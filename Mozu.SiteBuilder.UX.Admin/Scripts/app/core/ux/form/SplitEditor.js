@@ -3,13 +3,22 @@
  * @author Jimmy Sanford
  *
  * The base class for a split content container with a left-side grid panel and right-side form panel.
- *
+ * Contributions of the Split Editor:
+ * Includes the NavHeader mixin which encapsolates the navigation header (title, save, cancel, create, next, previous)
+ * Manages communications between the grid in the west position and the editor (typically a form) in the east position.
+ * 
  * This class extends the base class for split containers, {@link Taco.core.ux.content.SplitContainer}.
+ * 
+ * TODO: Fully exercise the adding removing, hiding, and showing of navHeader buttons based on the state of the mode;
  */
 
 Ext.define('Taco.core.ux.form.SplitEditor', {
     extend: 'Taco.core.ux.content.SplitContainer',
     alias: 'widget.spliteditor',
+    mixins: {
+        // this provides the top navigation bar. It includes the title, cancel, save, and create new button. 
+        navHeader: 'Taco.core.ux.mixins.NavHeader'
+    },
 
     /**
      * @cfg {String} originalTitle
@@ -46,16 +55,22 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         useSplit: false
     },
 
+    title: "Split Editor Title",
+
     initComponent: function () {
         var cfg;
 
+        this.mixins.navHeader.init.apply(this, arguments);
+
         this.callParent(arguments);
 
-        cfg = this.header.initialConfig;
+        this.updateSplitTitle();
 
-        if (!this.originalTitle) {
-            this.originalTitle = (cfg && cfg.title ? cfg.title : 'View ' + Ext.util.Inflector.pluralize(this.recordType));
-        }
+        //cfg = this.header.initialConfig;       
+
+        //if (!this.originalTitle) {
+        //    this.originalTitle = (cfg && cfg.title ? cfg.title : 'View ' + Ext.util.Inflector.pluralize(this.recordType));
+        //}
     },
 
     /**
@@ -66,36 +81,14 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      * @return {String} The value to be set, after modifications.
      */
     applyMode: function (nextMode) {
-        var prevMode = this.getMode() || this.config.mode;
-
+        var prevMode = this.getMode() || this.config.mode
+        
         if (prevMode !== nextMode) {
             this.fireEvent('modechange', this, nextMode, prevMode);
             this.onModeChange(nextMode, prevMode);
         }
 
         return nextMode;
-    },
-
-    /**
-     * Bind any header actions configured with `formBind: true`. Bound items will be automatically
-     * enabled or disabled according to the valid state of the form.
-     *
-     * @private
-     */
-    bindActionsToForm: function () {
-        var actions = this.header.actionsContainer;
-        var form = this.getEast().down('form');
-        var boundItems;
-
-        if (form) {
-            boundItems = form.getForm().getBoundItems();
-
-            actions.items.each(function (item) {
-                if (item.formBind) {
-                    boundItems.add(item);
-                }
-            });
-        }
     },
 
     /**
@@ -113,12 +106,20 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
             this.onRecordChange(nextRecord);
 
             nextTitle = 'Edit ' + (nextRecord.get(this.recordNameField) || recordType);
+            //Jimmy, we should consider simplifying this and delegating to the views to define their titles. 
+            // Since the views will need be able to stand alone and display an appropriate title outside of the splitEditor.
+            
+            
+            
+
         } else {
             this.setMode('create');
             this.resetForm();
         }
-
-        this.setTitle(nextTitle);
+        
+        // we should consolidate all title setting logic and delegate it to the view that's controlling the title;
+        //this.setTitle(nextTitle);
+        this.updateSplitTitle();
 
         this.setCollapsedState({
             west: !this.getUseSplit(),
@@ -126,27 +127,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         });
     },
 
-
-
-    /**
-     * @private
-     * The function to execute when the default cancel button is pressed     
-     */
-    cancel: function () {
-        var me = this;        
-
-        if (me.fireEvent('beforecancel', me) !== false) {
-            me.onCancel();
-            me.fireEvent('cancel', me);
-            me.doCancel();
-        }
-    },
-
-    /**
-    *  Template method called just before the cancel event is fired;
-    */
-    onCancel: Ext.emptyFn,
-
+    
 
     /**
      * Perform a cancel action.
@@ -154,8 +135,12 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      * By default, this function resets the form and updates the collapsed state.
      */
     doCancel: function (e, t) {
-        this.getWest().down('grid').getSelectionModel().deselectAll(true);
 
+        var grid = this.getWest().down('grid');
+        if (grid) {
+            grid.getSelectionModel().deselectAll(true);
+        }
+        
         this.resetForm();
 
         this.setCollapsedState({
@@ -164,59 +149,18 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         });
     },
 
-
-    /**
-     * @private
-     * The function to execute when the default create button is pressed     
-     */
-    create: function () {
-        var me = this;
-
-        if (me.fireEvent('beforecreate', me) !== false) {
-            me.onCreate();
-            me.fireEvent('create', me);
-            me.doCreate();
-        }
-    },
-
-    /**
-    *  Template method called just before the create event is fired;
-    */
-    onCreate : Ext.emptyFn,
-
     /**
      * A template method for performing a create action.
      *
      * By default, this function deselects all records in the grid.
      */
     doCreate: function () {
-        this.getWest().down('grid').getSelectionModel().deselectAll(true);
+        var grid = this.getWest().down('grid');
+        if (grid) {
+            grid.getSelectionModel().deselectAll(true);
+        }
         this.changeRecord(null);
     },
-
-
-    /**
-     * @private
-     * The function to execute when the default save button is pressed
-     * This is the beginning of the save process not the end. 
-     * Listen to the "savesuccess" event to get the final data after the save process completes
-     * Subclasses should NOT override this method with their own behavior. They should override the doSave()
-     */
-    save: function () {
-        var me = this;
-        
-
-        if (me.fireEvent('beforesave', me) !== false) {
-            me.onSave();
-            me.fireEvent('save', me);
-            me.doSave();
-        }
-    },
-
-    /**
-    *  Template method called just before the save event is fired;
-    */
-    onSave: Ext.emptyFn,
 
 
     /**
@@ -255,6 +199,7 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
      * @param {Object} prevState The previous collapsed state.
      */
     onCollapsedStateChange: function (nextState, prevState) {
+
         var form = this.getEast().down('form');
         var record = form ? form.getForm().getRecord() : null;
 
@@ -270,6 +215,9 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         } else if (form) {
             this.setMode(record ? 'edit' : 'create');
         }
+        
+        this.updateSplitTitle();
+
     },
 
     /**
@@ -290,8 +238,9 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         if (nextMode === 'edit') {
             nextTitle = 'Edit ' + (record ? record.get(this.recordNameField) || recordType : recordType);
         }
-
-        this.setTitle(nextTitle);
+        // we should consolidate all title setting logic and delegate it to the view that's controlling the title;
+        //this.setTitle(nextTitle);        
+        this.updateSplitTitle()
     },
 
     /**
@@ -320,5 +269,23 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         if (form) {
             form.getForm().reset(!(resetRecord === false));
         }
+    },
+
+    // override this if you want to let your west sub panel to give you the title;
+    getWestTitle: function () {
+        return this.getTitle();
+    },
+
+    // override this if you want to let your west sub panel to give you the title;
+    getEastTitle: function () {
+        return this.getTitle();
+    },
+
+    updateSplitTitle: function () {
+        var westTitle = this.getWestTitle(),
+            eastTitle = this.getEastTitle(),
+            activeTitle = (this.getMode() == "view") ? westTitle : eastTitle;
+
+        this.setTitle(activeTitle);
     }
 });

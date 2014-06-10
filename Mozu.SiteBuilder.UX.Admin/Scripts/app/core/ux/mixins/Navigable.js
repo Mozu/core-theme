@@ -3,14 +3,36 @@
  * @author Travis Johnson
  * @description Adds navigation to forms
  */
+// Note: I ran in to an insidious bug with this mixin and spent  many hours trying to run it down to no avail.
+// reverting users of the mixin to the NavForm2 base class since it doesn't have the issue;
+// steps to reproduce the bug:
+/*
+  load a discout
+  go back to grid
+  load the discount again.
+  after the view loads it deselects the active item in the nav.
+  It appears to be related to updates to the form fields but I couldn't isolate the issue;
+
+*/
+
+
 Ext.define('Taco.core.ux.mixins.Navigable', {
+    //sectionOffset: 39,
+    //topOffset: 39,
+
     sectionOffset: 39,
     topOffset: 39,
+
     enableScrollSpy: true,
 
     constructor: function (cfg) {
         var view,
             container;
+        /*
+        Ext.util.Observable.capture(this, function () {          
+            console.log(arguments);
+        });
+        */
 
         this.navStore = Ext.create('Ext.data.Store', {
             fields: ['title',"hidden"]
@@ -54,42 +76,55 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
 
         this.addDocked(container);
 
-        this.nav = this.down('#navFormNav');
+        this.leftNav = this.nav = this.down('#navFormNav');
 
-        this.on({
-            afterrender: this.onAfterRenderNavigable,
+        this.mon(this,{
+            boxready: function () {                
+                this.initLeftNav(arguments)
+            },
             add: this.loadNavItems,
             remove: this.loadNavItems,
             scope: this
         });
     },
 
+    //getWrapper: function () {
+    //    if (!this.wrapper) {
+    //        this.wrapper = Taco.app.viewPort.down('contentbody');
+    //    }
+    //    return this.wrapper;
+    //},
     getWrapper: function () {
+        var wrapper = Ext.ComponentQuery.query('fulleditor')[0];
+        // need to find the fulleditor class since it is the scroll container;
+        return wrapper;
+
+        /*
         if (!this.wrapper) {
             this.wrapper = Taco.app.viewPort.down('contentbody');
         }
-        return this.wrapper;
+
+        return this.wrapper || this;
+        */
     },
 
-    onAfterRenderNavigable: function () {
-
+    initLeftNav: function () {
+        
         if (!this.enableScrollSpy) return;
 
-        this.getWrapper().on({
-            afterlayout: function () {
-                this.getWrapper().getEl().dom.scrollTop = this._scrollTop || 0;
+        // need to realign the left nav to account for the top navHeader height change after layout;
+        this.leftNav.el.alignTo(this.el, "tl-tl", [0, 0]);
+
+        //this.getWrapper().on({
+        this.mon(this.getWrapper(), {
+            afterlayout: function (){                
+                this.getWrapper().body.el.dom.scrollTop = this._scrollTop || 0;
                 this.rebuildMap();   
             },
             scope: this
         });
 
-        this.getWrapper().on({
-            afterlayout: function () {
-                
-            }
-        })
-
-        this.getWrapper().getEl().on({
+        this.mon(this.getWrapper().body.el, {        
             scroll: this.checkTop,
             scope: this
         });
@@ -122,8 +157,7 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
     },
 
     checkTop: function () {
-
-        var scrollTop = this.getWrapper().getEl().dom.scrollTop,
+        var scrollTop = this.getWrapper().body.el.dom.scrollTop,
             max,
             li,
             active;
@@ -137,13 +171,22 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
             else return false;
         }, this);
 
+
         if (!this.nav.rendered) return;
-
+        
         active = this.nav.getEl().down('.active');
-
-        if (active) active.removeCls('active');
-
         li = this.nav.getEl().query('li')[max];
+
+        // don't need to make a change if the active one is already selected;
+        if (active && active.dom == li) {            
+            return;
+        }
+
+        if (active) {
+            active.removeCls('active');
+        }
+
+        
 
         if (!li) return;
 
@@ -151,7 +194,7 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
     },
 
     onNavClick: function (view, record) {
-        var wrapper = this.getWrapper().getEl(),
+        var wrapper = this.getWrapper().body.el,
             targetY;
 
         if (record.raw.getEl) {
@@ -168,7 +211,8 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
         // need to cull hidden panels from the store so that the dataview doesn't mismatch the record to the item clicked;  It currently uses index position and the hidden records are causing the mismatch;
         this.items.each(function(item) {
             if (!item.showHideNavWatch) {
-                item.on({
+                
+                item.mon(item,{
                     show: this.loadNavItems,
                     hide: this.loadNavItems,
                     scope: this

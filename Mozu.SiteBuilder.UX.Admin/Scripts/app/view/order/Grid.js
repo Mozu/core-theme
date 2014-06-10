@@ -1,110 +1,423 @@
 ﻿/**
  * @class Taco.view.order.Grid
- */
+*/
 Ext.define('Taco.view.order.Grid', {
-    extend: 'Taco.core.ux.BaseGrid',
+    extend: 'Taco.core.ux.browser.SearchList',
+    //cls: Taco.baseCSSPrefix + 'searchlist',
 
+    requires: [
+        'Taco.model.Order',
+        'Taco.store.OrderGrid',
+        'Taco.view.order.modal.ProductConfigurator'        
+    ],
+
+    launchEditorOnClick:true,
+    
+    // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
+    modelName: 'Taco.model.Order',
+
+    enableNavHeader: true,
+
+    // adds the "taco-content-navcontainer-padding" class
+    // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
+    addContentViewPadding: true,
+
+
+    enableSearch: true,
+    enablePaging: true,
+    enableRowEditing: false,
+
+    createButtonEnabled: true,
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+
+    createButtonText: "Create New Order",
+
+    showActionsColumn: true,
+
+    hideSearchToolbar: false,
+    selType: 'rowmodel',
+    
+    title: "Orders",
+
+    //bodyPadding:"10px 20px;",
+    //bodyStyle: "margin:10px 20px;",
+    //width: "100%",
+
+    //style: "margin:20px 20px 10px",
+
+    store: { type: 'Taco.store.Orders' },  
+
+    autoScroll: true,
+
+    // note: if you don't include this in a grid going into the contentView there will be no scrolling and no headers.
+    //region: "center",
+
+    
+    enableQuickFilters:false,
+
+    advancedSearchConfig : {
+        advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
+        
+        quickFilterData: [
+            [{ orderStatus: 'Open' }, 'Open Orders'],
+            [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
+            [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
+            [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
+            [{}, 'All Orders']
+        ]
+    },
+
+
+    onCreate: function () {
+
+    },
+
+    stateful: true,
+
+    stateId: 'statefulOrderGrid',
+        
     initComponent: function () {
         var me = this;
-
-        this.activeFilters = [];
-
-        this.columns = [{
-            dataIndex: 'orderNumber',
-            text: 'Order #',
-            align: 'right',
-            flex: 1,
-            renderer: function (value) {
-                return '<a href="#" class="taco-launch-editor">' + value + '</a>';
-            }
-        }, {
-            xtype: 'datecolumn',
-            dataIndex: 'updateDate',
-            text: 'Order Date',
-            format: 'm/d/y',
-            flex: 1
-        }, {
-            //dataIndex: 'payment',
-            dataIndex: 'billingFirstName',
-            text: 'First Name',
-            flex: 2/*,
-            renderer: function (value) {
-                if (!value || !value.card || !value.card.billingAddress) {
-                    return '';
-                }
-                return value.card.billingAddress.firstName;
-            }*/
-        }, {
-            //dataIndex: 'payment',
-            dataIndex: 'billingLastName',
-            text: 'Last Name',
-            flex: 2/*,
-            renderer: function (value) {
-                if (!value || !value.card || !value.card.billingAddress) {
-                    return '';
-                }
-                return value.card.billingAddress.lastName;
-            }*/
-        }, {
-            xtype: 'numbercolumn',
-            dataIndex: 'total',
-            text: 'Order Amount',
-            format: '$0.00',
-            align: 'right',
-            flex: 1
-        }, {
-            dataIndex: 'fulfillmentStatus',
-            text: 'Status',
-            flex: 1
-        }];
-
-        this.pager = Ext.create('Ext.toolbar.Paging', {
-            store: this.store,
-            displayInfo: true,
-            dock: 'bottom'
-        });
-
-        this.dockedItems = [
-        //     xtype: 'toolbar',
-        //     dock: 'top',
-        //     items: [{
-        //         xtype: 'textfield',
-        //         width: 400,
-        //         emptyText: 'Search orders',
-        //         enableKeyEvents: true,
-        //         listeners: {
-        //             'keyup': {
-        //                 fn: me.onKeyUp,
-        //                 scope: me
-        //             }
-        //         }
-        //     }]
-        // },
-        this.pager];
+        
+        this.columns = this.getColumnConfig();
+        
+        me.callParent(arguments);
+    },
+    
+    launchLoadedEditor: function (record, options) {
+        var site = Taco.app.context.getSite(),
+            infoStore,
+            infoRecord;
 
         this.callParent(arguments);
     },
 
-    onKeyUp: function (field) {
+    // override this method and adjust the columns if your need a grid with a subset of columns;
+    getColumnConfig: function () {
+        var me = this,
+            columns = [
+                {
+                    stateId: 'orderNumber',
+                    dataIndex: 'orderNumber',
+                    text: 'Order Number',
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100
+                }, {
+                    stateId: 'createDate',
+                    dataIndex: 'createDate',
+                    text: 'Order Date',
+                    flex: 1,
+                    minWidth: 180,
+                    xtype: 'datecolumn',
+                    format: 'M d Y g:ia'
+                }, {
+                    stateId: 'firstName',
+                    dataIndex: 'billingContact',
+                    text: 'First Name',
+                    flex: 1,
+                    width: 120,
+                    sortable: false,
+                    getSortParam: function () {
+                        return 'billingContact.firstName';
+                    },
+                    renderer: function (value, metaData, record) {
+                        return Ext.util.Format.htmlEncode(value.firstName);
+                    }
+                }, {
+                    stateId: 'lastName',
+                    dataIndex: 'billingContact',
+                    text: 'Last Name',
+                    flex: 1,
+                    minWidth: 120,
+                    width: 120,
+                    sortable: false,
+                    getSortParam: function () {
+                        return 'billingContact.lastName';
+                    },
+                    renderer: function (value, metaData, record) {
+                        return Ext.util.Format.htmlEncode(value.lastName);
+                    }
+                }, {
+                    stateId: 'orderTotal',
+                    dataIndex: 'total',
+                    text: 'Order Total',
+                    renderer: 'usMoney',
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100
+                }, {
+                    stateId: 'orderStatus',
+                    dataIndex: 'orderStatus',
+                    text: 'Order Status',
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100,
+                    sortable: false
+                }, {
+                    stateId: 'paymentStatus',
+                    dataIndex: 'paymentStatus',
+                    text: 'Payment Status',
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100
+                }, {
+                    stateId: 'fulfillmentStatus',
+                    dataIndex: 'fulfillmentStatus',
+                    text: 'Fulfillment Status',
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100,
+                    sortable: false
+                }, {
+                    stateId: 'channelName',
+                    text: 'Channel',
+                    dataIndex: "channelName",
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100,
+                    sortable: false
+                }, {
+                    stateId: 'customerEmail',
+                    text: 'Customer Email',
+                    dataIndex: 'billingContact',
+                    flex: 1,
+                    minWidth: 160,
+                    width: 260,
+                    sortable: false,
+                    hidden: true,
+                    renderer: function (value, metaData, record) {
+                        return value && value.email ? value.email : null;
+                    }
+                }, {
+                    stateId: 'customerState',
+                    text: 'Customer State',
+                    dataIndex: 'billingContact',
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100,
+                    sortable: false,
+                    hidden: true,
+                    renderer: function (value, metaData, record) {
+                        return value && value.stateOrProvince ? value.stateOrProvince : null;
+                    }
+                }, {
+                    stateId: 'paymentType',
+                    text: 'Payment Type',
+                    dataIndex: 'payments',
+                    flex: 1,
+                    minWidth: 120,
+                    width: 120,
+                    sortable: false,
+                    hidden: true,
+                    renderer: function (value, metaData, record) {
+                        return Ext.isArray(value) ? Ext.Array.unique(Ext.Array.pluck(value, 'paymentType')).join(', ') : null;
+                    }
+                }, {
+                    stateId: 'amountReceived',
+                    text: 'Amount Received',
+                    dataIndex: 'authorizationInfo',
+                    flex: 1,
+                    minWidth: 120,
+                    width: 120,
+                    sortable: false,
+                    hidden: true,
+                    renderer: function (value, metaData, record) {
+                        return Ext.util.Format.usMoney(value.amountCollected);
+                    }
+                }, {
+                    stateId: 'remainingAmount',
+                    text: 'Remaining Amount',
+                    dataIndex: 'authorizationInfo',
+                    flex: 1,
+                    minWidth: 120,
+                    width: 120,
+                    sortable: false,
+                    hidden: true,
+                    renderer: function (value, metaData, record) {
+                        return Ext.util.Format.usMoney(value.captureAmount);
+                    }
+                }, {
+                    stateId: 'ipAddress',
+                    text: 'IP Address',
+                    dataIndex: 'ipAddress',
+                    flex: 1,
+                    minWidth: 120,
+                    width: 120,
+                    sortable: false,
+                    hidden: true
+                }, {
+                    stateId: 'fraudScore',
+                    text: 'Fraud Score',
+                    dataIndex: 'fraudScore',
+                    itemId: 'fraudScore',
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100,
+                    sortable: false,
+                    hidden: true
+                }
+            ];
+
+
+        // add the actions column if required
+        if (me.showActionsColumn) {
+            columns.push(
+                {
+                    stateId: 'actions',
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    menuItems: [
+                        {
+                            text: 'Edit',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Category',
+                                behavior: 'update'
+                            },
+                            menuColumnHandler: function (item, eventData) {
+                                var page = eventData.grid.getParentPage(),
+                                    record = eventData.record,
+                                    metaData = { id: record.getId() };
+
+                                me.launchEditor(record, metaData);
+
+                            }
+                        }, {
+                            text: 'Capture Payment',
+                            itemId: 'capturePaymentAction',
+                            menuColumnHandler: function (item, eventData) {
+                                var me = this,
+                                    record = eventData.record,
+
+                                    grid = eventData.grid,
+                                    index = eventData.rowIndex,
+                                    amount = record.get('total') - (((record.get('authorizationInfo') || {}).amountCollected) || 0),
+                                    data = {
+                                        orderId: record.getId(),
+                                        paymentId: record.payments().getAt(0).getId(),
+                                        amount: amount
+                                    },
+                                    ajaxConfig,
+                                    errorMsg = 'issue capturing payment on order# <a href="#" onclick="Taco.core.StateManager.attemptNavigate(\'/admin/orders/edit/' + record.getId() + '\')">' + record.get('orderNumber') + '</a>';
+
+
+                                ajaxConfig = {
+                                    jsonData: data,
+                                    errorMsg: errorMsg,
+                                    success: function (response) {
+                                        record.reload();
+                                    },
+                                    scope: this
+                                };
+
+                                record.capturePayment(ajaxConfig);
+                            }
+                        }, {
+                            text: 'Cancel Order',
+                            itemId: "cancelAction",
+                            menuColumnHandler: function (item, eventData) {
+                                var me = this,
+                                    record = eventData.record,
+                                    grid = eventData.grid,
+                                    index = eventData.rowIndex,
+                                    row = Ext.get(grid.getView().getNode(record));
+
+                                Ext.MessageBox.show({
+                                    title: 'Cancel Order',
+                                    // pushes the buttons to the right to be consistant with our dialog ux.
+                                    rightJustifyButtons: true,
+                                    // reverses the order of the buttons
+                                    reverseOrder: true,
+                                    msg: 'Are you sure you want to cancel this order?',
+                                    closable: false,
+                                    buttons: Ext.Msg.YESNO,
+                                    fn: function (rec) {
+                                        if (rec === 'yes') {
+                                            grid.setLoading(true);
+
+                                            record.cancelOrder({
+                                                jsonData: {
+                                                    orderId: record.get('id')
+                                                },
+                                                success: function (response) {
+                                                    grid.setLoading(false);
+                                                    var json = Ext.decode(response.responseText, true);
+                                                    if (!json || !json.success) {
+                                                        Taco.app.fireEvent('setmessage', "Error canceling order", 'error');
+                                                        return;
+                                                    }
+                                                    record.reload();
+                                                },
+                                                failure: function (response) {
+                                                    var json = Ext.decode(response.responseText, true),
+                                                        msg = (json && json.message) ? json.message : "Error canceling order";
+                                                    Taco.app.fireEvent('setmessage', msg, 'error');
+                                                    grid.setLoading(false);
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    ],
+
+                    // do any processing needed to show menu
+                    onMenuShow: function (menu, eventData) {
+                        var me = this,
+                            record = eventData.record,
+                            availableActions = record.get("availableActions"),
+                            canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
+                            cancelAction = menu.items.get('cancelAction'),
+                            capturePaymentAction = menu.items.get('capturePaymentAction'),
+                            canCapture = record.payments().getCount() == 1 && (record.payments().getAt(0).get('availableActions') || []).indexOf('CapturePayment') > -1;
+
+                        /*    Order only has a single payment transaction
+                        Order Payment transaction is in “Authorized State”*/
+
+                        cancelAction.setDisabled(!canCancel);
+                        capturePaymentAction.setDisabled(!canCapture);
+                    }
+                }
+
+            )
+        }
+
+        return columns;
+    },
+
+    doCreate: function () {
         var me = this;
+        
+        var ctx = Taco.app.context.getCurrentContext(),
+            record;
 
-        this.store.currentPage = 1;
-
-        if (field.value.length == 0) {
-            this.store.filters.removeAtKey(this.id);
-
-            this.store.load();
+        if (ctx.contextType !== 's') {
+            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
             return;
         }
-        if (Ext.isNumeric(field.value) || field.value.length >= 3) {
-            this.store.filters.add(this.id, Ext.create('Ext.util.Filter', {
-                anyMatch: true,
-                property: 'query',
-                value: field.getValue(),
-                root: 'data'
-            }));
-            this.store.load();
-            return;
-        }
+
+        Taco.app.setLoading();
+
+        record = Ext.create('Taco.model.Order');
+
+        record.save({
+            callback: function (records, operation, success) {
+
+                //changing the path to be edit instead of create so that the user can refresh the page and get back to it if they accidently navigate away;
+                Taco.core.StateManager.attemptNavigate('s-' + record.data.siteId + '/orders/edit/' + record.data.id);
+
+                /*
+                this.createContentView(this.getEditorView(), {
+                    record: record
+                });
+                Taco.app.setLoading(false);
+                */
+            },
+            scope: this
+        });
+
     }
+
 });

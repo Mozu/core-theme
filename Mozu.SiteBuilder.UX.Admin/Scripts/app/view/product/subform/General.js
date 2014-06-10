@@ -22,7 +22,7 @@ Ext.define('Taco.view.product.subform.General', {
     ],
 
     title: 'General',
-    margin: '20 0',
+    margin: '0 0 20 0',
     initComponent: function () {
         var me = this,
             readOnly,

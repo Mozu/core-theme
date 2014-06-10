@@ -150,14 +150,7 @@
         
 
 
-        // this.form.on({
-        //     savablestatechange: function (form, isSavable) {
-        //         isSavable = this.checkSavable(isSavable) || this.record.get('publishedState') !== 'Live';
-
-        //         this.publishButton.setDirty(isSavable);
-        //     },
-        //     scope: this
-        // });
+        
 
         this.on({
             aftersave: function () {

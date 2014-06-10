@@ -18,6 +18,8 @@ Ext.define('Taco.core.ux.tab.Panel', {
     activeTabCls: Taco.baseCSSPrefix + 'form-tab-active',
     invalidTabCls: Taco.baseCSSPrefix + 'form-tab-invalid',
 
+
+
     /**
      * @cfg {Boolean} navigation
      * 'true' to insert naviation on the side
@@ -88,7 +90,7 @@ Ext.define('Taco.core.ux.tab.Panel', {
             xtype: 'container',
             componentCls: Taco.baseCSSPrefix + 'form-tab-bar',
             itemId: 'tabBar',
-            margin: '0 0 0 200',
+            margin: '0 1 20 200',
             items: [
                this.addButton,
                this.picker

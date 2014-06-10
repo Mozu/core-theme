@@ -1,67 +1,38 @@
 ﻿/**
- * @class Taco.core.ux.form.Form
+ * @class Taco.core.ux.form.TabForm
  */
-Ext.define('Taco.core.ux.form.NavForm2', {
+Ext.define('Taco.core.ux.form.TabForm', {
     extend: 'Taco.core.ux.form.Form',
-    alias: 'widget.taco.navform2',
+    alias: 'widget.taco.tabform',
     requires: [],
+//    sectionOffset: 39,
+///    topOffset: 0,
+//    enableScrollSpy: true,
 
-    // Sure would have been nice to have some comments for what this does...
-    sectionOffset: 38,
-
-    // Sure would have been nice to have some comments for what this does...
-    topOffset: 38,
-
-    // this is an offset adjustment to move the left nav up and down relative to the first subForm's top edge.
-    // By defaul the left nav will adjust itself to align with the top of the first subform;
-    // this is primarily here to support the tabs in the product navform;
-    leftNavTopOffset: 0,
-
-    
-    enableScrollSpy: true,
-
-//    layout : "fit",
-
-    
-    //cls: "taco-navform2",
-
-    //padding: "20 20 10 20",
+    layout:'card',
 
     initComponent: function () {
-        var me = this;
-        this.cls = this.cls || "";
-        this.cls += " taco-navform2";
-        
-        
-        
+
         // items from subclass
         var originalItems = this.items || [];
-        
-        this.formContainer = Ext.widget({
-            xtype: 'container',
-            cls: 'taco-form-nav-container',
-            //cls: "taco-content-navcontainer-padding",
-            //bodyStyle:"padding:20px",
-            items: originalItems
-        });
 
-        this.relayEvents(this.formContainer, ['add']);
+
+
+        //this.relayEvents(this.formContainer, ['add']);
 
         this.navStore = Ext.create('Ext.data.Store', {
             fields: ['title',"hidden"]
         });
 
-
-        
-        this.leftNav = Ext.widget({
+        this.dockedItems = [{
             xtype: 'dataview',
-            //dock: 'left',
-            //width:100,
-            //style: "margin-top: 51px",
+            dock: "left",
+            width: 400,
+            style: "background-color:red",
             store: this.navStore,
             itemId: 'navFormNav',
-            cls: 'taco-form-nav',
-            autoShow: true,
+            //cls: 'taco-form-nav',
+            //autoShow: true,
             itemSelector: '.taco-form-nav-link',
             listeners: {
                 itemclick: this.onNavClick,
@@ -81,81 +52,61 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                     }
                 }
             ]
-        })
-        
-        //me.dockedItems = me.dockedItems || [];
-        //me.dockedItems.push(this.leftNav)
+        }]
 
-        
 
-        this.items = [
-            this.leftNav,
+        /*
+
+        this.items = [            
             this.formContainer
         ];
 
+        this.callParent(arguments);
 
+        this.nav = this.down('#navFormNav');
+        
+        /*
+        this.on({
+            afterrender: this.onAfterRender,
+            scope: this
+        });
+        */
+
+        
 
 
         this.callParent(arguments);
 
-        
-
-        this.nav = this.down('#navFormNav');
-        
-        this.on({
-            boxready: this.initLeftNav,
-            scope: this
-        });
     },
 
     getWrapper: function () {
-        var wrapper = Ext.ComponentQuery.query('fulleditor')[0];
-        // need to find the fulleditor class since it is the scroll container;
-        return wrapper;
-
-        /*
         if (!this.wrapper) {
             this.wrapper = Taco.app.viewPort.down('contentbody');
         }
-
-        return this.wrapper || this;
-        */
+        return this.wrapper;
     },
 
-    initLeftNav: function () {
-        if (!this.enableScrollSpy) return;
+    onAfterRender: function () {
 
-        
-        // need to realign the left nav to account for the top navHeader height change after layout;
-        
-        this.leftNav.el.alignTo(this.formContainer.el, "tr-tl", [-20, this.leftNavTopOffset]);
+       /*
+        if (!this.enableScrollSpy) return;
 
         this.getWrapper().on({
             afterlayout: this.rebuildMap,
             scope: this
         });
-
-        this.getWrapper().body.el.on({
-            scroll: this.checkTop,
-            scope: this
-        });
-
+        */
         /*
-        //this.getWrapper().getEl().on({
-        this.body.on({
-            scroll: function () {
-                
-                this.checkTop(arguments);
-            },
+        this.getWrapper().getEl().on({
+            scroll: this.checkTop,
             scope: this
         });
         */
 
-        this.rebuildMap();
+      //  this.rebuildMap();
     },
-
+    /*
     rebuildMap: function () {
-        
         this.locationMap = [];
         this.recordMap = [];
 
@@ -173,21 +124,21 @@ Ext.define('Taco.core.ux.form.NavForm2', {
                 return;
             }
 
-            this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset - this.leftNavTopOffset);
+            this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset);
         }, this);
 
         this.checkTop();
     },
 
     checkTop: function () {
-        
-        var scrollTop = this.getWrapper().body.el.dom.scrollTop,
+
+        var scrollTop = this.getWrapper().getEl().dom.scrollTop,
             max,
             li,
             active;
 
         if (this.isHidden()) return;
-        
+
         Ext.each(this.locationMap, function (top, index) {
             if (scrollTop >= top) max = index;
             else return false;
@@ -206,36 +157,44 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         Ext.fly(li).addCls('active');
 
     },
+    */
 
     onNavClick: function (view, record) {
-        var wrapper = this.getWrapper().body.el,
+        var wrapper = this.getWrapper().getEl(),
             targetY;
         
+
+        var panel = Ext.getCmp(record.get("id"));
+        this.getLayout().setActiveItem(panel);
+
+        /*
         if (record.raw.getEl) {
             targetY = view.store.indexOf(record)
-                        ? record.raw.getEl().dom.offsetTop + this.sectionOffset - this.leftNavTopOffset
+                        ? record.raw.getEl().dom.offsetTop + this.sectionOffset
                         : 0;
             wrapper.scrollTo('top', targetY - this.topOffset, true);
         }
+        */
     },
+    
 
     loadNavItems: function (items) {
+        
         var components,
             recordsToAdd = [];
-        
+
         if (items) {
             //this.formContainer.autoDestroy = false;
-            this.formContainer.removeAll();
+            this.removeAll();
             //this.formContainer.autoDestroy = true;
             //destroy itemsToRemoved
-            components = this.formContainer.add(items);
+            components = this.add(items);
         } else {
-            components = this.formContainer.items.items;
+            components = this.items.items;
         }
 
         // need to cull hidden panels from the store so that the dataview doesn't mismatch the record to the item clicked;  It currently uses index position and the hidden records are causing the mismatch;
-        Ext.Array.each(components, function (item) {
-            
+        Ext.Array.each(components, function(item) {
             if (!item.hidden) {
                 recordsToAdd.push(item);
             }

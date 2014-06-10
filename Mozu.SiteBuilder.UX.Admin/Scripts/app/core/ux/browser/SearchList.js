@@ -2,10 +2,13 @@
  * @class Taco.core.ux.browser.SearchList
  * Simple grid panel with search. 
  */
+
 Ext.define('Taco.core.ux.browser.SearchList', {
     extend: 'Taco.core.ux.grid.Panel',
-    
+    requires:['Taco.core.ux.grid.plugins.AutoSelect'],
     mixins: {
+        launcheditor: 'Taco.core.ux.mixins.LaunchEditor',
+        navHeader : 'Taco.core.ux.mixins.NavHeader',
         pageable: 'Taco.core.ux.mixins.Pageable',
         searchable: 'Taco.core.ux.mixins.Searchable',
         rowEditable: 'Taco.core.ux.mixins.RowEditable'
@@ -13,25 +16,36 @@ Ext.define('Taco.core.ux.browser.SearchList', {
     
     alias: 'widget.searchlist',
     
-    cls: Taco.baseCSSPrefix + 'itembrowser',
+    //cls: Taco.baseCSSPrefix + 'itembrowser',
+    //cls: Taco.baseCSSPrefix + 'content-view',
     
     toolbar: null,
+
+    launchEditorOnClick: false,
     
     filterProperty: 'title',
     
     gridHeaderLabel: "Items",
     
+    enableNavHeader: false,
+    // grids with navHeader `enabled will need extra content padding. Class will be assigned in the navHeader mixin.
+    addContentPadding: false,
+
     enableSearch: true,
     
     enablePaging: true,
     
     hideSearchToolbar: false,
 
+    enableAutoSelect: true,
+
     // store: { type: 'Taco.store.InventoryProducts' },
     store: null,
     
     // array of toolbar items to be added to ths second toolbar below the search toolbar;
     secondToolbarItems: null,
+
+    disableContextMenuClick :false,
     
     // meant to be overriden by the subclass;
     columns: [
@@ -46,33 +60,66 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         }
     ],
     
-    
     initComponent: function () {
         var me = this;
+        
+        me.columns = Ext.clone(me.columns);
 
+        if (me.enableNavHeader) {
+            //**************************
+            // this will add padding around the panel with this mixin;
+            // need to put this into a scss class;
+            Ext.apply(this,{
+                //style: "border-width: 0px;background-color: #e6e6e6;",
+                //padding: "20 20 10 20"
+            })
+            //**************************
+        }
+        
+        // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
+        if (this.enableAutoSelect !== false) {            
+            this.plugins = this.plugins || [];
+            this.plugins.push("autoselect");
+        }
+
+
+        // Initialize the LaunchEditor Mixin Defined in SearchList 
+        if (this.launchEditorOnClick) {
+            //initialize the content navigation toolbar.
+            this.mixins.launcheditor.constructor.apply(this);
+        }
+        
+        
         if (!me.store) {
-            console.log("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
+            throw("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
             return;
         } else {
             me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
         }
         
-        me.columns = Ext.clone(me.columns);
         
+        /*
+        // this is deprecated since the toolbar now showing the item count
         me.store.on({
             load: me.onItemStoreUpdate,
             bulkremove: me.onItemStoreUpdate,
             scope: me
         });
-
         me.on('afterrender', this.onItemStoreUpdate, this);
-        
-        me.dockedItems = me.dockedItems || [];
+        */
 
-        this.mixins.rowEditable.constructor.apply(this, arguments);
+
+        me.dockedItems = me.dockedItems || [];
+        
+        if (me.enableNavHeader) {
+            //initialize the content navigation toolbar.
+            this.mixins.navHeader.init.apply(this);
+        } 
+
+        this.mixins.rowEditable.constructor.apply(this);
         
         // initialize the search toolbar mixin
-        this.mixins.searchable.constructor.apply(this, arguments);
+        this.mixins.searchable.constructor.apply(this);
         me.dockedItems.push(me.createSearchToolbar());
         
         if (me.secondToolbarItems) {
@@ -81,16 +128,47 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         
         if (me.enablePaging) {
             // initialize the grid paging toolbar mixin
-            this.mixins.pageable.constructor.apply(this, arguments);
+            this.mixins.pageable.constructor.apply(this);
         }
         
         
         this.callParent(arguments);
         
         
+        // add right click menu to grid that pulls its data from the actions menuColumn;
+        var menuColumns = Ext.Array.filter(me.columns, function (col) { return col.isXType && col.isXType('taco.menucolumn'); });        
+        if (me.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
+
+            me.mon(me.view, 'itemcontextmenu', function (cmp, record, item, index, e) {
+                var eventData = {
+                    grid: cmp.ownerCt,
+                    rowIndex: index,
+                    header: menuColumns[0],
+                    e: e,
+                    record: record,
+                    item: item
+                },
+                    menu = menuColumns[0].getMenu(eventData);
+
+                menu.on('hide', function () {
+                    // need to clear and reselect to get focus set after menu closes;
+                    // deselect old record
+                    me.getSelectionModel().deselect(record);
+                    //reselect old record
+                    me.getSelectionModel().select(record, false, false);
+                }, me)
+
+
+
+                //e.preventDefault();
+                e.stopEvent();
+                menu.showAt(e.xy);
+            }, me);
+
+        }
+
     },
 
-    
     // todo: move this to an expandable mixin;n
     createExpanderCollapser: function () {
         var me = this;
@@ -143,65 +221,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         me.secondToolbar = conf.items.length > 0 ? Ext.widget('toolbar', conf) : null;
 
         return me.secondToolbar;
-    },
-    
-    onItemStoreUpdate: function (store, records, indexesOrSuccess, isMove) {
-        var me = this,
-            rc = me.down('#recordCount'),
-            netChange, data,
-            unitLabel;
-        
-        // if the component has not been rendered yet, we can't update it
-        if (!rc) return;
-
-        // if afterrender triggered this function, the first argument is not a store
-        store = store.isStore ? store : me.store;
-
-        // if bulkremove triggered this function, totalCount will be out of sync
-        netChange = (isMove === false) ? records.length * -1 : 0;
-        if (me.gridHeaderLabel) {
-            if (records && records.length > 0) {
-                unitLabel = Ext.util.Inflector.pluralize(me.gridHeaderLabel);
-            } else {
-                unitLabel = me.gridHeaderLabel;
-            }
-            
-        } else {
-            unitLabel = me.itemType;
-        }
-        data = {
-            count: store.getCount(),
-            totalCount: store.getTotalCount() + netChange,
-            unit: unitLabel
-        };
-
-        data.totalCount = data.totalCount > data.count ? data.totalCount : data.count;
-
-        rc.update(data);
-        rc.renderData = data;
-    },
-
-    onKeyUp: function (field) {
-        var me = this,
-            value = field.getValue(),
-            store = me.store;
-        
-        store.currentPage = 1;
-     
-        if (value.length == 0) {
-            store.filters.removeAtKey(this.id);
-
-            store.load();
-            return;
-        }
-        if (value.length >= 3) {
-            store.filters.add(this.id, Ext.create('Ext.util.Filter', {
-                anyMatch: true,
-                property: me.filterProperty,
-                value: value,
-                root: 'data'
-            }));
-            store.load();
-        }
     }
+
+
 });

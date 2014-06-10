@@ -665,6 +665,7 @@
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
+    <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
     <Content Include="Scripts\app\core\ux\form\field\Category.js" />
     <Content Include="Scripts\app\core\ux\form\field\plugins\InputMask.js" />
@@ -678,6 +679,9 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\mixins\LaunchEditor.js" />
+    <Content Include="Scripts\app\core\ux\mixins\Permissions.js" />
+    <Content Include="Scripts\app\core\ux\mixins\NavHeader.js" />
     <Content Include="Scripts\app\core\ux\mixins\Navigable.js" />
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
@@ -742,6 +746,7 @@
     <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\CustomersPicker.js" />
+    <Content Include="Scripts\app\store\Navigation2.js" />
     <Content Include="Scripts\app\store\OrderGrid.js" />
     <Content Include="Scripts\app\store\ProductGrid.js" />
     <Content Include="Scripts\app\store\ProductPicker.js" />
@@ -776,6 +781,7 @@
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\order\Form2.js" />
     <Content Include="Scripts\app\view\order\Split.js" />
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\CheckDecline.js" />
@@ -1017,6 +1023,8 @@
     <Content Include="Scripts\sass\src\core\ux\form\field\plugins\InputMask.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\AddOrderItemToolbar.scss" />
     <Content Include="Scripts\Web.config" />
+    <Content Include="Scripts\sass\src\core\ux\mixins\NavHeader.scss" />
+    <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
