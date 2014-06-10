@@ -433,10 +433,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     */
     saveFailure: function () {
         var me = this;
-        me.onSaveFailure();        
+        me.onSaveFailure(arguments);        
         this.resetSaveButton();
-        me.fireEvent('savefailure', me, data);
+        me.fireEvent('savefailure', me,arguments);
     },
+
+    onSaveFailure : Ext.emptyFn,
 
     /**
      * @cfg cancelActionHandler
