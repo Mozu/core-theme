@@ -444,6 +444,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Diagrams\CommerceRuntime\Cart\cdCart_GiftCardView.cd" />
     <None Include="Diagrams\CommerceRuntime\Fulfillment\cdDigitalFulfillment.cd" />
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderService_GiftCardView.cd" />
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderServicePayments.cd" />

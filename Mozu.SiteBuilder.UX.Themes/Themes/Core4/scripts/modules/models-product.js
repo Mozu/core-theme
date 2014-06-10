@@ -198,7 +198,14 @@
             var me = this;
             this.whenReady(function() {
                 if (!me.validate()) {
-                    me.apiAddToCart(me.get("quantity")).then(function(item) {
+                    var fulfillMethod = me.get('fulfillmentMethod');
+                    if (! fulfillMethod) {
+                        fulfillMethod = (me.get('goodsType') === 'Physical') ? 'Ship' : 'Digital';
+                    }
+                    me.apiAddToCart({
+                        fulfillmentMethod: fulfillMethod,
+                        quantity: me.get("quantity")
+                        }).then(function (item) {
                         me.trigger('addedtocart', item);
                     });
                 }
