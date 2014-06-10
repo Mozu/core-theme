@@ -455,6 +455,7 @@
     <Compile Include="Contexts\PageContext.cs" />
     <Compile Include="Contexts\SiteContext.cs" />
     <Compile Include="Controllers\ApiControllerBase.cs" />
+    <Compile Include="Extensions\CustomerExtensions.cs" />
     <Compile Include="Extensions\FSharpExtensions.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="Extensions\MD5Extensions.cs" />
