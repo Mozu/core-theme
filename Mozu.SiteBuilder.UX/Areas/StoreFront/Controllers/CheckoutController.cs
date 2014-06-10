@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
@@ -217,6 +218,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             }
             var ipAddress = this.HttpContext.Request.Headers["x-forwarded-for"] ?? this.HttpContext.Request.ServerVariables["REMOTE_ADDR"];
+            System.Net.IPAddress ipAddressStruct;
+            if (!System.Net.IPAddress.TryParse(ipAddress, out ipAddressStruct) || ipAddressStruct.AddressFamily != AddressFamily.InterNetwork)
+            {
+                ipAddress = "127.0.0.1";
+            }
+            
             model.IPAddress = ipAddress;
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };

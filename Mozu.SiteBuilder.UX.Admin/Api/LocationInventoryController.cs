@@ -176,7 +176,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return CreateVirtualDigitalLocationWithInventory(product);
             }
 
-            List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(true)
+            List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(true) && 
+                //todo:not this.
+                product.ProductUsage != "Bundle"
                 ? await GetManagedInventory(pagingParams, extFilter, prodOrVariantCode, product)
                 : await GetUnmanagedInventory(product);
 
