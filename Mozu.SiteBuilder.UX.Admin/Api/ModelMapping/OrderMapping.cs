@@ -63,12 +63,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateDate : null))
                 .ForMember(x => x.CustomerId, op => op.ResolveUsing(dc => dc.CustomerAccountId))
-                // TODO: this is a workaround for now. Between storefront & Mozu Admin order creation, we should always ensure we have a BillingContact
                 .ForMember(x => x.BillingContact, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.BillingContact != null 
-                    ? dc.BillingInfo.BillingContact 
-                    : (dc.FulfillmentInfo != null) 
-                        ? dc.FulfillmentInfo.FulfillmentContact 
-                        : null))
+                    ? dc.BillingInfo.BillingContact : null))
                 .ForMember(x => x.FulfillmentContact, op => op.ResolveUsing(dc => (dc.FulfillmentInfo != null) 
                     ? dc.FulfillmentInfo.FulfillmentContact : null))
                 .ForMember(x => x.ShippingMethodCode, op => op.ResolveUsing(dc => (dc.FulfillmentInfo != null) 

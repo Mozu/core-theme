@@ -273,16 +273,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public int CustomerAccountId { get; set; }
         }
         [HttpPostRoute(UriTemplate = "setcustomer")]
-        public async Task<Response<Customer.Contracts.CustomerAccount>> SetCustomerAccountId(SetCustomerAccountIdArgs args)
+        public async Task<Response<Order>> SetCustomerAccountId(SetCustomerAccountIdArgs args)
         {
             DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+
             Customer.Contracts.CustomerAccount dcCustomer;
 
-            dcOrder.CustomerAccountId = args.CustomerAccountId;
-            dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
             dcCustomer = (await _customerAccountWebApiClient.GetAccount(args.CustomerAccountId)).ReadAsSync();
 
-            return Single2( dcCustomer );
+            dcOrder.CustomerAccountId = args.CustomerAccountId;
+
+            // set BillingInfo and FulfillmentInfo to customer's default.
+            if (dcOrder.BillingInfo == null || dcOrder.BillingInfo.BillingContact == null)
+            {
+                var defaultCustomerBillingContact = dcCustomer.GetDefaultBillingContact();
+                if (defaultCustomerBillingContact != null) {
+                    if (dcOrder.BillingInfo == null) {
+                        dcOrder.BillingInfo = new DCp.BillingInfo();
+                    }
+                    dcOrder.BillingInfo.BillingContact = defaultCustomerBillingContact;
+                }
+            }
+            if (dcOrder.FulfillmentInfo == null || dcOrder.FulfillmentInfo.FulfillmentContact == null)
+            {
+                // if (dcCustomer.Contacts.Any(c => c.Types.First().Name == Mozu.Customer.Contracts.ContactTypeConst.SHIPPING
+                var defaultCustomerShippingContact = dcCustomer.GetDefaultShippingContact();
+                if (defaultCustomerShippingContact != null)
+                {
+                    if (dcOrder.FulfillmentInfo == null)
+                    {
+                        dcOrder.FulfillmentInfo = new DCs.FulfillmentInfo();
+                    }
+                    dcOrder.BillingInfo.BillingContact = defaultCustomerShippingContact;
+                }
+            }
+
+            dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
+
+            return Single2( Mapper.Map<Order>(dcOrder) );
         }
     }
 }
