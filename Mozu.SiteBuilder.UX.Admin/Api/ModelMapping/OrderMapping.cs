@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     totalItemCount =
                         (from i in order.Items
-                         let itemsPerBundle = i.BundledProducts != null && i.BundledProducts.Count > 0 ? (int?)i.BundledProducts.Sum(bp => bp.Quantity) : (int?)null
+                         let itemsPerBundle = i.BundledProducts != null && i.BundledProducts.Count > 0 ? (int?)i.BundledProducts.Sum(bp => bp.Quantity) + (i.ProductUsage != "Bundle"?1:0) : (int?)null
                          let actualQuantity = itemsPerBundle.HasValue ? itemsPerBundle.Value * i.Quantity : i.Quantity
                          select actualQuantity
                         ).Sum();
@@ -212,7 +212,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // fill out UnpackagedItems and UnpickedupItems lists
 
                     // get all the product codes in the order.
-                    var productCodes = order.Items.Where(item => item.BundledProducts == null || item.BundledProducts.Count == 0).Select(item => item.ProductCode).ToList();
+                    var productCodes = order.Items.Where(item => item.ProductUsage != "Bundle").Select(item => item.ProductCode).ToList();
                     productCodes.AddRange(order.Items.SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.ProductCode));
                     productCodes = productCodes.Distinct().ToList();
 
@@ -348,6 +348,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         
 
         Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
+                .ForMember(x=> x.ProductUsage , opt => opt.ResolveUsing(dc=> dc.Product != null ? dc.Product.ProductUsage : null ))
                   .ForMember(x => x.BundledProducts , op => op.ResolveUsing(dc => (dc.Product != null) 
                       ? dc.Product.BundledProducts : null))
                   .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
@@ -449,8 +450,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UnitPrice, op => op.ResolveUsing(dc => dc.ImpactPerUnit))
                 .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Impact))
                 .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => dc.CouponCode))
+             
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
+
+            
         }
 
         private void Map_DcAppliedDiscount_to_OrderDiscount()

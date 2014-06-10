@@ -6,7 +6,7 @@
  * @description Discount Conditions Editor
  */
 Ext.define('Taco.view.discount.ConditionsForm', {
-    requires:[
+    requires: [
         'Ext.data.UuidGenerator',
         'Ext.ux.form.field.BoxSelect',
         'Taco.view.category.Modal',
@@ -31,7 +31,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
-        });        
+        });
 
         this.datesContainer = Ext.create('Ext.container.Container', {
             layout: {
@@ -116,11 +116,25 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             minValue: 0
         });
 
+        this.minimumCategorySubtotalBeforeDiscounts = Ext.create('Taco.core.ux.form.UnitField', {
+            name: 'minimumCategorySubtotalBeforeDiscounts',
+
+            // hidden: this.record.get('scope') !== 'Order',
+            unitString: '$',
+            forcePrecision: true,
+            unitAtEnd: false,
+            hideTrigger: true,
+            width: 600,
+            fieldLabel: 'Minimum Product Category Purchase Amount (pre-discount)',
+            //  emptyText: 'No Customer Value limit',
+            minValue: 0
+        });
+
         this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'minimumLifetimeValueAmount',
             hidden: this.record.get('scope') !== 'Order',
             unitString: '$',
-            forcePrecision:true,
+            forcePrecision: true,
             unitAtEnd: false,
             hideTrigger: true,
             width: 600,
@@ -135,14 +149,15 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             boxLabel: 'One Time Use per Shopper',
             checked: this.record.get('maximumUsesPerUser') === 1,
             listeners: {
-                change: function(cb, newValue) {
+                change: function (cb, newValue) {
                     this.record.set('maximumUsesPerUser', newValue ? 1 : 0);
                 },
                 scope: this
             }
         });
 
-        this.items = [{
+        this.items = [
+            {
                 xtype: 'component',
                 html: 'Choose what conditions must be met before a discount will be valid',
                 margin: '15 0 0 0'
@@ -151,8 +166,19 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             this.minimumLifetimeValueAmount,
             this.segmentsBox,
             this.datesContainer,
+            {
+                xtype: 'component',
+                html: 'Purchase one of the following items',
+                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
+            },
             this.productsBox,
+            {
+                xtype: 'component',
+                html: 'Purchase an item from the following categories',
+                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
+            },
             this.categoriesBox,
+            this.minimumCategorySubtotalBeforeDiscounts,
             this.redemptionLimits,
             this.requiresCouponInput,
             this.couponCodeBox,
@@ -161,6 +187,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
 
         this.callParent(arguments);
+        this.onProductsCategoriesChange(true);
     },
 
     buildProduct: function () {
@@ -176,7 +203,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'conditionalProducts',
-            width: 520,
+            flex: 1,
             margin: 0,
             store: productStore,
             getStore: function () {
@@ -188,7 +215,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'productName',
-            fieldLabel: 'Purchase one of the following items',
+            hideLable: true,
+            listeners: {
+                change: this.onProductsCategoriesChange,
+                scope: this
+            },
+            // fieldLabel: 'Purchase one of the following items',
             valueField: 'productCode',
             style: {
                 display: 'inline-table',
@@ -198,9 +230,23 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
 
         this.productsBox = Ext.create('Ext.container.Container', {
-            layout: 'auto',
+            layout: 'hbox',
             width: 600,
             items: [
+                {
+                    xtype: 'numberfield',
+                    name: 'minimumQuantityRequiredProducts',
+                    hideTrigger: true,
+                    width: 80,
+                    minValue: 0,
+                    labelAlign: 'right',
+                    hideLable: true,
+                }, {
+                    xtype: 'component',
+                    html: 'of',
+                    padding: '0 10px 0 10px',
+                    cls: 'x-form-item-label x-unselectable x-form-item-label-left'
+                },
                 this.productList, {
                     xtype: 'button',
                     scale: 'medium',
@@ -216,18 +262,19 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 }
             ]
         });
+        this.minimumQuantityRequiredProducts = this.productsBox.down('[name=minimumQuantityRequiredProducts]');
     },
 
 
-    buildSegments:function (){
+    buildSegments: function () {
         var segStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
-        
+
         this.segmentsList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'customerSegments',
             width: 520,
             margin: 0,
             store: segStore,
-            getStore: function() {
+            getStore: function () {
                 return segStore;
             },
             hideTrigger: true,
@@ -258,7 +305,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     style: {
                         verticalAlign: 'bottom'
                     },
-                    handler: function() { this.launchSegmentModal(this.segmentsList);},
+                    handler: function () { this.launchSegmentModal(this.segmentsList); },
                     scope: this
                 }
             ]
@@ -279,7 +326,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'conditionalCategories',
-            width: 520,
+            flex: 1,
             margin: 0,
             store: catStore,
             getStore: function () {
@@ -292,17 +339,40 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Purchase an item from the following categories',
+            hideLabel: true,
+
+            // fieldLabel: 'Purchase an item from the following categories',
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
             }
         });
 
+        Ext.defer(function () {
+            this.categoryList.on({
+                change: this.onProductsCategoriesChange,
+                scope: this
+            });
+        }, 3000, this);
+
         this.categoriesBox = Ext.create('Ext.container.Container', {
-            layout: 'auto',
+            layout: 'hbox',
             width: 600,
             items: [
+                {
+                    xtype: 'numberfield',
+                    name: 'minimumQuantityProductsRequiredInCategories',
+                    hideTrigger: true,
+                    width: 80,
+                    minValue: 0,
+                    labelAlign: 'right',
+                    hideLable: true,
+                }, {
+                    xtype: 'component',
+                    html: 'of',
+                    padding: '0 10px 0 10px',
+                    cls: 'x-form-item-label x-unselectable x-form-item-label-left'
+                },
                 this.categoryList,
                 {
                     xtype: 'button',
@@ -321,10 +391,11 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 }
             ]
         });
+        this.minimumQuantityProductsRequiredInCategories = this.categoriesBox.down('[name=minimumQuantityProductsRequiredInCategories]');
 
-       
+
     },
-    
+
     /**
      * Opens a modal with a TreePanel.
      * @private
@@ -338,7 +409,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         });
 
         this.modal.on({
-            savesuccess: function (modal, values) {                
+            savesuccess: function (modal, values) {
                 list.addValue(values);
             },
             scope: this
@@ -370,7 +441,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         });
     },
 
-    launchSegmentModal: function(list) {
+    launchSegmentModal: function (list) {
         var listStore = list.getStore(),
             gridStore = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.CustomerSegments',
@@ -382,7 +453,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.modal = Ext.create('Taco.view.customers.segments.Modal', {
             store: gridStore,
             listeners: {
-                savesuccess: function(modal, values) {
+                savesuccess: function (modal, values) {
                     list.addValue(values);
                 },
                 scope: this
@@ -390,6 +461,68 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         });
     },
 
+    onProductsCategoriesChange: function (delayed) {
+
+
+        var categoryList = this.categoryList.getValue(),
+            productList = this.productList.getValue(),
+            hasProducts = productList && productList.length,
+            hasCats = (categoryList && categoryList.length),
+            minReqCatVal = this.minimumQuantityProductsRequiredInCategories.getValue(),
+            minReqProdVal = this.minimumQuantityRequiredProducts.getValue(),
+            hasStuff = hasProducts || hasCats;
+
+        this.minimumCategorySubtotalBeforeDiscounts[hasStuff ? 'enable' : 'disable']();
+        if (hasCats) {
+            this.minimumQuantityProductsRequiredInCategories.enable();
+
+            if (!this.minimumQuantityProductsRequiredInCategories.getValue()) {
+                if (delayed !== true) {
+                    Ext.defer(this.onProductsCategoriesChange, 3000, this, [true]);
+
+                } else {
+                    this.minimumQuantityProductsRequiredInCategories.setValue(1);
+                }
+
+            }
+
+        } else {
+            this.minimumQuantityProductsRequiredInCategories.disable();
+
+            if (delayed !== true) {
+                Ext.defer(this.onProductsCategoriesChange, 3000, this, [true]);
+
+            } else {
+                this.minimumQuantityProductsRequiredInCategories.setValue(undefined);
+            }
+
+        }
+        if (hasProducts) {
+            this.minimumQuantityRequiredProducts.enable();
+
+            if (!this.minimumQuantityRequiredProducts.getValue()) {
+                if (delayed !== true) {
+                    Ext.defer(this.onProductsCategoriesChange, 3000, this, [true]);
+
+                } else {
+                    this.minimumQuantityRequiredProducts.setValue(1);
+                }
+            }
+
+        } else {
+            this.minimumQuantityRequiredProducts.disable();
+
+            if (delayed !== true) {
+                Ext.defer(this.onProductsCategoriesChange, 3000, this, [true]);
+
+            } else {
+                this.minimumQuantityRequiredProducts.setValue(undefined);
+            }
+
+        }
+
+
+    },
     /**
      * Removes a value from the list if the close icon was clicked.
      * @private
@@ -397,7 +530,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     onCategoryListItemClick: function (view, record, item, index, e) {
         var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
             list = view.ownerCt,
-            value, store;
+            value,
+            store;
         if (closeBtn) {
             store = view.getStore();
             value = Ext.Array.remove(list.getValue(), record.getId());

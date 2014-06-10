@@ -149,11 +149,11 @@ Ext.define('Taco.model.Discount', {
         },{
             name: 'minimumQuantityRequiredProducts',
             type:'int',
-            defaultValue:0
+            useNull:true
         },{
             name: 'minimumCategorySubtotalBeforeDiscounts',
             type:'int',
-            defaultValue:0
+            useNull: true
         }
 
     ],

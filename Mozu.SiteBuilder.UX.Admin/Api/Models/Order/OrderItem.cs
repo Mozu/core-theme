@@ -46,6 +46,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
             get; set;
         }
 
+        public string ProductUsage { get; set; }
+
 
         public string Id { get; set; }
 

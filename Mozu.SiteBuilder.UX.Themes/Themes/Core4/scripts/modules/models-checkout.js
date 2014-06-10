@@ -725,7 +725,7 @@
             },
             update: function() {
                 var j = this.toJSON();
-                delete j.billingInfo;
+               // delete j.billingInfo;
                 return this.apiModel.update(j);
             },
             isReady: function (val) {
