@@ -125,17 +125,21 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     initLeftNav: function () {
         if (!this.enableScrollSpy) return;
 
-        
-        // need to realign the left nav to account for the top navHeader height change after layout;
-        
-        this.leftNav.el.alignTo(this.formContainer.el, "tr-tl", [-20, this.leftNavTopOffset]);
+        var offset = this.leftNav.el.getAlignToXY(this.formContainer.el, "tr-tl", [0, 0]);
+        this.leftNav.el.moveTo(null, offset[1]+this.leftNavTopOffset)
 
         this.getWrapper().on({
+            resize: function () {
+                console.log("resize")
+          //      debugger;
+                
+            },
             afterlayout: this.rebuildMap,
             scope: this
         });
 
         this.getWrapper().body.el.on({
+            
             scroll: this.checkTop,
             scope: this
         });
