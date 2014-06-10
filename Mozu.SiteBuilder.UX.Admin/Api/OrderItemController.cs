@@ -10,7 +10,6 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Newtonsoft.Json;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Products;
-using DCd = Mozu.CommerceRuntime.Contracts.Discounts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -57,7 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 product.Options = (product.Options ?? Enumerable.Empty<DCp.ProductOption>()).Where(o => o.Value != null || o.ShopperEnteredValue != null).ToList();
                 product.Price = null;
 
-                var dcOrderItem = new DC.OrderItem {
+                var dcOrderItem = new DC.OrderItem
+                {
                     Quantity = product.Quantity,
                     Product = product,
                     FulfillmentLocationCode = product.FulfillmentLocationCode,
@@ -67,10 +67,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dcOrder = (await _orderWebApiClient.CreateOrderItem(args.OrderId, dcOrderItem, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
-            return Single2( dcOrder.Map<Order>() );
+            return Single2(dcOrder.Map<Order>());
         }
 
-        public class UpdateOrderItemArgs {
+        public class UpdateOrderItemArgs
+        {
             public string OrderId { get; set; }
             public List<OrderItem> OrderItems { get; set; }
         }
@@ -82,10 +83,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 dcOrder = (await _orderWebApiClient.UpdateItemQuantity(args.OrderId, item.Id, item.Quantity, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
-        
-            return Single2( dcOrder.Map<Order>() );
+
+            return Single2(dcOrder.Map<Order>());
         }
-        
+
         [HttpPostRoute(UriTemplate = "items/editprice")]
         public async Task<Response<Order>> UpdateOrderItemPrice(UpdateOrderItemArgs args, [FromUri]bool draft = false)
         {
@@ -95,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dcOrder = (await _orderWebApiClient.UpdateItemProductPrice(args.OrderId, item.Id, item.UnitPrice, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
-            return Single2( dcOrder.Map<Order>() );
+            return Single2(dcOrder.Map<Order>());
         }
 
         [HttpPostRoute(UriTemplate = "items/editfulfillmentmethod")]
@@ -108,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dcOrder = (await _orderWebApiClient.UpdateItemFulfillment(args.OrderId, item.Id, new DC.OrderItem { FulfillmentMethod = item.FulfillmentMethod, FulfillmentLocationCode = item.FulfillmentLocationCode }, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
-            return Single2( dcOrder.Map<Order>() );
+            return Single2(dcOrder.Map<Order>());
         }
 
 
@@ -127,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dcOrder = (await _orderWebApiClient.DeleteOrderItem(args.OrderId, itemId, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
-            return Single2( dcOrder.Map<Order>() );
+            return Single2(dcOrder.Map<Order>());
         }
 
         [HttpPostRoute(UriTemplate = "items/suppressdiscount")]
@@ -136,7 +137,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.Order dcOrder = null;
             DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, draft)).ReadAsSync();
 
-            DCd.AppliedLineItemDiscount discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) as DCd.AppliedLineItemDiscount ?? dcOrderItem.ShippingDiscounts.FirstOrDefault(d => d.Discount.Discount.Id == args.DiscountId) as DCd.AppliedLineItemDiscount;
+            var discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) ?? dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
 
             if (discount != null)
             {
@@ -148,7 +149,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return Message3<Order>(false, "No discount found with id: " + args.DiscountId);
             }
 
-            return Single2( dcOrder.Map<Order>() );
+            return Single2(dcOrder.Map<Order>());
         }
 
         [HttpPostRoute(UriTemplate = "items/activatediscount")]
@@ -157,7 +158,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.Order dcOrder = null;
             DC.OrderItem dcOrderItem = (await _orderWebApiClient.GetOrderItem(args.OrderId, args.OrderItemId, draft)).ReadAsSync();
 
-            DCd.AppliedDiscount discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) as DCd.AppliedDiscount ?? dcOrderItem.ShippingDiscounts.FirstOrDefault(d => d.Discount.Discount.Id == args.DiscountId) as DCd.AppliedDiscount;
+            var discount = dcOrderItem.ProductDiscounts.FirstOrDefault(d => d.Discount.Id == args.DiscountId) ?? dcOrderItem.ShippingDiscounts.Select(sd => sd.Discount).FirstOrDefault(d => d.Discount.Id == args.DiscountId);
+
             if (discount != null)
             {
                 discount.Excluded = false;
