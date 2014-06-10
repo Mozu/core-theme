@@ -130,8 +130,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
         this.getWrapper().on({
             resize: function () {
-                console.log("resize")
-          //      debugger;
+                console.log("resize")          
                 
             },
             afterlayout: this.rebuildMap,
