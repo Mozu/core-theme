@@ -61,7 +61,7 @@
         },
         function (next) {
             t.waitForEvent(m.editor.form, 'savesuccess', next);
-            t.click('>> #save');
+            t.click('>> #saveActionButton');
         },
         function (next) {
             var record = m.editor.record;
