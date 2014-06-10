@@ -34,7 +34,7 @@
         ,
          function (next) {
              t.waitForEvent(m.editor.form, 'savecomplete');
-             t.click('>> #save', next);
+             t.click('>> #saveActionButton', next);
 
          },
         function (next) {

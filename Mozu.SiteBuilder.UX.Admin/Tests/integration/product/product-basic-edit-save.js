@@ -39,7 +39,7 @@ StartTest(function (t) {
        },
         function (next) {
             t.waitForEvent(m.editor.form, 'savecomplete', next);
-            t.click('>> #save');
+            t.click('>> #saveActionButton');
 
         },
         function (next) {
