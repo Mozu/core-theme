@@ -1,18 +1,535 @@
-var fs=require("fs"),isWindows=/^win/i.test(navigator.platform),noColor=!1,ARGV=require("system").args,binDir=isWindows?ARGV[1].replace(/.$/,""):ARGV[1]+"/";phantom.injectJs(binDir+"launcher-common.js");
-var safePrint=function(a){noColor&&(a=a.replace(/\x1B\[\d+m([\s\S]*?)\x1B\[\d+m/g,"$1"));console.log(a)},isDebug=!1,debug=function(a){isDebug&&safePrint(a)},quit=function(a){phantom.exit(a||0)},safeExit=function(a){setTimeout(function(){phantom.exit(a||0)},0)},convertPath=function(a){return a},readFile=function(a){return fs.read(a)},args=processArguments(ARGV),options=args.options;
-if(options.version){var siestaAll=fs.read(binDir+"../siesta-all.js"),match=/^\/\*[\s\S]*?Siesta (\d.+)\n/.exec(siestaAll);console.log("PhantomJS : "+phantom.version.major+"."+phantom.version.minor+"."+phantom.version.patch);match&&console.log("Siesta    : "+match[1]);phantom.exit(8)}
-if(2==args.argv.length||options.help)console.log('Usage: phantomjs url [OPTIONS]\nThe `url` should point to your `tests/index.html` file\n\nOptions (all are optional):\n--help                     - prints this help message\n--version                  - prints versions of Siesta and PhantomJS\n\n--include regexp           - a regexp to to only include the matching urls of tests\n                             this option has an alias: filter\n--exclude regexp           - a regexp to exclude the matching urls, takes precedence over `include`\n--previous-coverage-report - specifies the location of the previous coverage report, which will be\n                             combined with the current session. It must be generated in the "raw" format.\n                             Can be a file name or directory name, in the latter case\n                             file name is assumed to be "raw_coverage_data.json"\n--coverage-report-format   - specifies the format of the code coverage report, recognized\n                             values are `html`, `lcov` or `raw`.\n                             If provided, will enable the code coverage information collection.\n                             This option can be repeated several times, resulting in several reports\n                             saved in the same directory. Alternatively, several formats can be\n                             concatenated with "," or "+": --coverage-report-format=html+raw\n--coverage-report-dir      - specifies the output directory for the code coverage report\n                             default value is "./coverage/"\n--coverage-unit            - sets the "coverageUnit" harness config option,\n                             recognized values are: "file" and "extjs_class"\n--verbose                  - enable the output from all assertions (not only from failed ones)\n--debug                    - enable diagnostic messages\n--report-format            - create a report after the test suite execution\n                             recognizable formats are: "JSON, JUnit"\n--report-file              - required when `report-format` is provided. \n                             Specifies the file to save the report to.\n--width                    - width of the viewport, in pixels\n--height                   - height of the viewport, in pixels\n--no-color                 - disable the coloring of the output\n--pause                    - pause between individual tests, in milliseconds\n--page-pause               - pause between tests pages, in milliseconds, default value is 3000\n--page-size                - the number of tests, after which the browser will be restarted, default value is 10\n--teamcity                 - enables the special additional output during test suite execution, that allows\n                             TeamCity to generate realtime progress information\n--team-city                - synonym for --teamcity\n--jenkins                  - forces launcher to always exit with 0 exit code (otherwise Jenkins thinks build has failed\n                             and will not try to create a report)\n'),phantom.exit(6);
-var harnessURL=args.argv[2],reportFormat=options["report-format"],reportFile=options["report-file"],isDebug=options.debug||!1,noColor=options["no-color"]||isWindows,isJenkins=options.jenkins;reportFormat&&("JSON"!=reportFormat&&"JUnit"!=reportFormat)&&(console.log("Unrecognized report format: "+reportFormat),phantom.exit(6));reportFormat&&!reportFile&&(console.log("`report-file` option is required, when `report-format` option is specified"),phantom.exit(6));
-reportFile&&!reportFormat&&(reportFormat="JSON");var coverageOptions=processCoverageOptions(options);console.log("Launching PhantomJS "+phantom.version.major+"."+phantom.version.minor+"."+phantom.version.patch+" at "+constructURL(harnessURL,{}));
-var runPage=function(a,d,f){a.setWindowSize(d.viewportWidth,d.viewportHeight);a.debug("Opening harness page: "+d.url);var e;a.onPageExit=function(){clearInterval(e);var d=a.exitCode;a.close();f({exitCode:d,pageCount:a.pageCount,summaryMessage:a.summaryMessage,combinedReport:a.combinedReport,htmlReport:a.htmlReport,lcovReport:a.lcovReport,rawReport:a.rawReport})};a.pageParams=d;a.shared=d.shared;a.open(d.url,function(){a.debug("Page opened successfully: "+d.url);e=setInterval(function(){18E4<new Date-
-a.lastActivity&&(safePrint("TIMEOUT: Exit after 3 minutes of inactivity"),phantom.exit(2))},1E4)})},getProceduralInterface=function(a){var d,f,e,h,c={exitCode:null,lastActivity:new Date,pageCount:null,summaryMessage:null,htmlReport:null,lcovReport:null,rawReport:null,pageReports:[],combinedReport:null,browserName:"PhantomJS",debug:function(b){debug(b)},print:function(b){safePrint(b)},open:function(b,g){d=new WebPage({settings:{localToRemoteUrlAccessEnabled:!0},viewportSize:{width:f,height:e},onResourceReceived:function(a){a.url===
-b&&400<a.status&&(console.log("Failed to load URL: "+b+"(status: "+a.status+")"),phantom.exit(5))},onInitialized:function(){d.evaluate(function(a,b,c,g,d){__PAGE_REPORTS__=a;__REPORT_OPTIONS__=b;__CONTENT_MANAGER_STATE__=c;__PREV_COVERAGE_INFO__=g;__COVERAGE_REPORT_FORMATS__=d},c.pageReports,a,c.shared.contentManagerState,c.shared.coverageInfo,coverageOptions.coverageReportFormats)},onConsoleMessage:function(a){var b;if(b=a.match(/^__PHANTOMJS__:([\s\S]*)/))if(a=b[1],debug("Received command: "+a),
-b=a.match(/^exit:(\d+)/))c.exitCode=Number(b[1]),c.onPageExit();else if(b=a.match(/^pageCount:(\d+)/))c.pageCount=Number(b[1]);else if(b=a.match(/^pageReport:([\s\S]*)/))c.pageReports.push(JSON.parse(b[1]));else if(b=a.match(/^summaryMessage:([\s\S]*)/))c.summaryMessage=String(b[1]);else if(b=a.match(/^combinedReport:([\s\S]*)/))c.combinedReport=String(b[1]);else if(a.match(/^keepAlive/))c.lastActivity=new Date;else if(b=a.match(/^log:([\s\S]+)/))safePrint(b[1]);else if(b=a.match(/^contentManagerState:([\s\S]+)/))c.shared.contentManagerState=
-JSON.parse(b[1]);else if(b=a.match(/^coverageInfo:([\s\S]+)/))c.shared.coverageInfo=JSON.parse(b[1]);else if(b=a.match(/^htmlReport:([\s\S]+)/))c.htmlReport=JSON.parse(b[1]);else if(b=a.match(/^lcovReport:([\s\S]+)/))c.lcovReport=JSON.parse(b[1]);else if(b=a.match(/^rawReport:([\s\S]+)/))c.rawReport=JSON.parse(b[1]);else throw"Unknown phantomjs command: "+a;else console.log(a)}});var k=!0;d.open(b,function(a){k&&(k=!1,"success"!==a&&(console.log("Failed to load the URL: "+b),phantom.exit(5)),h=setTimeout(function(){c.executeScript("var parent = window.opener || window.parent; return typeof Siesta == 'undefined' && (!parent || typeof parent.Siesta == 'undefined')")&&
-(console.log("[ERROR] Can't find Siesta on the harness page - page loading failed?"),c.close(),phantom.exit(5));c.executeScript("var parent = window.opener || window.parent; try { return typeof Siesta.Harness.Browser.Automation != 'undefined' } catch(e) { try { return typeof parent.Siesta.Harness.Browser.Automation != 'undefined' } catch(e) { return false } }")||(console.log("[ERROR] The harness page you are targeting contains Siesta Lite distribution. To use automation facilities, \nmake sure harness page uses `siesta-all.js` from Standard or Trial packages"),
-c.close(),phantom.exit(5));coverageOptions.enableCodeCoverage&&"true"!=String(c.executeScript("var parent = window.opener || window.parent; try { return typeof IstanbulCollector != 'undefined' } catch(e) { try { return typeof parent.IstanbulCollector != 'undefined' } catch(e) { return false } } "))&&(console.log("[ERROR] You've enabled code coverage, but harness page you are targeting does not contain required classes. Did you include `siesta-coverage-all.js` on the harness page?"),c.close(),phantom.exit(5));
-g&&g()},100))})},close:function(){clearTimeout(h);d&&(d.release(),d=null,c.lastActivity=null,c.exitCode=null)},setWindowSize:function(b,a){f=b;e=a},executeScript:function(b){b=eval("(function() {"+b+"})");return d.evaluate(b)},sleep:function(b,a){setTimeout(a,b)},saveReport:function(b){this.saveFile(a.file,b,"w")},saveFile:function(b,a,c){fs.write(b,a,c||"w")},readFile:function(a,c){return"rb"==c?fs.open(a,"rb").read():readFile(a)},copyFile:function(a,c){this.saveFile(c,this.readFile(a,"rb"),"wb")},
-copyTree:function(a,c){fs.copyTree(a,c)},saveHtmlCoverageReport:function(a,c){this.copyFile(binDir+"/coverage/index.html",a+"/index.html");this.copyFile(binDir+"/coverage/siesta-coverage-report.css",a+"/css/siesta-coverage-report.css");this.copyFile(binDir+"/coverage/siesta-coverage-report.js",a+"/siesta-coverage-report.js");this.copyFile(binDir+"/../resources/images/leaf.png",a+"/images/leaf.png");this.copyFile(binDir+"/../resources/images/ns.png",a+"/images/ns.png");this.copyTree(binDir+"../resources/css/fonts",
-a+"/css/fonts");this.saveFile(a+"/coverage-data.json",JSON.stringify(c))},saveLcovCoverageReport:function(a,c){this.saveFile(a+"/lcov.info",c.lcovReport)},saveRawCoverageReport:function(a,c){this.saveFile(a+"/raw_coverage_data.json",JSON.stringify(c))}};return c},reportOptions=reportFormat?{format:reportFormat,file:reportFile}:null,iface=getProceduralInterface(reportOptions);
-runBrowser(iface,{harnessURL:harnessURL,query:{phantom:!0,verbose:options.verbose,include:options.include||options.filter,exclude:options.exclude,pause:options.pause,pageSize:options["page-size"],isTeamCity:options["team-city"]||options.teamcity,isJenkins:isJenkins,enableCodeCoverage:coverageOptions.enableCodeCoverage,coverageUnit:coverageOptions.coverageUnit,hasPreviousReport:Boolean(coverageOptions.previousCoverageReport)},pagePause:options["page-pause"],viewportWidth:options.width||1200,viewportHeight:options.height||
-800,reportOptions:reportOptions,enableCodeCoverage:coverageOptions.enableCodeCoverage,coverageReportDir:coverageOptions.coverageReportDir,coverageReportFormats:coverageOptions.coverageReportFormats,coverageUnit:coverageOptions.coverageUnit,previousCoverageReport:coverageOptions.previousCoverageReport},function(a){safeExit(isJenkins?0:a)});
+var fs              = require('fs')
+var isWindows       = /^win/i.test(navigator.platform)
+var noColor         = false
+
+var ARGV            = require('system').args
+var binDir          = isWindows ? ARGV[ 1 ].replace(/.$/, '') : ARGV[ 1 ] + '/'
+
+phantom.injectJs(binDir + 'launcher-common.js')
+
+var safePrint = function (text) {
+    if (noColor) text = text.replace(/\x1B\[\d+m([\s\S]*?)\x1B\[\d+m/g, '$1')
+    
+    console.log(text)
+}
+
+var isDebug         = false
+
+var debug = function (text) {
+    if (isDebug) safePrint(text) 
+}
+
+var quit            = function (code) {
+    phantom.exit(code || 0)
+}
+
+// starting from 1.3 phantom segfaults when doing "phantom.exit" in the `onConsoleMessage` handler
+// so need to delay the exit
+var safeExit            = function (code) {
+    setTimeout(function () {
+        phantom.exit(code || 0)
+    }, 0)
+}
+
+var convertPath         = function (path) {
+    return path
+}
+
+var readFile            = function (fileName) {
+    return fs.read(fileName)
+}
+
+var args            = processArguments(ARGV)
+var options         = args.options
+
+if (options.version) {
+    var siestaAll   = fs.read(binDir + '../siesta-all.js')
+    var match       = /^\/\*[\s\S]*?Siesta (\d.+)\n/.exec(siestaAll)
+    
+    console.log("PhantomJS : " + phantom.version.major + '.' + phantom.version.minor + '.' + phantom.version.patch)
+    if (match) console.log("Siesta    : " + match[ 1 ])
+    
+    phantom.exit(8);
+}
+
+if (args.argv.length == 2 || options.help) {
+    console.log([
+        'Usage: phantomjs url [OPTIONS]',
+        'The `url` should point to your `tests/index.html` file',
+        '',
+        'Options (all are optional):',
+        '--help                     - prints this help message',
+        '--version                  - prints versions of Siesta and PhantomJS',
+        '',
+        '--include regexp           - a regexp to to only include the matching urls of tests',
+        '                             this option has an alias: filter',
+        '--exclude regexp           - a regexp to exclude the matching urls, takes precedence over `include`',
+        
+        '--previous-coverage-report - specifies the location of the previous coverage report, which will be',
+        '                             combined with the current session. It must be generated in the "raw" format.',
+        '                             Can be a file name or directory name, in the latter case',
+        '                             file name is assumed to be "raw_coverage_data.json"',
+        '--coverage-report-format   - specifies the format of the code coverage report, recognized',
+        '                             values are `html`, `lcov` or `raw`.',
+        '                             If provided, will enable the code coverage information collection.',
+        '                             This option can be repeated several times, resulting in several reports',
+        '                             saved in the same directory. Alternatively, several formats can be',
+        '                             concatenated with "," or "+": --coverage-report-format=html+raw',
+        '--coverage-report-dir      - specifies the output directory for the code coverage report',
+        '                             default value is "./coverage/"',          
+        '--coverage-unit            - sets the "coverageUnit" harness config option,',
+        '                             recognized values are: "file" and "extjs_class"',
+        '--coverage-no-source       - if specified, the source code files will not be included in the coverage report.',
+        '                             Currently only supported for html report',
+        
+        '--verbose                  - enable the output from all assertions (not only from failed ones)',
+        '--debug                    - enable diagnostic messages',
+        '--report-format            - create a report after the test suite execution',
+        '                             recognizable formats are: "JSON, JUnit"',
+        '--report-file              - required when `report-format` is provided. ',
+        '                             Specifies the file to save the report to.',
+        '--width                    - width of the viewport, in pixels',
+        '--height                   - height of the viewport, in pixels',
+        '--no-color                 - disable the coloring of the output',
+        '--pause                    - pause between individual tests, in milliseconds',
+        '--page-pause               - pause between tests pages, in milliseconds, default value is 3000',
+        '--page-size                - the number of tests, after which the browser will be restarted, default value is 10',
+        '--teamcity                 - enables the special additional output during test suite execution, that allows',
+        '                             TeamCity to generate realtime progress information',
+        '--team-city                - synonym for --teamcity',
+        '--jenkins                  - forces launcher to always exit with 0 exit code (otherwise Jenkins thinks build has failed',
+        '                             and will not try to create a report)',         
+        
+        // empty line to add the line break at the end
+        ''
+    ].join('\n'));
+    
+    phantom.exit(6);
+}
+
+
+
+var harnessURL      = args.argv[ 2 ]
+
+var reportFormat    = options[ 'report-format' ]
+var reportFile      = options[ 'report-file' ]
+
+isDebug             = options.debug || false
+
+noColor             = options[ 'no-color' ] || isWindows
+
+var isJenkins       = options[ 'jenkins' ]
+
+
+if (reportFormat && reportFormat != 'JSON' && reportFormat != 'JUnit') {
+    console.log([
+        'Unrecognized report format: ' + reportFormat
+    ].join('\n'));
+    
+    phantom.exit(6)
+}
+
+if (reportFormat && !reportFile) {
+    console.log([
+        '`report-file` option is required, when `report-format` option is specified'
+    ].join('\n'));
+    
+    phantom.exit(6)
+}
+
+if (reportFile && !reportFormat) reportFormat = 'JSON'
+
+var coverageOptions = processCoverageOptions(options)
+
+
+
+console.log("Launching PhantomJS " + phantom.version.major + '.' + phantom.version.minor + '.' + phantom.version.patch + " at " + constructURL(harnessURL, {}));
+
+
+var runPage = function (iface, params, callback) {
+    
+    iface.setWindowSize(params.viewportWidth, params.viewportHeight);
+    
+    iface.debug("Opening harness page: " + params.url)
+    
+    var timeoutCheckerId
+    
+    iface.onPageExit = function () {
+        clearInterval(timeoutCheckerId)
+        
+        var exitCode    = iface.exitCode
+        
+        iface.close()
+        
+        callback({
+            exitCode        : exitCode,
+            pageCount       : iface.pageCount,
+            summaryMessage  : iface.summaryMessage,
+            combinedReport  : iface.combinedReport,
+            
+            htmlReport      : iface.htmlReport,
+            lcovReport      : iface.lcovReport,
+            rawReport       : iface.rawReport
+        })
+    }
+    
+    iface.pageParams    = params
+    iface.shared        = params.shared
+    
+    
+    iface.open(params.url, function () {
+        
+        iface.debug("Page opened successfully: " + params.url)
+        
+        timeoutCheckerId  = setInterval(function () {
+            // end the test suite after 3 mins of inactivity
+            if (new Date() - iface.lastActivity > 3 * 60 * 1000) {
+                safePrint('TIMEOUT: Exit after 3 minutes of inactivity');
+                
+                phantom.exit(2)
+            }
+        }, 10 * 1000)
+    })
+}
+
+
+
+var getProceduralInterface = function (reportOptions) {
+    
+    var currentPage
+    var width, height
+    var sanityCheckId
+    
+    var iface = {
+        exitCode        : null,
+        lastActivity    : new Date(),
+        pageCount       : null,
+        
+        summaryMessage  : null,
+        
+        // coverage reports
+        htmlReport      : null,
+        lcovReport      : null,
+        rawReport       : null,
+        
+        pageReports     : [],
+        combinedReport  : null,
+        
+        browserName     : 'PhantomJS',
+        
+        debug : function (text) {
+            debug(text)
+        },
+        
+        
+        print : function (text) {
+            safePrint(text)
+        },
+        
+        
+        open : function (url, callback) {
+    
+            currentPage = new WebPage({
+            
+                settings : {
+                    localToRemoteUrlAccessEnabled   : true
+                },
+                
+                viewportSize : { 
+                    width   : width, 
+                    height  : height
+                },
+            
+                // Check for server error during page load. Log status code, then exit.
+                onResourceReceived : function (resource) {
+                    if (resource.url === url && resource.status > 400) {
+                        console.log('Failed to load URL: ' + url + '(status: ' + resource.status + ')');
+                        phantom.exit(5)
+                    }
+                },
+                
+                onInitialized : function () {
+                    currentPage.evaluate(function (pageReports, reportOptions, contentManagerState, coverageInfo, coverageReportFormats) {
+                        __PAGE_REPORTS__            = pageReports;
+                        __REPORT_OPTIONS__          = reportOptions;
+                        __CONTENT_MANAGER_STATE__   = contentManagerState
+                        __PREV_COVERAGE_INFO__      = coverageInfo
+                        __COVERAGE_REPORT_FORMATS__ = coverageReportFormats
+                    }, iface.pageReports, reportOptions, iface.shared.contentManagerState, iface.shared.coverageInfo, coverageOptions.coverageReportFormats)
+                },
+                
+                onConsoleMessage : function (msg) {
+                    var match
+                    
+                    if (match = msg.match(/^__PHANTOMJS__:([\s\S]*)/)) {
+                        var command     = match[ 1 ]
+                        
+                        debug('Received command: ' + command)
+                    
+                        if (match = command.match(/^exit:(\d+)/)) {
+                            iface.exitCode = Number(match[ 1 ])
+                            
+                            iface.onPageExit()
+                            
+                            return
+                        }
+                        
+                        if (match = command.match(/^pageCount:(\d+)/)) {
+                            iface.pageCount = Number(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^pageReport:([\s\S]*)/)) {
+                            iface.pageReports.push(JSON.parse(match[ 1 ]))
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^summaryMessage:([\s\S]*)/)) {
+                            iface.summaryMessage = String(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^combinedReport:([\s\S]*)/)) {
+                            iface.combinedReport = String(match[ 1 ])
+                        
+                            return
+                        }
+                    
+                        if (match = command.match(/^keepAlive/)) {
+                            iface.lastActivity = new Date()
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^log:([\s\S]+)/)) {
+                            safePrint(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^contentManagerState:([\s\S]+)/)) {
+                            iface.shared.contentManagerState    = JSON.parse(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^coverageInfo:([\s\S]+)/)) {
+                            iface.shared.coverageInfo           = JSON.parse(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^htmlReport:([\s\S]+)/)) {
+                            iface.htmlReport                    = JSON.parse(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^lcovReport:([\s\S]+)/)) {
+                            iface.lcovReport                    = JSON.parse(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        if (match = command.match(/^rawReport:([\s\S]+)/)) {
+                            iface.rawReport                     = JSON.parse(match[ 1 ])
+                        
+                            return
+                        }
+                        
+                        throw "Unknown phantomjs command: " + command
+                    } else
+                        console.log(msg)
+                }
+            })
+            
+            // see http://code.google.com/p/phantomjs/issues/detail?id=504
+            var initialOpen     = true
+            
+            currentPage.open(url, function (status) {
+                if (!initialOpen) return 
+                
+                initialOpen = false
+                
+                if (status !== "success") {
+                    console.log("Failed to load the URL: " + url)
+            
+                    phantom.exit(5)
+                }
+                
+                sanityCheckId = setTimeout(function () {
+                    if (iface.executeScript("var parent = window.opener || window.parent; return typeof Siesta == 'undefined' && (!parent || typeof parent.Siesta == 'undefined')")) {
+                        console.log("[ERROR] Can't find Siesta on the harness page - page loading failed?")
+                        
+                        iface.close()
+                        
+                        phantom.exit(5)
+                    }
+                    
+                    var siestaIsAutomated   = iface.executeScript("var parent = window.opener || window.parent; try { return typeof Siesta.Harness.Browser.Automation != 'undefined' } catch(e) { try { return typeof parent.Siesta.Harness.Browser.Automation != 'undefined' } catch(e) { return false } }")
+                    
+                    if (!siestaIsAutomated) {
+                        console.log("[ERROR] The harness page you are targeting contains Siesta Lite distribution. To use automation facilities, \nmake sure harness page uses `siesta-all.js` from Standard or Trial packages")
+                        
+                        iface.close()
+                        
+                        phantom.exit(5)
+                    }
+                    
+                    if (coverageOptions.enableCodeCoverage) {
+                        var hasCoverageOnPage   = String(iface.executeScript("var parent = window.opener || window.parent; try { return typeof IstanbulCollector != 'undefined' } catch(e) { try { return typeof parent.IstanbulCollector != 'undefined' } catch(e) { return false } } ")) == 'true'
+                        
+                        if (!hasCoverageOnPage) {
+                            console.log("[ERROR] You've enabled code coverage, but harness page you are targeting does not contain required classes. Did you include `siesta-coverage-all.js` on the harness page?")
+                            
+                            iface.close()
+                            
+                            phantom.exit(5)
+                        }
+                    }
+                    
+                    callback && callback()
+                }, 100)
+            })
+        },
+        
+        
+        close : function () {
+            clearTimeout(sanityCheckId)
+            
+            if (currentPage) {
+                currentPage.release()
+                
+                currentPage             = null
+                
+                iface.lastActivity      = null
+                iface.exitCode          = null
+            }
+        },
+        
+        
+        setWindowSize : function (w, h) {
+            width       = w
+            height      = h
+        },
+        
+        
+        executeScript   : function (text) {
+            var func = eval('(function() {' + text + '})')
+            
+            return currentPage.evaluate(func)
+        },
+        
+        
+        sleep : function (timeout, func) {
+            setTimeout(func, timeout)
+        },
+        
+        
+        saveReport : function (content) {
+            this.saveFile(reportOptions.file, content, 'w')
+        },
+        
+        
+        saveFile : function (fileName, content, mode) {
+            fs.write(fileName, content, mode || 'w')
+        },
+        
+        
+        readFile : function (fileName, mode) {
+            if (mode == 'rb') {
+                return fs.open(fileName, 'rb').read() 
+            } else
+                return readFile(fileName)
+        },
+        
+        
+        copyFile : function (source, dest) {
+            this.saveFile(dest, this.readFile(source, 'rb'), 'wb')
+        },
+        
+        
+        copyTree : function (source, dest) {
+            fs.copyTree(source, dest)
+        },
+        
+        
+        saveHtmlCoverageReport : function (reportDir, reportContent) {
+            // "binDir" has trailing slash in PhantomJS!
+            
+            this.copyFile(binDir + '/coverage/index.html', reportDir + '/index.html')
+            this.copyFile(binDir + '/coverage/siesta-coverage-report.css', reportDir + '/css/siesta-coverage-report.css')
+            this.copyFile(binDir + '/coverage/siesta-coverage-report.js', reportDir + '/siesta-coverage-report.js')
+            
+            this.copyFile(binDir + '/../resources/images/leaf.png', reportDir + '/images/leaf.png')
+            this.copyFile(binDir + '/../resources/images/ns.png', reportDir + '/images/ns.png')
+            
+            // "binDir" has trailing slash in PhantomJS!
+            this.copyTree(binDir + '../resources/css/fonts', reportDir + '/css/fonts')
+            
+            this.saveFile(reportDir + '/coverage-data.json', JSON.stringify(reportContent))
+        },
+        
+        
+        saveLcovCoverageReport : function (reportDir, reportContent) {
+            this.saveFile(reportDir + '/lcov.info', reportContent.lcovReport)
+        },
+        
+        
+        saveRawCoverageReport : function (reportDir, reportContent) {
+            this.saveFile(reportDir + '/raw_coverage_data.json', JSON.stringify(reportContent))
+        }
+    }
+    
+    return iface
+}
+// eof `getProceduralInterface`
+
+
+var reportOptions       = reportFormat ? {
+    format      : reportFormat,
+    file        : reportFile
+} : null
+
+
+
+var iface   = getProceduralInterface(reportOptions)
+
+runBrowser(iface, {
+    harnessURL      : harnessURL,
+    query           : {
+        phantom                 : true,
+        verbose                 : options.verbose,
+        'include'               : options[ 'include' ] || options.filter,
+        exclude                 : options[ 'exclude' ],
+        
+        pause                   : options.pause,
+        pageSize                : options[ 'page-size' ],
+        
+        isTeamCity              : options[ 'team-city' ] || options[ 'teamcity' ],
+        isJenkins               : isJenkins,
+        
+        enableCodeCoverage      : coverageOptions.enableCodeCoverage,
+        coverageUnit            : coverageOptions.coverageUnit,
+        hasPreviousReport       : Boolean(coverageOptions.previousCoverageReport),
+        coverageNoSource        : options[ 'coverage-no-source' ]
+    },
+    pagePause               : options[ 'page-pause' ],
+    
+    viewportWidth           : options.width || 1200,
+    viewportHeight          : options.height || 800,
+    
+    reportOptions           : reportOptions,
+    
+    enableCodeCoverage      : coverageOptions.enableCodeCoverage,
+    coverageReportDir       : coverageOptions.coverageReportDir,
+    coverageReportFormats   : coverageOptions.coverageReportFormats,
+    coverageUnit            : coverageOptions.coverageUnit,
+    previousCoverageReport  : coverageOptions.previousCoverageReport
+    
+}, function (exitCode) {
+    safeExit(isJenkins ? 0 : exitCode)
+})
