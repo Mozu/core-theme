@@ -4,6 +4,7 @@
  */
 Ext.define('Taco.controller.OrderAttributes', {
     extend: 'Taco.core.Controller',
+    alias: 'Taco.controller.Orderattributes',
     requires: ['Taco.view.orderAttribute.Index', 'Taco.view.orderAttribute.Edit'],
     modelName: 'OrderAttribute',
     models: ['Taco.model.OrderAttribute'],
