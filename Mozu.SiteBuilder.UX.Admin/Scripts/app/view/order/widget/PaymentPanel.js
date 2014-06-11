@@ -155,6 +155,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 itemId: 'ManualVoidPayment',
                 handler: me.creditPaymentManual,
                 scope: me
+            },
+            {
+                text: 'Decline Payment (Manual)',
+                itemId: 'ManualDeclinePayment',
+                handler: me.declinePaymentManual,
+                scope: me
             }
         ], function(actionConf) {
             actionConf.hidden = !Ext.Array.contains(availableActions, actionConf.itemId);
@@ -182,7 +188,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             // can capture is when you are auth ready and your order has a positive capture amount
             canCapture = authReady && captureAmount && captureAmount > 0,
             // order is awaiting approval
-            pendingReview = (me.record.get('status') === 'New' && me.order.get('orderStatus') === 'PendingReview');
+            pendingReview = me.order.get('orderStatus') === 'PendingReview';
 
         me.statusRow = Ext.create('Ext.container.Container', {
             cls: "orderform-payment-statusRow",
@@ -191,9 +197,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 align: 'middle',
                 pack: 'start'
             },
-            childEls: [
-                'captureField'
-            ],
             items: [
                 {
                     xtype: 'component',
@@ -203,6 +206,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     html: 'Status: ' + me.record.data.status
                 }, {
                     xtype: 'component',
+                    itemId: 'orderApprovedNotice',
                     html: 'Order must be approved first',
                     margin: '0 10 0 0',
                     hidden: !pendingReview,
@@ -216,6 +220,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     scale: 'medium',
                     margin: '0 2 0 0',
                     text: 'More Actions',
+                    itemId: 'moreActionsButton',
                     menu: me.getAvailableActions()
                 }, {
                     xtype: 'button',
@@ -223,6 +228,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     scale: 'medium',
                     text: 'Capture',
                     width: 180,
+                    itemId: 'captureButton',
                     handler: function() {
                         if (me.record.get('paymentType') == 'Check') {
                             me.applyCheck();
@@ -231,14 +237,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             me.capturePayment();
                         }
                     },
-                    disabled: !canCapture && !pendingReview
+                    disabled: !canCapture || pendingReview
                 }
             ]
         });
 
         // assign scoped references
         this.statusField = me.statusRow.getComponent('statusField');
-        this.captureField = me.statusRow.getComponent('captureField');
         this.captureButton = me.statusRow.getComponent('captureButton');
     },
 
@@ -535,5 +540,16 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         });
 
         creditPaymentManual.show();
+    },
+
+    declinePaymentManual: function() {
+        var me = this;
+        // TODO 6/10/14 replace!!
+        var declinePaymentManual = Ext.create('Taco.view.order.modal.CreditPaymentManual', {
+            order: me.order,
+            record: me.record
+        });
+
+        declinePaymentManual.show();
     }
 });

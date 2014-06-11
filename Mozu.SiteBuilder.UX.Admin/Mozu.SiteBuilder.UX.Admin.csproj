@@ -1584,6 +1584,7 @@
     <Content Include="Tests\customunit\core\ux\tab\picker.t.js" />
     <Content Include="Tests\customunit\view\website\settings\doc-seo.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.js" />
+    <Content Include="Tests\unit\view\order\widget\PaymentPanel.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>
     </Content>

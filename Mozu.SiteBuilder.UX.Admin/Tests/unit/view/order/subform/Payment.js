@@ -1,4 +1,5 @@
-﻿StartTest(function(t) {
+﻿
+StartTest(function(t) {
     var m = {};
 
     //Bug 28406:SEO fields missing for CMS pages in Site Builder
