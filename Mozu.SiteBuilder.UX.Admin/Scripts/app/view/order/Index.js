@@ -202,7 +202,7 @@ Ext.define('Taco.view.order.Index', {
             {
                 text: 'Edit',
                 requiredBehaviors: {
-                    model: 'Taco.model.Category',
+                    model: 'Taco.model.Order',
                     behavior: 'update'
                 },
                 menuColumnHandler: function (item, eventData) {
