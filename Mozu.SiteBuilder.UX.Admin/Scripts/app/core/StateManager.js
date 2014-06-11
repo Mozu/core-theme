@@ -63,17 +63,49 @@ Ext.define('Taco.core.StateManager', {
         //console.log("attemptNavigate", this, uriOrState);
         var me = this,
             newState = uriOrState.isAppState ? uriOrState : this.createState(uriOrState, metadata),
-            retryFn = function () { me.attemptNavigate(newState); };
+            retryFn = function () { me.attemptNavigate(newState); },
+            newMetadata,
+            controller;
         if (this.fireEvent('beforenavigate', newState, retryFn) !== false) {
             this.suspendAllHandlers = true;
             this.addState(newState, metadata, useReplace);
             this.suspendAllHandlers = false;
             if (this.fireEvent('navigate', newState) !== false) {
-                this.dispatchController(newState.getMetaData(true));
+                newMetadata = newState.getMetaData(true);
+                this.initController(newMetadata);
+                this.dispatchController(newMetadata);
+               
+
             }
             this.fireEvent('statechange', newState);
         }
         return newState;
+    },
+
+    //allows for late loading of controller... speeds up dev mode
+    initController: function (params) {
+        var controller, idx, name;
+        try {
+            idx = Taco.app.controllers.findIndex('id', params.controller);
+            if (idx) {
+                controller = Taco.app.controllers.getAt(idx);
+            }
+            if (!controller) {
+                controller = Taco.app.getController(Ext.String.capitalize(params.controller));
+            }
+        } catch (err) {
+            name = Taco.app.getModuleClassName(Ext.String.capitalize(params.controller), 'controller');
+            //Ext.require(name);
+            name = Ext.ClassManager.getNameByAlias(name);
+            if (name) {
+                return Taco.app.getController(name.substring(name.lastIndexOf('.') + 1));
+            }
+
+
+            //   Taco.app.getController("Errors").Http404();
+            //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');
+        }
+        return controller;
     },
 
     /**
@@ -204,7 +236,7 @@ Ext.define('Taco.core.StateManager', {
         return me.fireEvent('statechange', newState);
     },
 
-    attemptNavigateBack:function () {
+    attemptNavigateBack: function () {
         if (Taco.core.StateManager.stateindex == 0) {
             return false;
         }
@@ -243,7 +275,7 @@ Ext.define('Taco.core.StateManager', {
             Taco.app.getController("Errors").Http404();
             //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');
         }
-        if (controller.performAction ) {
+        if (controller.performAction) {
             ret = controller.performAction(params.action, params.args, [params]);
             if (ret !== false) {
                 return ret;

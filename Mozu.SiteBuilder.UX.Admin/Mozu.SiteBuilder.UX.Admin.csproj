@@ -643,6 +643,7 @@
     <Content Include="Scripts\.sencha\app\slice-impl.xml" />
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\Shipping.js" />
     <Content Include="Scripts\app\controller\Tests.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
@@ -698,6 +699,7 @@
     <Content Include="Scripts\app\model\CustomerAccountPicker.js" />
     <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
+    <Content Include="Scripts\app\model\TargetRule.js" />
     <Content Include="Scripts\app\model\ProductExtraValue.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />
     <Content Include="Scripts\app\model\Provisionable.js" />
@@ -746,6 +748,7 @@
     <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\CustomersPicker.js" />
+    <Content Include="Scripts\app\store\ShippingZones.js" />
     <Content Include="Scripts\app\store\Navigation2.js" />
     <Content Include="Scripts\app\store\OrderGrid.js" />
     <Content Include="Scripts\app\store\ProductGrid.js" />
@@ -781,7 +784,6 @@
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
-    <Content Include="Scripts\app\view\order\Form2.js" />
     <Content Include="Scripts\app\view\order\Split.js" />
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\CheckDecline.js" />
@@ -838,6 +840,9 @@
     <Content Include="Scripts\app\view\report\SidebarList.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
+    <Content Include="Scripts\app\view\settings\shipping\ProductRules.js" />
+    <Content Include="Scripts\app\view\settings\shipping\Configuration.js" />
+    <Content Include="Scripts\app\view\settings\shipping\Zones.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateEditor.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateList.js" />
     <Content Include="Scripts\app\view\siteSelection\Index.js" />
@@ -1533,6 +1538,7 @@
     <None Include="Tests\Automation\junitToTrx.xslt" />
     <Content Include="Tests\Automation\launcher-common.js" />
     <Content Include="Tests\Automation\phantomjs-launcher.js" />
+    <Content Include="Tests\customunit\view\settings\shipping\Zones-t.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
     <Content Include="Tests\HomePages\Mystic.cshtml" />

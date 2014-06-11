@@ -151,10 +151,20 @@ Harness.start(
             {
                 group: 'Product Type',
                 expanded: true,
-                items: [                    
+                items: [
                     {
                         url: 'customunit/view/productType/Form.t.js',
                         title: 'Product Type Tests'
+                    }
+                ]
+            }, {
+                group: 'Settings',
+                expanded: true,
+                alsoPreload: [],
+                items: [
+                    {
+                        url: 'customunit/view/settings/shipping/Zones-t.js',
+                        title: 'settings shipping zones'
                     }
                 ]
             },

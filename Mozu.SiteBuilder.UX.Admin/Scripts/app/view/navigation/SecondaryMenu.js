@@ -96,15 +96,45 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     bindSettingsStore:function() {
         var settingsMenu = this.down('#settingsMenu'),
             settingsRecord = this.navStore.getById('settings');
-        settingsRecord.items().each( function(item) {
-            settingsMenu.add({
-                xtype: 'menuitem',
-                text: item.get('label'),
-                handler: function() {
-                    Taco.app.StateManager.attemptNavigate(item.get('address'));
-                }
-            });
-        });
+        settingsRecord.items().each(function (item) {
+            var subItems = item.get('items'),
+                menuItem = settingsMenu.add({
+                    xtype: 'menuitem',
+                    text: item.get('label'),
+                    handler: function () {
+                        if (item.get('address')) {
+                            Taco.app.StateManager.attemptNavigate(item.get('address'));
+                        }
+                    }
+                }),
+                subMenu;
+            //temp adding 1 laver of sublinks till nav design is finalized
+            if (subItems && subItems.length) {
+                subMenu = {
+                    xtype: 'menu',
+                    plain: true,
+                    shadow: false,
+                    items: []
+                };
+                Ext.Array.each(subItems, function (subItem) {
+                   
+                    subMenu.items.push(
+                        {
+                            xtype: 'menuitem',
+                            text: subItem.label,
+                            handler: function () {
+                                Taco.app.StateManager.attemptNavigate(subItem.address);
+                            }
+                        }
+                    );
+                });
+                menuItem.setMenu(Ext.widget(subMenu));
+
+            };
+            
+
+
+    });
 
     }
     

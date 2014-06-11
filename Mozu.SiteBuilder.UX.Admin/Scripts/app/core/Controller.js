@@ -101,7 +101,7 @@ Ext.define('Taco.core.Controller', {
     getIndexView: function () {
         if (!this.indexView) {
             //console.log(this.id);
-            this.indexView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.id)) + '.Index';
+            this.indexView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.getControllerName())) + '.Index';
         }
         return this.indexView;
     },
@@ -109,9 +109,13 @@ Ext.define('Taco.core.Controller', {
     getEditorView: function () {
         if (!this.editorView) {
             //console.log(this.id);
-            this.editorView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.id)) + '.Edit';
+            this.editorView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.getControllerName())) + '.Edit';
         }
         return this.editorView;
+    },
+
+    getControllerName: function () {
+        return this.$className.substring(this.$className.lastIndexOf('.') + 1);
     },
 
     buildIndex: function (record, options) {
