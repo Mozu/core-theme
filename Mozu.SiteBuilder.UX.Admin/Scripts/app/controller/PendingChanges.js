@@ -6,6 +6,7 @@
 
 Ext.define('Taco.controller.PendingChanges', {
     extend: 'Taco.core.Controller',
+    alias:['Taco.controller.Pendingchanges'],
     requires: [
         'Taco.view.pendingChange.Cms',
         'Taco.view.pendingChange.Product'

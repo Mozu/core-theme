@@ -14,6 +14,46 @@ Ext.application({
     
     appFolder: '/admin/Scripts/app',
 
-    autoCreateViewport: false
-
+    autoCreateViewport: false,
+    controllers: [
+        'Analytics',
+        'Capability',
+        'Dashboard',
+        'Reports',
+        'Navigation',
+        'Customers',
+        'StoreCredits',
+        'CustomerAttributes',
+        'Categories',
+        'Products',
+        'PendingChanges',
+        'Inventory',
+        'Message',
+        'Catalog',
+        'Testing',
+        'Discounts',
+        'Settings',
+        'Provisioning',
+        'Tbd',
+        'Themes',
+        'Themesettings',
+        
+       
+        'GeneralSettings',
+        'Tests',
+        'Orders',
+        'OrderAttributes',
+        'Errors',
+        'Roles',
+        'ProductTypes',
+        'Attributes',
+        'FileManager',
+        'Channels',
+        'Locations',
+        'LocationTypes',
+        'Website',
+        'LocationInventory',
+        'SiteSelection',
+        'Redirects'
+    ],
 });

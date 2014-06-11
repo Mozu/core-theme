@@ -6,6 +6,7 @@
 
 Ext.define('Taco.controller.ProductTypes', {
     extend: 'Taco.core.Controller',
+    alias: ['Taco.controller.Producttypes'],
     requires:['Taco.view.productType.Edit'],
     listView: null,
     models: ['Taco.model.ProductType'],
