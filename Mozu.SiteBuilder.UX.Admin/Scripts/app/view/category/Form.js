@@ -4,23 +4,32 @@
  */
 Ext.define('Taco.view.category.Form', {
     extend: 'Taco.core.ux.form.Form',
-    editTitle: 'Edit Category',
-    createTitle: 'Create New Category',
     requires: [
         'Taco.shared.view.field.Image',
         'Taco.core.ux.CategoryComboBox'
     ],
+
     ui: 'subform',
+    editTitle: 'Edit Category',
+    createTitle: 'Create New Category',
+
+    header: false,
+
+    bodyStyle: {
+        'border-top-width': '0px'
+    },
+
     defaults: {
         xtype: 'textfield',
         width: "100%"
     },
+
     items: [
         {
             name: 'name',
             fieldLabel: 'Category Name',
             allowBlank: false,
-            maxLength: 80,
+            maxLength: 200,
             enforceMaxLength: true,
             required: true,
             minLength: 3,
@@ -62,7 +71,8 @@ Ext.define('Taco.view.category.Form', {
             xtype: 'textarea',
             rows: '10',
             name: 'description',
-            fieldLabel: 'Description' 
+            fieldLabel: 'Description',
+            maxLength: 500
         }, {
             //Note: need to update the record manually in the beforeSave class method. form.Form does not extract the value from the imageField automatically.
             fieldLabel: 'Category Image',
@@ -76,16 +86,20 @@ Ext.define('Taco.view.category.Form', {
             
         },  {
             name: 'pageTitle',
-            fieldLabel: 'Page Title'
+            fieldLabel: 'Page Title',
+            maxLength: 100
         }, {
             name: 'metaTitle',
-            fieldLabel: 'Meta Title'
+            fieldLabel: 'Meta Title',
+            maxLength: 100
         }, {
             name: 'metaDescription',
-            fieldLabel: 'Meta Description'
+            fieldLabel: 'Meta Description',
+            maxLength: 500
         }, {
             name: 'metaKeywords',
-            fieldLabel: 'Keywords'
+            fieldLabel: 'Keywords',
+            maxLength: 500
         }, {
             name: 'isHidden',
             xtype: 'checkboxfield',
