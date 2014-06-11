@@ -214,7 +214,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 return RazorView("TestHarnes");
             }
-            if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] == "true")
+            var tacoAssetServer = _httpContext.Request.Cookies.Get("taco-asset-location") != null ? _httpContext.Request.Cookies.Get("taco-asset-location").Value : null;
+            if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] == "true" & string.IsNullOrEmpty(tacoAssetServer))
             {
                 return RazorView("Index_Compiled");
             }

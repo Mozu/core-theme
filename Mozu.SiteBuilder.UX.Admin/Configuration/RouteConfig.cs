@@ -1,6 +1,9 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
+using System.Web.Routing;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using HttpMethodConstraint = System.Web.Routing.HttpMethodConstraint;
 
@@ -46,7 +49,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         
             routes.MapHttpRoute("RIA", "{*url}",
                                 new {action = "Index", controller = "home"},
-                                new {httpMethod = new HttpMethodConstraint(HttpMethod.Get.ToString())});
+                                new
+                                {
+                                    httpMethod = new HttpMethodConstraint(HttpMethod.Get.ToString()),
+                                    accpts = new AcceptsConstraint("text/html")
+                                });
 
 
 
@@ -55,6 +62,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
 
 
+        }
+        class AcceptsConstraint : IRouteConstraint
+        {
+            private readonly string _filter;
+
+            public AcceptsConstraint(string filter)
+            {
+                _filter = filter;
+            }
+
+            public bool Match(System.Web.HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
+            {
+                return Enumerable.Any((httpContext.Request.AcceptTypes ?? new string[0]), x => x.IndexOf(_filter, StringComparison.OrdinalIgnoreCase) != -1);
+            }
         }
         class MyRoute  : IHttpRoute
         {
