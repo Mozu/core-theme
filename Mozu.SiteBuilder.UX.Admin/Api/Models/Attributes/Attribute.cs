@@ -12,6 +12,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
         public int? AttributeId { get; set; }
 
+        public string Code { get; set; }
+
         public string Name { get; set; }
 
          [JsonConverter(typeof(StringEnumConverter))]
@@ -58,7 +60,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
         public string AdminName { get; set; }
 
         public List<AttributeValue> Values { get; set; }
-
 
     }
 

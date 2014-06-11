@@ -15,6 +15,9 @@ Ext.define('Taco.model.Attribute', {
             name: 'name',
             type: 'string'
         }, {
+            name: 'code',
+            type: 'string'
+        }, {
             name: 'inputType',
             type: 'string'
         }, {
