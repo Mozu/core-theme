@@ -10,17 +10,22 @@
  * This class extends the base class for content containers, {@link Taco.core.ux.content.Container}.
  */
 
-Ext.define('Taco.core.ux.content.SplitContainer', {    
+Ext.define('Taco.core.ux.content.SplitContainer', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.taco-splitcontainer',
-
-    // this is required since the contentView is border layout.
-    region:'center',
 
     layout: {
         type: 'hbox',
         align: 'stretch'
-    },    
+    },
+
+    bodyPadding: '20 20 10',
+    region: 'center',
+    ui: 'page',
+
+    stateful: true,
+
+    stateEvents: ['childcollapse', 'childexpand'],
 
     /**
      * @cfg {Boolean} preventCollapsedStateChange
@@ -28,20 +33,6 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
      */
 
     config: {
-        /**
-         * @cfg {Object} collapsedState
-         * The collapsed state of the west and east panels.
-         *
-         * This object should always have only two properties: `west` and `east`. Always use the
-         * auto-generated setter, `setCollapsedState`, to expand or collapse the west and east
-         * panels. Always set both properties at once; setting one without setting the other may
-         * lead to unexpected behavior.
-         */
-        collapsedState: {
-            west: false,
-            east: true
-        },
-
         /**
          * @cfg {String/Object/Object[]} east
          * A class name, an array of components, a single instantiated component, or a single
@@ -52,6 +43,15 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
          * as or used to create the east component itself.
          */
         east: 'Ext.panel.Panel',
+
+        /**
+         * @cfg {Boolean} split
+         * The setting controlling whether the west and east components stay expanded or alternate their
+         * collapsed state. Set to `true` to keep them expanded by default.
+         *
+         * Defaults to `false`.
+         */
+        split: false,
 
         /**
          * @cfg {Boolean/String/Object} splitter
@@ -73,12 +73,8 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         west: 'Ext.panel.Panel'
     },
 
-    title: "Split Container Title",
-
     initComponent: function () {
-
-
-        Ext.apply(this,{
+        Ext.apply(this, {
             items: [
                 this.getWest(),
                 this.getSplitter(),
@@ -86,32 +82,21 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             ]
         });
 
-        this.callParent(arguments);        
-    },
+        this.callParent(arguments);
 
-    /**
-     * Auto-generated method called before setting the `collapsedState` config.
-     *
-     * @private
-     * @param  {Object} nextState The value to be set, before modifications.
-     * @return {Object} The value to be set, after modifications.
-     */
-    applyCollapsedState: function (nextState) {
-        var prevState = this.getCollapsedState() || this.config.collapsedState;
+        this.relayEvents(this.getWest(), ['collapse', 'expand'], 'child');
+        this.relayEvents(this.getEast(), ['collapse', 'expand'], 'child');
 
-        if (prevState.west !== nextState.west || prevState.east !== nextState.east) {
-            nextState = Ext.apply({}, nextState, prevState);
-
-            this.getWest()[nextState.west ? 'collapse' : 'expand']();
-            this.getEast()[nextState.east ? 'collapse' : 'expand']();
-
-            if (this.preventCollapsedStateChange === true) return;
-
-            this.fireEvent('collapsedstatechange', this, nextState, prevState);
-            this.onCollapsedStateChange(nextState, prevState);
-        }
-
-        return nextState;
+        this.on({
+            childcollapse: {
+                scope: this,
+                fn: 'handleChildCollapseExpand'
+            },
+            childexpand: {
+                scope: this,
+                fn: 'handleChildCollapseExpand'
+            }
+        });
     },
 
     /**
@@ -123,7 +108,6 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
      */
     applyEast: function (config) {
         var defaults = this.getDefaultEastConfig();
-
 
         if (config.isComponent) {
             // if config is an instantiated component, return it directly
@@ -207,7 +191,6 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             collapseMode: 'mini',
             header: false,
             collapsible: true,
-            collapsed: true,
             animCollapse: false,
             flex: 2,
             lbar: {
@@ -257,6 +240,21 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         };
     },
 
+    getState: function () {
+        var state = this.callParent();
+        var nextSplit = this.getSplit();
+        
+        (state || (state = {})).split = nextSplit;
+
+        console.log('getState transformed state into', state);
+
+        return state;
+    },
+
+    handleChildCollapseExpand: function (panel) {
+        this.setSplit(!this.getWest().getCollapsed() && !this.getEast().getCollapsed());
+    },
+
     /**
      * An event handler triggered by a click on the collapse tool.
      *
@@ -266,26 +264,36 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
      * @param {HTMLElement} t The target of the event.
      */
     handleCollapseToolClick: function (e, t) {
-        var direction = Ext.getCmp(t.id).ownerCt.getItemId();
-        var prevState = this.getCollapsedState();
+        var direction = (Ext.getCmp(t.id).ownerCt.getItemId() === 'east' ? 'getEast' : 'getWest');
+        var opposite = (direction === 'getEast' ? 'getWest' : 'getEast');
 
-        this.setCollapsedState({
-            west: (direction === 'west' && !prevState.east),
-            east: (direction === 'east' && !prevState.west)
-        });
+        if (this[opposite]().getCollapsed()) {
+            this[opposite]().expand();
+        } else {
+            this[direction]().collapse();
+        }
     },
 
     /**
      * Include CSS classes.
      */
     onBoxReady: function () {
+        var state = this.getState();
+        var panel;
+
         this.callParent(arguments);
 
-        this.addCls('taco-splitcontainer');
-    },
+        if (state) {
+            if (state.split) {
+                panel = this.down('panel[@collapsed]');
+                if (panel) panel.expand();
+            } else {
+                // select west or east based on url
+                panel = this.getEast();
+                panel.collapse();
+            }
+        }
 
-    /**
-     * A template method for responding to a `collapsedState` change.
-     */
-    onCollapsedStateChange: Ext.emptyFn
+        this.addCls('taco-splitcontainer');
+    }
 });
