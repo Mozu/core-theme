@@ -8,8 +8,9 @@
     var extPath = assetServer + Url.Content("~/Scripts/ext/src");
     var bootStrapPath = assetServer + @Url.Content("~/Scripts/bootstrap.js");
     var appJsPath = assetServer + @Url.Content("~/Scripts/app/app.js");
-    
-    
+
+    var extLib = assetServer + Url.Content("~/Scripts/ext/" + ViewData["extlib"]);
+    var extLocale = assetServer + Url.Content("~/Scripts/ext/locale/" + ViewData["extlocalefile"]);
 }
 <!DOCTYPE html>
 <html>
@@ -27,8 +28,8 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/resources/lib/history.js")"></script>
     
 
-    <script type="text/javascript" src="@Url.Content("~/Scripts/ext/" + ViewData["extlib"])"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/ext/locale/" + ViewData["extlocalefile"])"></script>
+    <script type="text/javascript" src="@extLib"></script>
+    <script type="text/javascript" src="@extLocale"></script>
     
     <script type="text/javascript">
     Ext.state.Manager.setProvider(Ext.create('Ext.state.CookieProvider', {
