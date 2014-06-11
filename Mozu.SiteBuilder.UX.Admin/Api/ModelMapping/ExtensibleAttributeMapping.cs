@@ -205,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     IsVisible = source.IsVisible ,
                     IsActive = source.IsActive,
                     DisplayGroup = source.DisplayGroup ,
-                    AttributeCode = (source.Code ?? source.Name ?? "").Trim(),
+                    AttributeCode = !String.IsNullOrEmpty(source.Code) ? source.Code : (source.Name ?? "").Trim(),
                     Id = source.AttributeId,
                     Validation = attributeValidation,
                     VocabularyValues = source.InputType == AttributeInputType.List 
