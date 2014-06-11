@@ -699,6 +699,7 @@
     <Content Include="Scripts\app\model\CustomerAccountPicker.js" />
     <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
+    <Content Include="Scripts\app\model\NavigationItem2.js" />
     <Content Include="Scripts\app\model\TargetRule.js" />
     <Content Include="Scripts\app\model\ProductExtraValue.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />
