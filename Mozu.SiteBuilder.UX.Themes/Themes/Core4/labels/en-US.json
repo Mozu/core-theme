@@ -142,7 +142,7 @@
   "checkout"             : "Checkout",
   "orderSummary"         : "Order Summary",
   "shippingInformation"  : "Shipping Information",
-  "noFulfillmentInfoRequired" : "Because all items in this order will be picked up in-store, no shipping information is required.",
+  "noFulfillmentInfoRequired" : "No shipping information is required since all items will be picked up in the store or digitally fulfilled.",
   "selectValidAddress"   : "Select an address from these alternatives:",
   "addressValidationError": "We could not validate this address. Please check the address you entered and try again.",
   "suggestionNum"        : "Suggestion #{0}",
@@ -211,8 +211,16 @@
   "storeCredits"         : "Store Credits",
   "storeCreditAvailable" : "You have the following store credits available:",
   "storeCreditApplied"   : "You have applied the following store credits to your order:",
+
+  "giftCardCredits"         : "Gift Cards",
+  "giftCardCreditAvailable" : "You have the following gift cards available:",
+  "giftCardCreditApplied"   : "You have applied the following gift card payments to your order:",
+
+
   "remainingTotal"       : "Your remaining total is: ",
   "applyCredit"          : "Apply Credit",
+  "applyGiftCardCredit"          : "Apply Gift Card",
+
   "mailCheckTo"          : "Mail check to",
   "shipTo"               : "Ship to",
   "shippedTo"            : "Shipped to",
@@ -220,9 +228,9 @@
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
   "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
 
-  "giftCardBanner"       : "<a href=\"{0}\"><img src=\"http://cdn-tp1.mozu.com/2199-2317//resources/images/seismic-logo-165.png\"/></a>",
+  "giftCardBanner"       : "<a href=\"{0}\"><img src=\"//:0\"/></a>",
   "giftCardGreeting"     : "Hello {0} {1},",
-  "giftCardImage"        : "<a href=\"{0}\"><img src=\"http://www.businessreviewusa.com/money_matters/gift-card.jpg\"/></a>",
+  "giftCardImage"        : "<a href=\"{0}\"><img src=\"//:0\"/></a>",
   "giftCardIntro"        : "<p>Thank you for purchasing a {0} Gift Card.  Do not delete this message -- to redeem the gift card you must use the gift card claim code below.  You may want to print a copy of this message for easy reference later.</p>",
   "giftCardAmount"		 : "Gift Card Amount:",
   "giftCardClaimCode"	 : "Claim Code:",

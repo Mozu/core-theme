@@ -200,7 +200,7 @@
                 if (!me.validate()) {
                     var fulfillMethod = me.get('fulfillmentMethod');
                     if (! fulfillMethod) {
-                        fulfillMethod = (me.get('goodsType') === 'Physical') ? 'Ship' : 'Digital';
+                        fulfillMethod = (me.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
                     }
                     me.apiAddToCart({
                         fulfillmentMethod: fulfillMethod,
@@ -229,6 +229,7 @@
             this.whenReady(function() {
                 return me.apiAddToCartForPickup({
                     fulfillmentLocationCode: locationCode,
+                    fulfillmentMethod: Product.Constants.FulfillmentMethods.PICKUP,
                     quantity: quantity || 1
                 }).then(function(item) {
                     me.trigger('addedtocart', item);
@@ -259,6 +260,14 @@
                 if (j.bundledProducts && j.bundledProducts.length === 0) delete j.bundledProducts;
             }
             return j;
+        }
+    }, {
+        Constants: {
+            FulfillmentMethods: {
+                SHIP: "Ship",
+                PICKUP: "Pickup",
+                DIGITAL: "Digital"
+            }
         }
     }),
 
