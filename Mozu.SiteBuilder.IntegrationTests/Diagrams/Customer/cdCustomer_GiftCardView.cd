@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Mozu.Customer.Contracts.Credit.Credit">
     <Position X="0.75" Y="0.5" Width="2.25" />
     <Members>
@@ -16,7 +16,7 @@
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.Customer.Contracts.Credit.CreditEmail">
-    <Position X="4.5" Y="0.5" Width="3.25" />
+    <Position X="5.5" Y="0.5" Width="3.25" />
     <Members>
       <Method Name="CreditEmail" Hidden="true" />
     </Members>

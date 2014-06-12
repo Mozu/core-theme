@@ -546,6 +546,72 @@
             });
         });
 
+        //describe("should add digital gift cards to cart", function() {
+
+        //    var digitalCartItem = {
+        //        id: 'asdfdigitaljkl',
+        //        //fulfillmentMethod: 'Digital',
+        //        product: {
+        //            productCode: 'DigitalGiftCard'
+        //        }
+        //    };
+
+        //    var DigitalFixtures = {
+                
+        //        SampleDigitalProductCode: "DigitalGiftCard",
+        //        SampleDigitalProductUrl: ServiceUrls.productService + 'DigitalGiftCard',
+        //        SampleDigitalProduct: {
+        //            productCode: "DigitalGiftCard",
+        //            productName: "Digital Gift Card",
+        //            fulfillmentTypes: ['Digital'],
+        //            goodsType: 'DigitalCredit'
+        //        },
+
+        //        SampleDigitalCartItem: digitalCartItem,
+
+        //        SampleDigitalCart: {
+        //            items: [digitalCartItem],
+        //            total: 200
+        //        },
+           
+        //    };
+
+
+        //    before(function () {
+        //        server = sinon.fakeServer.create();
+
+        //        server.respondWith('GET', ServiceUrls.productService, JSON.stringify(Fixtures.SampleProductCollection));
+        //        server.respondWith('GET', new RegExp(ServiceUrls.productService + "\\?.*"), JSON.stringify(Fixtures.SampleProductCollection));
+        //        //server.respondWith('GET', new RegExp(Fixtures.SampleProductUrl + "\\?.*"), JSON.stringify(Fixtures.SampleProduct));
+        //        server.respondWith('GET', new RegExp(DigitalFixtures.SampleDigitalProductUrl + "\\?.*"), JSON.stringify(DigitalFixtures.SampleDigitalProduct));
+        //        //server.respondWith('GET', ServiceUrls.cartService + "current", JSON.stringify(Fixtures.SampleCart));
+        //        server.respondWith('GET', ServiceUrls.cartService + "current", JSON.stringify(DigitalFixtures.SampleDigitalCart));
+        //        server.respondWith('DELETE', ServiceUrls.cartService + "current/items/", JSON.stringify(Fixtures.EmptyCart));
+        //        //server.respondWith('POST', ServiceUrls.cartService + "current/items/", JSON.stringify(Fixtures.SampleCartItem));
+        //        server.respondWith('POST', ServiceUrls.cartService + "current/items/", JSON.stringify(DigitalFixtures.SampleDigitalCartItem));
+        //        server.respondWith('GET', new RegExp(ServiceUrls.BadUrl), [404, {}, ""]);
+
+        //        server.autoRespond = true;
+        //    });
+
+        //    after(function () {
+        //        server.restore();
+        //    });
+
+        //    it("should have 'Digital' fulfillmentMethod when adding a digital product to cart", function() {
+        //        //server.respondWith('POST', ServiceUrls.cartService + "current/items/", JSON.stringify(DigitalFixtures.SampleDigitalCartItem));
+        //        return Mozu.Utils.when.all([
+        //            api.get('product', DigitalFixtures.SampleDigitalProductCode).then(function(product) {
+        //                expect(product).to.respondTo('addToCart');
+        //                return product.addToCart().then(function(cartitem) {
+        //                    expect(cartitem).to.have.property('data').that.is.deep.equal(DigitalFixtures.SampleDigitalCartItem);
+        //                });
+        //            })
+        //        ]);
+
+        //    });
+        //});
+
         describe("should, for collections returned by the API, be of a special ApiCollection type, that", function () {
             var productsCollection, origLen, newItems = [{}, {}, {}, {}, {}];
             beforeEach(function() {

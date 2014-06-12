@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-06-03
+ * Mozu JavaScript SDK - v0.3.0 - 2014-06-12
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2641,7 +2641,8 @@ module.exports = {
     },
     FULFILLMENT_METHODS: {
         SHIP: "Ship",
-        PICKUP: "Pickup"
+        PICKUP: "Pickup",
+        DIGITAL: "Digital"
     }
 };
 

@@ -29,6 +29,7 @@ module.exports = {
     },
     FULFILLMENT_METHODS: {
         SHIP: "Ship",
-        PICKUP: "Pickup"
+        PICKUP: "Pickup",
+        DIGITAL: "Digital"
     }
 };
