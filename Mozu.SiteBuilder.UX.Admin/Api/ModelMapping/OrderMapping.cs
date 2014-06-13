@@ -165,16 +165,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     decimal totalAmount, amountCollected, balance;
                     int totalItemCount, fulfilledItemCount, unfulfilledItemCount;
 
-                    totalAmount = order.Total;
-                    amountCollected = order.Payments != null ? order.Payments.Sum(p => p.AmountCollected) - order.Payments.Sum(p => p.AmountCredited) : 0;
+                    totalAmount = dc.Total.GetValueOrDefault(0);
+                    amountCollected = dc.TotalCollected;
                     balance = totalAmount - amountCollected;
-
-                    order.AuthorizationInfo = new OrderAuthorizationInfo
-                    {
-                        TotalAmount = order.Total,
-                        AmountCollected = order.Payments.Sum(p => p.AmountCollected) - order.Payments.Sum(p => p.AmountCredited),
-                    };
-                    order.AuthorizationInfo.CaptureAmount = order.AuthorizationInfo.TotalAmount - order.AuthorizationInfo.AmountCollected;
 
                     totalItemCount =
                         (from i in order.Items
@@ -649,6 +642,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
                 .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
                 ;
+        }
+
+        private void Map_DcPickup_to_OrderPickup2()
+        {
+            //ShippingDC.DigitalPackage
         }
 
         private void Map_Adjustment_to_DcAdjustment()

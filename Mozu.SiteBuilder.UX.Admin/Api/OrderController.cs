@@ -64,14 +64,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     return List2<Order>( order.Map<Order>() );
                 else
                     throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
-
             }
             // get list of orders
             else
             {
                 var filter = extFilter.ToFilterString();
                 var q = extFilter.ToQString();
-                int? qLimit = q == null ?(int?) null : 3;
+                int? qLimit = q == null ?(int?) null : 26;
                 var dcOrders = (await _orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
                 
                 //trim out items for speedyness...
