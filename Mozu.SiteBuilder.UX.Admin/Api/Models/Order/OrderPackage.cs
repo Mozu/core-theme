@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ShipmentId { get; set; }
 
         /// <summary>
-        /// "NotShipped" or "Shipped"
+        /// "Fulfilled", "NotFulfilled", or "PartiallyFulfilled"
         /// </summary>
         public string Status { get; set; }
 
@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public int TotalQuantity { get; set; }
 
         #region workflow
-        public object AvailableActions { get; set; }
+        public List<string> AvailableActions { get; set; }
         #endregion
 
         public DateTime CreateDate { get; set; }

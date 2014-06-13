@@ -33,6 +33,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcPackageItem_to_OrderPackageItem();
             Map_DcPickupItem_to_OrderPickupItem();
             Map_DcPickup_to_OrderPickup();
+            Map_DcDigitalPackage_to_OrderDigitalPackage();
+            Map_DcDigitalPackageItem_to_OrderDigitalPackageItem();
             Map_DcAdjustment_to_OrderAdjustment();
             Map_DcAppliedDiscount_to_OrderDiscount();
 
@@ -86,11 +88,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OrderStatus, op => op.ResolveUsing(dc => dc.Status))
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus ))
                 .ForMember(x => x.PaymentStatus, op => op.ResolveUsing(dc => dc.PaymentStatus))
-                .ForMember(x => x.Payments, op => op.ResolveUsing(dc => (dc.Payments != null) 
-                    ? dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate) 
-                    : null))
+                .ForMember(x => x.Payments, op => op.ResolveUsing(dc => dc.Payments != null ? dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate) : null))
                 .ForMember(x => x.Packages, op => op.ResolveUsing(dc => dc.Packages))
                 .ForMember(x => x.Pickups, op => op.ResolveUsing(dc => dc.Pickups))
+                .ForMember(x => x.DigitalPackages, op => op.ResolveUsing(dc => dc.DigitalPackages ?? new List<ShippingDC.DigitalPackage>()))
 
                 .ForMember(x => x.OrderAdjustment, op => op.ResolveUsing(dc => dc.Adjustment))
                 .ForMember(x => x.ShippingAdjustment, op => op.ResolveUsing(dc => dc.ShippingAdjustment))
@@ -155,7 +156,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // add item name to pickup item
                     order.Pickups.SelectMany(p => p.Items).Each(pickupItem => FillPickupItemDetails(pickupItem, order));
 
-                    // add weight to each package
+                    // add item name to digital items
+                    order.DigitalPackages.SelectMany(p => p.Items).Each(digitalItem => FillPackageItemDetails(digitalItem, order));
+
+                    // ensure weight on all packages
                     order.Packages.Each(p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
                 })
                 .AfterMap((dc, order) =>
@@ -567,6 +571,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.ShipmentId, op => op.ResolveUsing(dc => dc.ShipmentId))
+                .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
                 .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
                 .ForMember(x => x.ShippingMethodCode, op => op.ResolveUsing(dc => dc.ShippingMethodCode))
                 .ForMember(x => x.ShippingMethodName, op => op.ResolveUsing(dc => dc.ShippingMethodName))
@@ -583,15 +588,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Weight, op => op.ResolveUsing(dc => dc.Measurements != null && dc.Measurements.Weight != null 
                     ? dc.Measurements.Weight.Value : null))
                 .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
-                //todo: confirm cast to object for AvailableActions Greg Murray on 2014-01-24
-                .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions as object))                
+                .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))                
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.ShipDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? dc.AuditInfo.UpdateDate : null))
-                //todo: confirm 0 default when null Greg Murray on 2014-01-28 
-                .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc =>
-                    (dc.Items != null) ? dc.Items.Sum(i => i.Quantity) : 0))
+                .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => dc.Items != null ? dc.Items.Sum(i => i.Quantity) : 0)) // 0 quantity when no items
                 //ignores
                 .ForMember(x => x.OrderId, op => op.Ignore()) //handled in Order map method
                 ;
@@ -621,9 +623,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
                 .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
                 .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
-                //todo: confirm 0 when null Greg Murray on 2014-01-28 
-                .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => (dc.Items != null) 
-                    ? dc.Items.Sum(i => i.Quantity) : 0))
+                .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => dc.Items != null ? dc.Items.Sum(i => i.Quantity) : 0)) // 0 quantity when no items
                 .ForMember(x => x.OrderId, op => op.Ignore())
                 .AfterMap((dc, x) => {
                     // set FulfillmentLocationCode on all items.
@@ -644,9 +644,52 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
-        private void Map_DcPickup_to_OrderPickup2()
+        private void Map_DcDigitalPackage_to_OrderDigitalPackage()
         {
-            //ShippingDC.DigitalPackage
+
+            /*
+                    public string Id { get; set; }
+        public string OrderId { get; set; }
+
+        public DateTime CreateDate { get; set; }
+        public string FulfillmentEmailAddress { get; set; }
+        public DateTime? FulfillmentDate { get; set; }
+        public int TotalQuantity { get; set; }
+        List<OrderDigitalPackageItem> Items { get; set; }
+
+        /// <summary>
+        /// "Fulfilled", "NotFulfilled", or "PartiallyFulfilled"
+        /// </summary>
+        public string Status { get; set; }
+        
+        #region workflow
+        public List<string> AvailableActions { get; set; }
+        #endregion
+*/
+            Mapper.CreateMap<ShippingDC.DigitalPackage, OrderDigitalPackage>()
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
+
+                .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))                
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.FulfillmentDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => dc.Items != null ? dc.Items.Sum(i => i.Quantity) : 0)) // 0 quantity when no items
+                .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+                //ignores
+                .ForMember(x => x.OrderId, op => op.Ignore()) //handled in Order map method
+                .ForMember(x => x.FulfillmentEmailAddress, op => op.Ignore()) //handled in Order map method
+                ;
+        }
+
+        private void Map_DcDigitalPackageItem_to_OrderDigitalPackageItem()
+        {
+            Mapper.CreateMap<ShippingDC.DigitalPackageItem, OrderDigitalPackageItem>()
+                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                .ForMember(x => x.GiftCardCode, op => op.ResolveUsing(dc => dc.GiftCardCode))
+                //ignores, handled in Order mapping
+                .ForMember(x => x.ProductName, op => op.Ignore())
+                ;
         }
 
         private void Map_Adjustment_to_DcAdjustment()
@@ -677,8 +720,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     Length = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Length },
                     Weight = new Core.Api.Contracts.Measurement { Unit = "lbs", Value = x.Weight }
                 }))
-                //todo: confirm cast Greg Murray on 2014-01-24 
-                .ForMember(dc => dc.AvailableActions, op => op.ResolveUsing(x => x.AvailableActions as List<string>))  
+                .ForMember(dc => dc.AvailableActions, op => op.ResolveUsing(x => x.AvailableActions))  
                 //ignores
                 .ForMember(dc => dc.FulfillmentDate, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
@@ -819,7 +861,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         /// <summary>
         /// Looks up a package item by OrderItemId and fills in the other information.
         /// </summary>
-        private void FillPackageItemDetails(OrderPackageItem packageItem, Order order)
+        private void FillPackageItemDetails(AbstractOrderPackageItem packageItem, Order order)
         {
             if (packageItem == null || order == null || order.Items == null)
                 return;

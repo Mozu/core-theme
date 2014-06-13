@@ -90,6 +90,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public List<OrderPackage> Packages { get; set; }
 
+        public List<OrderDigitalPackage> DigitalPackages { get; set; }
+
         public List<OrderPickup> Pickups { get; set; }
 
         public List<OrderPackageItem> UnpackagedItems { get; set; }
@@ -200,7 +202,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Price of shipping before fees and adjustments.
         /// </summary>
-        public decimal ShippingSubtotal;
+        public decimal ShippingSubtotal { get; set; }
 
         /// <summary>
         /// Final cost of shipping.
