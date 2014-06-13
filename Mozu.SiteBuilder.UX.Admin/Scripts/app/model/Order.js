@@ -2,7 +2,12 @@
  * @class Taco.model.Order
  */
 Ext.define('Taco.model.Order', {
-    requires: ['Taco.model.Return', 'Taco.model.ShippingMethod', 'Taco.store.ShippingMethods', 'Taco.model.OrderItem'],
+    requires: [
+        'Taco.model.OrderItem',
+        'Taco.model.Return',
+        'Taco.model.ShippingMethod',
+        'Taco.store.ShippingMethods',
+    ],
     
     extend: 'Taco.core.data.Model',
     /**********************************************************    
@@ -26,8 +31,7 @@ Ext.define('Taco.model.Order', {
         'Taco.store.Channels',
         'Taco.store.Attributes'
     ],
-    fields: [
-        {
+    fields: [{
             "name": "id",
             "type": "string",
             "useNull": true
@@ -63,8 +67,8 @@ Ext.define('Taco.model.Order', {
         {
             name: 'channelName',
             type: 'string',
-            persist:false,
-            convert: function (val, record) {
+            persist: false,
+            convert: function(val, record) {
                 var channelCode = record.get("channelCode"),
                     store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
                     channelRecord = store.getById(channelCode),
@@ -75,15 +79,14 @@ Ext.define('Taco.model.Order', {
                 }
                 return name;
             }
-        },
-        {
+        }, {
             name: 'siteId',
             type: 'int',
             "useNull": true
         }, {
-            name:"siteName",
-            type:"string",
-            convert: function (value, record) {
+            name: "siteName",
+            type: "string",
+            convert: function(value, record) {
                 var siteId = record.get('siteId'),
                     siteName = "";
                 
@@ -98,64 +101,55 @@ Ext.define('Taco.model.Order', {
         {
             "name": "authorizationInfo",
             "type": "auto"
-        },
-        {
+        }, {
             "name": "orderSummary",
             "type": "auto"
-        },
-        {
+        }, {
             "name": "orderNumber",
             "type": "int",
             "useNull": true
-        },
-        {
+        }, {
+            "name": "orderType",
+            "type": "auto"
+        }, {
             "name": "createDate",
             "type": "date",
             "useNull": true,
             dateFormat: 'c'
-        },
-        {
+        }, {
             "name": "updateDate",
             "type": "date",
             "useNull": true,
             dateFormat: 'c'
-        },
-        {
+        }, {
             "name": "customerId",
             "type": "int",
             "useNull": true
-        },
-        {
+        }, {
             "name": "billingContact",
             "type": "auto",
             "defaultValue": {}
-        },
-        {
+        }, {
             "name": "fulfillmentContact",
             "type": "auto",
             "defaultValue": {}
-        },
-        {
+        }, {
             "name": "ipAddress",
             "type": "string",
             "useNull": true
-        },
-        {
+        }, {
             name: 'attributes',
             type: 'auto',
             defaultValue: []
-        }, 
-        {
+        }, {
             "name": "items",
             "type": "auto",
             "useNull": true
-        },
-        {
+        }, {
             "name": "orderDiscounts",
             "type": "auto",
             "default": []
-        },
-        {
+        }, {
             "name": "activeDiscountDescription",
             "type": "string",
             "useNull": true
@@ -165,18 +159,15 @@ Ext.define('Taco.model.Order', {
             "name": "activeShippingDiscount",
             "type": "float",
             "useNull": true
-        },
-        {
+        }, {
             "name": "shippingDiscounts",
             "type": "auto",
             "default": []
-        },
-        {
+        }, {
             "name": "shippingSubtotal",
             "type": "float",
             "useNull": true
-        },
-        {
+        }, {
             "name": "shippingTotal",
             "type": "float",
             "useNull": true
@@ -203,18 +194,15 @@ Ext.define('Taco.model.Order', {
             "name": "discountedTotal",
             "type": "float",
             "useNull": true
-        },
-        {
+        }, {
             "name": "taxTotal",
             "type": "float",
             "useNull": true
-        },
-        {
+        }, {
             "name": "feeTotal",
             "type": "float",
             "useNull": true
-        },
-        {
+        }, {
             "name": "handlingTotal",
             "type": "float",
             "useNull": true
@@ -226,9 +214,9 @@ Ext.define('Taco.model.Order', {
             "name": "orderAdjustment",
             "type": "object",
             "defaultValue": {
-                "amount":0,
-                "description":"",
-                "internalComment":""
+                "amount": 0,
+                "description": "",
+                "internalComment": ""
             }        
         },
 
@@ -237,7 +225,7 @@ Ext.define('Taco.model.Order', {
             "name": "orderAdjustmentIsNegative",
             "type": "boolean",
             "persist": false,
-            "convert": function (value, record) {                
+            "convert": function(value, record) {
                 // if set explicitly use the value
                 if (Ext.isBoolean(value)) {
                     return value
@@ -267,7 +255,7 @@ Ext.define('Taco.model.Order', {
             "name": "shippingAdjustmentIsNegative",
             "type": "boolean",
             "persist": false,
-            "convert": function (value, record) {
+            "convert": function(value, record) {
                 // if set explicitly use the value
                 if (Ext.isBoolean(value)) {
                     return value
@@ -300,19 +288,16 @@ Ext.define('Taco.model.Order', {
             "name": "total",
             "type": "float",
             "useNull": true
-        },
-        {
+        }, {
             "name": "returnStatus",
             "type": "string",
             "useNull": true,
-            defaultValue:null
-        },
-        {
+            defaultValue: null
+        }, {
             "name": "customerNote",
             "type": "string",
             "useNull": true
-        },
-        {
+        }, {
             "name": "itemsOrdered",
             "type": "int",
             "useNull": false
@@ -324,18 +309,16 @@ Ext.define('Taco.model.Order', {
             "name": "totalDirectShipItems",
             "type": "int",
             "useNull": false,
-            convert: function (v, record) {
+            convert: function(v, record) {
                 var itemsNotShipped = record.get("itemsNotShipped") || 0;
-                var itemsShipped = record.get("itemsShipped")|| 0;
+                var itemsShipped = record.get("itemsShipped") || 0;
                 return itemsNotShipped + itemsShipped
             }
-        },
-        {
+        }, {
             "name": "itemsNotShipped",
             "type": "int",
             "useNull": false
-        },
-        {
+        }, {
             "name": "itemsShipped",
             "type": "int",
             "useNull": false
@@ -345,30 +328,25 @@ Ext.define('Taco.model.Order', {
             "name": "orderStatus",
             "type": "string",
             "useNull": true
-        },
-        {
+        }, {
             "name": "fulfillmentStatus",
             "type": "string",
             "useNull": true
-        },
-        {
+        }, {
             "name": "paymentStatus",
             "type": "string",
             "defaultValue": "Card Authorized",
             "useNull": true
-        },
-        {
+        }, {
             "name": "availableActions",
             "type": "auto",
             "default": []
-        },
-        {
+        }, {
             "name": "lastValidationDate",
             "type": "date",
             "useNull": true,
             dateFormat: 'c'
-        },
-        {
+        }, {
             "name": "expirationDate",
             "type": "date",
             "useNull": true,
@@ -389,7 +367,7 @@ Ext.define('Taco.model.Order', {
         {
             "name": "packages",
             "type": "array",
-            convert: function (v, record) {
+            convert: function(v, record) {
                 if (!Ext.isArray(v)) {
                     v = [];
                 }
@@ -415,7 +393,7 @@ Ext.define('Taco.model.Order', {
             "name": "unShippedPackages",
             "type": "array",
             persist: false,
-            convert: function (v, record) {
+            convert: function(v, record) {
                 var packages = record.get("packages");
                 var retVal = [];
                 
@@ -432,7 +410,7 @@ Ext.define('Taco.model.Order', {
             "name": "shippedPackages",
             "type": "array",
             persist: false,
-            convert: function (v, record) {
+            convert: function(v, record) {
                 var packages = record.get("packages");
                 var retVal = [];
                 for (var i = 0; i < packages.length; i++) {
@@ -452,7 +430,7 @@ Ext.define('Taco.model.Order', {
             "name": "totalPickupItems",
             "type": "int",
             "useNull": false,
-            convert: function (v, record) {
+            convert: function(v, record) {
                 var itemsNotPickedup = record.get("itemsNotPickedup") || 0;
                 var itemsPickedup = record.get("itemsPickedup") || 0;
                 return itemsNotPickedup + itemsPickedup;
@@ -480,11 +458,13 @@ Ext.define('Taco.model.Order', {
             "name": "instorePackages",
             "type": "array",
             persist: false,
-            convert: function (v, record) {
+            convert: function(v, record) {
 
 
                 var packages = record.get("pickups");
                 var retVal = [];
+
+                if (!packages) return retVal;
 
                 for (var i = 0; i < packages.length; i++) {
                     if (packages[i].status == "Fulfilled") {
@@ -500,9 +480,11 @@ Ext.define('Taco.model.Order', {
             "name": "pendingPickups",
             "type": "array",
             persist: false,
-            convert: function (v, record) {
+            convert: function(v, record) {
                 var packages = record.get("pickups");
                 var retVal = [];
+
+                if (!packages) return retVal;
 
                 for (var i = 0; i < packages.length; i++) {
                     if (packages[i].status == "NotFulfilled") {
@@ -519,9 +501,11 @@ Ext.define('Taco.model.Order', {
             "name": "pickedupPackages",
             "type": "array",
             persist: false,
-            convert: function (v, record) {
+            convert: function(v, record) {
                 var packages = record.get("pickups");
                 var retVal = [];
+
+                if (!packages) return retVal;
 
                 for (var i = 0; i < packages.length; i++) {
                     if (packages[i].status == "Fulfilled") {
@@ -536,18 +520,15 @@ Ext.define('Taco.model.Order', {
             "name": "shippingMethodName",
             "type": "string",
             persist: false
-        },
-        {
+        }, {
             "name": "shippingMethodCode",
             "type": "string",
             persist: false
-        },
-        {
+        }, {
             "name": "validationResults",
             "type": "any",
             persist: false
-        },
-        {
+        }, {
             "name": "fraudScore",
             "type": "int",
             persist: false,
@@ -555,15 +536,13 @@ Ext.define('Taco.model.Order', {
         }
     ],
     
-    reload: function (config) {
+    reload: function(config) {
         var me = this,
             config = config || {},
             modifiedNames = [],
-            loadConfig = Ext.applyIf(
-             {
+            loadConfig = Ext.applyIf({
                  bypassCache: true,
-                 success: function (record) {
-
+                    success: function(record) {
 
 
 
@@ -571,7 +550,7 @@ Ext.define('Taco.model.Order', {
                          me.beginEdit();
                          modifiedNames = me.copyFrom(record);
 
-                         me.associations.each(function (association) {
+                            me.associations.each(function(association) {
                              var reader = association.getReader();
                              if (reader) {
                                  association.read(me, reader, me.get(association.name));
@@ -593,13 +572,12 @@ Ext.define('Taco.model.Order', {
 
 
 
-
         //tbd: remove this
 
 
         this.self.load(me.getId(), loadConfig);
     },
-    getAttributes: function () {
+    getAttributes: function() {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ExtensibleAttributeValue',
             associationKey: 'attributes',
@@ -607,16 +585,26 @@ Ext.define('Taco.model.Order', {
         });
     },
     
-    /*
-    getPayments: function () {
+    loadCustomer: function(cfg) {
+        var me = this;
         
-        return this.getOrCreateHasManyStore({
-            model: 'Taco.model.OrderPayment',
-            associationKey: 'payments',
-            foreignProperty: 'order'
+        Taco.model.CustomerAccount.load(this.get('customerId'), {
+            success: function(record, op) {
+                me.customer = record;
+                if (cfg.success) cfg.success.call(cfg.scope || this, record, op);
+            },
+            failure: function(record, op) {
+                if (cfg.failure) cfg.failure.call(cfg.scope || this, record, op);
+            },
+            callback: function(record, op, suc) {
+                if (cfg.callback) cfg.callback.call(cfg.scope || this, record, op, suc);
+            }
         });
     },
-    */
+
+    getCustomer: function() {
+        return this.customer || null;
+    },
 
     associations: [      
         // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
@@ -629,33 +617,29 @@ Ext.define('Taco.model.Order', {
             model: 'Taco.model.OrderItem',
             name: "items",
             reader: 'json'
-        },
-        {
+        }, {
             type: 'hasOne',
             model: 'Taco.model.Contact',
             name: 'billingContact',
             reader: 'json'
-        },
-        {
+        }, {
             type: 'hasOne',
             model: 'Taco.model.Contact',
             name: 'fulfillmentContact',
             reader: 'json'
-        },
-        {
+        }, {
             type: 'hasMany',
             model: 'Taco.model.OrderPayment',
             name: 'payments',
-            reader:'json'
-        },
-        {
+            reader: 'json'
+        }, {
             type: 'hasMany',
             model: 'Taco.model.Return',
             primaryKey: 'id',
             foreignKey: 'originalOrderId',
             autoLoad: false,
             storeConfig: {
-                remoteFilter:true
+                remoteFilter: true
             },
             name: 'getReturnsStore'
         },
@@ -664,12 +648,11 @@ Ext.define('Taco.model.Order', {
             type: 'hasOne',
             model: 'Taco.model.OrderShippingDiscount',
             name: 'activeShippingDiscount'
-        },
-        {
+        }, {
             type: 'hasMany',
             model: 'Taco.model.OrderShippingDiscount',
             name: 'shippingDiscounts',
-            reader:"json"
+            reader: "json"
         }
     ],
 
@@ -684,10 +667,10 @@ Ext.define('Taco.model.Order', {
         },
         reader: {
             type: 'json',
-            getResponseData: function (response) {
+            getResponseData: function(response) {
                 // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
                 var data = Ext.decode(response.responseText);
-                if (data.items[0]) {
+                if (data.items  && data.items[0]) {
                     data.items[0].packages = data.items[0].packages || [];
                     data.items[0].unpackagedItems = data.items[0].unpackagedItems || undefined;
                 }
@@ -703,9 +686,6 @@ Ext.define('Taco.model.Order', {
         }
     },
     
-
-
-
 
 
     /*
@@ -786,13 +766,13 @@ Ext.define('Taco.model.Order', {
      *
      */
     
-    getShippingMethods:function () {
+    getShippingMethods: function() {
         if (!this.shippingMethods) {
             this.shippingMethods = Ext.create('Ext.data.Store', {
                 model: 'Taco.model.ShippingMethod',
                 proxy: {
                     type: 'ajax',
-                    url: '/admin/app/order/shipping/runtimemethods?orderId='+ this.getId(),
+                    url: '/admin/app/order/shipping/runtimemethods?orderId=' + this.getId(),
                     reader: {
                         type: 'json',
                         root: 'items',
@@ -804,7 +784,7 @@ Ext.define('Taco.model.Order', {
         return this.shippingMethods;
     },
 
-    capturePayment: function (config) {
+    capturePayment: function(config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/capture',
             method: "POST"            
@@ -818,7 +798,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    authorize: function (config) {
+    authorize: function(config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/authorize',
             method: 'POST'        
@@ -831,7 +811,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    authAndCapture: function (config) {
+    authAndCapture: function(config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/authAndCapture',
             method: 'POST'
@@ -871,7 +851,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    addPayment: function (config) {
+    addPayment: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/payment/create',
             method: "POST"            
@@ -923,7 +903,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    voidTransaction: function (config) {
+    voidTransaction: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/payment/void',
             method: "POST"
@@ -961,7 +941,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    requestCheck: function (config) {
+    requestCheck: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/payment/requestcheck',
             method: "POST"
@@ -976,23 +956,20 @@ Ext.define('Taco.model.Order', {
     /**
      * ensures that a date property is formatted correctly if it exists
      */
-    ensureDate: function(config, propertyName)
-    {
+    ensureDate: function(config, propertyName) {
         var d;
 
-        if (config && config[propertyName])
-        {
+        if (config && config[propertyName]) {
             try {
-                d = new Date( config[propertyName] );
+                d = new Date(config[propertyName]);
                 config[propertyName] = Ext.Date.format(d, 'c');
-            }
-            catch(e) {
+            } catch (e) {
                 delete config[propertyName];
             }
         }
     },
 
-    capturePaymentManual: function (config) {
+    capturePaymentManual: function(config) {
         var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/capture',
@@ -1006,7 +983,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    voidPaymentManual: function (config) {
+    voidPaymentManual: function(config) {
         var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/void',
@@ -1020,7 +997,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    creditPaymentManual: function (config) {
+    creditPaymentManual: function(config) {
         var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/credit',
@@ -1034,7 +1011,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    rollbackTransaction: function (config) {
+    rollbackTransaction: function(config) {
         var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/rollback',
@@ -1047,7 +1024,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    addManualPayment: function (config) {
+    addManualPayment: function(config) {
         var me = this;
         Ext.apply(config, {
             url: '/admin/app/order/payment/manual/create',
@@ -1087,7 +1064,7 @@ Ext.define('Taco.model.Order', {
         }
 
         */
-    issueCredit: function (config) {
+    issueCredit: function(config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/credit',
             method: "POST"
@@ -1099,7 +1076,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    applyCheck: function (config) {
+    applyCheck: function(config) {
 
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/applycheck',
@@ -1113,7 +1090,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    declineCheck: function (config) {
+    declineCheck: function(config) {
 
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/declinecheck',
@@ -1125,7 +1102,6 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
-
 
 
 
@@ -1176,7 +1152,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    createPackage: function (config) {
+    createPackage: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/create',
             method: "POST"
@@ -1212,7 +1188,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    deletePackage: function (config) {
+    deletePackage: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/delete',
             method: "POST"
@@ -1252,7 +1228,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    movePackageItems: function (config) {
+    movePackageItems: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/moveitems',
             method: "POST"
@@ -1287,7 +1263,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    markPackagesShipped: function (config) {
+    markPackagesShipped: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/markshipped',
             method: "POST"
@@ -1296,41 +1272,6 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -1371,7 +1312,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    createPickup: function (config) {
+    createPickup: function(config) {
         var me = this;
         
         config.errorMsg = "Error creating pickup";
@@ -1412,7 +1353,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    deletePickup: function (config) {
+    deletePickup: function(config) {
         var me = this;
         config.errorMsg = "Error deleting pickup";
 
@@ -1457,7 +1398,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    movePickupItems: function (config) {
+    movePickupItems: function(config) {
         var me = this;
         config.errorMsg = "Error moving pickup items";
 
@@ -1497,7 +1438,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    markPickupFulfilled: function (config) {
+    markPickupFulfilled: function(config) {
         var me = this;
         config.errorMsg = "Error marking pickup fulfilled";
 
@@ -1538,7 +1479,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    markPickupReady: function (config) {
+    markPickupReady: function(config) {
         var me = this;
         config.errorMsg = "Error marking pickup ready";
 
@@ -1558,25 +1499,6 @@ Ext.define('Taco.model.Order', {
     * END PICKUP END POINT   
     *****************************
     */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1605,7 +1527,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    changeShippingMethod: function (config) {
+    changeShippingMethod: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/edit',
             method: "POST"
@@ -1640,7 +1562,7 @@ Ext.define('Taco.model.Order', {
 
     *
     */
-    changePackagingType: function (config) {
+    changePackagingType: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/edit',
             method: "POST"
@@ -1674,7 +1596,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    changeTrackingNumber: function (config) {
+    changeTrackingNumber: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/edit',
             method: "POST"
@@ -1688,14 +1610,12 @@ Ext.define('Taco.model.Order', {
     
 
 
-
     /*
      ****************************************************
      *   Begin order detail service interaction methods
      ****************************************************
      */
     
-
 
 
     /**
@@ -1724,12 +1644,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    removeOrderItem: function (config) {
+    removeOrderItem: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/items/remove',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -1767,12 +1689,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    editOrderItemQuantity: function (config) {
+    editOrderItemQuantity: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/items/editquantity',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -1810,12 +1734,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    editOrderItemFulfillment: function (config) {
+    editOrderItemFulfillment: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/items/editfulfillment',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -1853,12 +1779,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    editOrderItemPrice: function (config) {
+    editOrderItemPrice: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/items/editprice',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -1896,7 +1824,7 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    editOrderItemFulfillmentMethod: function (config) {
+    editOrderItemFulfillmentMethod: function(config) {
         var me = this;
 
         config.errorMsg = config.errorMsg || "Error changing fulfillment method";
@@ -1905,7 +1833,9 @@ Ext.define('Taco.model.Order', {
        
         Ext.apply(config, {
             url: '/admin/app/order/items/editfulfillmentmethod',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -1948,12 +1878,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    addOrderItem: function (config) {
+    addOrderItem: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/items/add',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -2008,12 +1940,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    addOrderCoupon: function (config) {
+    addOrderCoupon: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/addcoupon',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -2047,12 +1981,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    suppressDiscount: function (config) {
+    suppressDiscount: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/suppressdiscount',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -2086,12 +2022,14 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    activateDiscount: function (config) {
+    activateDiscount: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/activatediscount',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
@@ -2136,44 +2074,30 @@ Ext.define('Taco.model.Order', {
 
      *
      */
-    updateOrderAdjustment: function (config) {
+    updateOrderAdjustment: function(config) {
         var me = this;
 
         Ext.apply(config, {
             url: '/admin/app/order/adjustment',
-            params: { 'draft': me.get('isDraft') },
+            params: {
+                'draft': me.get('isDraft')
+            },
             method: "POST"
         });
 
         Ext.Ajax.request(config);
     },
     
-    /**
-     * service call to apply the draft order on top of the actual order.
-     * @param {Object} config  A configuration object     
-     * config object:
-     * 
-        {
-            jsonData: {
-                orderId: "987654321"
-            },
-            success: function (response) {
-                // success handling here
-              so   var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    return;
-                }
-            },
-            failure: function (response) {
-                // error handling here
-            },
-            scope: this
-        }
+    setCustomer: function(config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/setcustomer',
+            method: 'POST'
+        });
 
-     *
-     */
-    saveDraftOrder: function (config) {
+        Ext.Ajax.request(config);
+            },
+
+    saveDraftOrder: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/commitdraft',
             method: "POST"
@@ -2181,33 +2105,8 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
-    
-    /**
-    * service call to remove(delete) the draft order.
-    * @param {Object} config  A configuration object
-    * config object:
-    * 
-       {
-           jsonData: {
-               orderId: "987654321"
-           },
-           success: function (response) {
-               // success handling here
-             so   var json = Ext.decode(response.responseText, true);
-               if (!json || !json.success) {
-                   // service didnt' return data properly
-                   return;
-               }
-           },
-           failure: function (response) {
-               // error handling here
-           },
-           scope: this
-       }
 
-    *
-    */
-    removeDraftOrder: function (config) {
+    removeDraftOrder: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/deletedraft',
             method: "POST"
@@ -2220,7 +2119,7 @@ Ext.define('Taco.model.Order', {
      * service call to accept an order.
      * you need to accept an order that is in 'PendingReview' state.
      */
-    acceptOrder: function (config) {
+    acceptOrder: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/accept',
             method: "POST"
@@ -2229,32 +2128,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    /**
-    * service call to cancel an order.
-    * @param {Object} config  A configuration object
-    * config object:
-    * 
-       {
-           jsonData: {
-               orderIds: ["987654321"]
-           },
-           success: function (response) {
-               // success handling here
-             so   var json = Ext.decode(response.responseText, true);
-               if (!json || !json.success) {
-                   // service didnt' return data properly
-                   return;
-               }
-           },
-           failure: function (response) {
-               // error handling here
-           },
-           scope: this
-       }
-
-    *
-    */
-    cancelOrder: function (config) {
+    cancelOrder: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/cancel',
             method: "POST"
@@ -2263,7 +2137,7 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    saveAttributes: function (config) {
+    saveAttributes: function(config) {
 
         Ext.applyIf(config, {
             url: '/admin/app/order/attributes/update',
@@ -2275,7 +2149,7 @@ Ext.define('Taco.model.Order', {
         });
         Ext.Ajax.request(config);
     }
-}, function () {
+}, function() {
 
     // console.log(arguments, "orderz", Taco.model.Order);
    

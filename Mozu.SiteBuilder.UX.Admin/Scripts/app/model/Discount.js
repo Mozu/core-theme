@@ -87,7 +87,7 @@ Ext.define('Taco.model.Discount', {
         },
         {
             name: "doesNotApplyToSalePrice",
-            type: 'bool',
+            type: 'bool'
         },
         {
             name: "customerSegments",

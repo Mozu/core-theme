@@ -41,5 +41,5 @@ Ext.define('Taco.model.ProductExtra', {
             model: 'Taco.model.ProductExtraValue',
             associationKey: 'values'
         });
-    },
+    }
 });

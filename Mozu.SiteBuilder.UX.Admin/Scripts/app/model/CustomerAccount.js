@@ -164,7 +164,7 @@ Ext.define('Taco.model.CustomerAccount', {
             type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: 'message',
+            messageProperty: 'message'
            
         },
         writer: {

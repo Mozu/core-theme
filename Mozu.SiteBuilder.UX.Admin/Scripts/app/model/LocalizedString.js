@@ -10,16 +10,4 @@
         type: 'string',
         mapping: 'Value'
     }]
-    //proxy: {
-    //    type: 'ajaxproxy',
-    //    api: {
-    //        read: '/admin/app/localization/read'
-    //    },
-    //    reader: {
-    //        type: 'json',
-    //        root: 'items',
-    //        successProperty: 'success',
-    //        messageProperty: "message"
-    //    }
-    //}
 });

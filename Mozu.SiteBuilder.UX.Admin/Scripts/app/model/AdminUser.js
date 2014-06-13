@@ -47,7 +47,5 @@ Ext.define('Taco.model.AdminUser', {
             root: 'items',
             successProperty: 'success'
         }
-        //,
-       // actionMethods: { read: "POST" }
     }
 });
