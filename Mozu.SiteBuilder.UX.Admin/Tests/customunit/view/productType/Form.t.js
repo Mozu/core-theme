@@ -25,8 +25,8 @@
         };
 
         
-
-        t.describe('To increase revenue and profits, as a merchant, I want to offer Gift Cards', function(t) {
+        // To increase revenue and profits, as a merchant, I want to offer Gift Cards
+        t.describe('Merchants want to offer Gift Cards to increase revenue and profits', function (t) {
 
             t.it("Should allow a merchant to designate a digital credit/gift card goods type.", function(t) {
 
@@ -55,7 +55,7 @@
                 );
             });
 
-            t.it("Should default goods type to 'Physical' for non-gift card product types.", function (t) {
+            t.it("Should make 'Physical' the default goods type.", function (t) {
 
                 m = {};
 
@@ -81,8 +81,7 @@
                 );
             });
 
-
-            t.it("Should disable gift card designation after saving", function(t) {
+            t.it("Should disable gift card checkbox after saving", function(t) {
 
                 m = {};
 
