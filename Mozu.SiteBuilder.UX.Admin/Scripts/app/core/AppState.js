@@ -123,6 +123,9 @@ Ext.define('Taco.core.AppState', {
         delete this.metaData.record;
 
         Ext.applyIf(this.complexMetaData, this.metaData);
+        if (!this.complexMetaData.record) {
+            delete this.complexMetaData.record;
+        }
         // set a sequential-ish state ID.
         this.metaData._stateid = Number((new Date().getTime().toString()) + Math.round(Math.random() * 100000));
 

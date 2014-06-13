@@ -2,7 +2,7 @@
  * @class Taco.store.Discounts
  */
 
-    Ext.define('Taco.store.ShippingZones', {
+    Ext.define('Taco.store.ProductRules', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.TargetRule',
         remoteFilter: false,
@@ -17,7 +17,7 @@
         proxy: {
             type: 'ajax',
             extraParams: {
-                domain: 'Shipping.DestinationAddress'
+                domain: 'Product'
             },
             api: {
                 read: '/admin/app/shipping/rules/read',

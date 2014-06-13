@@ -17,6 +17,8 @@
 
     autoScroll: true,
     
+
+
     initComponent: function () {
         var me = this;
         
@@ -56,7 +58,7 @@
             // Don't navigate if the record has yet to be persisted
             if (record.phantom) return;
             Taco.app.contentView.remove(editor);
-            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), { record: record });
+            Taco.core.StateManager.attemptNavigate(me.getEditRoute () + '/' + record.getId(), { record: record });
         }, this, { delay: 10, single: true, scope: this });
         
        
@@ -66,16 +68,26 @@
             }
             if (this.showIndexOnCancel) {
                 Ext.defer(function () {
-                    Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
+                    return Taco.core.StateManager.attemptNavigate(me.getIndexRoute());
                 }, 10);
             }
 
         }, this, { single: true, scope: this });
         
         this.on('destroyrecord', function(editor, records, operation) {
-            Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/index');
+            Taco.core.StateManager.attemptNavigate(me.getIndexViewName());
         }, this, { delay: 10, single: true, scope: this });
     },
+
+
+    getIndexRoute:function () {
+        return Taco.core.StateManager.getCurrentState().metaData.controller + '/index';
+    },
+
+    getEditRoute: function () {
+        return Taco.core.StateManager.getCurrentState().metaData.controller + '/edit';
+    },
+
 
     doSave: function () {
         
