@@ -64,13 +64,7 @@ Ext.define('Taco.model.Option', {
         name: "isConfigurable",
         type: "boolean",
         defaultValue: false
-    }
-    //        ,
-    //        {
-    //            name:'values',
-    //            model: 'NavigationItem'
-    //        }
-    ],
+    }],
     idProperty: 'id',
     hasMany: {
         model: 'Taco.model.OptionValue',

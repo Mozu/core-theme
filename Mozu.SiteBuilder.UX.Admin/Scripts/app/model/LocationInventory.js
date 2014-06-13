@@ -46,7 +46,7 @@ Ext.define('Taco.model.LocationInventory', {
             }
             return 0;
 
-        },
+        }
     }, {
         "name": "stockOnHand",
         "defaultValue": 0,
@@ -54,15 +54,6 @@ Ext.define('Taco.model.LocationInventory', {
         "useNull": true,
             persist: true
         },
-        /*
-        //deprecated
-            {
-        "name": "stockOnHandAdjustment",
-        "defaultValue": 0,
-        "type": "any",
-        "useNull": true
-            },
-        */
 
 
         {

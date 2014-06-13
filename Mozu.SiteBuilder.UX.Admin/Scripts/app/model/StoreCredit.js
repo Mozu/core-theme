@@ -58,7 +58,6 @@ Ext.define('Taco.model.StoreCredit', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-//            read: '/admin/Scripts/app/mocks/storecredit.json'
             read: '/admin/app/customer/credits/list',
             create: '/admin/app/customer/credits/create',
             update: '/admin/app/customer/credits/edit',
@@ -69,10 +68,6 @@ Ext.define('Taco.model.StoreCredit', {
             root: 'items',
             successProperty: 'success',
             messageProperty: "message"
-        }//,
-        //writer: {
-        //    allowSingle: false,
-        //    type: 'json'
-        //}
+        }
     }
 });

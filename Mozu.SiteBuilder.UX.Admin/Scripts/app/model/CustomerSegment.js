@@ -43,7 +43,7 @@ Ext.define('Taco.model.CustomerSegment', {
             type: 'json',
             root: 'items',
             successProperty: 'success',
-            messageProperty: 'message',
+            messageProperty: 'message'
            
         },
         writer: {
