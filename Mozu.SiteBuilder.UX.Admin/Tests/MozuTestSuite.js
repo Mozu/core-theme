@@ -17,7 +17,7 @@ Harness.configure({
     expectedGlobals: ['Ext', 'Taco'],
     testClass: Taco.TestClass.Core,
     preload: simAndSinPreloads,
-    hostPageUrl: 'homepages/Mystic.html',
+    hostPageUrl: 'homepages/Mystic.cshtml',
 
 });
 
