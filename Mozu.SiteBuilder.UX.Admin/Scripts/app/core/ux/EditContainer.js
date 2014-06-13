@@ -15,26 +15,26 @@ Ext.define('Taco.core.ux.EditContainer', {
         actions: []
     },
 
-    initComponent: function () {
-        var actionBar = Ext.create('Ext.container.Container', {
-            itemId: 'actions',
-            items: this.getActions()
-        });
+    //initComponent: function () {
+    //    var actionBar = Ext.create('Ext.container.Container', {
+    //        itemId: 'actions',
+    //        items: this.getActions()
+    //    });
 
-        this.callParent(arguments);
-
-        this.on({
-            boxready: {
-                scope: this,
-                fn: function () {
-                    var header = this.getHeader();
-                    if (header) {
-                        header.insert(1, actionBar);
-                    }
-                }
-            }
-        });
-    },
+    //    this.callParent(arguments);
+    //   // this.header.add(actionBar);
+    //    //this.on({
+    //    //    boxready: {
+    //    //        scope: this,
+    //    //        fn: function () {
+    //    //            var header = this.getHeader();
+    //    //            if (header) {
+    //    //                header.insert(1, actionBar);
+    //    //            }
+    //    //        }
+    //    //    }
+    //    //});
+    //},
 
     toggleActions: function () {
         var header = this.getHeader(),

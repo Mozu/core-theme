@@ -287,8 +287,9 @@
     <Reference Include="Mozu.Reporting.Contracts">
       <HintPath>..\packages\Mozu.Reporting.Contracts.1.7.0.3\lib\Mozu.Reporting.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.8.0.1\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.9.0-dev001\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts">
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.8.0.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
@@ -700,6 +701,8 @@
     <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
     <Content Include="Scripts\app\model\NavigationItem2.js" />
+    <Content Include="Scripts\app\model\HandlingFeeRule.js" />
+    <Content Include="Scripts\app\model\ShippingInclusionRule.js" />
     <Content Include="Scripts\app\model\TargetRule.js" />
     <Content Include="Scripts\app\model\ProductExtraValue.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />
@@ -749,6 +752,10 @@
     <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\CustomersPicker.js" />
+    <Content Include="Scripts\app\store\OrderHandlingFeeRules.js" />
+    <Content Include="Scripts\app\store\ProductHandlingFeeRules.js" />
+    <Content Include="Scripts\app\store\ShippingInclusionRules.js" />
+    <Content Include="Scripts\app\store\ProductRules.js" />
     <Content Include="Scripts\app\store\ShippingZones.js" />
     <Content Include="Scripts\app\store\Navigation2.js" />
     <Content Include="Scripts\app\store\OrderGrid.js" />
@@ -842,7 +849,15 @@
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\settings\shipping\ProductRules.js" />
-    <Content Include="Scripts\app\view\settings\shipping\Configuration.js" />
+    <Content Include="Scripts\app\view\settings\shipping\MethodsAndFees.js" />
+    <Content Include="Scripts\app\view\settings\shipping\Rules.js" />
+    <Content Include="Scripts\app\view\settings\shipping\HandlingFeeEditor.js" />
+    <Content Include="Scripts\app\view\settings\shipping\ShippingMethodEditor.js" />
+    <Content Include="Scripts\app\view\settings\shipping\TargetRuleEdit.js" />
+    <Content Include="Scripts\app\view\settings\shipping\widget\OrderHandlingFeeRulesForm.js" />
+    <Content Include="Scripts\app\view\settings\shipping\widget\ProductHandllingFeeRulesForm.js" />
+    <Content Include="Scripts\app\view\settings\shipping\widget\BaseShippingConfigurationRulesForm.js" />
+    <Content Include="Scripts\app\view\settings\shipping\widget\ShippingInclusionRulesForm.js" />
     <Content Include="Scripts\app\view\settings\shipping\Zones.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateEditor.js" />
     <Content Include="Scripts\app\view\settings\shipping\widget\RateList.js" />

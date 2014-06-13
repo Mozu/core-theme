@@ -206,29 +206,31 @@ Ext.define('Taco.store.Navigation', {
                         "address": "settings/tax"
                     },
                     {
-                        "id": "shippingSettings",
+                        "id": "shipping",
                         "label": "Shipping",
+                    
                         "items": [
+                                 {
+                                     "id": "shipping4",
+                                     "label": "Rates and Fees",
+                                     "address": "shipping"
+                                 },
                             {
                                 "id": "shipping1",
                                 "label": "Carriers",
                                 "address": "shipping/carriers"
                             },
                              {
-                                 "id": "shipping1",
+                                 "id": "shipping2",
                                  "label": "Zones",
                                  "address": "shipping/zones"
                              },
                              {
-                                 "id": "shipping2",
+                                 "id": "shipping3",
                                  "label": "Product Rules",
                                  "address": "shipping/productRules"
-                             },
-                        {
-                                "id": "shipping3",
-                                "label": "Configuration",
-                                "address": "shipping/configuration"
-}
+                             }
+                   
                         ]
 
                     },

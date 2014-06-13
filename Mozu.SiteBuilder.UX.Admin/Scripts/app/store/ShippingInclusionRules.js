@@ -2,28 +2,27 @@
  * @class Taco.store.Discounts
  */
 
-    Ext.define('Taco.store.ShippingZones', {
+Ext.define('Taco.store.ShippingInclusionRules', {
         extend: 'Ext.data.Store',
-        model: 'Taco.model.TargetRule',
+        model: 'Taco.model.ShippingInclusionRule',
         remoteFilter: false,
         remoteSort: false,
         pageSize: 50,
         storeManagerConfig: {
             clearFilters: true,
-            contextLevel: 'm',
+            contextLevel: 's',
             clearSort: true,
-            autoLoad: true
+            autoLoad: true,
+            createOnly:true,
         },
         proxy: {
             type: 'ajax',
-            extraParams: {
-                domain: 'Shipping.DestinationAddress'
-            },
+           
             api: {
-                read: '/admin/app/shipping/rules/read',
-                create: '/admin/app/shipping/rules/create',
-                update: '/admin/app/shipping/rules/edit',
-                destroy: '/admin/app/shipping/rules/delete'
+                read: '/admin/app/shipping/ShippingInclusionRules/read',
+                create: '/admin/app/shipping/ShippingInclusionRules/create',
+                update: '/admin/app/shipping/ShippingInclusionRules/edit',
+                destroy: '/admin/app/shipping/ShippingInclusionRules/delete'
             },
             reader: {
                 type: 'json',

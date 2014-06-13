@@ -44,14 +44,14 @@ Ext.define('Taco.core.Controller', {
 
 
                             store.on({
-                                    load: {
-                                        fn: function () {
-                                            me.ensureRequiredStores(options);
-                                        },
-                                        single: true
-                                    }
-                                });
-                            
+                                load: {
+                                    fn: function () {
+                                        me.ensureRequiredStores(options);
+                                    },
+                                    single: true
+                                }
+                            });
+
                         }
                     }
                 }
@@ -126,13 +126,16 @@ Ext.define('Taco.core.Controller', {
     },
 
     edit: function (id, additionalParams, appState) {
+        return this.doEdit.apply(this, [id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]]);
+    },
+    doEdit: function (id, additionalParams, appState, viewName, model) {
         var record = appState ? appState.record : null,
             options = appState ? appState.options : null;
         if (appState && appState.container) {
             options = options || {};
             options.container = appState.container;
         }
-            
+
         if (record) {
             Taco.app.setLoading();
             record.reload({
@@ -140,7 +143,7 @@ Ext.define('Taco.core.Controller', {
                     Taco.app.setLoading(false);
 
                     this.ensureRequiredStores(function () {
-                        this.createContentView(this.getEditorView(), {
+                        this.createContentView(viewName, {
                             record: record,
                             options: options
                         });
@@ -155,12 +158,12 @@ Ext.define('Taco.core.Controller', {
 
         } else {
             Taco.app.setLoading();
-            Taco.model[this.modelName].load(id, {
+            model.load(id, {
                 success: function (record) {
                     Taco.app.setLoading(false);
 
                     this.ensureRequiredStores(function () {
-                        this.createContentView(this.getEditorView(), {
+                        this.createContentView(viewName, {
                             record: record,
                             options: options
                         });
@@ -175,16 +178,22 @@ Ext.define('Taco.core.Controller', {
     },
 
     create: function (id, additionalParams, appState) {
-        var record = appState ? appState.record : Ext.create('Taco.model.' + this.modelName);
-        
+        return this.doCreate.apply(this, [id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]]);
+
+    },
+
+    doCreate: function (id, additionalParams, appState, viewName, model) {
+        var record = appState ? appState.record : Ext.create(model);
+
         this.ensureRequiredStores(function () {
-            this.createContentView(this.getEditorView(), {
-                record: record
-            });
+            this.createContentView(viewName, Ext.apply({
+                    record: record
+                }, additionalParams || {})
+            );
         });
     },
 
-  
+
     /**
      * Create a new **read-only** editor displaying an existing record of this Controller's associated Taco.core.data.Model.
      * @param  {Number/Taco.core.data.Model} id The ID of the model, or the model itself.
@@ -231,7 +240,7 @@ Ext.define('Taco.core.Controller', {
             Ext.suspendLayouts();
 
             //removing initial view  to aviod events firing from the create of the view from messin with the 
-           
+
             view = view.$className ? view : Ext.create(view, cfg);
             if (view.contextConfig && view.contextConfig.requiresContextOfType) {
                 view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
@@ -263,7 +272,7 @@ Ext.define('Taco.core.Controller', {
             } else if (context.contextType == 'm' || context.contextType == 'c') {
                 newContext = context.sites[0];
             }
-            
+
             Taco.app.context.setCurrentContext(newContext);
             return true;
         }
