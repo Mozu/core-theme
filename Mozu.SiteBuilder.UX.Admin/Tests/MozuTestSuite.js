@@ -157,17 +157,19 @@ Harness.start(
                         title: 'Product Type Tests'
                     }
                 ]
-            }, {
-                group: 'Settings',
-                expanded: true,
-                alsoPreload: [],
-                items: [
-                    {
-                        url: 'customunit/view/settings/shipping/Zones-t.js',
-                        title: 'settings shipping zones'
-                    }
-                ]
             },
+//{
+//                group: 'Settings',
+//                expanded: true,
+//                alsoPreload: [],
+//                items: [
+//                    {
+//                        url: 'customunit/view/settings/shipping/Zones-t.js',
+//                        title: 'settings shipping zones'
+//                    }
+//                ]
+//},
+
             {
                 group: 'WebSite',
                 expanded: true,
