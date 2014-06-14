@@ -37,7 +37,7 @@ Ext.application({
         'Tbd',
         'Themes',
         'Themesettings',
-        
+        'Shipping',
        
         'GeneralSettings',
         'Tests',
