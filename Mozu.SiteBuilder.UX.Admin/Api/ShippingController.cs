@@ -15,6 +15,7 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Domain;
+using Mozu.Core.Extensions;
 using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
@@ -311,7 +312,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule>>> ShippingRuleCreate(List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule> shippingInclusionRules )
         {
             var profileCode = await GetProfileCode();
-            var tasks = shippingInclusionRules.Select(x => _shippingProfileWebApiClient.CreateShippingInclusionRule(profileCode, x)).ToList();
+            var rules = (await _shippingProfileWebApiClient.GetShippingInclusionRules(profileCode)).ReadAsSync();
+            var next = rules != null ? rules.Items.OrderByDescending(x => x.Sequence).Select(x => x.Sequence).FirstOrDefault(0) : 0;
+
+            var tasks = shippingInclusionRules.Select(
+                x =>
+                {
+                    x.Sequence = ++next;
+                    return _shippingProfileWebApiClient.CreateShippingInclusionRule(profileCode, x);
+                }).ToList();
             await Task.WhenAll(tasks);
             shippingInclusionRules = tasks.Select(x => x.Result.ReadAsSync()).ToList();
             return this.List2(shippingInclusionRules);
@@ -356,47 +365,90 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule>>> ProductHandlingRuleEdit(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> handlingFeeRules)
         {
             var profileCode = await GetProfileCode();
-            var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.UpdateProductHandlingFeeRule(profileCode, x.Id, x)).ToList();
-            await Task.WhenAll(tasks);
-            handlingFeeRules.Clear();
-            handlingFeeRules = tasks.Select(x => x.Result.ReadAsSync()).OrderBy(x => x.Sequence).ToList();
-            return this.List2(handlingFeeRules);
-
+            var appliesTo = handlingFeeRules.First().AppliesTo;
+            if (appliesTo == "product")
+            {
+                var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.UpdateProductHandlingFeeRule(profileCode, x.Id, x)).ToList();
+                await Task.WhenAll(tasks);
+                handlingFeeRules.Clear();
+                handlingFeeRules = tasks.Select(x => x.Result.ReadAsSync()).OrderBy(x => x.Sequence).ToList();
+                return this.List2(handlingFeeRules);
+            }
+            else
+            {
+                var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.UpdateOrderHandlingFeeRule(profileCode, x.Id, x)).ToList();
+                await Task.WhenAll(tasks);
+                handlingFeeRules.Clear();
+                handlingFeeRules = tasks.Select(x => x.Result.ReadAsSync()).OrderBy(x => x.Sequence).ToList();
+                return this.List2(handlingFeeRules);
+            }
         }
 
 
 
         [HttpPostRoute(UriTemplate = "HandlingRules/delete")]
-        public async Task<Response<List<bool>>> ProductHandlingRuleDelete(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> targets)
+        public async Task<Response<List<bool>>> ProductHandlingRuleDelete(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> handlingFeeRules)
         {
             var profileCode = await GetProfileCode();
-            var tasks = targets.Select(x => _shippingProfileWebApiClient.DeleteProductHandlingFeeRule(profileCode, x.Id)).ToList();
-            await Task.WhenAll(tasks);
-            tasks.ForEach(x =>
+            var appliesTo = handlingFeeRules.First().AppliesTo;
+            if (appliesTo == "product")
             {
-                if (!x.Result.ResponseMessage.IsSuccessStatusCode)
+                var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.DeleteProductHandlingFeeRule(profileCode, x.Id)).ToList();
+                await Task.WhenAll(tasks);
+                tasks.ForEach(x =>
                 {
-                    throw x.Result.ReadException();
-                }
+                    if (!x.Result.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        throw x.Result.ReadException();
+                    }
 
-            });
-            return this.List2(new List<bool>());
+                });
+                return this.List2(new List<bool>());
+            }
+            else
+            {
+                var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.DeleteOrderHandlingFeeRule(profileCode, x.Id)).ToList();
+                await Task.WhenAll(tasks);
+                tasks.ForEach(x =>
+                {
+                    if (!x.Result.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        throw x.Result.ReadException();
+                    }
+
+                });
+                return this.List2(new List<bool>());
+            }
         }
 
         [HttpPostRoute(UriTemplate = "HandlingRules/create")]
         public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule>>> ProductHandlingRuleCreate(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> handlingFeeRules)
         {
             var profileCode = await GetProfileCode();
+        
             if (handlingFeeRules.First().AppliesTo == "product")
             {
-                var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.CreateProductHandlingFeeRule(profileCode, x)).ToList();
+                var fees = (await _shippingProfileWebApiClient.GetProductHandlingFeeRules(profileCode)).ReadAsSync();
+                var next = fees != null ? fees.Items.OrderByDescending(x => x.Sequence).Select(x => x.Sequence).FirstOrDefault(0) : 0;
+                var tasks = handlingFeeRules.Select(x =>
+                {
+                    x.Sequence = ++next ;
+                    return _shippingProfileWebApiClient.CreateProductHandlingFeeRule(profileCode, x);
+                }).ToList();
                 await Task.WhenAll(tasks);
                 handlingFeeRules = tasks.Select(x => x.Result.ReadAsSync()).ToList();
                 return this.List2(handlingFeeRules);
             }
             else
             {
-                var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.CreateOrderHandlingFeeRule(profileCode, x)).ToList();
+                var fees = (await _shippingProfileWebApiClient.GetOrderHandlingFeeRules(profileCode)).ReadAsSync();
+                var next = fees != null ? fees.Items.OrderByDescending(x => x.Sequence).Select(x => x.Sequence).FirstOrDefault(0) : 0;
+                var tasks = handlingFeeRules.Select(x =>
+                {
+                        x.Sequence = ++next;
+                       return  _shippingProfileWebApiClient.CreateOrderHandlingFeeRule(profileCode, x);
+                    
+                }).ToList();
                 await Task.WhenAll(tasks);
                 handlingFeeRules = tasks.Select(x => x.Result.ReadAsSync()).ToList();
                 return this.List2(handlingFeeRules);

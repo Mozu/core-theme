@@ -12,7 +12,10 @@ Ext.define('Taco.controller.Shipping', {
         'Taco.view.settings.shipping.MethodsAndFees',
         'Taco.view.settings.shipping.TargetRuleEdit',
         'Taco.view.settings.shipping.ShippingMethodEditor',
-        'Taco.view.settings.shipping.HandlingFeeEditor'
+        'Taco.view.settings.shipping.HandlingFeeEditor',
+        'Taco.model.ProductHandlingFeeRule',
+        'Taco.model.OrderHandlingFeeRule'
+
     ],
     stores: ['Taco.store.ShippingZones'],
     listView: null,
@@ -87,26 +90,27 @@ Ext.define('Taco.controller.Shipping', {
     productHandlingFeeCreate: function (id, additionalParams, appState) {
         appState = appState || {};
         delete additionalParams.record;
-        appState.record = Ext.create('Taco.model.HandlingFeeRule', {
+        appState.record = Ext.create('Taco.model.ProductHandlingFeeRule', {
             appliesTo: 'product'
         });
-        this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.HandlingFeeRule);
+        this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.ProductHandlingFeeRule);
     },
     productHandlingFeeEdit: function (id, additionalParams, appState) {
 
-        this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.HandlingFeeRule);
+
+        this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.ProductHandlingFeeRule);
     },
     orderHandlingFeeCreate: function (id, additionalParams, appState) {
         appState = appState || {};
         delete additionalParams.record;
-        appState.record = Ext.create('Taco.model.HandlingFeeRule', {
+        appState.record = Ext.create('Taco.model.OrderHandlingFeeRule', {
             appliesTo: 'order'
         });
-        this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.HandlingFeeRule);
+        this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.OrderHandlingFeeRule);
     },
     orderHandlingFeeEdit: function (id, additionalParams, appState) {
 
-        this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.HandlingFeeRule);
+        this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.OrderHandlingFeeRule);
     }
 
 
