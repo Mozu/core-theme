@@ -28,7 +28,7 @@
         ];
         gridCfg = {
             xtype: 'grid',
-
+         
             viewConfig: {
                 plugins: {
                     ptype: 'gridviewdragdrop',
@@ -119,7 +119,10 @@
                             });
                             return ret.join(',');
                         } else {
-                            return '[no methods]';
+                            if (me.showFeeColumn) {
+                                return '[All methods]';
+                            }
+                            return '[No methods]';
                         }
                     }
 
@@ -131,6 +134,7 @@
                     allowNavigation: false,
                     text: 'Actions',
                     width: 100,
+                    menuDisabled:true,
                     menuItems: [
                         {
                             text: 'Delete',
@@ -147,11 +151,15 @@
         };
         if (me.showFeeColumn) {
             gridCfg.columns.splice(gridCfg.columns.length - 2, 0, {
-                dataIndex: 'Value',
+                dataIndex: 'value',
                 text: 'Fees',
                 flex: 1,
                 renderer: function (value, metaData, record) {
-                    return value;
+                    var valueType = record.get('valueType');
+                    if (valueType == 'flatrate') {
+                        return Ext.util.Format.usMoney(value);
+                    }
+                    return value + '%';
                 }
             });
         }
@@ -166,7 +174,7 @@
         this.gridPager = Ext.create('Ext.toolbar.Paging', {
             dock: 'bottom',
             componentCls: 'x-grid-paging-toolbar',
-            displayInfo: true,
+            displayInfo: false,
             store: this.store,
             inputItemWidth: 45,
             border: '0 1 1'

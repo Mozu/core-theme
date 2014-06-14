@@ -699,6 +699,8 @@
     <Content Include="Scripts\app\model\BundledProduct.js" />
     <Content Include="Scripts\app\model\CustomerAccountPicker.js" />
     <Content Include="Scripts\app\model\CustomerSegment.js" />
+    <Content Include="Scripts\app\model\ProductHandlingFeeRule.js" />
+    <Content Include="Scripts\app\model\OrderHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
     <Content Include="Scripts\app\model\NavigationItem2.js" />
     <Content Include="Scripts\app\model\HandlingFeeRule.js" />
