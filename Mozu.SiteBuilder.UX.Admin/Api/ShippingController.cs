@@ -249,6 +249,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             await _shippingAdminProvisioningWebApiClient.CreateSite(new CreateSiteRequest()
                                                               {
+                                                                  MasterCatalogId = this.SbApiContext.MasterCatalogId ,
                                                                   CatalogId = this.SbApiContext.CatalogId,
                                                                   SiteId = this.SbApiContext.SiteId.Value ,
                                                                   TenantId = this.SbApiContext.TenantId
