@@ -1552,6 +1552,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\Automation\binary\phantomjs-1.6.0-win32-static\phantomjs.exe" />
+    <Content Include="Tests\Automation\binary\phantomjs-1.9.7-windows\phantomjs.exe" />
     <Content Include="Tests\Automation\CIRunner.js" />
     <None Include="Tests\Automation\junitToTrx.xslt" />
     <Content Include="Tests\Automation\launcher-common.js" />
