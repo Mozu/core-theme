@@ -92,6 +92,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             titlechange: {
                 fn: function (panel, newTitle) {
                     me.titleCmp.update(newTitle);
+
                 },
                 scope: me
             }
@@ -171,14 +172,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this,
             conf;
 
-        if (!me.contextConfig) {
-            me.contextConfig = {}
-        }
-        
+      
         // just call view.setTitle("new title here") to update the title;
         me.titleCmp = Ext.create('Ext.Component', {
             cls: "taco-content-header-title",
-            flex: 1,
+           // flex: 1,
             // todo: move this to the scss;
             //style: "font-size: 2rem;font-weight: 300;line-height: 3rem;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;",
             //html: "Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here "
@@ -195,6 +193,26 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.titleCmp
             ]
         };
+
+        if (!Ext.isEmpty(this.contextConfig)) {
+
+
+            conf.items.push({
+                autoEl: 'h3',
+                itemId: 'forLable',
+                style: {
+                    'font-weight': 'normal'
+                },
+                xtype: 'component',
+                html: '&nbsp;for&nbsp;'
+            });
+
+
+            conf.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
+        }
+        conf.items.push('->');
+
+    
         
 
 
@@ -301,6 +319,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 })
             }
         }
+
+
+       
 
         // Allows class with mixin to insert additional actions. Code copied from EditorWrapper;
         Ext.each(this.additionalActions, function (additionalAction) {

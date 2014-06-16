@@ -134,7 +134,7 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
             if (item.items().getCount()) {
                 ret = me.findNavRecords(item.items(), appStateAddress);
                 if (ret) {
-                    ret.parentRecord = ret.parentRecord == ret.selectedRecord ? item : ret.parentRecord;
+                    ret.parentRecord = ret.parentRecord == ret.selectedRecord && ret.selectedRecord.items().getCount() == 0 ? item : ret.parentRecord;
                     matches.push(ret);
                 }
                
