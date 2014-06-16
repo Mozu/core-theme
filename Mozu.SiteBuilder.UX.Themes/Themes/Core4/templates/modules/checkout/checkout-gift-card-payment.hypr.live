@@ -1,4 +1,31 @@
 ﻿<div class="mz-checkout-storecredit mz-l-stack-section">
+
+<!-- show regardless if have existing, look at coupon codes.-->
+  <div class="mz-l-formfieldgroup-cell">
+    <label for="gift-card-code">{{ labels.giftCardCode }}: </label>
+  </div>
+  <div class="mz-l-formfieldgroup-cell">
+    <input type="text" id="gift-card-code" name="gift-card-code" value="{{ model.giftCardCode }}" data-mz-value="giftCardCode">
+      <button class="mz-button" data-mz-action="addGiftCard" {% if="" not="" model.giftCardCode="" %} disabled="disabled" {% endif="" %}>{{ labels.apply }}</button>
+  </div>
+  
+  
+ <!--
+         <div class="mz-l-formfieldgroup-cell">
+            <label for="coupon-code">{{ labels.couponCode }}: </label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="coupon-code" name="coupon-code" value="{{ model.couponCode }}" data-mz-value="couponCode">
+            <button class="mz-button" data-mz-action="addCoupon" {% if not model.couponCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+        </div>
+ 
+ 
+ -->
+  
+  
+  
+  
+  
 {% if model.activeGiftCardCredits %}
   <h4 class="mz-l-stack-sectiontitle">{{ labels.storeCredits }}</h4>
     <div class="mz-checkout-appliedcredits">

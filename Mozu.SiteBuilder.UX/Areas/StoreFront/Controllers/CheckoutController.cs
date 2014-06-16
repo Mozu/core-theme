@@ -230,6 +230,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jOrder = JObject.FromObject(model, jSerializer);
 
             jOrder.Add("requiresFulfillmentInfo", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP));
+            jOrder.Add("requiresDigitalFulfillmentContact", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.DIGITAL));
 
             if (account != null)
             {

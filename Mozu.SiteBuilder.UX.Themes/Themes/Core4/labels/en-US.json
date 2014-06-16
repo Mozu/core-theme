@@ -148,6 +148,7 @@
   "suggestionNum"        : "Suggestion #{0}",
   "shippingMethod"       : "Shipping Method",
   "noShippingMethods"    : "Sorry, no shipping methods are available.",
+  "digitalFulfillmentContact"       : "Digital Gift Card",
   "paymentInformation"   : "Payment Information",
   "saveCard"             : "Save credit card information",
   "billingAddress"       : "Billing Address",
