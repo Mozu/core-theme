@@ -661,7 +661,9 @@
     <Content Include="Themes\Core4\templates\modules\checkout\step-review.hypr.live">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Core4\templates\modules\checkout\step-shipping-address.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\step-shipping-address.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\templates\modules\checkout\step-shipping-method.hypr.live">
       <SubType>Designer</SubType>
     </Content>
@@ -924,6 +926,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-gift-card-payment.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\modules\checkout\checkout-digital-fulfillment.hypr.live">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

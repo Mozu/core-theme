@@ -12,7 +12,7 @@
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus', 'requiresFulfillmentInfo'],
+            helpers: ['stepStatus', 'requiresFulfillmentInfo', 'requiresDigitalFulfillmentContact'],  //
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -53,6 +53,9 @@
             requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
             },
+            requiresDigitalFulfillmentContact: function () {
+                return this.getOrder().get('requiresDigitalFulfillmentContact');
+            },
             edit: function () {
                 this.stepStatus("incomplete");
             },
@@ -86,6 +89,9 @@
                 });
             },
             calculateStepStatus: function () {
+                if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact())
+                    return this.isDigitalValid();
+
                 if (!this.requiresFulfillmentInfo()) return this.stepStatus("complete");
                 return CheckoutStep.prototype.calculateStepStatus.apply(this);
             },
@@ -105,11 +111,33 @@
                 this.next();
             },
             toJSON: function () {
-                if (this.requiresFulfillmentInfo()) {
+                if (this.requiresFulfillmentInfo() || this.requiresDigitalFulfillmentContact()) {
                     return CheckoutStep.prototype.toJSON.apply(this, arguments);
                 }
             },
+            isDigitalValid: function() {
+                var email = this.get('email');
+                return (!email) ? false : true;
+            },
+            nextDigitalOnly: function() {
+                var parent = this.parent,
+                    order = this.getOrder(),
+                    me = this;
+                    this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
+                        me.provisional = false;
+                        me.isLoading(false);
+                        order.messages.reset();
+                        order.syncApiModel();
+
+                        me.calculateStepStatus();
+                        order.get('billingInfo').calculateStepStatus();
+                    });
+            },
             next: function () {
+                if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact()) {
+                    return this.nextDigitalOnly();
+                }
+
                 if (this.validate()) return false;
                 var parent = this.parent,
                     order = this.getOrder(),
@@ -132,7 +160,7 @@
                         parent.isLoading(false);
                         me.calculateStepStatus();
                         parent.calculateStepStatus();
-                    });
+                    });                  
                 };
 
                 var promptValidatedAddress = function () {
@@ -275,12 +303,18 @@
                 var active = this.getOrder().apiModel.getActiveStoreCredits();
                 return active && active.length > 0 && active;
             },
-            availableStoreCredits: function () {
+            //activeGiftCardCredits: function () {
+            //    var active = this.getOrder().apiModel.getActiveStoreCredits();
+            //    return active && active.length > 0 && active;
+            //},
+            availableCredits: function (creditType) {
                 var order = this.getOrder(),
                     customer = order.get('customer'),
                     credits = customer && customer.get('credits'),
                     usedCredits = this.activeStoreCredits(),
                     availableCredits = credits && _.compact(_.map(credits, function (credit) {
+                        if (credit.creditType != creditType)
+                            return false;
                         credit = _.clone(credit);
                         if (usedCredits) _.each(usedCredits, function (uc) {
                             if (uc.billingInfo.storeCreditCode === credit.code) {
@@ -291,6 +325,15 @@
                     }));
                 return availableCredits && availableCredits.length > 0 && availableCredits;
             },
+
+            availableStoreCredits: function () {
+                return this.availableCredits('StoreCredit');
+            },
+
+            availableGiftCardCredits: function () {
+                return this.availableCredits('GiftCard');
+            },
+
             applyingCredit: function () {
                 return this._applyingCredit;
             },
@@ -533,7 +576,7 @@
                         })
                     });
 
-                    if (!self.get("requiresFulfillmentInfo")) {
+                    if (!self.get("requiresFulfillmentInfo") && !self.get('requiresDigitalFulfillmentContact')) {
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf("fulfillment") === -1; }));
                     }
 

@@ -59,6 +59,7 @@
       <Property Name="VariationOptions" Hidden="true" />
     </Members>
     <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>

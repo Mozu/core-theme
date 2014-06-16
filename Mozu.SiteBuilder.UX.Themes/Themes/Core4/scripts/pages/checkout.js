@@ -69,7 +69,8 @@
             'address.postalOrZipCode',
             'address.addressType',
             'phoneNumbers.home',
-            'contactId'
+            'contactId',
+            'email'
         ],
         renderOnChange: [
             'address.countryCode',
