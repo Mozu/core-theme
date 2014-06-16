@@ -5,6 +5,7 @@
 
 Ext.define('Taco.controller.GeneralSettings', {
     extend: 'Taco.core.Controller',
+    alias:['Taco.controller.Generalsettings'],
     requires: ['Taco.view.generalSettings.Index'],
     views: ['generalSettings.Index'],
     models: ['Taco.model.GeneralSettings'],

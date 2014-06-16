@@ -188,13 +188,8 @@ Ext.define('Taco.store.Navigation', {
                     {
                         "id": "generalsettings",
                         "label": "General Settings",
-                        "items": [
-                            {
-                                "id": "generalsettingsgeneral",
-                                "label": "General",
-                                "address": "generalsettings"
-                            }
-                        ]
+                        "address": "generalsettings"
+                       
                     },
                     {
                         "id": "paymentcheckout",
@@ -208,11 +203,11 @@ Ext.define('Taco.store.Navigation', {
                     {
                         "id": "shipping",
                         "label": "Shipping",
-                    
+                        "address": "shipping",
                         "items": [
                                  {
                                      "id": "shipping4",
-                                     "label": "Rates and Fees",
+                                     "label": "Methods and Fees",
                                      "address": "shipping"
                                  },
                             {
