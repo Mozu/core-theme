@@ -67,6 +67,12 @@
         FulfillmentContact = CheckoutStep.extend({
             relations: CustomerModels.Contact.prototype.relations,
             validation: CustomerModels.Contact.prototype.validation,
+            digitalOnlyValidation: {
+                "email": {
+                    pattern: 'email',
+                    msg: Hypr.getLabel('emailMissing')
+                } 
+            },
             dataTypes: {
                 contactId: Backbone.MozuModel.DataTypes.Int
             },
@@ -89,10 +95,11 @@
                 });
             },
             calculateStepStatus: function () {
-                if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact())
-                    return this.isDigitalValid();
+                if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact()) {
+                    this.validation = this.digitalOnlyValidation;
+                }
 
-                if (!this.requiresFulfillmentInfo()) return this.stepStatus("complete");
+                if (!this.requiresFulfillmentInfo() && !this.requiresDigitalFulfillmentContact()) return this.stepStatus("complete");
                 return CheckoutStep.prototype.calculateStepStatus.apply(this);
             },
             getOrder: function () {
@@ -119,19 +126,19 @@
                 var email = this.get('email');
                 return (!email) ? false : true;
             },
-            nextDigitalOnly: function() {
-                var parent = this.parent,
-                    order = this.getOrder(),
+            nextDigitalOnly: function () {
+                var order = this.getOrder(),
                     me = this;
-                    this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
-                        me.provisional = false;
-                        me.isLoading(false);
-                        order.messages.reset();
-                        order.syncApiModel();
+                if (this.validate()) return false;
+                this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
+                    me.provisional = false;
+                    me.isLoading(false);
+                    order.messages.reset();
+                    order.syncApiModel();
 
-                        me.calculateStepStatus();
-                        order.get('billingInfo').calculateStepStatus();
-                    });
+                    me.calculateStepStatus();
+                    return order.get('billingInfo').calculateStepStatus();
+                });
             },
             next: function () {
                 if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact()) {
@@ -576,7 +583,7 @@
                         })
                     });
 
-                    if (!self.get("requiresFulfillmentInfo") && !self.get('requiresDigitalFulfillmentContact')) {
+                    if (!self.get("requiresFulfillmentInfo")) {
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf("fulfillment") === -1; }));
                     }
 
