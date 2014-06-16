@@ -9,7 +9,7 @@
       </div>
       <div class="mz-l-formfieldgroup-cell">
         <input type="text" id="digital-fulfillment-email" name="digital-fulfillment-email" data-mz-value="email" value="{{ model.email }}" />
-          <span class="mz-validationmessage" data-mz-validationmessage-for="fulfillmentInfo.contact.email"></span>
+          <span class="mz-validationmessage" data-mz-validationmessage-for="email"></span>
         </div>
     </div>
   </div>
