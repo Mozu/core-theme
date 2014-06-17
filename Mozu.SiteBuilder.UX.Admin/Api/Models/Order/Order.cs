@@ -76,8 +76,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public List<ShippingDiscount> ShippingDiscounts { get; set; }
         #endregion
 
+        /// <summary>
+        /// Notes entered by the shopper, if any.
+        /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CustomerNote { get; set; }
+
+        /// <summary>
+        /// Internal notes that a merchant may add to the order. Maximum 250 characters.
+        /// </summary>
+        public OrderNote InternalNotes { get; set; }
 
         #region workflow shit
         public string OrderStatus { get; set; }
