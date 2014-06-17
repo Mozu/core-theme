@@ -36,7 +36,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
 
             switch (item.property.ToLowerInvariant())
             {
-             
+                case "ordertype":
+                    return "type";
+
                 default:
                    return item.property.ToLowerInvariant();
             }

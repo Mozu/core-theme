@@ -98,6 +98,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     return string.Format("( {1} cont \"{0}\" )", filter.value, BILLINGCONTACTADDRESS);
                 case "customerid":
                     return string.Format("( CustomerAccountId  eq {0} )", filter.value);
+                case "ordertype":
+                    return string.Format("type eq {0}", filter.value);
                 default:
                 {
                     throw new NotImplementedException("unable to filter on property " + filter.property);
