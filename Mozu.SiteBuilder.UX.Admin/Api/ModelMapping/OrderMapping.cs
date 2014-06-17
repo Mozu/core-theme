@@ -35,8 +35,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcPickup_to_OrderPickup();
             Map_DcDigitalPackage_to_OrderDigitalPackage();
             Map_DcDigitalPackageItem_to_OrderDigitalPackageItem();
-            Map_DcAdjustment_to_OrderAdjustment();
+            Map_DcAdjustment_to_Adjustment();
             Map_DcAppliedDiscount_to_OrderDiscount();
+            Map_DcOrderNote_to_OrderNote();
 
             Map_OrderPackage_to_DcPackage();
             Map_OrderPackageItem_to_DcPackageItem();
@@ -85,6 +86,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? dc.ShippingDiscounts.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) : null))
                 .ForMember(x => x.ShippingDiscounts, op => op.ResolveUsing(dc => dc.ShippingDiscounts))
                 .ForMember(x => x.CustomerNote, op => op.ResolveUsing(dc => dc.ShopperNotes != null ? dc.ShopperNotes.Comments : null))
+                .ForMember(x => x.InternalNotes, op => op.ResolveUsing(dc => dc.Notes))
                 .ForMember(x => x.OrderStatus, op => op.ResolveUsing(dc => dc.Status))
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus ))
                 .ForMember(x => x.PaymentStatus, op => op.ResolveUsing(dc => dc.PaymentStatus))
@@ -692,7 +694,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
-        private void Map_Adjustment_to_DcAdjustment()
+        private void Map_DcAdjustment_to_Adjustment()
         {
             Mapper.CreateMap<CommerceDC.Adjustment, Adjustment>()
                 .ForMember(x => x.Amount, op => op.ResolveUsing(dc => dc.Amount))
@@ -849,12 +851,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
-        private void Map_DcAdjustment_to_OrderAdjustment()
+        private void Map_Adjustment_to_DcAdjustment()
         {
             Mapper.CreateMap<Adjustment, CommerceDC.Adjustment>()
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => x.Amount))
                 .ForMember(dc => dc.Description, op => op.ResolveUsing(x => x.Description))
                 .ForMember(dc => dc.InternalComment, op => op.ResolveUsing(x => x.InternalComment))
+                ;
+        }
+
+        private void Map_DcOrderNote_to_OrderNote()
+        {
+            Mapper.CreateMap<OrdersDC.OrderNote, OrderNote>()
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.Text, op => op.ResolveUsing(dc => dc.Text))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo.CreateDate))
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo.CreateBy))
+                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo.UpdateDate))
+                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo.UpdateBy))
                 ;
         }
 

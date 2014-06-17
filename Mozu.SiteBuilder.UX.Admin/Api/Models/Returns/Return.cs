@@ -146,26 +146,4 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     //    public Decimal? ShippingTaxAmount { get; set; }
     //}
-
-    [DataContract(Namespace = "Mozu.services.contracts")]
-    public class OrderNote
-    {
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Id { get; set; }
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Text { get; set; }
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public DateTime? UpdateDate { get; set; }
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public DateTime? CreateDate { get; set; }
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string UpdateBy { get; set; }
-
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string CreateBy { get; set; }
-    }
 }
