@@ -480,6 +480,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "carrierRatesWithConfigured")]
         public async Task<Response<List<object>>> GetAllCarrierRatesWithConfiguredInfo()
         {
+            var methods = (await this.ShippingRuleRead(new PagingParamaters(), new FilterCollection())).Items;
+
             var configurations = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
             var ret = new List<object>();
             foreach (var rp in Mozu.SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.GetAll())
@@ -502,8 +504,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             RateProvider = key,
                             IsActive = true,
                             RateType = customRate.RateType,
-                            IsConfigured = true,
-                            CustomValue = customRate.Value
+                            IsConfigured = methods.Any(x=> x.Id == customRate.Id ),
+                            CustomValue =  customRate.Value
                         };
                     ret.AddRange(cheese);
                 }
@@ -521,7 +523,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             IsActive = true,
                             IsInternational = true,
                             Sequence = 0,
-                            IsConfigured = isConfigured
+                            IsConfigured = methods.Any(x => x.Id == st.Code),
                         };
                     ret.AddRange(cheese);
                 }
