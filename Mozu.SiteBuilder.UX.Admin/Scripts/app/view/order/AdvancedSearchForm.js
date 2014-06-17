@@ -144,6 +144,26 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 })
             }, {
                 xtype: 'combobox',
+                name: 'ordertype',
+                fieldLabel: 'Order Type',
+                valueField: 'id',
+                displayField: 'name',
+                editable: true,
+                forceSelection: false,
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['id', "name"],
+                    data: [
+                        {
+                            name: "Online",
+                            id: "Online"
+                        }, {
+                            name: "Offline",
+                            id: "Offline"
+                        }
+                    ]
+                })
+            }, {
+                xtype: 'combobox',
                 name: 'channel',
                 fieldLabel: 'Channel',
                 valueField: 'code',
