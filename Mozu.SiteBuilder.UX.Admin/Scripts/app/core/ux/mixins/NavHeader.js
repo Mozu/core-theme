@@ -194,7 +194,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             ]
         };
 
-        if (!Ext.isEmpty(this.contextConfig)) {
+        if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
 
 
             conf.items.push({

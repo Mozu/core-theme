@@ -23,7 +23,10 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
     formCfg: {
         layout: {
             type: 'vbox',
-            align: 'stretch'
+            align: 'stretch',
+        },
+        defaults: {
+            margin: '10px 10px 10px 10px'
         },
         title: 'Shipping Methods and Fees',
         items: [

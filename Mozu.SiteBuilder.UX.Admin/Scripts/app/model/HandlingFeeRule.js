@@ -29,7 +29,8 @@ Ext.define('Taco.model.HandlingFeeRule', {
             "type": "auto"
         }, {
             "name": "valueType",
-            "type": "string"
+            "type": "string",
+            "defaultValue": "flatrate"
         }, {
             "name": "appliesTo",
             "type": "string"

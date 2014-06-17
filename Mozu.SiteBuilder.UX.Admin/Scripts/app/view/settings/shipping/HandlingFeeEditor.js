@@ -9,11 +9,11 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
     ],
     formCls: 'Taco.core.ux.form.Form',
     //editorName: 'Taco.view.discount.Edit',
-    title: 'Shipping Methods',
+   // title: 'Shipping Methods',
 
 
     contextConfig: {
-        supportedLevels: ['s'],
+   //     supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
     initComponent: function () {
@@ -22,7 +22,8 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
                 type: 'vbox',
                 align: 'stretch'
             },
-            title: 'Shipping Methods',
+
+            title: this.record.get('appliesTo') == 'product' ? 'Product Handling Fee Configuration' : 'Order Handling Fee Configuration',
             items: [
                 {
                     xtype: 'boxselect',
@@ -49,37 +50,35 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
 
                 },
 
-                /*
-                public string ValueType { get; set; }
-
-    public string AppliesTo { get; set; }
-
-    public Decimal Value { get; set; }
-    
-     public static readonly string Percentage = "percentage";
-                    public static readonly string FlatRate = "flatrate";
-    
-    */
+               
                 {
-                    xtype: 'combo',
-                    name: 'valueType',
-                    fieldLabel: 'Fee Type',
-                    allowBlank: false,
-                    editable: false,
-                    store: [
-                        ['percentage', 'percentage'],
-                        ['flatrate', 'flatrate']
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [
+                        {
+                            xtype: 'combo',
+                            name: 'valueType',
+                            fieldLabel: 'Fee Type',
+                            allowBlank: false,
+                            editable: false,
+                            value: 'flatrate',
+                            store: [
+                                ['percentage', 'percentage'],
+                                ['flatrate', 'flatrate']
+                            ]
+
+                        },
+                        {
+                            fieldLabel: 'Fee',
+                            xtype: 'textfield',
+                            hideTrigger: true,
+                            name: 'value'
+                        }
                     ]
-
                 },
                 {
-                    fieldLabel: 'Fee',
-                    xtype: 'textfield',
-                    hideTrigger: true,
-                    name: 'value'
-                },
-                {
-                    fieldLabel: 'Sequence',
+                    fieldLabel: 'Priority',
+                    hidden: this.record.phantom,
                     xtype: 'numberfield',
                     hideTrigger: true,
                     name: 'sequence',
@@ -91,7 +90,7 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
     },
     getIndexRoute: function () {
         return 'shipping';
-        
+
     },
 
     getEditRoute: function () {

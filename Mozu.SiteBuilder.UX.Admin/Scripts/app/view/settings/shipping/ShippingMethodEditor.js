@@ -14,7 +14,7 @@ Ext.define('Taco.view.settings.shipping.ShippingMethodEditor', {
 
 
     contextConfig: {
-        supportedLevels: ['s'],
+      //  supportedLevels: ['s'],
         requiresContextOfType: ['s']
     },
     initComponent: function () {
@@ -50,8 +50,9 @@ Ext.define('Taco.view.settings.shipping.ShippingMethodEditor', {
 
                 },
                 {
-                    fieldLabel: 'Sequence',
+                    fieldLabel: 'Priority',
                     xtype: 'numberfield',
+                    hidden: this.record.phantom,
                     hideTrigger:true,
                     name: 'sequence',
                     value:999
