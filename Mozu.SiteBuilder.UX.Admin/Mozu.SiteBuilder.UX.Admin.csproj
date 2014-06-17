@@ -801,8 +801,11 @@
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\CheckDecline.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
+    <Content Include="Scripts\app\view\order\subform\InternalNotes.js" />
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
+    <Content Include="Scripts\app\view\order\subform\Attributes.js" />
     <Content Include="Scripts\app\view\order\widget\AddOrderItemToolbar.js" />
+    <Content Include="Scripts\app\view\order\widget\InternalNotesGrid.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanelEditable.js" />
     <Content Include="Scripts\app\view\order\widget\PackagePickup.js" />
