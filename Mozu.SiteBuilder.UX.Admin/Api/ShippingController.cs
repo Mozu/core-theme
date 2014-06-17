@@ -11,6 +11,7 @@ using AutoMapper;
 using Burrows.Exceptions;
 using MongoDB.Driver;
 using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Api.Routing;
@@ -248,7 +249,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new InvalidOperationException("doh");
             }
 
-            await _shippingAdminProvisioningWebApiClient.CreateSite(new CreateSiteRequest()
+            await _shippingAdminProvisioningWebApiClient.CloneWithoutUserClaims().CreateSite(new CreateSiteRequest()
                                                               {
                                                                   MasterCatalogId = this.SbApiContext.MasterCatalogId ,
                                                                   CatalogId = this.SbApiContext.CatalogId,
