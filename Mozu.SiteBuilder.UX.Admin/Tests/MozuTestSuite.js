@@ -158,17 +158,17 @@ Harness.start(
                     }
                 ]
             },
-//{
-//                group: 'Settings',
-//                expanded: true,
-//                alsoPreload: [],
-//                items: [
-//                    {
-//                        url: 'customunit/view/settings/shipping/Zones-t.js',
-//                        title: 'settings shipping zones'
-//                    }
-//                ]
-//},
+{
+                group: 'Settings',
+                expanded: true,
+                alsoPreload: [],
+                items: [
+                    {
+                        url: 'customunit/view/settings/shipping/Zones-t.js',
+                        title: 'settings shipping zones'
+                    }
+                ]
+},
 
             {
                 group: 'WebSite',

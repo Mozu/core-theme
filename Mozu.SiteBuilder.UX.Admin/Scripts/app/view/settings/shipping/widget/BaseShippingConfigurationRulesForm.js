@@ -1,5 +1,5 @@
 ﻿Ext.define('Taco.view.settings.shipping.widget.BaseShippingConfigurationRulesForm', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Taco.core.ux.EditContainer',
    // alias: 'widget.shippinginclusionruleform',
     requires: [
         'Taco.store.ShippingInclusionRules',
