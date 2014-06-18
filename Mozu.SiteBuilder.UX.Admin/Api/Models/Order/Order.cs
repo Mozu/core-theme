@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Internal notes that a merchant may add to the order. Maximum 250 characters.
         /// </summary>
-        public OrderNote InternalNotes { get; set; }
+        public List<OrderNote> InternalNotes { get; set; }
 
         #region workflow shit
         public string OrderStatus { get; set; }
