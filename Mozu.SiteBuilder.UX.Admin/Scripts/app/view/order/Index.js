@@ -116,6 +116,14 @@ Ext.define('Taco.view.order.Index', {
             width: 100,
             sortable: true
         }, {
+            stateId: 'channelName',
+            text: 'Channel',
+            dataIndex: "channelName",
+            flex: 1,
+            minWidth: 100,
+            width: 100,
+            sortable: false
+        }, {
             stateId: 'siteName',
             text: 'SiteName',
             dataIndex: "siteName",
