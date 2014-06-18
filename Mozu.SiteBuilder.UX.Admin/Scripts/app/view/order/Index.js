@@ -150,7 +150,7 @@ Ext.define('Taco.view.order.Index', {
             dataIndex: 'billingContact',
             flex: 1,
             minWidth: 100,
-            width: 100,
+            width: 100, 
             sortable: false,
             hidden: true,
             renderer: function (value, metaData, record) {
@@ -358,7 +358,7 @@ Ext.define('Taco.view.order.Index', {
             infoStore,
             infoRecord;
          
-        if (oderSiteId != currentSite.id) {
+        if (currentSite== null || oderSiteId != currentSite.id) {
             Taco.app.context.setCurrentSite(oderSiteId);
         }
         this.callParent(arguments);
