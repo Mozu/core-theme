@@ -116,12 +116,13 @@ Ext.define('Taco.view.order.Index', {
             width: 100,
             sortable: true
         }, {
-            stateId: 'channelName',
-            text: 'Channel',
-            dataIndex:"channelName",
+            stateId: 'siteName',
+            text: 'SiteName',
+            dataIndex: "siteName",
             flex: 1,
             minWidth: 100,
             width: 100,
+            hidden:true,
             sortable: false
         }, {
             stateId: 'customerEmail',
@@ -344,10 +345,14 @@ Ext.define('Taco.view.order.Index', {
 
 
     launchLoadedEditor: function (record, options) {
-        var site = Taco.app.context.getSite(),
+        var currentSite = Taco.app.context.getSite(),
+            oderSiteId = record.get('siteId'),
             infoStore,
             infoRecord;
-
+         
+        if (oderSiteId != currentSite.id) {
+            Taco.app.context.setCurrentSite(oderSiteId);
+        }
         this.callParent(arguments);
     },
     
