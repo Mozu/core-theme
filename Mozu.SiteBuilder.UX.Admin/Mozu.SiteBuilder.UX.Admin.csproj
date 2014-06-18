@@ -2154,39 +2154,16 @@
   </Target>
   <Target Name="AfterCompile" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="CIRunner.bat" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Message Text="thoms notes- mstest /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" />
-    <Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\mstest.exe&quot; /publish:$(TeamFoundationServerUrl) /publishbuild:&quot;$(BuildNumber)&quot; /teamproject:Mozu /platform:&quot;Any CPU&quot; /flavor:$(Configuration) /publishresultsfile:junit.trx" WorkingDirectory="$(ProjectDir)\Tests\Automation" IgnoreExitCode="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <XmlPeek XmlInputPath="$(ProjectDir)\Tests\Automation\junit.trx" Query="/*/x:ResultSummary/@outcome" Namespaces="&lt;Namespace Prefix='x' Uri='http://microsoft.com/schemas/VisualStudio/TeamTest/2010' /&gt;">
-      <Output TaskParameter="Result" PropertyName="JSTestOutcom" />
-    </XmlPeek>
-    <XmlPeek XmlInputPath="$(ProjectDir)\Tests\Automation\junit.trx" Query="//x:UnitTestResult[@outcome='Failed']/@testName" Namespaces="&lt;Namespace Prefix='x' Uri='http://microsoft.com/schemas/VisualStudio/TeamTest/2010' /&gt;">
-      <Output TaskParameter="Result" PropertyName="JSTestUnitTests" />
-    </XmlPeek>
-    <Error Text="JS tests failed [$(JSTestUnitTests)]" Condition="'$(JSTestOutcom)'=='Failed'" />
-    <Message Text="thom notes result is $(ProjectDir)\Tests\Automation\junit.trx is $(JSTestOutcom) " />
-    <!--<PublishJUnit 
-          
-          BuildUri="$(BuildUri)"
-          Files="@(LocalJUnitLogFiles)"
-          Flavor="%(ConfigurationToBuild.FlavorToBuild)"
-          Platform="%(ConfigurationToBuild.PlatformToBuild)"
-          Style="$(JUnitTrxConversionStyle)"
-          TeamProjectCollectionUrl="$(TeamFoundationServerUrl)"
-          TestResultsRoot="$(TestResultsRoot)" />-->
-    <PropertyGroup>
-      <AdminScriptsBuildSource>$(ProjectDir)Scripts\build\**\*.*</AdminScriptsBuildSource>
-      <AdminScriptsBuildOutput>$(OutDir)_PublishedWebsites\Mozu.SiteBuilder.UX.Admin\Scripts\build</AdminScriptsBuildOutput>
-    </PropertyGroup>
-    <Message Text="thoms notes-- deleting temp files $(ProjectDir)Scripts\build\temp" />
+   
+
+
     <ItemGroup>
       <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />
     </ItemGroup>
     <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
     <ItemGroup>
       <Content Include="Scripts\build\**\*.*" />
-      <Content Include="Tests\Automation\*.xml" />
-      <Content Include="Tests\Automation\*.trx" />
+
     </ItemGroup>
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
