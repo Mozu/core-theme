@@ -26,10 +26,7 @@ var HyprLive = {
         cache: false,
         cmtControls: ['{% comment %}', '{% endcomment %}'],
         locals: locals,
-        getTemplateText: function (path) {
-            return HyprLiveContext.templates[path]
-        },
-        noResolveParents: true
+        loader: amds[0].loaders.memory(HyprLiveContext.templates, '/')
     }),
     getTemplate: getHyprLiveTemplate,
     getThemeSetting: function(setting) {
@@ -40,8 +37,4 @@ var HyprLive = {
         if (arguments.length > 1) return formatString(locals.labels[name], Array.prototype.slice.call(arguments, 1));
     }
 };
-
-HyprLive.engine.compileFile = function (path) {
-    return getHyprLiveTemplate(path).tpl;
-}
 // END INIT

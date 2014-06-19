@@ -9,7 +9,7 @@
         sign = n < 0 ? "-" : "";
         i = parseInt(n = (Math.round(om * Math.abs(+n || 0)) / om), 10) + "";
         j = (j = i.length) > 3 ? j % 3 : 0;
-        s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+            s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
         return sign + (symbolIsSuffix ? s + symbol : symbol + s);
     }
 
@@ -19,7 +19,11 @@
 
 
     HyprLive.engine.setFilter('divisibleby', function (num, divisor) {
-        return num % divisor === 0;
+        return num && num % divisor === 0;
+    });
+
+    HyprLive.engine.setFilter('add_url_param', function (url, param, value) {
+        return url + (url.indexOf('?') === -1 ? '?' : '&') + encodeURIComponent(param) + '=' + encodeURIComponent(value);
     });
 
     HyprLive.engine.setFilter('slugify', (function() {

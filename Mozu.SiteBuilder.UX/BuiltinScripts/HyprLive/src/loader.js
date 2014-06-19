@@ -1,6 +1,5 @@
-﻿var HyprLiveTemplate = function (precompiledTpl, swigTpl, path) {
+﻿var HyprLiveTemplate = function (precompiledTpl, path) {
     this.precompiledTpl = precompiledTpl;
-    this.tpl = swigTpl;
     this.path = path;
 },
 
@@ -11,8 +10,6 @@
         if (!tptText) throw new ReferenceError("HyprLive template \"" + lpath + "\" not found!");
         if (!(lpath in compiled)) {
             compiled[lpath] = new HyprLiveTemplate(HyprLive.engine.precompile(tptText, {
-                filename: path
-            }), HyprLive.engine.compile(tptText, {
                 filename: path
             }), path);
         }
