@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             foreach (var prod in vm)
             {
                 writer.WriteStartElement("url", NS);
-                writer.WriteElementString("loc", NS, "http://" + domain + prod.Url);
+                writer.WriteElementString("loc", NS, domain + prod.Url);
                 //  writer.WriteElementString("lastmod", NS, );
                 writer.WriteElementString("changefreq", NS, "daily");
                 writer.WriteElementString("priority", NS, ".7");
