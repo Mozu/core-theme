@@ -471,8 +471,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcShippingDiscount_to_ShippingDiscount()
         {
             Mapper.CreateMap<DiscountDC.ShippingDiscount, ShippingDiscount>()
-                .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => (dc.Discount != null) 
-                    ? dc.Discount.Discount.Id : 0))
+                .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Discount != null ? dc.Discount.Discount.Id : 0))
                 .ForMember(x => x.MethodCode, op => op.ResolveUsing(dc => dc.MethodCode))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null && dc.Discount.Discount != null) 
                     ? dc.Discount.Discount.Name : null))
@@ -512,6 +511,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? dc.BillingInfo.Card.CardNumberPartOrMask : null))
                 .ForMember(x => x.NameOnCard, op => op.ResolveUsing(dc => (dc.BillingInfo != null && dc.BillingInfo.Card != null) 
                     ? dc.BillingInfo.Card.NameOnCard : null))
+                .ForMember(x => x.ExpireMonth, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.Card != null ? (short?)dc.BillingInfo.Card.ExpireMonth : null))
+                .ForMember(x => x.ExpireYear, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.Card != null ? (short?)dc.BillingInfo.Card.ExpireYear : null))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))

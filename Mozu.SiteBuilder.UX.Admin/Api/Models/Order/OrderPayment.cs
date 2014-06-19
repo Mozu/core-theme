@@ -64,6 +64,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string NameOnCard { get; set; }
 
+        public short? ExpireMonth { get; set; }
+
+        public short? ExpireYear { get; set; }
+
         #endregion
 
         #region workflow shit

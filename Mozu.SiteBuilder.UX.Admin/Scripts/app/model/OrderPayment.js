@@ -75,6 +75,16 @@ Ext.define('Taco.model.OrderPayment', {
             'useNull': true
         },
         {
+            'name': 'expireMonth',
+            'type': 'int',
+            'useNull': true
+        },
+        {
+            'name': 'expireYear',
+            'type': 'int',
+            'useNull': true
+        },
+        {
             'name': 'createDate',
             'type': 'date',
             'useNull': true
