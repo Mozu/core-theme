@@ -19,6 +19,7 @@ using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Consume;
 using Mozu.Core.Messaging.Publish;
 using Mozu.Core.Settings;
+using Mozu.MZDB.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -76,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerRequest();
 
             builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerRequest();
-
+            builder.RegisterClassesMatchingInterfaceName(typeof(IEntityListsWebApiClient).Assembly);
 
             //  builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
             builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerRequest();

@@ -275,8 +275,9 @@
     <Reference Include="Mozu.Location.Contracts">
       <HintPath>..\packages\Mozu.Location.Contracts.1.7.0.3\lib\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.MZDB.Contracts">
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev001\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
+    <Reference Include="Mozu.MZDB.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev002\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts">
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.7.0.3\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
@@ -454,6 +455,8 @@
     </Compile>
     <Compile Include="Hypr\Tags\HeaderContent.cs" />
     <Compile Include="Hypr\Tags\DropZoneTag.cs" />
+    <Compile Include="Hypr\Tags\IncludeEntityTag.cs" />
+    <Compile Include="Hypr\Tags\IncludeContentTag.cs" />
     <Compile Include="Hypr\Tags\IncludeProductsTag.cs" />
     <Compile Include="Hypr\Tags\VisitTrackingPixelTag.cs">
       <SubType>Code</SubType>

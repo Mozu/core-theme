@@ -56,6 +56,9 @@ Harness.start(
                                 title: 'Attribute Creation'
                             }
                         ]
+                    },
+                    {
+                        url: 'integration/entities/grid-t.js'
                     }
                 ]
             }

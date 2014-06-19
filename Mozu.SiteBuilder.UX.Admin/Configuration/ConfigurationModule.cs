@@ -15,6 +15,7 @@ using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Publish;
 using Mozu.Core.Settings;
+using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
@@ -70,8 +71,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             //builder.RegisterClassesMatchingInterfaceName(typeof(PlatformService.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient ).Assembly);
 
-           
-            
+
+            builder.RegisterClassesMatchingInterfaceName(typeof (IEntityListsWebApiClient).Assembly);
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
             
