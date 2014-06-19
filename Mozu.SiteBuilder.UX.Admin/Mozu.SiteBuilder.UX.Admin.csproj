@@ -265,8 +265,9 @@
     <Reference Include="Mozu.Location.Contracts">
       <HintPath>..\packages\Mozu.Location.Contracts.1.7.0.3\lib\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.MZDB.Contracts">
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev001\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
+    <Reference Include="Mozu.MZDB.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev002\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts">
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.7.0.3\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
@@ -421,6 +422,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\EntityController.cs" />
     <Compile Include="Api\CmsDocumentController.cs" />
     <Compile Include="Api\CmsPublishingController.cs" />
     <Compile Include="Api\CapabilityController.cs" />
@@ -706,6 +708,7 @@
     <Content Include="Scripts\app\model\BundledProduct.js" />
     <Content Include="Scripts\app\model\CustomerAccountPicker.js" />
     <Content Include="Scripts\app\model\CustomerSegment.js" />
+    <Content Include="Scripts\app\model\Entity.js" />
     <Content Include="Scripts\app\model\ProductHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\OrderHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
@@ -763,6 +766,7 @@
     <Content Include="Scripts\app\store\CustomersPicker.js" />
     <Content Include="Scripts\app\store\OrderHandlingFeeRules.js" />
     <Content Include="Scripts\app\store\ProductHandlingFeeRules.js" />
+    <Content Include="Scripts\app\store\Entities.js" />
     <Content Include="Scripts\app\store\ShippingInclusionRules.js" />
     <Content Include="Scripts\app\store\ProductRules.js" />
     <Content Include="Scripts\app\store\ShippingZones.js" />
@@ -798,6 +802,7 @@
     <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
+    <Content Include="Scripts\app\view\entityManager\Grid.js" />
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
@@ -1573,6 +1578,7 @@
     <Content Include="Tests\HomePages\Mystic.cshtml" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
     <Content Include="Tests\index.html" />
+    <Content Include="Tests\integration\entities\grid-t.js" />
     <Content Include="Tests\integration\product\product-basic-edit-save.js" />
     <Content Include="Tests\mocha\basic\basic-mocha-bdd-test.js" />
     <Content Include="Tests\mocha\requireJs\config.js">
