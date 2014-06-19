@@ -4,7 +4,7 @@
 var port = 9001,
     testurl = "http://127.0.0.1:" + port + "/tests/SpecRunner.html";
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -93,7 +93,7 @@ module.exports = function (grunt) {
     //grunt.loadNpmTasks('grunt-contrib-connect');
     //grunt.loadNpmTasks('grunt-mocha');
 
-    grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
+    grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function() {
         var done = this.async(),
             spawn = require('child_process').spawn,
             child,
@@ -103,11 +103,11 @@ module.exports = function (grunt) {
 
         child = spawn("C:\\Program Files\ (x86)\\Microsoft\ Visual\ Studio\ 11.0\\Common7\\IDE\\TF.exe", ["checkout", this.data.dir + "\\*"]);
 
-        child.stderr.on('data', function (data) {
+        child.stderr.on('data', function(data) {
             grunt.log.error(data);
         });
 
-        child.on('close', function (code) {
+        child.on('close', function(code) {
             if (code !== 0) {
                 grunt.log.error("Could not check files out of TFS.") && grunt.fatal("TFS checkout failed.");
                 done(false);
@@ -121,6 +121,7 @@ module.exports = function (grunt) {
     var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
 
     grunt.registerTask('default', order);
+    grunt.registerTask('nobower', order.slice(1));
     //grunt.registerTask('test', ['connect:server', 'mocha']);
     //grunt.registerTask('testdebug', ['connect:browser']);
     //grunt.registerTask('notest', order.slice(0, -2));
