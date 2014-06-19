@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2014-04-28
+ * Mozu Hypr Live - v0.2.0 - 2014-06-19
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -21,7 +21,7 @@
 	(function (exportFn) {
 		exportFn(['hyprlivecontext'], function (HyprLiveContext) {
             
-/*! Swig v1.2.7 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v1.3.2 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -34,7 +34,7 @@ if (typeof define === 'function' && typeof define.amd === 'object') {
   window.swig = swig;
 }
 
-},{"../lib/swig":6}],2:[function(require,module,exports){
+},{"../lib/swig":9}],2:[function(require,module,exports){
 var utils = require('./utils');
 
 var _months = {
@@ -105,7 +105,7 @@ exports.l = function (input) {
 };
 exports.N = function (input) {
   var d = input.getDay();
-  return (d >= 1) ? d + 1 : 7;
+  return (d >= 1) ? d : 7;
 };
 exports.S = function (input) {
   var d = input.getDate();
@@ -234,7 +234,7 @@ exports.U = function (input) {
   return input.getTime() / 1000;
 };
 
-},{"./utils":23}],3:[function(require,module,exports){
+},{"./utils":26}],3:[function(require,module,exports){
 var utils = require('./utils'),
   dateFormatter = require('./dateformatter');
 
@@ -309,12 +309,16 @@ exports.capitalize = function (input) {
  * // now = new Date();
  * {{ now|date('Y-m-d') }}
  * // => 2013-08-14
+ * @example
+ * // now = new Date();
+ * {{ now|date('jS \o\f F') }}
+ * // => 4th of July
  *
- * @param  {?(string|date)} input
- * @param  {string} format  PHP-style date format compatible string.
- * @param  {number=} offset Timezone offset from GMT in minutes.
- * @param  {string=} abbr   Timezone abbreviation. Used for output only.
- * @return {string}         Formatted date string.
+ * @param  {?(string|date)}   input
+ * @param  {string}           format  PHP-style date format compatible string. Escape characters with <code>\</code> for string literals.
+ * @param  {number=}          offset  Timezone offset from GMT in minutes.
+ * @param  {string=}          abbr    Timezone abbreviation. Used for output only.
+ * @return {string}                   Formatted date string.
  */
 exports.date = function (input, format, offset, abbr) {
   var l = format.length,
@@ -329,7 +333,10 @@ exports.date = function (input, format, offset, abbr) {
 
   for (i; i < l; i += 1) {
     cur = format.charAt(i);
-    if (dateFormatter.hasOwnProperty(cur)) {
+    if (cur === '\\') {
+      i += 1;
+      out += (i < l) ? format.charAt(i) : cur;
+    } else if (dateFormatter.hasOwnProperty(cur)) {
       out += dateFormatter[cur](date, offset, abbr);
     } else {
       out += cur;
@@ -353,7 +360,7 @@ exports.date = function (input, format, offset, abbr) {
  * @param  {*}  def     Value to return if `input` is `undefined`, `null`, or `false`.
  * @return {*}          `input` or `def` value.
  */
-exports.default = function (input, def) {
+exports["default"] = function (input, def) {
   return (typeof input !== 'undefined' && (input || typeof input === 'number')) ? input : def;
 };
 
@@ -451,6 +458,50 @@ exports.first = function (input) {
   }
 
   return input[0];
+};
+
+/**
+ * Group an array of objects by a common key. If an array is not provided, the input value will be returned untouched.
+ *
+ * @example
+ * // people = [{ age: 23, name: 'Paul' }, { age: 26, name: 'Jane' }, { age: 23, name: 'Jim' }];
+ * {% for agegroup in people|groupBy('age') %}
+ *   <h2>{{ loop.key }}</h2>
+ *   <ul>
+ *     {% for person in agegroup %}
+ *     <li>{{ person.name }}</li>
+ *     {% endfor %}
+ *   </ul>
+ * {% endfor %}
+ *
+ * @param  {*}      input Input object.
+ * @param  {string} key   Key to group by.
+ * @return {object}       Grouped arrays by given key.
+ */
+exports.groupBy = function (input, key) {
+  if (!utils.isArray(input)) {
+    return input;
+  }
+
+  var out = {};
+
+  utils.each(input, function (value) {
+    if (!value.hasOwnProperty(key)) {
+      return;
+    }
+
+    var keyname = value[key],
+      newVal = utils.extend({}, value);
+    delete newVal[key];
+
+    if (!out[keyname]) {
+      out[keyname] = [];
+    }
+
+    out[keyname].push(newVal);
+  });
+
+  return out;
 };
 
 /**
@@ -819,7 +870,7 @@ exports.url_decode = function (input) {
   return decodeURIComponent(input);
 };
 
-},{"./dateformatter":2,"./utils":23}],4:[function(require,module,exports){
+},{"./dateformatter":2,"./utils":26}],4:[function(require,module,exports){
 var utils = require('./utils');
 
 /**
@@ -1009,7 +1060,7 @@ var TYPES = {
     {
       type: TYPES.VAR,
       regex: [
-        /^[a-zA-Z_$]\w*((\.\w*)+)?/,
+        /^[a-zA-Z_$]\w*((\.\$?\w*)+)?/,
         /^[a-zA-Z_$]\w*/
       ]
     },
@@ -1046,7 +1097,7 @@ var TYPES = {
     {
       type: TYPES.DOTKEY,
       regex: [
-        /^\.(\w+)/,
+        /^\.(\w+)/
       ],
       idx: 1
     },
@@ -1127,7 +1178,188 @@ exports.read = function (str) {
   return tokens;
 };
 
-},{"./utils":23}],5:[function(require,module,exports){
+},{"./utils":26}],5:[function(require,module,exports){
+var process=require("__browserify_process");var fs = require('fs'),
+  path = require('path');
+
+/**
+ * Loads templates from the file system.
+ * @alias swig.loaders.fs
+ * @example
+ * swig.setDefaults({ loader: swig.loaders.fs() });
+ * @example
+ * // Load Templates from a specific directory (does not require using relative paths in your templates)
+ * swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates' )});
+ * @param {string}   [basepath='']     Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.
+ * @param {string}   [encoding='utf8']   Template encoding
+ */
+module.exports = function (basepath, encoding) {
+  var ret = {};
+
+  encoding = encoding || 'utf8';
+  basepath = (basepath) ? path.normalize(basepath) : null;
+
+  /**
+   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+   * @alias resolve
+   * @param  {string} to        Non-absolute identifier or pathname to a file.
+   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+   * @return {string}
+   */
+  ret.resolve = function (to, from) {
+    if (basepath) {
+      from = basepath;
+    } else {
+      from = (from) ? path.dirname(from) : process.cwd();
+    }
+    return path.resolve(from, to);
+  };
+
+  /**
+   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+   * @alias load
+   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+   * @return {string}               Template source string.
+   */
+  ret.load = function (identifier, cb) {
+    if (!fs || (cb && !fs.readFile) || !fs.readFileSync) {
+      throw new Error('Unable to find file ' + identifier + ' because there is no filesystem to read from.');
+    }
+
+    identifier = ret.resolve(identifier);
+
+    if (cb) {
+      fs.readFile(identifier, encoding, cb);
+      return;
+    }
+    return fs.readFileSync(identifier, encoding);
+  };
+
+  return ret;
+};
+
+},{"__browserify_process":31,"fs":28,"path":29}],6:[function(require,module,exports){
+/**
+ * @namespace TemplateLoader
+ * @description Swig is able to accept custom template loaders written by you, so that your templates can come from your favorite storage medium without needing to be part of the core library.
+ * A template loader consists of two methods: <var>resolve</var> and <var>load</var>. Each method is used internally by Swig to find and load the source of the template before attempting to parse and compile it.
+ * @example
+ * // A theoretical memcached loader
+ * var path = require('path'),
+ *   Memcached = require('memcached');
+ * function memcachedLoader(locations, options) {
+ *   var memcached = new Memcached(locations, options);
+ *   return {
+ *     resolve: function (to, from) {
+ *       return path.resolve(from, to);
+ *     },
+ *     load: function (identifier, cb) {
+ *       memcached.get(identifier, function (err, data) {
+ *         // if (!data) { load from filesystem; }
+ *         cb(err, data);
+ *       });
+ *     }
+ *   };
+ * };
+ * // Tell swig about the loader:
+ * swig.setDefaults({ loader: memcachedLoader(['192.168.0.2']) });
+ */
+
+/**
+ * @function
+ * @name resolve
+ * @memberof TemplateLoader
+ * @description
+ * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+ * @param  {string} to        Non-absolute identifier or pathname to a file.
+ * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+ * @return {string}
+ */
+
+/**
+ * @function
+ * @name load
+ * @memberof TemplateLoader
+ * @description
+ * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+ * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+ * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+ * @return {string}               Template source string.
+ */
+
+/**
+ * @private
+ */
+exports.fs = require('./filesystem');
+exports.memory = require('./memory');
+
+},{"./filesystem":5,"./memory":7}],7:[function(require,module,exports){
+var path = require('path'),
+  utils = require('../utils');
+
+/**
+ * Loads templates from a provided object mapping.
+ * @alias swig.loaders.memory
+ * @example
+ * var templates = {
+ *   "layout": "{% block content %}{% endblock %}",
+ *   "home.html": "{% extends 'layout.html' %}{% block content %}...{% endblock %}"
+ * };
+ * swig.setDefaults({ loader: swig.loaders.memory(templates) });
+ *
+ * @param {object} mapping Hash object with template paths as keys and template sources as values.
+ * @param {string} [basepath] Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.
+ */
+module.exports = function (mapping, basepath) {
+  var ret = {};
+
+  basepath = (basepath) ? path.normalize(basepath) : null;
+
+  /**
+   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+   * @alias resolve
+   * @param  {string} to        Non-absolute identifier or pathname to a file.
+   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+   * @return {string}
+   */
+  ret.resolve = function (to, from) {
+    if (basepath) {
+      from = basepath;
+    } else {
+      from = (from) ? path.dirname(from) : '/';
+    }
+    return path.resolve(from, to);
+  };
+
+  /**
+   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+   * @alias load
+   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+   * @return {string}               Template source string.
+   */
+  ret.load = function (pathname, cb) {
+    var src, paths;
+
+    paths = [pathname, pathname.replace(/^(\/|\\)/, '')];
+
+    src = mapping[paths[0]] || mapping[paths[1]];
+    if (!src) {
+      utils.throwError('Unable to find template "' + pathname + '".');
+    }
+
+    if (cb) {
+      cb(null, src);
+      return;
+    }
+    return src;
+  };
+
+  return ret;
+};
+
+},{"../utils":26,"path":29}],8:[function(require,module,exports){
 var utils = require('./utils'),
   lexer = require('./lexer');
 
@@ -1359,10 +1591,11 @@ TokenParser.prototype = {
         } else {
           self.out.push(' || _fn)(');
         }
+        self.filterApplyIdx.push(self.out.length - 3);
       } else {
         self.out.push('(');
+        self.filterApplyIdx.push(self.out.length - 1);
       }
-      self.filterApplyIdx.push(self.out.length - 1);
       break;
 
     case _t.PARENCLOSE:
@@ -1371,6 +1604,9 @@ TokenParser.prototype = {
         utils.throwError('Mismatched nesting state', self.line, self.filename);
       }
       self.out.push(')');
+      // Once off the previous entry
+      self.filterApplyIdx.pop();
+      // Once for the open paren
       self.filterApplyIdx.pop();
       break;
 
@@ -1518,7 +1754,7 @@ TokenParser.prototype = {
    * @private
    */
   checkMatch: function (match) {
-    var temp = match[0];
+    var temp = match[0], result;
 
     function checkDot(ctx) {
       var c = ctx + temp,
@@ -1541,8 +1777,8 @@ TokenParser.prototype = {
     function buildDot(ctx) {
       return '(' + checkDot(ctx) + ' ? ' + ctx + match.join('.') + ' : "")';
     }
-
-    return '(' + checkDot('_ctx.') + ' ? ' + buildDot('_ctx.') + ' : ' + buildDot('') + ')';
+    result = '(' + checkDot('_ctx.') + ' ? ' + buildDot('_ctx.') + ' : ' + buildDot('') + ')';
+    return '(' + result + ' !== null ? ' + result + ' : ' + '"" )';
   }
 };
 
@@ -1881,23 +2117,22 @@ exports.compile = function (template, parents, options, blockName) {
   return out;
 };
 
-},{"./lexer":4,"./utils":23}],6:[function(require,module,exports){
-var fs = require('fs'),
-  path = require('path'),
-  utils = require('./utils'),
+},{"./lexer":4,"./utils":26}],9:[function(require,module,exports){
+var utils = require('./utils'),
   _tags = require('./tags'),
   _filters = require('./filters'),
   parser = require('./parser'),
-  dateformatter = require('./dateformatter');
+  dateformatter = require('./dateformatter'),
+  loaders = require('./loaders');
 
 /**
  * Swig version number as a string.
  * @example
- * if (swig.version === "1.2.0") { ... }
+ * if (swig.version === "1.3.2") { ... }
  *
  * @type {String}
  */
-exports.version = "1.2.0";
+exports.version = "1.3.2";
 
 /**
  * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
@@ -1908,6 +2143,7 @@ exports.version = "1.2.0";
  * @property {array}   cmtControls Open and close controls for comments. Defaults to <code data-language="js">['{#', '#}']</code>.
  * @property {object}  locals      Default variable context to be passed to <strong>all</strong> templates.
  * @property {CacheOptions} cache Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.
+ * @property {TemplateLoader} loader The method that Swig will use to load templates. Defaults to <var>swig.loaders.fs</var>.
  */
 var defaultOptions = {
     autoescape: true,
@@ -1933,7 +2169,26 @@ var defaultOptions = {
      *   }
      * });
      */
-    cache: 'memory'
+    cache: 'memory',
+    /**
+     * Configure Swig to use either the <var>swig.loaders.fs</var> or <var>swig.loaders.memory</var> template loader. Or, you can write your own!
+     * For more information, please see the <a href="../loaders/">Template Loaders documentation</a>.
+     * @typedef {class} TemplateLoader
+     * @example
+     * // Default, FileSystem loader
+     * swig.setDefaults({ loader: swig.loaders.fs() });
+     * @example
+     * // FileSystem loader allowing a base path
+     * // With this, you don't use relative URLs in your template references
+     * swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates') });
+     * @example
+     * // Memory Loader
+     * swig.setDefaults({ loader: swig.loaders.memory({
+     *   layout: '{% block foo %}{% endblock %}',
+     *   page1: '{% extends "layout" %}{% block foo %}Tacos!{% endblock %}'
+     * })});
+     */
+    loader: loaders.fs()
   },
   defaultInstance;
 
@@ -1979,6 +2234,14 @@ function validateOptions(options) {
       }
     }
   }
+  if (options.hasOwnProperty('loader')) {
+    if (options.loader) {
+      if (!options.loader.load || !options.loader.resolve) {
+        throw new Error('Invalid loader option ' + JSON.stringify(options.loader) + ' found. Expected { load: function (pathname, cb) { ... }, resolve: function (to, from) { ... } }.');
+      }
+    }
+  }
+
 }
 
 /**
@@ -2215,25 +2478,15 @@ exports.Swig = function (opts) {
    * @private
    */
   this.parseFile = function (pathname, options) {
-    var src,
-      templateTextAccessor;
+    var src;
 
     if (!options) {
       options = {};
     }
 
-    templateTextAccessor = options.getTemplateText || (this.options && this.options.getTemplateText);
+    pathname = self.options.loader.resolve(pathname, options.resolveFrom);
 
-    if (templateTextAccessor && typeof templateTextAccessor === "function") {
-      src = templateTextAccessor(pathname, options);
-    } else {
-      pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
-
-      if (!fs || !fs.readFileSync) {
-        throw new Error('Unable to find file ' + pathname + ' because there is no filesystem to read from.');
-      }
-      src = fs.readFileSync(pathname, 'utf8');
-    }
+    src = self.options.loader.load(pathname);
 
     if (!options.filename) {
       options = utils.extend({ filename: pathname }, options);
@@ -2298,13 +2551,9 @@ exports.Swig = function (opts) {
         throw new Error('Cannot extend "' + parentName + '" because current template has no filename.');
       }
 
-      if (self.options.noResolveParents) {
-        parentFile = parentName;
-      } else {
-        parentFile = parentFile || options.filename;
-        parentFile = path.resolve(path.dirname(parentFile), parentName);
-      }
-      parent = self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
+      parentFile = parentFile || options.filename;
+      parentFile = self.options.loader.resolve(parentName, parentFile);
+      parent = cacheGet(parentFile) || self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
       parentName = parent.parent;
 
       if (parentFiles.indexOf(parentFile) !== -1) {
@@ -2381,7 +2630,7 @@ exports.Swig = function (opts) {
    * @return {string}           Rendered output.
    */
   this.render = function (source, options) {
-    return this.compile(source, options)();
+    return self.compile(source, options)();
   };
 
   /**
@@ -2406,17 +2655,27 @@ exports.Swig = function (opts) {
    */
   this.renderFile = function (pathName, locals, cb) {
     if (cb) {
-      this.compileFile(pathName, {}, function (err, fn) {
+      self.compileFile(pathName, {}, function (err, fn) {
+        var result;
+
         if (err) {
           cb(err);
           return;
         }
-        cb(null, fn(locals));
+
+        try {
+          result = fn(locals);
+        } catch (err2) {
+          cb(err2);
+          return;
+        }
+
+        cb(null, result);
       });
       return;
     }
 
-    return this.compileFile(pathName)(locals);
+    return self.compileFile(pathName)(locals);
   };
 
   /**
@@ -2507,7 +2766,7 @@ exports.Swig = function (opts) {
       options = {};
     }
 
-    pathname = (options.resolveFrom) ? path.resolve(path.dirname(options.resolveFrom), pathname) : pathname;
+    pathname = self.options.loader.resolve(pathname, options.resolveFrom);
     if (!options.filename) {
       options = utils.extend({ filename: pathname }, options);
     }
@@ -2521,12 +2780,8 @@ exports.Swig = function (opts) {
       return cached;
     }
 
-    if (!fs || !fs.readFileSync) {
-      throw new Error('Unable to find file ' + pathname + ' because there is no filesystem to read from.');
-    }
-
     if (cb) {
-      fs.readFile(pathname, 'utf8', function (err, src) {
+      self.options.loader.load(pathname, function (err, src) {
         if (err) {
           cb(err);
           return;
@@ -2545,7 +2800,7 @@ exports.Swig = function (opts) {
       return;
     }
 
-    src = fs.readFileSync(pathname, 'utf8');
+    src = self.options.loader.load(pathname);
     return self.compile(src, options);
   };
 
@@ -2563,12 +2818,14 @@ exports.Swig = function (opts) {
    *
    * @param  {function} tpl       Pre-compiled Swig template function. Use the Swig CLI to compile your templates.
    * @param  {object} [locals={}] Template variable context.
-   * @param  {string} filepath    Filename used for caching the template.
+   * @param  {string} [filepath]  Filename used for caching the template.
    * @return {string}             Rendered output.
    */
   this.run = function (tpl, locals, filepath) {
     var context = getLocals({ locals: locals });
-    cacheSet(filepath, tpl);
+    if (filepath) {
+      cacheSet(filepath, tpl);
+    }
     return tpl(self, context, filters, utils, efn);
   };
 };
@@ -2588,26 +2845,9 @@ exports.render = defaultInstance.render;
 exports.renderFile = defaultInstance.renderFile;
 exports.run = defaultInstance.run;
 exports.invalidateCache = defaultInstance.invalidateCache;
+exports.loaders = loaders;
 
-},{"./dateformatter":2,"./filters":3,"./parser":5,"./tags":7,"./utils":23,"fs":25,"path":26}],7:[function(require,module,exports){
-exports.autoescape = require('./tags/autoescape');
-exports.block = require('./tags/block');
-exports.else = require('./tags/else');
-exports.elseif = require('./tags/elseif');
-exports.elif = exports.elseif;
-exports.extends = require('./tags/extends');
-exports.filter = require('./tags/filter');
-exports.for = require('./tags/for');
-exports.if = require('./tags/if');
-exports.import = require('./tags/import');
-exports.include = require('./tags/include');
-exports.macro = require('./tags/macro');
-exports.parent = require('./tags/parent');
-exports.raw = require('./tags/raw');
-exports.set = require('./tags/set');
-exports.spaceless = require('./tags/spaceless');
-
-},{"./tags/autoescape":8,"./tags/block":9,"./tags/else":10,"./tags/elseif":11,"./tags/extends":12,"./tags/filter":13,"./tags/for":14,"./tags/if":15,"./tags/import":16,"./tags/include":17,"./tags/macro":18,"./tags/parent":19,"./tags/raw":20,"./tags/set":21,"./tags/spaceless":22}],8:[function(require,module,exports){
+},{"./dateformatter":2,"./filters":3,"./loaders":6,"./parser":8,"./tags":20,"./utils":26}],10:[function(require,module,exports){
 var utils = require('../utils'),
   strings = ['html', 'js'];
 
@@ -2631,9 +2871,6 @@ exports.compile = function (compiler, args, content, parents, options, blockName
 exports.parse = function (str, line, parser, types, stack, opts) {
   var matched;
   parser.on('*', function (token) {
-    if (token.type === types.WHITESPACE) {
-      return;
-    }
     if (!matched &&
         (token.type === types.BOOL ||
           (token.type === types.STRING && strings.indexOf(token.match) === -1))
@@ -2649,7 +2886,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 };
 exports.ends = true;
 
-},{"../utils":23}],9:[function(require,module,exports){
+},{"../utils":26}],11:[function(require,module,exports){
 /**
  * Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
  *
@@ -2676,7 +2913,7 @@ exports.parse = function (str, line, parser) {
 exports.ends = true;
 exports.block = true;
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.
  *
@@ -2703,7 +2940,7 @@ exports.parse = function (str, line, parser, types, stack) {
   return (stack.length && stack[stack.length - 1].name === 'if');
 };
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var ifparser = require('./if').parse;
 
 /**
@@ -2733,7 +2970,7 @@ exports.parse = function (str, line, parser, types, stack) {
   return okay && (stack.length && stack[stack.length - 1].name === 'if');
 };
 
-},{"./if":15}],12:[function(require,module,exports){
+},{"./if":17}],14:[function(require,module,exports){
 /**
  * Makes the current template extend a parent template. This tag must be the first item in your template.
  *
@@ -2754,7 +2991,7 @@ exports.parse = function () {
 
 exports.ends = false;
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var filters = require('../filters');
 
 /**
@@ -2824,7 +3061,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.ends = true;
 
-},{"../filters":3}],14:[function(require,module,exports){
+},{"../filters":3}],16:[function(require,module,exports){
 var ctx = '_ctx.',
   ctxloop = ctx + 'forloop',
   ctxloopcache = ctx + '___loopcache';
@@ -2872,6 +3109,7 @@ var ctx = '_ctx.',
 exports.compile = function (compiler, args, content, parents, options, blockName) {
   var val = args.shift(),
     key = '__k',
+    ctxloopcache = (ctx + '__loopcache' + Math.random()).replace(/\./g, ''),
     last;
 
   if (args[0] && args[0] === ',') {
@@ -2884,10 +3122,10 @@ exports.compile = function (compiler, args, content, parents, options, blockName
 
   return [
     '(function () {\n',
-    '  var __l = ' + last + ';\n',
+    '  var __l = ' + last + ', __len = (_utils.isArray(__l)) ? __l.length : _utils.keys(__l).length;\n',
     '  if (!__l) { return; }\n',
     '  ' + ctxloopcache + ' = { forloop: ' + ctxloop + ', ' + val + ': ' + ctx + val + ', ' + key + ': ' + ctx + key + ' };\n',
-    '  ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __l.length, revindex0: __l.length - 1, length: __l.length, last: false };\n',
+    '  ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __len, revindex0: __len - 1, length: __len, last: false };\n',
     '  _utils.each(__l, function (' + val + ', ' + key + ') {\n',
     '    ' + ctx + val + ' = ' + val + ';\n',
     '    ' + ctx + key + ' = ' + key + ';\n',
@@ -2900,6 +3138,7 @@ exports.compile = function (compiler, args, content, parents, options, blockName
     '  ' + ctxloop + ' = ' + ctxloopcache + '.forloop;\n',
     '  ' + ctx + val + ' = ' + ctxloopcache + '.' + val + ';\n',
     '  ' + ctx + key + ' = ' + ctxloopcache + '.' + key + ';\n',
+    '  ' + ctxloopcache + ' = undefined;\n',
     '})();\n'
   ].join('');
 };
@@ -2954,7 +3193,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.ends = true;
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.
  *
@@ -3003,6 +3242,10 @@ exports.compile = function (compiler, args, content, parents, options, blockName
 };
 
 exports.parse = function (str, line, parser, types) {
+  if (typeof str === "undefined") {
+    throw new Error('No conditional statement provided on line ' + line + '.');
+  }
+
   parser.on(types.COMPARATOR, function (token) {
     if (this.isLast) {
       throw new Error('Unexpected logic "' + token.match + '" on line ' + line + '.');
@@ -3037,7 +3280,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.ends = true;
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -3062,12 +3305,23 @@ var utils = require('../utils');
  */
 exports.compile = function (compiler, args) {
   var ctx = args.pop(),
-    out = '_ctx.' + ctx + ' = {};\n' +
-      '(function (_ctx) {\n' +
-      '  var _output = "";\n';
+    out = '_ctx.' + ctx + ' = {};\n  var _output = "";\n',
+    replacements = utils.map(args, function (arg) {
+      return {
+        ex: new RegExp('_ctx.' + arg.name, 'g'),
+        re: '_ctx.' + ctx + '.' + arg.name
+      };
+    });
 
-  out += args.join('');
-  out += '}(_ctx.' + ctx + '));\n';
+  // Replace all occurrences of all macros in this file with
+  // proper namespaced definitions and calls
+  utils.each(args, function (arg) {
+    var c = arg.compiled;
+    utils.each(replacements, function (re) {
+      c = c.replace(re.ex, re.re);
+    });
+    out += c;
+  });
 
   return out;
 };
@@ -3092,7 +3346,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
         }
         macroName = token.args[0];
         out += token.compile(compiler, token.args, token.content, [], compileOpts) + '\n';
-        self.out.push(out);
+        self.out.push({compiled: out, name: macroName});
       });
       return;
     }
@@ -3120,7 +3374,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 
 exports.block = true;
 
-},{"../parser":5,"../swig":6,"../utils":23}],17:[function(require,module,exports){
+},{"../parser":8,"../swig":9,"../utils":26}],19:[function(require,module,exports){
 var ignore = 'ignore',
   missing = 'missing',
   only = 'only',
@@ -3161,7 +3415,7 @@ exports.compile = function (compiler, args, content, parents, options) {
     file = args.shift(),
     onlyIdx = args.indexOf(only),
     onlyCtx = onlyIdx !== -1 ? args.splice(onlyIdx, 1) : false,
-    parentFile = args.pop().replace(/\\/g, '\\\\'),
+    parentFile = (args.pop() || '').replace(/\\/g, '\\\\'),
     ignore = args[args.length - 1] === missing ? (args.pop()) : false,
     w = '',
     addl = '{',
@@ -3277,7 +3531,26 @@ exports.parse = function (str, line, parser, types, stack, opts) {
 
   return true;
 };
-},{}],18:[function(require,module,exports){
+
+},{}],20:[function(require,module,exports){
+exports.autoescape = require('./autoescape');
+exports.block = require('./block');
+exports["else"] = require('./else');
+exports.elseif = require('./elseif');
+exports.elif = exports.elseif;
+exports["extends"] = require('./extends');
+exports.filter = require('./filter');
+exports["for"] = require('./for');
+exports["if"] = require('./if');
+exports["import"] = require('./import');
+exports.include = require('./include');
+exports.macro = require('./macro');
+exports.parent = require('./parent');
+exports.raw = require('./raw');
+exports.set = require('./set');
+exports.spaceless = require('./spaceless');
+
+},{"./autoescape":10,"./block":11,"./else":12,"./elseif":13,"./extends":14,"./filter":15,"./for":16,"./if":17,"./import":18,"./include":19,"./macro":21,"./parent":22,"./raw":23,"./set":24,"./spaceless":25}],21:[function(require,module,exports){
 /**
  * Create custom, reusable snippets within your templates.
  * Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.
@@ -3353,7 +3626,7 @@ exports.parse = function (str, line, parser, types) {
 exports.ends = true;
 exports.block = true;
 
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /**
  * Inject the content from the parent template's block of the same name into the current block.
  *
@@ -3406,7 +3679,7 @@ exports.parse = function (str, line, parser, types, stack, opts) {
   return true;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 // Magic tag, hardcoded into parser
 
 /**
@@ -3431,7 +3704,7 @@ exports.parse = function (str, line, parser) {
 };
 exports.ends = true;
 
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
  * Set a variable for re-use in the current context. This will over-write any value already set to the context for the given <var>varname</var>.
  *
@@ -3448,6 +3721,19 @@ exports.ends = true;
  * {% set bar += index|default(3) %}
  * // => 3
  *
+ * @example
+ * // foods = {};
+ * // food = 'chili';
+ * {% set foods[food] = "con queso" %}
+ * {{ foods.chili }}
+ * // => con queso
+ *
+ * @example
+ * // foods = { chili: 'chili con queso' }
+ * {% set foods.chili = "guatamalan insanity pepper" %}
+ * {{ foods.chili }}
+ * // => guatamalan insanity pepper
+ *
  * @param {literal} varname   The variable name to assign the value to.
  * @param {literal} assignement   Any valid JavaScript assignement. <code data-language="js">=, +=, *=, /=, -=</code>
  * @param {*}   value     Valid variable output.
@@ -3457,25 +3743,69 @@ exports.compile = function (compiler, args) {
 };
 
 exports.parse = function (str, line, parser, types) {
-  var nameSet;
+  var nameSet = '',
+    propertyName;
+
   parser.on(types.VAR, function (token) {
-    if (!this.out.length) {
-      nameSet = token.match;
-      this.out.push(
-        // Prevent the set from spilling into global scope
-        '_ctx.' + nameSet
-      );
+    if (propertyName) {
+      // Tell the parser where to find the variable
+      propertyName += '_ctx.' + token.match;
+      return;
+    }
+
+    if (!parser.out.length) {
+      nameSet += token.match;
       return;
     }
 
     return true;
   });
 
+  parser.on(types.BRACKETOPEN, function (token) {
+    if (!propertyName && !this.out.length) {
+      propertyName = token.match;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.STRING, function (token) {
+    if (propertyName && !this.out.length) {
+      propertyName += token.match;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.BRACKETCLOSE, function (token) {
+    if (propertyName && !this.out.length) {
+      nameSet += propertyName + token.match;
+      propertyName = undefined;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.DOTKEY, function (token) {
+    if (!propertyName && !nameSet) {
+      return true;
+    }
+    nameSet += '.' + token.match;
+    return;
+  });
+
   parser.on(types.ASSIGNMENT, function (token) {
-    if (this.out.length !== 1 || !nameSet) {
+    if (this.out.length || !nameSet) {
       throw new Error('Unexpected assignment "' + token.match + '" on line ' + line + '.');
     }
 
+    this.out.push(
+      // Prevent the set from spilling into global scope
+      '_ctx.' + nameSet
+    );
     this.out.push(token.match);
   });
 
@@ -3484,7 +3814,7 @@ exports.parse = function (str, line, parser, types) {
 
 exports.block = true;
 
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -3528,7 +3858,7 @@ exports.parse = function (str, line, parser) {
 
 exports.ends = true;
 
-},{"../utils":23}],23:[function(require,module,exports){
+},{"../utils":26}],26:[function(require,module,exports){
 var isArray;
 
 /**
@@ -3596,7 +3926,7 @@ exports.each = function (obj, fn) {
  * @return {boolean}
  */
 exports.isArray = isArray = (Array.hasOwnProperty('isArray')) ? Array.isArray : function (obj) {
-  return (obj) ? (typeof obj === 'object' && Object.prototype.toString.call(obj).indexOf() !== -1) : false;
+  return (obj) ? (typeof obj === 'object' && Object.prototype.toString.call(obj).indexOf('[object Array]') !== -1) : false;
 };
 
 /**
@@ -3684,6 +4014,10 @@ exports.extend = function () {
  * @return {array}
  */
 exports.keys = function (obj) {
+  if (!obj) {
+    return [];
+  }
+
   if (Object.keys) {
     return Object.keys(obj);
   }
@@ -3710,7 +4044,7 @@ exports.throwError = function (message, line, file) {
   throw new Error(message + '.');
 };
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 
 
 //
@@ -3928,13 +4262,13 @@ if (typeof Object.getOwnPropertyDescriptor === 'function') {
   exports.getOwnPropertyDescriptor = valueObject;
 }
 
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 
 // not implemented
 // The reason for having an empty file and not throwing is to allow
 // untraditional implementation of this module.
 
-},{}],26:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var process=require("__browserify_process");// Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4145,7 +4479,7 @@ exports.extname = function(path) {
   return splitPath(path)[3];
 };
 
-},{"__browserify_process":28,"_shims":24,"util":27}],27:[function(require,module,exports){
+},{"__browserify_process":31,"_shims":27,"util":30}],30:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4690,7 +5024,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-},{"_shims":24}],28:[function(require,module,exports){
+},{"_shims":27}],31:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -4911,15 +5245,17 @@ var WithTag = {
 };
 HyprLive.engine.setTag('with', WithTag.parse, WithTag.compile, true, false);
 (function () {
-    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix) {
-        var decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-            symbol = symbol || "$",
-            decSeparator = decSeparator == undefined ? "." : decSeparator,
-            thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
-            sign = n < 0 ? "-" : "",
-            i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-            j = (j = i.length) > 3 ? j % 3 : 0,
-            s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp) {
+        var sign, i, j, s, om;
+        decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces;
+        om = Math.pow(10, decPlaces);
+        symbol = symbol || "$";
+        decSeparator = decSeparator == undefined ? "." : decSeparator;
+        thouSeparator = thouSeparator == undefined ? "," : thouSeparator;
+        sign = n < 0 ? "-" : "";
+        i = parseInt(n = (Math.round(om * Math.abs(+n || 0)) / om), 10) + "";
+        j = (j = i.length) > 3 ? j % 3 : 0;
+        s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
         return sign + (symbolIsSuffix ? s + symbol : symbol + s);
     }
 
