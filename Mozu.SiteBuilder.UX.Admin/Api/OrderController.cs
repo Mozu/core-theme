@@ -188,6 +188,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(returnList);
         }
 
+        public class SetCustomerNoteArgs
+        {
+            public string OrderId { get; set; }
+            public string Note { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "setcustomernote")]
+        public async Task<Response<Order>> SetCustomerNote(SetCustomerNoteArgs args)
+        {
+            DCo.Order order = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+            order.ShopperNotes = new DCo.ShopperNotes {
+                Comments = args.Note
+            };
+
+            order = (await _orderWebApiClient.UpdateOrder(args.OrderId, order)).ReadAsSync();
+
+            return Single2(order.Map<Order>());
+        }
 
         public class SetBillingInfoArgs
         {
