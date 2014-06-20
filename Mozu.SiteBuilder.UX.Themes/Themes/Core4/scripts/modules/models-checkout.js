@@ -380,9 +380,11 @@
 
             // todo: implement - Greg Murray on 2014-06-17 
             getDigitalCredit: function () {
-                var me = this;
-                var code = this.get('storeCreditCode');
-                console.log('storeCreditCode = ' + code);
+                var me = this,
+                    customer = me.getOrder().get('customer');
+
+                var code = this.get('digitalCreditCode');
+                console.log('digitalCreditCode = ' + code); //remove
                 var orderDiscounts = me.get('orderDiscounts');
                 if (orderDiscounts && _.findWhere(orderDiscounts, { couponCode: code })) {
                     // to maintain promise api
@@ -396,17 +398,17 @@
                     return deferred.promise;
                 }
 
-                //this.isLoading(true);
-                //return this.apiGetDigitalCredit(this.get('storeCreditCode')).then(function () {
-                //    me.set('couponCode', '');
-                //    var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
-                //    if (!allDiscounts || !_.findWhere(allDiscounts, { couponCode: code })) {
-                //        me.trigger('error', {
-                //            message: Hypr.getLabel('promoCodeError', code)
-                //        });
-                //    }
-                //    me.isLoading(false);
-                //});
+                this.isLoading(true);
+                return customer.apiGetDigitalCredit(this.get('digitalCreditCode')).then(function () {
+                    me.set('digitalCreditCode', '');
+                    var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
+                    if (!allDiscounts || !_.findWhere(allDiscounts, { storeCreditCode: code })) {
+                        me.trigger('error', {
+                            message: Hypr.getLabel('promoCodeError', code)
+                        });
+                    }
+                    me.isLoading(false);
+                });
             },
             removeCredit: function (id) {
                 var order = this.getOrder(),

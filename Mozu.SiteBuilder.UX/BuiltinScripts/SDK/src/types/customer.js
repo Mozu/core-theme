@@ -36,6 +36,11 @@ module.exports = (function () {
             errors.passFrom(credits, this);
             return credits.get();
         },
+        getDigitalCredit: function (id) {
+            var credit = this.api.createSync('storecredit', { code: id });
+            errors.passFrom(credit, this);
+            return credit.getCredit();
+        },
         addStoreCredit: function (id) {
             var credit = this.api.createSync('storecredit', { code: id });
             errors.passFrom(credit, this);
