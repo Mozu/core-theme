@@ -14,7 +14,7 @@ Ext.define('Taco.view.entityManager.Grid', {
         supportedLevels: ['t','m','c','s']
     },
 
-    launchEditorOnClick: true,
+    launchEditorOnClick: false,
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.TargetRule',
@@ -78,7 +78,7 @@ Ext.define('Taco.view.entityManager.Grid', {
             collumnMap = {},
             fieldCount = 0;
 
-
+        
         this.store.each(function (record) {
             var fields = record.get('fields') || {};
 
@@ -94,8 +94,11 @@ Ext.define('Taco.view.entityManager.Grid', {
                         xtype: 'gridcolumn',
                         dataIndex: key,
                         renderer:function (value,metaData,record) {
+                            var fields = record.get('fields');
+                            if (fields) {
+                                return fields[key];
+                            }
                             
-                            return fields[key];
                         },
                         hidden:hidden,
                         text: key,
@@ -107,16 +110,36 @@ Ext.define('Taco.view.entityManager.Grid', {
 
         }, this);
         this.columns = [];
-        
+        if (this.store.entityType == 'cms') {
+            this.columns.push({
+                xtype: 'gridcolumn',
+                dataIndex: 'id',
+                renderer: function (value, metaData, record) {
+                    return record.raw.name;
+
+                },
+          
+                text: 'name',
+                flex: 1,
+                width: 150,
+            });
+        }
+
         Ext.Object.each(collumnMap, function (key) {
             this.columns.push(collumnMap[key]);
         }, this);
+        //me.Lists = Ext.create('Taco.view.entityManager.Lists', { dock: 'left' });
+        //me.dockedItems = me.dockedItems || [];
+        //me.dockedItems.push(me.Lists);
 
         me.callParent(arguments);
+       
+        //me.insertDocked(0, me.Lists);
     },
 
     onCreate: function () {
-        return Taco.core.StateManager.attemptNavigate(this.createRoute);
+
+        
     },
 
     

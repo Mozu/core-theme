@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Policy;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Web;
 using System.Web.DynamicData;
 using System.Web.Http;
+using Magnum.FileSystem;
 using MongoDB.Driver.Builders;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
@@ -37,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
-        private const string MZDB_LIST_PROPERTY = "EntityListFullName";
+        private const string MZDB_LIST_PROPERTY = "EntityListName";
         private const string MZDB_DOCUMENT_ID_PROPERTY = "Id";
         private const string CMS_LIST_PROPERTY = "DocumentListName";
         private const string CMS_DOCUMENT_ID_PROPERTY = "Id";
@@ -73,8 +76,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
+
+               
                 var tasks = documents.Select(doc =>
-                    _entityListsWebApiClient.DeleteEntity(entityListFullName: (string) doc.GetValue(MZDB_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase), id: (string) doc.GetValue(MZDB_DOCUMENT_ID_PROPERTY, StringComparison.OrdinalIgnoreCase))
+                    _entityListsWebApiClient.DeleteEntity(entityListFullName: (string) doc.GetValue("NameSpace", StringComparison.OrdinalIgnoreCase) + "." + (string) doc.GetValue(MZDB_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase), id: (string) doc.GetValue(MZDB_DOCUMENT_ID_PROPERTY, StringComparison.OrdinalIgnoreCase))
                     ).ToList();
 
 
@@ -121,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<Mozu.MZDB.Contracts.EntityContainer>();
-                    return _entityListsWebApiClient.InsertEntity(entityListFullName: entity.EntityListName, item: entity.Item);
+                    return _entityListsWebApiClient.InsertEntity(entityListFullName: entity.NameSpace + "." +  entity.EntityListName, item: entity.Item);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -158,7 +163,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<Mozu.MZDB.Contracts.EntityContainer>();
-                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.EntityListName, item: entity.Item, id: entity.Id );
+                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.NameSpace +"."+ entity.EntityListName, item: entity.Item, id: entity.Id );
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -170,7 +175,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<Object>>> ReadMzdb(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view=null)
+        public async Task<Response<List<Object>>> Read(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view=null)
         {
             if (entityType == "cms")
             {
@@ -192,7 +197,82 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
+        public class Node
+        {
+            public string Text { get; set; }
+            public string Id { get; set; }
+            public object MetaData { get; set; }
+        
+            public List<Node> Items { get; set; }
+            public bool Leaf { get; set; }
+            public bool Expanded { get; set; }
+        }
 
+        [HttpGetRoute(UriTemplate = "lists/read")]
+        public async Task<Response<List<Node>>> ReadLists(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string view = null)
+        {
+            var nodes = new List<Node>();
+            
+
+           
+
+
+            if (entityType == "cms" || string.IsNullOrEmpty(entityType))
+            {
+                var cms = new Node() {Text = "content", Id="cms", Expanded =true,Items = new List<Node>()};
+                nodes.Add(cms);
+
+                string sortBy = null;
+                string filter = null;
+                try //todo:remove when support is there for tenant.
+                {
+                    var res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+                    if (res.Items != null)
+                    {
+                        res.Items.ForEach(x => cms.Items.Add(new Node() {Text = x.Name, Id = "cms_" + x.Name, MetaData = x, Leaf = true}));
+                    }
+                }
+                catch
+                {
+                }
+
+            }
+            if(entityType == "mzdb" || string.IsNullOrEmpty(entityType))
+            {
+                var mzdb = new Node() { Text = "entities", Id = "mzdb", Expanded = true, Items = new List<Node>() };
+                 nodes.Add(mzdb);
+                string sortBy = null;
+                string filter = null;
+                var res = (await _entityListsWebApiClient.GetEntityLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+                if (res.Items != null)
+                {
+                    res.Items.ForEach(x => mzdb.Items.Add(new Node() { Text = x.Name, Id = "mzdb_" + x.NameSpace + "." + x.Name, MetaData = x, Leaf = true }));
+                }
+
+                
+            }
+            return List2(nodes);
+        }
+
+        public class EditorResult
+        {
+            public string Id { get; set; }
+            public string Body { get; set; }
+
+        }
+
+        [HttpGetRoute(UriTemplate = "editors/read")]
+        public async Task<Response<List<EditorResult>>> ReadEditor()
+
+        {
+            var  editors = System.IO.Directory.GetFiles(HttpRuntime.AppDomainAppPath + @"\Tests\Mocks\Entities\Editors\").Select(js => new EditorResult
+                                                                                                                        {
+                                                                                                                            Id = Path.GetFileNameWithoutExtension(js).ToLower(),
+                                                                                                                            Body = System.IO.File.ReadAllText(js)
+                                                                                                                        }).ToList();
+            return List2(editors);
+
+        }
 
 
 
