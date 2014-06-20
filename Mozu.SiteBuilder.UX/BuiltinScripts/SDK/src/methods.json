@@ -245,13 +245,23 @@
     "get-credits": {
       "template": "{+creditService}",
       "returnType": "storecredits"
-    }
+    },
+	"get-credit": {
+	  "verb": "GET",
+      "template": "{+creditService}/{id}",
+      "returnType": "storecredit"
+    },
   },
   "storecredit": {
     "associate-to-shopper": {
       "verb": "PUT",
       "template": "{+creditService}{code}/associate-to-shopper",
       "includeSelf": true
+    },
+	"get-credit": {
+	  "verb": "GET",
+      "template": "{+creditService}/{code}",
+      "returnType": "storecredit"
     }
   },
   "storecredits": {

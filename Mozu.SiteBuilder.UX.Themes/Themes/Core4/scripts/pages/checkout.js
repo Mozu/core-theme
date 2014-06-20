@@ -119,7 +119,8 @@
             'billingContact.phoneNumbers.home',
             'billingContact.email',
             'creditAmountToApply',
-            'selectedCredit'
+            'selectedCredit',
+            'digitalCreditCode'
         ],
         renderOnChange: [
             'selectedCredit',
@@ -130,7 +131,7 @@
         ],
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
-            this.codeEntered = !!this.model.get('storeCreditCode');
+            this.codeEntered = !!this.model.get('digitalCreditCode');
         },
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
