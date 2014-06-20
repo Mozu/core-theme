@@ -249,6 +249,7 @@
 	"get-credit": {
 	  "verb": "GET",
       "template": "{+creditService}/{id}",
+	  "includeSelf": true,
       "returnType": "storecredit"
     },
   },
@@ -260,7 +261,8 @@
     },
 	"get-credit": {
 	  "verb": "GET",
-      "template": "{+creditService}/{code}",
+      "template": "{+creditService}{code}",
+	  "includeSelf": true,
       "returnType": "storecredit"
     }
   },
