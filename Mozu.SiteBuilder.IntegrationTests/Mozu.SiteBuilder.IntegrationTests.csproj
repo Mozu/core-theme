@@ -477,6 +477,7 @@
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderService_GiftCardView.cd" />
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderServicePayments.cd" />
     <None Include="Diagrams\CommerceRuntime\Orders\cdOrderService.cd" />
+    <None Include="Diagrams\CommerceRuntime\Orders\cdOrder_Credit.cd" />
     <None Include="Diagrams\Customer\cdCustomer_GiftCardView.cd" />
     <None Include="Diagrams\EmailTemplates\cdGiftCardEmail.cd" />
     <None Include="Diagrams\Location\cdLocation.cd" />

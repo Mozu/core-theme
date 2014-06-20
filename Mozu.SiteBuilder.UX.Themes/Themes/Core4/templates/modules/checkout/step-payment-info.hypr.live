@@ -56,12 +56,10 @@
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-        {% if model.availableStoreCredits || model.activeStoreCredits %}
-        {% include "modules/checkout/checkout-store-credit" %}
-        {% endif %}
-
-        {% if model.nonStoreCreditTotal > 0 %}
-        <div class="mz-l-stack-section">
+      {% include "modules/checkout/checkout-store-credit" %}
+     
+      {% if model.nonStoreCreditTotal > 0 %}
+      <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
             <div class="mz-l-formfieldgroup">
                 {% if model.savedPaymentMethods %}

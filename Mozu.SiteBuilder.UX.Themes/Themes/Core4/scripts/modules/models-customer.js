@@ -184,6 +184,15 @@
                 return self;
             });
         },
+        // todo: retrieve credit to validate - Greg Murray on 2014-06-20 
+        //getStoreCredit: function (code) {
+        //    var self = this;
+        //    return this.apiGetCredit(code).then(function (credit) {
+        //        self.set('credit', credit.data.items);
+        //        self.trigger('sync', credit);
+        //        return self;
+        //    });
+        //},
         addStoreCredit: function (id) {
             return this.apiAddStoreCredit(id);
         }

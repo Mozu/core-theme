@@ -126,8 +126,12 @@
             'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
-            'isSameBillingShippingAddress',
+            'isSameBillingShippingAddress'
         ],
+        initialize: function () {
+            this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
+            this.codeEntered = !!this.model.get('storeCreditCode');
+        },
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
@@ -152,6 +156,28 @@
                 self.render();
             });
         },
+        getDigitalCredit: function (e) {
+            // add the default behavior for loadingchanges
+            // but scoped to this button alone
+            var self = this;
+            this.$el.addClass('is-loading');
+            this.model.getDigitalCredit().ensure(function () {
+                self.$el.removeClass('is-loading');
+            });
+        },
+        onEnterDigitalCreditCode: function (model, code) {
+            if (code && !this.codeEntered) {
+                this.codeEntered = true;
+                this.$el.find('button').prop('disabled', false);
+            }
+            if (!code && this.codeEntered) {
+                this.codeEntered = false;
+                this.$el.find('button').prop('disabled', true);
+            }
+        },
+        handleEnterKey: function () {
+            this.getDigitalCredit();
+        }
     });
 
     var CouponView = Backbone.MozuView.extend({
