@@ -3418,6 +3418,7 @@ module.exports=
 	"get-credit": {
 	  "verb": "GET",
       "template": "{+creditService}/{id}",
+	  "includeSelf": true,
       "returnType": "storecredit"
     },
   },
@@ -3429,7 +3430,8 @@ module.exports=
     },
 	"get-credit": {
 	  "verb": "GET",
-      "template": "{+creditService}/{code}",
+      "template": "{+creditService}{code}",
+	  "includeSelf": true,
       "returnType": "storecredit"
     }
   },
@@ -4384,14 +4386,6 @@ module.exports = (function () {
                 return self.get();
             }, function(reason) {
                 errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
-            });
-        },
-        getDigitalCredit: function (digitalCreditCode) {
-            var self = this;
-            return this.applyGetCredit(digitalCreditCode).then(function () {
-                return self.get();
-            }, function(reason) {
-                errors.throwOnObject(self, 'ADD_GIFT_CARD_FAILED', reason.message);
             });
         },
         addNewCustomer: function (newCustomerPayload) {

@@ -381,34 +381,47 @@
             // todo: implement - Greg Murray on 2014-06-17 
             getDigitalCredit: function () {
                 var me = this,
-                    customer = me.getOrder().get('customer');
+                    order = me.getOrder(),
+                    customer = order.get('customer');
 
-                var code = this.get('digitalCreditCode');
-                console.log('digitalCreditCode = ' + code); //remove
-                var orderDiscounts = me.get('orderDiscounts');
-                if (orderDiscounts && _.findWhere(orderDiscounts, { couponCode: code })) {
-                    // to maintain promise api
-                    var deferred = api.defer();
-                    deferred.reject();
-                    deferred.promise.otherwise(function () {
-                        me.trigger('error', {
-                            message: Hypr.getLabel('promoCodeAlreadyUsed', code)
-                        });
-                    });
-                    return deferred.promise;
-                }
+                var creditCode = this.get('digitalCreditCode');
+                //var orderDiscounts = me.get('orderDiscounts');
+                //if (orderDiscounts && _.findWhere(orderDiscounts, { storeCreditCode: code })) {
+                //    // to maintain promise api
+                //    var deferred = api.defer();
+                //    deferred.reject();
+                //    deferred.promise.otherwise(function () {
+                //        me.trigger('error', {
+                //            message: Hypr.getLabel('promoCodeAlreadyUsed', code)
+                //        });
+                //    });
+                //    return deferred.promise;
+                //}
 
                 this.isLoading(true);
-                return customer.apiGetDigitalCredit(this.get('digitalCreditCode')).then(function () {
+
+                return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
+                    console.log(credit);
+                    me._applyingCredit = credit.data;
+                    order.set('creditAmountToApply', me.maxCreditAmountToApply());
+                    order.set('selectedCredit', credit.data);
                     me.set('digitalCreditCode', '');
-                    var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
-                    if (!allDiscounts || !_.findWhere(allDiscounts, { storeCreditCode: code })) {
-                        me.trigger('error', {
-                            message: Hypr.getLabel('promoCodeError', code)
-                        });
-                    }
-                    me.isLoading(false);
+                    //me.set('credit', credit.data);
+                    me.trigger('sync', credit);
+                    return me;
                 });
+
+                //return customer.apiGetDigitalCredit(this.get('digitalCreditCode')).then(function (credit) {
+                //    console.log(credit);
+                //    me.set('digitalCreditCode', '');
+                //    var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
+                //    if (!allDiscounts || !_.findWhere(allDiscounts, { storeCreditCode: code })) {
+                //        me.trigger('error', {
+                //            message: Hypr.getLabel('promoCodeError', code)
+                //        });
+                //    }
+                //    me.isLoading(false);
+                //});
             },
             removeCredit: function (id) {
                 var order = this.getOrder(),
