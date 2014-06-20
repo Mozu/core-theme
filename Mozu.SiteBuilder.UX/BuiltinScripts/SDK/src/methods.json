@@ -18,11 +18,15 @@
     "collectionOf": "category"
   },
   "category": {
-    "template": "{+categoryService}{id}(?allowInactive}",
-    "shortcutParam": "Id",
+    "template": "{+categoryService}{id}{?allowInactive}",
+    "shortcutParam": "id",
     "defaultParams": {
       "allowInactive": false
     }
+  },
+  "categorytree": {
+	"template": "{+categoryService}tree",
+	"returnType": "json"
   },
   "search": {
     "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}",
