@@ -328,18 +328,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcOrderItem_to_OrderItem()
         {
             Mapper.CreateMap<ProductsDC.BundledProduct, BundledProduct>()
-                .ForMember(x => x.UnitWeight, opt => opt.ResolveUsing(x => (x.Measurements != null && x.Measurements.Weight != null) 
-                    ? x.Measurements.Weight.Value : null));
+                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
+                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Name))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.GoodsType))
+                .ForMember(x => x.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone))
+                .ForMember(x => x.ProductReservationId, op => op.ResolveUsing(dc => dc.ProductReservationId))
+                .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.Measurements != null && dc.Measurements.Weight != null ? dc.Measurements.Weight.Value : null))
+                .ForMember(x => x.GoodsType, op => op.ResolveUsing(dc => dc.GoodsType))
+                .ForMember(x => x.CreditValue, op => op.ResolveUsing(dc => dc.CreditValue))
+                .ForMember(x => x.OptionAttributeFQN, op => op.ResolveUsing(dc => dc.OptionAttributeFQN))
+                .ForMember(x => x.OptionValue, op => op.ResolveUsing(dc => dc.OptionValue))
+                ;
 
             Mapper.CreateMap<BundledProduct, ProductsDC.BundledProduct>()
-                .ForMember(x => x.Measurements, opt => opt.ResolveUsing(x => new CommerceDC.PackageMeasurements()
-                                                                        {
-                                                                            Weight = new Measurement()
-                                                                                     {
-                                                                                         Value = x.UnitWeight, Unit = "lb"
-                                                                                     }
-                                                                        }));
-
+                .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
+                .ForMember(dc => dc.Name, op => op.ResolveUsing(dc => dc.Name))
+                .ForMember(dc => dc.Description, op => op.ResolveUsing(dc => dc.Description))
+                .ForMember(dc => dc.Quantity, op => op.ResolveUsing(dc => dc.GoodsType))
+                .ForMember(dc => dc.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone))
+                .ForMember(dc => dc.ProductReservationId, op => op.ResolveUsing(x => x.ProductReservationId))
+                .ForMember(dc => dc.Measurements, opt => opt.ResolveUsing(x => new CommerceDC.PackageMeasurements { Weight = new Measurement { Value = x.UnitWeight, Unit = "lb" } }))
+                .ForMember(dc => dc.GoodsType, op => op.ResolveUsing(x => x.GoodsType))
+                .ForMember(dc => dc.CreditValue, op => op.ResolveUsing(x => x.CreditValue))
+                .ForMember(dc => dc.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
+                .ForMember(dc => dc.OptionValue, op => op.ResolveUsing(x => x.OptionValue))
+                ;
         
 
         Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
@@ -423,6 +437,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
                 .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
+                .ForMember(x => x.ParentProductCode, op => op.Ignore())
                 //todo: temp to get unit test to pass - Greg Murray on 2014-05-20 
                 .ForMember(x => x.ProductDiscount, op => op.Ignore())
 
