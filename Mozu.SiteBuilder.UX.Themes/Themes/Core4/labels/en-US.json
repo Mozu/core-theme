@@ -213,14 +213,15 @@
   "storeCreditAvailable" : "You have the following store credits available:",
   "storeCreditApplied"   : "You have applied the following store credits to your order:",
 
-  "giftCardCredits"         : "Gift Cards",
-  "giftCardCreditAvailable" : "You have the following gift cards available:",
-  "giftCardCreditApplied"   : "You have applied the following gift card payments to your order:",
+  "giftCards"			: "Gift Cards",
+  "giftCardCode"		: "Gift Card Code",
+  "giftCardAvailable"	: "You have the following gift cards available:",
+  "giftCardApplied"		: "You have applied the following gift card payments to your order:",
 
 
   "remainingTotal"       : "Your remaining total is: ",
   "applyCredit"          : "Apply Credit",
-  "applyGiftCardCredit"          : "Apply Gift Card",
+  "applyGiftCard"        : "Redeem Gift Card",
 
   "mailCheckTo"          : "Mail check to",
   "shipTo"               : "Ship to",

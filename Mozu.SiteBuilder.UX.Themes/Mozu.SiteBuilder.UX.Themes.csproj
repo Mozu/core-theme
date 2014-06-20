@@ -559,7 +559,9 @@
     <Content Include="Themes\Core4\templates\email\product-return-authorized.hypr" />
     <Content Include="Themes\Core4\templates\email\product-return-received.hypr" />
     <Content Include="Themes\Core4\templates\email\product-return-rejected.hypr" />
-    <Content Include="Themes\Core4\templates\modules\checkout\checkout-payment.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\checkout-payment.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\templates\modules\common\price.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\state\is-crossedout.less" />
     <Content Include="Themes\Core4\stylesheets\state\is-saleprice.less" />
@@ -833,7 +835,9 @@
     <Content Include="Themes\Core4\stylesheets\widgets\category-navigation.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\table.less" />
     <Content Include="Themes\Core4\stylesheets\modules\my-account\account-storecredit.less" />
-    <Content Include="Themes\Core4\templates\modules\checkout\checkout-store-credit.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\checkout\checkout-store-credit.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\stylesheets\modules\checkout\checkout-store-credit.less" />
     <Content Include="Themes\Core4\stylesheets\modules\checkout\checkout-payment.less" />
     <Content Include="Themes\Core4\templates\modules\location\location-search.hypr.live">
@@ -923,11 +927,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\email\giftcard-created.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core4\templates\modules\checkout\checkout-gift-card-payment.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-digital-fulfillment.hypr.live">

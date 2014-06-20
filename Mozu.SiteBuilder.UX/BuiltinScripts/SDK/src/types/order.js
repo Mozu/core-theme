@@ -11,6 +11,7 @@ module.exports = (function () {
         'PAYPAL_TRANSACTION_ID_MISSING': 'Sorry, something went wrong: Expected the active payment to include a paymentServiceTransactionId and it did not.',
         'ORDER_CANNOT_SUBMIT': 'Sorry, this order cannot be submitted. Please refresh the page and try again, or contact Support.',
         'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
+        //'ADD_GIFT_CARD_FAILED': 'Adding gift card failed for the following reason: {0}',
         'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
     });
 
@@ -69,6 +70,14 @@ module.exports = (function () {
                 errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
             });
         },
+        getDigitalCredit: function (digitalCreditCode) {
+            var self = this;
+            return this.applyGetCredit(digitalCreditCode).then(function () {
+                return self.get();
+            }, function(reason) {
+                errors.throwOnObject(self, 'ADD_GIFT_CARD_FAILED', reason.message);
+            });
+        },
         addNewCustomer: function (newCustomerPayload) {
             var self = this;
             return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
@@ -113,14 +122,14 @@ module.exports = (function () {
         getCurrentPayment: function() {
             var activePayments = this.getActivePayments();
             for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType !== "StoreCredit") return activePayments[i];
+                if (activePayments[i].paymentType !== "StoreCredit" && activePayments[i].paymentType !== 'GiftCard') return activePayments[i];
             }
         },
         getActiveStoreCredits: function() {
             var activePayments = this.getActivePayments(),
                 credits = [];
             for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType === "StoreCredit") credits.unshift(activePayments[i]);
+                if (activePayments[i].paymentType === "StoreCredit" || activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
             }
             return credits;
         },
