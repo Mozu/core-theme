@@ -1,0 +1,51 @@
+Ext.create('Ext.form.Panel', {
+    title: 'No template defined',
+
+
+
+    // Fields will be arranged vertically, stretched to full width
+    layout: 'anchor',
+    defaults: {
+        anchor: '100%'
+    },
+
+    // The fields
+    defaultType: 'textfield',
+    items: [],
+
+
+    setData: function(data) {
+        //this.getForm().setValues(data);
+
+        Ext.Object.each(data, function(k, v) {
+            var editor;
+            if (!Ext.isArray(v) && !Ext.isObject(v)) {
+                editor = {
+                    xtype: 'textfield',
+                    name: k,
+                    value: v,
+                    fieldLabel: k
+                };
+                if (Ext.isArray(this.items)) {
+                    this.items.push(editor);
+                } else {
+                    this.add(editor);
+                }
+            }
+
+        }, this);
+
+        this.data = data;
+    },
+    getData: function() {
+
+        var data = this.getValues(false, false, false, true);
+
+
+        return Ext.applyIf(data, this.data);
+
+    },
+
+
+
+});

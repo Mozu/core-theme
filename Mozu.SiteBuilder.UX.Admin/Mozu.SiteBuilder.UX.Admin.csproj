@@ -654,6 +654,7 @@
     <Content Include="Scripts\.sencha\app\slice-impl.xml" />
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
     <Content Include="Scripts\app\controller\Tests.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
@@ -709,6 +710,7 @@
     <Content Include="Scripts\app\model\BundledProduct.js" />
     <Content Include="Scripts\app\model\CustomerAccountPicker.js" />
     <Content Include="Scripts\app\model\CustomerSegment.js" />
+    <Content Include="Scripts\app\model\EntityEditor.js" />
     <Content Include="Scripts\app\model\Entity.js" />
     <Content Include="Scripts\app\model\ProductHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\OrderHandlingFeeRule.js" />
@@ -765,6 +767,8 @@
     <Content Include="Scripts\app\store\ChannelPicker.js" />
     <Content Include="Scripts\app\store\Channels.js" />
     <Content Include="Scripts\app\store\CustomersPicker.js" />
+    <Content Include="Scripts\app\store\EntityEditors.js" />
+    <Content Include="Scripts\app\store\EntitiesListsTree.js" />
     <Content Include="Scripts\app\store\OrderHandlingFeeRules.js" />
     <Content Include="Scripts\app\store\ProductHandlingFeeRules.js" />
     <Content Include="Scripts\app\store\Entities.js" />
@@ -803,7 +807,10 @@
     <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
+    <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
+    <Content Include="Scripts\app\view\entityManager\Index.js" />
     <Content Include="Scripts\app\view\entityManager\Grid.js" />
+    <Content Include="Scripts\app\view\entityManager\Lists.js" />
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
@@ -1586,6 +1593,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\makeadmintests.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\default.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\pages.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\people.js" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
