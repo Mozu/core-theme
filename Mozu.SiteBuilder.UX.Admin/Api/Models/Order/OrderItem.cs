@@ -32,6 +32,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Gift Card Value
         /// </summary>
         public decimal? CreditValue { get; set; }
+
+        /// <summary>
+        /// Fully Qualified Name of the selected option's attribute
+        /// </summary>
+        public string OptionAttributeFQN { get; set; }
+
+        /// <summary>
+        /// Value of the selected option
+        /// </summary>
+        public string OptionValue { get; set; }
     }
 
 
