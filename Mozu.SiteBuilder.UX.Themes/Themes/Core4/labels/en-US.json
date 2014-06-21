@@ -230,9 +230,9 @@
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
   "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
 
-  "giftCardBanner"       : "<a href=\"{0}\"><img src=\"//:0\"/></a>",
+  "giftCardBanner"       : "<!--<a href=\"{0}\"><img src=\"//:0\"/></a>-->",
   "giftCardGreeting"     : "Hello {0} {1},",
-  "giftCardImage"        : "<a href=\"{0}\"><img src=\"//:0\"/></a>",
+  "giftCardImage"        : "<!--<a href=\"{0}\"><img src=\"//:0\"/></a>-->",
   "giftCardIntro"        : "<p>Thank you for purchasing a {0} Gift Card.  Do not delete this message -- to redeem the gift card you must use the gift card claim code below.  You may want to print a copy of this message for easy reference later.</p>",
   "giftCardAmount"		 : "Gift Card Amount:",
   "giftCardClaimCode"	 : "Claim Code:",
