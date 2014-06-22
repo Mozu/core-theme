@@ -7,7 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Collections;
+using Mozu.MZDB.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -16,6 +19,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NDjango;
 using NDjango.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -94,10 +98,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (ids != null && ids.Count == 0)
             {
-                res = (dynamic)(await service.GetEntity(entityListFullName:list, id:ids[0]));
+                res = (dynamic) (await service.GetEntity(entityListFullName: list, id: ids[0]));
             }
-            res = (dynamic)(await service.GetEntities(entityListFullName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
-
+            else
+            {
+                res = (dynamic) (await service.GetEntities(entityListFullName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
+            }
 
 
 
@@ -115,6 +121,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 model = res.ReadAsSync();
             }
 
+            if (model is EntityCollection)
+            {
+                model = new PagedCollection<JObject>(((EntityCollection) model).Items.Cast<JObject>())
+                        {
+                            PageSize = ((EntityCollection)model).PageSize,
+                            StartIndex = ((EntityCollection)model).StartIndex,
+                            TotalCount = ((EntityCollection)model).TotalCount
+                        };
+            }
 
 
             result.Template = template;

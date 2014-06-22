@@ -32,6 +32,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         [DataMember(Name = "widgets")]
         public List<WidgetDefinition> Widgets { get; set; }
 
+            [DataMember(Name = "editors")]
+        public List<EditorDefinition> Editors { get; set; }
+
         [DataContract]
         public class ThemeAbout
         {

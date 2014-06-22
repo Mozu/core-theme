@@ -331,14 +331,14 @@ namespace System.Linq.Dynamic
         {
 
             var sb = new StringBuilder(tuple.Item2);
-            sb.Replace("eq", "=")
-                .Replace("ne", "!=")
-                .Replace("gt", ">")
-                .Replace("lt", "<")
-                .Replace("ge", ">=")
-                .Replace("le", "<=")
-                .Replace("lt", "<")
-                .Replace("lt", "<")
+            sb.Replace(" eq ", " = ")
+                .Replace(" ne ", " != ")
+                .Replace(" gt ", " > ")
+                .Replace(" lt ", " < ")
+                .Replace(" ge ", " >= ")
+                .Replace(" le ", " <= ")
+                .Replace(" lt ", " < ")
+                .Replace(" lt ", " < ")
                 .Replace("'", "\"");
             var expression = sb.ToString();
 
@@ -1777,6 +1777,7 @@ namespace System.Linq.Dynamic
 
         bool IsApplicable(MethodData method, Expression[] args)
         {
+
             if (method.Parameters.Length != args.Length) return false;
             Expression[] promotedArgs = new Expression[args.Length];
             for (int i = 0; i < args.Length; i++)

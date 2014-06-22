@@ -91,8 +91,11 @@ Ext.define('Taco.core.Controller', {
             record = appState ? appState.record : null,
             options = appState ? appState.options : null;
 
-        this.ensureRequiredStores(function () {
-            this.buildIndex(record, options);
+
+        me.confirmContext(this.getIndexView(), function () {
+            me.ensureRequiredStores(function () {
+                me.buildIndex(record, options);
+            });
         });
 
 
@@ -126,15 +129,21 @@ Ext.define('Taco.core.Controller', {
     },
 
     edit: function (id, additionalParams, appState) {
-        return this.doEdit.apply(this, [id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]]);
+
+        return this.doEdit(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
     },
     doEdit: function (id, additionalParams, appState, viewName, model) {
+        this.confirmContext(viewName, this.doEditInternal, this,arguments);
+    },
+    doEditInternal: function (id, additionalParams, appState, viewName, model) {
         var record = appState ? appState.record : null,
             options = appState ? appState.options : null;
         if (appState && appState.container) {
             options = options || {};
             options.container = appState.container;
         }
+
+
 
         if (record) {
             Taco.app.setLoading();
@@ -178,11 +187,14 @@ Ext.define('Taco.core.Controller', {
     },
 
     create: function (id, additionalParams, appState) {
-        return this.doCreate.apply(this, [id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]]);
+        return this.doCreate(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
 
     },
-
     doCreate: function (id, additionalParams, appState, viewName, model) {
+        this.confirmContext(viewName, this.doCreateInternal, this,arguments);
+            
+    },
+    doCreateInternal: function (id, additionalParams, appState, viewName, model) {
         var record = appState ? appState.record : Ext.create(model);
 
         this.ensureRequiredStores(function () {
@@ -234,26 +246,26 @@ Ext.define('Taco.core.Controller', {
      * @return {Taco.core.ux.content.Container}      The view created or passed.
      */
     createContentView: function (view, cfg) {
-        var viewClass = Ext.ClassManager.get(view), container;
-        if (this.confirmContext(viewClass)) {
-            container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView;
-            Ext.suspendLayouts();
+        var container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView;
+        Ext.suspendLayouts();
 
-            //removing initial view  to aviod events firing from the create of the view from messin with the 
+        //removing initial view  to aviod events firing from the create of the view from messin with the 
 
-            view = view.$className ? view : Ext.create(view, cfg);
-            if (view.contextConfig && view.contextConfig.requiresContextOfType) {
-                view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
-                    var works = this.worksInContext(view, newContext);
-                    if (!works) Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', Ext.isArray(view.contextConfig.requiresContextOfType) ? view.contextConfig.requiresContextOfType[0] : view.contextConfig.requiresContextOfType).raw);
-                    return works;
-                }, this);
-            }
-            container.removeAll(true);
-            container.add(view);
-            Ext.resumeLayouts(true);
-            return view;
+        view = view.$className ? view : Ext.create(view, cfg);
+        if (view.contextConfig && view.contextConfig.requiresContextOfType) {
+            view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
+                var works = this.worksInContext(view, newContext);
+                if (!works) {
+                    Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', Ext.isArray(view.contextConfig.requiresContextOfType) ? view.contextConfig.requiresContextOfType[0] : view.contextConfig.requiresContextOfType).raw, undefined, true);
+                }
+                return works;
+            }, this);
         }
+        container.removeAll(true);
+        container.add(view);
+        Ext.resumeLayouts(true);
+        return view;
+
     },
 
     worksInContext: function (view, ctx) {
@@ -273,17 +285,24 @@ Ext.define('Taco.core.Controller', {
                 newContext = context.sites[0];
             }
 
-            Taco.app.context.setCurrentContext(newContext);
+            Taco.app.context.setCurrentContext(newContext,undefined,true);
             return true;
         }
         return false;
     },
 
-    confirmContext: function (viewClass) {
+    confirmContext: function (viewClass, callback, scope, args) {
         var context = Taco.app.context.getCurrentContext(),
-            requiresContextOfType = (viewClass.prototype.contextConfig || {}).requiresContextOfType,
-            newContext = null;
-        if (this.worksInContext(viewClass.prototype, context)) return true;
+            requiresContextOfType,
+            newContext;
+        args = args && !Ext.isArray(args) ? Array.prototype.slice.call(args, 0) : args;
+        viewClass = Ext.isString(viewClass) ? Ext.ClassManager.get(viewClass) : viewClass;
+        requiresContextOfType = (viewClass.prototype.contextConfig || {}).requiresContextOfType;
+      
+        if (this.worksInContext(viewClass.prototype, context)) {
+            return callback.apply(scope||this, args);
+           
+        }
 
         if (!Ext.isArray(requiresContextOfType)) {
             requiresContextOfType = [requiresContextOfType];
@@ -319,7 +338,9 @@ Ext.define('Taco.core.Controller', {
             throw 'oops';
         }
 
-        Taco.app.context.setCurrentContext(newContext);
-        return false;
+        if (Taco.app.context.setCurrentContext(newContext, false, true) !== false) {
+            return callback.apply(scope || this, args);
+        }
+
     }
 });

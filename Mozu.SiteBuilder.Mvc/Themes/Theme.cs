@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -97,6 +98,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         [IgnoreDataMember]
         public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
+
+
+        [IgnoreDataMember]
+        public List<EditorDefinition> Editors { get; set; }
+
+
         
         [IgnoreDataMember]
         public ThemeFileSystemInfoCollection  FileListing { get; set; }

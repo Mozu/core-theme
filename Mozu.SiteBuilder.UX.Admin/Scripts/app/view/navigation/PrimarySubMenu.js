@@ -35,6 +35,28 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
         selModel.allowDeselect = true;
     },
 
+    buildFlyoutMenuConfig:function (items, menuCfg) {
+       
+        Ext.Array.each(items, function (item) {
+            var itemCfg = {
+                text: item.label
+            }
+            menuCfg.items.add(itemCfg);
+            if (item.address) {
+                item.handler =function () {
+                    alert('open' + item.address);
+                }
+            }
+            if (item.items && item.items.length ) {
+                itemCfg.menu = {
+                    xtype: 'menu',
+                    items: []
+                };
+                this.buildFlyoutMenuConfig(item.items, itemCfg.menu);
+            }
+            
+        }, this);
+    },
     /**
      * Navigates to the link's destination via {@link Taco.core.StateManager}'s
      * attemptNavigate method.
@@ -46,9 +68,25 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
      */
     navigate: function (view, record, item, index, e) {
         var menu = Ext.ComponentQuery.query('#primaryMenu').shift(),
-            dest = record.get('address');
-
+            dest = record.get('address'),
+            items = record.get('items'),
+            flyoutMenu,
+            recurseFn;
         e.preventDefault();
+        if (items && items.length > 0) {
+            flyoutMenu = {
+                xtype: 'menu',
+                items: []
+            };
+
+            this.buildFlyoutMenuConfig(items, flyoutMenu);
+            flyoutMenu = Ext.widget(flyoutMenu);
+            flyoutMenu.showBy(menu);
+            return;
+
+        }
+
+       
         Taco.core.StateManager.attemptNavigate(dest);
         menu.hideMenu();
     }

@@ -5,6 +5,70 @@ Ext.define('Taco.store.Navigation', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.NavigationItem',
     autoLoad: true,
+    listeners: {
+       
+        beforeload: function (store) {
+            var data = store.getProxy().data,
+                seed = 0,
+                recursiveFind = function (key, val, items) {
+                    var res;
+                    Ext.Array.each(items,function (item) {
+                        if (item[key] == val) {
+                            res = item;
+                            return;
+                        }
+                        if (!res && item.items) {
+                            res = recursiveFind(key, val, item.items);
+                        }
+                    });
+                    
+                    return res;
+                };
+
+           
+            if (data.extensiblitySubNavLinksAdded || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
+                return;
+            }
+            Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
+                //todo check security.
+                //todo handle escaping of delimiter
+                var parts = ['Extensions'].concat(link.path),
+                    parentNode = recursiveFind('id', link.parentId, data);
+
+                if (!parentNode) {
+                    return;
+                }
+               
+                Ext.Array.each(parts, function (nodePart, nodeIndex) {
+                    var node = recursiveFind('label', nodePart, parentNode.items),
+                        isLeaf = nodeIndex == parts.length - 1;
+                    parentNode.items = parentNode.items || [];
+
+
+                    if (!node || isLeaf || node.address) {
+                      
+                        node = {
+                            id: 'ext_sub_link_' + seed++,
+                            label: nodePart,
+                            address: isLeaf ? link.href : null,
+                            metaData :link
+                        };
+                        parentNode.items.push(node);
+                        parentNode = node;
+                        return;
+                    }
+
+                    parentNode = node;
+                    return;
+
+
+                });
+
+            });
+            data.extensiblitySubNavLinksAdded = true;
+        }
+    },
+
     filters: [
         {
             filterFn: function (record) {
@@ -12,7 +76,8 @@ Ext.define('Taco.store.Navigation', {
                 if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
                     Ext.each(record.raw.behaviorIds, function (behaviorId) {
                         if (Taco.user.behaviors && Ext.Array.indexOf(Taco.user.behaviors, behaviorId) === -1) {
-                            return ret = false;
+                            ret = false;
+                            return ret;
                         }
                         return true;
                     });
@@ -98,7 +163,7 @@ Ext.define('Taco.store.Navigation', {
                     }
                 ]
             }, {
-                "id": "store",
+                "id": "orders",
                 "label": "Orders",
                 "address": "orders",
                 "behaviorIds": [73],
@@ -189,7 +254,7 @@ Ext.define('Taco.store.Navigation', {
                         "id": "generalsettings",
                         "label": "General Settings",
                         "address": "generalsettings"
-                       
+
                     },
                     {
                         "id": "paymentcheckout",
@@ -205,27 +270,26 @@ Ext.define('Taco.store.Navigation', {
                         "label": "Shipping",
                         "address": "shipping",
                         "items": [
-                                 {
-                                     "id": "shipping4",
-                                     "label": "Methods and Fees",
-                                     "address": "shipping"
-                                 },
+                            {
+                                "id": "shipping4",
+                                "label": "Methods and Fees",
+                                "address": "shipping"
+                            },
                             {
                                 "id": "shipping1",
                                 "label": "Carriers",
                                 "address": "shipping/carriers"
                             },
-                             {
-                                 "id": "shipping2",
-                                 "label": "Zones",
-                                 "address": "shipping/zones"
-                             },
-                             {
-                                 "id": "shipping3",
-                                 "label": "Product Rules",
-                                 "address": "shipping/productRules"
-                             }
-                   
+                            {
+                                "id": "shipping2",
+                                "label": "Zones",
+                                "address": "shipping/zones"
+                            },
+                            {
+                                "id": "shipping3",
+                                "label": "Product Rules",
+                                "address": "shipping/productRules"
+                            }
                         ]
 
                     },
@@ -260,6 +324,10 @@ Ext.define('Taco.store.Navigation', {
                         "id": "fileManager",
                         "label": "File Manager",
                         "address": "fileManager"
+                    }, {
+                        "id": "entities",
+                        "label": "Entity Manager",
+                        "address": "entities"
                     }, {
                         "id": "provisioning",
                         "label": "Structure",
@@ -319,7 +387,7 @@ Ext.define('Taco.store.Navigation', {
                 "address": "capability"
             }]
         }*/, {
-                "id": "report",
+            "id": "reports",
                 "label": "Reports",
                 "address": "reports",
                 "icon": "nav-dashboard",

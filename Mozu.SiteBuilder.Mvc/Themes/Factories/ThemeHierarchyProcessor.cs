@@ -35,6 +35,31 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 return obj.Id.GetHashCode();
             }
         }
+        class EditorDefinitionEQ : IEqualityComparer<EditorDefinition>
+        {
+
+            public bool Equals(EditorDefinition x, EditorDefinition y)
+            {
+                if (x.Id == null && y.Id == null)
+                {
+                    return true;
+                }
+                if (x.Id == null || y.Id == null)
+                {
+                    return false;
+                }
+                return x.Id == y.Id;
+            }
+
+            public int GetHashCode(EditorDefinition obj)
+            {
+                if (obj == null)
+                {
+                    return -1;
+                }
+                return obj.Id.GetHashCode();
+            }
+        }
         class PageTemplateDefinitionEQ : IEqualityComparer<PageTypeDefinition>
         {
 
@@ -73,6 +98,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             if (theme.Parent.Widgets != null)
             {
                 theme.Widgets = theme.Widgets.Union(theme.Parent.Widgets, new WidgetDefinitionEQ()).ToList();
+
+            }
+
+            if (theme.Parent.Editors != null)
+            {
+                theme.Editors = theme.Editors.Union(theme.Parent.Editors, new EditorDefinitionEQ()).ToList();
 
             }
              if (theme.Parent.PageTypes  != null)
