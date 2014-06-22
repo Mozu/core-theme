@@ -1595,6 +1595,7 @@
     <Content Include="Tests\makeadmintests.js" />
     <Content Include="Tests\Mocks\Entities\Editors\default.js" />
     <Content Include="Tests\Mocks\Entities\Editors\pages.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\SubNavLinks.js" />
     <Content Include="Tests\Mocks\Entities\Editors\people.js" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">

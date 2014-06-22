@@ -42,10 +42,50 @@
                                  apiVersion = ver.FileVersion,
                                  localizationValues = locValues, paymentApiBaseUrl,
                                  buildDate = verDate,
-                                 siteUsersRaw = siteUsers
+                                 siteUsersRaw = siteUsers,
+                             extensiblity = new{
+                                 subNavLinks = ViewData["adminSubNavExtensibilty"]
+                             }
                              };
     };
+
     window.Taco = @Html.Raw(JsonConvert.SerializeObject(windowTaco,Newtonsoft.Json.Formatting.None,CaseInsensitiveJsonSerializerSettings.Default));
+
+    window.Taco.extensiblity = window.Taco.extensiblity || {};
+    if (!window.Taco.extensiblity.subNavLinks || !window.Taco.extensiblity.subNavLinks.length   ) {
+        window.Taco.extensiblity.subNavLinks = [
+            {
+                parentId: 'orders',
+                path: ['Order export', 'Do It'],
+                href: 'http://www.fun.com?k=1',
+                windowTitle: 'fun.com'
+
+            }, {
+                parentId: 'orders',
+                path: ['Some Company', 'Order Export'],
+                href: 'http://www.cnet.com?k=2'
+            }, {
+                parentId: 'orders',
+                path: ['Some Company', 'Order Import'],
+                href: 'http://www.searse.com?k=3'
+            }, {
+                parentId: 'catalog',
+                path: ['blurg'],
+                href: 'http://www.cnn.com?k=4'
+            }, {
+                parentId: 'catalog',
+                path: ['link menu', 'think geek'],
+                href: 'http://www.thinkgeek.com?k=5',
+                windowTitle: 'Think Geek'
+            }, {
+                parentId: 'orders',
+                path: ['Order export'],
+                href: 'http://baconaustin.com/'
+            }
+        ];
+
+    };
+
     window.Taco.adminAppPath = window.location.protocol + "//" + window.location.host + '@Url.Content("~")';
     @if (ViewData["useGoogleAnalytics"] as string == "true")
     {

@@ -40,4 +40,15 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         public string FullPath { get; set; }
     }
 
+    public class EditorDefinition
+    {
+        public string Id { get; set; }
+        public Newtonsoft.Json.Linq.JObject Properties { get; set; }
+        public List<string> SupportedDocumentTypes { get; set; }
+
+        public string EntityType { get; set; }
+
+        public string Path { get; set; }
+
+    }
 }

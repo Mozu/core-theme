@@ -38,6 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 theme.PageTypes = tmd.Configuration.PageTypes;
                 theme.EmailTemplates = tmd.Configuration.EmailTemplates;
                 theme.Widgets = tmd.Configuration.Widgets;
+                theme.Editors = tmd.Configuration.Editors;
                 theme.MergedLabels = tmd.Labels;
 
             }

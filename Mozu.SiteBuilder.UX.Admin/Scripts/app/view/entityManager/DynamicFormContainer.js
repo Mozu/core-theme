@@ -10,7 +10,7 @@
     createButtonEnabled: false,
     
     layout: 'fit',
-    enableNavHeader: true,
+    enableNavHeader: false,
  
     padding:'20px',
     initComponent: function () {
@@ -46,7 +46,9 @@
             this.title = this.dynamicForm.getTitle();
         }
         this.items = [this.dynamicForm];
-        this.mixins.navHeader.init.apply(this);
+        if (this.enableNavHeader) {
+            this.mixins.navHeader.init.apply(this);
+        }
         this.callParent(arguments);
     },
 

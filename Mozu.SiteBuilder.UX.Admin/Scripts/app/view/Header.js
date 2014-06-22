@@ -42,7 +42,7 @@ Ext.define('Taco.view.Header', {
                 '<ul>',
                 '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
                 '<tpl for="items">',
-                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a href="{address}"><span>{label}</span></a></li>',
+                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
                 '</tpl></ul>'
             ]
         });
@@ -110,11 +110,37 @@ Ext.define('Taco.view.Header', {
                 element: 'el',
                 delegate: 'a',
                 fn: function (e, link) {
-                    var dest;
+                    var dest,
+                        id,
+                        node,
+                        linkEl,
+                        flyoutMenu;
 
                     if (link) {
                         e.preventDefault();
-                        dest = Ext.fly(link).getAttribute('href') || '#';
+                        linkEl = Ext.get(link);
+                        id = linkEl.getAttribute('data-nav-id');
+                        if (id) {
+                            Ext.Array.each(breadcrumb.data.items, function (item) {
+                                if (item.id == id) {
+                                    node = item;
+                                }
+                            });
+                        }
+
+                        if (node.items && node.items.length > 0) {
+                            flyoutMenu = {
+                                xtype: 'menu',
+                                items: []
+                            };
+
+                            me.buildFlyoutMenuConfig(node.items, flyoutMenu);
+                            flyoutMenu = Ext.widget(flyoutMenu);
+                            flyoutMenu.showBy(linkEl);
+                            return;
+
+                        }
+                        dest = linkEl.getAttribute('href') || '#';
                         Taco.core.StateManager.attemptNavigate(dest);
                     }
                 }
@@ -128,5 +154,83 @@ Ext.define('Taco.view.Header', {
             }
             cmp.data = user.data;
         });
-    }
+
+        
+    },
+    buildFlyoutMenuConfig: function (items, menuCfg) {
+        var me = this;
+        Ext.Array.each(items, function (item) {
+            var itemCfg = {
+                text: item.label
+            }
+            menuCfg.items.push(itemCfg);
+            if (item.address) {
+                itemCfg.handler = function () {
+                    me.launchExtensionWindow(item);
+                }
+            }
+            if (item.items && item.items.length) {
+                itemCfg.menu = {
+                    xtype: 'menu',
+                    items: []
+                };
+                me.buildFlyoutMenuConfig(item.items, itemCfg.menu);
+            }
+
+        });
+    },
+    launchExtensionWindow: function (extensionLink) {
+
+        var configIframe = Ext.create('Ext.ux.IFrame', {
+            height: '100%',
+            src: 'about:blank'
+        });
+
+        var formHtml = "<form id='configPost' method='POST' action='" + extensionLink.address
+            + "' target='" + configIframe.frameName + "'>"
+       //     + "<input type=hidden name='x-vol-tenant-domain' value='" + this.record.get("tenantDomain") + "'/>"
+         //   + "<input type=hidden name='x-vol-return-url' value='" + this.record.get("configReturnUrl") + "'/>"
+            + "</form>";
+
+        var configForm = {
+            xtype: 'component',
+            html: formHtml,
+            id: 'configHiddenForm',
+            hidden:true,
+            listeners: {
+                render: function (cmp) {
+                    var fm = cmp.el.dom.firstElementChild;
+                    fm.submit();
+                }
+            }
+        };
+
+        var modalConfigWindow = Ext.create('Taco.core.ux.window.Drawer', {
+            autoShow: true,
+            resizable: true,
+            draggable: true,
+            layout: 'fit',
+            autoScroll:false,
+            height: '90%',
+            scale: 'large',
+            actions:[],
+            width: '90%',
+            shadow: true,
+            title:extensionLink.metaData.windowTitle,
+            items: [
+                configIframe,
+                configForm
+            ],
+            //listeners: {
+            //    close: function (cmp) {
+            //        cmp.removeAll(true);
+            //        this.record.reload();
+            //    },
+            //    scope: this
+            //}
+        });
+        modalConfigWindow.center();
+
+        this.add(modalConfigWindow);
+    },
 });

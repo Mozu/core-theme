@@ -99,7 +99,7 @@ Ext.define('Taco.core.context.TaContext', {
         this.setCurrentContext(record.raw, false);
     },
 
-    setCurrentContext: function (cfg, navigate) {
+    setCurrentContext: function (cfg, navigate, replaceHistory) {
         var me = this,
             smState = Taco.core.StateManager.getCurrentState(),
             newUrl = '';
@@ -121,9 +121,9 @@ Ext.define('Taco.core.context.TaContext', {
                 newUrl = cfg.urlToken + '/' + smState.uri;
             }
             if (navigate !== false) {
-                Taco.core.StateManager.attemptNavigate(newUrl);
+                Taco.core.StateManager.attemptNavigate(newUrl, undefined, replaceHistory);
             } else {
-                Taco.core.StateManager.addState(newUrl);
+                Taco.core.StateManager.addState(newUrl , undefined, replaceHistory);
             }
 
             me.currentCtx = cfg;

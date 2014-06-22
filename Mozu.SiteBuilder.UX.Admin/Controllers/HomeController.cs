@@ -18,6 +18,8 @@ using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
+using Mozu.MZDB.Contracts;
+using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -38,6 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
     public class HomeController : AdminApiControllerBase 
     {
         private readonly ILogger _logger;
+        private readonly IEntityListsWebApiClient _entityListsWebApiClient;
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
 
         private readonly IAuthenticationHelper _authenticationHelper;
@@ -52,10 +55,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient )
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient , Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
         {
             
             _logger = logger;
+            _entityListsWebApiClient = entityListsWebApiClient.CloneWithoutUserClaims().CloneWithApiContext(x =>
+            {
+                x.SiteId = null;
+                x.CatalogId = null;
+                x.MasterCatalogId = null;
+            });
             _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
 
             _usersRepo = usersRepo.CloneWithoutUserClaims();
@@ -141,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
             var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
             var tenantTask = _tenantsWebApi.GetTenantInternal(  _apiContext.TenantId , false );
-
+            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
             
             var siteUsersTask = _usersRepo.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, pageSize: 200, startIndex: 0);
             
@@ -149,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection >> masterCatalogsTask;
              masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs( );
 
-             await Task.WhenAll( userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask );
+             await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
             
@@ -167,6 +176,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 masterCatalogs = new DCproduct.MasterCatalogCollection() {Items = new List<DCproduct.MasterCatalog>()};
             }
+            if (adminSubNavExtensibiltyTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                await _entityListsWebApiClient.CreateEntityList(new EntityList()
+                                                                {
+                                                                    NameSpace = "mozu.extensiblity",
+                                                                    ContextLevel = "Tenant",
+                                                                    IsVisibleInStorefront = false,
+                                                                    UseSystemAssignedId = true,
+                                                                    Name = "subNavLinks"
+                                                                });
+                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
+                await adminSubNavExtensibiltyTask;
+
+            }
+           
 
             var user = new Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User()
             {
@@ -203,6 +227,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
             this.ViewData["siteUsers"] = siteUsers.Items;
+            this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
 
             // IE8 compatibility (http://hsivonen.fi/doctype/)
             this.Response.AddHeader("X-UA-Compatible", "IE=Edge");
