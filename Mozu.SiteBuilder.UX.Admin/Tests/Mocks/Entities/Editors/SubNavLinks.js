@@ -14,7 +14,7 @@ Ext.create('Ext.form.Panel', {
     items: [
         {
             fieldLabel: 'parentId',
-            xtype:'combobox',
+            xtype: 'combobox',
             name: 'parentId',
             queryMode: 'local',
             store: ['customers', 'catalog', 'orders', 'marketing', 'sitebuilder', 'settings', 'locations', 'publishing', 'reports'],
@@ -24,19 +24,22 @@ Ext.create('Ext.form.Panel', {
             fieldLabel: 'Path',
             name: 'path',
             xtype: 'boxselect',
-      
+            delimiter :'/',
             store: [],
             queryMode: 'local',
             forceSelection: false,
             createNewOnEnter: true,
             createNewOnBlur: true,
         }, {
+            name: 'href',
+            fieldLabel:'Href'
+            
+        }, {
             fieldLabel: 'windowTitle',
             name: 'windowTitle'
         }
     ],
 
-       
 
     setData: function (data) {
         data.guid = data.guid || Ext.data.IdGenerator.get('uuid').generate();
