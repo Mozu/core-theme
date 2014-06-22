@@ -57,7 +57,7 @@
             {% include "modules/my-account/my-account-addressbook" %}
         </div>
 
-        <a id="storecredit"></a>
+        <a id="{{ labels.digitalCreditsAnchor }}"></a>
         <div class="mz-l-stack-section mz-accountstorecredit" id="account-storecredit">
             {% include "modules/my-account/my-account-storecredit" %}
         </div>

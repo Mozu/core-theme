@@ -1,7 +1,7 @@
 ﻿<div class="mz-checkout-storecredit mz-l-stack-section">
-  <h4 class="mz-l-stack-sectiontitle">{{ labels.storeCredits }}</h4>
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredits }}</h4>
   <div class="mz-l-formfieldgroup-cell">
-    <label for="digital-credit-code">{{ labels.giftCardCode }}: </label>
+    <label for="digital-credit-code">{{ labels.digitalCreditCode }}: </label>
   </div>
   <div class="mz-l-formfieldgroup-cell">
     <input type="text" id="digital-credit-code" name="digital-credit-code" value="{{ model.digitalCreditCode }}" data-mz-value="digitalCreditCode" />
@@ -10,12 +10,12 @@
   
 {% if model.activeStoreCredits %}
     <div class="mz-checkout-appliedcredits">
-        <p>{{ labels.storeCreditApplied }}</p>
+        <p>{{ labels.digitalCreditApplied }}</p>
         <ul class="mz-checkout-storecredit-appliedcreditslist">
             {% for credit in model.activeStoreCredits %}
             <li class="mz-checkout-storecredit-credit mz-checkout-storecredit-credit-applied">
                 <span class="mz-checkout-storecredit-creditamount">{{ credit.amountRequested|currency }}</span>
-                <span class="mz-checkout-storecredit-creditcode">{{ labels.storeCreditNumber }}: {{ credit.billingInfo.storeCreditCode }}</span>
+                <span class="mz-checkout-storecredit-creditcode">{{ labels.digitalCreditCode }}: {{ credit.billingInfo.storeCreditCode }}</span>
                 <a href="javascript:;" class="mz-icon mz-icon-close" data-mz-action="removeCredit" data-mz-credit-id="{{ credit.id }}">{{ labels.remove }}</a>
             </li>
             {% endfor %}
@@ -38,7 +38,7 @@
     </div>
 </div>
 {% else %} {% if model.availableStoreCredits and model.nonStoreCreditTotal > 0 %}
-  <p>{{ labels.storeCreditAvailable }}</p>
+  <p>{{ labels.digitalCreditAvailable }}</p>
   <div class="mz-checkout-storecredit-list">
     {% for credit in model.availableStoreCredits %}
     <label class="mz-checkout-storecredit-credit">
