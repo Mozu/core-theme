@@ -50,7 +50,6 @@ Ext.create('Ext.form.Panel', {
     getData: function () {
 
         var data = this.getValues(false, false, false, true);
-        data.friends = Ext.pluck(this.down('#friendsGrid').store.data.items, 'data');
 
         return Ext.applyIf(data, this.data);
 
