@@ -3,25 +3,25 @@
   {% block body-content %}
     <br>
 
-	{{ labels.giftCardBanner|string_format(domainName)|safe}}
+	{{ labels.giftCardEmailBanner|string_format(domainName)|safe}}
 
 	<p>
 	{% if model.Order.billingInfo.billingContact.firstName %}
-		{{ labels.giftCardGreeting|string_format(model.Order.billingInfo.billingContact.firstName, model.Order.billingInfo.billingContact.lastNameOrSurname)|safe }}
+		{{ labels.giftCardEmailGreeting|string_format(model.Order.billingInfo.billingContact.firstName, model.Order.billingInfo.billingContact.lastNameOrSurname)|safe }}
 	{% else %}
 		{{ labels.emailOpeningAlternative|safe }}
 	{% endif %}
 	</p>
 
-	{{ labels.giftCardIntro|string_format(siteContext.generalSettings.websiteName)|safe }}
+	{{ labels.giftCardEmailIntro|string_format(siteContext.generalSettings.websiteName)|safe }}
 	
-	{{ labels.giftCardImage|string_format(domainName)|safe}}
+	{{ labels.giftCardEmailImage|string_format(domainName)|safe}}
 
-	<p><b>{{ labels.giftCardAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
-    <p><b>{{ labels.giftCardClaimCode }}</b> {{model.Credit.Code}}</p>
+	<p><b>{{ labels.giftCardEmailAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
+    <p><b>{{ labels.giftCardEmailClaimCode }}</b> {{model.Credit.Code}}</p>
 
-	{{ labels.giftCardInstructions|string_format(domainName)|safe }}
+	{{ labels.giftCardEmailInstructions|string_format(domainName)|safe }}
 
-	{{ labels.giftCardClosing|string_format(domainName)|safe }}
+	{{ labels.giftCardEmailClosing|string_format(domainName)|safe }}
 
 {% endblock body-content %}

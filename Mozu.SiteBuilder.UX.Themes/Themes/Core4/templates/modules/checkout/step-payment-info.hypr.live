@@ -38,10 +38,10 @@
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paypalExpress }}</h4>
             <span>{{ labels.paypalExpressSummary }}</span>
         </div>
-        {% endif %}
-        {% if payment.billingInfo.paymentType == "StoreCredit" %}
-        <div class="mz-l-stack-section">
-        <h4 class="mz-l-stack-sectiontitle">{{ labels.storeCredit }}</h4>
+      {% endif %}
+      {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" %}
+      <div class="mz-l-stack-section">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h4>
         <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.storeCreditCode }}</span> 
         </div>
         {% endif %}
