@@ -782,10 +782,10 @@
         "icon": "/resources/admin/widgets/07_code.png",
         "editViewFields": [{
             "xtype": "textareafield",
-            "grow": true,
+            "height": 400,
             "name": "body",
             "fieldLabel": "HTML",
-            "anchor": "100%",
+            "width": "100%",
             "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%"
         }],
         "defaultConfig": {
