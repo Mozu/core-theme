@@ -248,7 +248,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
                                         '<tpl if="values.phoneNumber">',
                                             '<div>{phoneNumber}</div>',                                    
                                         '</tpl>',
-                                        '<tpl if="values.email">',                                                                        
+                                        '<tpl if="values.email">',                   
                                             '<div>{email}</div>',
                                         '</tpl>',
                                     '</div>',
@@ -257,6 +257,12 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
 
                             '</tr></table>',
 
+                            '<ul>',
+                            '<lh>Transaction History</lh>',
+                            '<tpl for="changeMessages">',
+                            '<li>{subject}: {createDate:date("M d g:ia")} | Modified By: {userName}</li>',
+                            '</tpl>',
+                            '</ul>',
 
 
                             '<tpl if="values.showVisibilityToggle">',
