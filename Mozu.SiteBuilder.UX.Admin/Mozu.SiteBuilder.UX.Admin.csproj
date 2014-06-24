@@ -747,6 +747,7 @@
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />
+    <Content Include="Scripts\app\overrides\panel\Header.js" />
     <Content Include="Scripts\app\overrides\picker\Month.js" />
     <Content Include="Scripts\app\overrides\selection\CellModel.js" />
     <Content Include="Scripts\app\overrides\toolbar\Paging.js" />
@@ -823,6 +824,7 @@
     <Content Include="Scripts\app\view\order\subform\Attributes.js" />
     <Content Include="Scripts\app\view\order\widget\AddOrderItemToolbar.js" />
     <Content Include="Scripts\app\view\order\widget\InternalNotesGrid.js" />
+    <Content Include="Scripts\app\view\order\widget\ShippingMethodMenu.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanelEditable.js" />
     <Content Include="Scripts\app\view\order\widget\PackagePickup.js" />
@@ -1071,6 +1073,8 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Scripts\sass\src\core\ux\mixins\NavHeader.scss" />
     <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />
+    <Content Include="Scripts\sass\src\overrides\panel\Header.scss" />
+    <Content Include="Scripts\sass\src\view\order\widget\ShippingMethodMenu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

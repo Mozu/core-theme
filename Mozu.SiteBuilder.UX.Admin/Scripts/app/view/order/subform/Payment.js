@@ -132,7 +132,7 @@ Ext.define('Taco.view.order.subform.Payment', {
            amountCollected = paymentAuthInfo && paymentAuthInfo.amountCollected,
            paymentStatus = "Unpaid";
 
-        if (amountCollected >= total) paymentStatus = "Fully Paid";
+        if (amountCollected > 0  && amountCollected >= total) paymentStatus = "Fully Paid";
         if (amountCollected < total && amountCollected > 0) paymentStatus = "Partially Paid";
 
         me.setTitle('Status: ' + paymentStatus);

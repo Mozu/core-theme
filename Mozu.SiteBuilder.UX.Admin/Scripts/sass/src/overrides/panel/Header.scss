@@ -1,0 +1,17 @@
+.taco-header-toolbar {
+    background-color:$color-neutral-transparent;
+}
+
+
+.taco-icon-button{
+    padding-left:8px;
+    .x-btn-arrow-right{
+            padding-right:26px;
+    }
+}
+
+.taco-button-gear {
+    @include icon-font($glyph-gear);
+    
+    position:absolute;
+}

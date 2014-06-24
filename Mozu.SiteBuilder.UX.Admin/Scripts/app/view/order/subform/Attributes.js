@@ -4,11 +4,16 @@
 
 // todos extend base class for the subform
 Ext.define('Taco.view.order.subform.Attributes', {
-    extend: 'Taco.view.order.subform.Subform',
-    
+    extend: 'Taco.view.order.subform.Subform',    
     title: 'Attributes',
     ui: 'subform',
     bodyPadding: '11 0 0 0',
+
+    requires: [
+        "Ext.grid.Panel",
+        "Taco.core.ux.window.Modal",
+        "Taco.shared.view.form.ExtensibleAttribute"
+    ],
 
     initComponent: function () {
         var me = this;

@@ -1,5 +1,5 @@
-
 .orderform-detail-totalpanel { 
+
 	margin: 0px 0px 0px 0px;
 	
 	/*border: 1px solid $color-neutral-75 !important; */
@@ -182,7 +182,14 @@
         }
     }
 
-     
+
+    .taco-order-discount-error{
+        color:$color-theme-red;
+        padding-top:5px;
+        .taco-couponCode{padding-right:10px;font-weight:bold}
+        .taco-reason{}
+    }
+
 
 }
 

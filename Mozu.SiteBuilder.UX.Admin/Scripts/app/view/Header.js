@@ -128,7 +128,7 @@ Ext.define('Taco.view.Header', {
                             });
                         }
 
-                        if (node.items && node.items.length > 0) {
+                        if (node && node.items && node.items.length > 0) {
                             flyoutMenu = {
                                 xtype: 'menu',
                                 items: []

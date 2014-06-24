@@ -87,8 +87,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         this.shippingAdjustmentLabelButton = new Ext.button.Button({
             ui: "action",
             scale: "medium",
-            cls:"order-adjusment-menu",
-            style: "font-size: 1.4rem;",
+            //cls:"order-adjusment-menu",
+            //style: "font-size: 1.4rem;",
             text: me.getShippingAdjustmentText(this.record.get("shippingAdjustmentIsNegative")),
             menu: {
                 plain:true,
@@ -129,8 +129,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         this.orderAdjustmentLabelButton = new Ext.button.Button({
             ui: "action",
             scale: "medium",
-            cls: "order-adjusment-menu",
-            style: "font-size: 1.4rem;",
+            //cls: "order-adjusment-menu",
+            //style: "font-size: 1.4rem;",
             text: (orderAdjustment > 0) ? addOrderLabelText : subtractOrderLabelText,
             menu: {
                 plain:true,
@@ -363,9 +363,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             flex: flex,
             tpl: this.getMasterTemplate()
         });
-
-
-        
         
         this.items = [
             this.leftPanel,
@@ -380,22 +377,63 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     },
 
     initLeftPanel : function (){
-        //this.couponCombo = 
+        var me = this;
 
-        this.initCouponCombo();
+        me.callParent(arguments);
+        
+        me.initCouponCombo();
+        me.leftPanel.add(me.couponCombo);
+        me.leftPanel.add(me.couponError);
 
-        this.leftPanel = Ext.create("Ext.container.Container", {
-            cls: "orderform-detail-totalpanel-leftpanel",
-            //style:"background-color:red",
-            layout:{
-                type: 'form'
-            },
-            items: [
-                this.couponCombo
-            ],
-            flex: .5
-        });
+        
+        var customerNotesText = me.record.get("customerNote");
+        // todo: refactor editableDisplayField to allow for placeholder text
+        var placeholder = ""
+        if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
+            var placeholder = "None provided"
+        }
 
+        me.customerNoteField = Ext.widget({
+            //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
+            xtype: "textarea",
+            fieldLabel: "Customer Notes",            
+            value: customerNotesText,
+            placeholder: placeholder,
+            readOnly: !(this.record.get("orderStatus") == "Pending"),
+            listeners: {
+                blur: {
+                    fn: me.onCustomerNoteChange,
+                    scope:me
+                }
+            }
+        });        
+
+        me.leftPanel.add(me.customerNoteField)
+
+    },
+
+    onCustomerNoteChange: function (field, e, eOpts) {
+        if (field.isDirty()) {
+            
+            this.record.setCustomerNote({
+                jsonData: {
+                    orderId: this.record.getId(),
+                    note: this.customerNoteField.getValue()
+                },
+                success: function (response) {
+                    // success handling here
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        return;
+                    }
+                    this.fireEvent('saveSuccess', json);
+                },
+                failure: function (response) {
+                    this.fireEvent('saveFailure');
+                },
+                scope: this
+            })
+        }
     },
 
     initCouponCombo: function () {
@@ -430,6 +468,19 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 }
             }
         });
+
+        this.couponError = Ext.widget({
+            xtype: "component",
+            data: this.record.get("invalidCoupons"),
+            hidden: !this.record.get("invalidCoupons").length,
+            cls: "taco-order-discount-error",
+            tpl: [
+                '<tpl for=".">',
+                    '{% if (xindex > 1) break; %}',
+                    '<div><span class="taco-couponCode">Coupon: {couponCode}</span><span class="taco-reason">{reason}</span></div>',
+                '</tpl>'
+            ]
+        })
     },
 
 
@@ -463,10 +514,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
     },
 
+    onShippingInfoChange: function () {
+        this.fireEvent('savesuccess', this);        
+    },
+
 
     applyRecord: function (record) {
         //this.updateData(record.getData());
         //this.masterTable.update(record.getData());
+        
 
         var me = this;
         if (record) {
@@ -491,44 +547,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             // update the ext components 
 
 
+            
+            this.updateShippingMethodButton(record);
         }
-
-
 
         return record
     },
-
-    /*
-    // when the data gets updated apply the new data to the two subComponents;
-    updateData: function (newValue, oldValue) {
-        var me = this;
-        if (newValue) {
-            
-            var data = Ext.clone(newValue);
-
-            // add some css class variables to the data for use in the templates
-            Ext.apply(data, {
-                tdCls: "taco-grid-cell ",
-                tdInnerCls: "taco-grid-cell-inner "
-            });
-
-            // update the sub XTemplates
-            var subTpl_1_el = this.masterTable.el.down("[itemId = taco-subTpl_1]");
-            this["subTpl_1"].overwrite(subTpl_1_el, data);
-
-            var subTpl_2_el = this.masterTable.el.down("[itemId = taco-subTpl_2]");
-            this["subTpl_2"].overwrite(subTpl_2_el, data);
-
-            var subTpl_3_el = this.masterTable.el.down("[itemId = taco-subTpl_3]");
-            this["subTpl_3"].overwrite(subTpl_3_el, data);
-
-
-            // update the ext components 
-
-
-        }
-    },
-    */
 
     /**
      * Do any class level cleanup. Destroy and null any scoped refs.     

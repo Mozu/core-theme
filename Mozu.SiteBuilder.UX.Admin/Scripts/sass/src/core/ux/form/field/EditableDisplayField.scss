@@ -3,7 +3,7 @@
 
 
 	
-	.x-form-editable-display-field {
+	.taco-editable-display-field-inner {
         text-decoration:none;
         display:block;
 		color: #333333;
@@ -17,28 +17,48 @@
 		height:"auto";
         cursor:pointer;
         
-        &:hover{
-            text-decoration:none;
-            /*border-color: #3778d5;*/
-            @include box-shadow(inset 0px -1px $color-action-outline-hover);
-        }
-
+        
+        
 	}
 
-    
-
-
-	.x-form-editable-display-field-border{		
+    .taco-editable-display-field-inner-border{		
 		padding: 5px 10px 3px 10px;	
 		border-width: 1px;
 		border-style: solid;
 		border-color: #bfbfbf;
 	}
 
-	.x-form-editable-display-field.x-form-invalid-field {
+    .taco-editable-display-field {
+
+    
+    }
+    
+    .taco-editable-display-field-over {
+        .taco-editable-display-field-inner {
+            background-color:$color-neutral-95;
+            @include box-shadow(inset 0px -1px $color-action-outline-hover);
+        }
+    }
+
+
+	.taco-editable-display-field-inner.x-form-invalid-field {
 	    border-color:$color-theme-base;
 	}
 
-    .x-form-editabledisplayfield-focus{
-        border-color: #3778d5;
+    .taco-editable-display-field-focus{
+        //border-color: #3778d5;
+        background-color:$color-neutral-95;        
+    }
+
+
+    .x-item-disabled .taco-editable-display-field-inner{
+        cursor:default;
+        filter: alpha(opacity=30);
+        opacity: .3;
+    }
+
+
+    .x-form-readonly{
+    
+    
     }

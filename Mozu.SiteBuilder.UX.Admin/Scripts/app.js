@@ -28,7 +28,7 @@ Ext.application({
         'Products',
         'PendingChanges',
         'Inventory',
-        'Message',
+        //'Message',
         'Catalog',
         'Testing',
         'Discounts',

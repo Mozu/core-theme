@@ -541,8 +541,37 @@ Ext.define('Taco.model.Order', {
             "type": "int",
             persist: false,
             "useNull": true
+        }, {
+            "name": "couponCodes",
+            "type": "auto",
+            "persist": false,
+            "defaultValue" : ["88DD9CD9"],
+            "useNull": true
+        },{
+            "name": "invalidCoupons",
+            "type": "auto",
+            "persist": false,
+            "defaultValue": [
+                /*
+                {
+                    "couponCode": "88DD9CD9",
+                    "reasonCode": 123,
+                    "reason": "No qualifying product or category condition was found asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f asdf asd f",
+                    "createDate": "2014-06-18T22:09:04.927Z"
+                }, {
+                    "couponCode": "88DD9CD9",
+                    "reasonCode": 123,
+                    "reason": "No qualifying product or category condition was found",
+                    "createDate": "2014-06-19T17:16:28.628Z"
+                }
+                */
+                
+            ],
+            "useNull": true
         }
     ],
+
+        
     
     reload: function(config) {
         var me = this,
@@ -2095,6 +2124,31 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
+
+
+    /**
+     * service call to update the customer note.
+     * @param {Object} config  A configuration object     
+     * config object:
+        {
+            jsonData: {   
+                // include one or both adjustment types.
+                orderId: "987654321",
+                note: ""
+            }
+        }
+     *
+     */
+    setCustomerNote: function (config){
+        Ext.applyIf(config, {
+            url: '/admin/app/order/setcustomernote',
+            method: "POST"
+        });
+        config.errorMsg = config.errorMsg || "Error saving customer note";
+        this.addErrorHandling(config);
+        Ext.Ajax.request(config);
+    },
+
     
     setCustomer: function(config) {
         Ext.apply(config, {

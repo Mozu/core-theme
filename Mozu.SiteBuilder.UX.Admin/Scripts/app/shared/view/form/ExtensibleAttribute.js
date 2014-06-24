@@ -165,8 +165,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
         editorCfg = this.buildEditor(attributeDefinition, attr, attrValue);
 
         return Ext.widget({
-            xtype: 'container',
-            cls: 'taco-attribute-form',
+            xtype: 'container',            
             items: editorCfg
         });
         
