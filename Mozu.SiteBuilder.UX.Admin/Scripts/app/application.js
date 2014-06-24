@@ -68,6 +68,7 @@ Ext.define('Taco.Application', {
     autoCreateViewport: false,
     requires: [
         'Taco.core.util.Common',
+        'Taco.overrides.panel.Header',
         'Taco.overrides.dom.ElementAddons',
         'Taco.overrides.selection.CellModel',
         'Taco.overrides.ZIndexManager',
@@ -130,7 +131,7 @@ Ext.define('Taco.Application', {
         //'Products',
         //'PendingChanges',
         //'Inventory',
-        //'Message',
+        'Message',
         //'Catalog',
         //'Testing',
         //'Discounts',

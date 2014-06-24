@@ -5,7 +5,7 @@
 Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     extend: 'Ext.form.field.Display',
     alias: 'widget.editabledisplayfield',
-    fieldCls: 'x-form-editable-display-field',
+    
     validateOnChange: true,
     readOnly: false,
     border: true,
@@ -31,7 +31,7 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
      */
     requiredCls: Ext.baseCSSPrefix + 'form-required-field',
 
-    requiredCls: Ext.baseCSSPrefix + 'form-required-field',
+    
     allowBlank: true,
 
     tabIndex: 0,
@@ -46,8 +46,11 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
      * @cfg {String} [focusCls='x-form-checkbox-focus']
      * The CSS class to use when the checkbox receives focus
      */
-    focusCls: 'form-editabledisplayfield-focus',
+    focusCls: 'focus',
 
+    baseCls: "taco-editable-display-field",
+
+    fieldCls: 'taco-editable-display-field-inner',
 
     fieldSubTpl: [
         '<a id="{id}" tabIndex="0" role="{role}" {inputAttrTpl}',
@@ -77,7 +80,7 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
         me.fieldCls += (me.allowBlank) ? '' : ' ' + me.requiredCls;
 
         if (this.border) {
-            this.fieldCls += " x-form-editable-display-field-border";
+            this.fieldCls += " taco-editable-display-field-inner-border";
         }
         this.callParent(arguments);
 
@@ -151,7 +154,6 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
         this.callParent(arguments)
     },
 
-
     // override this method to handle click on the field;
     onClick: Ext.emptyFn,
 
@@ -161,8 +163,8 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
      * @param e
      */
     onMouseOver: function (e) {
-        var me = this;
-        if (!me.disabled && !e.within(me.el, true, true)) {
+        var me = this;        
+        if ((!me.disabled && !me.readOnly) && !e.within(me.el, true, true)) {
             me.onMouseEnter(e);
         }
     },
@@ -209,24 +211,26 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
 
 
     addOverCls: function () {
-        if (!this.disabled) {
+        if (!this.disabled && !this.readOnly) {
             this.addClsWithUI(this.overCls);
         }
     },
+
     removeOverCls: function () {
         this.removeClsWithUI(this.overCls);
     },
 
-
-    onKeyDown: function (e,target) {        
-        if (e.getKey() == e.ENTER) {
-            if (this.onClick) {
-                this.onClick()
+    onKeyDown: function (e, target) {
+        if (!this.disabled && !this.readOnly) {
+            if (e.getKey() == e.ENTER) {
+                if (this.onClick) {
+                    this.onClick(e, target)
+                }
             }
+
         }
 
         this.fireEvent('keydown', this, e);
-
     },
 
     onKeyUp: function (e) {
@@ -244,11 +248,12 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     // @private
     onMouseDown: function (e) {
         var me = this;
-
-        if (Ext.isIE) {
-            // In IE the use of unselectable on the button's elements causes the element
-            // to not receive focus, even when it is directly clicked.
-            me.getFocusEl().focus();
+        if (!me.disabled && !me.readOnly) {
+            if (Ext.isIE) {
+                // In IE the use of unselectable on the button's elements causes the element
+                // to not receive focus, even when it is directly clicked.
+                me.getFocusEl().focus();
+            }
         }
         /*
         if (!me.disabled && e.button === 0) {
@@ -261,20 +266,24 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
     // @private
     onMouseUp: function (e) {
         var me = this;
-        if (e.button === 0) {
-            if (!me.pressed) {
-                me.removeClsWithUI(me.pressedCls);
+        if (!this.disabled) {
+            if (e.button === 0) {
+                if (!me.pressed) {
+                    me.removeClsWithUI(me.pressedCls);
+                }
             }
         }
     },
 
 
     onDisable: function () {        
+        this.inputEl.dom.tabIndex = "-1";
         this.callParent();
     },
 
     //private
-    onEnable: function () {
+    onEnable: function () {        
+        this.inputEl.dom.tabIndex = "0";
         this.callParent();        
     },
 
@@ -339,7 +348,11 @@ Ext.define('Taco.core.ux.form.field.EditableDisplayField', {
         me.callParent(arguments);
 
         me.mon(me.el, {
-            click: me.onClick,
+            click: function (e, el, eOpts) {
+                if (!me.disabled) {
+                    me.onClick(e, el, eOpts);
+                }
+            },
             scope: me
         });
     },

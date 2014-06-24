@@ -13,38 +13,54 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
     ],
     title: 'Shipping',
 
-    tools: [{
-        type: 'gear',
-        menu: {
-            plain: true,
-            shadow: false,
-            items: []
-        },
-        callback: function (owner, tool, e) {
-            var menu = tool.menu;
-
-            if (tool.hasVisibleMenu()) {
-                menu.removeAll();
-                menu.add(owner.getMenuActions());
-            }
-        }
-    }],
+    // puts the tools into a header toolbar with overflow management and default button configuration; 
+    headerToolbar: true,
 
     config: {        
         record: null
     },
 
     initComponent: function () {
-        var me = this;        
+        var me = this;
+
+        this.tools =[
+            {
+                xtype: "button",
+                ui: "action",
+                scale: "medium",
+                cls: "taco-icon-button",
+                iconCls: "taco-button-gear",
+                menuAlign:"tr-br",
+                listeners: {
+                    menushow: {
+                        fn: function (button, menu, eOpts) {
+                            menu.removeAll();
+                            menu.add(me.getMenuActions());
+                        },
+                        scope: me
+                    }
+                },
+                menu: {
+                    plain: true,
+                    showSeparator: false,
+                    shadow: false,
+                    items: [{
+                        text: "loading..."
+                    }]
+                }
+            }
+        ]
+
+
+
+
         me.items = [];
         me.initShippingMethodField();
         me.callParent(arguments);
     },
 
-
-
-
     getMenuActions: function () {
+        
         var action = new Ext.Action({
             text: 'Add Address',
             handler: this.launchEditor,

@@ -10,41 +10,23 @@ Ext.define('Taco.view.order.subform.Detail', {
         'Taco.model.OrderItemDiscount',
         'Taco.view.order.widget.OrderTotalPanel',
         'Taco.view.order.widget.OrderItemGrid',
-        'Taco.view.order.modal.EditOrderDetail'
+        'Taco.view.order.modal.EditOrderDetail',
+        'Taco.shared.view.form.ExtensibleAttribute'
     ],
     alias: 'widget.taco-orderdetail',
-    
     itemId: 'orderDetailPanel',
-    title: 'Order Details',
+    title: 'Order Details',    
+    headerToolbar: true,
 
-    /*
-    tools:[{
-        type: 'gear',
-        itemId: 'actionTrigger',
-        menu: {
-            plain: true,
-            shadow: false,
-            items: []
-        },
-        callback: function (owner, tool, e) {
-            var menu = tool.menu;
+    bodyPadding: '0 0 0 0 ',
 
-            if (tool.hasVisibleMenu()) {
-                menu.removeAll();
-                menu.add(owner.getMenuActions());
-            }
-        }
-    }],    
-    */
-    
     config: {
 
         // order model
         record: null,
         
         // determines whether the detailGrid allows field editing
-        editMode: false,
-        
+        editMode: false,       
         
         
         totalColumnWidth: 100,
@@ -55,7 +37,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         itemId:"orderDetails"
         
     },
-        
+
+    
 
     // width of the actionColumn. used to align the grid total container
     actionColumnWidth: 30,
@@ -70,49 +53,13 @@ Ext.define('Taco.view.order.subform.Detail', {
             me.onRecordChange();
         }, me);
         
-        me.tools = me.getButtonActions();
+        //me.tools = me.getButtonActions();
         
         // var siteContext = Taco.app.context.getCurrent().urlToken;
 
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
         
-        // this.actionTrigger = Ext.create('Taco.core.ux.action.Button', {
-        //     width: 50,
-        //     height: 30,
-        //     text: ' ',
-
-
-
-
-
-
-
-        //     menuAlign: 'tr-br',
-        //     cls: Taco.baseCSSPrefix + 'editcontainer-menu-button',
-        //     autoEl: {
-        //         tag: 'a'
-        //     },
-            
-        //     listeners: {
-        //         menushow: {
-        //             fn: function (button, menu, eOpts) {
-        //                 // need to generate the menu each time since the menu options may change after the record is modified;
-        //                 menu.removeAll();
-        //                 menu.add(me.getMenuActions());
-        //             },
-        //             scope: me
-        //         }
-        //     },
-        //     menu: {
-        //         plain: true,
-        //         items: [{
-        //             text: ""
-        //         }]
-        //     }
-        // });
-    
-        // add the action trigger icon in header;
-        // this.setTools([this.actionTrigger]);
+        
     
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
@@ -137,6 +84,11 @@ Ext.define('Taco.view.order.subform.Detail', {
                     },
                     scope: me
                 },
+                'orderAccepted': {
+                    fn: function () {
+                        me.record.reload();
+                    },
+                },
                 'orderCancelled': {
                     fn: function() {
                         me.record.reload();
@@ -149,6 +101,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         
         // subtotals, orderlevel discounts, tax shipping, and totals
         this.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
+            margin: '0 0 20 0',
             record: me.record,
             //data: me.record.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
@@ -156,20 +109,71 @@ Ext.define('Taco.view.order.subform.Detail', {
         });
         
         // customer notes class
-        this.customerNoteRow = Ext.create('Ext.Component', {
-            cls: "orderform-detail-customerNotesRow",
+        this.customerNoteRow = Ext.create('Ext.panel.Panel', {
+            //cls: "orderform-detail-customerNotesRow",
+            ui: "subform-section",
+            title: "Customer Notes",
+            margin: "0 0 20px 0 ",
+            bodyStyle: "padding:20px 0px 40px 0px ",            
             tpl: [
                 '<div class="customerNote">',
-                    '<span class="label">Customer Notes:</span> {customerNote}',
+                    '<tpl if="values.customerNote">',
+                        '{customerNote}',
+                    '<tpl else>',
+                        'None available',
+                    '</tpl>',
                 '</div>'
             ],
             data:this.record.getData()
         });
+
+
+        me.internalNoteRow = Ext.widget({
+            xtype: "panel",
+            ui: "subform-section",
+            title: "Internal Notes",
+            bodyStyle: "padding:20px 0px 40px 0px ",
+            html: "Notes grid goes here. TBD"
+
+        });
+        
+        this.orderAttrGrid = Ext.create('Taco.view.order.subform.Attributes', {
+            ui: "subform-section",
+            headerToolbar: true,
+            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes'),
+            record: this.record,
+            orderForm: this
+        });
+
+        //todo refactor attributes to encapsolate this form; and to make the dialog auto destroy;
+        this.orderAttr = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {
+            title: 'Attributes',
+            header:false,
+            record: this.record,
+            ui: "form",
+            attributeDefinitionStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderAttributes')
+        });
         
         Ext.apply(this, {
-            items: [
-                me.detailGrid,
-                this.totalRow
+                items: [{
+                    xtype: "panel",                    
+                    ui: "subform-section",
+                    headerToolbar: true,
+                    tools: me.getButtonActions(),
+                    title:"Items Ordered",
+                    items:[
+                        me.detailGrid,
+                        this.totalRow                        
+                    ]
+                },
+                
+                this.orderAttrGrid,
+
+                this.customerNoteRow,
+
+                this.internalNoteRow
+
+
             ]
         });
 
@@ -316,6 +320,13 @@ Ext.define('Taco.view.order.subform.Detail', {
     updateUi: function () {
         var me = this;        
         me.totalRow.setRecord(me.record);
+        
+        me.customerNoteRow.update(me.record.data)
+        
+
+        // todo: update the internalNotes
+        //me.internalNoteRow.setRecord(me.record);
+
         me.rebuildItems();
         me.updateHasDraftToolbar();
     },
@@ -325,11 +336,19 @@ Ext.define('Taco.view.order.subform.Detail', {
     getMenuActions: function () {
         var me = this,
             availableActions = me.record.get("availableActions"),
+            canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = true,
+            canEdit = !canAccept,
             menu;
         
         menu = [{
+            text: 'Accept Order',
+            handler: function () {
+                this.detailGrid.acceptOrder();
+            },
+            scope: me,
+            hidden: !canAccept
+        }, {
             text: 'Edit Details',
             handler: function () {
                 this.editOrder();
