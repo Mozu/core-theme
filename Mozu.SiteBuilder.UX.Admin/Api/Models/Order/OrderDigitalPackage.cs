@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DC = Mozu.CommerceRuntime.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -22,5 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         #region workflow
         public List<string> AvailableActions { get; set; }
         #endregion
+
+        public List<DC.Commerce.ChangeMessage> ChangeMessages { get; set; }
     }
 }

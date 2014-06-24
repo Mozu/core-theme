@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
+using DC = Mozu.CommerceRuntime.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -52,5 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public DateTime CreateDate { get; set; }
 
         public DateTime? ShipDate { get; set; }
+
+        public List<DC.Commerce.ChangeMessage> ChangeMessages { get; set; }
     }
 }
