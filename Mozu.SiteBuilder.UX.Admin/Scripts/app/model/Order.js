@@ -372,12 +372,14 @@ Ext.define('Taco.model.Order', {
                     v = [];
                 }
                 Ext.Array.forEach(v, function(pkg) {
-                    Ext.Array.forEach(pkg.changeMessages, function (chgMsg) {
-                        var user = Ext.Array.findBy(Taco.siteUsersRaw, function(sur) { return sur.id === chgMsg.userId });
-                        if (user) {
-                            chgMsg.userName = user.firstName + ' ' + user.lastName;
-                        }
-                    });
+                    if (pkg.changeMessages) {
+                        Ext.Array.forEach(pkg.changeMessages, function(chgMsg) {
+                            var user = Ext.Array.findBy(Taco.siteUsersRaw, function(sur) { return sur.id === chgMsg.userId });
+                            if (user) {
+                                chgMsg.userName = user.firstName + ' ' + user.lastName;
+                            }
+                        });
+                    }
                 });
                 return v;
             }
@@ -393,7 +395,24 @@ Ext.define('Taco.model.Order', {
         // like a package but for people that can't wait a few days for direct ship. 
         {
             "name": "pickups",
-            "type": "array"
+            "type": "array",
+            convert: function (v, record) {
+                if (!Ext.isArray(v)) {
+                    v = [];
+                }
+                Ext.Array.forEach(v, function(pik) {
+                    if (pik.changeMessages) {
+                        Ext.Array.forEach(pik.changeMessages, function(chgMsg) {
+                            var user = Ext.Array.findBy(Taco.siteUsersRaw, function(sur) { return sur.id === chgMsg.userId });
+                            if (user) {
+                                chgMsg.userName = user.firstName + ' ' + user.lastName;
+                            }
+                        });
+                    }
+                });
+                return v;
+            }
+
         },
         
         // helper field. ui iterates on unshipped packages in multiple places

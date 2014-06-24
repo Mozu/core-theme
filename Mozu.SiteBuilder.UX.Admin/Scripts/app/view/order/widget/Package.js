@@ -523,9 +523,12 @@ Ext.define('Taco.view.order.widget.Package', {
                 
                             '</tr></table>',
 
-                            '<ul><tpl for="changeMessages">',
-                            '<li>{createDate:date("M d g:ia")} : {userName} : {subject}</li>',
-                            '</tpl></ul>',
+                            '<ul>',
+                            '<lh>Transaction History</lh>',
+                            '<tpl for="changeMessages">',
+                            '<li>{subject}: {createDate:date("M d g:ia")} | Modified By: {userName}</li>',
+                            '</tpl>',
+                            '</ul>',
 
                             '<tpl if="values.showVisibilityToggle">',
                                 '<div class="visibilityToggle">',

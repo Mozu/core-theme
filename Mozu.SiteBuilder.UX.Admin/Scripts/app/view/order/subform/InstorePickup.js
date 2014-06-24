@@ -137,7 +137,7 @@ Ext.define('Taco.view.order.subform.InstorePickup', {
                             itemTotal: dataItem.totalQuantity,    
                             weight: dataItem.weight,
                         
-                        
+                            changeMessages: dataItem.changeMessages,
                         
                             // billing contact info
                             firstName: billingContact.firstName,
