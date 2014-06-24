@@ -133,6 +133,8 @@ Ext.define('Taco.view.order.subform.Shipping', {
                         // ui controls
                         showVisibilityToggle: false,
                         
+                        changeMessages: dataItem.changeMessages,
+
                         // order info
                         title: "Package " + i,
                         fulfillmentStatus: dataItem.status,
@@ -232,7 +234,9 @@ Ext.define('Taco.view.order.subform.Shipping', {
                     trackingNumber: dataItem.trackingNumber,
                     shipDate: dataItem.shipDate,
                     packagingType : packagingTypeText,
-                        
+
+                    changeMessages: dataItem.changeMessages,
+
                     // billing contact info
                     firstName: Ext.util.Format.htmlEncode(contact.firstName),
                     lastName: Ext.util.Format.htmlEncode(contact.lastName),

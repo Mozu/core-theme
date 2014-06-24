@@ -523,14 +523,15 @@ Ext.define('Taco.view.order.widget.Package', {
                 
                             '</tr></table>',
 
-
+                            '<ul><tpl for="changeMessages">',
+                            '<li>{createDate:date("M d g:ia")} : {userName} : {subject}</li>',
+                            '</tpl></ul>',
 
                             '<tpl if="values.showVisibilityToggle">',
                                 '<div class="visibilityToggle">',
                                     '<a class="shipmentAction expanded" shipmentAction="toggleVisibility">Click for more details</a>',
                                 '</div>',
                             '</tpl>',
-
 
 
                         '</div>',               
@@ -568,6 +569,8 @@ Ext.define('Taco.view.order.widget.Package', {
             ]
         
         };
+
+        this.getHeaderData();
     },
 
 

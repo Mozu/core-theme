@@ -612,6 +612,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShipDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? dc.AuditInfo.UpdateDate : null))
                 .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => dc.Items != null ? dc.Items.Sum(i => i.Quantity) : 0)) // 0 quantity when no items
+                .ForMember(x => x.ChangeMessages, op => op.ResolveUsing(dc => dc.ChangeMessages))
                 //ignores
                 .ForMember(x => x.OrderId, op => op.Ignore()) //handled in Order map method
                 ;
@@ -642,7 +643,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
                 .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
                 .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => dc.Items != null ? dc.Items.Sum(i => i.Quantity) : 0)) // 0 quantity when no items
+                .ForMember(x => x.ChangeMessages, op => op.ResolveUsing(dc => dc.ChangeMessages))
                 .ForMember(x => x.OrderId, op => op.Ignore())
+
                 .AfterMap((dc, x) => {
                     // set FulfillmentLocationCode on all items.
                     x.Items.ForEach(pickupItem => pickupItem.FulfillmentLocationCode = x.FulfillmentLocationCode);
@@ -664,26 +667,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcDigitalPackage_to_OrderDigitalPackage()
         {
-
-            /*
-                    public string Id { get; set; }
-        public string OrderId { get; set; }
-
-        public DateTime CreateDate { get; set; }
-        public string FulfillmentEmailAddress { get; set; }
-        public DateTime? FulfillmentDate { get; set; }
-        public int TotalQuantity { get; set; }
-        List<OrderDigitalPackageItem> Items { get; set; }
-
-        /// <summary>
-        /// "Fulfilled", "NotFulfilled", or "PartiallyFulfilled"
-        /// </summary>
-        public string Status { get; set; }
-        
-        #region workflow
-        public List<string> AvailableActions { get; set; }
-        #endregion
-*/
             Mapper.CreateMap<ShippingDC.DigitalPackage, OrderDigitalPackage>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
@@ -693,6 +676,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.UpdateDate : null))
                 .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => dc.Items != null ? dc.Items.Sum(i => i.Quantity) : 0)) // 0 quantity when no items
                 .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+                .ForMember(x => x.ChangeMessages, op => op.ResolveUsing(dc => dc.ChangeMessages))
                 //ignores
                 .ForMember(x => x.OrderId, op => op.Ignore()) //handled in Order map method
                 .ForMember(x => x.FulfillmentEmailAddress, op => op.Ignore()) //handled in Order map method

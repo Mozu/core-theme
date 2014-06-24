@@ -371,6 +371,14 @@ Ext.define('Taco.model.Order', {
                 if (!Ext.isArray(v)) {
                     v = [];
                 }
+                Ext.Array.forEach(v, function(pkg) {
+                    Ext.Array.forEach(pkg.changeMessages, function (chgMsg) {
+                        var user = Ext.Array.findBy(Taco.siteUsersRaw, function(sur) { return sur.id === chgMsg.userId });
+                        if (user) {
+                            chgMsg.userName = user.firstName + ' ' + user.lastName;
+                        }
+                    });
+                });
                 return v;
             }
         },
