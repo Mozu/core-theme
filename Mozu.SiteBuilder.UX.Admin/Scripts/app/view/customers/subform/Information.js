@@ -11,7 +11,7 @@ Ext.define('Taco.view.customers.subform.Information', {
 
         var me = this,
             data = this.record.getData();
-        this.setTitle('Shopper Id:' + this.record.getId());
+        this.setTitle('Shopper Id: ' + this.record.getId());
         me.taxExemptIdField = Ext.create('Ext.form.field.Text', {
             name: 'taxId',
             hidden: !data.taxExempt,
@@ -81,26 +81,26 @@ Ext.define('Taco.view.customers.subform.Information', {
                         '<div class="total-orders"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>'
                     ]
                 }, {
-                    xtype: 'button',
-                    text: 'View Wish List',
-                    cls: 'customer-wish-list-btn',
-                    handler: function () {
-                        var model = Ext.create('Taco.shared.view.modal.Wishlist', {
-                            record: this.record
-                        });
-                    },
-                    scope: this
-                }, {
-                    xtype: 'button',
-                    text: 'View Store Credit',
-                    cls: 'customer-wish-list-btn',
-                    handler: function () {
-                        var model = Ext.create('Taco.shared.view.modal.StoreCredit', {
-                            record: this.record
-                        });
-                    },
-                    scope: this
-                }]
+                        xtype: 'button',
+                        text: 'View Wish List',
+                        cls: 'customer-wish-list-btn',
+                        handler: function () {
+                            var model = Ext.create('Taco.shared.view.modal.Wishlist', {
+                                record: this.record
+                            });
+                        },
+                        scope: this
+                    }, {
+                        xtype: 'button',
+                        text: 'View Gift Cards and Store Credits',
+                        cls: 'customer-wish-list-btn',
+                        handler: function () {
+                            var model = Ext.create('Taco.shared.view.modal.StoreCredit', {
+                                record: this.record
+                            });
+                        },
+                        scope: this
+                    }]
             }, {
                 xtype: 'container',
                 layout: {
