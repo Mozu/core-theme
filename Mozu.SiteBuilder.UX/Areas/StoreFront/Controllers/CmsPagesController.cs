@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected ICmsServiceWrapper _cmsService;
         
         protected ICmsTypeHelper _cmsTypeHelper;
-        protected ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        
         private readonly HyprViewEngine _hyprViewEngine;
       
      
@@ -57,10 +57,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             )
         {
 
-            _docRepo = docRepo;
+            _docRepo = docRepo.CloneWithoutUserClaims();
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
-            _customerAccountWebApiClient = customerAccountWebApiClient.CloneWithoutUserClaims();
+            
             _cmsTypeHelper= cmsTypeHelper;
             _hyprViewEngine = hyprViewEngine;
 

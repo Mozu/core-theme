@@ -50,6 +50,10 @@ Ext.define('Taco.model.Entity', {
             useNull : true
         },
         {
+            name: 'entityType',
+            type: 'string'
+        },
+        {
             name: 'siteId',
             type: 'auto',
             useNull: true

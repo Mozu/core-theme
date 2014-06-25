@@ -223,5 +223,52 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         return me.secondToolbar;
     }
 
+    ,
+    deleteRecordFromStore:function (record) {
+
+        var grid = this;
+            
+
+        Ext.MessageBox.show({
+            title: 'Delete',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: "Are you sure you want to delete this",
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function (val) {
+                if (val === 'yes') {
+                    
+                    var store = grid.getStore();
+                    grid.setLoading(true);
+                    store.remove(record);
+                    store.sync({
+                        success: function (m) {                            
+                            grid.setLoading(false);
+                        },
+                        failure: function (m) {
+                            store.reload();
+                            grid.setLoading(false);
+
+                            var text = "Unknown error.";
+                            if (m.exceptions && Taco.core.util.ExceptionWhiner.wasHandled(m.exceptions)) {
+                                return;
+                            }
+                            if (m.exceptions) {
+                                text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
+                            }
+
+                            Taco.app.fireEvent('setmessage', text, 'error');
+
+                        }
+
+                    });
+                }
+            }
+        });
+
+    },
 
 });

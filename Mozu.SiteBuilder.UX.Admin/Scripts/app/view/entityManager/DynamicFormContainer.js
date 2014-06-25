@@ -77,6 +77,16 @@
         }
         
         this.record.save({
+            failure: function (record, operation) {
+                var msg = operation.error;
+                if (msg && msg.remoteException) {
+                    msg = msg.remoteException.getMessage();
+                }
+
+                if (msg) {
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                }
+            },
             callback: function (r, o, s) {
                 me.saveSuccess(r);
             }

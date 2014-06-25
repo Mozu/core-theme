@@ -11,6 +11,7 @@ using System.Web.DynamicData;
 using System.Web.Http;
 using Magnum.FileSystem;
 using MongoDB.Driver.Builders;
+using Mozu.Core.Mongo.JobScheduler;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Newtonsoft.Json;
@@ -63,8 +64,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             EntityContainer cont;
 
-            if (documents.First().GetValue(MZDB_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase) == null)
+            if (documents.First().Value<string>("entityType") == "cms")
             {
+               
                 var tasks = documents.Select(doc =>
                     _documentListWebApiClient.DeleteDocument(documentListName: (string) doc.GetValue(CMS_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase), documentId: (string) doc.GetValue(CMS_DOCUMENT_ID_PROPERTY, StringComparison.OrdinalIgnoreCase))
                     ).ToList();
@@ -80,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 });
 
             }
-            else
+            else if (documents.First().Value<string>("entityType") == "mzdb")
             {
 
                
@@ -98,6 +100,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     }
                 });
             }
+            else
+            {
+                throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
+            }
 
 
 
@@ -111,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Object>>> Create(List<JObject> documents)
         {
 
-            if (documents.First().GetValue(MZDB_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase) == null)
+            if (documents.First().Value<string>("entityType") == "cms")
             {
                 var tasks = documents.Select(doc =>
                 {
@@ -125,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             }
-            else
+            else if (documents.First().Value<string>("entityType") == "mzdb")
             {
 
 
@@ -140,6 +146,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(tasks.Select(x => (object) x.Result.ReadAsSync()).ToList());
 
             }
+            else
+            {
+                throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
+            }
 
         }
 
@@ -148,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Object>>> Update(List<JObject> documents)
         {
 
-            if (documents.First().GetValue(MZDB_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase) == null)
+            if (documents.First().Value<string>("entityType") =="cms")
             {
                 var tasks = documents.Select(doc =>
                 {
@@ -162,26 +172,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             }
-            else
+            else if (documents.First().Value<string>("entityType") == "mzdb")
             {
 
 
                 var tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<Mozu.MZDB.Contracts.EntityContainer>();
-                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.NameSpace +"."+ entity.EntityListName, item: entity.Item, id: entity.Id );
+                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.NameSpace + "." + entity.EntityListName, item: entity.Item, id: entity.Id);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
 
-                return List2(tasks.Select(x => (object)x.Result.ReadAsSync()).ToList());
+                return List2(tasks.Select(x => (object) x.Result.ReadAsSync()).ToList());
 
+            }
+            else
+            {
+                throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType")+"]");
             }
 
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<Object>>> Read(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view=null)
+        public async Task<Response<List<JObject >>> Read(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view=null)
         {
             if (entityType == "cms")
             {
@@ -190,7 +204,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 string filter = null;
                 var res = (await _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
 
-                return List2(res.Items.Cast<object>().ToList(), res.TotalCount);
+                return List2(res.Items.Select(x =>
+                {
+                    var j = JObject.FromObject(x,JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+                    j["entityType"] = "cms";
+                    return j;
+                }).ToList(), res.TotalCount);
             }
             else
             {
@@ -198,10 +217,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 string filter = null;
                 var res = (await _entityListsWebApiClient.GetEntityContainers(entityListFullName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
 
-                return List2(res.Items.Cast<object>().ToList(), res.TotalCount);
+                return List2(res.Items.Select(x =>
+                {
+                    var j = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+                    j["entityType"] = "mzdb";
+                    return j;
+                }).ToList(), res.TotalCount);
             }
 
         }
+
+
+
 
         public class Node
         {
@@ -214,8 +241,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public bool Expanded { get; set; }
         }
 
-        [HttpGetRoute(UriTemplate = "lists/read")]
-        public async Task<Response<List<Node>>> ReadLists(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string view = null)
+        //[HttpGetRoute(UriTemplate = "lists/read")]
+        //public async Task<Response<List<JObject>>> ReadLists(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string listName = null)
+        //{
+        //    var nodes = new List<Object>();
+        //    if (entityType == "cms" || string.IsNullOrEmpty(entityType))
+        //    {
+        //        var cms = new Node() { Text = "content", Id = "cms", Expanded = true, Items = new List<Node>() };
+        //        nodes.Add(cms);
+
+        //        string sortBy = null;
+        //        string filter = null;
+        //        try //todo:remove when support is there for tenant.
+        //        {
+        //            var res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+        //            if (res.Items != null)
+        //            {
+        //                res.Items.ForEach(x => cms.Items.Add(new Node() { Text = x.Name, Id = "cms_" + x.Name, MetaData = AddViews(x), Leaf = true }));
+        //            }
+        //        }
+        //        catch
+        //        {
+        //        }
+
+        //    }
+        //    if (entityType == "mzdb" || string.IsNullOrEmpty(entityType))
+        //    {
+        //        var mzdb = new Node() { Text = "entities", Id = "mzdb", Expanded = true, Items = new List<Node>() };
+        //        nodes.Add(mzdb);
+        //        string sortBy = null;
+        //        string filter = null;
+        //        var res = (await _entityListsWebApiClient.GetEntityLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+        //        if (res.Items != null)
+        //        {
+        //            res.Items.ForEach(x => mzdb.Items.Add(new Node() { Text = x.Name, Id = "mzdb_" + x.NameSpace + "." + x.Name, MetaData = AddViews(x), Leaf = true }));
+        //        }
+
+
+        //    }
+        //    return List2(nodes);
+        //}
+
+        [HttpGetRoute(UriTemplate = "lists/tree")]
+        public async Task<Response<List<Node>>> ReadListsTree(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string view = null)
         {
             var nodes = new List<Node>();
             
