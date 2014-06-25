@@ -68,10 +68,15 @@ Ext.define('Taco.view.customers.modal.Contacts', {
     doSave: function() {
         var me = this,
             count = 0,
+            shipping = this.down('[name="customerShipToAddress"]{getValue()}'),
+            billing = this.down('[name="customerBillToAddress"]{getValue()}'), 
             fnComplete = function() {
                 if (++count < 2) return;
                 me.saveSuccess(me.record);
             };
+
+        if (shipping) this.order.set('fulfillmentContact', shipping.inputValue);
+        if (billing) this.order.set('billingContact', billing.inputValue);
 
         if (this.record.dirty) {
             this.record.save({
@@ -88,8 +93,10 @@ Ext.define('Taco.view.customers.modal.Contacts', {
         }
 
         if (this.order && this.order.dirty) {
-            this.order.save({
-                success: function() {
+            this.order.updateContactInfo({
+                success: function(response) {
+                    var json = Ext.decode(response.responseText).items[0];
+                    me.order.set(json);
                     me.order.commit();
                     fnComplete();
                 },
