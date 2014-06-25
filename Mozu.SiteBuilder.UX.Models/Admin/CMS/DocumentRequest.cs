@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
     public class DocumentRequest
     {
         public string Id { get; set; }
-        public string Collection { get; set; }
+        public string DocumentListName { get; set; }
         private string _path;
         public string Path {
             get
@@ -30,22 +30,22 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         [System.Runtime.Serialization.IgnoreDataMember()]
         public Mozu.Content.Contracts.Document Document { get; set; }
 
-        public object this[string key]
-        {
-            get
-            {
-                if (this.Document == null)
-                {
-                    return null;
-                }
-                if (string.Equals(key, "name", StringComparison.OrdinalIgnoreCase))
-                {
-                    return Document.Name;
-                }
+        //public object this[string key]
+        //{
+        //    get
+        //    {
+        //        if (this.Document == null)
+        //        {
+        //            return null;
+        //        }
+        //        if (string.Equals(key, "name", StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            return Document.Name;
+        //        }
 
-                return Document.Properties.Where(x => string.Equals(x.PropertyType, key, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
-            }
-        }
+        //        return Document.Properties.Where(x => string.Equals(x.PropertyType, key, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+        //    }
+        //}
 
 
         public string PublishState { get; set; }

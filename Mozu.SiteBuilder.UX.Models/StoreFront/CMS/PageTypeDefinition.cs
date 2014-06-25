@@ -28,6 +28,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [DataMember (Name = "documentType")]
         public string DocumentType { get; set; }
 
+        [DataMember(Name = "editor")]
+        public string Editor { get; set; }
+
         [DataMember(Name = "userCreatable")]
         public bool? UserCreatable { get; set; }
          
@@ -44,11 +47,19 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
     {
         public string Id { get; set; }
         public Newtonsoft.Json.Linq.JObject Properties { get; set; }
-        public List<string> SupportedDocumentTypes { get; set; }
-
-        public string EntityType { get; set; }
-
+        public List<DocumentOrEntityListEditorSelector> SsupportedDocumentTypes { get; set; }
+        public List<DocumentOrEntityListEditorSelector> SupportedEntityLists { get; set; }
+  
         public string Path { get; set; }
 
+    }
+
+    public class DocumentOrEntityListEditorSelector
+    {
+
+      
+        public string Name { get; set; }
+  
+        public float Priority { get; set; }
     }
 }

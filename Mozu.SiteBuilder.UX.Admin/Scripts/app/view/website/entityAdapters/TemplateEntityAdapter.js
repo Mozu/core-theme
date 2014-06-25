@@ -17,7 +17,7 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
   
 
     getId: function () {
-        return this.pageContext.cmsContext.template.collection + "_" + this.pageContext.cmsContext.template.id;
+        return this.pageContext.cmsContext.template.documentListName + "_" + this.pageContext.cmsContext.template.id;
     },
 
   
@@ -27,7 +27,7 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
           templReq = me.pageContext.cmsContext.template;
 
         if (templReq.id) {
-            Taco.model.CmsDocument.load(templReq.collection + '_' + templReq.id, {
+            Taco.model.CmsDocument.load({documentListName:templReq.documentListName ,id: templReq.id}, {
                 success: function (doc) {
                     me.set(doc);
                 }
@@ -36,7 +36,7 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
             cmsDoc = Ext.create('Taco.model.CmsDocument', {
                 documentType: templReq.documentType,
                 name: templReq.path,
-                collectionName: templReq.collection
+                documentListName: templReq.documentListName
             });
             me.set(cmsDoc);
         }

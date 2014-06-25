@@ -19,7 +19,7 @@ Ext.define('Taco.view.website.entityAdapters.EmailTemplateEntityAdapter', {
     },
 
     getId: function () {
-        return this.pageContext.cmsContext.page.collection + "_" + this.pageContext.cmsContext.page.id;
+        return { documentListName: this.pageContext.cmsContext.page.documentListName, id: this.pageContext.cmsContext.page.id };
     },
 
     getSaveTask: function () {

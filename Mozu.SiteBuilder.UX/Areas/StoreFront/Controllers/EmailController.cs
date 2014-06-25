@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             HttpResponseMessage res = await Page("email", GetCmsPage(emailTempalte));
             if (res.StatusCode == HttpStatusCode.NotFound)
             {
-                var reqDoc = new Document
+                var reqDoc = new DC.Document
                                  {
                                      DocumentListName = "email",
                                      DocumentType = "email",

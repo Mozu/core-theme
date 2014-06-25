@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                         Initialized=false,
                                                         Template = new DocumentRequest()
                                                                           {
-                                                                              Collection ="templates",
+                                                                              DocumentListName ="templates",
                                                                               Path = "home"
                                                                           }
                                                     };
@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Initialized = false,
                 Template = new DocumentRequest()
                 {
-                    Collection = "templates",
+                    DocumentListName = "templates",
                     Path = "404"
                 }
             };

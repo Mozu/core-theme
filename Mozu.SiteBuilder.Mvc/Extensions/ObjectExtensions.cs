@@ -4,6 +4,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Magnum.Binding.TypeBinders;
+using Magnum.Extensions;
+using Microsoft.FSharp.Core;
+using Newtonsoft.Json.Linq;
+
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
     using System;
@@ -21,6 +26,56 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     public static class ObjectExtensions
     {
 
+        public static T Get<T>(this Mozu.Content.Contracts.Document doc, string key, T defaultValue= default(T))
+        {
+            if (doc == null || doc.Properties == null)
+            {
+                return defaultValue;
+            }
+            JToken tok;
+            if (doc.Properties.CastAs<JObject>().TryGetValue(key, out tok))
+            {
+                return (T) tok.ToObject<T>();
+            }
+            return defaultValue;
+            
+        }
+
+        public static bool TryGet<T>(this Mozu.Content.Contracts.Document doc, string key, out T  value)
+        {
+            if (doc == null || doc.Properties == null)
+            {
+                value = default (T);
+                return false;
+            }
+          
+            JToken tok;
+            if (doc.Properties.CastAs<JObject>().TryGetValue(key, out tok))
+            {
+                //todo test if can be cast..
+                value = (T) tok.ToObject<T>();
+                return true;
+                
+            }
+            value = default(T);
+            return false;
+            
+        }
+        
+
+        public static void Set(this Mozu.Content.Contracts.Document doc, string key, object value)
+        {
+            if (doc == null )
+            {
+                throw new NullReferenceException("doc null");
+            }
+            if (doc.Properties == null)
+            {
+                doc.Properties = new JObject();
+            }
+            
+            doc.Properties.CastAs<JObject>()[key] = JToken.FromObject(value);
+        }
 
         public static bool IsTruthy(this object obj)
         {

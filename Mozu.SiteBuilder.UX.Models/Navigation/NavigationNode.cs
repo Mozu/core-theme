@@ -85,25 +85,35 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             set { _originalId = value; }
         }
 
-        /// <summary>
-        /// The original Collection, if applicable.
-        /// </summary>
-        private string _originalCollection;
+
+        [Obsolete]
         [DataMember(Name = "originalCollection")]
         public string OriginalCollection
         {
+            get { return this.OriginalDocumentListName; }
+            set { this.OriginalDocumentListName = value; }
+        }
+
+
+        /// <summary>
+        /// The original Collection, if applicable.
+        /// </summary>
+        private string _originalDocumentListName;
+        [DataMember(Name = "originalDocumentListName")]
+        public string OriginalDocumentListName
+        {
             get
             {
-                if (String.IsNullOrEmpty(_originalCollection))
+                if (String.IsNullOrEmpty(_originalDocumentListName))
                 {
                     if (NodeType != null && NodeType.IsPage && IdParts.Length > 2)
                         return IdParts[IdParts.Length - 2];
                     else
                         return null;
                 }
-                else return _originalCollection;
+                else return _originalDocumentListName;
             }
-            set { _originalCollection = value; }
+            set { _originalDocumentListName = value; }
         }
 
         // plain string for easy serialization.

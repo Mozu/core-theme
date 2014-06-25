@@ -56,8 +56,17 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         [DataMember(Name = "originalId")]
         public string OriginalId { get; set; }
 
+        [Obsolete]
         [DataMember(Name = "originalCollection")]
-        public string OriginalCollection { get; set; }
+        public string OriginalCollection
+        {
+            get { return this.OriginalDocumentListName; }
+            set { this.OriginalDocumentListName = value; }
+        }
+
+
+        [DataMember(Name = "originalDocumentListName")]
+        public string OriginalDocumentListName { get; set; }
 
 
         [DataMember (Name="url")]
