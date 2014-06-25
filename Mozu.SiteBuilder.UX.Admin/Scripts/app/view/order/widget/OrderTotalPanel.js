@@ -54,7 +54,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             shippingMethodButton = me.down("#shippingMethodButton")
     
         if (shippingMethodButton) {
-            if (record.get("fulfillmentContact").id && record.get("items").length) {
+            // check if there is a valid contact by checking for one of its members; must also have order items;
+            if (record.get("fulfillmentContact").postalOrZipCode && record.get("items").length) {
                 shippingMethodButton.enable();
             } else {
                 shippingMethodButton.disable();
@@ -167,6 +168,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         
         
         
+        
+
         //only show this field if this is a phone order in pending status or when editing a draft;
         if (this.record.get("orderStatus") == "Pending" || this.record.get("isDraft")) {
             var shippingMethodButton = Ext.widget({
@@ -174,8 +177,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 xtype: 'button',
                 ui: "action",
                 scale: "medium",
-                // need to have order items and a customer address
-                disabled: !this.record.get("fulfillmentContact").id || !this.record.get("items").length,
+                // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
+                disabled: !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
                 text: me.record.get("shippingMethodName") || "None Selected",
                 menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
                     showRuntimePricing: true,
