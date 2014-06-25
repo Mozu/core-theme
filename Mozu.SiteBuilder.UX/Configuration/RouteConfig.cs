@@ -42,12 +42,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
-               "StoreFront_pages",
+               "StoreFront_pages_collection",
                "cms/{collection}/{pageName}",
                new { controller = "cmspages", action = "Page" });
 
             routes.MapHttpRoute(
-               "StoreFront_pages",
+               "StoreFront_pages_list",
                "cms/{listname}",
                new { controller = "cmspages", action = "contentIndex" });
 
