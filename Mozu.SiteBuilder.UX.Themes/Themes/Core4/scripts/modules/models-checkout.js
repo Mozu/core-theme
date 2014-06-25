@@ -410,7 +410,7 @@
                 var digitalCredit = _.findWhere(this.availableDigitalCredits(), { code: creditCode });
                 //not found.
                 if (! digitalCredit) {
-                    me.trigger('error', {
+                    self.trigger('error', {
                         message: Hypr.getLabel('digitalCodeAlreadyUsed', creditCode)
                     });
                     var deferred = api.defer();
