@@ -803,6 +803,8 @@
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\customers\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\customers\Contacts.js" />
+    <Content Include="Scripts\app\view\customers\modal\Contacts.js" />
     <Content Include="Scripts\app\view\customers\modal\CreateCustomer.js" />
     <Content Include="Scripts\app\view\customers\segments\AddRemoveModal.js" />
     <Content Include="Scripts\app\view\customers\segments\Index.js" />
@@ -1635,6 +1637,10 @@
     <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\customunit\core\ux\tab\picker.t.js" />
     <Content Include="Tests\customunit\view\website\settings\doc-seo.js" />
+    <Content Include="Tests\unit\view\customers\contacts.t.js" />
+    <Content Include="Tests\unit\view\customers\modal\contacts.t.js" />
+    <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
+    <Content Include="Tests\unit\view\customers\subform\information.t.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.js" />
     <Content Include="Tests\unit\view\order\widget\PaymentPanel.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
