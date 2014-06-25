@@ -24,6 +24,18 @@ StartTest(function(t) {
       return this.doGet.apply(this, arguments);
     }
   }, {
+    url: '/admin/app/order/updatecontactinfo',
+    getData: function() {},
+    doPost: function() {
+      return {
+        responseText: Ext.encode({
+          items: [m.orderData],
+          success: true
+        }),
+        status: 200
+      };
+    }
+  }, {
     url: '/admin/app/order/edit',
     stype: 'json',
     getData: function() {
@@ -175,6 +187,7 @@ StartTest(function(t) {
               t.chain(
                 function(next) {
                   n.callback = next;
+                  m.orderData = n.order.getData();
                   t.click(n.modal.down('button[text="Save"]'));
                 },
                 function(next) {
@@ -368,6 +381,8 @@ StartTest(function(t) {
 
                   t.is(n.customer.dirty, true, 'The Customer should be Dirty');
                   t.is(n.order.dirty, true, 'The Order should be Dirty');
+
+                  m.orderData = n.order.getData();
 
                   n.modal.on('savesuccess', next);
 

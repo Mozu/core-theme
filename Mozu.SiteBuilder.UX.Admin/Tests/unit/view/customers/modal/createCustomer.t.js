@@ -24,6 +24,18 @@ StartTest(function(t) {
       return this.doGet.apply(this, arguments);
     }
   }, {
+    url: '/admin/app/order/updatecontactinfo',
+    getData: function() {},
+    doPost: function() {
+      return {
+        responseText: Ext.encode({
+          items: [m.orderData],
+          success: true
+        }),
+        status: 200
+      };
+    }
+  }, {
     url: '/admin/app/customer/create',
     stype: 'json',
     getData: function() {

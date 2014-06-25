@@ -2,12 +2,12 @@ StartTest(function(t) {
   var m = {};
 
   m.skip = function() {
-      if (!m.run) {
-        m.run = [1,1,1,1];
-        m.runCount = 0;
-      }
+    if (!m.run) {
+      m.run = [1, 1, 1, 1];
+      m.runCount = 0;
+    }
 
-      return !m.run[m.runCount++];
+    return !m.run[m.runCount++];
   }
 
   t.setOnlyMocks();
@@ -262,8 +262,8 @@ StartTest(function(t) {
 
               t.chain(
                 function(next) {
-                    n.contacts.createNewContact();
-                    next();
+                  n.contacts.createNewContact();
+                  next();
                 },
                 function(next) {
                   n.modal = Ext.ComponentQuery.query('taco-address-modal')[0];
@@ -281,11 +281,11 @@ StartTest(function(t) {
                   }, next);
                 },
                 function(next) {
-                    t.click(n.modal.down('button[text="Save"]'), next);
+                  t.click(n.modal.down('button[text="Save"]'), next);
                 },
                 function(next) {
-                    t.pass('done');
-                    next();
+                  t.pass('done');
+                  next();
                 },
                 next
               )
@@ -293,11 +293,11 @@ StartTest(function(t) {
           },
 
           function(next) {
-              t.it('Should select the first contact as shipping and billing if no other contacts', function(t) {
-                  t.is(n.contacts.down('[name="customerShipToAddress"]').getValue(), true, 'Customer Ship To Address is checked');
-                  t.is(n.contacts.down('[name="customerBillToAddress"]').getValue(), true, 'Customer Bill To Address is checked');
-                  next();
-              })
+            t.it('Should select the first contact as shipping and billing if no other contacts', function(t) {
+              t.is(n.contacts.down('[name="customerShipToAddress"]').getValue(), true, 'Customer Ship To Address is checked');
+              t.is(n.contacts.down('[name="customerBillToAddress"]').getValue(), true, 'Customer Bill To Address is checked');
+              next();
+            })
           },
           next
         );
@@ -374,8 +374,8 @@ StartTest(function(t) {
 
             t.it('Should select the current Order Billing and Shipping addresses', function(t) {
               var selection = n.contacts.getSelection();
-              t.is(selection.customerShipToAddress, 1008, 'Correct shipping address is selected');
-              t.is(selection.customerBillToAddress, 0, 'Correct billing address is selected');
+              t.is(selection.customerShipToAddress.id, 1008, 'Correct shipping address is selected');
+              t.is(selection.customerBillToAddress.id, 0, 'Correct billing address is selected');
             });
 
             t.it('Should Hide delete buttons for Order Contacts', function(t) {
@@ -492,25 +492,30 @@ StartTest(function(t) {
           function(next) {
             t.it('Should select the current Order Billing and Shipping addresses', function(t) {
               var selection = n.contacts.getSelection();
-              t.is(selection.customerShipToAddress, 0, 'Correct shipping address is selected');
-              t.is(selection.customerBillToAddress, 0, 'Correct billing address is selected');
+              t.is(selection.customerShipToAddress.id, 0, 'Correct shipping address is selected');
+              t.is(selection.customerBillToAddress.id, 0, 'Correct billing address is selected');
               next();
             });
           },
 
           function(next) {
+            var shipping = Ext.Array.findBy(n.contacts.query('[name="customerShipToAddress"]'), function(item) {
+                return item.inputValue && item.inputValue.id === 1002;
+              }),
+              billing = Ext.Array.findBy(n.contacts.query('[name="customerBillToAddress"]'), function(item) {
+                return item.inputValue && item.inputValue.id === 1005;
+              });
 
-
-            t.click(n.contacts.down('[name="customerShipToAddress"][inputValue="1002"]'));
-            t.click(n.contacts.down('[name="customerBillToAddress"][inputValue="1005"]'), next);
+            t.click(shipping);
+            t.click(billing, next);
           },
 
           function(next) {
             t.it('Should return the correct selection when the user selects a different address', function(t) {
               var selection = n.contacts.getSelection();
 
-              t.is(selection.customerShipToAddress, 1002, 'Correct shipping address is selected');
-              t.is(selection.customerBillToAddress, 1005, 'Correct billing address is selected');
+              t.is(selection.customerShipToAddress.id, 1002, 'Correct shipping address is selected');
+              t.is(selection.customerBillToAddress.id, 1005, 'Correct billing address is selected');
             });
           }
         );
