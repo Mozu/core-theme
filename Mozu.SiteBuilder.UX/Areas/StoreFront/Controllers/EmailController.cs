@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISitesWebApiClient _sitesWebApiClient;
         private readonly ILogger _logger;
         private readonly Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
+        protected ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
 
         static EmailController()
@@ -115,6 +116,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
+            _customerAccountWebApiClient = customerAccountWebApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
         }
 
