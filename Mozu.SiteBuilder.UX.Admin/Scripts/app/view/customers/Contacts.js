@@ -110,14 +110,14 @@ Ext.define('Taco.view.customers.Contacts', {
                 }, {
                     xtype: 'radiofield',
                     name: 'customerShipToAddress',
-                    inputValue: contact.id,
+                    inputValue: contact,
                     boxLabel: 'Ship to this address',
                     checked: shippingChecked,
                     hidden: !this.order
                 }, {
                     xtype: 'radiofield',
                     name: 'customerBillToAddress',
-                    inputValue: contact.id,
+                    inputValue: contact,
                     boxLabel: 'Bill to this address',
                     checked: billingChecked,
                     hidden: !this.order
