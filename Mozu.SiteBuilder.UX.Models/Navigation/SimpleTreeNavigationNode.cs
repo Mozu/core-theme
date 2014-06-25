@@ -8,7 +8,14 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public string OriginalId { get; set; }
 
-        public string OriginalCollection { get; set; }
+        [Obsolete]
+        public string OriginalCollection
+        {
+            get { return this.OriginalDocumentListName; }
+            set { this.OriginalDocumentListName = value; }
+        }
+
+        public string OriginalDocumentListName { get; set; }
 
         public string Name { get; set; }
 

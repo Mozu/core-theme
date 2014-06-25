@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
             Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleTreeNavigationNode>()
                .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.DocumentListName, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
-               .ForMember(d => d.OriginalCollection, opt => opt.ResolveUsing(x => x.DocumentListName))
+               .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.DocumentListName))
                .ForMember(d => d.ParentId, opt => opt.UseValue(null))
                .ForMember(d => d.Name, opt => opt.ResolveUsing(x =>
                    x.Get<string>("link_title").GetNullIfWhiteSpace() ?? x.Get<string>("title").GetNullIfWhiteSpace() ?? x.Name))
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
             Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleRuntimeNavigationNode>()
                .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.DocumentListName, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
-               .ForMember(d => d.OriginalCollection, opt => opt.ResolveUsing(x => x.DocumentListName))
+               .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.DocumentListName))
                .ForMember(d => d.ParentId, opt => opt.UseValue(null))
                .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.Name))
                .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.DocumentListName + "/" + x.Name))
