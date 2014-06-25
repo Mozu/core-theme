@@ -70,12 +70,15 @@ Ext.define('Taco.view.order.Form', {
         this.callParent(arguments);
         
         this.shippingForm = this.down('taco-ordershippingsimple');
-        this.customerForm = this.down('taco-ordercustomer');
+        //this.customerForm = this.down('taco-ordercustomer');
         this.paymentForm = this.down('taco-orderpayment');
 
+        /*
         if (this.customerForm) {
             this.mon(this.customerForm, "customerChange", this.onCustomerChange, this);
+
         }
+        */
 
 
         this.orderDetail = this.down('taco-orderdetail');
@@ -85,7 +88,8 @@ Ext.define('Taco.view.order.Form', {
         
     },
     
-    onCustomerChange : function (view, customerRecord){        
+    onCustomerChange: function (view, customerRecord) {
+        
         this.customerRecord = customerRecord;
         //this.record.set("customerId", customerRecord.get("id"));        
         //this.shippingForm.onCustomerChange();
@@ -139,7 +143,10 @@ Ext.define('Taco.view.order.Form', {
         //     items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
         // }
         // 
-        items.push(Ext.create('Taco.view.order.Header', subformCfg));
+
+        this.headerCmp = Ext.create('Taco.view.order.Header', subformCfg)
+        this.mon(this.headerCmp, 'customerchanged', this.onCustomerChange, me);
+        items.push(this.headerCmp);
 
         items.push(Ext.create('Taco.view.order.subform.Detail', Ext.apply({
             listeners: {
@@ -225,8 +232,9 @@ Ext.define('Taco.view.order.Form', {
     isValid: function () {        
         var me = this,
             isValid = true,
-            errors= [];
+           errors = [];
 
+        
         // Only validate when in create mode
         if (this.isEdit()) isValid = false;        
 
