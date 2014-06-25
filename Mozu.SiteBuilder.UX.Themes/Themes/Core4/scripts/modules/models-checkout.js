@@ -431,7 +431,15 @@
                             deferredSameCredit.reject();
                             return deferredSameCredit.promise;
                         }
-                        order.apiVoidPayment(sameCreditPayment.id);
+                        if (creditAmountToApply <= 0) {
+                            order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
+                                order.set(o.data);
+                                self.trigger('orderPayment', o.data, this);
+                                return o;
+                            });
+                        } else {
+                            order.apiVoidPayment(sameCreditPayment.id);
+                        }
                     }
                 }
                 if (creditAmountToApply <= 0) {
