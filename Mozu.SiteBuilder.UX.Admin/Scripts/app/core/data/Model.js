@@ -13,7 +13,7 @@ Ext.define('Taco.core.data.Model', {
         nullIfEmpty: function (v) {
             return v || null;
         }
-    },
+        },
     init:function () {
         if (this.raw && this.logMissMappedFields) {
             Ext.Object.each(this.raw, function (key,value) {
@@ -69,6 +69,10 @@ Ext.define('Taco.core.data.Model', {
 
                 if (success) {
                     records = operation.getRecords();
+                }
+
+                if (success && records.length > 0) {
+
                     if (records.length > 1) {
                         record = Ext.Array.findBy(records, function (item) { return item.getId() == id; });
                     }

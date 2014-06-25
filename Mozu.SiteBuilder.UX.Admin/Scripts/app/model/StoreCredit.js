@@ -43,7 +43,7 @@ Ext.define('Taco.model.StoreCredit', {
         },
         {
             name: 'currentBalance',
-            type: 'string'
+            type: 'float'
         },
         {
             name: 'email',
@@ -52,6 +52,15 @@ Ext.define('Taco.model.StoreCredit', {
         {
             name: 'customer',
             type: []
+        },
+        {
+            name: 'amtToApply',
+            type: 'float',
+            defaultValue: 0
+        },
+        {
+            name: 'remainderToAccount',
+            type: 'boolean'
         }
     ],
 

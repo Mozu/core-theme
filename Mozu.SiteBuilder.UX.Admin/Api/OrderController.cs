@@ -31,6 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ISettings _settings;
         private IOrderWebApiClient _orderWebApiClient;
         private ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        private ICreditWebApiClient _creditWebApiClient;
         private ISiteBuilderApiContext _ctx;
 
         /*
@@ -44,11 +45,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ISettings settings, ISiteBuilderApiContext ctx)
+        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings, ISiteBuilderApiContext ctx)
         {
             _settings = settings;
             _orderWebApiClient = orderWebApiClient;
             _customerAccountWebApiClient = customerAccountWebApiClient;
+            _creditWebApiClient = creditWebApiClient;
             _ctx = ctx;
         }
 

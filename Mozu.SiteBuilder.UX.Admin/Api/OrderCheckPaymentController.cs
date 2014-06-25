@@ -24,11 +24,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "payment/requestcheck")]
         public async Task<Response<Order>> RequestCheck(RequestCheckArgs args)
         {
-            var action = new DCp.PaymentAction {
+            var action = new DCp.PaymentAction
+            {
                 ActionName = ACTIONS.REQUEST_CHECK,
-                NewBillingInfo = new DCp.BillingInfo {
+                NewBillingInfo = new DCp.BillingInfo
+                {
                     PaymentType = DCp.PaymentTypeConst.CHECK,
-                    BillingContact = new DCcore.Contact {
+                    BillingContact = new DCcore.Contact
+                    {
                         FirstName = args.FirstName,
                         LastNameOrSurname = args.LastName
                     }
@@ -37,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
             var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
 
-            return Single2( order.Map<Order>() );
+            return Single2(order.Map<Order>());
         }
 
         public class ApplyCheckArgs
@@ -53,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = ACTIONS.CAPTURE_PAYMENT,
-                
+
                 CurrencyCode = "USD",
                 CheckNumber = args.CheckNumber,
                 Amount = args.Amount
@@ -61,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return Single2( order.Map<Order>() );
+            return Single2(order.Map<Order>());
         }
 
         public class DeclineCheckArgs
@@ -82,7 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
 
-            return Single2( order.Map<Order>() );
+            return Single2(order.Map<Order>());
         }
     }
 }
