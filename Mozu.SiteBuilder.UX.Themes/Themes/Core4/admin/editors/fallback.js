@@ -1,8 +1,8 @@
-Ext.create('Ext.form.Panel', {
+﻿Ext.create('Ext.form.Panel', {
     title: 'No template defined',
 
 
-// Fields will be arranged vertically, stretched to full width
+    // Fields will be arranged vertically, stretched to full width
     layout: 'anchor',
     defaults: {
         anchor: '100%'

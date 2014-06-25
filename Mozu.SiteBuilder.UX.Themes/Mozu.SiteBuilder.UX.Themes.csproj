@@ -376,6 +376,7 @@
     <Content Include="Addons\Blue\addon.json" />
     <Content Include="Addons\Orange\addon.json" />
     <Content Include="Docs\Gruntfile.js" />
+    <Content Include="Themes\Core4\admin\editors\fallback.js" />
     <Content Include="Themes\Core4\compiled\scripts\build.txt" />
     <Content Include="Themes\Core4\compiled\scripts\modules\common.js" />
     <Content Include="Themes\Core4\compiled\scripts\pages\cart.js" />
@@ -799,7 +800,6 @@
     <Folder Include="SampleThemes\helloWorld\Modules\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Scripts\Pages\" />
-    <Folder Include="Themes\Core4\admin\editors\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
