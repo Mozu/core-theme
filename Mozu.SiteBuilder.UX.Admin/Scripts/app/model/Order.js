@@ -42,7 +42,6 @@ Ext.define('Taco.model.Order', {
             "type": "boolean",
             "defaultValue": false
         },
-
         {
             "name": "hasDraft",
             "type": "boolean",

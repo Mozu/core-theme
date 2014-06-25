@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mozu.CommerceRuntime.Contracts.Discounts;
 using Newtonsoft.Json;
 using System.Web;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
@@ -24,6 +25,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string OrderType { get; set; }
 
         public int? SiteId { get; set; }
+
+
+        public List<InvalidCoupon> InvalidCoupons { get; set; }
 
         /// <summary>
         /// A sequential order number, only populated for completed orders.
