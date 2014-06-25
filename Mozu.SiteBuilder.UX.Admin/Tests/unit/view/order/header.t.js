@@ -24,6 +24,17 @@ StartTest(function(t) {
       };
     }
   }, {
+    url: '/admin/app/order/updatecontactinfo',
+    getData: function() {},
+    doPost: function() {
+      return {
+        responseText: Ext.encode({
+          items: [{}]
+        }),
+        status: 200
+      };
+    }
+  }, {
     url: '/admin/app/customer/edit',
     stype: 'json',
     getData: function() {
