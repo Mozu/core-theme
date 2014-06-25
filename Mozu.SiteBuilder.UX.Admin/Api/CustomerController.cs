@@ -401,9 +401,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "credits/list")]
-        public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]int? customerId = null)
+        public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]FilterCollection extFilter = null, [FromUri]int? customerId = null)
         {
             string filter = null;
+
+            int impermanence;
+            if (extFilter.TryGetValue<int>("customerId", out impermanence))
+                customerId = impermanence;
+
             if (id != null)
                 filter = string.Format("Code eq \"{0}\"", id);
             if (customerId != null)
@@ -485,5 +490,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var resp = (await _creditWebApiClient.GetTransactions(code)).ReadAsSync();
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items));
         }
+
     }
 }

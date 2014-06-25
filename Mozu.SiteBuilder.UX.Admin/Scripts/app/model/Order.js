@@ -1171,6 +1171,19 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    addGiftCards: function(config) {
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/addgiftcards',
+            method: 'POST'
+        });
+
+        config.errorMsg = config.errorMsg || "Error adding gift cards";
+        this.addErrorHandling(config);
+
+        Ext.Ajax.request(config);
+    },
+
 
 
     /*

@@ -443,6 +443,7 @@
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
     <Compile Include="Api\Models\Order\OrderSummary.cs" />
+    <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />
     <Compile Include="Api\OrderPickupController.cs" />
     <Compile Include="Api\CustomerAttributeController.cs" />
@@ -819,6 +820,7 @@
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\order\modal\AddGiftCard.js" />
     <Content Include="Scripts\app\view\order\Split.js" />
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\CheckDecline.js" />
@@ -827,6 +829,8 @@
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
     <Content Include="Scripts\app\view\order\subform\Attributes.js" />
     <Content Include="Scripts\app\view\order\widget\AddOrderItemToolbar.js" />
+    <Content Include="Scripts\app\view\order\widget\GiftCardForm.js" />
+    <Content Include="Scripts\app\view\order\widget\GiftCardGrid.js" />
     <Content Include="Scripts\app\view\order\widget\InternalNotesGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingMethodMenu.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />

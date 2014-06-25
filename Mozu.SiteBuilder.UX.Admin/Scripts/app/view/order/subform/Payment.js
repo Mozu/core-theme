@@ -13,6 +13,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.widget.PaymentPanel',
         'Taco.view.order.modal.AddPayment',
         'Taco.view.order.modal.AddPaymentManual',
+        'Taco.view.order.modal.AddGiftCard',
         'Taco.store.StoreCredits'
     ],
 
@@ -25,16 +26,28 @@ Ext.define('Taco.view.order.subform.Payment', {
         itemId:"orderPayment"
     },
     
+    getLastValidPayment: function() {
+        return this.record.payments().queryBy(function(payment) { return payment.get('status') !== "Voided"; }).last();
+    },
+
     initComponent: function (eOpts) {
         var me = this;
 
-        this.tools = Ext.Array.map(me.getNewPaymentActions(), function(action) {
-            var button = Ext.widget('button',action);
-            button.setUI('action');
-            button.setScale('medium');
-            button.setMargin('0 2px 0 0');
-            return button;
-        });
+        this.tools = [
+            me.addPaymentButton = Ext.widget('splitbutton', {
+                text: 'Add Payment',
+                handler: function() {
+                    var action = me.paymentActions.addCreditCard;
+                    var lastValidPayment = me.getLastValidPayment();
+                    if (lastValidPayment && lastValidPayment.get('paymentType') === "Check") action = me.paymentActions.requestCheck;
+                    return action.execute();
+                },
+                menu: me.getNewPaymentActions(),
+                ui: 'action',
+                scale: 'medium',
+                margin: '0 2px 0 0'
+            })
+        ];
 
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
 
@@ -52,10 +65,15 @@ Ext.define('Taco.view.order.subform.Payment', {
             this.storeCreditsStore = Taco.store.StoreCredits.createForCustomer(this.record.get('customerId'));
             this.storeCreditsStore.load({
                 callback: function (records) {
-                    me.availableCredits = Ext.Array.filter(records, function(credit) { return credit.get('currentBalance') > 0 });
-                    if (me.availableCredits.length > 0) {
-                        me.onRecordChange();
-                    }
+                    //me.availableCredits = Ext.Array.filter(records, function(credit) { return credit.get('currentBalance') > 0 });
+                    //if (me.availableCredits.length > 0) {
+                    //    me.onRecordChange();
+                    //}
+                    //me.storeCreditsStore.filter({
+                    //    property: 'currentBalance',
+                    //    operator: '>',
+                    //    value: 0
+                    //});
                 },
                 scope: me
             });
@@ -70,19 +88,20 @@ Ext.define('Taco.view.order.subform.Payment', {
             return Ext.create('Ext.Action', {
                 text: text,
                 handler: function() {
-                    Ext.create(cls, { record: me.record }).show();
+                    Ext.create(cls, { record: me.record, storeCreditsStore: me.storeCreditsStore }).show();
                 }
             });
         }
 
         var me = this,
             actions = me.paymentActions = {
-                addPayment: makeAction('Add Payment', 'Taco.view.order.modal.AddPayment'),
-                requestCheck: makeAction('Request Check', 'Taco.view.order.modal.RequestCheck'),
-                addManualPayment: makeAction('Add Manual Payment', 'Taco.view.order.modal.AddPaymentManual')
+                addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
+                requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
+                addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
+                addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard')
             };
 
-        return [actions.addPayment, actions.requestCheck, actions.addManualPayment];
+        return [actions.addCreditCard, actions.requestCheck, actions.addManualCreditCard, actions.addGiftCard];
     },
     
     // initialize the views and actions menu
