@@ -1,0 +1,523 @@
+StartTest(function(t) {
+  var m = {};
+
+  m.skip = function() {
+      if (!m.run) {
+        m.run = [1,1,1,1];
+        m.runCount = 0;
+      }
+
+      return !m.run[m.runCount++];
+  }
+
+  t.setOnlyMocks();
+
+  t.simManager().register([{
+    url: '/admin/app/order/list',
+    jsonFile: '/admin/tests/mocks/Mystic1/Orders1.json'
+  }, {
+    url: '/admin/app/customer/list',
+    jsonFile: '/admin/tests/mocks/Mystic1/CustomerAccounts1.json'
+  }, {
+    url: '/admin/app/Reference/countries/list',
+    jsonFile: '/admin/tests/mocks/Mystic1/Countries1.json'
+  }, {
+    url: '/admin/app/customer/edit',
+    stype: 'json',
+    getData: function() {
+      return {
+        items: [{}]
+      };
+    },
+    doPost: function() {
+      return this.doGet.apply(this, arguments);
+    }
+  }]);
+
+  t.chain(
+    function(next) {
+
+      t.it('Should have requireable files', function(t) {
+        t.requireOk(
+          'Taco.view.customers.Contacts',
+          'Taco.model.CustomerAccount',
+          'Taco.model.Order',
+          'Taco.store.Countries',
+          next
+        );
+      });
+
+    },
+
+
+
+    /**** DESCRIBE: The Customer Contacts with no Order ****/
+
+    function(next) {
+      var n = {};
+
+      n.data = {
+        firstName: 'Taco',
+        lastName: 'Johnson',
+        emailAddress: 'taco@volusion.com',
+        taxId: '1231234'
+      };
+
+      if (m.skip()) return next();
+
+      t.describe('The Customer Contacts with no Order', function(t) {
+
+        t.chain(
+          function(next) {
+            Taco.model.CustomerAccount.load(1047, {
+              success: function(record) {
+                n.customer = record;
+                next();
+              },
+              failure: function() {
+                t.fail('Failed to load the customer');
+              }
+            });
+          },
+          function(next) {
+            n.contacts = Ext.create('Taco.view.customers.Contacts', {
+              cls: 'address1',
+              record: n.customer
+            });
+
+            Taco.app.viewPort.add(n.contacts);
+
+            t.waitForComponentVisible(n.contacts, next);
+
+          },
+          function(next) {
+            t.it('Should hide radiofields', function(t) {
+              t.isComponentNotVisible(n.contacts.down('radiofield'), 'Radio input fields hidden by default');
+            });
+
+            t.it('Should have Edit buttons that load the contact when clicked', function(t) {
+              var tests = [],
+                buttons = n.contacts.query('button[itemId="editButton"]'),
+                expected = [
+                  '1835 Kramer Lane',
+                  '1308 Horseback Holw',
+                  '1835 Kramer Lane Suite 300'
+                ];
+
+              Ext.each(buttons, function(button, i) {
+                tests.push(function(next) {
+                  t.click(button, next);
+                });
+
+                tests.push(function(next) {
+                  var modals = Ext.ComponentQuery.query('taco-address-modal'),
+                    modal = modals[modals.length - 1],
+                    address1;
+
+                  t.is(!!modal, true, 'Address modal launched when edit was clicked');
+
+                  address1 = modal.down('form').getForm().findField('address1').getValue();
+
+                  t.is(address1, expected[i], 'The address in the form matches the contact: ' + expected[i]);
+
+                  t.click(modal.down('button[text="Cancel"]'), next);
+                });
+              });
+
+              tests.push(next);
+
+              t.chain(tests);
+            });
+
+          },
+
+          function(next) {
+
+            t.it('Should delete the Contact only when the user is prompted and confirms', function(t) {
+              var buttons = n.contacts.query('button[itemId="deleteButton"]'),
+                expected = [
+                  1002,
+                  1005
+                ];
+
+              t.chain(
+                function(next) {
+                  t.click(buttons[0], next);
+                },
+                function(next) {
+
+                  t.isHandlePresent(n.contacts, 'contact-' + expected[0], 'Found the correct address when delete is clicked');
+
+                  t.click(Taco.MessageBox.down('button[text="Cancel"]'), next);
+                },
+                function(next) {
+                  t.isHandlePresent(n.contacts, 'contact-' + expected[0], 'Contact was not deleted since Cancel was clicked');
+
+                  t.click(buttons[1], next);
+                },
+                function(next) {
+                  t.isHandlePresent(n.contacts, 'contact-' + expected[1], 'Found the correct address when delete is clicked');
+
+                  t.click(Taco.MessageBox.down('button[text="OK"]'), next);
+                },
+                function(next) {
+                  t.isHandleNotPresent(n.contacts, 'contact-' + expected[1], 'Contact was deleted since OK was clicked');
+                  next();
+                },
+                next
+              )
+            });
+          },
+
+
+          function(next) {
+            t.it('Should show the results of a Contact change after completing an edit', function(t) {
+              t.chain(
+                function(next) {
+                  t.click(n.contacts.down('button[text="Edit"]'), next);
+                },
+                function(next) {
+                  var address1;
+
+                  n.modal = Ext.ComponentQuery.query('taco-address-modal')[0];
+
+                  t.is(!!n.modal, true, 'Found Address Modal when Edit Address was clicked');
+
+                  address1 = n.modal.down('form').getForm().findField('address1').getValue();
+
+                  t.is(address1, '1835 Kramer Lane', 'The address in the form should match the Contact that was clicked for edit');
+
+                  t.setFormValues('Change the address1 field', n.modal.down('form'), {
+                    address1: '1835a Kramer Lane'
+                  }, next);
+                },
+                function(next) {
+                  n.modal.on('savesuccess', next);
+                  t.click(n.modal.down('button[text="Save"]'));
+                },
+                function(next) {
+                  var address1 = n.contacts.getEl().down('[data-handle="contact-1002"] [data-handle="contact-address1"]').getHTML();
+                  t.is(address1, '1835a Kramer Lane', 'The first contact address should reflect the changed address: ' + '1835a Kramer Lane');
+                  next();
+                },
+                next
+              );
+            });
+
+          },
+          next
+        );
+
+
+      });
+    },
+
+
+    /**** DESCRIBE: The Customer Contacts with an Order with no contacts and a customer with no contacts ****/
+
+    function(next) {
+      var n = {};
+
+      if (m.skip()) return next();
+
+      t.describe('The Customer Contacts with an Order with no contacts and a customer with no contacts', function(t) {
+        Taco.app.viewPort.removeAll(true);
+
+        t.chain(
+          function(next) {
+            Taco.model.Order.load('asdf02340rk203fk02k3r02k3f0', {
+              success: function(record) {
+                n.order = record;
+                next();
+              },
+              failure: function() {
+                t.fail('Failed to load the order');
+              }
+            });
+          },
+          function(next) {
+            n.order.loadCustomer({
+              success: function(record) {
+                n.customer = record;
+                next();
+              },
+              failure: function() {
+                t.fail('Failed to load the customer from the order');
+              }
+            });
+          },
+          function(next) {
+            n.contacts = Ext.create('Taco.view.customers.Contacts', {
+              cls: 'address1',
+              record: n.customer,
+              order: n.order
+            });
+
+            Taco.app.viewPort.add(n.contacts);
+
+            t.waitForComponentVisible(n.contacts, next);
+          },
+          function(next) {
+            t.it('Should create a new contact when none are present', function(t) {
+
+              t.chain(
+                function(next) {
+                    n.contacts.createNewContact();
+                    next();
+                },
+                function(next) {
+                  n.modal = Ext.ComponentQuery.query('taco-address-modal')[0];
+                  t.isComponentVisible(n.modal, 'The modal should be visible');
+
+                  t.setFormValues('Enter new address data', n.modal.down('form'), {
+                    firstName: 'New',
+                    lastName: 'Customer',
+                    email: 'new@contact.com',
+                    address1: '123 New Street',
+                    cityOrTown: 'Austin',
+                    stateOrProvince: 'TX',
+                    postalOrZipCode: '78758',
+                    homePhone: '123-456-7890'
+                  }, next);
+                },
+                function(next) {
+                    t.click(n.modal.down('button[text="Save"]'), next);
+                },
+                function(next) {
+                    t.pass('done');
+                    next();
+                },
+                next
+              )
+            });
+          },
+
+          function(next) {
+              t.it('Should select the first contact as shipping and billing if no other contacts', function(t) {
+                  t.is(n.contacts.down('[name="customerShipToAddress"]').getValue(), true, 'Customer Ship To Address is checked');
+                  t.is(n.contacts.down('[name="customerBillToAddress"]').getValue(), true, 'Customer Bill To Address is checked');
+                  next();
+              })
+          },
+          next
+        );
+      });
+    },
+
+
+
+    /**** DESCRIBE: The Customer Contacts with an Order that has one matching Contact ****/
+
+    function(next) {
+      var n = {};
+
+      if (m.skip()) return next();
+
+      t.describe('The Customer Contacts with an Order that has one matching Contact', function(t) {
+        Taco.app.viewPort.removeAll(true);
+
+        t.chain(
+          function(next) {
+            Taco.model.Order.load('0487efc11397e7155443c968001008ab', {
+              success: function(record) {
+                n.order = record;
+                next();
+              },
+              failure: function() {
+                t.fail('Failed to load the order');
+              }
+            });
+          },
+          function(next) {
+            n.order.loadCustomer({
+              success: function(record) {
+                n.customer = record;
+                next();
+              },
+              failure: function() {
+                t.fail('Failed to load the customer from the order');
+              }
+            });
+          },
+          function(next) {
+            n.contacts = Ext.create('Taco.view.customers.Contacts', {
+              cls: 'address1',
+              record: n.customer,
+              order: n.order
+            });
+
+            Taco.app.viewPort.add(n.contacts);
+
+            t.waitForComponentVisible(n.contacts, next);
+
+            m.contacts = n.contacts;
+          },
+
+          function(next) {
+            t.it('Should render and be visible', function(t) {
+              t.isComponentVisible(n.contacts, 'contacts view is visible');
+            });
+
+            t.it('Should display each of the radio boxes', function(t) {
+              Ext.each(n.contacts.query('radiofield'), function(radio, i) {
+                t.isComponentVisible(radio, 'Radiofield ' + (1 + i) + ' is visible: ' + radio.name);
+              });
+            });
+
+            t.it('Should merge the order contacts with the customer contacts', function(t) {
+              var orderContacts = n.contacts.getEl().query('[data-contact-type="order"]'),
+                customerContacts = n.contacts.getEl().query('[data-contact-type="customer"]');
+
+              t.is(orderContacts.length, 1, 'Found 1 order contact');
+              t.is(customerContacts.length, 3, 'Found 3 customer contacts');
+            });
+
+            t.it('Should select the current Order Billing and Shipping addresses', function(t) {
+              var selection = n.contacts.getSelection();
+              t.is(selection.customerShipToAddress, 1008, 'Correct shipping address is selected');
+              t.is(selection.customerBillToAddress, 0, 'Correct billing address is selected');
+            });
+
+            t.it('Should Hide delete buttons for Order Contacts', function(t) {
+              var orderContacts = n.contacts.query('[isFromOrder="true"]');
+              t.is(orderContacts.length, 1, 'Expected 1 Order Contact');
+              t.isComponentNotVisible(orderContacts[0].down('button[text="Delete"]'), 'Delete button hidden');
+            });
+
+            t.it('Should Show delete buttons for Customer Contacts', function(t) {
+              var customerContacts = n.contacts.query('[isFromOrder="false"]');
+
+              t.is(customerContacts.length, 3, 'Expected 3 Customer Contacts');
+
+              Ext.each(customerContacts, function(contact, index) {
+                t.isComponentVisible(contact.down('button[text="Delete"]'), index + ' Delete button hidden');
+              });
+            });
+
+            next();
+          },
+          function(next) {
+            var address1 = '1234 Customer Change St';
+
+            t.it('Should add the order contact to the customer after editing an order contact while keeping Address selection state', function(t) {
+              var orderContact = n.contacts.down('[isFromOrder="true"]');
+
+              t.chain(
+                function(next) {
+                  t.click(orderContact.down('button[text="Edit"]'), next);
+                },
+                function(next) {
+
+                  n.modal = Ext.ComponentQuery.query('taco-address-modal')[0];
+
+                  t.setFormValues('Change the address1 field', n.modal.down('form'), {
+                    address1: address1
+                  }, next);
+                },
+                function(next) {
+                  n.modal.on('savesuccess', next);
+                  t.click(n.modal.down('button[text="Save"]'));
+                },
+                function(next) {
+                  var contact = n.contacts.down('[isFromOrder="false"]'),
+                    orderContact = n.contacts.down('[isFromOrder="true"]');
+
+                  t.is(!!orderContact, false, 'There is no longer an order contact');
+
+                  t.isHandleHtml(contact, 'contact-address1', address1, 'The first contact address should reflect the changed address: ' + address1);
+
+                  t.is(contact.down('radiofield[name="customerBillToAddress"]').getValue(), true, 'The editted address is still selected as the bill to address');
+
+
+                  next();
+                },
+
+
+                next
+              )
+            });
+          },
+          next
+        );
+      })
+    },
+
+
+
+    /**** DESCRIBE: The Customer Contacts with an Order that has two different Contact ****/
+
+    function(next) {
+      var n = {};
+
+      if (m.skip()) return next();
+
+      t.describe('The Customer Contacts with an Order that has two different Contacts', function(t) {
+        Taco.app.viewPort.removeAll(true);
+
+        t.chain(
+          function(next) {
+            Taco.model.Order.load('0487efc11397e7155443c968000008ed', {
+              success: function(record) {
+                n.order = record;
+                next();
+              },
+              failure: function() {
+                t.fail('Failed to load the order');
+              }
+            });
+          },
+          function(next) {
+            n.order.loadCustomer({
+              success: function(record) {
+                n.customer = record;
+                next();
+              },
+              failure: function() {
+                t.fail('Failed to load the customer from the order');
+              }
+            });
+          },
+          function(next) {
+            n.contacts = Ext.create('Taco.view.customers.Contacts', {
+              cls: 'address2',
+              record: n.customer,
+              order: n.order
+            });
+
+            Taco.app.viewPort.add(n.contacts);
+
+            setTimeout(next, 10);
+          },
+
+          function(next) {
+            t.it('Should select the current Order Billing and Shipping addresses', function(t) {
+              var selection = n.contacts.getSelection();
+              t.is(selection.customerShipToAddress, 0, 'Correct shipping address is selected');
+              t.is(selection.customerBillToAddress, 0, 'Correct billing address is selected');
+              next();
+            });
+          },
+
+          function(next) {
+
+
+            t.click(n.contacts.down('[name="customerShipToAddress"][inputValue="1002"]'));
+            t.click(n.contacts.down('[name="customerBillToAddress"][inputValue="1005"]'), next);
+          },
+
+          function(next) {
+            t.it('Should return the correct selection when the user selects a different address', function(t) {
+              var selection = n.contacts.getSelection();
+
+              t.is(selection.customerShipToAddress, 1002, 'Correct shipping address is selected');
+              t.is(selection.customerBillToAddress, 1005, 'Correct billing address is selected');
+            });
+          }
+        );
+      })
+
+    }
+
+
+  );
+});

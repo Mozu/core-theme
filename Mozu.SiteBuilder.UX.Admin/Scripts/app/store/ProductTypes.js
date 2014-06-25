@@ -18,8 +18,4 @@ Ext.define('Taco.store.ProductTypes', {
         clearSort: true,
         autoLoad: true
     }
-    //storeManagerConfig: {
-    //    createOnly: true,
-    //    autoLoad:true
-    //}
 });

@@ -13,21 +13,4 @@ Ext.define('Taco.controller.Products', {
     stores: ['Taco.store.Products'],
     views: ['product.Index'],
     modelName: 'Product'
-
-    //contextPlaceholders: {
-    //    t: function () {
-    //        return Ext.create('Taco.core.ux.content.Container', {
-    //            header: {
-    //                title: "choose a site collection"
-    //            },
-
-    //            body: {
-    //                layout: 'auto',
-    //                items: [{
-    //                    html: 'placeholder for choose site collection interstitial '
-    //                }]
-    //            }
-    //        });
-    //    }
-    //}
 });

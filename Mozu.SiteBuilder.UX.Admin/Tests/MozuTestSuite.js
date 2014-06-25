@@ -17,7 +17,7 @@ Harness.configure({
     expectedGlobals: ['Ext', 'Taco'],
     testClass: Taco.TestClass.Core,
     preload: simAndSinPreloads,
-    hostPageUrl: 'homepages/Mystic.cshtml',
+    hostPageUrl: 'homepages/Mystic.cshtml'
 
 });
 
@@ -44,7 +44,7 @@ Harness.start(
                         items: [
                             {
                                 url: 'integration/product/product-basic-edit-save.js',
-                                title: 'Product Save',
+                                title: 'Product Save'
                             }
                         ]
                     }, {
@@ -126,11 +126,29 @@ Harness.start(
                     }
                 ]
             }, {
+                group: 'Customers',
+                expanded: true,
+                items: [{
+                    url: 'unit/view/customers/subform/information.t.js',
+                    title: 'Customer Information Subform'
+                }, {
+                    url: 'unit/view/customers/modal/createCustomer.t.js',
+                    title: 'Create Customer Modal'
+                }, {
+                    url: 'unit/view/customers/contacts.t.js',
+                    title: 'Customer Contacts selector'
+                }, {
+                    url: 'unit/view/customers/modal/contacts.t.js',
+                    title: 'Customer Contacts Modal'
+                }]
+            }, {
                 group: 'Orders',
                 expanded: true,
-                alsoPreload: [
-                ],
                 items: [
+                    {
+                        url: 'unit/view/order/header.t.js',
+                        title: 'Order Header Unit Tests'
+                    },
                     {
                         url: 'customunit/view/order/pendingreview-should-not-allow-add-payment.js',
                         title: 'PendingReview Should Not Allow Add Payment'

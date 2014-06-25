@@ -1,0 +1,104 @@
+/**
+ * @class Taco.view.customers.modal.Contacts
+ */
+
+Ext.define('Taco.view.customers.modal.Contacts', {
+    extend: 'Taco.core.ux.window.Modal',
+    alias: 'widget.taco-contacts-modal',
+    requires: [
+        'Taco.view.customers.Contacts'
+    ],
+
+    autoShow: true,
+    scale: 'large',
+    title: 'Edit Contacts',
+    isNewCustomer: false,
+
+    closeAction: 'destroy',
+
+    initComponent: function() {
+
+        this.form = Ext.create('Ext.form.Panel', {
+            itemId: 'contactForm',
+            items: [
+                Ext.create('Taco.view.customers.Contacts', {
+                    record: this.record,
+                    itemId: 'customerContacts',
+                    order: this.order,
+                    width: '100%'
+                }), {
+                    xtype: 'button',
+                    ui: 'action-primary',
+                    itemId: 'addNewContact',
+                    text: 'Add New Addres',
+                    handler: function() {
+                        this.down('#customerContacts').createNewContact();
+                    },
+                    scope: this
+                }
+            ]
+        });
+
+        this.items = [this.form];
+
+        this.callParent(arguments);
+
+        this.on({
+            cancel: this.doCancel,
+            savesuccess: function() {
+                if (typeof this.callback === 'function') this.callback()
+            },
+            activate: function() {
+                if (!this.isNewCustomer || this.notFirstActivate) return;
+                this.notFirstActivate = true;
+                Ext.defer(function() {
+                    this.down('#customerContacts').createNewContact()
+                }, 1, this);
+            },
+            scope: this
+        });
+    },
+
+    doCancel: function() {
+        this.record.reject();
+        this.order.reject();
+        if (typeof this.callback === 'function') this.callback();
+    },
+
+    doSave: function() {
+        var me = this,
+            count = 0,
+            fnComplete = function() {
+                if (++count < 2) return;
+                me.saveSuccess(me.record);
+            };
+
+        if (this.record.dirty) {
+            this.record.save({
+                success: function() {
+                    me.record.commit();
+                    fnComplete();
+                },
+                failure: function() {
+                    Taco.app.fireEvent('setmessage', 'Error saving customer', 'error');
+                }
+            });
+        } else {
+            fnComplete();
+        }
+
+        if (this.order && this.order.dirty) {
+            this.order.save({
+                success: function() {
+                    me.order.commit();
+                    fnComplete();
+                },
+                failure: function() {
+                    Taco.app.fireEvent('setmessage', 'Error saving order', 'error');
+                }
+            });
+        } else {
+            fnComplete();
+        }
+    },
+});

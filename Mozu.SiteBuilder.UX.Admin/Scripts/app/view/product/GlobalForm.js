@@ -99,10 +99,7 @@ Ext.define('Taco.view.product.GlobalForm', {
 
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
-           // Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
-            //,
-           // Ext.create('Taco.view.product.subform.CrossSale', subFormCfg)
         ]);
 
         this.loadNavItems(items);
@@ -112,17 +109,4 @@ Ext.define('Taco.view.product.GlobalForm', {
         //need to initialize the visibility of the subForms
         this.updateSubFormVisibility(this.product.get('productUsage'));
     }
-
-    //addSaveTasks: function (tasks) {
-    //    if (this.isSingleSite) {
-    //        return tasks;
-    //    }
-
-    //    tasks.add([{
-    //        key: 'save-product-record',
-    //        saveRecord: this.record
-    //    }]);
-
-    //    return tasks;
-    //}
 });

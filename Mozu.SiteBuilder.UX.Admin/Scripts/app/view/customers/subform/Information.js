@@ -6,114 +6,130 @@ Ext.define('Taco.view.customers.subform.Information', {
     ],
 
     title: 'Shopper ID',
-    cls: Taco.baseCSSPrefix + 'customer-profile',
-    initComponent: function () {
+    cls: Taco.baseCSSPrefix + 'customer-information',
+
+    layout: {
+        type: 'hbox',
+        align: 'stretch'
+    },
+
+    initComponent: function() {
 
         var me = this,
-            data = this.record.getData();
-        this.setTitle('Shopper Id: ' + this.record.getId());
-        me.taxExemptIdField = Ext.create('Ext.form.field.Text', {
+            data = this.record ? this.record.getData() : {
+                createDate: new Date()
+            };
+
+        if (this.record) this.setTitle('Shopper ID: ' + this.record.getId());
+
+        this.taxExemptIdField = Ext.create('Ext.form.field.Text', {
+            padding: '0 0 0 10',
+            itemId: 'taxExemptIdField',
+            flex: 1,
             name: 'taxId',
-            hidden: !data.taxExempt,
-            width: 300,
-            fieldLabel: 'Tax Exempt Code'
+            cls: 'no-field-padding',
+            hidden: !data.taxExempt
         });
 
-        me.taxExamptField = Ext.create('Ext.form.FieldContainer', {
-            items: [
-                {
+        this.taxExamptField = Ext.create('Ext.form.FieldContainer', {
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [{
                     xtype: 'checkboxfield',
                     name: 'taxExempt',
+                    itemId: 'taxExemptCheckbox',
                     boxLabel: 'Tax Exempt',
                     listeners: {
-                        'change': {
-                            fn: function (field, newValue, oldValue, eOpts) {
-                                me.taxExemptIdField.setVisible(newValue);
-                            },
-                            scope: me
-                        }
+                        change: function(field, newValue, oldValue, eOpts) {
+                            this.taxExemptIdField.setVisible(newValue);
+                        },
+                        scope: this
                     }
                 },
-                me.taxExemptIdField
+                this.taxExemptIdField
             ]
         });
 
         this.items = [{
-                xtype: 'container',
-                width: 340,
-                bodyPadding: '19 0',
-                cls: 'customer-info',
-                defaults: {
-                    width:'100%'
-                },
-                items: [{
-                        xtype: 'textfield',
-                        name: 'firstName',
-                        fieldLabel: 'First Name'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'lastName',
-                        fieldLabel: 'Last Name'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'emailAddress',
-                        fieldLabel: 'Email'
-                    }, {
-                        xtype: 'checkboxfield',
-                        name: 'acceptsMarketing',
-                        boxLabel: 'Yes, keep me up to date on store news and specials'
-                    },
-                    me.taxExamptField
-                ]
-            }, {
-                xtype: 'container',
-                width: 320,
-                cls: 'customer-settings',
-                items: [{
-                    xtype: 'component',
-                    width: 320,
-                    cls: 'customer-history',
-                    renderData: data,
-                    renderTpl: [
-                        '<div class="total-spent"><label>Lifetime Value</label><h2>{[Ext.util.Format.usMoney(values.totalSpent || 0)]}</h2></div>',
-                        '<div class="total-orders"><label>Fulfilled Orders</label><h2>{[values.orderCount || 0]}</h2></div>',
-                        '<div class="total-visits"><label>Total Visits</label><h2>{[values.visitCount || 0]}</h2></div>',
-                        '<div class="total-orders"><span>Customer Since: </span><span>{[Ext.util.Format.date(values.createDate, "m/d/Y")]}</span></div>'
-                    ]
+            xtype: 'container',
+            defaults: {
+                width: '100%'
+            },
+            flex: 1,
+            padding: '0 10 0 0',
+            items: [{
+                    xtype: 'textfield',
+                    cls: 'no-field-padding',
+                    name: 'firstName',
+                    fieldLabel: 'First Name'
                 }, {
-                        xtype: 'button',
-                        text: 'View Wish List',
-                        cls: 'customer-wish-list-btn',
-                        handler: function () {
-                            var model = Ext.create('Taco.shared.view.modal.Wishlist', {
-                                record: this.record
-                            });
-                        },
-                        scope: this
-                    }, {
-                        xtype: 'button',
-                        text: 'View Gift Cards and Store Credits',
-                        cls: 'customer-wish-list-btn',
-                        handler: function () {
-                            var model = Ext.create('Taco.shared.view.modal.StoreCredit', {
-                                record: this.record
-                            });
-                        },
-                        scope: this
-                    }]
+                    xtype: 'textfield',
+                    name: 'lastName',
+                    fieldLabel: 'Last Name'
+                }, {
+                    xtype: 'textfield',
+                    padding: '0 0 16 0',
+                    name: 'emailAddress',
+                    fieldLabel: 'Email'
+                }, {
+                    xtype: 'checkboxfield',
+                    name: 'isAnonymous',
+                    boxLabel: 'Create shopper account',
+                    itemId: 'createAccountCheckbox',
+                    hidden: this.record
+                }, {
+                    xtype: 'checkboxfield',
+                    name: 'acceptsMarketing',
+                    boxLabel: 'Yes, keep me up to date on store news and specials'
+                },
+                this.taxExamptField
+            ]
+        }, {
+            xtype: 'container',
+            cls: 'customer-settings',
+            flex: 1,
+            padding: '0 0 0 10',
+            items: [{
+                xtype: 'component',
+                cls: 'customer-history',
+                data: data,
+                tpl: [
+                    '<table width="100%">',
+                    '<tr>',
+                    '<td>',
+                    '<label>Lifetime Value</label>',
+                    '<h2 data-handle="customer-total-spent"><tpl if="typeof totalSpent === \'number\'">{totalSpent:currency}<tplelse>N/A</tpl></h2>',
+                    '</td>',
+                    '<td>',
+                    '<label>Fulfilled Orders</label>',
+                    '<h2 data-handle="customer-order-count"><tpl if="typeof orderCount === \'number\'">{orderCount}<tplelse>N/A</tpl></h2>',
+                    '</td>',
+                    '<td>',
+                    '<label>Total Visits</label>',
+                    '<h2 data-handle="customer-visit-count"><tpl if="typeof visitCount === \'number\'">{visitCount}<tplelse>N/A</tpl></h2>',
+                    '</td>',
+                    '</table>',
+                    '<div>Customer Since: <span data-handle="customer-since">{createDate:date("m/d/Y")}</span></div>'
+                ]
             }, {
                 xtype: 'container',
                 layout: {
                     type: 'hbox',
                     align: 'bottom'
                 },
-                width: 600,
+                padding: '48 10 16 0',
+                width: '100%',
                 items: [{
                     xtype: 'boxselect',
+                    padding: '0 5 0 0',
                     fieldLabel: 'Customer Segments',
                     itemId: 'customerSegments',
                     store: this.segmentStore,
-                    getStore: function() { return me.segmentStore; },
+                    getStore: function() {
+                        return me.segmentStore;
+                    },
                     name: 'segmentIds',
                     valueField: 'id',
                     displayField: 'code',
@@ -125,10 +141,35 @@ Ext.define('Taco.view.customers.subform.Information', {
                 }, {
                     xtype: 'secondarybutton',
                     text: 'Add',
-                    click: function() { this.launchSegmentModal(); },
+                    click: function() {
+                        this.launchSegmentModal();
+                    },
                     scope: this
                 }]
-            }];
+            }, {
+                xtype: 'button',
+                scale: 'medium',
+                ui: 'link',
+                text: 'View Wishlist',
+                handler: function() {
+                    Ext.create('Taco.shared.view.modal.Wishlist', {
+                        record: this.record
+                    });
+                },
+                scope: this
+            }, {
+                xtype: 'button',
+                scale: 'medium',
+                ui: 'link',
+                text: 'View Store Credit',
+                handler: function() {
+                    Ext.create('Taco.shared.view.modal.StoreCredit', {
+                        record: this.record
+                    });
+                },
+                scope: this
+            }]
+        }];
 
         this.callParent(arguments);
     },

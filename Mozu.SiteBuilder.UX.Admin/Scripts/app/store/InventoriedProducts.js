@@ -22,7 +22,7 @@ Ext.define('Taco.store.InventoriedProducts', {
             read: '/admin/app/Product/inventoriedproductlist'
         },
         extraParams: {
-            responseGroups: 'Min,Price,VariationOptions',
+            responseGroups: 'Min,Price,VariationOptions'
             
         },
         reader: {

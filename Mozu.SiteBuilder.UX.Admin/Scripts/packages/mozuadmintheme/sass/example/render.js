@@ -4,7 +4,7 @@
  */
 
 Ext.require([
-    'Ext.layout.Context',
+    'Ext.layout.Context'
 ]);
 
 Ext.theme = {

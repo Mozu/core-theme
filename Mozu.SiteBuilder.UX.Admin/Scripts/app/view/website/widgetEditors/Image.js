@@ -237,8 +237,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         value: 'stretch',
                         store: [
                             ['stretch', 'Stretch']
-                            // ['maintainAspectRatio', 'Maintain Aspect Ratio'],
-                            // ['specificSize', 'Specific Size']
                         ],
                         listeners: {
                             change: {

@@ -615,7 +615,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         Ext.apply(data, {
             fulfillmentMethod: fulfillmentMethod,
             fulfillmentLocationCode : fulfillmentLocationCode,
-            fulfillmentId: fulfillmentMethod + "(" + fulfillmentLocationCode + ")",
+            fulfillmentId: fulfillmentMethod + "(" + fulfillmentLocationCode + ")"
         })
 
         plugin.completeEdit();

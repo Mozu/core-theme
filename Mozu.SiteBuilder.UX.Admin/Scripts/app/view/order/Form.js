@@ -131,13 +131,15 @@ Ext.define('Taco.view.order.Form', {
             orderForm: this                
         };
 
-        if (this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.Header', subformCfg));
-        }
+        // if (this.isEdit()) {
+        //     items.push(Ext.create('Taco.view.order.Header', subformCfg));
+        // }
 
-        if (!this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
-        }
+        // if (!this.isEdit()) {
+        //     items.push(Ext.create('Taco.view.order.subform.Customer', subformCfg));
+        // }
+        // 
+        items.push(Ext.create('Taco.view.order.Header', subformCfg));
 
         items.push(Ext.create('Taco.view.order.subform.Detail', Ext.apply({
             listeners: {

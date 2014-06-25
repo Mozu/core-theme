@@ -7,11 +7,6 @@
 		requires: [
             'Taco.store.Roles',
             'Taco.store.AccountUsers'
-
-            //,
-            //'Taco.view.account.Navigation',
-            //'Taco.view.account.Overview'
-
 		],
 
 	    // this is the title. 

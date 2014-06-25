@@ -22,6 +22,6 @@ Ext.define('Taco.view.themesettings.Edit', {
                 Taco.core.StateManager.attemptNavigate('themes');
             }
         }, this, { single: true, scope: this });
-    },
+    }
 
 });

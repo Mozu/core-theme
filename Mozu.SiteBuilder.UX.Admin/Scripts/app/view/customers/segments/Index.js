@@ -17,11 +17,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
     modelName: 'Taco.model.CustomerSegment',
     store: { type: 'Taco.store.CustomerSegments' },
     enableRowEditing: true,
-    defaultRowEditingData: {
-        //name: "name here",
-        //code: "code here",
-        //region:"region here"
-    },
+    defaultRowEditingData: {},
     useTilePanel: false,
     
   
@@ -76,7 +72,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
                     msgTarget: "qtip",
                     selectOnFocus: true,
                     allowBlank: false
-                },
+                }
             }, {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
@@ -138,10 +134,5 @@ Ext.define('Taco.view.customers.Segments.Index', {
         };
         
         this.callParent(arguments);
-    },
-    
-   
-    
-
-    
+    }
 });

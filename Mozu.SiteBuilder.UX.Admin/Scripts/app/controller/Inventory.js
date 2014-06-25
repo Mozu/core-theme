@@ -11,23 +11,6 @@ Ext.define('Taco.controller.Inventory', {
     stores: ['Taco.store.LocationInventories'],
     views: ['inventory.Index'],
     modelName: 'LocationInventory'
-
-    //contextPlaceholders: {
-    //    t: function () {
-    //        return Ext.create('Taco.core.ux.content.Container', {
-    //            header: {
-    //                title: "choose a site collection"
-    //            },
-
-    //            body: {
-    //                layout: 'auto',
-    //                items: [{
-    //                    html: 'placeholder for choose site collection interstitial '
-    //                }]
-    //            }
-    //        });
-    //    }
-    //}
 });
 
 

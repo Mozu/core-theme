@@ -204,7 +204,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             {
                 xtype: 'taco-adminuserfield',
                 name: 'modifiedBy',
-                fieldLabel: 'Modified By',
+                fieldLabel: 'Modified By'
             },
             {
                 xtype: 'fieldcontainer',

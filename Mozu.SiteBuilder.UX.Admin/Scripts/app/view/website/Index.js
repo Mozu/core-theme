@@ -707,7 +707,7 @@ Ext.define('Taco.view.website.Index', {
                             failure: function (response) {
                                 var res = Ext.JSON.decode(response.responseText);
                                 Taco.MessageBox.alert('Error', 'There was a problem adding the widget: ' + res.message);
-                            },
+                            }
                         });
                     }
                 }

@@ -15,7 +15,7 @@ Harness.configure({
         '/admin/tests/sinon.js'
     ],
     //  loaderPath  : { 'Ext.ux': 'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux' },
-    hostPageUrl: 'homepages/Mystic.cshtml',
+    hostPageUrl: 'homepages/Mystic.cshtml'
 });
 
 Harness.start( {

@@ -5,7 +5,7 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
         extend: 'Taco.core.ux.form.Form',
         requires: [
             'Taco.store.CustomerSegments',
-            'Ext.ux.form.field.BoxSelect',
+            'Ext.ux.form.field.BoxSelect'
         ],
 
         defaults: {
@@ -21,13 +21,13 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
                 {
                     name: 'keyword',
                     fieldLabel: 'Keyword Search',
-                    width: 450,
+                    width: 450
                 },
                 {
                     xtype: 'checkbox',
                     name: 'showAnonymous',
                     fieldLabel: 'Include Anonymous Checkouts',
-                    width: 450,             
+                    width: 450            
                 },
                 {
                     xtype: 'combobox',
@@ -44,11 +44,7 @@ Ext.define('Taco.view.customers.AdvancedSearchForm', {
                 }];
 
             this.callParent(arguments);
-            segments = this.getForm().findField('segments');
-            //
-        
-       
-        
+            segments = this.getForm().findField('segments'); 
         }
     }
 );

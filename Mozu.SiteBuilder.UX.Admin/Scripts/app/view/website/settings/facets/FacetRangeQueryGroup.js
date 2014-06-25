@@ -11,17 +11,6 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryGroup', {
 
     isDescending: function(rqs) {
         return false;
-        //rqs = rqs || this.getValue(),
-        //allNull = true,
-        //isDesc = Ext.Array.every(rqs, function(rq, ix) {
-        //    if (rq.start === null && rq.end === null) return true;
-        //    allNull = false;
-        //    var nextrq = rqs[ix+1], prevrq = rqs[ix-1];
-        //    if (!nextrq) return rq.end === null || rq.start > rq.end;
-        //    if (!prevrq) return rq.start === null || rq.start > rq.end;
-        //    return rq.start > rq.end && rq.end >= nextrq.start;
-        //});
-        //return !allNull && isDesc;
     },
 
     isAscending: function(rqs) {

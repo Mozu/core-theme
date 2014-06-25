@@ -68,10 +68,6 @@
             t.is(record.get('productName'), m.newName);
 
         }
-        //,
-        //function (next) {
-
-        //}
     );
 
 

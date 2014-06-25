@@ -82,12 +82,4 @@ Ext.define('Taco.core.ux.TreeList', {
         });
 
     }
-
-//    destroy: function () {
-//        var me = this;
-//        Ext.iterate(this.getDockedItems(), function (item) {
-//            me.removeDocked(item, true);
-//        });
-//        this.callParent(arguments);
-//    },
 });

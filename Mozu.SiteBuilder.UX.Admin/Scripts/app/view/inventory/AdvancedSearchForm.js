@@ -117,7 +117,7 @@ Ext.define('Taco.view.inventory.AdvancedSearchForm', {
         {
             xtype: 'taco-adminuserfield',
             name: 'modifiedBy',
-            fieldLabel: 'Modified By',
+            fieldLabel: 'Modified By'
         },
         {
             xtype: 'fieldcontainer',
@@ -129,7 +129,6 @@ Ext.define('Taco.view.inventory.AdvancedSearchForm', {
             items: [{
                     xtype: 'datefield',
                     name: 'modifiedFrom',
-                    //                    fieldLabel: 'Modified From',
                     width: 200
                 }, {
                     xtype: 'component',
@@ -138,7 +137,6 @@ Ext.define('Taco.view.inventory.AdvancedSearchForm', {
                 }, {
                     xtype: 'datefield',
                     name: 'modifiedTo',
-                    //fieldLabel: 'Modified To',
                     width: 200
                 }]
         }]

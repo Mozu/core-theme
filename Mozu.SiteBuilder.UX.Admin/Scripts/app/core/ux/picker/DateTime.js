@@ -8,7 +8,7 @@ Ext.define('Taco.core.ux.picker.DateTime', {
     alias: 'widget.datetimepicker',
     requires: [
         'Ext.form.field.Time',
-        'Ext.container.Container',
+        'Ext.container.Container'
     ],   
     childEls: [
         'innerEl', 'eventEl', 'prevEl', 'nextEl', 'middleBtnEl', 'footerEl'

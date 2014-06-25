@@ -528,14 +528,12 @@ Ext.define('Taco.view.product.subform.General', {
                             editmodechange: htmlEditorEditModeChangeHandler
                         },
                         width: '100%'
-                        //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                     }, {
                         xtype: 'htmleditor',
                         enableFont: false,
                         fieldLabel: 'Full Description',
                         name: 'productFullDescription',
                         emptyText: 'Words, words, and more words.  Also, with lists.',
-                        //fontFamilies: ['MyriadWebProRegular', 'Arial', 'Courier New', 'Tahoma', 'Times New Roman', 'Verdana'],
                         listeners: {
                             editmodechange: htmlEditorEditModeChangeHandler,
                             change: function(cmp, newValue) {

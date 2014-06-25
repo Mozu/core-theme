@@ -706,10 +706,6 @@ allowBlank:false,
                     ['AdminAndStorefront', 'Storefront & Admin'],
                     ['Admin', 'Admin Only']
                 ]
-                //listeners: {
-                //    change: this.onInputTypeChange,
-                //    scope: this
-                //}
             }, {
                 xtype: 'selectfield',
                 fieldLabel: 'Input Type',

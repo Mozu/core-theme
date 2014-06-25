@@ -38,15 +38,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
 
         gridPanelDefaults: {
             enableColumnHide: true,
-            paged: true,
-            //none of our grids do anything with selection ... removing from default config. 
-            //selModel: {
-            //    selType: 'checkboxmodel',
-            //    checkOnly: true,
-            //    showHeaderCheckbox: true,
-            //    ignoreRightMouseSelection: true,
-            //    headerWidth: 37
-            //}
+            paged: true
         },
 
         tilePanelDefaults: {

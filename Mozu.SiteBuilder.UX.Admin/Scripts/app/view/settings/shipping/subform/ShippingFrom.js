@@ -21,12 +21,6 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     
     initComponent: function () {
         var me = this, isAddressEmpty = true;
-
-        /*  { name: 'shippingLocationCode', type: 'string' },
-            { name: 'inStorePickupLabel', type: 'string' },
-            { name: 'enableInStorePickup', type: 'boolean' },
-            { name: 'storePickupLocationTypeCodes', type: 'auto', defaultValue: [] },
-           */
         this.shipFromCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'shippingLocationCode',
             width:300,
@@ -40,16 +34,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Locations',
                 autoLoad: true,
-                remoteFilter: false,
-                listeners: {
-                    load: {
-                        fn: function () {
-                            //this.shipFromCombo.clearInvalid();
-                        },
-                        single: true,
-                        scope: me
-                    }
-                }
+                remoteFilter: false
             })
         });
 
@@ -72,17 +57,9 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
 
         this.items = [
             this.shipFromCombo,
-            //{
-            //    xtype: "textfield",
-            //    width: 300,
-            //    emptyText: "In Store Pickup",
-            //    fieldLabel: "Override In Store Pickup Label",
-            //    name:"inStorePickupLabel"
-            //},
             {
                 xtype: 'fieldcontainer',
                 fieldLabel: "Enabled Fulfillment Methods",
-                // note this layout is required for radiogroups to have the proper height;
                 layout:"column",
                 items: [
                     {
@@ -109,9 +86,6 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
                                 listeners: {
                                     change: {
                                         fn: function (cmp, newValue, oldValue, eOpts) {
-                                            //toggle the visibility and set the toggle field to be required when visible and not required when hidden;
-                                            // need to determine if this is required or not.
-                                            //me.locationTypeIds.allowBlank = !newValue;
                                             me.locationTypeIds.setVisible(newValue);
                                         },
                                         scope: me
@@ -124,45 +98,11 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
             },
             
             me.locationTypeIds
-
-            //,this.addressView,
-            //this.editButton,
             
         ];
 
         this.callParent(arguments);
 
-        /*
-        // address is deprecated as part of the omnichannel update
-        // todo remove this code when complete;
-        if (isAddressEmpty) {
-            this.on('boxready', function () {
-                this.editAddress();
-            }, this);
-
-        }
-
-        */
-
     }
-    /*
-    // address is deprecated as part of the omnichannel update
-        // todo remove this code when complete;
-    ,
-    editAddress: function () {
-        var me = this,
-            modal = Ext.create('Taco.shared.view.modal.Address', {
-            record: me.addressRecord,
-            addressHasNames: false,
-            validateAddress: true,
-            listeners: {
-                savesuccess: function () {
-                    me.record.set('siteShippingOriginAddress', Ext.apply({}, me.addressRecord.data));
-                    me.addressView.update(me.addressRecord.data);
-                }
-            }
-        });
-    }
-    */
     
 });

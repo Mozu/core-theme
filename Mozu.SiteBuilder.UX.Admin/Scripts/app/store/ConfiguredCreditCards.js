@@ -18,7 +18,7 @@ Ext.define('Taco.store.ConfiguredCreditCards', {
         proxy: {
             type: 'ajax',
             api: {
-                read: '/admin/app/checkoutsettings/cards/list',
+                read: '/admin/app/checkoutsettings/cards/list'
             },
             reader: {
                 type: 'json',

@@ -27,20 +27,4 @@
         }
 
     }
-    //,
-    //function () {
-    //    Ext.apply(this.prototype, {
-    //        actionMethods: {
-    //            create: 'POST',
-    //            read: 'GET',
-    //            update: 'POST',
-    //            destroy: 'POST',
-    //            duplicate: 'POST'
-    //        },
-
-    //        duplicate: function() {
-    //            return this.doRequest.apply(this, arguments);
-    //        }
-    //    });
-    //}
    );

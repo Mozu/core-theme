@@ -36,5 +36,5 @@ Ext.define('Taco.overrides.selection.CellModel', {
         }
         // Enforce code correctness in unbuilt source.
         return null;
-    },
+    }
 });

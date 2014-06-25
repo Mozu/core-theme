@@ -52,7 +52,6 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                     xtype: "radiogroup",
                     fieldLabel: "Custom Rate Type",
                     flex: 1,
-                    //columnWidth: .5,
                     name: "typeGroup",
                     layout: {
                         layout: "hbox"
@@ -62,14 +61,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                         { xtype: "radiofield", boxLabel: "Flat Rate Per Item", inputValue: "CUSTOM_FLAT_RATE_PER_ITEM_EXACT_AMOUNT", id: "radio1", name: "type" },
                         { xtype: "radiofield", boxLabel: "Flat Rate Per Order", inputValue: "CUSTOM_FLAT_RATE_PER_ORDER_EXACT_AMOUNT", id: "radio2", name: "type" },
                         { xtype: "radiofield", boxLabel: "Percentage of Order", inputValue: "CUSTOM_PERCENTAGE_PER_ORDER", id: "radio3", name: "type" }
-                    ],
-                    listeners: {
-                        change: function (field, newValue, oldValue) {
-                            //if (me.amountField) {
-                            //    me.amountField.labelEl.update(newValue);
-                            //}
-                        }
-                    }
+                    ]
                 }]
             }, {
                 xtype: 'numberfield',
@@ -82,7 +74,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                 width: 160
             }, {
                 xtype: 'taco-countryfield',
-                name: 'configuredCountries',
+                name: 'configuredCountries'
             }]
         });
 

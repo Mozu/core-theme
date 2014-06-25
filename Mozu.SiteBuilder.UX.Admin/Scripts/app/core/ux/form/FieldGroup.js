@@ -67,15 +67,6 @@
                     tpl: me.title + ' ({count})',
                     data: { count: 0 },
                     flex: 1,
-                    listeners: {
-                        afterrender: function (item) {
-                            //                            me.store.on({
-                            //                                load: this.updateCount,
-                            //                                datachanged: this.updateCount,
-                            //                                scope: this
-                            //                            });
-                        }
-                    },
                     updateCount: function (to) {
                         this.update({ count: to });
                     }

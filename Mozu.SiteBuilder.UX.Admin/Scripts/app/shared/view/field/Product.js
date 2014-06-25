@@ -53,5 +53,5 @@ Ext.define('Taco.shared.view.field.Product', {
                 }
             }
         }
-    },
+    }
 });

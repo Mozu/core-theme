@@ -125,5 +125,5 @@ Ext.define('Taco.view.order.Edit', {
     onDestroy: function () {
         this.keyNav.destroy();
         this.callParent(arguments);
-    },
+    }
 });

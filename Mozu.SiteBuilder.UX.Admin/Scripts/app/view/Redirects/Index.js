@@ -110,10 +110,7 @@ Ext.define('Taco.view.redirects.Index', {
             {
                 hidden: true,
                 url: '/admin/app/redirects/import?siteId='+ Taco.app.context.getSiteId(),
-                items: [this.uploadButton
-
-                ],
-                
+                items: [this.uploadButton]
             });
         this.header = Ext.apply({}, this.header);
         this.header.actions = [

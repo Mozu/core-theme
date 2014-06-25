@@ -27,8 +27,6 @@ Ext.define('Taco.view.generalSettings.subform.Analytics', {
                     itemId: 'googleAnalyticsId',
                     name: 'googleAnalyticsId',
                     fieldLabel: "User Account (UA#)"
-                    //value: me.settings.googleAnalyticsId,
-                    //disabled: !me.settings.googleAnalyticsEnabled
                 },
                 {
                     xtype: 'checkbox',
@@ -37,14 +35,7 @@ Ext.define('Taco.view.generalSettings.subform.Analytics', {
                     boxLabel: 'Enable Google Analytics on your storefront',
                     boxLabelAlign: 'after',
                     inputValue: true,
-                    uncheckedValue: false,
-                    //checked: me.settings.googleAnalyticsEnabled,
-                    listeners: {
-                        change: function (cmp, isChecked) {
-                           // me.analytics.getComponent('googleAnalyticsId').setDisabled(!isChecked);
-                            //me.analytics.getComponent('googleAnalyticsEcomEnabled').setDisabled(!isChecked);
-                        }
-                    }
+                    uncheckedValue: false
                 },
                 {
                     xtype: 'checkbox',
@@ -54,8 +45,6 @@ Ext.define('Taco.view.generalSettings.subform.Analytics', {
                     boxLabelAlign: 'after',
                     inputValue: true,
                     uncheckedValue: false
-                    //checked: me.settings.googleAnalyticsEcomEnabled,
-                    //disabled: !me.settings.googleAnalyticsEnabled
                 }];
 
         this.callParent(arguments);

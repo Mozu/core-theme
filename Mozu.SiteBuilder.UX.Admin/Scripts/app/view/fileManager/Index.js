@@ -77,7 +77,7 @@ Ext.define('Taco.view.fileManager.Index', {
                     }
                 },
                 dataIndex: 'name',
-                width: 260,
+                width: 260
             },
             {
                 text: 'Tags', sortable: false,
@@ -134,38 +134,13 @@ Ext.define('Taco.view.fileManager.Index', {
                         menuColumnHandler: 'destroyMenuColumnHandler'
                     }
                 ]
-            }],
-        
-        // selType: 'cellmodel',
-       //plugins: [
-        //    Ext.create('Ext.grid.plugin.RowEditing', {
-        //        clicksToEdit: 2,
-        //        listeners: {
-        //            edit: function (editor, e) {
-        //                console.log('edit', arguments);
-        //                this.grid.store.sync();
-        //            },
-        //            canceledit:function () {
-        //                console.log('canceledit', arguments);
-        //            },
-        //            validateedit:function () {
-        //                console.log('validateedit', arguments);
-        //            }
-        //        }
-        //    })
-        //]
+            }]
     },
 
     initComponent: function () {
         var editor;
         this.header = {
             actions: [
-                //{
-                //xtype: 'secondarybutton',
-                //text: 'Manage Tags',
-                //click: this.manageTags,
-                //scope: this
-                //},
                 {
                     xtype: 'tacofilefield',
                     text: 'Upload',

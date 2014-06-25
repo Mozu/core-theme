@@ -11,5 +11,5 @@ Ext.define('Taco.view.settings.tax.Edit', {
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
-    },
+    }
 });
