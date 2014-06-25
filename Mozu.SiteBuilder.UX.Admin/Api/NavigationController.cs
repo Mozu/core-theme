@@ -285,7 +285,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (item.NodeType.IsPage)
                 {
                     // delete item from CMS
-                    Tuple<bool, ServiceClientResponse<StreamContent>> resp = await _cmsService.Delete2(item.OriginalCollection, item.OriginalId);
+                    Tuple<bool, ServiceClientResponse<StreamContent>> resp = await _cmsService.Delete2(item.OriginalDocumentListName, item.OriginalId);
                 }
                 if (item.NodeType.IsCategory)
                 {
@@ -371,7 +371,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         private Task HandleCmsRename(NavigationTreeNode change)
         {
-            string docCollection = change.OriginalCollection;
+            string docCollection = change.OriginalDocumentListName;
             string docId = change.OriginalId;
 
             // retrieve and update the requested category.

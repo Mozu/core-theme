@@ -9,7 +9,17 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
         public string OriginalId { get; set; }
 
-        public string OriginalCollection { get; set; }
+        
+
+
+        [Obsolete]
+        public string OriginalCollection
+        {
+            get { return this.OriginalDocumentListName; }
+            set { this.OriginalDocumentListName = value; }
+        }
+
+        public string OriginalDocumentListName { get; set; }
 
         private string _parentId;
         public string ParentId { get { return _parentId ?? (Parent != null ? Parent.Id : null); } set { _parent = null; _parentId = value; } }

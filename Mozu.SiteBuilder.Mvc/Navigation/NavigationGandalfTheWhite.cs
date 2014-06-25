@@ -184,7 +184,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                                 Id = "page^^" + page.DocumentListName + "^^" + page.Id,
                                 ParentId = navmeta.ParentId,
                                 OriginalId = page.Id,
-                                OriginalCollection = page.DocumentListName,
+                                OriginalDocumentListName = page.DocumentListName,
                                 Index = navmeta.Index,
                                 Url = String.Equals(page.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.DocumentListName + "/" + page.Name
                             };
@@ -245,7 +245,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         Id = "page^^" + p.DocumentListName + "^^" + p.Id,
                         ParentId = UNLINKED_PAGES_NODE_ID,
                         OriginalId = p.Id,
-                        OriginalCollection = p.DocumentListName,
+                        OriginalDocumentListName = p.DocumentListName,
                         Index = 0,
                         Url = String.Equals(p.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + p.Name : "/" + p.DocumentListName + "/" + p.Name,
                     };

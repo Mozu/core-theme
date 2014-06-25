@@ -12,19 +12,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Navigation
         private static readonly NavigationSet _emptySet;
         private static readonly NavigationSet _testSet;
         private static readonly NavigationSet.Converter _converter = new NavigationSet.Converter();
-        private static readonly string _nodeJson1 = "{id: \"page^^foo^^home\", originalId: \"home\", originalDocumentListName: \"foo\", parentId: \"_default\", name: \"Home Page\", url: \"/p/home\", index: 3, nodeType: \"page\"}";
-        private static readonly string _nodeJson2 = "{id: \"page^^foo^^bar\", originalId: \"bar\", originalDocumentListName: \"foo\", parentId: \"_default\", name: \"Bar Page\", url: \"/p/bar\", index: 7, nodeType: \"page\"}";
+        private static readonly string _nodeJson1 = "{id: \"page^^foo^^home\", originalId: \"home\", originalCollection: \"foo\", parentId: \"_default\", name: \"Home Page\", url: \"/p/home\", index: 3, nodeType: \"page\"}";
+        private static readonly string _nodeJson2 = "{id: \"page^^foo^^bar\", originalId: \"bar\", originalCollection: \"foo\", parentId: \"_default\", name: \"Bar Page\", url: \"/p/bar\", index: 7, nodeType: \"page\"}";
         private static readonly string _newFormatJson = "[" + _nodeJson1 + "," + _nodeJson2 + "]";
-        private static readonly string _jsonNoOriginalId = "[{id: \"page^^foo^^bar\", originalDocumentListName: \"foo\", parentId: \"_default\", name: \"Bar Page\", url: \"/p/bar\", index: 7, nodeType: \"page\"}]";
-        private static readonly string _oldFormatJson = "{\"nodes\":[{\"id\":\"page^^pages^^0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"parentId\":\"_navigation\",\"name\":\"home\",\"index\":1,\"leaf\":false,\"isHidden\":false,\"originalId\":\"0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"originalDocumentListName\":\"pages\",\"nodeType\":\"page\",\"url\":\"/default\"}]}";
-        private static readonly string _weirdNodeTypeJson = "{\"nodes\":[{\"id\":\"page^^pages^^0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"parentId\":\"_navigation\",\"name\":\"home\",\"index\":1,\"leaf\":false,\"isHidden\":false,\"originalId\":\"0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"originalDocumentListName\":\"pages\", \"NodeType\":{\"nodeType\":\"page\"},\"url\":\"/default\"}]}";
-            
+        private static readonly string _jsonNoOriginalId = "[{id: \"page^^foo^^bar\", originalCollection: \"foo\", parentId: \"_default\", name: \"Bar Page\", url: \"/p/bar\", index: 7, nodeType: \"page\"}]";
+        private static readonly string _oldFormatJson = "{\"nodes\":[{\"id\":\"page^^pages^^0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"parentId\":\"_navigation\",\"name\":\"home\",\"index\":1,\"leaf\":false,\"isHidden\":false,\"originalId\":\"0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"originalCollection\":\"pages\",\"nodeType\":\"page\",\"url\":\"/default\"}]}";
+        private static readonly string _weirdNodeTypeJson = "{\"nodes\":[{\"id\":\"page^^pages^^0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"parentId\":\"_navigation\",\"name\":\"home\",\"index\":1,\"leaf\":false,\"isHidden\":false,\"originalId\":\"0818cc78-19b3-4ed7-bbd1-1f5218403fef\",\"originalCollection\":\"pages\", \"NodeType\":{\"nodeType\":\"page\"},\"url\":\"/default\"}]}";
+
 
         static NavigationSetSerializationTest()
         {
             _emptySet = new NavigationSet();
             _testSet = new NavigationSet();
-            _testSet.Add(new SimpleNavigationNode {
+            _testSet.Add(new SimpleNavigationNode
+            {
                 Id = "page^^foo^^home",
                 OriginalId = "home",
                 OriginalCollection = "foo",
