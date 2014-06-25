@@ -61,6 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ChannelCode, op => op.ResolveUsing(dc => dc.ChannelCode))
                 .ForMember(x => x.TenantId, op => op.ResolveUsing(dc => dc.TenantId))
                 .ForMember(x => x.OrderType, op => op.ResolveUsing(dc => dc.Type))
+                .ForMember(x => x.InvalidCoupons, op => op.ResolveUsing(dc => dc.InvalidCoupons))
 
                 .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
