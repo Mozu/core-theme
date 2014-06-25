@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         {
             this.SiteTemplate= new DocumentRequest()
                                       {
-                                          Collection="templates",
+                                          DocumentListName="templates",
                                           Path="site/page"
                                       };
             this.Page = new DocumentRequest();

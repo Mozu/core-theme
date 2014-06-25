@@ -53,7 +53,7 @@ a:last-child{
       .#{$vprefix}icon-catalog {
         @include icons-sprite(icon-barcode);
       }
-      .#{$vprefix}icon-store {
+      .#{$vprefix}icon-orders {
         margin-left: -10px;
         @include icons-sprite(icon-cart);
       }
@@ -69,7 +69,7 @@ a:last-child{
       .#{$vprefix}icon-locations {
         @include icons-sprite(icon-map);
       }
-      .#{$vprefix}icon-report {
+      .#{$vprefix}icon-reports {
         @include icons-sprite(icon-dashboard);
       }
 	  

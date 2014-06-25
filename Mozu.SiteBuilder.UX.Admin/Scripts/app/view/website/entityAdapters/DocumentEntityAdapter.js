@@ -23,9 +23,9 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     },
 
     getId: function () {
-        if (!this.pageContext.cmsContext.page.collection || !this.pageContext.cmsContext.page.id)
+        if (!this.pageContext.cmsContext.page.documentListName || !this.pageContext.cmsContext.page.id)
             return undefined;
-        return this.pageContext.cmsContext.page.collection + "_" + this.pageContext.cmsContext.page.id;
+        return { documentListName: this.pageContext.cmsContext.page.documentListName, id: this.pageContext.cmsContext.page.id };
     },
 
     getPageSettings: function () {

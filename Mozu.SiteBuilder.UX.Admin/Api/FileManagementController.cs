@@ -12,6 +12,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using System.ServiceModel.Web;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
+using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using AutoMapper;
@@ -119,29 +120,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     // FolderId = file.folderId == "0" ? null : file.folderId,
                      PublishState = CmsConstants.Documents.doc_state_active,
                      DocumentType = "image", //todo: file.fileType != null && file.fileType.IndexOf("im", StringComparison.OrdinalIgnoreCase) > -1 ? "image" : "document",
-                     Properties = new List<DC.PropertyValue>()
-                     {
-                         new DC.PropertyValue(){
-                             PropertyType = "height",
-                             Value = file.height
-                         },
-                         new DC.PropertyValue(){
-                             PropertyType = "width",
-                             Value=file.width
-                         }
-                         
-
-
-                     }
+                     Properties = new JObject(
+                         new JProperty("height", file.height ),
+                         new JProperty("width", file.width )
+                     )
                  };
                 if (file.tags != null && file.tags.Length > 0)
                 {
-                    dm.Properties.Add(
-                        new DC.PropertyValue()
-                        {
-                            PropertyType = "tags",
-                            Value = file.tags
-                        });
+                    dm.Set("tags", file.tags);
                 }
                 //var existing = _docClient.List("files", dm.Name, null, dm.FolderId, CmsConstants.Documents.doc_state_active, null, null, null, 1, 0).Result.ReadAsSync().Items.FirstOrDefault();
                 //if (existing != null)

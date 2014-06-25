@@ -15,7 +15,7 @@ Ext.define('Taco.model.NavigationTreeNode', {
             useNull: true
         },
         {
-            name: 'originalCollection',
+            name: 'originalDocumentListName',
             type: 'string',
             useNull: true
         },

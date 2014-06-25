@@ -31,11 +31,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 if (request.Id != null)
                 {
-                    task = _cmsServiceWrapper.Get2(request.Collection ?? defaultCollection, request.Id);
+                    task = _cmsServiceWrapper.Get2(request.DocumentListName ?? defaultCollection, request.Id);
                 }
                 if (request.Path != null)
                 {
-                    task = _cmsServiceWrapper.GetByPath2(request.Collection ?? defaultCollection, request.Path);
+                    task = _cmsServiceWrapper.GetByPath2(request.DocumentListName ?? defaultCollection, request.Path);
                 }
             }
             return task != null;
@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                     if (templateTask == null && cmsPageContext.Page.Document != null && cmsPageContext.Page.Document.Properties != null && cmsPageContext.Page.Document.Properties != null)
                     {
-                        string templateName = cmsPageContext.Page.Document.Properties.Where(x => x.PropertyType == "template").Select(x => (string) x.Value).FirstOrDefault();
+                        string templateName = cmsPageContext.Page.Document.Get<string>("template");
                         if (templateName != null)
                         {
                             if (cmsPageContext.Template == null)
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                                 cmsPageContext.Template = new DocumentRequest
                                                               {
                                                                   Path = templateName,
-                                                                  Collection = "templates"
+                                                                  DocumentListName = "templates"
                                                               };
                             }
                             templateTask = _cmsServiceWrapper.GetByPath2("templates", templateName);
@@ -124,12 +124,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                     if (cmsPageContext.Page.Document != null)
                     {
-                        var widgetRaw = (string) cmsPageContext.Page.Document.Get(CmsConstants.Documents.widget_prop);
+                        var widgetRaw = (string) cmsPageContext.Page.Document.Get<string>(CmsConstants.Documents.widget_prop);
                         
                         var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.Page.Document.Id,
-                                          Collection = cmsPageContext.Page.Document.DocumentListName
+                                          DocumentListName = cmsPageContext.Page.Document.DocumentListName
                                       };
                         
                     
@@ -144,12 +144,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     }
                     if (cmsPageContext.Template.Document != null)
                     {
-                        var widgetRaw = (string) cmsPageContext.Template.Document.Get(CmsConstants.Documents.widget_prop);
+                        var widgetRaw = (string) cmsPageContext.Template.Document.Get<string>(CmsConstants.Documents.widget_prop);
                         
                         var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.Template.Document.Id,
-                                          Collection = cmsPageContext.Template.Document.DocumentListName
+                                          DocumentListName = cmsPageContext.Template.Document.DocumentListName
                                       };
                         
                        
@@ -163,12 +163,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     }
                     if (cmsPageContext.SiteTemplate.Document != null)
                     {
-                        var widgetRaw = (string) cmsPageContext.SiteTemplate.Document.Get(CmsConstants.Documents.widget_prop);
+                        var widgetRaw = (string) cmsPageContext.SiteTemplate.Document.Get<string>(CmsConstants.Documents.widget_prop);
                         
                         var src = new DocumentRequest
                                       {
                                           Id = cmsPageContext.SiteTemplate.Document.Id,
-                                          Collection = cmsPageContext.SiteTemplate.Document.DocumentListName
+                                          DocumentListName = cmsPageContext.SiteTemplate.Document.DocumentListName
                                       };
                         
                         

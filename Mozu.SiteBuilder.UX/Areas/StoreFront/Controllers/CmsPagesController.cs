@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                     Page = new DocumentRequest()
                                                {
                                                    Path = pageName,
-                                                   Collection = collection
+                                                   DocumentListName = collection
                                                }
 
                                 };
@@ -115,18 +115,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
             }
 
-            var vm = Mapper.Map<DC.Document, VM.Document>(pc.CmsContext.Page.Document ,
-                                                          opt => opt.ConstructServicesUsing(this.LifetimeScope .Resolve ));
+            var vm = pc.CmsContext.Page.Document;
 
             SetNavigationContext(vm);
 
             //pc.WidgetCreationTags.Add(doc.ToWidgetStem());
             pc.CollectionId = collection;
             pc.DocumentId = pc.CmsContext.Page.Document.Id;
-            pc.Title = vm.Properties.GetValue("title") as string;
-            pc.MetaDescription = vm.Properties.GetValue("meta_description") as string;
-            pc.MetaTitle = vm.Properties.GetValue("meta_title") as string;
-            pc.PageType = (string)(vm.Properties.GetValue("page_type")) ?? "cmspage";
+            pc.Title = vm.Get<string>("title") as string;
+            pc.MetaDescription = vm.Get<string>("meta_description") as string;
+            pc.MetaTitle = vm.Get<string>("meta_title") as string;
+            pc.PageType = (string)(vm.Get<string>("page_type")) ?? "cmspage";
 
            
 
@@ -167,7 +166,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Updates the SiteContext.NavigationContext with the current document.
         /// </summary>
-        private void SetNavigationContext(VM.Document doc)
+        private void SetNavigationContext(Document doc)
         {
             NavigationContext.SetContext(doc);
         }

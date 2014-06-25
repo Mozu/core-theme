@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.UI;
 using Autofac;
+using Magnum.Extensions;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -45,11 +46,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             _lifetimescope = lifetimescope;
         }
 
-        private Task<ServiceClientResponse<DC.Document>> CreateInternal(AVM.Document doc)
+        private Task<ServiceClientResponse<DC.Document>> CreateInternal(DC.Document doc)
         {
-            doc.Items = doc.Items ?? new List<AVM.DocumentProperty>();
+            doc.Properties = doc.Properties ?? new JObject();
 
-            var documentTypeId = doc.Items.Where(x => x.Key == CmsConstants.Widgets.page_type_definition).Select(x => (string)x.Value).FirstOrDefault();
+            var documentTypeId = doc.Get<string>(CmsConstants.Widgets.page_type_definition);
             PageTypeDefinition pageTypeDef = null;
             var themeEntityDefinitionProvider = _lifetimescope.Resolve<IThemeEntityDefinitionProvider>();
             if (documentTypeId == null)
@@ -67,14 +68,15 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
 
 
-            var d = AutoMapper.Mapper.Map<Mozu.Content.Contracts.Document>(doc);
+            var d = doc;
 
             d.Name = string.IsNullOrEmpty(d.Name) ? Guid.NewGuid().ToString() : d.Name;
             d.DocumentType = string.IsNullOrEmpty(d.DocumentType) ? pageTypeDef.DocumentType : d.DocumentType;
 
-            if (string.IsNullOrEmpty((string)d.Get(CmsConstants.Documents.template)))
+            if (string.IsNullOrEmpty(d.Get<string>(CmsConstants.Documents.template)))
             {
-                d.Set(CmsConstants.Documents.template, pageTypeDef.Template);
+                d.Properties.CastAs<JObject>()[CmsConstants.Documents.template] = pageTypeDef.Template;
+                
             }
 
 
@@ -84,71 +86,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             if (pageTypeDef.Zones != null && pageTypeDef.Zones.Count> 0)
             {
                 var widgetPropVal = Newtonsoft.Json.JsonConvert.SerializeObject(pageTypeDef.Zones);
-                d.Set(CmsConstants.Documents.widget_prop, widgetPropVal);
+                d.Properties.CastAs<JObject>()[CmsConstants.Documents.widget_prop] = widgetPropVal;
             }
 
 
-            if (pageTypeDef.Properties != null)
-            {
-                foreach (var kvp in pageTypeDef.Properties)
-                {
-                    if (string.IsNullOrEmpty((string)d.Get(kvp.Key)))
-                    {
-                        object valueToSet = null;
-                        switch (kvp.Value.Type)
-                        {
-                            case JTokenType.Array:
-                                {
-                                    valueToSet = kvp.Value.ToObject<object[]>();
-                                    break;
-                                }
-                            case JTokenType.Object:
-                                {
-                                    valueToSet = kvp.Value.ToString();
-                                    break;
-                                }
-                            default:
-                                {
-                                    var jval = kvp.Value as JValue;
-                                    if (jval != null)
-                                    {
-                                        valueToSet = jval.Value;
-                                    }
-                                    break;
-                                }
-
-                        }
-
-                        if (valueToSet != null)
-                        {
-                            d.Set(kvp.Key, valueToSet);
-                        }
-
-                    }
-                }
-            }
-
-            //tbd get this shit out of here
-
-            //if (documentTypeId == "post")
-            //{
-            //    string folderPath = DateTime.Now.ToString("MM-yyyy");
-            //    var res = _folderRepo.GetByPath("blogs", folderPath).Result.ReadAsSync();
-
-            //    if (res != null)
-            //    {
-            //        d.FolderId = res.Id;
-            //    }
-            //    else
-            //    {
-            //        var folder = _folderRepo.Create("blogs", new DC.Folder() { Name = folderPath, DocumentListName = "blogs" }).Result.ReadAsSync();
-            //        d.FolderId = folder.Id;
-            //    }
-
-
-
-            //}
-
+           
             var task = _docRepo.CreateDocument( d.DocumentListName, d);
             return task;
         }
@@ -170,101 +112,31 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             //        });
         }
 
-        public Task<ServiceClientResponse<DC.Document>> UpdateInternal(AVM.Document doc)
+        public Task<ServiceClientResponse<DC.Document>> UpdateInternal(DC.Document doc)
         {
-            if (doc.DocumentId.StartsWith("new"))
+            if (doc.Id.StartsWith("new"))
             {
                 //todo: clean up create sync.
                 return null;
             }
 
-            var d = _docRepo.GetDocument( documentListName : doc.DocumentListName, documentId : doc.DocumentId ).Result.ReadAsSync();
-            if (!string.IsNullOrEmpty(doc.Name))
+
+            //remove when patch comes back.
+            if (doc.Properties["widgets"]== null )
             {
-                d.Name = doc.Name;    
-            }
-            
-            // d.PublishState = CmsConstants.Documents.doc_state_active;
-            foreach (var item in doc.Items)
-            {
-                
-                var prop = d.Properties.FirstOrDefault(x => string.Equals(x.PropertyType, item.Key, StringComparison.OrdinalIgnoreCase));
+                var d = _docRepo.GetDocument(documentListName: doc.DocumentListName, documentId: doc.Id).Result.ReadAsSync();
 
-
-                if (prop == null)
+                // doc.Set("widgets", );
+                JToken widgets;
+                if (d.Properties != null && d.Properties.TryGetValue("widgets", out widgets))
                 {
-
-                    try
-                    {
-                        var cProp = ToPropertyValue(item);
-                        d.Properties.Add(cProp);
-                    }
-                    catch
-                    {
-                    }
-
+                    doc.Properties["widgets"] = widgets;
                 }
-                else
-                {
-                    ToPropertyValue(item, prop);
-                    prop.Value = item.Value;
-                }
+
             }
-
-            if (d.Properties != null)
-            {
-                var item = d.Properties.FirstOrDefault(x => string.Equals("widgets", x.PropertyType, StringComparison.OrdinalIgnoreCase));
-                if (item != null)
-                {
-                    d.Properties.Remove(item);
-                }
-              
-            }
-            return _docRepo.UpdateDocument(doc.DocumentListName, doc.DocumentId, d);
+            return _docRepo.UpdateDocument(doc.DocumentListName, doc.Id, doc);
         }
 
-        private DC.PropertyValue ToPropertyValue(AVM.DocumentProperty inProperty, DC.PropertyValue outProperty = null)
-        {
-            var propType = _cmsTypeHelper.GetPropertyType(inProperty.Key);//.GetDocumentType (doc.DocumentType).PropertyTypes.FirstOrDefault(x => string.Equals(x.Name, p.Key, StringComparison.OrdinalIgnoreCase));
-            if (propType == null)
-            {
-                throw new Exception("unknown property" + inProperty.Key);
-                //todo: throw fault or warning.....
-                //continue;
-            }
-            if (outProperty == null)
-            {
-                outProperty = new DC.PropertyValue()
-                {
-                    PropertyType = inProperty.Key,
-                    Value = inProperty.Value
-                };
-            }
-            else
-            {
-                outProperty.Value = inProperty.Value;
-            }
-
-            //todo: value type validation and or conversion...
-            if (propType.PropertyValueType.StorageType == "integer")
-            {
-                if (!(outProperty.Value is int))
-                {
-                    outProperty.Value = Convert.ToInt32(outProperty.Value);
-                }
-            }
-            if (propType.IsMultiValued.Value)
-            {
-
-                if (!(outProperty.Value is System.Collections.IList))
-                {
-                    outProperty.Value = new object[] { outProperty.Value };
-                }
-
-
-            }
-            return outProperty;
-        }
 
         [Obsolete]
         public Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName)
@@ -322,18 +194,15 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             );
         }
 
-        public Task<ServiceClientResponse<DC.Document>> Update2(AVM.Document doc)
+        public Task<ServiceClientResponse<DC.Document>> Update2(DC.Document doc)
         {
             return UpdateInternal( doc );
 
         }
 
-        public Task<ServiceClientResponse<DC.Document>> Update2(DC.Document doc)
-        {
-            return _docRepo.UpdateDocument(doc.DocumentListName, doc.Id, doc);
-        }
+      
 
-        public Task<ServiceClientResponse<DC.Document>> Create2(AVM.Document doc)
+        public Task<ServiceClientResponse<DC.Document>> Create2(DC.Document doc)
         {
             return CreateInternal( doc );
         }

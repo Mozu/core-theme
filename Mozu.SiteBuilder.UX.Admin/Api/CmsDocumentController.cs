@@ -6,10 +6,12 @@ using System.Security.Policy;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Web.Http;
+using Magnum.Extensions;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Newtonsoft.Json.Linq;
 using DC=Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using System.Threading.Tasks;
@@ -33,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ICmsTypeHelper _cmsTypeHelper;
 
         ICmsServiceWrapper _cmsService;
+        private readonly IDocumentListWebApiClient _documentListWebApiClien;
         private readonly ILogger _logger;
         //ISessionDocumentStore _sessionDocStore;
         public CmsDocumentController(IDocumentListWebApiClient docRepo ,
@@ -41,11 +44,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
           //  ISessionDocumentStore sessionDocStore,
             ICmsTypeHelper cmsTypeHelper,
              ICmsServiceWrapper cmsService,
+            Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClien,
             ILogger logger 
             )
         {
 
             _cmsService = cmsService;
+            _documentListWebApiClien = documentListWebApiClien;
             _logger = logger;
             //  _docRepo = docRepo;
          //   _sessionDocStore = sessionDocStore;
@@ -56,30 +61,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
-        public async Task<Response<List<AVM.Document>>> Delete(List<AVM.Document> docs)
+        public async Task<Response<List<DC.Document>>> Delete(List<DC.Document> docs)
         {
             var tasks = docs.Select(doc => _cmsService.Delete2(Mapper.Map<DC.Document>(doc))).ToList();
             await Task.WhenAll(tasks);
             var successes = tasks.Select(x => x.Result).Select(x => x.Item1 ? 1 : 0).Sum();
 
-            return EmptyList2<AVM.Document>();
+            return EmptyList2<DC.Document>();
         }
        
         
         [HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<List<AVM.Document>>> Create(List<AVM.Document> docs)
+        public async Task<Response<List<DC.Document>>> Create(List<DC.Document> docs)
         {
             var exitingTasks = docs.Select(doc => _cmsService.GetByPath2(doc.DocumentListName, doc.Name)).ToList();
             await Task.WhenAll(exitingTasks);
             var exiting = exitingTasks.Select(x => x.Result).Where(x => x.ResponseMessage.IsSuccessStatusCode).Select(x=>x.ReadAsSync()).ToList();
-            var updates = new List<AVM.Document>();
+            var updates = new List<DC.Document>();
             exiting.ForEach(ed =>
                 {
                     var idx = docs.FindIndex(x => string.Equals(x.DocumentListName, ed.DocumentListName, StringComparison.OrdinalIgnoreCase) && string.Equals(x.Name, ed.Name, StringComparison.OrdinalIgnoreCase));
                     if (idx > -1)
                     {
                         updates.Add(docs[idx]);
-                        docs[idx].DocumentId = ed.Id;
+                        docs[idx].Id = ed.Id;
                         docs.RemoveAt(idx);
                     }
 
@@ -101,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
        
         [HttpPostRoute(UriTemplate = "update")]
-        public async Task<Response<List<AVM.Document>>> Update(List<AVM.Document> docs )
+        public async Task<Response<List<DC.Document>>> Update(List<DC.Document> docs)
         {
             var tasks = docs.Select(doc => _cmsService.Update2(doc)).ToList();
             await Task.WhenAll(tasks);
@@ -125,14 +130,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var source = message.source;
             message.zones = message.zones ?? new List<AVM.ZoneRuntimeData>();
 
-            var docResult= (await _cmsService.GetByPath2(contentCollection: source.Collection, name: source.Path));
+            var docResult= (await _cmsService.GetByPath2(contentCollection: source.DocumentListName, name: source.Path));
             DC.Document doc;
             bool exitst = false;
             if (docResult.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
                 doc = new DC.Document()
                       {
-                          DocumentListName = source.Collection,
+                          DocumentListName = source.DocumentListName,
                           Name = source.Path,
                           DocumentType = source.DocumentType
                       };
@@ -176,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-            doc.Properties = new List<DC.PropertyValue>();
+            doc.Properties = new JObject();
             doc.Set("widgets", zoneSerilized);
 
             if (exitst)
@@ -192,68 +197,58 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<AVM.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams)
+        public async Task<Response<List<DC.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string id=null, string documentListName= CmsConstants.Documents.default_collection_name)
         {
             DC.DocumentCollection  results = null;
-            if (pagingParams.id == null)
+            if (id == null)
             {
-                results = (await _cmsService.GetList2(contentCollection: CmsConstants.Documents.default_collection_name, pageSize: int.MaxValue)).ReadAsSync();
+                results = (await _cmsService.GetList2(contentCollection: documentListName, pageSize: int.MaxValue)).ReadAsSync();
             }
             else
             {
-                var idx= pagingParams.id.LastIndexOf( '_');
-                var col =  pagingParams.id.Substring ( 0,idx);
-                var id = pagingParams.id.Substring (idx+1);
+                
+
+
                 results = new DC.DocumentCollection()
                 {
                     Items = new List<DC.Document>()
                     {
-                        (await _cmsService.Get2(col, id)).ReadAsSync()
+                        (await _documentListWebApiClien.GetDocument(documentListName: documentListName, documentId: id)).ReadAsSync()
                     },
-                    TotalCount =1,
-                    PageSize =12,
-                    StartIndex =0
+                    TotalCount = 1,
+                    PageSize = 12,
+                    StartIndex = 0
                 };
-                
-            }
-            var docs = results.Items.Select(document => ConvertDocument(document )).ToList();
 
-            return List2(docs);
+            }
+            
+
+            return List2(results.Items,results.TotalCount );
         }
 
-        private static AVM.Document ConvertDocument(Mozu.Content.Contracts.Document result)
+        private static DC.Document ConvertDocument(Mozu.Content.Contracts.Document result)
         {
-            var doc = new AVM.Document();
-            doc.DocumentId = result.Id;
+            return result;
+            //var doc = new DC.Document();
+            //doc.Id = result.Id;
 
-            doc.DocumentType = result.DocumentType;
-            doc.PublishState = result.PublishState;
-            
+            //doc.DocumentType = result.DocumentType;
+            //doc.PublishState = result.PublishState;
+
+            //doc.Properties = result.Properties;
                         
-            doc.Items = new List<AVM.DocumentProperty>();
-            doc.DocumentListName = result.DocumentListName  ;
-            doc.Name = result.Name;
-            doc.Id = doc.DocumentListName + "_" + doc.DocumentId;
-            foreach (var prop in result.Properties)
-            {
-                doc.Items.Add(new AVM.DocumentProperty
-                {
-                    Key = prop.PropertyType,
-                    Value = prop.Value
-                   
-                });
-            }
+         
+            //doc.DocumentListName = result.DocumentListName  ;
+            //doc.Name = result.Name;
+            //doc.Id = doc.DocumentListName + "_" + doc.Id;
+           
+            //if (doc.Properties != null)
+            //{
+            //    doc.Properties.CastAs<JObject>().Remove("widgets");
+            //}
 
-            if (doc.Items != null)
-            {
-
-                var w = doc.Items.FirstOrDefault(i => string.Equals(i.Key, "widgets", StringComparison.OrdinalIgnoreCase));
-                if (w != null)
-                {
-                    doc.Items.Remove(w);
-                }
-            }
-            return doc;
+          
+            //return doc;
         }
     }
 }

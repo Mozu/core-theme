@@ -2,11 +2,13 @@
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
+using Magnum.Extensions;
 using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
@@ -83,7 +85,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                           Name = NAVIGATION_FILE_NAME,
                           DocumentType = "document",
                           DocumentListName = NAVIGATION_CONTENT_COLLECTION,
-                          Properties = new List<DC.PropertyValue>()
+                          Properties = new JObject()
                       };
 
             UpdateNavigationDocument(doc, set);

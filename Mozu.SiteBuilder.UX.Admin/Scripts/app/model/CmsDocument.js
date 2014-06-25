@@ -7,17 +7,72 @@
 Ext.define('Taco.model.CmsDocument', {
     extend: 'Taco.core.data.Model',
 
-    constructor: function (data, id, raw, convertedData) {
-        if (data && !data.id && data.documentId) {
-            data.id = data.collectionName + '_' + data.documentId;
-        }
+    inheritableStatics: {
+        load: function (lookupInfo, config) {
+          
+            if (Ext.isString(lookupInfo)) {
+                Ext.log({ level: 'error' }, 'need lookupInfo object not id');
+            }
+            config = Ext.apply({}, config);
+            config = Ext.applyIf(config, {
+                action: 'read',
+                id: lookupInfo.id,
+                documentListName: lookupInfo.documentListName
 
+            });
+
+            config.params = config.params || {};
+            Ext.apply(config.params, lookupInfo);
+
+
+            var operation = new Ext.data.Operation(config),
+                scope = config.scope || this,
+                callback;
+
+            callback = function (operation) {
+                var record = null,
+                    success = operation.wasSuccessful();
+
+                if (success) {
+                    record = operation.getRecords()[0];
+                    // If the server didn't set the id, do it here
+                    if (!record.hasId()) {
+                        record.setId(id);
+                    }
+                    Ext.callback(config.success, scope, [record, operation]);
+                } else {
+                    Ext.callback(config.failure, scope, [record, operation]);
+                }
+                Ext.callback(config.callback, scope, [record, operation, success]);
+            };
+
+            this.getProxy().read(operation, callback, this);
+        },
+    },
+    constructor: function (data, id, raw, convertedData) {
+        if (raw) {
+            raw.uniqueId = raw.documentListName + "/" + raw.id;
+        }
+        if (data) {
+            data.uniqueId = data.documentListName + "/" + data.id;
+        }
+        
         this.callParent(arguments);
     },
 
-    dictField: 'items',
 
+    
     fields: [
+        {
+            "name": "uniqueId",
+            "type": "string",
+            convert:function (v, r) {
+                if (r.raw) {
+                    return r.raw.documentListName + "/" + r.raw.id;
+                }
+                return v;
+            }
+        },
         {
             "name": "id",
             "type": "string",
@@ -33,85 +88,26 @@ Ext.define('Taco.model.CmsDocument', {
             "type": "string",
             "useNull": true
         },
+     
         {
-            "name": "documentId",
-            "type": "string",
-            "useNull": true,
-            defaultValue:null
-        },
-        {
-            "name": "collectionName",
+            "name": "documentListName",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "items",
-            "type": "auto",
-            defaultValue:[],
-            "useNull": true,
-            serialize: function (value, record) {
-                var cleanValue= null,
-                    newItems = {};
-                if (value) {
-                    cleanValue = Ext.Array.clone(value);
-                    Ext.each(value, function (item, index, items) {
-                        var dotIndex = item.key.indexOf("."),
-                            parentKey,
-                            subKey,
-                            newItem;
-                        if (item.key.indexOf("extended_") == 0 && dotIndex > 0) {
-                            parentKey = item.key.substring(0, dotIndex);
-                            subKey = item.key.substring(dotIndex + 1);
-                            newItem = newItems[parentKey];
-                            if (!newItem) {
-                                newItem = {};
-                                newItems[parentKey] = newItem;
-                            }
-                            newItem[subKey] = item.value;
-                            Ext.Array.remove(cleanValue, item);
-                        }
-                    });
-                    Ext.Object.each(newItems, function (key, val) {
-                        cleanValue.push({ key: key, value: Ext.encode(val) });
-                    });
-                   
-                }
-                return cleanValue;
+            name: 'properties',
+            type: 'auto',
+            useNull: true,
+            defaultValue: {}
 
-            },
-            convert: function (value, record) {
-                var cleanValue = null;
-                
-                if (value) {
-                    cleanValue = Ext.Array.clone(value);
-                    Ext.each(value, function (item, index, items) {
-                        var json = item.value;
-                        if (item.key.indexOf("extended_") == 0 && item.key.indexOf(".")==-1) {
-                            if (Ext.isString(item.value)) {
-                                json = Ext.decode(item.value, true);
-                            }
-                            if (json) {
-                                Ext.Object.each(json, function (key, val) {
-                                    cleanValue.push({ key: item.key +"."+ key, value: val });
-                                });
-                                
-                                Ext.Array.remove(cleanValue, item);
-                            }
-                            
-                            
-                        }
-                    });
-                }
-                return cleanValue;
-
-            }
-        }, {
+        },
+        {
             name: 'publishState'
         }
-        
     ],
+    idProperty:'uniqueId',
     set: function (k, v) {
-        
+
         if (Ext.isObject(k)) {
             Ext.Object.each(k, function (kkey, kvalue) {
                 this.set(kkey, kvalue);
@@ -120,40 +116,34 @@ Ext.define('Taco.model.CmsDocument', {
         if (k in this.self.realFields || !k || typeof k !== "string") {
             return this.callParent(arguments);
         }
-        return this.setItem.apply(this, arguments);
+        return this.setPropertyValue.apply(this, arguments);
     },
     get: function (k) {
         if (k in this.self.realFields || !k || typeof k !== "string") {
             return this.callParent(arguments);
         }
-        return this.getItem.apply(this, arguments);
+        return this.getPropertyValue.apply(this, arguments);
     },
-    getItem: function (itemName, decode) {
-        var items = this.get('items'),
-           kvp;
+    getPropertyValue: function (name, decode) {
+        var properties = this.get('properties'),
+            val;
 
-        if (!items) {
+        if (!properties) {
             return null;
         }
-        Ext.Array.forEach(items, function (item) {
-            if (item.key === itemName) {
-                kvp = item;
-                //item.value = itemValue;
-                return false;
-            }
-        });
-        return kvp ? (decode ? Ext.decode(kvp.value) : kvp.value) : null;
+
+        val = properties[name];
+        if (val && decode) {
+            return Ext.decode(val, true) || val;
+        }
+        return val;
     },
-    setItem: function (itemName, itemValue, encode) {
-        var items = (this.get('items') || []).concat([]);       
-       
-        
-        Ext.Array.remove(items, Ext.Array.findBy(items, function (item) { return item.key === itemName; }));
+    setPropertyValue: function (name, value) {
+        var properties = Ext.apply({}, this.get('properties'));
 
-        items.push({ key: itemName, value: (encode ? Ext.encode(itemValue) : itemValue) });
-        
+        properties[name] = value;
 
-        this.set("items", items );
+        this.set("properties", properties);
 
     },
 
@@ -178,7 +168,7 @@ Ext.define('Taco.model.CmsDocument', {
         }
     }
 
-}, function() {
+}, function () {
 
     // cache of fields
     var realFields = this.realFields = {};

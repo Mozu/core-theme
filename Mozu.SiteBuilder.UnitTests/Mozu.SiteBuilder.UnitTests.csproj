@@ -203,8 +203,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.9.0-dev001\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Content.Contracts">
-      <HintPath>..\packages\Mozu.Content.Contracts.1.7.0.2\lib\Mozu.Content.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Content.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Content.Contracts.1.9.0-dev003\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core">
       <HintPath>..\packages\Mozu.Core.1.7.0.8\lib\net45\Mozu.Core.dll</HintPath>
@@ -212,12 +213,13 @@
     <Reference Include="Mozu.Core.Api">
       <HintPath>..\packages\Mozu.Core.Api.1.7.0.16\lib\net45\Mozu.Core.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Client, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Api.Client, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Client.1.7.0.10\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Client.1.8.0.1\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Contracts">
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.7.0.3\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Core.Api.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.8.0.2\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching">
       <HintPath>..\packages\Mozu.Core.Caching.1.7.0.4\lib\net45\Mozu.Core.Caching.dll</HintPath>
@@ -253,7 +255,7 @@
     </Reference>
     <Reference Include="Mozu.MZDB.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev002\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev004\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts">
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.7.0.3\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
@@ -307,8 +309,8 @@
       <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.10\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NSubstitute">
       <HintPath>..\packages\NSubstitute.1.7.1.0\lib\NET40\NSubstitute.dll</HintPath>

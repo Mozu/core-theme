@@ -1,6 +1,6 @@
 ﻿<b>bing</b>
 
-{% for person in model.items|collection_filter:"Item['balance'] gt 20" %}
+{% for person in model.items %}
 	<div>
 		{{person.name}} <br/>
 		<img src="{{person.picture}}" width=200 />
@@ -11,3 +11,6 @@
 	</ul>
 	</div>
 {% endfor %}
+
+
+

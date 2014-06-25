@@ -383,7 +383,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                     Debug.WriteLine(
                         String.Format("[doc {0}] Renaming document. Old Name: {1}. New Name: {2}.",
-                                      page.Id, page.Get("link_title") ?? page.Name, change.Name
+                                      page.Id, page.Get<string>("link_title") ?? page.Name, change.Name
                             ));
 
                     page.Set("link_title", change.Name);

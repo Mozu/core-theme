@@ -48,11 +48,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 return;
             }
             var sb = new StringBuilder();
-            var cnt = cmsContext.SiteTemplate.Document.Get(extended_header_content);
+            var cnt = cmsContext.SiteTemplate.Document.Get<string>(extended_header_content);
             sb.Append(cnt);
-            cnt = cmsContext.Template.Document.Get(extended_header_content);
+            cnt = cmsContext.Template.Document.Get<string>(extended_header_content);
             sb.Append(cnt);
-            cnt = cmsContext.Page.Document.Get(extended_header_content);
+            cnt = cmsContext.Page.Document.Get<string>(extended_header_content);
             sb.Append(cnt);
 
             buffer = sb.ToString();

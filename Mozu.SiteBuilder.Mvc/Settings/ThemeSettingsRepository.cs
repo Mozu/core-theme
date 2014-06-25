@@ -108,30 +108,16 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     else
                     {
                         var doc = new Document
-                        {
-                            Name = this.GetFileName(themeId),
-                            DocumentType = "theme_settings",
-                            DocumentListName = "settings",
-                            Properties = new List<PropertyValue>
-                            {
-                                new PropertyValue
-                                    {
-                                        PropertyType = "theme",
-                                        Value = themeId
-                                    },
-                                new PropertyValue
-                                    {
-                                        PropertyType = "tags",
-                                        Value = new object[] {"something"}
-                                    },
-                                new PropertyValue
-                                    {
-                                        PropertyType = "data",
-                                        Value = values.ToString(Formatting.None)
-                                    }
-                            }
-                        };
-
+                                  {
+                                      Name = this.GetFileName(themeId),
+                                      DocumentType = "theme_settings",
+                                      DocumentListName = "settings",
+                                      Properties = new JObject(
+                                          new JProperty("theme", themeId),
+                                          new JProperty("tags", new JArray(new object[] {"something"})),
+                                          new JProperty("data", values)
+                                          )
+                                  };
                         return _cmsService.RawCreate2(doc);
                     }
                 })

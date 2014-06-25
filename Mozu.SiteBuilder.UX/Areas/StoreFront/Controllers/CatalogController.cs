@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                              Page = new DocumentRequest
                                                         {
                                                             Path = "product-" + productCode,
-                                                            Collection = "catalog_pages",
+                                                            DocumentListName = "catalog_pages",
                                                             DocumentType = "catalog_page"
                                                         }
                                          };
@@ -253,7 +253,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                              Page = new DocumentRequest
                                                         {
                                                             Path = "category-" + categoryId,
-                                                            Collection = "catalog_pages",
+                                                            DocumentListName = "catalog_pages",
                                                             DocumentType = "catalog_page"
                                                         }
                                          };

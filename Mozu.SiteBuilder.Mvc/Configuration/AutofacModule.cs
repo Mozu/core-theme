@@ -39,11 +39,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
              
             builder.RegisterType<MozuVirtualPathProvider>().InstancePerRequest();
             //   builder.RegisterType<WidgetProvider>().As<IWidgetProvider>();
-            builder.RegisterType<Document>();
-            // builder.RegisterType<WidgetInstanceData >();
-            builder.RegisterType<CmsProperty>();
-            builder.RegisterType<Blog>();
-            builder.RegisterType<Post>();
+            //builder.RegisterType<Document>();
+            //// builder.RegisterType<WidgetInstanceData >();
+            //builder.RegisterType<CmsProperty>();
+            //builder.RegisterType<Blog>();
+            //builder.RegisterType<Post>();
 
 
             builder.RegisterType<Mozu.SiteBuilder.Mvc.Contexts.ClientApiContext>().InstancePerRequest();

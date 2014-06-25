@@ -97,13 +97,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                ;
 
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
-            Mapper.CreateMap<Mozu.SiteBuilder.Mvc.Models.CMS.Document, SimpleRuntimeNavigationNode>()
-               .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.Collection, x.Id)))
+            Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleRuntimeNavigationNode>()
+               .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.DocumentListName, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
-               .ForMember(d => d.OriginalCollection, opt => opt.ResolveUsing(x => x.Collection))
+               .ForMember(d => d.OriginalCollection, opt => opt.ResolveUsing(x => x.DocumentListName))
                .ForMember(d => d.ParentId, opt => opt.UseValue(null))
                .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.Name))
-               .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.Collection, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.Collection + "/" + x.Name))
+               .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.DocumentListName + "/" + x.Name))
                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
                .ForMember(d => d.Index, opt => opt.UseValue(null))
              //  .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentType == "blog"))

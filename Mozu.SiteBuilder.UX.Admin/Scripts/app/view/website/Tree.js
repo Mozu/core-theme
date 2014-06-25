@@ -288,9 +288,9 @@ Ext.define('Taco.view.website.Tree', {
     },
     deletePage: function (record) {
         var cmsDoc = Ext.create('Taco.model.CmsDocument', {
-            id: record.get('originalCollection') + '_' + record.get('originalId'),
-            documentId: record.get('originalId'),
-            collectionName: record.get('originalCollection')            
+            //uniqueId: record.get('originalDocumentListName') + '_' + record.get('originalId'),
+            id: record.get('originalId'),
+            documentListName: record.get('originalDocumentListName')
         });
         cmsDoc.destroy({
             success: function () {
@@ -443,7 +443,7 @@ Ext.define('Taco.view.website.Tree', {
 
                         cmsDoc = Ext.create('Taco.model.CmsDocument', {
                             documentType: values.docInfo.documentType,
-                            collectionName: values.docInfo.collectionName,
+                            documentListName: values.docInfo.documentListName,
                             name: values.name,
                             items: [{
                                     key: "title",
@@ -465,10 +465,10 @@ Ext.define('Taco.view.website.Tree', {
                             success: function (cmsRecord) {
                                 
                                 var navRecord = Ext.create('Taco.model.NavigationTreeNode', {
-                                    id: 'page^^' + cmsRecord.get('collectionName') + '^^' + cmsRecord.get('documentId'),
+                                    id: 'page^^' + cmsRecord.get('documentListName') + '^^' + cmsRecord.get('id'),
                                     editAction: 'move',
                                     nodeType: 'page',
-                                    originalCollection: cmsRecord.get('collectionName'),
+                                    originalDocumentListName: cmsRecord.get('documentListName'),
                                     url: '/' + cmsRecord.get('name'),
                                     name: values.title                                    
                                 });

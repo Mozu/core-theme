@@ -43,8 +43,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
         [DataMember(Name = "originalId", EmitDefaultValue = false)]
         public string OriginalId { get; set; }
 
-        [DataMember(Name = "originalCollection", EmitDefaultValue = false)]
-        public string OriginalCollection { get; set; }
+   
+
+        [Obsolete]
+        [DataMember(Name = "originalCollection")]
+        public string OriginalCollection
+        {
+            get { return this.OriginalDocumentListName; }
+            set { this.OriginalDocumentListName = value; }
+        }
+
+
+
+        [DataMember(Name = "originalDocumentListName", EmitDefaultValue = false)]
+        public string OriginalDocumentListName { get; set; }
+
+
+
+
 
         [DataMember(Name = "parentId")]
         public string ParentId { get; set; }

@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 pc.CmsContext.SiteTemplate  = new DocumentRequest()
                                          {
                                              Path = "site/" + pageType.Template,
-                                             Collection = "templates",
+                                             DocumentListName = "templates",
                                              DocumentType = "page_template"
                                          };
                 view.View = _hyprViewEngine.FindView(pageType.Template, new string[] { "templates\\{0}" });
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 pc.CmsContext.Template = new DocumentRequest()
                                          {
                                              Path = pageType.Template,
-                                             Collection = "templates",
+                                             DocumentListName = "templates",
                                              DocumentType = "page_template"
                                          };
             }

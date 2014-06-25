@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 {
     public interface ICmsServiceWrapper
     {
-        Task<ServiceClientResponse<DC.Document>> Create2(AVM.Document doc);
+        Task<ServiceClientResponse<DC.Document>> Create2(DC.Document doc);
 
         Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc);
 
@@ -32,9 +32,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         [Obsolete]
         Task<ServiceClientResponse<List<DC.Facet>>> GetFacets(string contentCollection,  string propertyName);
 
-        Task<ServiceClientResponse<DC.Document>> Update2(AVM.Document document);
         Task<ServiceClientResponse<DC.Document>> Update2(DC.Document document);
-
+   
         IDocumentListWebApiClient DocumentListWebApiClient { get; set; }
     }
 

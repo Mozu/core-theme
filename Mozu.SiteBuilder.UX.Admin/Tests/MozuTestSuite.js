@@ -95,7 +95,7 @@ Harness.start(
                 text: "Taco.app.viewPort.removeAll(true);"
             }
         ],
-        items: [
+        items: [+
             {
                 group: 'Forms',
                 expanded: true,
