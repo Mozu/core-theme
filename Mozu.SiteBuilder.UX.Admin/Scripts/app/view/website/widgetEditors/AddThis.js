@@ -14,8 +14,6 @@ Ext.define('Taco.view.website.widgetEditors.AddThis', {
                 defaultType: 'radiofield',
                 defaults: {
                     flex: 1
-                    //,
-                //    labelWidth:150
                 },
                 layout: 'vbox',
                 items: [

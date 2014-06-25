@@ -22,7 +22,7 @@ Ext.define('Taco.view.fileManager.AdvancedSearchForm', {
         {
             xtype: 'taco-adminuserfield',
             name: 'createdBy',
-            fieldLabel: 'Created By',
+            fieldLabel: 'Created By'
         },
         {
             xtype: 'fieldcontainer',

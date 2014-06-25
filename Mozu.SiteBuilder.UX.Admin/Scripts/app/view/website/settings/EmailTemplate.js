@@ -26,8 +26,8 @@ Ext.define('Taco.view.website.settings.EmailTemplate', {
             name: 'html_2',
             fieldLabel: 'Html block 2',
             xtype: 'htmleditor',
-        width: '95%',
-        enableFont: false,
+            width: '95%',
+            enableFont: false
         }, {
             xtype: 'htmleditor',
             width: '95%',

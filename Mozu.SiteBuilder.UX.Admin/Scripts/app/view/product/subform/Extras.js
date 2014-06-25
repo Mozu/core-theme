@@ -271,8 +271,7 @@ Ext.define('Taco.view.product.subform.Extras', {
             editorCfg, {
                 xtype: 'container',
                 cls: 'extra-required',
-                items: [checkbox, isMultiSelect],
-                
+                items: [checkbox, isMultiSelect]
             }
         ];
         

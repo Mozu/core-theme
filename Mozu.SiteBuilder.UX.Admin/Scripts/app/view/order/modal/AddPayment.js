@@ -188,7 +188,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
                     '<tpl if="email">',
                         '<div>{email}</div>',
-                    '</tpl>',
+                    '</tpl>'
                 ],
                 data : this.record.data.billingContact
             }, {

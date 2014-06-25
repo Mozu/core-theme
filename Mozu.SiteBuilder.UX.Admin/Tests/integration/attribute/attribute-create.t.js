@@ -53,19 +53,6 @@
             });
 
         }
-        // ,
-       // function (next, res) {
-
-       //     var inputType = m.editor.form.findField('inputType');
-            
-       //    t.clickSelect(inputType, 'TextBox', next);
-       //}
-       //,
-        
-        //function (next) {
-        //    var record = editor.record;
-        //    t.is(record.get('productName'), 'banannas');
-        //}
     );
 
 

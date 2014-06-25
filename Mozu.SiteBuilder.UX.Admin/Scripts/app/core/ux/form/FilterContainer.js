@@ -511,18 +511,5 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         this.doFilter(syncedValues['json']);
 
         return syncedValues;
-    },
-
-    //onDestroy: function () {
-    //    if (this.store && this.store.getProxy()) {
-    //        var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
-    //        if (params.advancedSearch) {
-    //            this.store.needsRefresh = true;
-    //            delete params.advancedSearch;
-    //        }
-           
-    //    }
-
-    //    this.callParent(arguments);
-    //},
+    }
 });

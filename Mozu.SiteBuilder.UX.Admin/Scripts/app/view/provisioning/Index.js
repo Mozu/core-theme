@@ -27,8 +27,8 @@ Ext.define('Taco.view.provisioning.Index', {
                     type: 'json',
                     root: 'items',
                     successProperty: 'success'
-                },
-            },
+                }
+            }
         });
 
 
@@ -42,8 +42,8 @@ Ext.define('Taco.view.provisioning.Index', {
                     type: 'json',
                     root: 'items',
                     successProperty: 'success'
-                },
-            },
+                }
+            }
         });
 
 
@@ -152,16 +152,6 @@ Ext.define('Taco.view.provisioning.Index', {
                             xtype: 'taco.menucolumn',
                             text: 'Actions',
                             menuItems: [
-                                //{
-                                         //    itemId: 'addnew',
-                                         //    text: 'Add New',
-                                         //    hideOnClick: false,
-                                         //    menuColumnHandler: function (item, eventData) {
-
-
-                                         //        alert('add new');
-                                         //    }
-                                         //},
                                 {
                                     itemId: 'rename',
                                     text: 'Rename',
@@ -181,7 +171,7 @@ Ext.define('Taco.view.provisioning.Index', {
                                 }
                             ]
                         }
-                    ],                    
+                    ]
                 }]
         };
         me.callParent(arguments);

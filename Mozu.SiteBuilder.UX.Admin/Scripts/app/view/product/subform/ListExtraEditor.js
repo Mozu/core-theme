@@ -137,8 +137,6 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     {
                         dataIndex: 'value',
                         text: 'Code'
-//flex: 1,
-
                     },
                     {
                         dataIndex: 'productName',
@@ -149,7 +147,6 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     {
                         dataIndex: 'price',
                         text: 'Mast Catalog Price',
-                        //  flex: 1,
                         renderer: function (v) {
                             return v ? Ext.util.Format.usMoney(v) : undefined;
                         }

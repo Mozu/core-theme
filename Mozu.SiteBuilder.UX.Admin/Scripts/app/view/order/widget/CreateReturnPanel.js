@@ -127,7 +127,7 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
             listeners: {
                 change: me.onCreateStateChange,
                 scope: me
-            },
+            }
         });
 
         me.createButton = Ext.create('Taco.core.ux.action.DirtyButton', {

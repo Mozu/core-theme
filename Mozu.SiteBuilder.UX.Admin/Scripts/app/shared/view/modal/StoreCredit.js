@@ -125,7 +125,7 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
                             allowBlank: false
                         }*/
                     }
-                ],
+                ]
             },
             scope: this
         });

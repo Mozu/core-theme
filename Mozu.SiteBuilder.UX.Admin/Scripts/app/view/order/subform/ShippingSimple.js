@@ -128,16 +128,11 @@ Ext.define('Taco.view.order.subform.ShippingSimple', {
                             '<div class="city-state-zip">{cityOrTown}, {stateOrProvince} {postalOrZipCode}  {countryCode}</div>',
                             '<div class="country">{email}</div>',
                             '<div class="phone">{homePhone}</div>',
-                            //'<div class="actions"><a href="#">edit</a> | <a href="#">delete</a></div>',
                         '</tpl>',
                     '</div>',
                 '</tpl>',
 
-                //'<tpl if="values.length">',
-                    '<div><a href="#" style="float:left;padding:10px;clear:both" class="addLink">Add new address</a></div>'
-                //'<tpl else>',
-                //    '<div class="no-address addLink"><br>Click to add one.</div>',                    
-                //'</tpl>',
+                '<div><a href="#" style="float:left;padding:10px;clear:both" class="addLink">Add new address</a></div>'
 
             ],
             listeners: {

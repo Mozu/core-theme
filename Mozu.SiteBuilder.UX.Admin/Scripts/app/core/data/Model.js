@@ -12,7 +12,7 @@ Ext.define('Taco.core.data.Model', {
     statics: {
         nullIfEmpty: function (v) {
             return v || null;
-        },
+        }
     },
     init:function () {
         if (this.raw && this.logMissMappedFields) {
@@ -72,13 +72,26 @@ Ext.define('Taco.core.data.Model', {
                     if (records.length > 1) {
                         record = Ext.Array.findBy(records, function (item) { return item.getId() == id; });
                     }
-                    if (!record) {
+                    
+                    if (!record && ! (records.length && operation.request && operation.request.isSimulated )) {
+                        
                         record = operation.getRecords()[0];
                     }
                     
                     // If the server didn't set the id, do it here
-                    if (!record.hasId()) {
+                    if (record && !record.hasId()) {
                         record.setId(id);
+                    }
+
+                    if (!record && operation.request.isSimulated) {
+                        operation.setException({
+                            data: {
+                                errorCode: 'ITEM_NOT_FOUND',
+                                message: 'Item not found'
+                            },
+                            status: 404,
+                            statusText: 'Not Found'
+                        });
                     }
                     Ext.callback(config.success, scope, [record, operation]);
                 } else {

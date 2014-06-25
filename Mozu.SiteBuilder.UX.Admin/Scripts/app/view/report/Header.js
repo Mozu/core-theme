@@ -54,20 +54,11 @@ Ext.define('Taco.view.report.Header', {
     initComponent: function () {
         var me = this;
         me.cls += ' ' + Taco.baseCSSPrefix + 'order-detail-header';
-//        me.updateUI();
         this.callParent(arguments);
     },
 
     updateUI: function (data) {
         var me = this;
         this.update(data);
-//        Taco.model.CustomerAccount.load(me.record.get('customerId'), {
-//            success: function (record) {
-////                me.customerData = record.getData();
-////                var data = Ext.apply({}, me.customerData, me.record.getData());
-//                this.update(data);
-//            },
-//            scope: me
-//        });
     }
 });

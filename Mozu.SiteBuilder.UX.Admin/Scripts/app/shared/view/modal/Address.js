@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.shared.view.modal.Address', {
     extend: 'Taco.core.ux.window.Modal',
+    alias: 'widget.taco-address-modal',
     requires: [
         'Taco.model.Contact',
         'Taco.shared.view.form.Address',

@@ -24,8 +24,7 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
                     {
                         xtype: 'textfield',
                         name: 'name',
-                       fieldLabel: 'Site Name',
-                     
+                       fieldLabel: 'Site Name'
                     },
                 {
                     xtype: 'radiogroup',
@@ -53,21 +52,21 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
                         name: 'localeCode',
                         store: ['en-US'],
                         value: 'en-US',
-                        fieldLabel: 'Locale Code',
+                        fieldLabel: 'Locale Code'
                     },
                     {
                         xtype: 'combobox',
                         name: 'CountryCode',
                         store: ['US'],
                         value: 'US',
-                        fieldLabel: 'Country Code',
+                        fieldLabel: 'Country Code'
                     },
                     {
                         xtype: 'combobox',
                         name: 'CurrencyCode',
                         store: ['USD'],
                         value: 'USD',
-                        fieldLabel: 'Currency Code',
+                        fieldLabel: 'Currency Code'
                     }
                 
                 ]
@@ -75,30 +74,6 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
         this.items = [this.form];
         me.callParent(arguments);
     },
-    
-    /*  public int TenantId { get; set; }
-
-    public int? MasterCatalogId { get; set; }
-
-    public int? CatalogId { get; set; }
-
-    public CreateCatalogRequest CatalogRequest { get; set; }
-
-    public int SiteId { get; set; }
-
-    public string Name { get; set; }
-
-    public string LocaleCode { get; set; }
-
-    public string CountryCode { get; set; }
-
-    public string CurrencyCode { get; set; }
-
-    public List<CreateCustomDomainRequest> Domains { get; set; }
-
-    public bool IsMozuStorefront { get; set; }*/
-
-
 
     doSave: function () {
         var me = this,

@@ -1397,10 +1397,26 @@
             return store;
         },
 
-        isField: function(cmp, field, expected, desc) {
-            var el = cmp.getEl().down('[data-field="' + field + '"]');
+        getHandleEl: function(cmp, fieldName) {
+          return cmp.getEl().down('[data-handle="' + fieldName + '"]');
+        },
+
+        isHandleHtml: function(cmp, field, expected, desc) {
+            var el = this.getHandleEl(cmp, field);
 
             this.is(el.getHTML(), expected, desc);
+        },
+
+        isHandlePresent: function(cmp, fieldName, desc) {
+           var el = this.getHandleEl(cmp, fieldName);
+
+           this.is(!!el, true, desc);
+        },
+
+        isHandleNotPresent: function(cmp, fieldName, desc) {
+            var el = this.getHandleEl(cmp, fieldName);
+
+           this.is(!!el, false, desc);
         },
 
         isElementPresent: function(cmp, selector, desc) {

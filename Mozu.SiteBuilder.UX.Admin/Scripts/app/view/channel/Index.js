@@ -17,11 +17,7 @@ Ext.define('Taco.view.channel.Index', {
     enableRowEditing: true,
     
     // default data to use when createing new entity
-    defaultRowEditingData: {
-        //name: "name here",
-        //code: "code here",
-        //region:"region here"
-    },
+    defaultRowEditingData: {},
 
     //editorName: 'Taco.view.locationType.Edit',
     

@@ -23,8 +23,7 @@ Ext.define('Taco.view.website.Tree', {
     viewConfig: {
         stripeRows: true,
         plugins: {
-            ptype: 'treeviewdragdrop',
-
+            ptype: 'treeviewdragdrop'
         }
     },
 
@@ -358,25 +357,6 @@ Ext.define('Taco.view.website.Tree', {
                 }
             }
         });
-        //var request = {
-        //    url: '/admin/app/emailTesting/Send',
-        //    method: "POST",
-        //    jsonData: {
-        //        email: Taco.user.email,
-        //        id: record.get('originalId')
-        //    },
-        //    success: function (response, opts) {
-        //        Taco.app.fireEvent('setmessage', 'email sent', 'info');
-        //    },
-        //    failure: function (response, opts) {
-        //        var respObj = Ext.decode(response.responseText, true),
-        //            errorMsg = respObj && respObj.message ? respObj.message : 'Failure Sending Email';
-
-        //        Taco.app.fireEvent('setmessage', errorMsg, 'error');
-        //    }
-        //};
-
-        //Ext.Ajax.request(request);
     },
     showPageCreator: function (parentRecord) {
         var me = this,
@@ -386,7 +366,6 @@ Ext.define('Taco.view.website.Tree', {
         pageTypeDefinitionStore.filter([{ property: "userCreatable", value: true }]);
 
         // hack to get around filtered store not working... todo spend 5 mins and figure it out
-        // storeCopy = Ext.create('Taco.store.PageTypeDefinitions', { data: data });
         
         dialog = Ext.create('Taco.core.ux.window.Modal', {            
             scale: 'medium',

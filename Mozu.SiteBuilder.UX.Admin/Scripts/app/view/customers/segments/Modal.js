@@ -48,7 +48,7 @@ Ext.define('Taco.view.customers.segments.Modal', {
             dataIndex: 'name',
             text: 'Name',
             minWidth: 120,
-            resizable: false,
+            resizable: false
         }, {
             dataIndex: 'description',
             text: 'Description',

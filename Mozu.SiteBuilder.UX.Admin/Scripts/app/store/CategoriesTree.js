@@ -16,11 +16,7 @@ Ext.define('Taco.store.CategoriesTree', {
         isLoaded:false,
         id:-1
     },
-    storeManagerConfig: {
-        //clearFilters: true,
-        //clearSort: true,
-        //autoLoad: true
-    },
+    storeManagerConfig: {},
     load: function (options) {
         var me = this;
 

@@ -322,7 +322,7 @@ Ext.define('Taco.Application', {
                 if (me.fireEvent('beforechange', me, current) !== false) {
                     me.store.loadPage(current, { refresh: true });
                 }
-            },
+            }
         });
 
         Ext.override(Ext.data.StoreManager, {

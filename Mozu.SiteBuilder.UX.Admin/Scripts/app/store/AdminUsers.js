@@ -11,7 +11,7 @@ Ext.define('Taco.store.AdminUsers', {
             this.callParent([config]);
         },
         storeManagerConfig: {
-            createOnly: true,
+            createOnly: true
            
         }
     });

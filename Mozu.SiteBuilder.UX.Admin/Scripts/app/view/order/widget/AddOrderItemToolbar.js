@@ -261,7 +261,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             this.rowTotalField,
             {
                 xtype: "component",
-                width: this.gridColumns[6].width,
+                width: this.gridColumns[6].width
             }
         ]
 
@@ -419,7 +419,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             quantity: this.quantityField.getValue(),
             fulfillmentMethod: fulfillmentMethod,
             fulfillmentLocationCode: locationCode,
-            fulfillmentId: fulfillmentMethod + "(" + locationCode + ")",
+            fulfillmentId: fulfillmentMethod + "(" + locationCode + ")"
         })
 
         

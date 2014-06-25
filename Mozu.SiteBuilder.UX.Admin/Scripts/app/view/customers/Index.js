@@ -106,23 +106,6 @@ Ext.define('Taco.view.customers.Index', {
                         return '';
 
                     },
-                    //    renderer: function(value, metaData, record) {
-                    //    if (value && value.length) {
-                    //        var names = [];
-
-                    //        Ext.each(value || [], function(tagId) {
-                    //            var tagRecord = me.tagStore.getById(tagId);
-
-                    //            if (tagRecord) {
-                    //                names.push(tagRecord.get('Value'));
-                    //            }
-                    //        });
-
-                    //        if (names.length) {
-                    //            return names.join(', ');
-                    //        }
-                    //    }
-                    //},
                     minWidth: 100,
                     flex: 1
                 }, {
@@ -158,12 +141,5 @@ Ext.define('Taco.view.customers.Index', {
     
     allowCreate: function() {
         return false;
-    },
-
-    //launchEditor: function (record) {
-    //    Ext.defer(function () {
-    //        Taco.core.StateManager.attemptNavigate('customers/edit/' + record.getId(), { complexMetaData: { record: record } });
-    //    }, 1, this);
-    //    return;
-    //}
+    }
 });

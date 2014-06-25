@@ -15,7 +15,5 @@
             contextLevel: 'c',
             clearSort: false,
             autoLoad: true
-        },
-
-        
+        }        
     });

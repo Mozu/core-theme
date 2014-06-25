@@ -242,5 +242,5 @@ Ext.define('Taco.view.product.variant.Grid', {
             return innerTask.saveRecord == this.product;
         }, this)
         return tasks;
-    },
+    }
 });

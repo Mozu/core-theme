@@ -43,7 +43,7 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
                         },
                         scope:this,
                         value: this.itemType,
-                        fieldLabel: 'Catalog Type',
+                        fieldLabel: 'Catalog Type'
                     },
                      {
                          xtype: 'combobox',
@@ -70,21 +70,14 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
                         name: 'DefaultLocaleCode',
                         store: ['en-US'],
                         value: 'en-US',
-                        fieldLabel: 'Locale Code',
+                        fieldLabel: 'Locale Code'
                     },
-                    //{
-                    //    xtype: 'combobox',
-                    //    name: 'CountryCode',
-                    //    store: ['US'],
-                    //    value: 'US',
-                    //    fieldLabel: 'Country Code',
-                    //},
                     {
                         xtype: 'combobox',
                         name: 'DefaultCurrencyCode',
                         store: ['USD'],
                         value: 'USD',
-                        fieldLabel: 'Currency Code',
+                        fieldLabel: 'Currency Code'
                     }
                 
                 ]

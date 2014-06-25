@@ -4,5 +4,5 @@
 
 Ext.define('Taco.core.ux.form.field.Product', {
     extend: 'Taco.shared.view.field.Product',
-    alias: [ 'widget.taco-productfield-old'],
+    alias: [ 'widget.taco-productfield-old']
 });

@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         record: null,
         //dockTotalPanel: "inline", // possible values bottomm, right, inline
         rowTotalColumnWidth: 100,
-        hasDraft: true,
+        hasDraft: true
         
     },
 
@@ -154,9 +154,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             orderModel = Ext.ModelManager.getModel('Taco.model.Order');
         
          var mask = me.setLoading({
-             msg: "Loading",
-             // making the initial loading mask white to avoid the screen flash
-             //maskCls: "x-mask taco-white-mask"
+             msg: "Loading"
          }, me.body);
         
         orderModel.load(orderId, {

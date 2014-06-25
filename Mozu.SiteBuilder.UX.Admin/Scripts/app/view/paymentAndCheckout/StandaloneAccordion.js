@@ -10,7 +10,6 @@
 
 Ext.define('Taco.view.paymentAndCheckout.StandaloneAccordion', {
     extend: 'Ext.container.Container',
-    // extend: 'Taco.core.ux.content.Container',
     alias: 'widget.standalone-accordion',
     cls: 'taco-standalone-accordion',
     layout: 'vbox',
@@ -19,17 +18,6 @@ Ext.define('Taco.view.paymentAndCheckout.StandaloneAccordion', {
     accordionHeight: 300,
     accordionContents: null,
     opened: false,
-    // accordionContents: Ext.create('Ext.container.Container', {
-    //     height: 300,
-    //     width: '100%',
-    //     style: {
-    //         'background-color': '#333'
-    //     },
-    //     items: [{
-    //         xtype: 'component',
-    //         html: '<p>The quick brown fox jumped over the lazy red dog. All work and no play makes Jack a dull boy.  Lorem ipsum, ipso facto. The quick brown fox jumped over the lazy red dog. All work and no play makes Jack a dull boy.  Lorem ipsum, ipso facto. The quick brown fox jumped over the lazy red dog. All work and no play makes Jack a dull boy.  Lorem ipsum, ipso facto.</p>'
-    //     }]
-    // }),
 
     initComponent: function () {
         var me = this,
@@ -51,9 +39,7 @@ Ext.define('Taco.view.paymentAndCheckout.StandaloneAccordion', {
         me.callParent( arguments );
 
         if( me.opened ) {
-//            console.log('initComponent[ standalone-accordion ]', contents.getHeight() );
             contents.addCls('taco-standalone-accordion-contents').setHeight( me.accordionHeight );
-//            console.log('initComponent[ standalone-accordion ]', contents.getHeight() );
             me.addCls('opened');
         } else {
             contents.addCls('taco-standalone-accordion-contents').setHeight( 0 );
@@ -70,17 +56,11 @@ Ext.define('Taco.view.paymentAndCheckout.StandaloneAccordion', {
                })
             }
         );
-
-        // me.headerBar.getEl().on({
-        //     click: me.expandAccordion,
-        //     scope: me.accordionContents
-        // });
     },
 
     expandAccordion: function () {
         var me = this,
             accordionContents = me.accordionContents;
-        // console.log('expandAccordion', accordionContents.getHeight() );
         if( !accordionContents.getHeight() ) {
             me.addCls('opened');
             me.removeCls('closed');
