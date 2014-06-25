@@ -286,7 +286,8 @@
                 card: PaymentMethods.CreditCard,
                 check: PaymentMethods.Check
             },
-            helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply', 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments'],
+            helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits'], //'availableStoreCredits',
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
@@ -315,7 +316,7 @@
                     customer = order.get('customer'),
                     credits = customer && customer.get('credits'),
                     usedCredits = this.activeStoreCredits(),
-                    availableCredits = credits && _.compact(_.map(credits, function (credit) {
+                    availableCredits = credits && _.compact(_.map(credits.models, function (credit) {
                         if (!(credit.creditType === 'StoreCredit' || credit.creditType === 'GiftCard'))
                             return false;
                         credit = _.clone(credit);
@@ -348,7 +349,7 @@
                         this.set('creditAmountToApply', this.maxCreditAmountToApply());
                     }
                 }
-            },
+            },            
             closeApplyCredit: function () {
                 delete this._applyingCredit;
                 this.unset('selectedCredit');
@@ -378,51 +379,108 @@
                 });
             },
 
-            // todo: implement - Greg Murray on 2014-06-17 
+            //digital
+
+            loadCustomerDigitalCredits: function () {
+                var order = this.getOrder(),
+                    customer = order.get('customer');
+                if (customer) {
+                    var customerCredits = customer.get('credits');
+                    if (customerCredits) {
+                        var jsonCredits = customerCredits.toJSON();
+                        return _.filter(jsonCredits, function (cred) {
+                            var expDate = (cred.expirationDate) ? new Date(cred.expirationDate) : new Date(2099, 0, 1);
+                            return (cred.currentBalance > 0 && expDate > new Date());
+                        });
+                    }
+                }
+                return [];
+            },
+            availableDigitalCredits: function () {
+                if (! this._cachedDigitalCredits) {
+                    this._cachedDigitalCredits = this.loadCustomerDigitalCredits();
+                }
+                return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
+            },
+
+            applyDigitalCredit: function (creditCode, creditAmountToApply) {
+                var self = this,
+                    order = self.getOrder();
+                this._oldPaymentType = this.get('paymentType');
+                var digitalCredit = _.findWhere(this.availableDigitalCredits(), { code: creditCode });
+                //not found.
+                if (! digitalCredit) {
+                    me.trigger('error', {
+                        message: Hypr.getLabel('digitalCodeAlreadyUsed', creditCode)
+                    });
+                    var deferred = api.defer();
+                    deferred.reject();
+                    
+                    return deferred.promise;
+                }
+                var activeCreditPayments = this.activeStoreCredits();
+                if (activeCreditPayments) {
+                    //check if payment applied with this code, remove
+                    var sameCreditPayment = _.find(activeCreditPayments, function (cred) {
+                        return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode === creditCode;
+                    });
+
+                    if (sameCreditPayment) {
+                        if (this.areNumbersEqual(sameCreditPayment.amountRequested, creditAmountToApply)) {
+                            var deferredSameCredit = api.defer();
+                            deferredSameCredit.reject();
+                            return deferredSameCredit.promise;
+                        }
+                        order.apiVoidPayment(sameCreditPayment.id);
+                    }
+                }
+                if (creditAmountToApply <= 0) {
+                    delete digitalCredit.creditAmountApplied;
+                    digitalCredit.isEnabled = false;
+                    return this.getOrder();
+                }
+                digitalCredit.creditAmountApplied = creditAmountToApply;
+                digitalCredit.isEnabled = true;
+                return order.apiAddStoreCredit({
+                    storeCreditCode: creditCode,
+                    amount: creditAmountToApply
+                }).then(function (o) {
+                    order.set(o.data);
+                    return o;
+                });
+            },
+
+            areNumbersEqual: function(f1, f2) {
+                var epsilon = 0.01; 
+                return (Math.abs(f1 - f2)) < epsilon; 
+            },
+
             getDigitalCredit: function () {
                 var me = this,
                     order = me.getOrder(),
-                    customer = order.get('customer');
-
+                    customer = order.get('customer'),
+                    availCredits = this.availableDigitalCredits();
                 var creditCode = this.get('digitalCreditCode');
-                //var orderDiscounts = me.get('orderDiscounts');
-                //if (orderDiscounts && _.findWhere(orderDiscounts, { storeCreditCode: code })) {
-                //    // to maintain promise api
-                //    var deferred = api.defer();
-                //    deferred.reject();
-                //    deferred.promise.otherwise(function () {
-                //        me.trigger('error', {
-                //            message: Hypr.getLabel('promoCodeAlreadyUsed', code)
-                //        });
-                //    });
-                //    return deferred.promise;
-                //}
 
+                if (availCredits && availCredits.length > 0 && _.findWhere(availCredits, { code: creditCode })){
+                    me.trigger('error', {
+                        message: Hypr.getLabel('digitalCodeAlreadyUsed', creditCode)
+                    });
+                    // to maintain promise api
+                    var deferred = api.defer();
+                    deferred.reject();
+                    return deferred.promise;
+                }
                 this.isLoading(true);
-
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
-                    console.log(credit);
-                    me._applyingCredit = credit.data;
-                    order.set('creditAmountToApply', me.maxCreditAmountToApply());
-                    order.set('selectedCredit', credit.data);
-                    me.set('digitalCreditCode', '');
-                    //me.set('credit', credit.data);
+                    me._cachedDigitalCredits.push(credit.data);
                     me.trigger('sync', credit);
+                    // todo: blank out triggers getDigitalCredit event - Greg Murray on 2014-06-23 
+                    //me.set('digitalCreditCode', '');
                     return me;
                 });
-
-                //return customer.apiGetDigitalCredit(this.get('digitalCreditCode')).then(function (credit) {
-                //    console.log(credit);
-                //    me.set('digitalCreditCode', '');
-                //    var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
-                //    if (!allDiscounts || !_.findWhere(allDiscounts, { storeCreditCode: code })) {
-                //        me.trigger('error', {
-                //            message: Hypr.getLabel('promoCodeError', code)
-                //        });
-                //    }
-                //    me.isLoading(false);
-                //});
             },
+
             removeCredit: function (id) {
                 var order = this.getOrder(),
                     currentPayment = order.apiModel.getCurrentPayment();
@@ -478,6 +536,8 @@
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
+
+                this._cachedDigitalCredits = null;
 
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
             },

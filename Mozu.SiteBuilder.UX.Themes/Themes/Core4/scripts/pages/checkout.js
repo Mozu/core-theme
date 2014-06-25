@@ -25,7 +25,7 @@
             me.listenTo(me.model,'stepstatuschange', me.render, me);
             me.$el.on('keypress', 'input', function (e) {
                 if (e.which === 13) {
-                    me.handleEnterKey();
+                    me.handleEnterKey(e);
                     return false;
                 }
             });
@@ -132,6 +132,7 @@
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
+            //this.listenTo(this.model, 'change:creditAmountToApply', this.onChangeDigitalCredit, this);
         },
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
@@ -158,15 +159,43 @@
             });
         },
         getDigitalCredit: function (e) {
-            // add the default behavior for loadingchanges
-            // but scoped to this button alone
             var self = this;
             this.$el.addClass('is-loading');
             this.model.getDigitalCredit().ensure(function () {
                 self.$el.removeClass('is-loading');
             });
         },
-        onEnterDigitalCreditCode: function (model, code) {
+
+        //onChangeDigitalCredit: function(model, amt) {
+        //    //var amtToApply = parseFloat(amt.replace(/[^\d\.]/g, ''));
+        //    //if (isNaN(amtToApply)) {
+        //    //    amtToApply = 0;
+        //    //}
+
+        //    model.applyDigitalCredit(this._selectedCode, this.stripNonNumericAndParseFloat(amt));
+        //    //amtToApply);
+        //    this.render(); //this?
+
+        //},
+
+        stripNonNumericAndParseFloat: function(val) {
+            var result = parseFloat(val.replace(/[^\d\.]/g, ''));
+            return isNaN(result) ? 0 : result;
+        },
+
+        applyDigitalCredit: function(e) {
+            var val = $(e.currentTarget).prop('value'),
+                creditCode = $(e.currentTarget).attr('data-mz-credit-code-target');
+            var amtToApply = parseFloat(val.replace(/[^\d\.]/g, ''));
+            if (isNaN(amtToApply)) {
+                amtToApply = 0;
+            }
+
+            this.model.applyDigitalCredit(creditCode, amtToApply);
+            this.render();
+        },
+
+        onEnterDigitalCreditCode: function(model, code) {
             if (code && !this.codeEntered) {
                 this.codeEntered = true;
                 this.$el.find('button').prop('disabled', false);
@@ -176,8 +205,45 @@
                 this.$el.find('button').prop('disabled', true);
             }
         },
-        handleEnterKey: function () {
-            this.getDigitalCredit();
+
+        enableDigitalCredit: function(e) {
+            var creditCode = $(e.currentTarget).attr('data-mz-credit-code-source'), // or e.currentTarget.attributes.getNamedItem('data-mz-credit-code').value
+                isEnabled = $(e.currentTarget).prop('checked') === true,
+                balance = $(e.currentTarget).attr('data-mz-credit-balance'),
+                targetCreditAmtEl = this.$el.find("input[data-mz-credit-code-target='" + creditCode + "']"),
+                me = this;
+
+            if (isEnabled) {
+                targetCreditAmtEl.prop('disabled', false);
+                var creditBalance = this.stripNonNumericAndParseFloat(balance);
+                var remainingTotal = this.model.nonStoreCreditTotal();
+                var maxAmt = remainingTotal < creditBalance ? remainingTotal : creditBalance;
+                maxAmt = Math.round(maxAmt * 100) / 100.0; //round to 2 decimal places
+                targetCreditAmtEl.prop('value', maxAmt);
+                //experiment
+                this.model.applyDigitalCredit(creditCode, maxAmt);
+
+
+            } else {
+                targetCreditAmtEl.prop('disabled', true);
+                targetCreditAmtEl.prop('value', '0.00');
+                this.model.applyDigitalCredit(creditCode, 0);
+                this.render();
+            }
+        },
+
+        updateCreditAmountApplied: _.debounce(function(e) {
+            var val = $(e.currentTarget).prop('value'),
+                creditCode = $(e.currentTarget).attr('data-mz-credit-code-target');
+            var amtToApply = this.stripNonNumericAndParseFloat(val);
+            this.model.applyDigitalCredit(creditCode, amtToApply);
+            this.render();
+        }, 500),
+
+        handleEnterKey: function (e) {
+            var source = $(e.currentTarget).prop('id');
+            if (source === 'digital-credit-code')
+                this.getDigitalCredit();
         }
     });
 

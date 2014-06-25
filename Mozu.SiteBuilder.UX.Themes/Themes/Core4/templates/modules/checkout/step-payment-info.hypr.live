@@ -39,13 +39,14 @@
             <span>{{ labels.paypalExpressSummary }}</span>
         </div>
       {% endif %}
+      <!-- **** move outside of outer for loop and place within own for loop? -->
       {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" %}
       <div class="mz-l-stack-section">
         <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h4>
         <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.storeCreditCode }}</span> 
         </div>
         {% endif %}
-        {% endfor %}
+      {% endfor %} 
 
         {% if model.billingContact.email %}
         <div class="mz-l-stack-section">
@@ -56,7 +57,7 @@
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-      {% include "modules/checkout/checkout-store-credit" %}
+      {% include "modules/checkout/checkout-digital-credit" %}
      
       {% if model.nonStoreCreditTotal > 0 %}
       <div class="mz-l-stack-section">
