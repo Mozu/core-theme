@@ -273,7 +273,7 @@ Ext.define('Taco.view.order.Header', {
                     return;
                 }
                 
-                this.record.set(Ext.decode(response.responseText).items[0]);
+                this.record.set(Ext.decode(response.responseText).items);
 
                 this.record.commit();
 
