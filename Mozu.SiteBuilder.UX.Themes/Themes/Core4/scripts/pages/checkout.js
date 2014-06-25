@@ -131,6 +131,7 @@
         ],
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
+            this.listenTo(this.model, 'orderPayment', this.onOrderPaymentApplied, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
             //this.listenTo(this.model, 'change:creditAmountToApply', this.onChangeDigitalCredit, this);
         },
@@ -239,6 +240,10 @@
             this.model.applyDigitalCredit(creditCode, amtToApply);
             this.render();
         }, 500),
+
+        onOrderPaymentApplied: function(order, scope) {
+            this.render();
+        },
 
         handleEnterKey: function (e) {
             var source = $(e.currentTarget).prop('id');

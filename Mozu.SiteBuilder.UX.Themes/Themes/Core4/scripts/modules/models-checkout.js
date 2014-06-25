@@ -446,6 +446,7 @@
                     amount: creditAmountToApply
                 }).then(function (o) {
                     order.set(o.data);
+                    self.trigger('orderPayment', o.data, this);
                     return o;
                 });
             },
@@ -473,10 +474,17 @@
                 }
                 this.isLoading(true);
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
+                    credit.data.isEnabled = true;
+
+                    var remainingTotal = me.nonStoreCreditTotal();
+                    var maxAmt = remainingTotal < credit.data.currentBalance ? remainingTotal : credit.data.currentBalance;
+
+                    maxAmt = Math.round(maxAmt * 100) / 100.0; //round to 2 decimal places
+                    credit.data.creditAmountApplied = maxAmt;
+
                     me._cachedDigitalCredits.push(credit.data);
+                    me.applyDigitalCredit(credit.data.code, maxAmt);
                     me.trigger('sync', credit);
-                    // todo: blank out triggers getDigitalCredit event - Greg Murray on 2014-06-23 
-                    //me.set('digitalCreditCode', '');
                     return me;
                 });
             },
