@@ -149,6 +149,28 @@ Ext.define('Taco.view.entityManager.Grid', {
             });
         });
 
+
+        columns.push({
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            menuItems: [
+                {
+                    text: 'Edit',
+                    hideOnClick: false,
+                    menuColumnHandler: function (item, eventData) {
+                   
+                        me.fireEvent('itemedit', eventData.grid, eventData.record);
+                    }
+                }, {
+                    text: 'Delete',
+                    hideOnClick: false,
+                    menuColumnHandler: function (item, eventData) {
+                        me.deleteRecordFromStore(eventData.record);
+                    }
+                }
+            ]
+        });
+
         store = Ext.create('Taco.store.Entities', {
             listName: (me.listMetaData.nameSpace ? me.listMetaData.nameSpace + '.' : '') + me.listMetaData.name,
             entityType: me.listMetaData.entityType,

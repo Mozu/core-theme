@@ -18,7 +18,7 @@ Ext.define('Taco.store.EntitiesListsTree', {
         proxy: {
             type: 'ajax',
             api: {
-                read: '/admin/app/entities/lists/read'
+                read: '/admin/app/entities/lists/tree'
             },
             reader: {
                 type: 'json',

@@ -13,7 +13,7 @@ Ext.create('Ext.form.Panel', {
     defaultType: 'textfield',
     items: [{
         fieldLabel: 'title',
-        name: 'meta_title',
+        name: 'title',
         allowBlank: false
     }, {
         fieldLabel: 'meta_title',
@@ -21,7 +21,7 @@ Ext.create('Ext.form.Panel', {
         allowBlank: false
     }, {
         fieldLabel: 'link_title',
-        name: 'template',
+        name: 'link_title',
         allowBlank: true
     }, {
         fieldLabel: 'template',
