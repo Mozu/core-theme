@@ -489,6 +489,7 @@
     <None Include="Diagrams\ProductAdmin\cdProductVariant.cd" />
     <None Include="Diagrams\ProductRuntime\cdProductRuntime_GiftCardView.cd" />
     <None Include="Diagrams\ProductRuntime\cdProductRuntime.cd" />
+    <None Include="Diagrams\StoreFront\Checkout\cdDigitalCredit.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

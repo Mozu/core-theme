@@ -154,6 +154,9 @@
             }),
             cards: Backbone.Collection.extend({
                 model: PaymentMethods.CreditCard
+            }),
+            credits: Backbone.Collection.extend({
+                model: PaymentMethods.DigitalCredit
             })
         },
         getPrimaryContactOfType: function (typeName) {

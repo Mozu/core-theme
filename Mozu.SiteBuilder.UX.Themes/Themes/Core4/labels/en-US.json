@@ -215,10 +215,10 @@
 
   "digitalCredits"			: "Gift Cards & Store Credits",
   "digitalCreditCode"		: "Code",
-  "digitalCreditAvailable"	: "You have the following gift cards & store credits available:",
+  "digitalCreditBalance"	: "Balance",
+  "digitalCreditAmtToUse"	: "Amt. to Apply",
+  "digitalCreditSaveToAccount" : "Remainder to Acct.",
   "digitalCreditApplied"	: "You have applied the following gift card or store credit payments to your order:",
-  "digitalCreditsAnchor"	: "giftcards",
-
 
   "remainingTotal"       : "Your remaining total is: ",
   "applyCredit"          : "Apply Credit",
@@ -291,8 +291,11 @@
   "returnNumber"         : "RMA #",
   "enterStoreCredit"     : "Enter Store Credit Number",
   "storeCreditNumber"    : "Store Credit Number",
+  
   "enterDigitalCredit"   : "Enter Gift Card or Store Credit Code",
-  "digitalCreditCode"    : "Code",
+  "digitalCreditAvailable"	: "You have the following gift cards & store credits available:",
+  "digitalCreditsAnchor"	: "giftcards",
+
   "creditDate"           : "Credit Date",
   "creditAmount"         : "Credit Amount",
   "remaining"            : "Remaining",
@@ -344,6 +347,7 @@
   "noLongerWanted"       : "No longer needed/wanted",
   "tooLate"              : "Arrived too late",
   "wrongCountryForType"  : "Please select a country supported for this contact type",
+  "digitalCodeAlreadyUsed" : "This code has already been used.",
 
   
   "clearAllFilters"      : "Clear All Filters",

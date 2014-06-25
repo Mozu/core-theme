@@ -105,8 +105,30 @@
         }
     });
 
+    var DigitalCredit = PaymentMethod.extend({
+        defaults: {
+            "isEnabled":  false
+        },
+
+        helpers: ['remainingBalance'],
+
+        remainingBalance: function() {
+            return this.get('currentBalance') - this.get('creditAmountApplied');
+        },
+        //isTiedToCustomer: function() {
+        //    return (this.customerId);
+        //}
+
+        validate: function(attrs, options) {
+            if (attrs.creditAmountApplied > attrs.currentBalance) {
+                return "Exceeds card balance.";
+            }
+        }
+    });
+
     return {
         CreditCard: CreditCard,
-        Check: Check
+        Check: Check,
+        DigitalCredit: DigitalCredit
     };
 });
