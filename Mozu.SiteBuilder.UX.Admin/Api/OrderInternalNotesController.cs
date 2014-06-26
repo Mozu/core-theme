@@ -25,10 +25,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Creates a new internal note.
         /// </summary>
         [HttpPostRoute(UriTemplate = "internalnotes/create")]
-        public async Task<Response<OrderNote>> CreateInternalNote(OrderInternalNotesArgs args) {
-            var dcNote = (await _orderWebApiClient.CreateOrderNote(args.OrderId, new DC.OrderNote { Text = args.Text })).ReadAsSync();
+        public async Task<Response<List<OrderNote>>> CreateInternalNote(List<OrderInternalNotesArgs> argss)
+        {
+              var ret = new List<OrderNote>();
+            foreach (var args in argss)
+            {
+                var dcNote = (await _orderWebApiClient.CreateOrderNote(args.OrderId, new DC.OrderNote {Text = args.Text})).ReadAsSync();
 
-            return Single2(dcNote.Map<OrderNote>());
+                ret.Add(dcNote.Map<OrderNote>());
+            }
+            return List2(ret);
         }
 
         /// <summary>
