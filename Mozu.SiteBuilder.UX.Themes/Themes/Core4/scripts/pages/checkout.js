@@ -48,9 +48,19 @@
 
     var OrderSummaryView = Backbone.MozuView.extend({
         templateName: 'modules/checkout/checkout-order-summary',
+
+        initialize: function () {
+            this.listenTo(this.model.get('billingInfo'), 'orderPayment', this.onOrderCreditChanged, this);
+        },
+
         editCart: function () {
             window.location = "/cart";
         },
+        
+        onOrderCreditChanged: function (order, scope) {
+            this.render();
+        },
+
         // override loading button changing at inappropriate times
         handleLoadingChange: function () { }
     });
