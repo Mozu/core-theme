@@ -8,8 +8,8 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
     requires: ['Taco.view.order.widget.InternalNotesGrid'],
     
     title: 'Internal Notes',
-    ui: 'subform',
-    bodyPadding: '11 0 0 0',
+    ui: 'subform-section',
+    bodyPadding: '20 0 40 0',
 
     initComponent: function () {
         var me = this;
@@ -52,59 +52,55 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
         this.callParent(arguments);
     },
 
-    addNote: function () {
+    // openNotesDialog: function () {
+    //     if (this.notesDialog) {
+    //         this.notesDialog.show();
+    //     } else {
+    //         this.notesDialog = Ext.create('Taco.core.ux.window.Modal', {
+    //             autoShow: true,
+    //             scale: 'large',
+    //             title: 'Internal Notes',
+    //             overflowY: 'auto',
+    //             closeAction: 'hide',
+    //             layout: {
+    //                 type: 'vbox',
+    //                 align: 'stretch'
+    //             },
+    //             items: [this.grid],
+    //             listeners: {
+    //                 savesuccess: {
+    //                     scope: this,
+    //                     fn: function () {
+    //                         var me = this;
+    //                         var orderForm = this.orderForm;
 
-    },
+    //                         console.log('todo: wire up saving of internal notes');
 
-    openNotesDialog: function () {
-        if (this.notesDialog) {
-            this.notesDialog.show();
-        } else {
-            this.notesDialog = Ext.create('Taco.core.ux.window.Modal', {
-                autoShow: true,
-                scale: 'large',
-                title: 'Internal Notes',
-                overflowY: 'auto',
-                closeAction: 'hide',
-                layout: {
-                    type: 'vbox',
-                    align: 'stretch'
-                },
-                items: [this.grid],
-                listeners: {
-                    savesuccess: {
-                        scope: this,
-                        fn: function () {
-                            var me = this;
-                            var orderForm = this.orderForm;
+    //                         // orderForm.setLoading(true, orderForm.body);
 
-                            console.log('todo: wire up saving of internal notes');
+    //                         // // rely on the subform's "beforeSave" method to save attributes to the model correctly.
+    //                         // orderForm.orderAttr.beforeSave();
 
-                            // orderForm.setLoading(true, orderForm.body);
+    //                         // orderForm.record.saveAttributes({
+    //                         //     success: function () {
+    //                         //         orderForm.setLoading(false, orderForm.body);
 
-                            // // rely on the subform's "beforeSave" method to save attributes to the model correctly.
-                            // orderForm.orderAttr.beforeSave();
-
-                            // orderForm.record.saveAttributes({
-                            //     success: function () {
-                            //         orderForm.setLoading(false, orderForm.body);
-
-                            //         me.refreshGrid();
-                            //     },
-                            //     failure: function (msg) {
-                            //         orderForm.setLoading(false, this.body);
+    //                         //         me.refreshGrid();
+    //                         //     },
+    //                         //     failure: function (msg) {
+    //                         //         orderForm.setLoading(false, this.body);
                                     
-                            //         var res = Ext.JSON.decode(msg.responseText);
+    //                         //         var res = Ext.JSON.decode(msg.responseText);
                                    
-                            //         Taco.app.fireEvent('setmessage', res.items[0].message, 'error', orderForm);
-                            //     }
-                            // });
-                        }
-                    }
-                }
-            });
-        }
-    },
+    //                         //         Taco.app.fireEvent('setmessage', res.items[0].message, 'error', orderForm);
+    //                         //     }
+    //                         // });
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //     }
+    // },
 
     onDestroy: function () {
         Ext.destroy(this.notesDialog);

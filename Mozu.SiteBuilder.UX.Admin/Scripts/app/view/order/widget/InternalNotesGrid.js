@@ -19,7 +19,8 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
         flex: 1,
         editor: {
             xtype: 'datefield',
-            format: 'm/d/Y h:ia'
+            format: 'm/d/Y h:ia',
+            value: '6/1/2014 12:00am'
         }
     }, {
         dataIndex: 'agent',
@@ -53,6 +54,10 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
             beforeedit: {
                 scope: this,
                 fn: 'handleBeforeEdit'
+            },
+            edit: {
+                scope: this,
+                fn: function (editor, context) { console.log('edit'); }
             }
         });
     },
