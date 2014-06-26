@@ -323,7 +323,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ? 0 
                         : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
                 })
-                ;
+                 .AfterMap((dc, order) =>
+                 {
+                     if (order.InternalNotes != null)
+                     {
+                         order.InternalNotes.ForEach(x=> x.OrderId = order.Id);
+                     }
+
+                 });
         }
 
         private void Map_DcOrderItem_to_OrderItem()
@@ -864,7 +871,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcOrderNote_to_OrderNote()
         {
             Mapper.CreateMap<OrdersDC.OrderNote, OrderNote>()
-                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.NoteId, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.Text, op => op.ResolveUsing(dc => dc.Text))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo.CreateDate))
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo.CreateBy))
