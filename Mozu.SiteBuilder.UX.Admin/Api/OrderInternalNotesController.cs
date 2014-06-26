@@ -35,9 +35,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Deletes a note.
         /// </summary>
         [HttpPostRoute(UriTemplate = "internalnotes/delete")]
-        public async Task<Response<OrderNote>> DeleteInternalNote(OrderInternalNotesArgs args)
+        public async Task<Response<OrderNote>> DeleteInternalNote(List<OrderInternalNotesArgs> argss)
         {
-            (await _orderWebApiClient.DeleteOrderNote(args.OrderId, args.NoteId)).ReadAsSync();
+            foreach (var args in argss)
+            {
+                var resp =await _orderWebApiClient.DeleteOrderNote(args.OrderId, args.NoteId);
+                if (resp.HasException)
+                {
+                    throw resp.ReadException();
+                }
+                //todo check for error;
+            }
+        
+
+    
 
             return SuccessWithTotal2<OrderNote>(1);
         }
@@ -46,13 +57,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Edits a note.
         /// </summary>
         [HttpPostRoute(UriTemplate = "internalnotes/edit")]
-        public async Task<Response<OrderNote>> EditInternalNote(OrderInternalNotesArgs args)
+        public async Task<Response<List<OrderNote>>> EditInternalNote(List<OrderInternalNotesArgs> argss)
         {
-            var dcNote = (await _orderWebApiClient.GetOrderNote(args.OrderId, args.NoteId)).ReadAsSync();
-            dcNote.Text = args.Text;
-            dcNote = (await _orderWebApiClient.UpdateOrderNote(args.OrderId, args.NoteId, dcNote)).ReadAsSync();
+            var ret = new List<OrderNote>();
+            foreach (var args in argss)
+            {
+                var dcNote = (await _orderWebApiClient.GetOrderNote(args.OrderId, args.NoteId)).ReadAsSync();
+                dcNote.Text = args.Text;
+                dcNote = (await _orderWebApiClient.UpdateOrderNote(args.OrderId, args.NoteId, dcNote)).ReadAsSync();
 
-            return Single2(dcNote.Map<OrderNote>());
+                ret.Add(dcNote.Map<OrderNote>());
+            }
+            return List2(ret);
         }
     }
 }
