@@ -215,6 +215,7 @@ Ext.define('Taco.shared.view.form.Address', {
                     checked: this.record.get('isPrimaryBilling')
                 }, {
                     xtype: 'checkbox',
+                    padding: '0 0 0 20',
                     boxLabel: 'Default Shipping Address',
                     name: 'isPrimaryShipping',
                     inputValue: true,
