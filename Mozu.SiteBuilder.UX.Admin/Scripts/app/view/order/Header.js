@@ -19,6 +19,13 @@ Ext.define('Taco.view.order.Header', {
         this.addEvents([
             /**
              * @event beforeload
+             * Fired when the header makes a contact change
+             * @param {Taco.view.order.header} header The Header object that fired the event
+             * @param {Taco.model.CustomerAccount} record The record of the Order
+             */
+            'addresschanged',
+            /**
+             * @event customerchanged
              * Fired when the header makes a customer selection
              * @param {Taco.view.order.header} header The Header object that fired the event
              * @param {Taco.model.CustomerAccount} record The record of the Customer Account
@@ -245,7 +252,14 @@ Ext.define('Taco.view.order.Header', {
     },
 
     createCustomer: function() {
-
+        var me = this;
+        Ext.create('Taco.view.customers.modal.CreateCustomer', {
+            order: this.record,
+            callback: function() {
+                me.fireEvent('customerchanged', me, me.record.getCustomer());
+                me.updateHeader();
+            }
+        });
     },
 
     changeAddress: function() {
@@ -254,6 +268,7 @@ Ext.define('Taco.view.order.Header', {
             record: this.record.getCustomer(),
             order: this.record,
             callback: function() {
+                me.fireEvent('addresschanged', me, me.record);
                 me.updateHeader();
             }
         });
