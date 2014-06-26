@@ -205,6 +205,7 @@ Ext.define('Taco.view.customers.Contacts', {
     editContact: function(contact) {
         Ext.create('Taco.shared.view.modal.Address', {
             record: Ext.create('Taco.model.Contact', contact),
+            showDefaultOptions: true,
             listeners: {
                 savesuccess: function(form, newContact) {
                     var contacts = Ext.Array.clone(this.record.get('contacts')),

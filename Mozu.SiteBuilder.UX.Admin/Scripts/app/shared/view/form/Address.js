@@ -22,6 +22,7 @@ Ext.define('Taco.shared.view.form.Address', {
 	showCompanyName: true,
 	showEmail: true,
 	showPhoneNumbers: true,
+    showDefaultOptions: false,
 
     emailRequired: false,
 
@@ -198,6 +199,30 @@ Ext.define('Taco.shared.view.form.Address', {
             });
         }
 
+        if (this.showDefaultOptions) {
+            fields.push({
+                xtype: 'container',
+                width: '100%',
+                layout: {
+                    type: 'hbox',
+                    align: 'stretch'
+                },
+                items: [{
+                    xtype: 'checkbox',
+                    boxLabel: 'Default Billing Address',
+                    name: 'isPrimaryBilling',
+                    inputValue: true,
+                    checked: this.record.get('isPrimaryBilling')
+                }, {
+                    xtype: 'checkbox',
+                    boxLabel: 'Default Shipping Address',
+                    name: 'isPrimaryShipping',
+                    inputValue: true,
+                    checked: this.record.get('isPrimaryShipping')
+                }]
+            });
+        }
+
         this.items = fields;
 
 		this.callParent(arguments);
@@ -205,6 +230,9 @@ Ext.define('Taco.shared.view.form.Address', {
 
 	beforeSave: function (){
 	    var me = this;
+
+        this.record.set('isPrimaryBilling', this.down('[name="isPrimaryBilling"]').getValue());
+        this.record.set('isPrimaryShipping', this.down('[name="isPrimaryShipping"]').getValue());
 	    
 	    // convert state to 2 digit value if the countryCode is US
 	    var countryCode = me.form.findField("countryCode").getValue();
