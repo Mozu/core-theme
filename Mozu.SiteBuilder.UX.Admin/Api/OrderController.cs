@@ -232,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (fullFillmentContact != null)
             {
-                if (dcOrder.FulfillmentInfo != null)
+                if (dcOrder.FulfillmentInfo == null)
                 {
                     dcOrder.FulfillmentInfo = new DCs.FulfillmentInfo();
                 }
@@ -243,13 +243,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
           
             if (billingContact != null)
             {
-                if (dcOrder.BillingInfo != null)
+                if (dcOrder.BillingInfo == null)
                 {
                     dcOrder.BillingInfo = new DCp.BillingInfo();
                 }
                 dcOrder.BillingInfo.BillingContact = billingContact;
 
-                 tasks.Add(_orderWebApiClient.SetBillingInfo(dcOrder.Id, dcOrder.BillingInfo));
+                tasks.Add(_orderWebApiClient.SetBillingInfo(dcOrder.Id, dcOrder.BillingInfo));
             }
             await Task.WhenAll(tasks);
             if (fTask != null && fTask.Result.HasException)
