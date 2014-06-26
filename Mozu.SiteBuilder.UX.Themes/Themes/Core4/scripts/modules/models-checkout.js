@@ -287,7 +287,7 @@
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits'], //'availableStoreCredits',
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
@@ -495,6 +495,15 @@
                     me.trigger('sync', credit);
                     return me;
                 });
+            },
+
+            digitalCreditPaymentTotal: function () {
+                var activeCreditPayments = this.activeStoreCredits();
+                if (!activeCreditPayments)
+                    return null;
+                return _.reduce(activeCreditPayments, function (sum, credit) {
+                    return sum + credit.amountRequested;
+                }, 0);
             },
 
             removeCredit: function (id) {
