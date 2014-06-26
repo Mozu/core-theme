@@ -218,7 +218,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public Contact BillingContact { get; set; }
         }
 
-        [HttpPostRoute(UriTemplate = "updateContactInfo")]
+        [HttpPostRoute(UriTemplate = "updatecontactinfo")]
         public async Task<Response<Order>> UpdateOrder(Order order)
         {
             var dcOrder = (await _orderWebApiClient.GetOrder(order.Id)).ReadAsSync();
