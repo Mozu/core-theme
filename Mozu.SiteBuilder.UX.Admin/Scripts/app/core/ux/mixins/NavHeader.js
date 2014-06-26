@@ -195,8 +195,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         };
 
         if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
-
-
+            
             conf.items.push({
                 autoEl: 'h3',
                 itemId: 'forLable',
@@ -305,18 +304,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
 
             if (me.createButtonEnabled) {
-                me.actions.push({
-                    xtype: 'button',
-                    text: this.createButtonText,
-                    margin: "0 0 0 10",
-                    ui: 'action-primary',
-                    scale: 'medium',
-                    hidden: !me.createButtonVisible,
-                    itemId: 'createActionButton',
-                    handler: me.createActionHandler,
-                    scope: me
-
-                })
+                var createButtonConfig = this.getCreateButtonConfig();
+                me.actions.push(createButtonConfig)
             }
         }
 
@@ -349,6 +338,22 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         me.navHeader = Ext.widget('toolbar', conf);
         
         me.header.items.unshift(me.navHeader);
+    },
+
+    getCreateButtonConfig: function () {
+        var me = this;
+
+        return {
+            xtype: 'button',
+            text: me.createButtonText,
+            margin: "0 0 0 10",
+            ui: 'action-primary',
+            scale: 'medium',
+            hidden: !me.createButtonVisible,
+            itemId: 'createActionButton',
+            handler: me.createActionHandler,
+            scope: me
+        }
     },
 
     resetSaveButton: function () {
@@ -517,7 +522,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     onCreate: Ext.emptyFn,
 
     doCreate: function () {
-        console.log("doCreate")        
+        console.log("doCreate")
     },
 
     bindActionsToForm: function (form) {

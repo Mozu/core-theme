@@ -14,6 +14,10 @@ Ext.define('Taco.view.order.Header', {
 
     header: false,
 
+    title:"Customer",
+
+    navigation: false,
+
     initComponent: function() {
 
         this.addEvents([

@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.Grid', {
     //region: "center",
 
     
-    enableQuickFilters:false,
+    enableQuickFilters:true,
 
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
@@ -84,7 +84,7 @@ Ext.define('Taco.view.order.Grid', {
         
         me.callParent(arguments);
     },
-    
+    /*
     launchLoadedEditor: function (record, options) {
         var site = Taco.app.context.getSite(),
             infoStore,
@@ -92,6 +92,20 @@ Ext.define('Taco.view.order.Grid', {
 
         this.callParent(arguments);
     },
+    */
+
+    launchLoadedEditor: function (record, options) {
+        var currentSite = Taco.app.context.getSite(),
+            oderSiteId = record.get('siteId'),
+            infoStore,
+            infoRecord;
+
+        if (currentSite == null || oderSiteId != currentSite.id) {
+            Taco.app.context.setCurrentSite(oderSiteId);
+        }
+        this.callParent(arguments);
+    },
+
 
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
@@ -171,12 +185,29 @@ Ext.define('Taco.view.order.Grid', {
                     width: 100,
                     sortable: false
                 }, {
+                    stateId: 'orderType',
+                    text: 'Order Type',
+                    dataIndex: "orderType",
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100,
+                    sortable: true
+                }, {
                     stateId: 'channelName',
                     text: 'Channel',
                     dataIndex: "channelName",
                     flex: 1,
                     minWidth: 100,
                     width: 100,
+                    sortable: false
+                }, {
+                    stateId: 'siteName',
+                    text: 'SiteName',
+                    dataIndex: "siteName",
+                    flex: 1,
+                    minWidth: 100,
+                    width: 100,
+                    hidden: true,
                     sortable: false
                 }, {
                     stateId: 'customerEmail',
@@ -387,6 +418,88 @@ Ext.define('Taco.view.order.Grid', {
         return columns;
     },
 
+
+    // if multi site, need to make the create button trigger a menu that lists out all of the possible sites;
+    getCreateButtonConfig: function () {
+        var me = this;
+        
+        // get site list
+        var ctx = Taco.app.context,
+            item,
+            value,
+            contextStore = Taco.app.context.getStore(false),
+            menu = [],
+            isMultiSite;
+
+        // filter the context store to be only sites;
+        contextStore.filter([
+            {
+                filterFn: function (item) {
+                    return Ext.Array.contains(['s'], item.get("contextType"));
+                },
+                scope: this
+            }
+        ]);
+
+        isMultiSite = (contextStore.count() > 1);
+
+        // if multisite we need to make a menu button
+        if (isMultiSite) {
+            contextStore.each(function (record) {
+                var itemConfig = {};
+                itemConfig.siteId = record.raw.id; //Ext.clone(record.raw);
+                itemConfig.text = record.raw.name;
+                // remove the id from the data as it will cause conflicts between the duplicated items when they are configured;
+                //delete itemConfig.id;
+                menu.push(itemConfig);
+            })
+        }
+
+
+        var createButtonConfig=  {
+            xtype: 'button',
+            text: me.createButtonText,
+            margin: "0 0 0 10",
+            ui: 'action-primary',
+            scale: 'medium',
+            hidden: !me.createButtonVisible,
+            itemId: 'createActionButton',
+            handler: me.createActionHandler,
+            scope: me
+        }
+
+        // need to make create a menu button with list of sites;
+        if (isMultiSite) {
+            Ext.apply(createButtonConfig, {
+                //remove the handler since it will be handled by the menu;
+                handler: Ext.emptyFn,
+                menu: {
+                    plain: true,
+                    showSeparator: false,
+                    listeners: {
+                        click: {
+                            fn: function (menu, menuItem, e) {
+                                //var context= menuItem.context;
+                                var siteId = menuItem.siteId;
+                                // set the context to the siteId of the selected store;
+                                var context = Taco.app.context.getStore().findRecord('id', siteId).raw
+                                Taco.app.context.setCurrentContext(context);
+                                //create the 
+                                me.createActionHandler()
+
+                            },
+                            scope: me,
+                            delegate: "x-menu-item-link"
+                        }
+                    },
+                    items: menu
+                }
+            });
+        }
+
+        return createButtonConfig
+    },
+
     doCreate: function () {
         var me = this;
         
@@ -399,6 +512,9 @@ Ext.define('Taco.view.order.Grid', {
         }
 
         Taco.app.setLoading();
+        
+
+        
 
         record = Ext.create('Taco.model.Order');
 

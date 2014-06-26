@@ -439,14 +439,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     initCouponCombo: function () {
         var me = this;
         
-        this.couponCombo = Ext.create('Taco.view.order.widget.DiscountPickerField', {
-            //fieldCls: "toolbar-field",
+        this.couponCombo = Ext.create('Taco.view.order.widget.DiscountPickerField', {            
             flex:1,
             validOnDate: this.record.get("createDate"),
             hideLabel :false,
-            fieldLabel: "Add Discount or Coupon (Order, Item, or Shipping)",
+            fieldLabel: "Add Coupon (Order, Item, or Shipping)",
             labelStyle:"padding-top:16px;",
-            emptyText:"Add Discount or Coupon",
+            emptyText:"Add Coupon",
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Discounts',
                 pageSize: me.discountsPerPage,
@@ -488,6 +487,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     addOrderCoupon: function (coupons) {
         var me = this;        
         this.fireEvent('save');
+        
         this.record.addOrderCoupon({
             jsonData: {
                 orderId: this.record.get('id'),
