@@ -18,7 +18,7 @@ StartTest(function(t) {
     doPost: function() {
       return {
         responseText: Ext.encode({
-          items: [Ext.apply({}, m.setCustomerCfg, m.order.getData())]
+          items: Ext.apply({}, m.setCustomerCfg, m.order.getData())
         }),
         status: 200
       };
