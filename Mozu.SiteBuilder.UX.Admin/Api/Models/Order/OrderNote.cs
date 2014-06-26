@@ -6,7 +6,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     public class OrderNote
     {
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Id { get; set; }
+        public string NoteId { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string OrderId { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Text { get; set; }
