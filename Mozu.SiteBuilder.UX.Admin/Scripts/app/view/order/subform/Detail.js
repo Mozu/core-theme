@@ -11,7 +11,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         'Taco.view.order.widget.OrderTotalPanel',
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.modal.EditOrderDetail',
-        'Taco.shared.view.form.ExtensibleAttribute'
+        'Taco.shared.view.form.ExtensibleAttribute',
+        'Taco.view.order.subform.InternalNotes'
     ],
     alias: 'widget.taco-orderdetail',
     itemId: 'orderDetailPanel',
@@ -127,14 +128,29 @@ Ext.define('Taco.view.order.subform.Detail', {
             data:this.record.getData()
         });
 
+        me.internalNotesStore = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: [{
+                type: 'date', name: 'date',
+            }, {
+                type: 'string', name: 'agent',
+            }, {
+                type: 'string', name: 'comment'
+            }],
+            data: [{
+                date: Ext.Date.parse('01/01/2014 07:43am', 'm/d/Y h:ia'),
+                agent: 'Patsy OrderProcessor',
+                comment: 'I called the customer and let them know the widget is backordered.'
+            }, {
+                date: Ext.Date.parse('01/02/2014 05:19pm', 'm/d/Y h:ia'),
+                agent: 'Cody CustomerCare',
+                comment: 'I spoke to Joe and let him know that I will cancel the widget and that it will be reflected on his CC within 3 days.'
+            }]
+        });
 
-        me.internalNoteRow = Ext.widget({
-            xtype: "panel",
-            ui: "subform-section",
-            title: "Internal Notes",
-            bodyStyle: "padding:20px 0px 40px 0px ",
-            html: "Notes grid goes here. TBD"
-
+        me.internalNoteRow = Ext.create('Taco.view.order.subform.InternalNotes', {
+            record: this.record,
+            orderForm: this
         });
         
         this.orderAttrGrid = Ext.create('Taco.view.order.subform.Attributes', {
@@ -393,6 +409,13 @@ Ext.define('Taco.view.order.subform.Detail', {
                 scope: me,
                 disabled: !canCancel
             },{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Print Order',
+                handler: me.openPrintWindow,
+                scope: me
+            }, {
                 text: 'Edit Details',
                 xtype: "button",
                 ui: "action",
@@ -421,5 +444,231 @@ Ext.define('Taco.view.order.subform.Detail', {
     isValid: function () {
         var items = this.record.get('items');
         return items && items.length;
+    },
+
+    openPrintWindow: function () {
+        var me = this;
+        var printWindow = window.open();
+        var doc = printWindow.document;
+        var styleEl = doc.createElement('style');
+        var tpl, cssText;
+
+        tpl = new Ext.XTemplate(
+            '<table class="print-order-page">',
+            '<thead class="header"><tr>',
+            '<th class="company-info"><h1>Prizm Audio & Video</h1></th>',
+            '<th class="company-contacts">http://www.prizmav.com</th>',
+            '<th class="order-essentials">',
+                '<div class="order-number"><span class="label">Order #</span><span>{orderNumber}</span></div>',
+                '<div class="order-date"><span class="label">Date: </span><span>{createDate:date("m/d/Y")}</span></div>',
+            '</th>',
+            '</tr></thead>',
+            '<tfoot class="footer"><tr>',
+                '<td colspan="3">For questions or feedback, email us at http://www.prizmav.com. Thanks - please visit us again at http://www.prizmav.com!</td>',
+            '</tr></tfoot>',
+            '<tbody><tr><td colspan="3">',
+                '<div class="section section-contacts"><table class="panes"><tbody><tr>',
+                    '<td clas="billing-address"><tpl for="billingContact">',
+                        '<div class="label">Bill To</div>',
+                        '<div>{firstName} {lastName}</div>',
+                        '<div>{address1}</div>',
+                        '<tpl if="address2"><div>{address2}</div></tpl>',
+                        '<tpl if="address3"><div>{address3}</div></tpl>',
+                        '<tpl if="address4"><div>{address4}</div></tpl>',
+                        '<div>{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
+                        '<tpl if="homePhone"><div>{homePhone} (home)</div></tpl>',
+                        '<tpl if="workPhone"><div>{workPhone} (work)</div></tpl>',
+                        '<tpl if="mobilePhone"><div>{mobilePhone} (mobile)</div></tpl>',
+                        '<div>{email}</div>',
+                    '</tpl></td>',
+                    '<td class="shipping-address"><tpl for="fulfillmentContact">',
+                        '<div class="label">Ship To</div>',
+                        '<div>{firstName} {lastName}</div>',
+                        '<div>{address1}</div>',
+                        '<tpl if="address2"><div>{address2}</div></tpl>',
+                        '<tpl if="address3"><div>{address3}</div></tpl>',
+                        '<tpl if="address4"><div>{address4}</div></tpl>',
+                        '<div>{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
+                        '<tpl if="homePhone"><div>{homePhone} (home)</div></tpl>',
+                        '<tpl if="workPhone"><div>{workPhone} (work)</div></tpl>',
+                        '<tpl if="mobilePhone"><div>{mobilePhone} (mobile)</div></tpl>',
+                        '<div>{email}</div>',
+                    '</tpl></td>',
+                    '<td class="order-totals">',
+                        '<div class="label">Totals</div>',
+                        '<div class="price-total">{total:usMoney}</div>',
+                        '<div class="item-total">{itemsOrdered} items</div>',
+                    '</td>',
+                '</tr></tbody></table></div>',
+                '<div class="section section-orderitems">',
+                    '<h2>Items Ordered</h2>',
+                    '<table class="grid">',
+                        '<thead><tr>',
+                            '<th>Code</th>',
+                            '<th>Product</th>',
+                            '<th>Fulfillment</th>',
+                            '<th>Price</th>',
+                            '<th>Qty</th>',
+                            '<th>Item Total</th>',
+                        '</tr></thead>',
+                        '<tbody><tpl for="items">',
+                            '<tr>',
+                                '<td>{productCode}</td>',
+                                '<td>{productName}</td>',
+                                '<td><tpl if="fulfillmentLocationCode">{fulfillmentMethod} ({fulfillmentLocationCode})</tpl></td>',
+                                '<td>{unitPrice:usMoney}</td>',
+                                '<td>{quantity}</td>',
+                                '<td>{subtotal:usMoney}</td>',
+                            '</tpl></tr>',
+                        '</tbody>',
+                    '</table>',
+                '</div>',
+                '<div class="section section-payment">',
+                    '<h2>Payment Details</h2>',
+                    '<table class="grid">',
+                        '<thead><tr>',
+                            '<th>Date Paid</th>',
+                            '<th>Payment Type</th>',
+                            '<th>Payment ID</th>',
+                            '<th>Expiration Date</th>',
+                            '<th>Amount</th>',
+                        '</tr></thead>',
+                        '<tbody><tpl for="payments">',
+                            '<tr>',
+                                '<td>{createDate:date("m/d/Y")}</td>',
+                                '<td>{cardType}</td>',
+                                '<td>{cardNumber}</td>',
+                                '<td><tpl if="expirationMonth">{expirationMonth}/{expirationYear}</tpl></td>',
+                                '<td>{amountCollected:usMoney}</td>',
+                            '</tr>',
+                        '</tpl></tbody>',
+                    '</table>',
+                '</div>',
+                '<div class="section section-attributes">',
+                    '<h2>Order Attributes</h2>',
+                    '<tpl for="attributes"><div class="attribute">',
+                        '<span class="label">{fullyQualifiedName}</span>',
+                        '<span><tpl for="values" between=",">{.}</tpl></span>',
+                    '</div></tpl>',
+                '</div>',
+                '<div class="section section-notes">',
+                    '<h2>Notes</h2>',
+                    '<table class="grid">',
+                        '<thead><tr>',
+                            '<th>Date</th>',
+                            '<th>Author</th>',
+                            '<th>Comment</th>',
+                        '</tr></thead>',
+                        '<tbody>',
+                            '<tr>',
+                                '<td>{createDate:date("m/d/Y H:i a")}</td>',
+                                '<td>Customer</td>',
+                                '<td>{customerNote}</td>',
+                            '</tr>',
+                        '</tbody>',
+                    '</table>',
+                '</div>',
+                '<div class="section section-fulfillment">',
+                    '<h2>Fulfillment</h2>',
+                    '<tpl if="totalDirectShipItems"><div class="subsection-wrapper">',
+                        '<h3>Shipping</h3>',
+                        '<tpl for="packages"><table class="subsection"><tbody>',
+                            '<tr>',
+                                '<td colspan="2">Package #{#}</td>',
+                                '<td colspan="2">Status: {status}</td>',
+                            '</tr><tr>',
+                                '<td>',
+                                    '<div class="label">Ship To</div>',
+                                    '<tpl for="parent.fulfillmentContact">',
+                                        '<div>{firstName} {lastName}</div>',
+                                        '<div>{address1}</div>',
+                                        '<tpl if="address2"><div>{address2}</div></tpl>',
+                                        '<tpl if="address3"><div>{address3}</div></tpl>',
+                                        '<tpl if="address4"><div>{address4}</div></tpl>',
+                                        '<div>{cityOrTown}, {stateOrProvince} {postalOrZipCode}</div>',
+                                    '</tpl>',
+                                '</td><td>',
+                                    '<div class="label">Shipping Method</div>',
+                                    '<div>{shippingMethodName}</div>',
+                                    '<div class="label">Total Weight</div>',
+                                    '<div>{weight:currency(" lbs", 1, true)}</div>',
+                                '</td><td>',
+                                    '<div class="label">Packaging Type</div>',
+                                    '<div>{packagingType}</div>',
+                                '</td><td>',
+                                    '<div class="label">Tracking Number</div>',
+                                '</td>',
+                            '</tr><tr>',
+                                '<td colspan="4"><table class="grid">',
+                                    '<thead><tr>',
+                                        '<th>Code</th>',
+                                        '<th>Products</th>',
+                                        '<th>Weight</th>',
+                                        '<th>Quantity</th>',
+                                    '</tr></thead>',
+                                    '<tbody><tpl for="items"><tr>',
+                                        '<td>{productCode}</td>',
+                                        '<td>{productName}</td>',
+                                        '<td>{weight:currency(" lbs", 1, true)}</td>',
+                                        '<td>{quantity}</td>',
+                                    '</tr></tpl></tbody>',
+                                '</table></td>',
+                            '</tr>',
+                        '</tbody></table></tpl>',
+                    '</div></tpl>',
+                    '<tpl if="totalPickupItems"><div class="subsection-wrapper">',
+                        '<h3>In-Store Pickup</h3>',
+                        '<tpl for="pickups"><table class="subsection"><tbody>',
+                            '<tr>',
+                                '<td>Pickup #{#}</td>',
+                                '<td>Status: {status}</td>',
+                            '</tr><tr>',
+                                '<td>',
+                                    '<div class="label">Location</div>',
+                                    '<div>{fulfillmentLocationCode}</div>',
+                                '</td><td>',
+                                    '<div class="label">Pickup Date</div>',
+                                    '<div>{fulfillmentDate:date("m/d/Y")}</div>',
+                                '</td>',
+                            '</tr><tr>',
+                                '<td colspan="4"><table class="grid">',
+                                    '<thead><tr>',
+                                        '<th>Code</th>',
+                                        '<th>Products</th>',
+                                        '<th>Weight</th>',
+                                        '<th>Quantity</th>',
+                                    '</tr></thead>',
+                                    '<tbody><tpl for="items"><tr>',
+                                        '<td>{productCode}</td>',
+                                        '<td>{productName}</td>',
+                                        '<td>{weight:currency(" lbs", 1, true)}</td>',
+                                        '<td>{quantity}</td>',
+                                    '</tr></tpl></tbody>',
+                                '</table></td>',
+                            '</tr>',
+                        '</tbody></table></tpl>',
+                    '</div></tpl>',
+                '</div>',
+            '</td></tr></tbody>',
+            '</table>'
+        );
+
+        cssText = 'body{font-family:"Source Sans Pro";font-size:14px;line-height:1;margin:0;padding:0}h1,h2,h3{font-weight:600;margin:0}table{border-collapse:collapse;font-size:inherit;line-height:inherit}.section{border-bottom:1px solid #b3b3b3;padding-bottom:10px}.section>h2{border-bottom:1px solid #bfbfbf;font-size:17px;line-height:1;margin:0 2%;padding:17px 1% 16px}.subsection-wrapper{margin:10px 2%}.subsection-wrapper>h3{padding:7px 2%}.subsection-wrapper .grid{margin-left:0;margin-right:0;width:100%}.subsection{margin:0 2%;width:96%}.subsection .label{font-weight:600;margin:14px 0 7px}.subsection .label:nth-of-type(1){margin-top:0}.subsection td{padding:7px 7px 0 0;vertical-align:top}.grid{border:1px solid #bfbfbf;margin:10px 2%;width:96%}.grid th{background-color:#e5e5e5;font-weight:600;padding:8px 14px;text-align:left;white-space:nowrap}.grid td{border-top:1px solid #bfbfbf;padding:8px 14px;text-align:left}.grid tr:nth-of-type(1) td{border-top-width:0}.panes{margin:10px 2%;width:96%}.panes td{border-left:1px solid #bfbfbf;padding:2px 14px 8px;vertical-align:top;width:33%}.panes td:nth-of-type(1){border-left-width:0}.panes .label{color:#b3b3b3;font-size:13px;margin-bottom:7px}.panes .price-total{font-size:24px;margin-bottom:7px}.panes .item-total{font-size:16px}.print-order-page{width:100%}.header th{border-bottom:1px solid #b3b3b3;font-weight:400;padding:14px 2%;text-align:left;vertical-align:top;width:33%}.header .company-info h1{font-size:24px}.header .company-contacts{text-align:center;vertical-align:middle}.header .order-essentials{text-align:right}.header .order-essentials .order-number{font-size:17px;font-weight:600;margin-bottom:3px}.header .order-essentials .order-number .label{color:#b3b3b3;font-weight:400}.header .order-essentials .order-date .label{font-weight:600}.footer td{padding:14px 3%}.section-attributes .attribute{margin:10px 4%}.section-attributes .attribute span{font-style:italic;margin-right:10px}.section-attributes .attribute .label{font-style:normal;font-weight:600}';
+
+        styleEl.setAttribute('type', 'text/css');
+
+        if (Ext.isIE) {
+            doc.head.appendChild(styleEl);
+            styleEl.styleSheet.cssText = cssText;
+        } else {
+            try {
+                styleEl.appendChild(doc.createTextNode(cssText));
+            } catch (e) {
+                styleEl.cssText = cssText;
+            }
+            doc.head.appendChild(styleEl);
+        }
+
+        tpl.overwrite(doc.body, me.record.getData(), false);
     }
 });
