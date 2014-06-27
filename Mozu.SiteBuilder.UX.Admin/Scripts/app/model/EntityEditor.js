@@ -8,7 +8,29 @@ Ext.define('Taco.model.EntityEditor', {
         {
             name: 'id'
         }, {
-            name: 'body'
+            name: 'code',
+            type: 'string'
+        },
+        {
+            name: 'documentTypes',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
+            name: 'entityLists',
+            type: 'auto',
+            defaultValue: []
+        },
+         {
+             name: 'documentLists',
+             type: 'auto',
+             defaultValue: []
+         },
+        {
+            name: 'priority',
+            type: 'float',
+            useNumm:false,
+            defaultValue: 0
         }
     ],
 

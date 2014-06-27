@@ -34,10 +34,8 @@ Ext.define('Taco.view.entityManager.Index', {
 
     initComponent: function () {
         var me = this,
-            metaData= Taco.core.StateManager.getCurrentState().metaData,
+            metaData = Taco.core.StateManager.getCurrentState().metaData,
             qs = metaData.args[metaData.args.length - 1];
-
-
 
 
         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
@@ -55,8 +53,9 @@ Ext.define('Taco.view.entityManager.Index', {
             layout: 'fit',
             listeners: {
                 cellclick: me.onCellClick,
-                itemedit:me.onItemEdit,
+                itemedit: me.onItemEdit,
                 create: me.onCreate,
+
                 savesuccess: me.saveSuccess,
                 savefailure: me.saveFailure,
                 render: me.showHideButtons,
@@ -76,7 +75,6 @@ Ext.define('Taco.view.entityManager.Index', {
         }
 
 
-
         me.callParent(arguments);
 
         if (qs.entityType && qs.list) {
@@ -94,7 +92,7 @@ Ext.define('Taco.view.entityManager.Index', {
                         me.onOpenList(listRecord);
                         me.lists.getSelectionModel().select(listRecord);
                     }
-                }
+                };
                 if (me.lists.store.isLoading()) {
                     me.mon(me.lists.store, 'load', fn, { single: true });
                 } else {
@@ -139,6 +137,7 @@ Ext.define('Taco.view.entityManager.Index', {
                 documentListName: this.grid.listMetaData.entityType == 'cms' ? this.grid.listMetaData.name : null,
                 tenantId: Taco.app.context.getTenantId(),
                 entityType: this.grid.listMetaData.entityType,
+                documentType: this.grid.listMetaData.documentTypes && this.grid.listMetaData.documentTypes.length ? this.grid.listMetaData.documentTypes[0] : undefined,
                 properties: {},
                 item: {}
 
@@ -164,7 +163,25 @@ Ext.define('Taco.view.entityManager.Index', {
             return;
 
         }
-        me.loadEditor(record);
+        if (record.get('entityType') == 'cms') {
+            Ext.Msg.prompt({
+                title: 'File Name',
+                msg: 'Please enter a file Name:  ',
+                width: 300,
+                buttons: Ext.Msg.OKCANCEL,
+                multiline: true,
+                fn: function (res, name) {
+                    if (res == 'ok') {
+                        record.set('name', name);
+                        me.loadEditor(record);
+                    }
+                },
+                //animateTarget: 'addAddressBtn',
+                icon: Ext.window.MessageBox.INFO
+            });
+        } else {
+            me.loadEditor(record);
+        }
 
 
     },
@@ -175,7 +192,7 @@ Ext.define('Taco.view.entityManager.Index', {
         me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
             record: record,
             bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
-            editor: me.editors.getById(record.get('entityListName')) || me.editors.getById(record.get('documentListName')) || me.editors.getById('default')
+            editor: me.editors.findEditor(record)
         });
         me.contentContainer.add(me.form);
         me.showHideButtons();
@@ -187,11 +204,11 @@ Ext.define('Taco.view.entityManager.Index', {
         me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
             record: record,
             bubbleEvents: ['savesuccess', 'saveSuccess'],
-            editor: me.editors.getById(record.get('entityListName')) || me.editors.getById(record.get('documentListName')) || me.editors.getById('default')
+            editor: me.editors.findEditor(record)
         });
         me.contentContainer.add(me.form);
         me.showHideButtons();
-}   ,
+    },
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         var me = this,
             header = view.getHeaderAtIndex(cellIndex);
