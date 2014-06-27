@@ -174,6 +174,7 @@ Ext.define('Taco.view.entityManager.Grid', {
         store = Ext.create('Taco.store.Entities', {
             listName: (me.listMetaData.nameSpace ? me.listMetaData.nameSpace + '.' : '') + me.listMetaData.name,
             entityType: me.listMetaData.entityType,
+            view: view.name,
             autoLoad: true
         });
 

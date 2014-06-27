@@ -1611,8 +1611,8 @@
     <Content Include="Tests\Mocks\Entities\Editors\default.js" />
     <Content Include="Tests\Mocks\Entities\Editors\EntityEditors.js" />
     <Content Include="Tests\Mocks\Entities\Editors\pages.js" />
-    <Content Include="Tests\Mocks\Entities\Editors\SubNavLinks.js" />
-    <Content Include="Tests\Mocks\Entities\Editors\people.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\mozu.extensiblity.subnavlinks.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\phipps.people.js" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

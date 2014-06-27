@@ -75,16 +75,16 @@ Ext.define('Taco.model.Entity', {
             convert: function (v, rec) {
                 if (rec.raw) {
                     if (rec.raw.nameSpace) {
-                        return rec.raw.nameSpace + '.' + rec.raw.name;
+                        return rec.raw.nameSpace + '.' + rec.raw.entityListName;
                     } else {
-                        return rec.raw.name;
+                        return rec.raw.entityListName || rec.raw.name;
                     }
                 }
                 if (rec.data) {
                     if (rec.data.nameSpace) {
-                        return rec.data.nameSpace + '.' + rec.data.name;
+                        return rec.data.nameSpace + '.' + rec.data.entityListName;
                     } else {
-                        return rec.data.name;
+                        return rec.data.entityListName||rec.data.name;
                     }
                 }
                 return null;

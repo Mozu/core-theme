@@ -112,7 +112,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 if (sbContext.IsEditMode)
                 {
-                    throw (Exception)res.ReadException();
+                    //todo add in after demo
+                   // throw (Exception)res.ReadException();
                 }
 
             }
