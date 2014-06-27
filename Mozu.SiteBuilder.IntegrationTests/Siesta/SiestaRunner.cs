@@ -204,6 +204,11 @@ namespace Mozu.SiteBuilder.IntegrationTests.Siesta
 
         private void WalkAssertions(JsonTestAssertion ass)
         {
+           
+            if (ass.assertions != null)
+            {
+                ass.assertions.Each(WalkAssertions);
+            }
             if (ass.passed.HasValue && ass.passed.Value)
             {
                 Assert.IsTrue(true, ass.description);
@@ -211,10 +216,6 @@ namespace Mozu.SiteBuilder.IntegrationTests.Siesta
             else if (ass.passed.HasValue && !ass.passed.Value)
             {
                 Assert.Fail("{0} [{1}]", ass.description, ass.annotation);
-            }
-            if (ass.assertions != null)
-            {
-                ass.assertions.Each(WalkAssertions);
             }
         }
 

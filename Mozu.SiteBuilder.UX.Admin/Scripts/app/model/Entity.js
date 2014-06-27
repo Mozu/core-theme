@@ -18,7 +18,7 @@ Ext.define('Taco.model.Entity', {
                 }
             },
             persist: false
-            
+
         }, {
             "name": "auditInfo",
             "type": "auto",
@@ -30,7 +30,7 @@ Ext.define('Taco.model.Entity', {
             convert: function (v, rec) {
                 var ret, tmp;
                 if (rec.raw) {
-                    ret=  rec.raw.item || rec.raw.properties;
+                    ret = rec.raw.item || rec.raw.properties;
 
                 }
                 //temp code till cms is reworked
@@ -39,7 +39,7 @@ Ext.define('Taco.model.Entity', {
                     Ext.Array.each(ret, function (item) {
                         tmp[item.propertyType] = item.value && Ext.isString(item.value) && (item.value.indexOf('[') == 0 || item.value.indexOf('{') == 0) && Ext.decode(item.value, true) ? Ext.decode(item.value) : item.value;
                     });
-                    ret=  tmp;
+                    ret = tmp;
                 }
                 return ret;
             },
@@ -47,7 +47,7 @@ Ext.define('Taco.model.Entity', {
         }, {
             name: 'tenantId',
             type: 'auto',
-            useNull : true
+            useNull: true
         },
         {
             name: 'entityType',
@@ -68,51 +68,77 @@ Ext.define('Taco.model.Entity', {
             type: 'auto',
             useNull: true
         },
-         {
-             name: 'item',
-             type: 'auto',
-             useNull: true
-         },
-         {
-             name: 'createDate',
-             type: 'auto',
-             useNull: true,
-             persist: false
-         },
-          {
-              name: 'updateDate',
-              type: 'auto',
-              useNull: true,
-              persist: false
-          },
-          {
-              name: 'name',
-              type: 'auto',
-              useNull: true
-          },
-          {
-              name: 'extension',
-              type: 'auto',
-              useNull: true
-          },
-          {
-              name: 'documentListName',
-              type: 'auto',
-              useNull: true
-          },
-          {
-              name: 'publishState',
-              type: 'auto',
-              useNull: true
-          },
-          {
-              name: 'properties',
-              type: 'auto',
-              useNull: true
-          }
+        {
+            name: 'entityListFullName',
+            type: 'auto',
+            persist: false,
+            convert: function (v, rec) {
+                if (rec.raw) {
+                    if (rec.raw.nameSpace) {
+                        return rec.raw.nameSpace + '.' + rec.raw.name;
+                    } else {
+                        return rec.raw.name;
+                    }
+                }
+                if (rec.data) {
+                    if (rec.data.nameSpace) {
+                        return rec.data.nameSpace + '.' + rec.data.name;
+                    } else {
+                        return rec.data.name;
+                    }
+                }
+                return null;
+            }
+        },
+        {
+            name: 'item',
+            type: 'auto',
+            useNull: true
+        },
+        {
+            name: 'createDate',
+            type: 'auto',
+            useNull: true,
+            persist: false
+        },
+        {
+            name: 'updateDate',
+            type: 'auto',
+            useNull: true,
+            persist: false
+        },
+        {
+            name: 'name',
+            type: 'auto',
+            useNull: true
+        },
+        {
+            name: 'extension',
+            type: 'auto',
+            useNull: true
+        },
+        {
+            name: 'documentType',
+            type: 'auto',
+            useNull: true
+        },
+        {
+            name: 'documentListName',
+            type: 'auto',
+            useNull: true
+        },
+        {
+            name: 'publishState',
+            type: 'auto',
+            useNull: true
+        },
+        {
+            name: 'properties',
+            type: 'auto',
+            useNull: true
+        }
     ],
 
-    
 
     proxy: {
         type: 'ajax',
@@ -134,4 +160,3 @@ Ext.define('Taco.model.Entity', {
         }
     }
 });
-

@@ -195,7 +195,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         };
 
         if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
-            
+
             conf.items.push({
                 autoEl: 'h3',
                 itemId: 'forLable',
@@ -271,7 +271,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             // todo: finalize button visibility pattern and do search and replace
             if (me.cancelButtonEnabled) {
-                me.actions.push({
+                me.actions.push(Ext.apply({}, me.cancelButtonCfg, {
                     xtype: 'button',
                     text: me.cancelText,
                     margin: "0 0 0 10",
@@ -281,12 +281,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     itemId: 'cancelActionButton',
                     handler: me.cancelActionHandler,
                     scope:me
-                })
+                }));
             }
 
             if (me.saveButtonEnabled) {
                 
-                me.actions.push({
+                me.actions.push(Ext.apply({}, me.saveButtonCfg, {
                     xtype: 'button',
                     text: me.saveText,
                     margin: "0 0 0 10",
@@ -300,12 +300,23 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     toggleHandler: me.saveActionHandler,
                     scope: me
                     
-                })
+                }));
             }
 
             if (me.createButtonEnabled) {
                 var createButtonConfig = this.getCreateButtonConfig();
-                me.actions.push(createButtonConfig)
+               
+                me.actions.push(Ext.apply({}, me.createButtonCfg, {
+                    xtype: 'button',
+                    text: this.createButtonText,
+                    margin: "0 0 0 10",
+                    ui: 'action-primary',
+                    scale: 'medium',
+                    hidden: !me.createButtonVisible,
+                    itemId: 'createActionButton',
+                    handler: me.createActionHandler,
+                    scope: me
+                }));
             }
         }
 
@@ -522,7 +533,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     onCreate: Ext.emptyFn,
 
     doCreate: function () {
-        console.log("doCreate")
+        console.log("doCreate")        
     },
 
     bindActionsToForm: function (form) {

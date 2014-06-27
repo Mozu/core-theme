@@ -757,6 +757,8 @@
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\overrides\ZIndexManager.js" />
+    <Content Include="Scripts\app\shared\view\field\ArrayField.js" />
+    <Content Include="Scripts\app\shared\view\field\GridField.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\shared\view\field\CountryField.js" />
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
@@ -1605,7 +1607,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\makeadmintests.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\default - Copy.js" />
     <Content Include="Tests\Mocks\Entities\Editors\default.js" />
+    <Content Include="Tests\Mocks\Entities\Editors\EntityEditors.js" />
     <Content Include="Tests\Mocks\Entities\Editors\pages.js" />
     <Content Include="Tests\Mocks\Entities\Editors\SubNavLinks.js" />
     <Content Include="Tests\Mocks\Entities\Editors\people.js" />
