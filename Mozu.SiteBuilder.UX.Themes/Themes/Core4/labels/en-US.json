@@ -63,6 +63,7 @@
   "digitalCreditTotal"	 : "Less: Gift Cards",
   "digitalCreditSubtractFromOrderPrefix" : "(",
   "digitalCreditSubtractFromOrderSuffix" : ")",
+  "remainingBalance"	 : "Remaining Balance",
   "clear"                : "Clear",
   "cancel"               : "Cancel",
   "sendEmail"            : "Send Email",
