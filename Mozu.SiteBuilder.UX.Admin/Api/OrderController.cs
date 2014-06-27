@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -105,8 +107,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var ctx = Request.Properties["MS_HttpContext"] as HttpContextWrapper;
                 if (ctx != null)
                 {
-                    emptyOrder.IPAddress = ctx.Request.Headers["X-Forwarded-For"] ?? ctx.Request.UserHostAddress;
+                    var ipStr = ctx.Request.Headers["X-Forwarded-For"] ?? ctx.Request.UserHostAddress;
+                    IPAddress ipaddress;
+                    if (IPAddress.TryParse(ipStr, out ipaddress) && ipaddress.AddressFamily != AddressFamily.InterNetworkV6)
+                    {
+                        emptyOrder.IPAddress = ipStr;
+                    }
+                    
                 }
+              
             }
 
             var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
