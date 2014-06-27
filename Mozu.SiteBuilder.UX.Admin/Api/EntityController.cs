@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else if (documents.First().Value<string>("entityType") == "mzdb")
             {
-                List<Task<ServiceClientResponse<object>>> tasks = documents.Select(doc =>
+                List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<EntityContainer>();
                     return _entityListsWebApiClient.InsertEntity(entityListFullName: entity.NameSpace + "." + entity.EntityListName, item: entity.Item);
@@ -139,7 +139,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else if (documents.First().Value<string>("entityType") == "mzdb")
             {
-                List<Task<ServiceClientResponse<object>>> tasks = documents.Select(doc =>
+                List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<EntityContainer>();
                     return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.NameSpace + "." + entity.EntityListName, item: entity.Item, id: entity.Id);
