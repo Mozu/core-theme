@@ -445,7 +445,7 @@
                             return order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
                                 order.set(o.data);
                                 //* may need to set digitalCredit here when goes through
-                                self.trigger('orderPayment', o.data, this);
+                                self.trigger('orderPayment', o.data, self);
                                 return o;
                             });
                         } else {
@@ -463,7 +463,7 @@
                     order.set(o.data);
                     //* may need to set digitalCredit here when goes through
 
-                    self.trigger('orderPayment', o.data, this);
+                    self.trigger('orderPayment', o.data, self);
                     return o;
                 });
             },
@@ -476,11 +476,13 @@
             getDigitalCredit: function () {
                 var me = this,
                     order = me.getOrder(),
-                    customer = order.get('customer'),
-                    availCredits = this.availableDigitalCredits();
+                    customer = order.get('customer');
                 var creditCode = this.get('digitalCreditCode');
 
-                if (availCredits && availCredits.length > 0 && _.findWhere(availCredits, { code: creditCode })){
+                var existingDigitalCredit = this._cachedDigitalCredits.filter(function (cred) {
+                    return cred.get('code') === creditCode;
+                });
+                if (existingDigitalCredit && existingDigitalCredit.length > 0){
                     me.trigger('error', {
                         message: Hypr.getLabel('digitalCodeAlreadyUsed', creditCode)
                     });
@@ -491,17 +493,18 @@
                 }
                 this.isLoading(true);
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
-                    credit.data.isEnabled = true;
-
+                    var creditModel = new PaymentMethods.DigitalCredit(credit.data);
+                    
                     var remainingTotal = me.nonStoreCreditTotal();
-                    var maxAmt = remainingTotal < credit.data.currentBalance ? remainingTotal : credit.data.currentBalance;
-
+                    var maxAmt = remainingTotal < creditModel.get('currentBalance') ? remainingTotal : creditModel.get('currentBalance');
+                    
                     maxAmt = Math.round(maxAmt * 100) / 100.0; //round to 2 decimal places
-                    credit.data.creditAmountApplied = maxAmt;
-
-                    me._cachedDigitalCredits.push(credit.data);
-                    me.applyDigitalCredit(credit.data.code, maxAmt);
-                    me.trigger('sync', credit);
+                    creditModel.set('creditAmountApplied', maxAmt);
+                    creditModel.set('isEnabled', true);
+                    
+                    me._cachedDigitalCredits.push(creditModel);
+                    me.applyDigitalCredit(creditCode, maxAmt, true);
+                    me.trigger('sync', creditModel);
                     return me;
                 });
             },
