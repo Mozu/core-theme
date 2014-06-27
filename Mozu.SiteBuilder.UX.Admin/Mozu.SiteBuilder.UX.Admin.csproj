@@ -707,6 +707,7 @@
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\Card.js" />
+    <Content Include="Scripts\app\model\InternalNote.js" />
     <Content Include="Scripts\app\model\Channel.js" />
     <Content Include="Scripts\app\model\CheckoutSettings.js" />
     <Content Include="Scripts\app\model\Capability.js" />
@@ -767,6 +768,7 @@
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
+    <Content Include="Scripts\app\store\InternalNotes.js" />
     <Content Include="Scripts\app\store\ConfiguredCreditCards.js" />
     <Content Include="Scripts\app\store\AdminUsers.js" />
     <Content Include="Scripts\app\store\Capability.js" />

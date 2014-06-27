@@ -128,26 +128,6 @@ Ext.define('Taco.view.order.subform.Detail', {
             data:this.record.getData()
         });
 
-        me.internalNotesStore = Ext.create('Ext.data.Store', {
-            autoLoad: true,
-            fields: [{
-                type: 'date', name: 'date',
-            }, {
-                type: 'string', name: 'agent',
-            }, {
-                type: 'string', name: 'comment'
-            }],
-            data: [{
-                date: Ext.Date.parse('01/01/2014 07:43am', 'm/d/Y h:ia'),
-                agent: 'Patsy OrderProcessor',
-                comment: 'I called the customer and let them know the widget is backordered.'
-            }, {
-                date: Ext.Date.parse('01/02/2014 05:19pm', 'm/d/Y h:ia'),
-                agent: 'Cody CustomerCare',
-                comment: 'I spoke to Joe and let him know that I will cancel the widget and that it will be reflected on his CC within 3 days.'
-            }]
-        });
-
         me.internalNoteRow = Ext.create('Taco.view.order.subform.InternalNotes', {
             record: this.record,
             orderForm: this
