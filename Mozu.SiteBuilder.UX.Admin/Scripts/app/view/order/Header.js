@@ -144,6 +144,12 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="billingContract.address2">{billingContact.address2}<br></tpl>',
 
+                '<tpl if="billingContract.address2">{billingContact.address2}<br></tpl>',
+
+                '<tpl if="billingContract.address3">{billingContact.address3}<br></tpl>',
+
+                '<tpl if="billingContract.address4">{billingContact.address4}<br></tpl>',
+
                 '{billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}<br>',
 
                 '',
@@ -161,6 +167,10 @@ Ext.define('Taco.view.order.Header', {
                 '{fulfillmentContact.address1}<br>',
 
                 '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2}<br></tpl>',
+
+                '<tpl if="fulfillmentContact.address3">{fulfillmentContact.address3}<br></tpl>',
+
+                '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4}<br></tpl>',
 
                 '{fulfillmentContact.cityOrTown}, {fulfillmentContact.stateOrProvince} {fulfillmentContact.postalOrZipCode} {fulfillmentContact.countryCode}<br>',
 
