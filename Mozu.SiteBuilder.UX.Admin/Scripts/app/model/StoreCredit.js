@@ -64,6 +64,11 @@ Ext.define('Taco.model.StoreCredit', {
         }
     ],
 
+    canBeApplied: function() {
+        var now = new Date().getTime();
+        return this.get('expirationDate') > now && this.get('activationDate') < now && this.get('currentBalance'() > 0);
+    },
+
     proxy: {
         type: 'ajaxproxy',
         api: {

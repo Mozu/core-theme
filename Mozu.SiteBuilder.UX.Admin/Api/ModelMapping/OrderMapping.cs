@@ -536,6 +536,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? dc.BillingInfo.Card.NameOnCard : null))
                 .ForMember(x => x.ExpireMonth, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.Card != null ? (short?)dc.BillingInfo.Card.ExpireMonth : null))
                 .ForMember(x => x.ExpireYear, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.Card != null ? (short?)dc.BillingInfo.Card.ExpireYear : null))
+                .ForMember(x => x.StoreCreditCode, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.StoreCreditCode != null ? dc.BillingInfo.StoreCreditCode : null))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))

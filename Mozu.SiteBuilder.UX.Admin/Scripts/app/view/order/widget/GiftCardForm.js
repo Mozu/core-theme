@@ -36,7 +36,15 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                     Taco.model.StoreCredit.load(code, {
                         scope: me,
                         callback: function(validCredit) {
+                            var errorText;
                             if (!validCredit) return codeField.markInvalid([codeField.invalidText]);
+                            var now = new Date().getTime(),
+                                expDate = validCredit.get('expirationDate'),
+                                activationDate = validCredit.get('activationDate');
+                            if (expDate < now) errorText = "expired on " + expDate.toString();
+                            if (activationDate > now) errorText = "does not become active until " + activationDate.toString();
+                            if (validCredit.get('currentBalance') <= 0) errorText = "has no remaining funds.";
+                            if (errorText) return codeField.markInvalid(["Credit ID " + code + " " + errorText]);
                             validCredit.set('customerId', me.order.get('customerId'));
                             validCredit.save({
                                 success: function() {

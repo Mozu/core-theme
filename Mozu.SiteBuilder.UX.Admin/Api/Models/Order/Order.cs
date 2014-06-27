@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Web;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCpay = Mozu.CommerceRuntime.Contracts.Payments;
+using DCcredit = Mozu.Customer.Contracts.Credit;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -188,6 +189,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// A fraud score, if one was included in the ValidationResults.
         /// </summary>
         public string FraudScore { get; set; }
+
+        /// <summary>
+        /// A list of store credits which were used in a valid payment on this order.
+        /// </summary>
+        public List<DCcredit.Credit> AssociatedCredits { get; set; }
 
         #region Totals
 
