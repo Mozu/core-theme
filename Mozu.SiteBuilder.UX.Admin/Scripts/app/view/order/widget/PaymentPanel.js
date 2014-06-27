@@ -170,7 +170,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{payment.amountAuthorized:usMoney}</strong></h4>',
                 '<h4><span class="{cls}-label">{labels.collected}:</span> <strong class="{cls}-value">{payment.amountCollected:usMoney}</strong></h4>',
                 '<tpl if="payment.amountCredited != 0">',
-                '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{payment.amountCredited:usMoney}</strong></h4>',
+                '<h4><span class="{cls}-label">{labels.credited}:</span> <strong class="{cls}-value">{payment.amountCredited:usMoney}</strong></h4>',
                 '</tpl>',
             ],
             data: {

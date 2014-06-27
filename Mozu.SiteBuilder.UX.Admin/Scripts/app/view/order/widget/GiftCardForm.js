@@ -36,6 +36,8 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                     Taco.model.StoreCredit.load(code, {
                         scope: me,
                         callback: function(validCredit) {
+
+                            // validation
                             var errorText;
                             if (!validCredit) return codeField.markInvalid([codeField.invalidText]);
                             var now = new Date().getTime(),
@@ -44,7 +46,10 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                             if (expDate < now) errorText = "expired on " + expDate.toString();
                             if (activationDate > now) errorText = "does not become active until " + activationDate.toString();
                             if (validCredit.get('currentBalance') <= 0) errorText = "has no remaining funds.";
-                            if (errorText) return codeField.markInvalid(["Credit ID " + code + " " + errorText]);
+                            if (validCredit.get('customerId')) errorText = "has already been claimed.";
+                            if (errorText) return codeField.markInvalid(["Credit code " + code + " " + errorText]);
+
+                            // claim
                             validCredit.set('customerId', me.order.get('customerId'));
                             validCredit.save({
                                 success: function() {
@@ -54,6 +59,12 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                                             me.getGiftCardGrid().startEditAtCode(code);
                                         }, 500)
                                     });
+                                },
+                                failure: function(r, op) {
+                                    var msg = "Please try another card.", 
+                                        e =  op.getError();
+                                    if (e && e.remoteException) msg = e.remoteException.getMessage();
+                                    codeField.markInvalid(['There was an unknown error applying this gift card: ' + msg]);
                                 }
                             });
                         }
