@@ -449,7 +449,19 @@
                                 return o;
                             });
                         } else {
-                            order.apiVoidPayment(sameCreditPayment.id);
+                            return order.apiVoidPayment(sameCreditPayment.id).then(function (o) {
+                                order.set(o.data);
+                                return order.apiAddStoreCredit({
+                                    storeCreditCode: creditCode,
+                                    amount: creditAmountToApply
+                                }).then(function (o) {
+                                    order.set(o.data);
+                                    //* may need to set digitalCredit here when goes through
+
+                                    self.trigger('orderPayment', o.data, self);
+                                    return o;
+                                });
+                            });
                         }
                     }
                 }
