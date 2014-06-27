@@ -381,35 +381,42 @@
 
             //digital
 
+            
+            onCreditAmountChanged: function(digCredit, amt) {
+                this.applyDigitalCredit(digCredit.get('code'), amt);
+                //console.log(digCredit);
+            },
+
             loadCustomerDigitalCredits: function () {
                 var order = this.getOrder(),
                     customer = order.get('customer');
                 if (customer) {
                     var customerCredits = customer.get('credits');
                     if (customerCredits) {
-                        var jsonCredits = customerCredits.toJSON();
-                        return _.filter(jsonCredits, function (cred) {
-                            var expDate = (cred.expirationDate) ? new Date(cred.expirationDate) : new Date(2099, 0, 1);
-                            return (cred.currentBalance > 0 && expDate > new Date());
+                        customerCredits.filter(function (cred) {
+                            var expDate = (cred.get('expirationDate')) ? new Date(cred.get('expirationDate')) : new Date(2076, 6, 4);
+                            return (cred.get('currentBalance') > 0 && expDate > new Date());
                         });
+                        return customerCredits;
                     }
                 }
-                return [];
+                return []; //new PaymentMethods.DigitalCreditCollection()/result;
             },
             availableDigitalCredits: function () {
-                if (! this._cachedDigitalCredits) {
+                if (! this._cachedDigitalCredits) { 
                     this._cachedDigitalCredits = this.loadCustomerDigitalCredits();
                 }
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
             },
 
-            applyDigitalCredit: function (creditCode, creditAmountToApply) {
+            applyDigitalCredit: function (creditCode, creditAmountToApply, isEnabled) {
                 var self = this,
                     order = self.getOrder();
                 this._oldPaymentType = this.get('paymentType');
-                var digitalCredit = _.findWhere(this.availableDigitalCredits(), { code: creditCode });
-                //not found.
-                if (! digitalCredit) {
+                var digitalCredit = this._cachedDigitalCredits.filter(function(cred) {
+                     return cred.get('code') === creditCode;
+                });
+                if (! digitalCredit || digitalCredit.length === 0) {
                     self.trigger('error', {
                         message: Hypr.getLabel('digitalCodeAlreadyUsed', creditCode)
                     });
@@ -418,6 +425,9 @@
                     
                     return deferred.promise;
                 }
+                digitalCredit = digitalCredit[0];
+                digitalCredit.set('creditAmountApplied', creditAmountToApply);
+                digitalCredit.set('isEnabled', isEnabled);
                 var activeCreditPayments = this.activeStoreCredits();
                 if (activeCreditPayments) {
                     //check if payment applied with this code, remove
@@ -431,9 +441,10 @@
                             deferredSameCredit.reject();
                             return deferredSameCredit.promise;
                         }
-                        if (creditAmountToApply <= 0) {
-                            order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
+                        if (creditAmountToApply === 0) {
+                            return order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
                                 order.set(o.data);
+                                //* may need to set digitalCredit here when goes through
                                 self.trigger('orderPayment', o.data, this);
                                 return o;
                             });
@@ -442,18 +453,16 @@
                         }
                     }
                 }
-                if (creditAmountToApply <= 0) {
-                    delete digitalCredit.creditAmountApplied;
-                    digitalCredit.isEnabled = false;
+                if (creditAmountToApply === 0) {
                     return this.getOrder();
                 }
-                digitalCredit.creditAmountApplied = creditAmountToApply;
-                digitalCredit.isEnabled = true;
                 return order.apiAddStoreCredit({
                     storeCreditCode: creditCode,
                     amount: creditAmountToApply
                 }).then(function (o) {
                     order.set(o.data);
+                    //* may need to set digitalCredit here when goes through
+
                     self.trigger('orderPayment', o.data, this);
                     return o;
                 });
