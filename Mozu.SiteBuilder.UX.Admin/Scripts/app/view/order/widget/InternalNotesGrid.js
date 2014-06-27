@@ -12,25 +12,7 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
     enableRowEditing: true,
 
     columns: [{
-        xtype: 'datecolumn',
-        dataIndex: 'date',
-        text: 'Date',
-        format: 'm/d/Y h:ia',
-        flex: 1,
-        editor: {
-            xtype: 'datefield',
-            format: 'm/d/Y h:ia',
-            value: '6/1/2014 12:00am'
-        }
-    }, {
-        dataIndex: 'agent',
-        text: 'Agent',
-        flex: 1,
-        editor: {
-            xtype: 'textfield'
-        }
-    }, {
-        dataIndex: 'comment',
+        dataIndex: 'text',
         text: 'Comment',
         flex: 4,
         nowrap: false,
@@ -55,9 +37,9 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
                 scope: this,
                 fn: 'handleBeforeEdit'
             },
-            edit: {
+            validateedit: {
                 scope: this,
-                fn: function (editor, context) { console.log('edit'); }
+                fn: 'handleValidateEdit'
             }
         });
     },
@@ -72,5 +54,23 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
         context.cancel = !context.record.phantom;
 
         if (context.cancel) return false;
+    },
+
+    handleValidateEdit: function (editor, context) {
+        context.cancel = true;
+
+        context.record.set({
+            'orderId': this.record.get('id'),
+            'text': context.newValues.text
+        });
+
+        editor.cancelEdit();
+
+        this.getStore().add(context.record);
+        console.log(context.record, this.getStore().last());
+
+        this.getView().refresh();
+
+        this.getStore().sync();
     }
 });

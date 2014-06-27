@@ -6,6 +6,7 @@ Ext.define('Taco.model.Order', {
         'Taco.model.OrderItem',
         'Taco.model.Return',
         'Taco.model.ShippingMethod',
+        'Taco.model.InternalNote',
         'Taco.store.ShippingMethods',
     ],
     
@@ -295,6 +296,11 @@ Ext.define('Taco.model.Order', {
         }, {
             "name": "customerNote",
             "type": "string",
+            "useNull": true
+        }, {
+            "name": "internalNotes",
+            "type": "auto",
+            "defaultValue": [],
             "useNull": true
         }, {
             "name": "itemsOrdered",
@@ -1166,19 +1172,6 @@ Ext.define('Taco.model.Order', {
         });
 
         config.errorMsg = config.errorMsg || "Error declining check";
-        this.addErrorHandling(config);
-
-        Ext.Ajax.request(config);
-    },
-
-    addGiftCards: function(config) {
-
-        Ext.applyIf(config, {
-            url: '/admin/app/order/payment/addgiftcards',
-            method: 'POST'
-        });
-
-        config.errorMsg = config.errorMsg || "Error adding gift cards";
         this.addErrorHandling(config);
 
         Ext.Ajax.request(config);
@@ -2254,6 +2247,14 @@ Ext.define('Taco.model.Order', {
             }
         });
         Ext.Ajax.request(config);
+    },
+
+    getInternalNotes: function () {
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.InternalNote',
+            associationKey: 'internalNotes',
+            foreignProperty: 'orderId'
+        });
     }
 }, function() {
 

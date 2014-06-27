@@ -5,7 +5,9 @@
 // todos extend base class for the subform
 Ext.define('Taco.view.order.subform.InternalNotes', {
     extend: 'Taco.view.order.subform.Subform',
-    requires: ['Taco.view.order.widget.InternalNotesGrid'],
+    requires: [
+        'Taco.view.order.widget.InternalNotesGrid'
+    ],
     
     title: 'Internal Notes',
     ui: 'subform-section',
@@ -14,27 +16,30 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
     initComponent: function () {
         var me = this;
 
-        this.store = Ext.create('Ext.data.Store', {
-            autoLoad: true,
-            fields: [{
-                type: 'date', name: 'date',
-            }, {
-                type: 'string', name: 'agent',
-            }, {
-                type: 'string', name: 'comment'
-            }],
-            data: [{
-                date: Ext.Date.parse('01/01/2014 07:43am', 'm/d/Y h:ia'),
-                agent: 'Patsy OrderProcessor',
-                comment: 'I called the customer and let them know the widget is backordered.'
-            }, {
-                date: Ext.Date.parse('01/02/2014 05:19pm', 'm/d/Y h:ia'),
-                agent: 'Cody CustomerCare',
-                comment: 'I spoke to Joe and let him know that I will cancel the widget and that it will be reflected on his CC within 3 days.'
-            }]
-        });
+        this.store = this.record.getInternalNotes();
+
+        // this.store = Ext.create('Ext.data.Store', {
+        //     autoLoad: true,
+        //     fields: [{
+        //         type: 'date', name: 'date',
+        //     }, {
+        //         type: 'string', name: 'agent',
+        //     }, {
+        //         type: 'string', name: 'comment'
+        //     }],
+        //     data: [{
+        //         date: Ext.Date.parse('01/01/2014 07:43am', 'm/d/Y h:ia'),
+        //         agent: 'Patsy OrderProcessor',
+        //         comment: 'I called the customer and let them know the widget is backordered.'
+        //     }, {
+        //         date: Ext.Date.parse('01/02/2014 05:19pm', 'm/d/Y h:ia'),
+        //         agent: 'Cody CustomerCare',
+        //         comment: 'I spoke to Joe and let him know that I will cancel the widget and that it will be reflected on his CC within 3 days.'
+        //     }]
+        // });
 
         this.grid = Ext.create('Taco.view.order.widget.InternalNotesGrid', {
+            record: this.record,
             store: this.store
         });
 
