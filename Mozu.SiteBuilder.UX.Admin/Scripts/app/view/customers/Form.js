@@ -14,7 +14,6 @@ Ext.define('Taco.view.customers.Form', {
     // enableStoreSyncTasks:true,
     initComponent: function () {
         var data = this.record.getData(),
-            contactsStore = this.record.getContacts(),
             me = this,
             profile, contacts, orderGrid, shipingInfo, notes;
 
@@ -25,7 +24,6 @@ Ext.define('Taco.view.customers.Form', {
             data.lastName
         ].join(' ');
 
-        this.store = this.record.getContacts();
         this.segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
 
         
@@ -37,12 +35,8 @@ Ext.define('Taco.view.customers.Form', {
             segmentStore: this.segmentStore
         });
 
-        me.billingInformation = Ext.create('Taco.view.customers.subform.BillingInformation', {
-            record: contactsStore
-        });
-
-        me.shippingInformation = Ext.create('Taco.view.customers.subform.ShippingInformation', {
-            record: contactsStore
+        me.contacts = Ext.create('Taco.view.customers.subform.Contacts', {
+            record: this.record
         });
 
         var orders = this.record.getOrders();
@@ -63,8 +57,7 @@ Ext.define('Taco.view.customers.Form', {
         me.customerAttribute.width = 960;
         this.items = [
             me.profile,
-            me.billingInformation,
-            me.shippingInformation,
+            me.contacts,
             me.storeCredit,
             me.orderHistory,
             me.customerAttribute/*,
