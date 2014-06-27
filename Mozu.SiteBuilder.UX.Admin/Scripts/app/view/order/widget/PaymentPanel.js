@@ -16,7 +16,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.VoidPaymentManual',
         'Taco.view.order.modal.CreditPaymentManual',
         'Taco.view.order.modal.CheckDecline',
-        'Taco.core.ux.form.CurrencyField',
         'Ext.window.MessageBox'
     ],
     cls: 'orderform-payment-transaction',
@@ -25,7 +24,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         me.initStatusRow();
         me.initPaymentDetails();
-        me.initCaptureAmountField();
+        me.initDisplayAmount();
         me.initTransactionList();
 
         me.items = [
@@ -35,14 +34,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     layout: 'column',
                     items: [
                         me.paymentDetails,
-                        {
-                            xtype: 'container',
-                            width: 180,
-                            margin: '2 0 0 0',
-                            items: [
-                                me.captureAmountField
-                            ]
-                        }
+                        me.displayAmount
                     ]
                 },
                 me.transactionList
@@ -169,13 +161,28 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     },
 
-    // text field below actions for entering in actual capture dollar amount
-    initCaptureAmountField: function() {
-        this.captureAmountField = Ext.widget('currencyfield', {
-            width: 180,
-            value: Math.min(this.record.data.amountAuthorized, this.order.data.authorizationInfo.captureAmount),
-            disabled: true
-        })
+    //large-type display amount for the total amount collected, displayed, or authorized
+    initDisplayAmount: function() {
+        var cls = Taco.baseCSSPrefix + 'orderform-payment-amounts-summary';
+        this.displayAmount = Ext.widget('component', {
+            cls: cls,
+            tpl: [
+                '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{payment.amountAuthorized:usMoney}</strong></h4>',
+                '<h4><span class="{cls}-label">{labels.collected}:</span> <strong class="{cls}-value">{payment.amountCollected:usMoney}</strong></h4>',
+                '<tpl if="payment.amountCredited != 0">',
+                '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{payment.amountCredited:usMoney}</strong></h4>',
+                '</tpl>',
+            ],
+            data: {
+                cls: cls,
+                labels: {
+                    collected: 'Amount Collected',
+                    credited: 'Amount Credited',
+                    authorized: 'Amount Authorized'
+                },
+                payment: this.record.data
+            }
+        });
     },
 
     // shows status and action buttons and field depending on the state of the entity
@@ -316,8 +323,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
                     '<tpl if="paymentType == \'Check\'">',
                         '<div class="paymentTypeCheck">',
-                        '<h3 class="paymentDetailsHeader">Method:</h3>',
+                        '<h4 class="paymentDetailsHeader">Method:</h4>',
                         '<div class="check">Check</div>',
+                        '</div>',
+                    '<tpl elseif="paymentType == \'StoreCredit\'">',
+                        '<div class="paymentTypeStoreCredit">',
+                            '<h4 class="paymentDetailsHeader">Method:</h4>',
+                            '<div class="credit">Store Credit</div>',
+                            '<div class="credit">Code: {storeCreditCode} (<a href="/StoreCredits/edit/{storeCreditCode}">click for details</a>)</div>',
                         '</div>',
                     '<tpl else>',
                         '<div class="authorizedCreditCard">',
@@ -342,7 +355,18 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
                 '</div>'
             ],
-            data: data
+            data: data,
+            listeners: {
+                boxready: function() {
+                    this.getEl().on('click', function(e,t) {
+                        var href = t.getAttribute('href');
+                        if (href && t.tagName.toLowerCase() === "a") {
+                            e.preventDefault();
+                            Taco.core.StateManager.attemptNavigate(href);
+                        }
+                    });
+                }
+            }
         });
 
     },

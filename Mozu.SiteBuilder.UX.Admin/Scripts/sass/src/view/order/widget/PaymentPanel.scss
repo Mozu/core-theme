@@ -66,6 +66,23 @@
     }
   }
 
+  .#{$vprefix}orderform-payment-amounts-summary {
+	  display: table;
+	  padding: 1rem;
+	  h4 {
+		display: table-row;
+	  }
+	  &-label {
+		display: table-cell;
+		text-align: left;
+		padding: 0 1rem 1rem 0;
+	  }
+	  &-value {
+		text-align: right;
+		display: table-cell;
+	  }
+  }
+
   .orderform-payment-transactionlist{   
     
     .payment-transaction{   

@@ -414,7 +414,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (customerId != null)
                 filter = string.Format("CustomerId eq {0}", customerId);
 
-            var dcitem = (await _creditWebApiClient.GetCredits(0, 600, filter: filter)).ReadAsSync();
+            var dcitemTask = (await _creditWebApiClient.GetCredits(0, 600, filter: filter));
+
+            if (dcitemTask.HasException)
+            {
+                throw dcitemTask.ReadException();
+            }
+
+            var dcitem = dcitemTask.ReadAsSync();
             var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
             //todo get all ids and make one query;
             Hashtable custLookups = new Hashtable();
