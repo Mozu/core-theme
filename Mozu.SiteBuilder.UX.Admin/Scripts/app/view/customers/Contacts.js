@@ -90,11 +90,15 @@ Ext.define('Taco.view.customers.Contacts', {
                     tpl: [
                         '<div data-handle="contact-{id}" data-contact-type="', '<tpl if="isFromOrder">order<tplelse>customer</tpl>' , '">',
 
-                        '{firstName} {lastName}<br>',
+                        '{firstName}<tpl if="middleName"> {middleName}</tpl> {lastName}<br>',
 
                         '<span data-handle="contact-address1">{address1}</span><br>',
 
                         '<tpl if="address2">{address2}<br></tpl>',
+                        
+                        '<tpl if="address3">{address3}<br></tpl>',
+                        
+                        '<tpl if="address4">{address4}<br></tpl>',
 
                         '{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}<br>',
 
