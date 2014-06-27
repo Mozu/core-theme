@@ -179,20 +179,6 @@
             });
         },
 
-        onChangeDigitalCredit: function(credit, amt) {
-            this.model.applyDigitalCredit(credit.get('code'), this.stripNonNumericAndParseFloat(amt));
-            this.render();
-
-        },
-
-        onDigitalCreditChanged: function (e) {
-            var inputType = $(e.currentTarget).prop('type');
-            if (inputType === 'checkbox') {
-                this.enableDigitalCredit(e);
-            } else {
-                this.applyDigitalCredit(e);
-            }
-        },
 
         stripNonNumericAndParseFloat: function (val) {
             if (!val) return 0;
@@ -250,9 +236,14 @@
         },
 
         handleEnterKey: function (e) {
-            var source = $(e.currentTarget).prop('id');
-            if (source === 'digital-credit-code')
-                this.getDigitalCredit();
+            var source = $(e.currentTarget).attr('data-mz-value');
+            if (!source) return;
+            switch (source) {
+                case "creditAmountApplied":
+                    return this.applyDigitalCredit(e);
+                case "digitalCreditCode":
+                    return this.getDigitalCredit(e);
+            }
         }
     });
 
