@@ -7,7 +7,8 @@
     },
     requires:[
         'Taco.shared.view.field.GridField',
-        'Taco.shared.view.field.ArrayField'
+        'Taco.shared.view.field.ArrayField',
+        'Ext.form.FieldSet'
     ],
     saveButtonEnabled: true,
     createButtonEnabled: true,
