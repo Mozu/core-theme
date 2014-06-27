@@ -158,6 +158,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<List<JObject>>> Read(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view = null)
         {
+            if (view != null && view.IndexOf("-fake")>-1)
+            {
+                view = null;
+            }
             if (entityType == "cms")
             {
                 string sortBy = null;
@@ -175,7 +179,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 string sortBy = null;
                 string filter = null;
-                EntityContainerCollection res = (await _entityListsWebApiClient.GetEntityContainers(entityListFullName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
+                EntityContainerCollection res = null;
+                if (string.IsNullOrEmpty(view) || 1==1)
+                {
+                    res = (await _entityListsWebApiClient.GetEntityContainers(entityListFullName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
+                }
+                else
+                {
+                    res = (await _entityListsWebApiClient.GetViewEntityContainers( viewName:view, entityListFullName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex)).ReadAsSync();
+                    
+                }
+                
 
                 return List2(res.Items.Select(x =>
                 {
@@ -271,131 +285,137 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private JObject AddViews(EntityList x)
         {
             List<ListView> views = null;
-            if (string.Equals(x.Name, "subNavLinks", StringComparison.OrdinalIgnoreCase))
+            if (x.Views == null || x.Views.Count == 0)
             {
-                views = new List<ListView>()
-                        {
-                            new ListView()
+
+
+                if (string.Equals(x.Name, "subNavLinks", StringComparison.OrdinalIgnoreCase))
+                {
+                    views = new List<ListView>()
                             {
-                                Name = "default",
-                                Usages = new List<string>() {"entityManager"},
-                                Fields = new List<ListViewField>()
-                                         {
-                                             new ListViewField()
+                                new ListView()
+                                {
+                                    Name = "default-fake",
+                                    Usages = new List<string>() {"entityManager"},
+                                    Fields = new List<ListViewField>()
                                              {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "parentId",
-                                                 Type = "string"
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "parentId",
+                                                     Type = "string"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "path",
+                                                     Type = "any",
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "href",
+                                                     Type = "string"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "windowTitle",
+                                                     Type = "string"
+                                                 }
                                              },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "path",
-                                                 Type = "any",
-                                             },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "href",
-                                                 Type = "string"
-                                             },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "windowTitle",
-                                                 Type = "string"
-                                             }
-                                         },
-                                Security = "public"
-                            }
-                        };
-            }
-            else
-            {
-                views = new List<ListView>()
-                        {
-                            new ListView()
+                                    Security = "public"
+                                }
+                            };
+                }
+                else
+                {
+                    views = new List<ListView>()
                             {
-                                Name = "default",
-                                Usages = new List<string> {"entityManager"},
-                                Fields = new List<ListViewField>()
-                                         {
-                                             new ListViewField()
+                                new ListView()
+                                {
+                                    Name = "default-fake",
+                                    Usages = new List<string> {"entityManager"},
+                                    Fields = new List<ListViewField>()
                                              {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "name",
-                                                 Type = "string"
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "name",
+                                                     Type = "string"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "email",
+                                                     Type = "string"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "phone",
+                                                     Type = "string"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "age",
+                                                     Type = "string"
+                                                 }
                                              },
-                                             new ListViewField()
+                                    Security = "public"
+                                },
+                                new ListView()
+                                {
+                                    Name = "alt1-fake",
+                                    Usages = new List<string> {"entityManager"},
+                                    Fields = new List<ListViewField>()
                                              {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "email",
-                                                 Type = "string"
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "name",
+                                                     Type = "string"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "email",
+                                                     Type = "string"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "registere",
+                                                     Type = "datetime"
+                                                 },
+                                                 new ListViewField()
+                                                 {
+                                                     IsQueryable = true,
+                                                     IsSortable = true,
+                                                     Name = "favoriteFruit",
+                                                     Type = "string"
+                                                 }
                                              },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "phone",
-                                                 Type = "string"
-                                             },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "age",
-                                                 Type = "string"
-                                             }
-                                         },
-                                Security = "public"
-                            },
-                            new ListView()
-                            {
-                                Name = "alt1",
-                                Usages = new List<string> {"entityManager"},
-                                Fields = new List<ListViewField>()
-                                         {
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "name",
-                                                 Type = "string"
-                                             },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "email",
-                                                 Type = "string"
-                                             },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "registere",
-                                                 Type = "datetime"
-                                             },
-                                             new ListViewField()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "favoriteFruit",
-                                                 Type = "string"
-                                             }
-                                         },
-                                Security = "public"
-                            }
-                        };
+                                    Security = "public"
+                                }
+                            };
+                }
+                x.Views = views;
             }
 
-            x.Views = views;
+           
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
 
             ret["entityType"] = "mzdb";
@@ -407,8 +427,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var views = new List<DC.View>()
                         {
+                            
                             new DC.View()
                             {
+                                Name = "-fake",
                                 Usages = new List<string>() {"entityManager"},
                                 Fields = new List<DC.ViewFields>()
                                          {
@@ -430,7 +452,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 Security = "public"
                             }
                         };
-            x.Views = views;
+            if (x.Views == null || x.Views.Count == 0)
+            {
+                x.Views = views;
+            }
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
             ret["entityType"] = "cms";
 
