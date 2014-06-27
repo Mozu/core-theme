@@ -393,10 +393,18 @@
                 if (customer) {
                     var customerCredits = customer.get('credits');
                     if (customerCredits) {
-                        customerCredits.filter(function (cred) {
-                            var expDate = (cred.get('expirationDate')) ? new Date(cred.get('expirationDate')) : new Date(2076, 6, 4);
-                            return (cred.get('currentBalance') > 0 && expDate > new Date());
+                        var currentDate = new Date(),
+                            unexpiredDate = new Date(2076, 6, 4);
+                        var invalidCredits = customerCredits.filter(function (cred) {
+                            var credBalance = cred.get('currentBalance'),
+                                credExpDate = cred.get('expirationDate');
+                            var expDate = (credExpDate) ? new Date(credExpDate) : unexpiredDate;
+                            return (!credBalance || credBalance <= 0 || expDate < currentDate);
                         });
+                        _.each(invalidCredits, function(inv) {
+                            customerCredits.remove(inv);
+                        });
+
                         return customerCredits;
                     }
                 }
