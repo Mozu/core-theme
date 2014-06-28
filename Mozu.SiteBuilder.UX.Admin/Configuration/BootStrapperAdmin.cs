@@ -121,9 +121,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         //    });
         //}
 
-        protected override void InitializeLoggingServiceFactory(System.Web.Http.HttpConfiguration configuration)
+        protected override ILoggingServiceFactory InitializeLoggingServiceFactory(System.Web.Http.HttpConfiguration configuration)
         {
-            base.InitializeLoggingServiceFactory(configuration);
+           var ret= base.InitializeLoggingServiceFactory(configuration);
 
             // TODO: we really break abstraction here. base.InitializeLoggingServiceFactory should give us an object to add context providers to.
 
@@ -133,6 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
                 fac.AddContextProvider(new ApplicationNameLoggingContextProvider(ApplicationConstants.APPLICATION_NAME));
             }
+            return ret;
         }
 
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)

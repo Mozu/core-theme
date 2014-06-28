@@ -87,9 +87,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
                ;
 
         }
-        protected override void InitializeLoggingServiceFactory(System.Web.Http.HttpConfiguration configuration)
+        protected override ILoggingServiceFactory InitializeLoggingServiceFactory(System.Web.Http.HttpConfiguration configuration)
         {
-            base.InitializeLoggingServiceFactory(configuration);
+            var ret=base.InitializeLoggingServiceFactory(configuration);
             
             // TODO: we really break abstraction here.
             var fac = LoggingService.LoggingServiceFactory as Log4NetServiceFactory;
@@ -98,6 +98,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 fac.AddContextProvider(new CurrentRequestLoggingContextProvider());
                 fac.AddContextProvider(new ApplicationNameLoggingContextProvider(ApplicationConstants.APPLICATION_NAME));
             }
+            return ret;
         }
 
         protected override void PreApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)

@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.CatalogId, opt => opt.ResolveUsing(c => c.CatalogId))
                 .ForMember(dest => dest.ParentCategoryId, opt => opt.ResolveUsing(c => c.ParentId.GetValueOrDefault(-1) == -1 ? null : c.ParentId))
                 .ForMember(dest => dest.Sequence, opt => opt.ResolveUsing(c => c.Index))
-                .ForMember(dest => dest.Content, opt => opt.ResolveUsing(c => c))
+                .ForMember(dest => dest.Content, opt => opt.ResolveUsing((Category c) => c))
                 .ForMember(dest => dest.IsDisplayed, opt => opt.ResolveUsing(c => !c.IsHidden))
                 //ignores
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())

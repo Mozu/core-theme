@@ -23,12 +23,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
-                .ForMember(dc => dc.Content, opt => opt.ResolveUsing(x =>  x.Value  is string 
+                .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) =>  x.Value  is string 
                     ? new DC.AttributeValueLocalizedContent { LocaleCode = "en-US", Value = x.Value as string  } 
                     : null))
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 // TODO: do not hard code this.
-                .ForMember(dc => dc.Sequence, opt => opt.ResolveUsing(x => 0))
+                .ForMember(dc => dc.Sequence, opt => opt.ResolveUsing((AttributeValue x) => 0))
                 // ignores
                 .ForMember(dc => dc.IsHidden, op => op.Ignore())
                 ;
@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null && !string.IsNullOrEmpty( x.Content.Value)
                     ? x.Content.Value :  x.Value))
-                .ForMember(x => x.Id, op => op.ResolveUsing(x => (x.Value != null ? x.Value.ToString() : null)))
+                .ForMember(x => x.Id, op => op.ResolveUsing((DC.AttributeVocabularyValue x) => (x.Value != null ? x.Value.ToString() : null)))
                 .ForMember(x => x.AttributeFQN, opt => opt.Ignore())
                 ;
 
@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Value, op => op.ResolveUsing(x => x.StringValue));
             Mapper.CreateMap<DC.AttributeValueLocalizedContent, AttributeVocabularyValueLocalizedContent>()
                 //todo: confirm value -> stringValue Greg Murray on 2014-01-24
-                .ForMember(x => x.StringValue, op => op.ResolveUsing(dc => dc.Value));
+                .ForMember(x => x.StringValue, op => op.ResolveUsing(( DC.AttributeValueLocalizedContent dc) => dc.Value));
         }
 
         public class AttributeToContractConverter2 : ITypeConverter<Attribute, DC.Attribute>

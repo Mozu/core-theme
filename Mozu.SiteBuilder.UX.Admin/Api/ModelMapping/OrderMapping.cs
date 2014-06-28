@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SiteId, op => op.ResolveUsing(dc => dc.SiteId))
                 .ForMember(x => x.ChannelCode, op => op.ResolveUsing(dc => dc.ChannelCode))
                 .ForMember(x => x.TenantId, op => op.ResolveUsing(dc => dc.TenantId))
-                .ForMember(x => x.OrderType, op => op.ResolveUsing(dc => dc.Type))
+                .ForMember(x => x.OrderType, op => op.ResolveUsing((OrdersDC.Order dc) => dc.Type))
                 .ForMember(x => x.InvalidCoupons, op => op.ResolveUsing(dc => dc.InvalidCoupons))
 
                 .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
@@ -744,7 +744,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
-                .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(x => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
+                .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPackageItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
                 ;
         }
 
@@ -766,7 +766,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 //todo: do we need this on our model? - Greg Murray on 2014-05-19 
-                .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(x => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
+                .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPickupItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
                 ;
         }
 

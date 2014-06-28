@@ -74,9 +74,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             Mapper.CreateMap<CheckoutSettings, DCss.CheckoutSettings>()
-                .ForMember(dc => dc.CustomerCheckoutSettings, op => op.ResolveUsing(x => x))
-                .ForMember(dc => dc.OrderProcessingSettings, op => op.ResolveUsing(x => x))
-                .ForMember(dc => dc.PaymentSettings, op => op.ResolveUsing(x => x))
+                .ForMember(dc => dc.CustomerCheckoutSettings, op => op.ResolveUsing(( CheckoutSettings x) => x))
+                .ForMember(dc => dc.OrderProcessingSettings, op => op.ResolveUsing( (CheckoutSettings x) => x))
+                .ForMember(dc => dc.PaymentSettings, op => op.ResolveUsing(( CheckoutSettings x) => x))
                 ;
 
             Mapper.CreateMap<CheckoutSettings, DCss.PaymentSettings>()
