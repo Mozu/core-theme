@@ -128,18 +128,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
-                .ForMember(dc => dc.Content, opt => opt.ResolveUsing(x =>  x.Value  is string 
+                .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) =>  x.Value  is string 
                     ? new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = x.Value as string  } 
                     : null))
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 // TODO: do not hard code this.
-                .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing(x => 0))
+                .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing(( AttributeValue x) => 0))
             ;
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.StringValue) 
                     ? x.Content.StringValue 
                     :  x.Value))
-                .ForMember(x => x.Id, op => op.ResolveUsing(x => (x.Value != null) ? x.Value.ToString() : null))
+                .ForMember(x => x.Id, op => op.ResolveUsing(( DC.AttributeVocabularyValue x) => (x.Value != null) ? x.Value.ToString() : null))
                 .ForMember(x => x.AttributeFQN, op => op.Ignore())
                 ;
 
@@ -151,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<DC.AttributeVocabularyValueInProductType, AttributeValue>()
-                .ForMember(x => x.Id , opt => opt.ResolveUsing(dc => dc.Value))
+                .ForMember(x => x.Id , opt => opt.ResolveUsing(( DC.AttributeVocabularyValueInProductType dc) => dc.Value))
                 .ForMember(x=> x.Value , opt => opt.ResolveUsing( dc=> dc.VocabularyValueDetail != null && dc.VocabularyValueDetail.Content != null && !string.IsNullOrEmpty( dc.VocabularyValueDetail.Content.StringValue) 
                     ? dc.VocabularyValueDetail.Content.StringValue 
                     : dc.Value ))

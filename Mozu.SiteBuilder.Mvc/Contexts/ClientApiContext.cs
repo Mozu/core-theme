@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             bool sslEnabled = _settings.CoreSettings.IsSSLValidationEnabled;
 
-            bool useCoors = _settings.AppSettings("useCORS") == "true";
+            bool useCoors = _settings.Urls("useCORS") == "true";
 
             return sis.ToDictionary(x => x.Id, y =>
             {
@@ -143,72 +143,72 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         new ServiceInfo
                         {
                             Id = "ProductService",
-                            InternalUrl = settings.AppSettings("service-url-ProductRuntimeWebApi")
+                            InternalUrl = settings.Urls("service-url-ProductRuntimeWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "CategoryService",
-                            InternalUrl = settings.AppSettings("service-url-ProductCategoryRuntimeWebApi")
+                            InternalUrl = settings.Urls("service-url-ProductCategoryRuntimeWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "CartService",
-                            InternalUrl = settings.AppSettings("service-url-CartWebApi")
+                            InternalUrl = settings.Urls("service-url-CartWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "CustomerService",
-                            InternalUrl = settings.AppSettings("service-url-CustomerAccountWebApi"),
+                            InternalUrl = settings.Urls("service-url-CustomerAccountWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "InStockNotificationService",
-                            InternalUrl = settings.AppSettings("service-url-InStockNotificationSubscriptionWebApi")
+                            InternalUrl = settings.Urls("service-url-InStockNotificationSubscriptionWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "ShippingService",
-                            InternalUrl = settings.AppSettings("service-url-ShippingWebApi"),
+                            InternalUrl = settings.Urls("service-url-ShippingWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "OrderService",
-                            InternalUrl = settings.AppSettings("service-url-OrderWebApi"),
+                            InternalUrl = settings.Urls("service-url-OrderWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "SearchService",
-                            InternalUrl = settings.AppSettings("service-url-ProductSearchWebApi")
+                            InternalUrl = settings.Urls("service-url-ProductSearchWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "ReferenceService",
-                            InternalUrl = settings.AppSettings("service-url-ReferenceDataWebApi")
+                            InternalUrl = settings.Urls("service-url-ReferenceDataWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "PaymentService",
-                            InternalUrl = settings.AppSettings("service-url-StorefrontCardsWebApi"),
+                            InternalUrl = settings.Urls("service-url-StorefrontCardsWebApi"),
                             SkipRename = true,
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "addressValidationService",
-                            InternalUrl = settings.AppSettings("service-url-AddressValidationWebApi")
+                            InternalUrl = settings.Urls("service-url-AddressValidationWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "wishlistService",
-                            InternalUrl = settings.AppSettings("service-url-WishlistWebApi")
+                            InternalUrl = settings.Urls("service-url-WishlistWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "ReturnService",
-                            InternalUrl = settings.AppSettings("service-url-ReturnWebApi"),
+                            InternalUrl = settings.Urls("service-url-ReturnWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
@@ -222,18 +222,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         new ServiceInfo
                         {
                             Id = "locationService",
-                            InternalUrl = settings.AppSettings("service-url-LocationRuntimeWebApi")
+                            InternalUrl = settings.Urls("service-url-LocationRuntimeWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "creditService",
-                            InternalUrl = settings.AppSettings("service-url-CreditWebApi")
+                            InternalUrl = settings.Urls("service-url-CreditWebApi")
                         }
                         ,new ServiceInfo
                         {
                              Id = "paypalExpress",
                              SkipRename= true,
-                            InternalUrl = settings.AppSettings("paypalExpressUrl")
+                            InternalUrl = settings.Urls("paypalExpressUrl")
                         }
 
 

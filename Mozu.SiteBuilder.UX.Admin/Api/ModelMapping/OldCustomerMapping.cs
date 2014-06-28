@@ -70,12 +70,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                                             RoleId =x.RoleId ,
                                                                                                             RoleName = x.Role 
                                                                                                         }}))
-                .ForMember(x => x.Type, m => m.ResolveUsing(x => x.GetType().Name.ToLowerInvariant()))
+                .ForMember(x => x.Type, m => m.ResolveUsing((AC.Invitation x) => x.GetType().Name.ToLowerInvariant()))
                 ;
             Mapper.CreateMap<AP.User, AC.AccountUser>()
                 .ForMember( x=> x.Roles , m=> m.ResolveUsing(x=> x.Roles ))
                
-                .ForMember(x => x.Type, m => m.ResolveUsing(x => x.GetType().Name.ToLowerInvariant()))
+                .ForMember(x => x.Type, m => m.ResolveUsing((AP.User x) => x.GetType().Name.ToLowerInvariant()))
                 .ForMember(x => x.Activity, m => m.ResolveUsing(x =>
                 {
                     var data = x.SystemData;

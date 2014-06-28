@@ -496,7 +496,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>()
                 //todo: confirm unit -> symbol mappings Greg Murray on 2014-01-24 
                 .ForMember(x => x.Symbol, op => op.ResolveUsing(dc => dc.Unit))
-                .ForMember(x => x.Val, op => op.ResolveUsing(dc => dc.Value))
+                .ForMember(x => x.Val, op => op.ResolveUsing(( Mozu.Core.Api.Contracts.Measurement dc) => dc.Value))
                 ;
             Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>()
                 //todo: confirm Symbol -> unit mapping Greg Murray on 2014-01-24 
