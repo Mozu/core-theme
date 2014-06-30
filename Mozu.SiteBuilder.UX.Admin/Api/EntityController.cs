@@ -10,9 +10,12 @@ using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.MZDB.Contracts;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -54,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
                 await Task.WhenAll(tasks);
-                tasks.Each(x =>
+                EnumerableExtensions.Each(tasks, x =>
                 {
                     if (x.Result.HasException)
                     {
@@ -70,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
                 await Task.WhenAll(tasks);
-                tasks.Each(x =>
+                EnumerableExtensions.Each(tasks, x =>
                 {
                     if (x.Result.HasException)
                     {
@@ -166,7 +169,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 string sortBy = null;
                 string filter = null;
-                DC.DocumentCollection res = (await _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
+
+                DC.DocumentCollection res = null;
+                if (!string.IsNullOrEmpty(pagingParams.id))
+                {
+
+                    var doc  = (await _documentListWebApiClient.GetDocument(documentListName: list, documentId: pagingParams.id )).ReadAsSync();
+                    res = new DC.DocumentCollection()
+                          {
+                              Items = new List<DC.Document>() {doc},
+                              TotalCount = 1
+                          };
+                }
+                else
+                {
+                    res = (await _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
+                }
+
+                
 
                 return List2(res.Items.Select(x =>
                 {
@@ -180,16 +200,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 string sortBy = null;
                 string filter = null;
                 EntityContainerCollection res = null;
-                if (string.IsNullOrEmpty(view) || 1==1)
+                if (!string.IsNullOrEmpty(pagingParams.id))
+                    {
+                        var doc = (await _entityListsWebApiClient.GetEntityContainer(id: pagingParams.id, entityListFullName: list)).ReadAsSync();
+                        res = new EntityContainerCollection()
+                        {
+                            Items = new List<EntityContainer>() { doc },
+                            TotalCount = 1
+                        };
+                    }
+                else if (string.IsNullOrEmpty(view))
                 {
                     res = (await _entityListsWebApiClient.GetEntityContainers(entityListFullName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
                 }
                 else
                 {
-                    res = (await _entityListsWebApiClient.GetViewEntityContainers( viewName:view, entityListFullName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex)).ReadAsSync();
-                    
+                    res = (await _entityListsWebApiClient.GetViewEntityContainers(viewName: view, entityListFullName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex)).ReadAsSync();
                 }
-                
+
 
                 return List2(res.Items.Select(x =>
                 {
@@ -276,7 +304,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 EntityListCollection res = (await _entityListsWebApiClient.GetEntityLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
                 if (res.Items != null)
                 {
-                    res.Items.ForEach(x => mzdb.Items.Add(new Node() {Text = x.Name, Id = "mzdb_" + x.NameSpace + "." + x.Name, MetaData = AddViews(x), Leaf = true}));
+                    mzdb.Items.AddRange(res.Items.Where(x =>
+                    {
+                        switch (x.ContextLevel)
+                        {
+                            case "Tenant":
+                            {
+                                return true;
+                            }
+                            case "MasterCatalog":
+                            {
+                                return this.SbApiContext.MasterCatalogId.HasValue;
+                            }
+                            case "Catalog":
+                            {
+                                return this.SbApiContext.CatalogId.HasValue;
+                            }
+                            case "Site":
+                            {
+                                return this.SbApiContext.SiteId.HasValue;
+                            }
+                        }
+                        throw new HttpUnhandledException("unknown context type ["+ x.ContextLevel +"] on entity list "+ x.Name);
+                    }).Select(x => new Node() {Text = x.Name, Id = "mzdb_" + x.NameSpace + "." + x.Name, MetaData = AddViews(x), Leaf = true}));
+
+                    //res.Items.ForEach(x => mzdb.Items.Add(new Node() {Text = x.Name, Id = "mzdb_" + x.NameSpace + "." + x.Name, MetaData = AddViews(x), Leaf = true}));
                 }
             }
             return List2(nodes);
@@ -506,6 +558,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 }).Where(x => x != null);
                 editors = editors.Concat(cmsEditors).ToList();
+            }
+
+            if (this.SbApiContext.SiteId.HasValue)
+            {
+                var siteContext = this.Request.Resolve<SiteContext>();
+                await siteContext.Init();
+                var theme = this.Request.Resolve<SiteContext>().Theme;
+                if (theme.Editors != null && theme.Editors.Count > 0)
+                {
+                    editors = editors.Concat(theme.Editors.Select(x =>
+                    {
+                        var jsFile = theme.FileListing.GetFileInfo("admin\\editors\\"+ x.Path, true);
+                        if (jsFile != null)
+                        {
+                            return new EditorResult()
+                                   {
+                                       Id = "theme_" + x.Id,
+                                       DocumentLists = x.DocumentLists,
+                                       EntityLists = x.EntityLists,
+                                       DocumentTypes = x.DocumentTypes,
+                                       Priority = x.Priority,
+                                       Code = jsFile.OpenText().ReadToEnd()
+                                   };
+                        }
+                        return null;
+                    }).Where(x => x != null)).ToList();
+                }
             }
 
 

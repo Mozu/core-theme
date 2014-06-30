@@ -254,29 +254,10 @@
     "editors": [
     {
         "id": "page",
-        "path": "page.js",
-        "supportedDocumentTypes": [
-            {
-                "name": "web_page",
-                "priority": 0.5
-            }
-        ]
-    },
-    {
-        "id": "fallback",
-        "path": "fallback.js",
-        "supportedEntityLists": [
-            {
-                "id": "*",
-                "priority": 0.1
-            }
-        ],
-        "supportedDocumentTypes": [
-            {
-                "name": "*",
-                "priority": 0.5
-            }
-        ]
+        "path": "web_page.js",
+        "priority": 0.5,
+        "documentTypes": ["web_page"]
+        
     }],
     "emailTemplates": [{
         "id": "order.shipped",

@@ -306,7 +306,7 @@
     </Reference>
     <Reference Include="Mozu.MZDB.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev006\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev007\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
