@@ -4,6 +4,57 @@
 Ext.define('Taco.model.Entity', {
     extend: 'Taco.core.data.Model',
     idProperty: "entityId",
+    statics: {
+        
+
+        load: function (lookupInfo, config) {
+            var params;
+            config = Ext.apply({}, config);
+           
+            config = Ext.applyIf(config, {
+                action: 'read',
+                
+            });
+            params = config.params|| {}
+
+            params.list = lookupInfo.list;
+            params.entityType = lookupInfo.entityType;
+            params.id = lookupInfo.id;
+
+            config.params = params;
+
+
+            var operation = new Ext.data.Operation(config),
+                scope = config.scope || this,
+                callback;
+
+            callback = function (operation) {
+                var record = null,
+                    success = operation.wasSuccessful();
+
+                if (success) {
+                    record = operation.getRecords()[0];
+                    // If the server didn't set the id, do it here
+                    //if (!record.hasId()) {
+                    //    record.setId(id);
+                    //}
+                    Ext.callback(config.success, scope, [record, operation]);
+                } else {
+                    Ext.callback(config.failure, scope, [record, operation]);
+                }
+                Ext.callback(config.callback, scope, [record, operation, success]);
+            };
+
+            this.getProxy().read(operation, callback, this);
+        }
+    },
+    getLoadParams:function () {
+      return {
+          list: this.get('documentListName') || this.get('entityListFullName'),
+          entityType: this.get('entityType'),
+          id: this.get('id')
+      }  
+    },
     fields: [
         {
             "name": "entityId",
@@ -139,7 +190,7 @@ Ext.define('Taco.model.Entity', {
         }
     ],
 
-
+   
     proxy: {
         type: 'ajax',
         api: {

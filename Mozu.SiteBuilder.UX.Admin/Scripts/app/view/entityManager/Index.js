@@ -198,16 +198,24 @@ Ext.define('Taco.view.entityManager.Index', {
         me.showHideButtons();
     },
     onItemEdit: function (view, record) {
+       
         var me = this;
-        me.contentContainer.removeAll();
-        me.grid = null;
-        me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
-            record: record,
-            bubbleEvents: ['savesuccess', 'saveSuccess'],
-            editor: me.editors.findEditor(record)
+
+        record.reload({
+            success:function () {
+                me.contentContainer.removeAll();
+                me.grid = null;
+                me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+                    record: record,
+                    bubbleEvents: ['savesuccess', 'saveSuccess'],
+                    editor: me.editors.findEditor(record)
+                });
+                me.contentContainer.add(me.form);
+                me.showHideButtons();
+            }
         });
-        me.contentContainer.add(me.form);
-        me.showHideButtons();
+        
+        
     },
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         var me = this,

@@ -46,9 +46,10 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
     public class EditorDefinition
     {
         public string Id { get; set; }
-        public Newtonsoft.Json.Linq.JObject Properties { get; set; }
-        public List<DocumentOrEntityListEditorSelector> SsupportedDocumentTypes { get; set; }
-        public List<DocumentOrEntityListEditorSelector> SupportedEntityLists { get; set; }
+        public List<string> DocumentTypes { get; set; }
+        public List<string> EntityLists { get; set; }
+        public List<string> DocumentLists { get; set; }
+        public decimal? Priority { get; set; }
   
         public string Path { get; set; }
 

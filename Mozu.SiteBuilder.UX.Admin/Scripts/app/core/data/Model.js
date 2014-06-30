@@ -358,7 +358,7 @@ Ext.define('Taco.core.data.Model', {
         //tbd: remove this
         
 
-        this.self.load(me.getId(), loadConfig);
+        this.self.load(me.getLoadParams? me.getLoadParams(): me.getId(), loadConfig);
     },
 
 
