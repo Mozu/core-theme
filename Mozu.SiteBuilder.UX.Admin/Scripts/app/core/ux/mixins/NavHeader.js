@@ -303,9 +303,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 }));
             }
 
-            if (me.createButtonEnabled) {
-                var createButtonConfig = this.getCreateButtonConfig();
-               
+            if (me.createButtonEnabled) {                
                 me.actions.push(Ext.apply({}, me.createButtonCfg, {
                     xtype: 'button',
                     text: this.createButtonText,
@@ -349,23 +347,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         me.navHeader = Ext.widget('toolbar', conf);
         
         me.header.items.unshift(me.navHeader);
-    },
-
-    getCreateButtonConfig: function () {
-        var me = this;
-
-        return {
-            xtype: 'button',
-            text: me.createButtonText,
-            margin: "0 0 0 10",
-            ui: 'action-primary',
-            scale: 'medium',
-            hidden: !me.createButtonVisible,
-            itemId: 'createActionButton',
-            handler: me.createActionHandler,
-            scope: me
-        }
-    },
+    },    
 
     resetSaveButton: function () {
         var saveButton = this.down('button#saveActionButton');
