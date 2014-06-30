@@ -408,7 +408,7 @@
                         return customerCredits;
                     }
                 }
-                return []; //new PaymentMethods.DigitalCreditCollection()/result;
+                return [];
             },
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) { 
@@ -419,23 +419,28 @@
 
             applyDigitalCredit: function (creditCode, creditAmountToApply, isEnabled) {
                 var self = this,
-                    order = self.getOrder();
+                    order = self.getOrder(),
+                    maxCreditAvailable = null;
+
                 this._oldPaymentType = this.get('paymentType');
                 var digitalCredit = this._cachedDigitalCredits.filter(function(cred) {
                      return cred.get('code') === creditCode;
                 });
+
                 if (! digitalCredit || digitalCredit.length === 0) {
-                    self.trigger('error', {
-                        message: Hypr.getLabel('digitalCodeAlreadyUsed', creditCode)
-                    });
-                    var deferred = api.defer();
-                    deferred.reject();
-                    
-                    return deferred.promise;
+                    return self.deferredError(Hypr.getLabel('digitalCodeAlreadyUsed', creditCode), self);
                 }
                 digitalCredit = digitalCredit[0];
+                var previousAmount = digitalCredit.get('creditAmountApplied');
+                var previousEnabledState = digitalCredit.get('isEnabled');
                 digitalCredit.set('creditAmountApplied', creditAmountToApply);
                 digitalCredit.set('isEnabled', isEnabled);
+
+                //need to round to prevent being over total by .01
+                if (creditAmountToApply > 0) {
+                    creditAmountToApply = self.roundToPlaces(creditAmountToApply, 2);
+                }
+
                 var activeCreditPayments = this.activeStoreCredits();
                 if (activeCreditPayments) {
                     //check if payment applied with this code, remove
@@ -452,20 +457,24 @@
                         if (creditAmountToApply === 0) {
                             return order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
                                 order.set(o.data);
-                                //* may need to set digitalCredit here when goes through
                                 self.trigger('orderPayment', o.data, self);
                                 return o;
                             });
                         } else {
+                            maxCreditAvailable = self.getMaxCreditToApply(digitalCredit, self, sameCreditPayment.amountRequested);
+                            if (creditAmountToApply > maxCreditAvailable) {
+                                digitalCredit.set('creditAmountApplied', previousAmount);
+                                digitalCredit.set('isEnabled', previousEnabledState);
+                                return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+                            }
                             return order.apiVoidPayment(sameCreditPayment.id).then(function (o) {
                                 order.set(o.data);
+                                
                                 return order.apiAddStoreCredit({
                                     storeCreditCode: creditCode,
                                     amount: creditAmountToApply
                                 }).then(function (o) {
                                     order.set(o.data);
-                                    //* may need to set digitalCredit here when goes through
-
                                     self.trigger('orderPayment', o.data, self);
                                     return o;
                                 });
@@ -476,16 +485,32 @@
                 if (creditAmountToApply === 0) {
                     return this.getOrder();
                 }
+
+                maxCreditAvailable = self.getMaxCreditToApply(digitalCredit, self);
+                if (creditAmountToApply > maxCreditAvailable) {
+                    digitalCredit.set('creditAmountApplied', previousAmount);
+                    digitalCredit.set('isEnabled', previousEnabledState);
+                    return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+                }
+
                 return order.apiAddStoreCredit({
                     storeCreditCode: creditCode,
                     amount: creditAmountToApply
                 }).then(function (o) {
                     order.set(o.data);
-                    //* may need to set digitalCredit here when goes through
-
                     self.trigger('orderPayment', o.data, self);
                     return o;
                 });
+            },
+
+            deferredError: function deferredError(msg, scope) {
+                scope.trigger('error', {
+                    message: msg
+                });
+                var deferred = api.defer();
+                deferred.reject();
+
+                return deferred.promise;
             },
 
             areNumbersEqual: function(f1, f2) {
@@ -514,11 +539,10 @@
                 this.isLoading(true);
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
                     var creditModel = new PaymentMethods.DigitalCredit(credit.data);
-                    
-                    var remainingTotal = me.nonStoreCreditTotal();
-                    var maxAmt = remainingTotal < creditModel.get('currentBalance') ? remainingTotal : creditModel.get('currentBalance');
-                    
-                    maxAmt = Math.round(maxAmt * 100) / 100.0; //round to 2 decimal places
+                    if (!creditModel.get('currentBalance')) {
+                        creditModel.set('currentBalance', creditModel.get('initialBalance'));
+                    }
+                    var maxAmt = me.getMaxCreditToApply(creditModel, me);
                     creditModel.set('creditAmountApplied', maxAmt);
                     creditModel.set('isEnabled', true);
                     
@@ -527,6 +551,20 @@
                     me.trigger('sync', creditModel);
                     return me;
                 });
+            },
+
+            getMaxCreditToApply: function(creditModel, scope, toBeVoidedPayment) {
+                var remainingTotal = scope.nonStoreCreditTotal();
+                if (!!toBeVoidedPayment) {
+                    remainingTotal += toBeVoidedPayment;
+                }
+                var maxAmt = remainingTotal < creditModel.get('currentBalance') ? remainingTotal : creditModel.get('currentBalance');
+                return scope.roundToPlaces(maxAmt, 2);
+            },
+
+            roundToPlaces: function(amt, numberOfDecimalPlaces) {
+                var transmogrifier = Math.pow(10, numberOfDecimalPlaces);
+                return Math.round(amt * transmogrifier) / transmogrifier;
             },
 
             digitalCreditPaymentTotal: function () {
