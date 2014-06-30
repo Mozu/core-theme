@@ -23,7 +23,7 @@
         object siteUsers = ViewData["siteUsers"];
         string extPath = WebConfigurationManager.AppSettings["extPath"];
 
-        var paymentApiBaseUrl = MozuConfigurationManager.AppSettings("service-url-StorefrontCardsWebApi");
+        var paymentApiBaseUrl = MozuConfigurationManager.Urls("service-url-StorefrontCardsWebApi");
 
         object locValues = ViewData["localizationValues"];
 
