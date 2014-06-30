@@ -352,6 +352,7 @@
   "tooLate"              : "Arrived too late",
   "wrongCountryForType"  : "Please select a country supported for this contact type",
   "digitalCodeAlreadyUsed" : "This code has already been used.",
+  "digitalCreditExceedsBalance" : "The amount to apply exceeds the total remaining.",
 
   
   "clearAllFilters"      : "Clear All Filters",
