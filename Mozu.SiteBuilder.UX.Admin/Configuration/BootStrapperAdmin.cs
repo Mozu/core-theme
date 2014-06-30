@@ -27,6 +27,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
 using Mozu.SiteBuilder.UX.Admin.MessageHandlers;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -60,6 +61,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
           //  GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpActionSelector), new HackApiHttpActionSelector());
 
             
+
+        }
+
+        protected override void InitializeFormatters(HttpConfiguration httpConfiguration)
+        {
+            base.InitializeFormatters(httpConfiguration);
+            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
+                new CamelCasePropertyNamesContractResolver();
 
         }
 
