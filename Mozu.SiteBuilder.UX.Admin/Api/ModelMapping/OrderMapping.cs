@@ -874,10 +874,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrdersDC.OrderNote, OrderNote>()
                 .ForMember(x => x.NoteId, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.Text, op => op.ResolveUsing(dc => dc.Text))
-                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo.CreateDate))
-                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo.CreateBy))
-                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo.UpdateDate))
-                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo.UpdateBy))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null: dc.AuditInfo.CreateDate))
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.CreateBy))
+                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.UpdateDate))
+                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.UpdateBy))
                 ;
         }
 
