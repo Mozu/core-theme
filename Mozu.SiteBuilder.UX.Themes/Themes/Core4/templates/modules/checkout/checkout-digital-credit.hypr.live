@@ -42,7 +42,13 @@
                    />
           </td>
           <td class="mz-checkout-digitalcredit-cell-savetoaccount">
-            <input type="checkbox" data-mz-value="saveDigitalCreditToAccount" value="true" />
+            {% if credit.attributes.isEnabled and credit.attributes.remainingBalance > 0 %}
+            <span class="mz-checkout-digitalcredit-remainder" data-mz-value="credit.attributes.remainingBalance">{{ credit.attributes.remainingBalance|currency }}</span>
+            <input type="checkbox" data-mz-value="addRemainderToCustomer"
+                   data-mz-digital-add-remainder-to-customer
+                   data-mz-credit-code-to-tie-to-customer="{{ credit.attributes.code }}" 
+                   value="true" {% if credit.attributes.isTiedToCustomer %}disabled="true" checked="true"{% endif %}/>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}

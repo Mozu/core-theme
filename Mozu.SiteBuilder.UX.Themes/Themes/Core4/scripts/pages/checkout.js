@@ -139,7 +139,8 @@
         ],
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
-            "change [data-mz-digital-credit-amount]": "applyDigitalCredit"
+            "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
         },
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
@@ -231,6 +232,13 @@
             }
         },
 
+        addRemainderToCustomer: function (e) {
+            var creditCode = $(e.currentTarget).attr('data-mz-credit-code-to-tie-to-customer'),
+                isEnabled = $(e.currentTarget).prop('checked') === true;
+            this.model.addRemainingCreditToCustomerAccount(creditCode, isEnabled);
+        },
+
+        // todo: move to anon fn in listener - Greg Murray on 2014-07-01 
         onOrderPaymentApplied: function(order, scope) {
             this.render();
         },
