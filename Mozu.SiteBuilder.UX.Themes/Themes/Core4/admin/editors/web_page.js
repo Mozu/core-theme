@@ -1,5 +1,5 @@
 ﻿Ext.create('Ext.form.Panel', {
-    title: 'A Simple core4 page',
+    title: 'A Simple core4 page to show jon',
 
 
 
@@ -27,10 +27,18 @@
         fieldLabel: 'template',
         name: 'template',
         allowBlank: true
-    }, ],
-
+    }, {
+        fieldLabel: 'fungus',
+        name: 'FUNGLE DISCHARGE',
+        allowBlank: true
+    }],
+    initComponent: function() {
+        window.setTimeout(function () { alert('hey jon'); }, 5000);
+        this.callParent(arguments);
+    },
 
     setData: function (data) {
+        debugger;
         this.getForm().setValues(data);
         this.data = data;
     },
@@ -41,7 +49,7 @@
 
         return Ext.applyIf(data, this.data);
 
-    },
+    }
 
 
 

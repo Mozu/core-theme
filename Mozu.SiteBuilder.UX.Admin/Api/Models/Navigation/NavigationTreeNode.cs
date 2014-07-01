@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
 {
@@ -27,7 +28,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
             this.Expandable = true;
             this.AllowDrop = true;
         }
-
+         [DataMember(Name = "metaData", EmitDefaultValue = false)]
+        public JObject MetaData { get; set; }
         [DataMember(Name = "id", EmitDefaultValue = false)]
         public string Id { get; set; }
 

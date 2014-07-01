@@ -231,10 +231,10 @@ Ext.define('Taco.shared.view.form.Address', {
 
 	beforeSave: function (){
 	    var me = this;
-
-        this.record.set('isPrimaryBilling', this.down('[name="isPrimaryBilling"]').getValue());
-        this.record.set('isPrimaryShipping', this.down('[name="isPrimaryShipping"]').getValue());
-	    
+	    if (this.showDefaultOptions) {
+	        this.record.set('isPrimaryBilling', this.down('[name="isPrimaryBilling"]').getValue());
+	        this.record.set('isPrimaryShipping', this.down('[name="isPrimaryShipping"]').getValue());
+	    }
 	    // convert state to 2 digit value if the countryCode is US
 	    var countryCode = me.form.findField("countryCode").getValue();
         // only do the conversion if the country is the US

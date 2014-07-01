@@ -52,7 +52,7 @@ Ext.define('Taco.view.entityManager.Index', {
             flex: 1,
             layout: 'fit',
             listeners: {
-                cellclick: me.onCellClick,
+               
                 itemedit: me.onItemEdit,
                 create: me.onCreate,
 
@@ -216,16 +216,8 @@ Ext.define('Taco.view.entityManager.Index', {
         });
         
         
-    },
-    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-        var me = this,
-            header = view.getHeaderAtIndex(cellIndex);
-        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
-            e.preventDefault();
-
-            this.onItemEdit(view, record);
-        }
     }
+   
 
 
 });

@@ -18,6 +18,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         private const string NODE_TYPE_PRODUCT = "product";
         private const string NODE_TYPE_TEMPLATE = "template";
         private const string NODE_TYPE_EMAIL_TEMPLATE = "emailtemplate";
+        private const string NODE_TYPE_CONTENT_LIST = "contentlist";
 
         private readonly string _nodeType;
 
@@ -34,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public static NavigationNodeType Product = new NavigationNodeType(NODE_TYPE_PRODUCT);
         public static NavigationNodeType EmailTemplate = new NavigationNodeType(NODE_TYPE_TEMPLATE);
         public static NavigationNodeType Template = new NavigationNodeType(NODE_TYPE_EMAIL_TEMPLATE);
+        public static NavigationNodeType ContentList = new NavigationNodeType(NODE_TYPE_CONTENT_LIST);
 
         /// <summary>
         /// Operator overload to allow for comparison with strings.
