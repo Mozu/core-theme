@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
             Mapper.AddProfile<UX.Admin.Api.ModelMapping.GeneralSettingsMapping>();
             Mapper.AddProfile<UserMapping>();
             Mapper.AddProfile<AttributeMapping>();
-            Mapper.AddProfile<OptionMapping>();
+            
             Mapper.AddProfile<TaxMapping>();
             Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CustomerMapping>();
 //            Mapper.AddProfile<OrderMapping>();

@@ -47,5 +47,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
              return this.Request.CreateResponse(HttpStatusCode.OK, List2(res.Items, (int)res.TotalCount));
            
          }
+
+           [HttpGetRoute(UriTemplate = "locales/list")]
+         public async Task<HttpResponseMessage> GetLocales([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+         {
+           
+             var res = (await _referenceDataWebApi.GetContentLocales()).ReadAsSync();
+          
+             return this.Request.CreateResponse(HttpStatusCode.OK, List2(res.Items, (int)res.TotalCount));
+           
+         }
+           [HttpGetRoute(UriTemplate = "currencies/list")]
+           public async Task<HttpResponseMessage> GetCurrencies([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+           {
+
+               var res = (await _referenceDataWebApi.GetCurrencies()).ReadAsSync();
+
+               return this.Request.CreateResponse(HttpStatusCode.OK, List2(res.Items, (int)res.TotalCount));
+
+           }
+
+        
     }
 }

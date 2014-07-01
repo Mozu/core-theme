@@ -6,7 +6,10 @@
 Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
     extend: 'Taco.core.ux.window.Modal',
     title:'Catalog Provisioning',
-    requires: [],
+    requires: [
+        'Taco.store.Locales',
+        'Taco.store.Currencies'
+    ],
     scale:"large",
     autoShow: true,
     itemType:'mastercatalog',    
@@ -68,14 +71,18 @@ Ext.define('Taco.view.provisioning.CatalogProvisionerModal', {
                     {
                         xtype: 'combobox',
                         name: 'DefaultLocaleCode',
-                        store: ['en-US'],
+                        store: { type: 'Taco.store.Locales' },
+                        valueField: 'code',
+                        displayField: 'code',
                         value: 'en-US',
                         fieldLabel: 'Locale Code'
                     },
                     {
                         xtype: 'combobox',
                         name: 'DefaultCurrencyCode',
-                        store: ['USD'],
+                        valueField: 'code',
+                        displayField: 'code',
+                        store: { type: 'Taco.store.Currencies' },
                         value: 'USD',
                         fieldLabel: 'Currency Code'
                     }

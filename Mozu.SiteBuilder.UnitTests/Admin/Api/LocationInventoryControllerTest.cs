@@ -241,7 +241,9 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             productWebApiClient.GetProduct(product_code)
                 .ReturnsForAnyArgs(new DCprod.Product { 
                     ProductCode = product_code,
-                    Content = new DCprod.ProductLocalizedContent{ LocaleCode = "en-US", ProductName = product_code + " name"},
+                    Content = new DCprod.ProductLocalizedContent{
+                   //     LocaleCode = "??-??",
+                        ProductName = product_code + " name"},
                     InventoryInfo = new DCprod.ProductInventoryInfo {
                         ManageStock = true, OutOfStockBehavior = "HideProduct"
                     },

@@ -6,7 +6,8 @@ Ext.define('Taco.view.category.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.shared.view.field.Image',
-        'Taco.core.ux.CategoryComboBox'
+        'Taco.core.ux.CategoryComboBox',
+        'Taco.core.ux.form.SlugField'
     ],
 
     ui: 'subform',

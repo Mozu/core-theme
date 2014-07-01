@@ -24,7 +24,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
                 .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) =>  x.Value  is string 
-                    ? new DC.AttributeValueLocalizedContent { LocaleCode = "en-US", Value = x.Value as string  } 
+                    ? new DC.AttributeValueLocalizedContent
+                      {
+                          LocaleCode = "??-??",
+                          Value = x.Value as string
+                      } 
                     : null))
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 // TODO: do not hard code this.
@@ -214,8 +218,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     AttributeMetadata = Mapper.Map<List<DC.AttributeMetadataItem>>(source.AttributeMetadata),
                     Content = new DC.AttributeLocalizedContent
                     {
-                        Value = (source.Name ?? "").Trim(),
-                        LocaleCode = "en-US",
+                        Value = (source.Name ?? "").Trim()
+                        //,
+                        //LocaleCode = "??-??",
                     },
                     InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
                     DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),
