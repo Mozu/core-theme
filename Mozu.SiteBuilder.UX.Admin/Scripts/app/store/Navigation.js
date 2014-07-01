@@ -319,7 +319,7 @@ Ext.define('Taco.store.Navigation', {
                     }, {
                         "id": "channels",
                         "label": "Channels",
-                        "address": "channel"
+                        "address": "channels"
                     }, {
                         "id": "fileManager",
                         "label": "File Manager",
