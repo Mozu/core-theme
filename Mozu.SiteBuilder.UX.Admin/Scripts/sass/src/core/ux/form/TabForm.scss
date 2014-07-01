@@ -1,0 +1,58 @@
+
+  
+  .#{$vprefix}form-tabform-nav-container {
+    margin-left: 99px;
+  }
+
+  .#{$vprefix}form-tabform-nav {
+    background-color: $color-neutral-95;
+    border: 1px solid border-for($color-neutral-95);
+    border-width:0px;
+    border-top-width:1px;    
+    padding: 0px;
+    position: fixed;
+    width: 100px;
+    z-index:1;
+    outline-style:none;
+    outline-width:0px;
+
+    .#{$vprefix}form-tabform-nav-link{
+    
+    }
+
+    .x-item-selected {
+        color: $color-neutral-black;
+        font-weight:bold;
+        background-color:$color-neutral-white;
+        border-right-color:$color-neutral-white;
+    }
+
+    li {      
+      border: 1px solid border-for($color-neutral-95);
+      border-width:1px;
+      border-top-width:0px;
+      cursor: pointer;
+      font-size: px-to-rem(14);
+      line-height: px-to-rem(20);
+      padding: 6px 8px 4px 8px;
+
+
+      
+      @include transition(color 0.2s, border-color 0.2s);
+
+      
+
+      &:hover {        
+        text-decoration: underline;
+      }
+
+      &.active {
+      /*
+        color: $color-neutral-black;
+        font-weight:bold;
+        background-color:$color-neutral-white;
+        */
+        /*border-right-color:$color-neutral-white;*/
+      }
+    }
+  }  

@@ -37,9 +37,16 @@ Ext.define('Taco.view.order.Header', {
             'customerchanged'
         ]);
 
+        // after the record is reloaded we will need to refresh the ui
+        this.mon(this.record, "aftercommit", this.onRecordChange, this);
+
         this.callParent(arguments);
 
         this.loadCustomer();
+    },
+
+    onRecordChange: function () {        
+        this.updateHeader();
     },
 
     loadCustomer: function() {
@@ -246,6 +253,8 @@ Ext.define('Taco.view.order.Header', {
             this.customerCmp,
             this.dataContainer
         ]);
+
+        
     },
 
     updateHeader: function() {
@@ -267,9 +276,12 @@ Ext.define('Taco.view.order.Header', {
         var me = this;
         Ext.create('Taco.view.customers.modal.CreateCustomer', {
             order: this.record,
-            callback: function() {
-                me.fireEvent('customerchanged', me, me.record.getCustomer());
-                me.updateHeader();
+            listeners: {
+                scope: me,
+                aftersaveclose: function (view, record) {                    
+                    me.fireEvent('addresschanged', me, me.record);
+                    me.updateHeader();
+                }
             }
         });
     },
@@ -279,9 +291,12 @@ Ext.define('Taco.view.order.Header', {
         Ext.create('Taco.view.customers.modal.Contacts', {
             record: this.record.getCustomer(),
             order: this.record,
-            callback: function() {
-                me.fireEvent('addresschanged', me, me.record);
-                me.updateHeader();
+            listeners: {
+                scope: me,
+                aftersaveclose: function (view, record) {                    
+                    me.fireEvent('addresschanged', me, me.record);
+                    me.updateHeader();
+                }
             }
         });
     },
