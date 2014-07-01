@@ -46,8 +46,10 @@ Ext.define('Taco.core.ux.grid.plugins.AutoSelect', {
         var me = this;
         
 
+        // generalizing this so it can be used for dataViews as well. Note: dataView is much like grid except there is no view.
         me.grid = grid;
-        me.view = grid.view;
+        // this makes it so that dataviews can act like grid.views;
+        me.view = grid.view || grid;
         me.store = grid.store;
         
 
@@ -146,7 +148,7 @@ Ext.define('Taco.core.ux.grid.plugins.AutoSelect', {
         me.clearListeners();
 
         if (grid) {
-            grid.autoSelectPlugin = grid.view.autoSelectPlugin = me.grid = me.view = me.store = null;
+            grid.autoSelectPlugin = me.view.autoSelectPlugin = me.grid = me.view = me.store = null;
         }
     }
 

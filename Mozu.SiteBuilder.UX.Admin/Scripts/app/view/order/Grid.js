@@ -481,7 +481,10 @@ Ext.define('Taco.view.order.Grid', {
                     showSeparator: false,
                     listeners: {
                         click: {
-                            fn: function (menu, menuItem, e) {
+                            fn: function (menu, menuItem, e) {                                
+                                if (!menuItem) {
+                                    return
+                                }
                                 //var context= menuItem.context;
                                 var siteId = menuItem.siteId;
                                 // set the context to the siteId of the selected store;
@@ -523,6 +526,12 @@ Ext.define('Taco.view.order.Grid', {
 
         record.save({
             callback: function (records, operation, success) {
+
+                if (!success) {
+                    Taco.app.fireEvent('setmessage', "Error creating order", 'error');
+                    Taco.app.setLoading(false);
+                    return;
+                }
 
                 //changing the path to be edit instead of create so that the user can refresh the page and get back to it if they accidently navigate away;
                 Taco.core.StateManager.attemptNavigate('s-' + record.data.siteId + '/orders/edit/' + record.data.id);

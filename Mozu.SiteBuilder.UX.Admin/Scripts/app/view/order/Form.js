@@ -2,7 +2,9 @@
  * @class Taco.view.order.Form
  */
 Ext.define('Taco.view.order.Form', {
-    extend: 'Taco.core.ux.form.NavForm2',    
+    extend: 'Taco.core.ux.form.NavForm2',
+    extend: 'Taco.core.ux.form.TabForm',
+    
     alias: 'widget.taco-orderform',
     requires: [
         'Taco.model.Order',
@@ -10,8 +12,7 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.Header',
         'Taco.view.order.subform.Customer',
         'Taco.view.order.subform.Detail',
-        'Taco.view.order.subform.Payment',
-        //'Taco.view.order.subform.Shipping',
+        'Taco.view.order.subform.Payment',        
         'Taco.view.order.subform.InstorePickup',
         'Taco.view.order.subform.Return',        
         'Taco.view.order.subform.InternalNotes'
@@ -75,11 +76,13 @@ Ext.define('Taco.view.order.Form', {
 
         //this.orderDetail = this.down('taco-orderdetail');
 
+        
+
         this.loadNavItems();
     },
     
     onCustomerChange: function (view, customerRecord) {        
-        this.customerRecord = customerRecord;
+        //this.customerRecord = customerRecord;
         //this.record.set("customerId", customerRecord.get("id"));        
         //this.shippingForm.onCustomerChange();
         //this.shippingForm.onCustomerChange(this.customerRecord);
@@ -113,45 +116,51 @@ Ext.define('Taco.view.order.Form', {
         return isValid 
     },
 
-    onRecordChange: function () {
+
+
+
+    updatePanelVisibility : function (){
         var me = this,
             orderItems = this.record.get("items"),
             navUpdateRequired = false;
-        // try and re-establish the scrollTop position after the record reloads;
         
+
+
+        // need to cache what's selected 
         
+
         // begin if statement from hell...
         // if a admin entered order that has not been submitted we need to do some visibility magic;
         if (this.record.get("orderStatus") == "Pending") {
             // need to adjust the visibility of subforms based on the progression of data entry in phone orders
             if (me.isHeaderDataComplete()) {
-                if (this.orderDetailPanel.isHidden()) {
-                    this.orderDetailPanel.show()
-                    navUpdateRequired = true;
+                //this.formContainer.show()
+                navUpdateRequired = true;
+                if (!this.orderDetailPanel.rendered) {
+                    this.formContainer.add(this.orderDetailPanel);
                 }
 
                 // if the order has some order items
                 if (orderItems.length) {
-                    // if the payment panel is hidden then show it.
-                    if (this.paymentPanel.isHidden()) {
-                        this.paymentPanel.show();
-                        navUpdateRequired = true;
-                    }
-                } else {
-                    // if the payment panel is visible then hide it. it should only be visible when there is order items;.
-                    if (!this.paymentPanel.isHidden()) {
-                        this.paymentPanel.hide();
+                    if (!this.paymentPanel.rendered) {
+                        this.formContainer.add(this.paymentPanel);
                         navUpdateRequired = true;
                     }
                 }
             } else {
+                
+                //this.formContainer.hide()
+                navUpdateRequired = true;
+
+
                 // header isn't filled out we need to hide the sub panels if they are currently visible;
                 if (!this.orderDetailPanel.isHidden() || !this.paymentPanel.isHidden()) {
                     // until the customer info is filled out we need to hide the details and payments panel
-                    this.orderDetailPanel.hide()
-                    this.paymentPanel.hide();
+
+                    //this.orderDetailPanel.hide()
+                    //this.paymentPanel.hide();
                     // update the left nav
-                    navUpdateRequired = true;
+                    //navUpdateRequired = true;
                 }
             }
 
@@ -160,6 +169,13 @@ Ext.define('Taco.view.order.Form', {
             }
         }
 
+    },
+
+    onRecordChange: function () {
+        var me = this,
+            orderItems = this.record.get("items")
+        
+        this.updatePanelVisibility();
 
         //if (me.isHeaderDataComplete() && (this.orderDetailPanel.isHidden() || this.paymentPanel.isHidden())) {
         //    // need to show the hidden panels once the customer information is defined;
@@ -205,12 +221,27 @@ Ext.define('Taco.view.order.Form', {
             orderForm: this                
         };
 
-        this.headerCmp = Ext.create('Taco.view.order.Header', subformCfg)
-        this.mon(this.headerCmp, 'customerchanged', this.onCustomerChange, me);
-        items.push(this.headerCmp);
+        this.headerCmp = Ext.create('Taco.view.order.Header', Ext.apply({
+            excludeFromNavigation: true,
+            listeners: {
+                scope: this,
+                afterlayout: function (view, width, height, oldWidth, oldHeight) {
+                    this.alignLeftNav();
+                    // this one only exists if this is in navForm2 instead of tabForm; TODO: refactor navForm2 to not cache the panel heights in the store; ie get rid of the mapping.
+                    if (this.rebuildMap) {
+                        this.rebuildMap();
+                    }
+                }
+            }
+        }, subformCfg));
 
+        this.mon(this.headerCmp, 'customerchanged', this.onCustomerChange, me);
+            
+        items.push(this.headerCmp);
+                
         this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({
-            hidden: !this.isHeaderDataComplete(),
+            //hidden: !this.isHeaderDataComplete(),
+            //disabled: !this.isHeaderDataComplete(),
             listeners: {
                 orderchange: function () {
                     if (this.shippingForm) {
@@ -226,21 +257,18 @@ Ext.define('Taco.view.order.Form', {
 
         },subformCfg)) 
         
-        items.push(this.orderDetailPanel);
 
-
-        /*
-        if (!this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.subform.ShippingSimple', subformCfg));
+        if (me.isHeaderDataComplete()) {            
+            items.push(this.orderDetailPanel);
         }
-        */
-        
 
         this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({
-            hidden: !this.isHeaderDataComplete()
+            //hidden: !this.isHeaderDataComplete()
         }, subformCfg))
 
-        items.push(this.paymentPanel);
+        if (me.isHeaderDataComplete() && this.record.get("items").length) {
+            items.push(this.paymentPanel);
+        }
       
         if (this.isEdit()) {
             items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
@@ -265,9 +293,9 @@ Ext.define('Taco.view.order.Form', {
 
         
         // Only validate when in create mode
-        if (this.isEdit()) isValid = false;        
+        if (this.isEdit()) isValid = false;
 
-        if (!this.customerRecord) {
+        if (!this.record.get("customerId")) {
             isValid = false;
             errors.push("A customer must be created or selected before saving this order");
         } else if (!this.record.itemsStore.count()) {

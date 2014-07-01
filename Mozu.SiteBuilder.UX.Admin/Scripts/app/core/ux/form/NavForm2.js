@@ -7,10 +7,10 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     requires: [],
 
     // Sure would have been nice to have some comments for what this does...
-    sectionOffset: 38,
+    //sectionOffset: 38,
 
     // Sure would have been nice to have some comments for what this does...
-    topOffset: 38,
+    //topOffset: 38,
 
     // this is an offset adjustment to move the left nav up and down relative to the first subForm's top edge.
     // By defaul the left nav will adjust itself to align with the top of the first subform;
@@ -35,8 +35,19 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         
         
         // items from subclass
-        var originalItems = this.items || [];
-        
+        var originalItems =  [];
+        var excludedItems = [];
+
+        Ext.Array.each(this.items, function (item, index) {
+            if (item.excludeFromNavigation) {
+                excludedItems.push(item);
+            } else {
+                originalItems.push(item)
+            }
+        })
+
+
+
         this.formContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-form-nav-container',
@@ -87,11 +98,11 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         //me.dockedItems.push(this.leftNav)
 
         
-
-        this.items = [
-            this.leftNav,
-            this.formContainer
-        ];
+        var items = excludedItems;
+        items.push(this.leftNav)
+        items.push(this.formContainer)
+        
+        this.items = items;
 
 
 
@@ -122,11 +133,18 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         */
     },
 
+    alignLeftNav: function () {
+        var offset = this.leftNav.el.getAlignToXY(this.formContainer.el, "tr-tl", [0, 0]);
+
+        // need to account for scrolling when this gets realigned;
+        var scrollTop = this.getWrapper().body.el.dom.scrollTop;
+        var y = offset[1] + this.leftNavTopOffset + scrollTop;
+        //this.leftNav.el.moveTo(null, offset[1] + this.leftNavTopOffset)
+        this.leftNav.el.moveTo(null, y)
+    },
+
     initLeftNav: function () {
         if (!this.enableScrollSpy) return;
-
-        var offset = this.leftNav.el.getAlignToXY(this.formContainer.el, "tr-tl", [0, 0]);
-        this.leftNav.el.moveTo(null, offset[1]+this.leftNavTopOffset)
 
         this.getWrapper().on({
             resize: function () {
@@ -142,25 +160,24 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             scroll: this.checkTop,
             scope: this
         });
-
-        /*
-        //this.getWrapper().getEl().on({
-        this.body.on({
-            scroll: function () {
-                
-                this.checkTop(arguments);
-            },
-            scope: this
-        });
-        */
-
-        this.rebuildMap();
+        
+        this.alignLeftNav();
     },
 
     rebuildMap: function () {
         
         this.locationMap = [];
         this.recordMap = [];
+
+        // todo need to calculate the offset to the top of the formContainer and dynamicly set the leftNavTopOffset
+        
+        this.formContainerTop = this.formContainer.el.dom.offsetTop;
+        var detailTop = this.nav.store.data.items[0].raw.el.dom.offsetTop;
+        var detailHeight = this.nav.store.data.items[0].raw.el.dom.offsetHeight;
+        var nextPanelTop = this.nav.store.data.items[1].raw.el.dom.offsetTop;
+        
+        
+
 
         if (!this.nav || !this.nav.store) return;
 
@@ -174,9 +191,12 @@ Ext.define('Taco.core.ux.form.NavForm2', {
             if (index === 0) {
                 this.locationMap.push(0);
                 return;
-            }
+            }            
+            //this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset - this.leftNavTopOffset);
+            this.locationMap.push(el.dom.offsetTop - this.leftNavTopOffset - this.formContainerTop);
+            //this.locationMap.push(el.dom.offsetTop);
 
-            this.locationMap.push(el.dom.offsetTop + this.sectionOffset - this.topOffset - this.leftNavTopOffset);
+
         }, this);
 
         this.checkTop();
@@ -191,6 +211,8 @@ Ext.define('Taco.core.ux.form.NavForm2', {
 
         if (this.isHidden()) return;
         
+        
+
         Ext.each(this.locationMap, function (top, index) {
             if (scrollTop >= top) max = index;
             else return false;
@@ -216,9 +238,10 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         
         if (record.raw.getEl) {
             targetY = view.store.indexOf(record)
-                        ? record.raw.getEl().dom.offsetTop + this.sectionOffset - this.leftNavTopOffset
-                        : 0;
-            wrapper.scrollTo('top', targetY - this.topOffset, true);
+            //? record.raw.getEl().dom.offsetTop + this.sectionOffset - this.leftNavTopOffset
+                ? record.raw.getEl().dom.offsetTop - this.formContainerTop - this.leftNavTopOffset
+                : 0;
+            wrapper.scrollTo('top', targetY, true);
         }
     },
 
