@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     public class ProductMapping : Profile
     {
         private const int MAX_ATTRIBUTE_VALUE_LENGTH = 50;
-        private const string DEFAULT_CURRENCY_CODE = "USD";
+     //   private const string DEFAULT_CURRENCY_CODE = "USD";
 
         public override string ProfileName
         {
@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DistPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).DistPartNumber))
                 .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.ISOCurrencyCode
-                    : DEFAULT_CURRENCY_CODE))
+                    : "USD"))   //todo:add to UI 
                 .ForMember(x => x.Cost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.Cost
                     : NULLCOST.Cost))
@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Price, op => op.ResolveUsing(p =>
                     new DC.ProductPrice()
                     {
-                        ISOCurrencyCode = DEFAULT_CURRENCY_CODE,
+                      //  ISOCurrencyCode = DEFAULT_CURRENCY_CODE,
                         // ListPrice = p.ListPrice,
                         Price = p.Price,
                         SalePrice = p.SalePrice,
@@ -432,7 +432,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Price, op => op.ResolveUsing(p =>
                     new DC.ProductPrice
                     {
-                        ISOCurrencyCode = DEFAULT_CURRENCY_CODE,
+                      //  ISOCurrencyCode = DEFAULT_CURRENCY_CODE,
                         // ListPrice = p.ListPrice,
                         Price = p.Price,
                         SalePrice = p.SalePrice,
@@ -512,7 +512,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ProductExtraValue, DC.ProductExtraValue>()
                   .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => new DC.ProductExtraValueDeltaPrice()
                   {
-                      CurrencyCode = DEFAULT_CURRENCY_CODE,
+               //       CurrencyCode = DEFAULT_CURRENCY_CODE,
                       DeltaPrice = x.DeltaPrice
                   }));
 
@@ -532,7 +532,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MfgPartNumber, op => op.ResolveUsing(dc => (dc.SupplierInfo ?? NULLSUPPLIER).MfgPartNumber))
                 .ForMember(x => x.CostCurrencyCode, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.ISOCurrencyCode
-                    : DEFAULT_CURRENCY_CODE))
+                    : "USD"))
                 .ForMember(x => x.DeltaCost, op => op.ResolveUsing(dc => (dc.SupplierInfo != null && dc.SupplierInfo.Cost != null)
                     ? dc.SupplierInfo.Cost.Cost
                     : NULLCOST.Cost))
@@ -544,7 +544,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPriceValue.HasValue
                     ? new DC.ProductVariationDeltaPrice()
                     {
-                        CurrencyCode = DEFAULT_CURRENCY_CODE,
+                 //       CurrencyCode = DEFAULT_CURRENCY_CODE,
                         Value = x.DeltaPriceValue,
                         MSRP = x.DeltaMSRP,
                         CreditValue = x.CreditValue

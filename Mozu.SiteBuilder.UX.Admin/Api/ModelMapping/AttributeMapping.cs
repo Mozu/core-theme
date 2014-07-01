@@ -129,7 +129,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
                 .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) =>  x.Value  is string 
-                    ? new DC.AttributeVocabularyValueLocalizedContent { LocaleCode = "en-US", StringValue = x.Value as string  } 
+                    ? new DC.AttributeVocabularyValueLocalizedContent
+                      {
+          //                LocaleCode = "??-??", 
+                          StringValue = x.Value as string
+                      } 
                     : null))
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 // TODO: do not hard code this.

@@ -71,9 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.MetaTagTitle, op => op.ResolveUsing(x => x.MetaTitle))
                 .ForMember(dc => dc.MetaTagKeywords, op => op.ResolveUsing(x => x.MetaKeywords))
                 .ForMember(dc => dc.Slug, op => op.ResolveUsing(x => x.Slug))
-                .ForMember(dc => dc.CategoryImages, op => op.ResolveUsing(x => x.CategoryImages))
-                .ForMember(dc => dc.LocaleCode, op => op.UseValue("en-US"))
-                ;
+                .ForMember(dc => dc.CategoryImages, op => op.ResolveUsing(x => x.CategoryImages));
 
             Mapper.CreateMap<CategoryImage, DC.CategoryLocalizedImage>()
                 .ForMember(dc => dc.ImageUrl, op => op.ResolveUsing(x => x.Url))

@@ -6,7 +6,9 @@
 Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
     extend: 'Taco.core.ux.window.Modal',
     title:'Site Provisioning',
-    requires: [],
+    requires: [
+        'Taco.store.Countries'
+    ],
     autoShow: true,
     scale: "large",    
     initComponent: function () {
@@ -47,27 +49,30 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
                         queryMode:'local'
                     },
                     
-                    {
-                        xtype: 'combobox',
-                        name: 'localeCode',
-                        store: ['en-US'],
-                        value: 'en-US',
-                        fieldLabel: 'Locale Code'
-                    },
+                    //{
+                    //    xtype: 'hidden',
+                    //    name: 'localeCode',
+                  
+                    //    value: 'en-US',
+                    //    fieldLabel: 'Locale Code'
+                    //},
                     {
                         xtype: 'combobox',
                         name: 'CountryCode',
-                        store: ['US'],
+                        store: { type:'Taco.store.Countries'},
                         value: 'US',
+                        valueField: 'code',
+                        displayField: 'code',
                         fieldLabel: 'Country Code'
-                    },
-                    {
-                        xtype: 'combobox',
-                        name: 'CurrencyCode',
-                        store: ['USD'],
-                        value: 'USD',
-                        fieldLabel: 'Currency Code'
                     }
+                    //,
+                    //{
+                    //    xtype: 'hidden',
+                    //    name: 'CurrencyCode',
+                    //    store: ['USD'],
+                    //    value: 'USD',
+                    //    fieldLabel: 'Currency Code'
+                    //}
                 
                 ]
             });
@@ -80,9 +85,9 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
             data = me.form.getValues(),
             catalogIdField = me.form.findField('catalogId'),
             catRecord = catalogIdField.findRecordByValue(catalogIdField.getValue());
-        
-
-
+       
+        data.localeCode = catRecord.get('defaultLocaleCode');
+        data.currencyCode = catRecord.get('defaultCurrencyCode');
         data.masterCatalogId = catRecord.raw.masterCatalogId;
         data.tenantId = Taco.app.context.getTenantId();
         this.saveSuccess(data);        

@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private ThemeSelection _themeSelection;
         private ThemeRuntimeSettingsCollection _themeRuntimeSettingsCollection;
         private string _themeOverrideId = null;
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ISiteBuilderApiContext apiContext, ILocationSettingsWebApiClient locationSettingsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,  HttpRequestMessage requestMessage)
+        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ILocationSettingsWebApiClient locationSettingsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,  HttpRequestMessage requestMessage)
         {
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
@@ -167,7 +167,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 if (_labels == null)
                 {
-                    _labels = Theme.MergedLabels["en-US"].ToDictionary();
+                    ThemeLabelCollection tlc;
+                    if (!Theme.MergedLabels.TryGetValue(_siteBuilderApiContext.LocaleCode, out tlc))
+                    {
+                        tlc = Theme.MergedLabels["en-US"];
+                    }
+                    _labels = tlc.ToDictionary();
+                    
                 }
                 return _labels;
             }

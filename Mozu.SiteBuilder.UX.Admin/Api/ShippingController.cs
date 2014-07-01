@@ -490,7 +490,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
                 if (configuration == null  || !configuration.Enabled)
                     continue;
-                var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetCarrierServiceTypes(key, "en-US")).ReadAsSync();
+
+
+
+                var cConfig = (await _carrierConfigurationGlobalWebApiClient.GetCarrierServiceTypes(key, this.SbApiContext.LocaleCode)).ReadAsSync();
                
                 if (key == "custom")
                 {

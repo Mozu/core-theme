@@ -1,38 +1,26 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
-using System.Linq;
-using Mozu.PaymentService.Contracts;
-using MSC=Mozu.ShippingAdmin.Contracts;
+using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
+using Mozu.SiteSettings.Shipping.Contracts;
 using Newtonsoft.Json.Linq;
-using CarrierConfiguration = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.CarrierConfiguration;
-using CustomAttribute = Mozu.ShippingRuntime.Contracts.CustomAttribute;
-
-using ShippingClass = Mozu.ProductAdmin.Contracts.ShippingClass;
-using ShippingRate = Mozu.ShippingRuntime.Contracts.ShippingRate;
-
-
+using MSC = Mozu.ShippingAdmin.Contracts;
 using SiteShippingSettings = Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
-using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
+
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ShippingMapping : Profile
     {
-        const string CUSTOM_PERCENTAGE_PER_ORDER = "CUSTOM_PERCENTAGE_PER_ORDER";
+        private const string CUSTOM_PERCENTAGE_PER_ORDER = "CUSTOM_PERCENTAGE_PER_ORDER";
 
         public override string ProfileName
         {
-            get
-            {
-                return this.GetType().FullName;
-            }
+            get { return GetType().FullName; }
         }
 
         protected override void Configure()
         {
-
-
             Mapper.CreateMap<MSC.CustomTableRate, CustomTableRate>()
                 .ForMember(x => x.Name, opt => opt.ResolveUsing(x => (x.Content != null)
                     ? x.Content.Name : null))
@@ -42,9 +30,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType));
 
             Mapper.CreateMap<CustomTableRate, MSC.CustomTableRate>()
-                .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new MSC.CustomTableRateContent()
+                .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new MSC.CustomTableRateContent
                                                                         {
-                                                                            LocaleCode = "en-US", Name = x.Name
+                                                                            //LocaleCode = "??-??"
+                                                                            //,
+                                                                            Name = x.Name
                                                                         }))
                 .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Value, opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER
@@ -52,139 +42,81 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType));
 
 
-            Mapper.CreateMap<CarrierConfiguration, Mozu.ShippingAdmin.Contracts.CarrierConfiguration>().ConvertUsing(
+            Mapper.CreateMap<CarrierConfiguration, MSC.CarrierConfiguration>().ConvertUsing(
                 x =>
+                {
+                    var dest = new MSC.CarrierConfiguration
+                               {
+                                   Id = x.id,
+                                   Settings = new List<MSC.Setting>(),
+                                   Enabled = x.Enabled
+                               };
+                    foreach (var carSet in x.Settings)
                     {
-                        var dest = new Mozu.ShippingAdmin.Contracts.CarrierConfiguration()
-                                       {
-                                           Id = x.id,
-                                           Settings = new List<Mozu.ShippingAdmin.Contracts.Setting>(),
-                                           Enabled = x.Enabled
-                                           
-                                       };
-                        foreach (var carSet in x.Settings)
-                        {
-                            dest.Settings.Add(new Mozu.ShippingAdmin.Contracts.Setting()
-                                                  {
-                                                      Key = carSet.Key,
-                                                      Value = (string) carSet.Value
-                                                  });
-                        }
-                        
-                        
-                        return dest;
-                    });
+                        dest.Settings.Add(new MSC.Setting
+                                          {
+                                              Key = carSet.Key,
+                                              Value = (string) carSet.Value
+                                          });
+                    }
 
 
-            Mapper.CreateMap< Mozu.ShippingAdmin.Contracts.CarrierConfiguration,CarrierConfiguration>().ConvertUsing(
+                    return dest;
+                });
+
+
+            Mapper.CreateMap<MSC.CarrierConfiguration, CarrierConfiguration>().ConvertUsing(
                 x =>
+                {
+                    var dest = new CarrierConfiguration
+                               {
+                                   id = x.Id,
+                                   Enabled = x.Enabled,
+                                   Settings = new JObject(),
+                                   IsConfigured = true
+                               };
+                    foreach (MSC.Setting setting in x.Settings)
                     {
+                        dest.Settings[setting.Key] = setting.Value;
+                    }
 
-                        var dest = new CarrierConfiguration()
-                                       {
-                                           id = x.Id,
-                                            Enabled = x.Enabled,
-                                           Settings = new JObject(),
-                                           IsConfigured = true 
+                    return dest;
+                });
 
-                                       };
-                        foreach (var setting in x.Settings)
-                        {
-                            dest.Settings[setting.Key] = setting.Value;
-                        }
-                        
-                        return dest;
-                    });
-            
 
-            //Mapper.CreateMap<ShippingRate, Models.Shipping.ShippingRate>();
-            //Mapper.CreateMap<ShippingClass, Models.Shipping.ShippingClass>();
-            //Mapper.CreateMap<ShippingRateLocalizedContent, Models.Shipping.ShippingRateLocalizedContent>();
-            //Mapper.CreateMap<FlatPerCartShippingRate, Models.Shipping.FlatPerCartShippingRate>();
-            //Mapper.CreateMap<FlatPerItemShippingRate, Models.Shipping.FlatPerItemShippingRate>();
-            //Mapper.CreateMap<ShippingRatePrice, Models.Shipping.ShippingRatePrice>();
-            //Mapper.CreateMap<SiteShippingMethod, Models.Shipping.SiteShippingMethod>();
-            //Mapper.CreateMap<SiteShippingMethodLocalizedContent, Models.Shipping.SiteShippingMethodLocalizedContent>();
-            //Mapper.CreateMap<SiteShippingRegion, Models.Shipping.SiteShippingRegion>();
             Mapper.CreateMap<SiteShippingSettings, Models.Shipping.SiteShippingSettings>()
                 //.ForMember(x => x.ActiveRateProviders, opt => opt.ResolveUsing(x => x.ActiveRateProviders))
-                  .ForMember(x => x.OrderHandlingFee, opt => opt.ResolveUsing(x => x.OrderHandlingFee != null 
-                      ? x.OrderHandlingFee.Amount : null))
-                  //ignore
-                  .ForMember(x => x.SiteShippingRegions, op => op.Ignore())
-                  .ForMember(x => x.ShippingLocationCode, op => op.Ignore())
-                  .ForMember(x => x.EnableInStorePickup, op => op.Ignore())
-                  .ForMember(x => x.StorePickupLocationTypeCodes, op => op.Ignore())
-                  .ForMember(x => x.CustomRates, op => op.Ignore())
-
-                  ;
-                //  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.ResolveUsing(x => x.SiteShippingOriginAddress));
+                .ForMember(x => x.OrderHandlingFee, opt => opt.ResolveUsing(x => x.OrderHandlingFee != null
+                    ? x.OrderHandlingFee.Amount : null))
+                //ignore
+                .ForMember(x => x.SiteShippingRegions, op => op.Ignore())
+                .ForMember(x => x.ShippingLocationCode, op => op.Ignore())
+                .ForMember(x => x.EnableInStorePickup, op => op.Ignore())
+                .ForMember(x => x.StorePickupLocationTypeCodes, op => op.Ignore())
+                .ForMember(x => x.CustomRates, op => op.Ignore())
+                ;
+            //  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.ResolveUsing(x => x.SiteShippingOriginAddress));
 
             Mapper.CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>()
                 //       .ForMember(x => x.ActiveRateProviders, opt => opt.ResolveUsing(x => x.ActiveRateProviders))
-                  .ForMember(x => x.OrderHandlingFee, opt => opt.ResolveUsing(x => x.OrderHandlingFee.HasValue 
-                      ? new Mozu.SiteSettings.Shipping.Contracts.SiteShippingHandlingFee()
-                          {
-                              Amount = x.OrderHandlingFee
-                          }
-                      : null))
+                .ForMember(x => x.OrderHandlingFee, opt => opt.ResolveUsing(x => x.OrderHandlingFee.HasValue
+                    ? new SiteShippingHandlingFee
+                      {
+                          Amount = x.OrderHandlingFee
+                      }
+                    : null))
                 //ignores
                 .ForMember(dc => dc.SignatureRequirement, op => op.Ignore())
-                .ForMember(dc => dc.AuditInfo, op => op.Ignore())                                                                  
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
-             //     .ForMember(x => x.SiteShippingOriginAddress, opt => opt.ResolveUsing(x => x.SiteShippingOriginAddress));
+            //     .ForMember(x => x.SiteShippingOriginAddress, opt => opt.ResolveUsing(x => x.SiteShippingOriginAddress));
 
 
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Feature, Mozu.SiteBuilder.UX.Admin.Api.Models.Feature>();
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.Feature,Mozu.Core.Api.Contracts.Feature>();
-           
+            Mapper.CreateMap<Feature, Models.Feature>();
+            Mapper.CreateMap<Models.Feature, Feature>();
 
 
-            //Mapper.CreateMap<SharedShippingMethod, Models.Shipping.SharedShippingMethod>();
-            //Mapper.CreateMap<SharedShippingMethodLocalizedContent, Models.Shipping.SharedShippingMethodLocalizedContent>();
-            
-            //Mapper.CreateMap<Models.Shipping.SiteShippingOriginAddress, SiteShippingOriginAddress>();
-            //Mapper.CreateMap<Models.Shipping.ShippingRate, ShippingRate>();
-            //Mapper.CreateMap<Models.Shipping.ShippingClass, ShippingClass>();
-            //Mapper.CreateMap<Models.Shipping.ShippingRateLocalizedContent, ShippingRateLocalizedContent>();
-            //Mapper.CreateMap<Models.Shipping.FlatPerCartShippingRate, FlatPerCartShippingRate>();
-            //Mapper.CreateMap<Models.Shipping.FlatPerItemShippingRate, FlatPerItemShippingRate>();
-            //Mapper.CreateMap<Models.Shipping.ShippingRatePrice, ShippingRatePrice>();
-            //Mapper.CreateMap<Models.Shipping.SiteShippingMethod, Mozu.SiteSettings.Shipping.Contracts.SiteShippingMethod>();
-            //Mapper.CreateMap<Models.Shipping.SiteShippingMethodLocalizedContent, Mozu.SiteSettings.Shipping.Contracts.SiteShippingMethodLocalizedContent>();
-            //Mapper.CreateMap<Models.Shipping.SiteShippingOriginAddress, Mozu.SiteSettings.Shipping.Contracts.SiteShippingOriginAddress>();
-            //Mapper.CreateMap<Models.Shipping.SiteShippingRegion, Mozu.SiteSettings.Shipping.Contracts.SiteShippingRegion>();
-            Mapper.CreateMap<Models.Shipping.SiteShippingSettings, Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>();
-
-            //Mapper.CreateMap<Models.Shipping.SharedShippingMethod, SharedShippingMethod>();
-            //Mapper.CreateMap<Models.Shipping.SharedShippingMethodLocalizedContent, SharedShippingMethodLocalizedContent>();
-
-            // USPS
-
-            /*Mapper.CreateMap<ShippingMethod, Models.Shipping.ShippingMethod>()
-                .ForMember(x => x.Code, op => op.ResolveUsing(x => x.Code))
-                .ForMember(x => x.IsActive, op => op.ResolveUsing(x => x.IsActive))
-                .ForMember(x => x.IsInternational, op => op.ResolveUsing(x => x.IsInternational))
-                .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Content.Name));
-
-            Mapper.CreateMap<Models.Shipping.ShippingMethod, ShippingMethod>()
-                .ForMember(x => x.Code, op => op.ResolveUsing(x => x.Code))
-                .ForMember(x => x.Content, op => op.ResolveUsing(x => new ShippingMethodLocalizedContent { ContentLocaleCode = "en-US", Name = x.Name }))
-                .ForMember(x => x.IsActive, op => op.ResolveUsing(x => x.IsActive))
-                .ForMember(x => x.IsInternational, op => op.ResolveUsing(x => x.IsInternational));
-
-            Mapper.CreateMap<UspsConfiguration, Models.Shipping.UspsConfiguration>()
-                .ForMember(x => x.ShippingMethods, op => op.ResolveUsing(x => (from sm in x.ShippingMethods where sm.Code != null select sm.Code).ToArray()))
-                .ForMember(x => x.UspsUserId, op => op.ResolveUsing(x => x.CustomAttributes.SingleOrDefault(att => att.Key == "uspsuserid").Value));
-
-            Mapper.CreateMap<Models.Shipping.UspsConfiguration, ShippingConfiguration>()
-                .ForMember(x => x.CreateBy, op => op.Ignore())
-                .ForMember(x => x.CreateDate, op => op.Ignore())
-                .ForMember(x => x.CustomAttributes, op => op.ResolveUsing(x => new List<CustomAttribute> { new CustomAttribute { Key = "uspsuserid", Value = x.UspsUserId } }))
-                .ForMember(x => x.ShippingMethods, op => op.ResolveUsing(x => x.ShippingMethods.Select(method => new ShippingMethod() { Code = method }).ToList()))
-                .ForMember(x => x.UpdateBy, op => op.Ignore())
-                .ForMember(x => x.UpdateDate, op => op.Ignore());*/
-                
+            Mapper.CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>();
         }
     }
 }

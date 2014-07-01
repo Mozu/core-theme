@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
             Mapper.AddProfile<FacetMapping>();
             Mapper.AddProfile<FileManagementModelMapping>();
             Mapper.AddProfile<GeneralSettingsMapping>();
-            Mapper.AddProfile<OptionMapping>();
+            
             Mapper.AddProfile<OrderMapping>();
             //Mapper.AddProfile<ProductMapping>();
             Mapper.AddProfile<ReturnMapping>();

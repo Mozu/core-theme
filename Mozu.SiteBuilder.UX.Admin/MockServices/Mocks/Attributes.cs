@@ -29,7 +29,9 @@ namespace Mozu.SiteBuilder.UX.Admin.MockServices.Mocks
             IsOption = false;
             IsProperty = true;
             VocabularyValues = new List<DC.AttributeVocabularyValue>();
-            Content = new DC.AttributeLocalizedContent { LocaleCode = "en-US", Name = "Engraved Poem" };
+            Content = new DC.AttributeLocalizedContent { 
+                LocaleCode = "en-US",
+                Name = "Engraved Poem" };
         }
     }
 

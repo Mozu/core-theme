@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     Description = "",
                     Name = (source.Name ?? "").Trim(),
-                    LocaleCode = "en-US",
+   //                 LocaleCode = "??-??",
                 },
                 InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
                 DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),
