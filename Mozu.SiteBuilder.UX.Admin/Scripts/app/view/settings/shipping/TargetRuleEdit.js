@@ -22,7 +22,10 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
 
     autoScroll: true,
     initComponent: function () {
-        var labels = {};
+        
+        var me =this,
+            labels = {};
+
         if (this.record.get('domain') == 'Shipping.DestinationAddress') {
             this.title = 'Shipping Zone';
         
@@ -67,6 +70,46 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
                     fieldStyle: 'resize:both',
                     minHeight: 400
                 }
+
+                /*
+                ,
+
+                // temporariy prototype for ace editor inclusion. See jGill for info
+
+                {
+                    xtype: "component",
+                    itemId: "aceEditor",
+                    
+                    height:200,
+                    html: "test",
+                    listeners: {
+                        scope: me,
+                        render: function (cmp) {                            
+                            var me = this;
+                            var editDom = cmp.getEl().dom;
+                            debugger;
+                            if (!ace) {
+                                return
+                            }
+
+                            me.editor = ace.edit(editDom);
+                            me.editor.setTheme("ace/theme/tomorrow");
+                            me.editor.getSession().setMode("ace/mode/mozufilter");
+                            me.originalData = me.editor.getValue();
+                            me.editor.on('change', function (e) {
+                                var prevState = me.isDirtyFlag;
+                                me.isDirtyFlag = (me.editor.getValue() != me.originalData);
+                                if (prevState != me.isDirtyFlag) {
+                                    // Somebody fire the isDirtyFlag
+                                }
+                            });
+
+                        }
+                    }
+                }
+                */
+
+
             ]
 
         };
