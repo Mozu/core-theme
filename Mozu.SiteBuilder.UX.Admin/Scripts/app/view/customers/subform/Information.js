@@ -161,7 +161,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 xtype: 'button',
                 scale: 'medium',
                 ui: 'link',
-                text: 'View Store Credit',
+                text: 'View Gift Cards & Store Credits',
                 handler: function() {
                     Ext.create('Taco.shared.view.modal.StoreCredit', {
                         record: this.record
