@@ -17,6 +17,7 @@ Ext.application({
     autoCreateViewport: false,
     controllers: [
         'Analytics',
+        'Account',
         'Capability',
         'Dashboard',
         'Reports',
