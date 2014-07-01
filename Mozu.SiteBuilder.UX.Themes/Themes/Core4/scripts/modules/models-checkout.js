@@ -389,13 +389,17 @@
 
             loadCustomerDigitalCredits: function () {
                 var order = this.getOrder(),
-                    customer = order.get('customer');
+                    customer = order.get('customer'),
+                    activeCredits = this.activeStoreCredits();
+
                 if (customer) {
                     var customerCredits = customer.get('credits');
                     if (customerCredits) {
                         var currentDate = new Date(),
                             unexpiredDate = new Date(2076, 6, 4);
-                        var invalidCredits = customerCredits.filter(function (cred) {
+
+                        // todo: refactor so conversion & get can re-use - Greg Murray on 2014-07-01 
+                        var invalidCredits = customerCredits.filter(function(cred) {
                             var credBalance = cred.get('currentBalance'),
                                 credExpDate = cred.get('expirationDate');
                             var expDate = (credExpDate) ? new Date(credExpDate) : unexpiredDate;
@@ -404,15 +408,33 @@
                         _.each(invalidCredits, function(inv) {
                             customerCredits.remove(inv);
                         });
-
-                        return customerCredits;
+                        this._cachedDigitalCredits = customerCredits;
                     }
+                } else {
+                    this._cachedDigitalCredits = [];
                 }
-                return [];
+
+                if (activeCredits) {
+                    this.convertPaymentsToDigitalCredits(activeCredits, customer);
+                }
+
             },
+
+            convertPaymentsToDigitalCredits: function(activeCredits, customer) {
+                var me = this;
+                _.each(activeCredits, function (activeCred) {
+                    var currentCred = activeCred;
+                    return me.retrieveDigitalCredit(customer, currentCred.billingInfo.storeCreditCode, me, currentCred.amountRequested).then(function(digCredit) {
+                        me.trigger('orderPayment', me.getOrder().data, me);
+                        return digCredit;
+                    });
+                });
+            },
+
+
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) { 
-                    this._cachedDigitalCredits = this.loadCustomerDigitalCredits();
+                    this.loadCustomerDigitalCredits();
                 }
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
             },
@@ -518,6 +540,28 @@
                 return (Math.abs(f1 - f2)) < epsilon; 
             },
 
+            retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
+                return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
+                    var creditModel = new PaymentMethods.DigitalCredit(credit.data);
+
+                    // todo: add validation call (expired 0 balance.) - Greg Murray on 2014-07-01 
+                    if (!creditModel.get('currentBalance')) {
+                        creditModel.set('currentBalance', creditModel.get('initialBalance'));
+                    }
+                    var maxAmt = me.getMaxCreditToApply(creditModel, me, amountRequested);
+                    if (!!amountRequested && amountRequested < maxAmt) {
+                        maxAmt = amountRequested;
+                    }
+                    creditModel.set('creditAmountApplied', maxAmt);
+                    creditModel.set('isEnabled', true);
+
+                    me._cachedDigitalCredits.push(creditModel);
+                    me.applyDigitalCredit(creditCode, maxAmt, true);
+                    me.trigger('sync', creditModel);
+                    return creditModel;
+                });
+            },
+
             getDigitalCredit: function () {
                 var me = this,
                     order = me.getOrder(),
@@ -536,19 +580,8 @@
                     deferred.reject();
                     return deferred.promise;
                 }
-                this.isLoading(true);
-                return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
-                    var creditModel = new PaymentMethods.DigitalCredit(credit.data);
-                    if (!creditModel.get('currentBalance')) {
-                        creditModel.set('currentBalance', creditModel.get('initialBalance'));
-                    }
-                    var maxAmt = me.getMaxCreditToApply(creditModel, me);
-                    creditModel.set('creditAmountApplied', maxAmt);
-                    creditModel.set('isEnabled', true);
-                    
-                    me._cachedDigitalCredits.push(creditModel);
-                    me.applyDigitalCredit(creditCode, maxAmt, true);
-                    me.trigger('sync', creditModel);
+                me.isLoading(true);
+                return me.retrieveDigitalCredit(customer, creditCode, me).then(function(digCredit) {
                     return me;
                 });
             },
