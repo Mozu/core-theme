@@ -392,27 +392,23 @@
                     customer = order.get('customer'),
                     activeCredits = this.activeStoreCredits();
 
-                if (customer) {
-                    var customerCredits = customer.get('credits');
-                    if (customerCredits) {
-                        var currentDate = new Date(),
-                            unexpiredDate = new Date(2076, 6, 4);
+                var customerCredits = customer.get('credits');
+                if (customerCredits && customerCredits.length > 0) {
+                    var currentDate = new Date(),
+                        unexpiredDate = new Date(2076, 6, 4);
 
-                        // todo: refactor so conversion & get can re-use - Greg Murray on 2014-07-01 
-                        var invalidCredits = customerCredits.filter(function(cred) {
-                            var credBalance = cred.get('currentBalance'),
-                                credExpDate = cred.get('expirationDate');
-                            var expDate = (credExpDate) ? new Date(credExpDate) : unexpiredDate;
-                            return (!credBalance || credBalance <= 0 || expDate < currentDate);
-                        });
-                        _.each(invalidCredits, function(inv) {
-                            customerCredits.remove(inv);
-                        });
-                        this._cachedDigitalCredits = customerCredits;
-                    }
-                } else {
-                    this._cachedDigitalCredits = [];
+                    // todo: refactor so conversion & get can re-use - Greg Murray on 2014-07-01 
+                    var invalidCredits = customerCredits.filter(function(cred) {
+                        var credBalance = cred.get('currentBalance'),
+                            credExpDate = cred.get('expirationDate');
+                        var expDate = (credExpDate) ? new Date(credExpDate) : unexpiredDate;
+                        return (!credBalance || credBalance <= 0 || expDate < currentDate);
+                    });
+                    _.each(invalidCredits, function(inv) {
+                        customerCredits.remove(inv);
+                    });
                 }
+                this._cachedDigitalCredits = customerCredits;
 
                 if (activeCredits) {
                     this.convertPaymentsToDigitalCredits(activeCredits, customer);
@@ -456,6 +452,7 @@
                 var previousAmount = digitalCredit.get('creditAmountApplied');
                 var previousEnabledState = digitalCredit.get('isEnabled');
                 digitalCredit.set('creditAmountApplied', creditAmountToApply);
+                digitalCredit.set('remainingBalance',  digitalCredit.calculateRemainingBalance());
                 digitalCredit.set('isEnabled', isEnabled);
 
                 //need to round to prevent being over total by .01
@@ -487,6 +484,7 @@
                             if (creditAmountToApply > maxCreditAvailable) {
                                 digitalCredit.set('creditAmountApplied', previousAmount);
                                 digitalCredit.set('isEnabled', previousEnabledState);
+                                digitalCredit.set('remainingBalance', digitalCredit.calculateRemainingBalance());
                                 return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
                             }
                             return order.apiVoidPayment(sameCreditPayment.id).then(function (o) {
@@ -511,6 +509,7 @@
                 maxCreditAvailable = self.getMaxCreditToApply(digitalCredit, self);
                 if (creditAmountToApply > maxCreditAvailable) {
                     digitalCredit.set('creditAmountApplied', previousAmount);
+                    digitalCredit.set('remainingBalance', digitalCredit.calculateRemainingBalance());
                     digitalCredit.set('isEnabled', previousEnabledState);
                     return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
                 }
@@ -543,6 +542,7 @@
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
                     var creditModel = new PaymentMethods.DigitalCredit(credit.data);
+                    creditModel.set("isTiedToCustomer", false);
 
                     // todo: add validation call (expired 0 balance.) - Greg Murray on 2014-07-01 
                     if (!creditModel.get('currentBalance')) {
@@ -553,6 +553,7 @@
                         maxAmt = amountRequested;
                     }
                     creditModel.set('creditAmountApplied', maxAmt);
+                    creditModel.set('remainingBalance', creditModel.calculateRemainingBalance());
                     creditModel.set('isEnabled', true);
 
                     me._cachedDigitalCredits.push(creditModel);
@@ -607,6 +608,20 @@
                 return _.reduce(activeCreditPayments, function (sum, credit) {
                     return sum + credit.amountRequested;
                 }, 0);
+            },
+
+            addRemainingCreditToCustomerAccount: function(creditCode, isEnabled) {
+                var self = this;
+
+                var digitalCredit = this._cachedDigitalCredits.filter(function (cred) {
+                    return cred.get('code') === creditCode;
+                });
+
+                if (!digitalCredit || digitalCredit.length === 0) {
+                    return self.deferredError(Hypr.getLabel('digitalCodeAlreadyUsed', creditCode), self);
+                }
+                digitalCredit = digitalCredit[0];
+                digitalCredit.set('addRemainderToCustomer', isEnabled);
             },
 
             removeCredit: function (id) {

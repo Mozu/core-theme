@@ -109,15 +109,21 @@
 
         isEnabled: false,
         creditAmountApplied: null,
+        remainingBalance: null,
+        isTiedToCustomer: true,
+        addRemainderToCustomer: false,
 
         initialize: function() {
             this.set({ isEnabled: this.isEnabled });
             this.set({ creditAmountApplied: this.creditAmountApplied });
+            this.set({ remainingBalance: this.remainingBalance });
+            this.set({ isTiedToCustomer: this.isTiedToCustomer });
+            this.set({ addRemainderToCustomer: this.addRemainderToCustomer });
         },
 
-        helpers: ['remainingBalance'],
+        helpers: ['calculateRemainingBalance'],
 
-        remainingBalance: function () {
+        calculateRemainingBalance: function () {
             return (! this.get('creditAmountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('creditAmountApplied');
         },
 
