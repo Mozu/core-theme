@@ -229,8 +229,8 @@ namespace Mozu.SiteBuilder.Mvc
 
         public void Load()
         {
-            this.LocaleCode = "en-US";
-            this.CurrencyCode = "usd";
+          //  this.LocaleCode = "en-US";
+          //  this.CurrencyCode = "usd";
 
 
 
@@ -317,6 +317,14 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     this.CatalogId  = tmpInt;
                 }
+                if (!string.IsNullOrEmpty( cookie["locale"]))
+                {
+                    this.LocaleCode = cookie["locale"];
+                }
+                if (!string.IsNullOrEmpty(cookie["currency"]))
+                {
+                    this.CurrencyCode = cookie["currency"];
+                } 
                 DataViewModeType dataViewModeType;
                 if (Enum.TryParse<DataViewModeType>(cookie["dataview"], true, out dataViewModeType))
                 {

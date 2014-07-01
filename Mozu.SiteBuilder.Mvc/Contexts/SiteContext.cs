@@ -291,13 +291,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return _domains;
             }
             set { _domains = value; }
-        } 
+        }
 
-        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid)
+        public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null)
         {
             var cookie = new HttpCookie("") {Expires = DateTime.MaxValue};
 
             cookie["site"] = site.HasValue ? site.ToString() : null;
+            cookie["locale"] = locale;
+            cookie["currency"] = currency;
             cookie["masterCatalog"] = masterCatalog.HasValue ? masterCatalog.ToString() : null;
             cookie["catalog"] = catalogid.HasValue ? catalogid.ToString() : null;
             cookie["tenant"] = tenant.ToString();
@@ -444,5 +446,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                  
             }
         }
+
+        
     }
 }
