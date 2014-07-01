@@ -142,13 +142,11 @@ Ext.define('Taco.view.order.Header', {
 
                 '{billingContact.address1}<br>',
 
-                '<tpl if="billingContract.address2">{billingContact.address2}<br></tpl>',
+                '<tpl if="billingContact.address2">{billingContact.address2}<br></tpl>',
 
-                '<tpl if="billingContract.address2">{billingContact.address2}<br></tpl>',
+                '<tpl if="billingContact.address3">{billingContact.address3}<br></tpl>',
 
-                '<tpl if="billingContract.address3">{billingContact.address3}<br></tpl>',
-
-                '<tpl if="billingContract.address4">{billingContact.address4}<br></tpl>',
+                '<tpl if="billingContact.address4">{billingContact.address4}<br></tpl>',
 
                 '{billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}<br>',
 

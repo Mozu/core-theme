@@ -88,16 +88,16 @@ Ext.define('Taco.view.customers.Contacts', {
                 }, {
                     xtype: 'component',
                     tpl: [
-                        '<div data-handle="contact-{id}" data-contact-type="', '<tpl if="isFromOrder">order<tplelse>customer</tpl>' , '">',
+                        '<div data-handle="contact-{id}" data-contact-type="', '<tpl if="isFromOrder">order<tplelse>customer</tpl>', '">',
 
                         '{firstName}<tpl if="middleName"> {middleName}</tpl> {lastName}<br>',
 
                         '<span data-handle="contact-address1">{address1}</span><br>',
 
                         '<tpl if="address2">{address2}<br></tpl>',
-                        
+
                         '<tpl if="address3">{address3}<br></tpl>',
-                        
+
                         '<tpl if="address4">{address4}<br></tpl>',
 
                         '{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}<br>',
@@ -158,9 +158,7 @@ Ext.define('Taco.view.customers.Contacts', {
 
     loadContacts: function() {
         var billingContact,
-            billingContactJson,
             fulfillmentContact,
-            fulfillmentContactJson,
             foundBilling,
             foundFulfillment;
 
@@ -168,14 +166,13 @@ Ext.define('Taco.view.customers.Contacts', {
 
         if (this.order) {
 
-            billingContact = this.order.get('billingContact');
-            fulfillmentContact = this.order.get('fulfillmentContact');
+            billingContact = Ext.clone(this.order.get('billingContact'));
+            fulfillmentContact = Ext.clone(this.order.get('fulfillmentContact'));
 
             if (billingContact && billingContact.address1) {
-                billingContactJson = Ext.encode(billingContact);
                 foundBilling = Ext.Array.findBy(this.record.get('contacts'), function(contact) {
-                    return Ext.encode(contact) === billingContactJson;
-                });
+                    return this.contactsMatch(contact, billingContact);
+                }, this);
 
                 if (!foundBilling) {
                     billingContact.isFromOrder = true;
@@ -185,16 +182,15 @@ Ext.define('Taco.view.customers.Contacts', {
             }
 
             if (fulfillmentContact && fulfillmentContact.address1) {
-                fulfillmentContactJson = Ext.encode(fulfillmentContact);
                 foundFulfillment = Ext.Array.findBy(this.record.get('contacts'), function(contact) {
-                    return Ext.encode(contact) === fulfillmentContactJson;
-                });
+                    return this.contactsMatch(contact, fulfillmentContact);
+                }, this);
 
                 if (!foundFulfillment) {
                     fulfillmentContact.isFromOrder = true;
                     fulfillmentContact.isOrderFullfilment = true;
 
-                    if (fulfillmentContactJson !== billingContactJson) Ext.Array.push(this.contacts, fulfillmentContact);
+                    if (!this.contactsMatch(fulfillmentContact, billingContact)) Ext.Array.push(this.contacts, fulfillmentContact);
                 }
             }
         }
@@ -203,7 +199,9 @@ Ext.define('Taco.view.customers.Contacts', {
     },
 
     createNewContact: function() {
-        this.editContact({isNewContact: true});
+        this.editContact({
+            isNewContact: true
+        });
     },
 
     editContact: function(contact) {
@@ -232,6 +230,37 @@ Ext.define('Taco.view.customers.Contacts', {
                 scope: this
             }
         });
+    },
+
+    contactsMatch: function(c1, c2) {
+        var parameters = [
+                'firstName',
+                'lastName',
+                'address1',
+                'address2',
+                'address3',
+                'address4',
+                'cityOrTown',
+                'stateOrProvince',
+                'postalOrZipCode',
+                'countryCode',
+                'homePhone',
+                'mobilePhone',
+                'workPhone',
+                'email',
+                'companyOrOrganization',
+                'addressType'
+            ],
+            ret = true;
+
+            Ext.each(parameters, function(param) {
+                if (c1[param] !== c2[param]) {
+                    ret = false;
+                    return false;
+                }
+            });
+
+        return ret;
     },
 
     deleteContact: function(contact) {

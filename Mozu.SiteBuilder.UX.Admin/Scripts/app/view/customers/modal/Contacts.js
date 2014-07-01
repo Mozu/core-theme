@@ -29,8 +29,9 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                 }), {
                     xtype: 'button',
                     ui: 'action-primary',
+                    scale: 'medium',
                     itemId: 'addNewContact',
-                    text: 'Add New Addres',
+                    text: 'Add New Address',
                     handler: function() {
                         this.down('#customerContacts').createNewContact();
                     },
