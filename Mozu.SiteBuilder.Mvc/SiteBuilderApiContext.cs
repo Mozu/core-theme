@@ -90,6 +90,7 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
+        private static System.Collections.Concurrent.ConcurrentDictionary<int, Site> g_SiteIdSiteLookup = new ConcurrentDictionary<int, Site>();
 
 
 
@@ -282,6 +283,16 @@ namespace Mozu.SiteBuilder.Mvc
 
 
 
+            if (string.IsNullOrEmpty(this.LocaleCode) && this.SiteId.HasValue)
+            {
+                Site site = g_SiteIdSiteLookup.GetOrAdd(this.SiteId.Value, LookupSiteById );
+                if (site != null)
+                {
+                    LocaleCode = site.DefaultLocaleCode;
+                    CurrencyCode = site.DefaultCurrencyCode;
+
+                }
+            }
 
 
 
@@ -352,6 +363,22 @@ namespace Mozu.SiteBuilder.Mvc
                 return null;
             }
 
+        }
+
+        private Site LookupSiteById(int siteId)
+        {
+            var client = new SitesWebApiClient(new ServiceClientMessageHandler(new ApiContext(), _settings));
+            var res = client.GetSite(siteId).Result;
+            if (((int) res.ResponseMessage.StatusCode) >= 500)
+            {
+                throw res.ReadException();
+            }
+            if (res.ResponseMessage.IsSuccessStatusCode)
+            {
+                return res.ReadAsSync();
+            }
+            return null;
+          
         }
 
 

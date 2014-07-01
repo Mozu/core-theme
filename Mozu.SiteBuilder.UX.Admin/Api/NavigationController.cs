@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation;
 using Mozu.SiteBuilder.UX.Models.Navigation;
@@ -219,7 +220,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                              IsHidden = false
                          });
 
+            list.Add(new NavigationTreeNode
+            {
+                AllowDrag = false,
+                AllowDrop = false,
+                NodeType = NavigationNodeType.ContentList,
+                Id = "_cmsContentTypes",
+                OriginalId = "_cmsContentTypes",
+                Expanded = false,
+                Expandable = true,
+                Index = 101,
+                Name = "Content Lists",
+                ParentId = SUPER_ROOT_NODE_NAME,
+                IsHidden = false
+            });
 
+            var etC = this.Request.Resolve<EntityControllerController>();
+            var etcRet = (await etC.ReadListsTree(pagingParams:new PagingParamaters(), extFilter :null, entityType: "cms"));
+            list.AddRange(etcRet.Items[0].Items.Select(x => new NavigationTreeNode()
+                                                   {
+                                                       AllowDrag = true,
+                                                       AllowDrop = false,
+                                                       NodeType = NavigationNodeType.Page,
+                                                       Id = "_cmsContentTypes"+ x.Id,
+                                                       MetaData = x.MetaData,
+                                                       OriginalId = "_cmsContentTypes",
+                                                       Expanded = true,
+                                                       Expandable = true,
+                                                       Index = 101,
+                                                       Name = x.Text,
+                                                       ParentId = "_cmsContentTypes",
+                                                       IsHidden = false
+                                                   }));
             return list;
         }
 

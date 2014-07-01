@@ -184,13 +184,23 @@ Ext.define('Taco.view.entityManager.Grid', {
             me.columns = columns;
             me.store = store;
         }
+
+        me.on('cellclick', me.onCellClick, me);
         
     },
     onCreate: function () {
 
         //do nothing
     },
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        var me = this,
+            header = view.getHeaderAtIndex(cellIndex);
+        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
+            e.preventDefault();
 
+            me.fireEvent('itemedit', me, record);
+        }
+    }
     
 
     //launchLoadedEditor: function (record, options) {

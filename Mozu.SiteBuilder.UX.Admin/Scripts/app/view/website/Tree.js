@@ -13,7 +13,7 @@ Ext.define('Taco.view.website.Tree', {
         'Taco.view.website.misc.ExternalLinkEditor',
         'Taco.core.ux.form.SlugField'
     ],
-
+    animate:false,
     border: false,
     componentCls: 'taco-website-tree',
     hideHeaders: true,
@@ -116,6 +116,7 @@ Ext.define('Taco.view.website.Tree', {
                 scope: this,
                 fn: function (tree, record, item, index, e, eOpts) {
                     var url = record.get('url'),
+                        metaData = record.raw.metaData,
                         items;
 
                     if (e.getTarget('.taco-website-tree-menu-trigger', 10)) {
@@ -128,6 +129,9 @@ Ext.define('Taco.view.website.Tree', {
                         }
                     } else if (url) {
                         this.fireEvent('urlclick', this, url, record, item, index, e, eOpts);
+                    }
+                    else if (metaData) {
+                        this.fireEvent('contentlistclick', this, metaData, record, item, index, e, eOpts);
                     }
                 }
             },
@@ -265,7 +269,8 @@ Ext.define('Taco.view.website.Tree', {
            
 
         }
-        
+
+        //contentlist
 
 
         return items;

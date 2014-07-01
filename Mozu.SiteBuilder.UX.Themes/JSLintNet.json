@@ -1,0 +1,31 @@
+﻿{
+  "ignore": [],
+  "options": {
+    "predef": {
+      "Ext": false,
+      "console.window": false
+    },
+    "ass": true,
+    "bitwise": true,
+    "closure": true,
+    "continue": true,
+    "debug": true,
+    "devel": true,
+    "eqeq": true,
+    "evil": true,
+    "forin": true,
+    "newcap": true,
+    "nomen": true,
+    "passfail": false,
+    "plusplus": true,
+    "regexp": true,
+    "unparam": true,
+    "sloppy": true,
+    "stupid": true,
+    "sub": true,
+    "todo": true,
+    "vars": true,
+    "white": true
+  },
+  "runOnBuild": false
+}
