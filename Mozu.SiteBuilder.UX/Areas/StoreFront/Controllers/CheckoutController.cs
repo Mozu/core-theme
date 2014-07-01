@@ -229,7 +229,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = JObject.FromObject(model, jSerializer);
 
-            jOrder.Add("requiresFulfillmentInfo", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP));
+            var isFulfillmentInfoRequired = model.Items.Exists(
+                    x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
+
+            jOrder.Add("requiresFulfillmentInfo", isFulfillmentInfoRequired);
             jOrder.Add("requiresDigitalFulfillmentContact", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.DIGITAL));
 
             if (account != null)
@@ -240,7 +243,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jOrder.Add("customer", accountJson);
             }
 
-            if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null && model.FulfillmentInfo.FulfillmentContact.Address != null)
+            if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null 
+                && model.FulfillmentInfo.FulfillmentContact.Address != null)
             {
                 if (addedPrimaryShippingContactToOrderJustNow)
                 {
@@ -251,7 +255,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     catch { } // it's really okay if this doesn't work
                    
                 }
-                var methods = (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync();
+                var methods = (isFulfillmentInfoRequired)
+                    ? (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync()
+                    : new List<ShippingRate>();
                 var asm = JArray.FromObject(methods, jSerializer);
                 JObject si = (JObject)jOrder["fulfillmentInfo"];
                 si.Add("availableShippingMethods", asm);
