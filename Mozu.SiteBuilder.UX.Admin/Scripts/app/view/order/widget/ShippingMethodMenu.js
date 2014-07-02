@@ -130,16 +130,12 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
 
             me.removeAll();
 
-            if (menuData) {
+            if (menuData && menuData.length) {
                 var added = me.add(menuData);
                 // need to make the first item get focus;
                 added[0].setActive(true);
             } else {
-                /*
-                var added = me.add({
-                    text: "No shipping methods available"
-                });
-                */
+                Taco.app.fireEvent('setmessage', "Error loading shipping methods", 'error');
             }
         }
         
