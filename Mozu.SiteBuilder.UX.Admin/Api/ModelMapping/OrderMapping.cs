@@ -339,7 +339,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
-                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.GoodsType))
+                .ForMember(x => x.GoodsType, op => op.ResolveUsing(dc => dc.GoodsType))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+
                 .ForMember(x => x.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone))
                 .ForMember(x => x.ProductReservationId, op => op.ResolveUsing(dc => dc.ProductReservationId))
                 .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.Measurements != null && dc.Measurements.Weight != null ? dc.Measurements.Weight.Value : null))
