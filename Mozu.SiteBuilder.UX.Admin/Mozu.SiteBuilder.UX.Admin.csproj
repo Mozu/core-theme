@@ -1753,6 +1753,7 @@
     <Content Include="Tests\Automation\phantomjs.bat" />
     <Content Include="Tests\Web.config" />
     <Content Include="Tests\Automation\CIRunner.bat" />
+    <Content Include="Tests\Mocks\Mystic1\Orders2Payments.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
