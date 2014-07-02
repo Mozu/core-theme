@@ -1,7 +1,7 @@
 ﻿Ext.define('Taco.view.productType.AttributeForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.producttype.attributeform',
-    requires: ['Taco.store.Attributes'],
+    requires: ['Taco.store.Attributes', 'Taco.core.ux.action.DirtyButton'],
 
     layout: {
         type: 'hbox',
