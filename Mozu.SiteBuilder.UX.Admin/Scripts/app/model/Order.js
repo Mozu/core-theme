@@ -8,6 +8,7 @@ Ext.define('Taco.model.Order', {
         'Taco.model.ShippingMethod',
         'Taco.model.InternalNote',
         'Taco.store.ShippingMethods',
+        "Ext.data.association.HasOne"
     ],
     
     extend: 'Taco.core.data.Model',
@@ -708,7 +709,8 @@ Ext.define('Taco.model.Order', {
         {
             type: 'hasOne',
             model: 'Taco.model.OrderShippingDiscount',
-            name: 'activeShippingDiscount'
+            name: 'activeShippingDiscount',
+            reader: "json"
         }, {
             type: 'hasMany',
             model: 'Taco.model.OrderShippingDiscount',

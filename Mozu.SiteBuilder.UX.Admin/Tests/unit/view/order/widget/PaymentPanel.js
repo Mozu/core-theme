@@ -7,7 +7,7 @@
                 //var passoc = o.associations.getByKey('payments');
                 //passoc.read(o, passoc.getReader(), o.data.payments);
                 o.associations.each(function(assoc) {
-                    if (assoc.name in o.data) assoc.read(o, assoc.getReader(), o.data[assoc.name]);
+                    if (assoc.name in o.data) assoc.read(o, assoc.getReader(), o.data[assoc.name] || []);
                 });
                 cb(o);
             },
