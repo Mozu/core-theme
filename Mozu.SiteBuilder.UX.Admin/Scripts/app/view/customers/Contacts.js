@@ -62,7 +62,8 @@ Ext.define('Taco.view.customers.Contacts', {
                     items: [{
                         xtype: 'component',
                         flex: 1,
-                        html: contact.isFromOrder ? 'Order Contact' : 'Customer Contact'
+                        html: contact.isFromOrder ? 'Order Contact' : 'Customer Contact',
+                        hidden: !this.order
                     }, {
                         xtype: 'button',
                         ui: 'link',

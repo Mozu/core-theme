@@ -141,11 +141,11 @@ Ext.define('Taco.view.order.Header', {
                 '<table><tr><td>Billing Address</td><td>Shipping Address</td></tr>',
 
 
-                '<tr>',
+                '<tr><td>',
 
-                '<tpl if="billingContact">',
+                '<tpl if="billingContact && billingContact.address1">',
 
-                '<td>{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}<br>',
+                '{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}<br>',
 
                 '{billingContact.address1}<br>',
 
@@ -157,15 +157,15 @@ Ext.define('Taco.view.order.Header', {
 
                 '{billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}<br>',
 
-                '',
-
                 '<tplelse>',
+
+                '<div data-handle="order-header-no-billing">n/a</div>',
 
                 '</tpl>',
 
                 '</td><td>',
 
-                '<tpl if="fulfillmentContact">',
+                '<tpl if="fulfillmentContact && fulfillmentContact.address1">',
 
                 '{fulfillmentContact.firstName}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName}</tpl> {fulfillmentContact.lastName}<br>',
 
@@ -178,6 +178,10 @@ Ext.define('Taco.view.order.Header', {
                 '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4}<br></tpl>',
 
                 '{fulfillmentContact.cityOrTown}, {fulfillmentContact.stateOrProvince} {fulfillmentContact.postalOrZipCode} {fulfillmentContact.countryCode}<br>',
+
+                '<tplelse>',
+
+                '<div data-handle="order-header-no-fulfillment">n/a</div>',
 
                 '</tpl>',
 
