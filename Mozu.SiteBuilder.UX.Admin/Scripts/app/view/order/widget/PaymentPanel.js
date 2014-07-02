@@ -5,17 +5,16 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     extend: 'Ext.panel.Panel',
     requires: [
         'Ext.MessageBox',
-        'Taco.view.order.modal.IssueCredit',
+        'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
-        'Taco.view.order.modal.CheckPayment',
+        'Taco.view.order.modal.ApplyCheck',
         'Taco.view.order.modal.CapturePayment',
         'Taco.view.order.modal.AuthorizePayment',
         'Taco.view.order.modal.AuthAndCapture',
-        'Taco.view.order.modal.CapturePayment',
-        'Taco.view.order.modal.CapturePaymentManual',
-        'Taco.view.order.modal.VoidPaymentManual',
-        'Taco.view.order.modal.CreditPaymentManual',
-        'Taco.view.order.modal.CheckDecline',
+        'Taco.view.order.modal.ManualCapturePayment',
+        'Taco.view.order.modal.ManualVoidPayment',
+        'Taco.view.order.modal.ManualCreditPayment',
+        'Taco.view.order.modal.DeclineCheck',
         'Ext.window.MessageBox'
     ],
     cls: 'orderform-payment-transaction',
@@ -47,10 +46,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
         var me = this,
 
-            rollBack = function() {
-                me.rollBackTransaction(me.getValue());
-            },
-
             availableActions = me.record.data.availableActions;
 
         me.paymentActions = {};
@@ -58,104 +53,76 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         return Ext.Array.map([
             {
                 text: 'Apply Check',
-                itemId: 'ApplyCheck',
-                handler: me.applyCheck,
-                scope: me
+                itemId: 'ApplyCheck'
             },
             {
                 text: 'Decline Check',
-                itemId: 'DeclineCheck',
-                handler: me.declineCheck,
-                scope: me
+                itemId: 'DeclineCheck'
             },
             {
                 text: 'Decline Payment',
-                itemId: 'DeclinePayment',
-                handler: me.declineCheck,
-                scope: me
+                itemId: 'DeclinePayment'
             },
             {
                 text: 'Credit Payment',
                 itemId: 'CreditPayment',
-                handler: me.issueCredit,
-                scope: me
+                hidden: me.record.get('amountCollected') <= 0
             },
             {
                 text: 'Authorize Payment',
-                itemId: 'AuthorizePayment',
-                handler: me.authorize,
-                scope: me
+                itemId: 'AuthorizePayment'
             },
             {
                 text: 'Auth and Capture',
-                itemId: 'AuthAndCapture',
-                handler: me.authAndCapture,
-                scope: me
+                itemId: 'AuthAndCapture'
             },
             {
                 text: 'Rollback',
                 itemId: 'Rollback',
-                handler: me.voidTransaction,
-                scope: rollBack,
-                scope: me
-            },
-            {
-                text: 'Rollback',
-                itemId: 'Rollback',
-                handler: me.voidTransaction,
-                scope: rollBack,
-                scope: me
+                handler: me.rollBackTransaction
             },
             {
                 text: 'Rollback Capture',
                 itemId: 'RollbackCapture',
-                handler: rollBack,
-                scope: me
+                handler: me.rollBackTransaction
             },
             {
                 text: 'Rollback Credit',
                 itemId: 'RollbackCredit',
-                handler: rollBack,
-                scope: me
+                handler: me.rollBackTransaction
             },
             {
                 text: 'Rollback Void',
                 itemId: 'RollbackVoid',
-                handler: rollBack,
-                scope: me
+                handler: me.rollBackTransaction
             },
             {
                 text: 'Capture Payment (Manual)',
-                itemId: 'ManualCapturePayment',
-                handler: me.capturePaymentManual,
-                scope: me
+                itemId: 'ManualCapturePayment'
             },
             {
                 text: 'Credit Payment (Manual)',
-                itemId: 'ManualCreditPayment',
-                handler: me.creditPaymentManual,
-                scope: me
+                itemId: 'ManualCreditPayment'
             },
             {
                 text: 'Void Payment',
                 itemId: 'VoidPayment',
-                handler: me.voidTransaction,
-                scope: me
+                handler: me.voidTransaction
             },
             {
                 text: 'Void Payment (Manual)',
-                itemId: 'ManualVoidPayment',
-                handler: me.creditPaymentManual,
-                scope: me
+                itemId: 'ManualVoidPayment'
             },
             {
                 text: 'Decline Payment (Manual)',
-                itemId: 'ManualDeclinePayment',
-                handler: me.declinePaymentManual,
-                scope: me
+                itemId: 'ManualDeclinePayment'
             }
         ], function(actionConf) {
-            actionConf.hidden = !Ext.Array.contains(availableActions, actionConf.itemId);
+            actionConf.hidden = actionConf.hidden || !Ext.Array.contains(availableActions, actionConf.itemId);
+            Ext.applyIf(actionConf, {
+                scope: me,
+                handler: me.openPaymentActionModal
+            });
             return me.paymentActions[actionConf.itemId] = new Ext.Action(actionConf);
         });
 
@@ -237,12 +204,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     width: 180,
                     itemId: 'captureButton',
                     handler: function() {
-                        if (me.record.get('paymentType') == 'Check') {
-                            me.applyCheck();
-                        }
-                        else {
-                            me.capturePayment();
-                        }
+                        me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
                     },
                     disabled: !canCapture || pendingReview
                 }
@@ -373,9 +335,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
 
 
-    rollBackTransaction: function (actionName) {
+    rollBackTransaction: function (item) {
         var me = this,
-            actionSimpleName = actionName.replace('Rollback', '');
+            actionSimpleName = item.itemId.replace('Rollback', '');
         
         this.actionModal = Ext.MessageBox.show({
             title: 'Rollback',
@@ -419,9 +381,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         });
     },
 
-    openActionModal: function(clsName) {
+    openPaymentActionModal: function(item) {
         var me = this,
-            modal = this.actionModal = Ext.create(clsName, {
+            clsName = (typeof item === "string") ? item : item.itemId,
+            modal = this.actionModal = Ext.create('Taco.view.order.modal.' + clsName, {
                 order: me.order,
                 record: me.record
             });
@@ -476,55 +439,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 me.order.voidTransaction(config);
             }
         });
-    },
-
-    issueCredit: function(config) {
-        var me = this,
-            amountCollected = me.record.get('amountCollected');
-
-        // check to make sure the record is appropriate. needs to have an amountCollected greater than zero
-        if (!amountCollected || amountCollected <= 0) {
-            return;
-        }
-
-        this.mon(this.openActionModal('Taco.view.order.modal.IssueCredit'), 'savesuccess', this.order.reload, this.order);
-    },
-
-
-    applyCheck: function() {
-        this.openActionModal('Taco.view.order.modal.CheckPayment');
-    },
-
-    declineCheck: function() {
-        this.openActionModal('Taco.view.order.modal.CheckDecline');
-    },
-
-    authorize: function() {
-        this.openActionModal('Taco.view.order.modal.AuthorizePayment');
-    },
-
-    authAndCapture: function() {
-        this.openActionModal('Taco.view.order.modal.AuthAndCapture')
-    },
-
-    capturePayment: function() {
-        this.openActionModal('Taco.view.order.modal.CapturePayment');
-    },
-
-    capturePaymentManual: function() {
-        this.openActionModal('Taco.view.order.modal.CapturePaymentManual');
-    },
-
-    voidPaymentManual: function() {
-        this.openActionModal('Taco.view.order.modal.VoidPaymentManual');
-    },
-
-    creditPaymentManual: function() {
-        this.openActionModal('Taco.view.order.modal.CreditPaymentManual');
-    },
-
-    declinePaymentManual: function() {
-        this.openActionModal('Taco.view.order.modal.CreditPaymentManual');
     }
+
+    //creditPayment: function(config) {
+    //    // check to make sure the record is appropriate. needs to have an amountCollected greater than zero
+    //    if (this.record.get('amountCollected') > 0) {
+    //        this.mon(this.openPaymentActionModal('CreditPayment'), 'savesuccess', this.order.reload, this.order);
+    //    }
+    //}
 
 });

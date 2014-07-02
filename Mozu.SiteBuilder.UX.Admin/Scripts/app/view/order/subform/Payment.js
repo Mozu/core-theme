@@ -5,9 +5,9 @@ Ext.define('Taco.view.order.subform.Payment', {
     extend: 'Taco.view.order.subform.Subform',
     alias: 'widget.taco-orderpayment',
     requires: [
-        'Taco.view.order.modal.IssueCredit',
+        'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
-        'Taco.view.order.modal.CheckPayment',
+        'Taco.view.order.modal.ApplyCheck',
         // commenting out this unfinished code;
         //'Taco.view.order.modal.ApplyStoreCredit',
         'Taco.view.order.widget.PaymentPanel',

@@ -1,8 +1,8 @@
 /**
- * @class Taco.view.order.modal.CreditPaymentManual
+ * @class Taco.view.order.modal.ManualCapturePayment
  */
 
-Ext.define('Taco.view.order.modal.CreditPaymentManual', {
+Ext.define('Taco.view.order.modal.ManualCapturePayment', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.core.ux.form.DateTime',
@@ -10,35 +10,54 @@ Ext.define('Taco.view.order.modal.CreditPaymentManual', {
     ],
 
     autoShow: true,
-    scale: 'medium',    
-    title: 'Manual Transaction: Credit Payment',
+    scale: 'medium',
+    title: 'Manual Transaction: Capture Payment',
 
     initComponent: function () {
-        this.form = Ext.create('Taco.core.ux.form.Form', {            
-            items: [
-                {
+        this.form = Ext.create('Taco.core.ux.form.Form', {
+            layout: {
+                type: 'vbox'
+            },
+            items: [{
+                xtype: 'container',
+                layout: {
+                    type: 'hbox'
+                },
+                defaults: {
+                    margin: '0 25 0 0',
+                    width: 230
+                },
+                items: [{
                     xtype: 'textfield',
                     name: 'gatewayInteractionId',
-                    anchor:'0',
                     fieldLabel: 'Gateway Interaction Id'
                 }, {
                     xtype: 'currencyfield',
                     name: 'amount',
-                    width:200,
                     fieldLabel: 'Amount Captured',
-                    value: this.record.data.amountAuthorized
-                }, {
+                    value: this.record.data.amountAuthorized,
+                    margin: '0 0 0 0'
+                }]
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox'
+                },
+                defaults: {
+                    width: 230
+                },
+                items: [{
                     xtype: 'datetime',
                     name: 'interactionDate',
-                    width: 200,
                     fieldLabel: 'Transaction Date'
-                }
-            ]
+                }]
+            }]
         });
 
         this.items = [this.form];
 
         this.callParent(arguments);
+
     },
 
     doSave: function () {
@@ -59,17 +78,20 @@ Ext.define('Taco.view.order.modal.CreditPaymentManual', {
             msg: "Saving"
         }, me.body);
 
+
+        // package up the data for the model to persist
         cfg = {
             jsonData: data,
             success: function (response) {
                 me.setLoading(false, me.body);
-
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
+                    // service didn't return data properly
                     return;
-                }                
+                }
+                
                 me.order.reload();
-                me.saveSuccess(json)
+                me.saveSuccess(json);
             },
             failure: function () {
                 me.setLoading(false, me.body);
@@ -77,6 +99,7 @@ Ext.define('Taco.view.order.modal.CreditPaymentManual', {
             scope: this
         };
 
-        this.order.creditPaymentManual(cfg);
+        // call the model method to persist the change
+        this.order.capturePaymentManual(cfg);
     }
 });

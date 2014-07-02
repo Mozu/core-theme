@@ -1,14 +1,16 @@
 /**
- * @class Taco.view.order.modal.VoidPaymentManual
+ * @class Taco.view.order.modal.ManualVoidPayment
  */
 
-Ext.define('Taco.view.order.modal.VoidPaymentManual', {
+Ext.define('Taco.view.order.modal.ManualVoidPayment', {
     extend: 'Taco.core.ux.window.Modal',
     requires: ['Taco.core.ux.form.DateTime'],
 
     autoShow: true,
     scale: 'medium',
     title: 'Manual Transaction: Void Payment',
+
+    alternateClassName: ['Taco.view.order.modal.ManualDeclinePayment'],
 
     initComponent: function () {
         this.form = Ext.create('Taco.core.ux.form.Form', {
