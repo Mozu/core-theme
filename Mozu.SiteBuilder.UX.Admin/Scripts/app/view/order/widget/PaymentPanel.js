@@ -371,78 +371,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     },
 
-    // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
-    voidTransaction: function () {
-        var me = this,
-            config = {
-                jsonData: {
-                    orderId: me.order.getId(),
-                    paymentId: me.record.getId()
-                },
-                success: function (response) {
-                    // success handling here
-                    me.setLoading(false);
-
-                    var json = Ext.decode(response.responseText, true);
-                    if (!json || !json.success) {
-                        // service didn't return data properly
-                        return;
-                    }
-                    me.order.reload();
-                },
-                failure: function (response) {
-                    me.setLoading(false);
-                    // error handling here
-                },
-                scope: this
-            };
-
-        Ext.MessageBox.show({
-            title: 'Void Payment',
-            rightJustifyButtons: true,
-            reverseOrder: true,
-            msg: 'Are you certain you want to void this payment?',
-            closable: false,
-            buttons: Ext.Msg.YESNO,
-            fn: function(val) {
-                if (val !== 'yes') return;                
-
-        me.setLoading(true);
-        // call the model method to persist the change
-        me.order.voidTransaction(config);
-            }
-        });
-    },
-    
-    issueCredit: function (config) {
-        var me = this,
-            amountCollected = me.record.get('amountCollected');
-
-        // check to make sure the record is appropriate. needs to have an amountCollected greater than zero
-        if (!amountCollected || amountCollected <= 0) {
-            return;
-        }
-
-        var issueCreditModal = Ext.create('Taco.view.order.modal.IssueCredit', {
-            record: me.record,
-            order: me.order,
-            listeners: {
-                savesuccess: function () {
-                    me.order.reload();
-                },
-                scope: me
-            }
-        });
-
-        issueCreditModal.show();
-    },
 
 
     rollBackTransaction: function (actionName) {
         var me = this,
             actionSimpleName = actionName.replace('Rollback', '');
         
-        Ext.MessageBox.show({
+        this.actionModal = Ext.MessageBox.show({
             title: 'Rollback',
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
@@ -469,111 +404,127 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             }
                             
                             me.order.reload();
+                            delete me.actionModal;
                         },
                         failure: function (response) {
                             me.setLoading(false);
                             var json = Ext.decode(response.responseText, true),
                                 msg = (json && json.message) ? json.message : "Error rolling back.";
                             Taco.app.fireEvent('setmessage', msg, 'error');
+                            delete me.actionModal;
                         }
                     });
                 }
             }
         });
     },
-    
-    applyCheck: function() {
-        var me = this;
 
-        var checkPaymentModal = Ext.create('Taco.view.order.modal.CheckPayment', {
-            order: me.order,
-            record: me.record
+    openActionModal: function(clsName) {
+        var me = this,
+            modal = this.actionModal = Ext.create(clsName, {
+                order: me.order,
+                record: me.record
+            });
+
+        me.mon(modal, 'close', function() {
+            delete me.actionModal;
         });
 
-        checkPaymentModal.show();
+        modal.show();
+
+        return modal;
+    },
+
+    // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
+    voidTransaction: function() {
+        var me = this,
+            config = {
+                jsonData: {
+                    orderId: me.order.getId(),
+                    paymentId: me.record.getId()
+                },
+                success: function(response) {
+                    // success handling here
+                    me.setLoading(false);
+
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        // service didn't return data properly
+                        return;
+                    }
+                    me.order.reload();
+                },
+                failure: function(response) {
+                    me.setLoading(false);
+                    // error handling here
+                },
+                scope: this
+            };
+
+        this.actionModal = Ext.MessageBox.show({
+            title: 'Void Payment',
+            rightJustifyButtons: true,
+            reverseOrder: true,
+            msg: 'Are you certain you want to void this payment?',
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function(val) {
+                if (val !== 'yes') return;
+
+                me.setLoading(true);
+                // call the model method to persist the change
+                me.order.voidTransaction(config);
+            }
+        });
+    },
+
+    issueCredit: function(config) {
+        var me = this,
+            amountCollected = me.record.get('amountCollected');
+
+        // check to make sure the record is appropriate. needs to have an amountCollected greater than zero
+        if (!amountCollected || amountCollected <= 0) {
+            return;
+        }
+
+        this.mon(this.openActionModal('Taco.view.order.modal.IssueCredit'), 'savesuccess', this.order.reload, this.order);
+    },
+
+
+    applyCheck: function() {
+        this.openActionModal('Taco.view.order.modal.CheckPayment');
     },
 
     declineCheck: function() {
-        var me = this;
-
-        var checkDeclineModal = Ext.create('Taco.view.order.modal.CheckDecline', {
-            order: me.order,
-            record: me.record
-        });
-
-        checkDeclineModal.show();
+        this.openActionModal('Taco.view.order.modal.CheckDecline');
     },
 
     authorize: function() {
-        Ext.create('Taco.view.order.modal.AuthorizePayment', {
-            order: this.order,
-            record: this.record,
-            autoShow: true
-        });
+        this.openActionModal('Taco.view.order.modal.AuthorizePayment');
     },
 
     authAndCapture: function() {
-        Ext.create('Taco.view.order.modal.AuthAndCapture', {
-            order: this.order,
-            record: this.record,
-            autoShow: true
-        });
+        this.openActionModal('Taco.view.order.modal.AuthAndCapture')
     },
 
-
-    // call the service via the model and save the captured amount
-    capturePayment: function () {
-        var me = this;
-        
-        var capturePayment = Ext.create('Taco.view.order.modal.CapturePayment', {
-            order: me.order,
-            record: me.record
-        });
-
-        capturePayment.show();
+    capturePayment: function() {
+        this.openActionModal('Taco.view.order.modal.CapturePayment');
     },
 
-    capturePaymentManual: function () {
-        var me = this;
-        
-        var capturePaymentManual = Ext.create('Taco.view.order.modal.CapturePaymentManual', {
-            order: me.order,
-            record: me.record
-        });
-
-        capturePaymentManual.show();
+    capturePaymentManual: function() {
+        this.openActionModal('Taco.view.order.modal.CapturePaymentManual');
     },
 
-    voidPaymentManual: function () {
-        var me = this;
-        
-        var voidPaymentManual = Ext.create('Taco.view.order.modal.VoidPaymentManual', {
-            order: me.order,
-            record: me.record
-        });
-
-        voidPaymentManual.show();
+    voidPaymentManual: function() {
+        this.openActionModal('Taco.view.order.modal.VoidPaymentManual');
     },
 
-    creditPaymentManual: function () {
-        var me = this;
-        
-        var creditPaymentManual = Ext.create('Taco.view.order.modal.CreditPaymentManual', {
-            order: me.order,
-            record: me.record
-        });
-
-        creditPaymentManual.show();
+    creditPaymentManual: function() {
+        this.openActionModal('Taco.view.order.modal.CreditPaymentManual');
     },
 
     declinePaymentManual: function() {
-        var me = this;
-        // TODO 6/10/14 replace!!
-        var declinePaymentManual = Ext.create('Taco.view.order.modal.CreditPaymentManual', {
-            order: me.order,
-            record: me.record
-        });
-
-        declinePaymentManual.show();
+        this.openActionModal('Taco.view.order.modal.CreditPaymentManual');
     }
+
 });
