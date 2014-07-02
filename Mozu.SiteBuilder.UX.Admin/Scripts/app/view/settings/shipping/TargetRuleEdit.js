@@ -61,61 +61,99 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
                     maxWidth: 400,
                 },
                 {
-                    xtype: 'textarea',
+                    xtype: 'hiddenfield',
                     name: 'expression',
-                    fieldLabel: 'Expression',
-                    flex: 1,
-                    cols: 60,
-                    grow: true,
-                    fieldStyle: 'resize:both',
-                    minHeight: 400
+                    itemId: 'expressionValue', 
+                 
+                    //listeners: {
+                    //    scope: me,
+                    //    render: function (cmp) {
+                    //        var me = this;
+                    //        var editDom = cmp.inputEl.dom;
+                    //        debugger;
+                    //        if (!ace) {
+                    //            return
+                    //        }
+
+                    //        me.editor = ace.edit(editDom);
+                    //        me.editor.setTheme("ace/theme/tomorrow");
+                    //        me.editor.getSession().setMode("ace/mode/mozufilter");
+                    //        me.originalData = me.editor.getValue();
+                    //        me.editor.on('change', function (e) {
+                    //            var prevState = me.isDirtyFlag;
+                    //            me.isDirtyFlag = (me.editor.getValue() != me.originalData);
+                    //            if (prevState != me.isDirtyFlag) {
+                    //                //Somebody fire the isDirtyFlag
+                    //            }
+                    //        });
+
+                    //    }
+                    //}
+
+
                 }
 
-                /*
+             
                 ,
-
-                // temporariy prototype for ace editor inclusion. See jGill for info
+                  {
+                      xtype: "component",
+                      html: '<label class="x-form-item-label x-unselectable x-form-item-label-top" unselectable="on">Expression</label>',
+                      padding: '0 0 5 0'
+                 
+                  }, 
 
                 {
                     xtype: "component",
-                    itemId: "aceEditor",
-                    
-                    height:200,
-                    html: "test",
+                    name: 'expressionEditor',
+                    itemId: "codeEditor",
+                    html: me.record.get('expression'),
+                    height: 300,
+                    width: 800,
+                    maxWidth: 800,
                     listeners: {
                         scope: me,
                         render: function (cmp) {                            
                             var me = this;
                             var editDom = cmp.getEl().dom;
-                            debugger;
                             if (!ace) {
-                                return
+                                return;
                             }
 
                             me.editor = ace.edit(editDom);
-                            me.editor.setTheme("ace/theme/tomorrow");
+            
+                            me.editor.setTheme("ace/theme/textmate");
                             me.editor.getSession().setMode("ace/mode/mozufilter");
+                            me.editor.setHighlightActiveLine(false);
+                            me.editor.getSession().setUseWrapMode(true);
+
+                            me.editor.getSession().setWrapLimitRange(85, 85);
+                            me.editor.setPrintMarginColumn(85);
+                            me.editor.setShowPrintMargin(false);
+
+                            me.editor.setFontSize('16px');
+
+                            me.editor.renderer.setShowGutter(false);
                             me.originalData = me.editor.getValue();
                             me.editor.on('change', function (e) {
                                 var prevState = me.isDirtyFlag;
-                                me.isDirtyFlag = (me.editor.getValue() != me.originalData);
+                             
+                                var actualValue = me.editor.getValue();
+                                me.isDirtyFlag = (actualValue != me.originalData);
                                 if (prevState != me.isDirtyFlag) {
-                                    // Somebody fire the isDirtyFlag
+                                    me.expressionValue.setValue(actualValue);
                                 }
                             });
 
                         }
                     }
                 }
-                */
-
-
             ]
 
         };
      
 
         this.callParent(arguments);
+        me.expressionValue = me.down('#expressionValue');
     },
     getIndexRoute: function () {
         return this.indexRoute;
