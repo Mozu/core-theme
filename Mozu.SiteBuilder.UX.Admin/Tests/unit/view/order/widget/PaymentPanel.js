@@ -204,6 +204,10 @@
 
             t.ok(m.newPanel.captureButton && m.newPanel.captureButton.getEl() && m.newPanel.captureButton.isDisabled(), "capturebutton exists but disabled");
 
+
+            // testing all actions
+
+
         }
 
     );

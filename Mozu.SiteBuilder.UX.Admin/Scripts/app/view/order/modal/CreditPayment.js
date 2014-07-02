@@ -1,7 +1,7 @@
 ﻿/**
- * @class Taco.view.order.modal.IssueCredit
+ * @class Taco.view.order.modal.CreditPayment
  */
-Ext.define('Taco.view.order.modal.IssueCredit', {
+Ext.define('Taco.view.order.modal.CreditPayment', {
     extend: 'Taco.core.ux.window.Modal',
 
     autoShow: true,

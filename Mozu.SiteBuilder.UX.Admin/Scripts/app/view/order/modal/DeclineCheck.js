@@ -1,17 +1,18 @@
 /**
- * @class Taco.view.order.modal.CheckPayment
+ * @class Taco.view.order.modal.DeclineCheck
  */
 
-Ext.define('Taco.view.order.modal.CheckPayment', {
+Ext.define('Taco.view.order.modal.DeclineCheck', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.core.ux.form.DateTime',
         'Taco.core.ux.form.CurrencyField'
     ],
+    alternateClassName: ['Taco.view.order.modal.DeclinePayment'],
 
     autoShow: true,
     scale: 'small',
-    title: 'Collect Check',
+    title: 'Decline Check',
 
     initComponent: function () {
         this.form = Ext.create('Taco.core.ux.form.Form', {
@@ -19,25 +20,20 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
                 type: 'hbox'
             },
             defaults: {
-                
-                flex: 1
+                margin: '0 20 0 0',
+                width: 170
             },
             items: [{
                 xtype: 'textfield',
                 name: 'checkNumber',
-                fieldLabel: 'Check Number',
-                margin: '0 10 0 0'
-            }, {
-                xtype: 'currencyfield',
-                name: 'amount',
-                fieldLabel: 'Amount Collected',
-                value: this.record.data.amountAuthorized
+                fieldLabel: 'Check Number'
             }]
         });
 
         this.items = [this.form];
 
         this.callParent(arguments);
+
     },
 
     doSave: function () {
@@ -48,24 +44,26 @@ Ext.define('Taco.view.order.modal.CheckPayment', {
         data = {
             orderId: this.order.getId(),
             paymentId: this.record.getId(),
-            checkNumber: formValues.checkNumber,
-            amount: formValues.amount
+            checkNumber: formValues.checkNumber
         };
 
-        this.order.applyCheck({
+        me.setLoading(true, me.body);
+
+        this.order.declineCheck({
             jsonData: data,
             success: function (response) {
-                var json = Ext.decode(response.responseText, true),
-                    data;
-
-                if (!json || !json.success) {                
-                    return;
+                me.setLoading(false, me.body);
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    return
                 }
-                
-                data = json.items;
                 me.order.reload();
-                me.saveSuccess(data);
-            }
+                me.saveSuccess(json);
+            },
+            failure: function (response) {             
+                me.setLoading(false, me.body);
+            },
+            scope: me
         });
     }
 });
