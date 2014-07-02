@@ -169,17 +169,11 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         this.locationMap = [];
         this.recordMap = [];
 
-        // todo need to calculate the offset to the top of the formContainer and dynamicly set the leftNavTopOffset
-        
-        this.formContainerTop = this.formContainer.el.dom.offsetTop;
-        var detailTop = this.nav.store.data.items[0].raw.el.dom.offsetTop;
-        var detailHeight = this.nav.store.data.items[0].raw.el.dom.offsetHeight;
-        var nextPanelTop = this.nav.store.data.items[1].raw.el.dom.offsetTop;
-        
-        
-
-
         if (!this.nav || !this.nav.store) return;
+
+                
+        this.formContainerTop = (this.formContainer.el && this.formContainer.el.dom) ? this.formContainer.el.dom.offsetTop : 0;
+
 
         this.nav.store.each(function (record, index) {
             var el = record.raw.getEl();
