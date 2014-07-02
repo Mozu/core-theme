@@ -211,7 +211,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     ProductCode = product.ProductCode,
                     ProductName = product.Content.ProductName,
                     LocationCode = "Digital",
-                    StockAvailable = 10000
+                    StockAvailable = 0
                 }
             });
         }
