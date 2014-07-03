@@ -644,18 +644,6 @@
                 return this._cachedDigitalCredits.where({ isEnabled: true, addRemainderToCustomer: true, isTiedToCustomer: false });
             },
 
-            associateDigitalCreditToCustomer: function () {
-                var self = this,
-                    order = self.getOrder(),
-                    customer = order.getCustomer();
-                var digitalCredits = self.getDigitalCreditsToAddToCustomerAccount();
-                return _.each(digitalCredits, function(cred) {
-                    return customer.apiAddStoreCredit(cred.get('code')).then(function (associateResult) {
-                        return associateResult;
-                    });
-                });
-            },
-
             removeCredit: function (id) {
                 var order = this.getOrder(),
                     currentPayment = order.apiModel.getCurrentPayment();
@@ -871,7 +859,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 'addDigitalCreditToCustomerAccount');
 
 
 
@@ -1010,6 +998,17 @@
                     customerEmail = this.get('emailAddress');
                 if (!customerEmail) this.set('emailAddress', billingEmail);
             },
+            addDigitalCreditToCustomerAccount: function () {
+                var billingInfo = this.get('billingInfo'),
+                    customer = this.get('customer');
+
+                var digitalCredits = billingInfo.getDigitalCreditsToAddToCustomerAccount();
+                if (!digitalCredits)
+                    return;
+                return _.each(digitalCredits, function (cred) {
+                    return customer.apiAddStoreCredit(cred.get('code'));
+                });
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1036,9 +1035,9 @@
                     process.push(this.saveCustomerCard);
                 }
 
-                //if ((this.get('createAccount') || require.mozuData('user').isAuthenticated) && billingInfo.getDigitalCreditsToAddToCustomerAccount().length > 0) {
-                //    process.push(this.associateDigitalCreditToCustomer);
-                //}
+                if ((this.get('createAccount') || require.mozuData('user').isAuthenticated) && billingInfo.getDigitalCreditsToAddToCustomerAccount().length > 0) {
+                    process.push(this.addDigitalCreditToCustomerAccount);
+                }
                
                 process.push(this.apiCheckout);
                 
