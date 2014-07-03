@@ -5,7 +5,7 @@
   </div>
   <div class="mz-l-formfieldgroup-cell">
     <input type="text" id="digital-credit-code" name="digital-credit-code" value="{{ model.digitalCreditCode }}" data-mz-value="digitalCreditCode" />
-    <button class="mz-button" data-mz-action="getDigitalCredit" {% if not model.digitalCreditCode  %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+    <button class="mz-button" data-mz-action="getDigitalCredit" {% if not model.digitalCreditCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
   </div>
 
   {% if model.availableDigitalCredits %}
@@ -16,7 +16,7 @@
           <th class="mz-checkout-digitalcredit-header-code">{{ labels.digitalCreditCode }}</th>
           <th class="mz-checkout-digitalcredit-header-balance">{{ labels.digitalCreditBalance }}</th>
           <th class="mz-checkout-digitalcredit-header-amttouse">{{ labels.digitalCreditAmtToUse }}</th>
-          <th class="mz-checkout-digitalcredit-header-savetoaccount">{{ labels.digitalCreditSaveToAccount }}</th>
+          <th class="mz-checkout-digitalcredit-header-savetoaccount">{{ labels.digitalCreditRemainder }}</th>
         </tr>
       </thead>
       <tbody>
@@ -43,11 +43,16 @@
           </td>
           <td class="mz-checkout-digitalcredit-cell-savetoaccount">
             {% if credit.attributes.isEnabled and credit.attributes.remainingBalance > 0 %}
-            <span class="mz-checkout-digitalcredit-remainder" data-mz-value="credit.attributes.remainingBalance">{{ credit.attributes.remainingBalance|currency }}</span>
-            <input type="checkbox" data-mz-value="credit.attributes.addRemainderToCustomer"
-                   data-mz-digital-add-remainder-to-customer
-                   data-mz-credit-code-to-tie-to-customer="{{ credit.attributes.code }}" 
-                   value="true" {% if credit.attributes.isTiedToCustomer %}disabled="true" checked="true"{% else %} {% if credit.attributes.addRemainderToCustomer %}checked="true"{% endif %} {% endif %}/>
+              <span class="mz-checkout-digitalcredit-remainder" data-mz-value="credit.attributes.remainingBalance">{{ credit.attributes.remainingBalance|currency }}</span>
+              {% if not model.isAnonymousShopper and not credit.attributes.isTiedToCustomer %}
+                <label class="mz-paymenttype mz-paymenttype-paypal">
+                  <input type="checkbox" data-mz-value="credit.attributes.addRemainderToCustomer"
+                       data-mz-digital-add-remainder-to-customer
+                       data-mz-credit-code-to-tie-to-customer="{{ credit.attributes.code }}"
+                       value="true" {% if credit.attributes.isTiedToCustomer %}disabled="true" checked="true"{% else %} {% if credit.attributes.addRemainderToCustomer %}checked="true"{% endif %} {% endif %}/>
+                  <span class="mz-checkout-digitalcredit-remainder">{{ labels.digitalCreditAddToAccount }}</span>
+                </label>
+              {% endif %}
             {% endif %}
           </td>
         </tr>

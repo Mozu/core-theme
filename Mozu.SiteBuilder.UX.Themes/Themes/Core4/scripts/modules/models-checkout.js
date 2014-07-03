@@ -287,7 +287,7 @@
                 check: PaymentMethods.Check
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal'],
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
@@ -379,12 +379,10 @@
                 });
             },
 
-            //digital
+            // digital
 
-            
             onCreditAmountChanged: function(digCredit, amt) {
                 this.applyDigitalCredit(digCredit.get('code'), amt);
-                //console.log(digCredit);
             },
 
             loadCustomerDigitalCredits: function () {
@@ -412,7 +410,6 @@
                 self._cachedDigitalCredits = customerCredits;
 
                 if (activeCredits) {
-
                     var userEnteredCredits = _.filter(activeCredits, function(activeCred) {
                         var existingCustomerCredit = self._cachedDigitalCredits.findWhere({ code: activeCred.billingInfo.storeCreditCode });
                         if (!existingCustomerCredit) {
@@ -435,16 +432,12 @@
                 var me = this;
                 _.each(activeCredits, function (activeCred) {
                     var currentCred = activeCred;
-                    
-
-
                     return me.retrieveDigitalCredit(customer, currentCred.billingInfo.storeCreditCode, me, currentCred.amountRequested).then(function(digCredit) {
                         me.trigger('orderPayment', me.getOrder().data, me);
                         return digCredit;
                     });
                 });
             },
-
 
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) { 
@@ -642,6 +635,12 @@
 
             getDigitalCreditsToAddToCustomerAccount: function() {
                 return this._cachedDigitalCredits.where({ isEnabled: true, addRemainderToCustomer: true, isTiedToCustomer: false });
+            },
+
+            isAnonymousShopper: function() {
+                var order = this.getOrder(),
+                    customer = order.get('customer');
+                return (!customer || !customer.id || customer.id <= 1);
             },
 
             removeCredit: function (id) {

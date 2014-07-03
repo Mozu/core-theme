@@ -221,7 +221,9 @@
   "digitalCreditCode"		: "Code",
   "digitalCreditBalance"	: "Balance",
   "digitalCreditAmtToUse"	: "Amt. to Apply",
-  "digitalCreditSaveToAccount" : "Remainder to Acct.",
+  "digitalCreditRemainder"  : "Remainder",
+  "digitalCreditAddToAccount"  : "Add to my account",
+
   "digitalCreditApplied"	: "You have applied the following gift card or store credit payments to your order:",
 
   "remainingTotal"       : "Your remaining total is: ",
