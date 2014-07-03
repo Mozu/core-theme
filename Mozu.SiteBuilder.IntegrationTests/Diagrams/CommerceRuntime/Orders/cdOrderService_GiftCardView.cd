@@ -95,7 +95,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Mozu.CommerceRuntime.Contracts.Fulfillment.DigitalPackage">
-    <Position X="9.5" Y="5" Width="3.25" />
+    <Position X="10" Y="5" Width="3.25" />
     <TypeIdentifier />
   </Class>
   <Class Name="Mozu.CommerceRuntime.Contracts.Fulfillment.DigitalFulfillment">
@@ -148,11 +148,6 @@
   </Class>
   <Class Name="Mozu.CommerceRuntime.Contracts.Products.Product" Collapsed="true">
     <Position X="0.5" Y="5.5" Width="2" />
-    <NestedTypes>
-      <Class Name="Mozu.CommerceRuntime.Contracts.Products.Product.GoodsTypeConst" Collapsed="true">
-        <TypeIdentifier />
-      </Class>
-    </NestedTypes>
     <TypeIdentifier />
     <ShowAsAssociation>
       <Property Name="Price" />
