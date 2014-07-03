@@ -47,7 +47,7 @@
             <input type="checkbox" data-mz-value="credit.attributes.addRemainderToCustomer"
                    data-mz-digital-add-remainder-to-customer
                    data-mz-credit-code-to-tie-to-customer="{{ credit.attributes.code }}" 
-                   value="true" {% if credit.attributes.isTiedToCustomer %}disabled="true" checked="true"{% else %} {% if credit.attributes.addRemainderToCustomer %}checked="true"{% endif %} {% endif%}/>
+                   value="true" {% if credit.attributes.isTiedToCustomer %}disabled="true" checked="true"{% else %} {% if credit.attributes.addRemainderToCustomer %}checked="true"{% endif %} {% endif %}/>
             {% endif %}
           </td>
         </tr>
