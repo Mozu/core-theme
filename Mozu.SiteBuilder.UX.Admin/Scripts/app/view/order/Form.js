@@ -292,19 +292,31 @@ Ext.define('Taco.view.order.Form', {
            errors = [];
 
         
+        var isShippable = this.record.isShippable();
         // Only validate when in create mode
         if (this.isEdit()) isValid = false;
 
         if (!this.record.get("customerId")) {
             isValid = false;
             errors.push("A customer must be created or selected before saving this order");
+        } else if (Ext.Object.isEmpty(this.record.get("fulfillmentContact"))) {
+            isValid = false;
+            errors.push("Shipping Address must be added before saving this order.");
+        } else if (Ext.Object.isEmpty(this.record.get("billingContact"))) {
+            isValid = false;
+            errors.push("Billing Address must be added before saving this order.");
         } else if (!this.record.itemsStore.count()) {
             isValid = false;
-            errors.push("Products must be added before saving this order. Click the gear icon and select \"Edit Details\" to add products.");
-        } else if (!this.record.data.fulfillmentContact || !this.record.data.fulfillmentContact.email) {
-            isValid = false;
-            errors.push("A shipping address must be created or selected before saving this order");
-        } else if (!this.record.get("shippingMethodCode")) {
+            errors.push("Products must be added before saving this order. Click the \"Edit Details\" button to add products.");
+        }
+
+        //else if (!this.record.data.fulfillmentContact || !this.record.data.fulfillmentContact.email) {
+        //    isValid = false;
+        //    errors.push("A shipping address must be created or selected before saving this order");
+        //}
+
+
+        else if (isShippable && !this.record.get("shippingMethodCode")) {
             isValid = false;
             errors.push("A shipping method must be selected before saving this order");
         }

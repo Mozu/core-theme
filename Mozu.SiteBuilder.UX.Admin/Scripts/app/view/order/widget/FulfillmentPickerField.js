@@ -31,7 +31,9 @@ Ext.define('Taco.view.order.widget.FulfillmentPickerField', {
         emptyText: '<div style="padding:0px 10px 10px 10px;color:#999999"> No matching fulfillment locations found.</div>',
         // Custom rendering template for each item
         getInnerTpl: function () {
-            return "<span class='fulfillment-method'>{fulfillmentMethod}</span> <span class='fulfillment-location-code'>({locationCode}) <span style='float:right;display:block' class='fulfillment-location-code'>{stockAvailable} in stock</span>"
+            return "<span class='fulfillment-method'>{fulfillmentMethod}</span> <span class='fulfillment-location-code'>  <tpl if='values.fulfillmentMethod == \"Digital\"'> (Download)<tpl else>({locationCode})</tpl> <span style='float:right;display:block' class='fulfillment-location-code'><tpl if='values.stockAvailable'>{stockAvailable} in stock</tpl></span>"
+
+            
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;

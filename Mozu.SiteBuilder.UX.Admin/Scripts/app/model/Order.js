@@ -596,6 +596,12 @@ Ext.define('Taco.model.Order', {
         }
     ],
 
+    // helper method that walks the order items and any bundled items to determine if this order has any items that require shipping.
+    // if order contains pickup items or downloadable items only this will return false
+    isShippable: function () {        
+        // if we have unshipped packages or unpackaged items we are a shippable order;
+        return this.get("unpackagedItems").length || this.get("unShippedPackages").length;
+    },
         
     
     reload: function(config) {
