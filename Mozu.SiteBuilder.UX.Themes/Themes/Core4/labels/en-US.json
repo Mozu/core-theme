@@ -319,6 +319,7 @@
   "genericOneOf"         : "{0} must be one of: {1}",
   "genericEqualTo"       : "{0} must be the same as {1}",
   "genericPattern"       : "{0} must be a valid {1}",
+  "genericNotFound"      : "Item was not found",
   "phoneMissing"         : "Phone number required",
   "streetMissing"        : "Street address required",
   "cityMissing"          : "City or town required",

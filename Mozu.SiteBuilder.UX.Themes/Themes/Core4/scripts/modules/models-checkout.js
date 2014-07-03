@@ -388,7 +388,8 @@
             },
 
             loadCustomerDigitalCredits: function () {
-                var order = this.getOrder(),
+                var self = this,
+                    order = this.getOrder(),
                     customer = order.get('customer'),
                     activeCredits = this.activeStoreCredits();
 
@@ -408,10 +409,24 @@
                         customerCredits.remove(inv);
                     });
                 }
-                this._cachedDigitalCredits = customerCredits;
+                self._cachedDigitalCredits = customerCredits;
 
                 if (activeCredits) {
-                    this.convertPaymentsToDigitalCredits(activeCredits, customer);
+
+                    var userEnteredCredits = _.filter(activeCredits, function(activeCred) {
+                        var existingCustomerCredit = self._cachedDigitalCredits.findWhere({ code: activeCred.billingInfo.storeCreditCode });
+                        if (!existingCustomerCredit) {
+                            return true;
+                        }
+                        //apply pricing update.
+                        existingCustomerCredit.set('isEnabled', true);
+                        existingCustomerCredit.set('creditAmountApplied', activeCred.amountRequested);
+                        existingCustomerCredit.set('remainingBalance', existingCustomerCredit.calculateRemainingBalance());
+                        return false;
+                    });
+                    if (userEnteredCredits) {
+                        this.convertPaymentsToDigitalCredits(userEnteredCredits, customer);
+                    }
                 }
 
             },
@@ -420,6 +435,9 @@
                 var me = this;
                 _.each(activeCredits, function (activeCred) {
                     var currentCred = activeCred;
+                    
+
+
                     return me.retrieveDigitalCredit(customer, currentCred.billingInfo.storeCreditCode, me, currentCred.amountRequested).then(function(digCredit) {
                         me.trigger('orderPayment', me.getOrder().data, me);
                         return digCredit;
@@ -613,15 +631,29 @@
             addRemainingCreditToCustomerAccount: function(creditCode, isEnabled) {
                 var self = this;
 
-                var digitalCredit = this._cachedDigitalCredits.filter(function (cred) {
-                    return cred.get('code') === creditCode;
-                });
+                var digitalCredit = self._cachedDigitalCredits.findWhere({ code: creditCode });
 
-                if (!digitalCredit || digitalCredit.length === 0) {
-                    return self.deferredError(Hypr.getLabel('digitalCodeAlreadyUsed', creditCode), self);
+                if (!digitalCredit) {
+                    return self.deferredError(Hypr.getLabel('genericNotFound'), self);
                 }
-                digitalCredit = digitalCredit[0];
                 digitalCredit.set('addRemainderToCustomer', isEnabled);
+                return digitalCredit;
+            },
+
+            getDigitalCreditsToAddToCustomerAccount: function() {
+                return this._cachedDigitalCredits.where({ isEnabled: true, addRemainderToCustomer: true, isTiedToCustomer: false });
+            },
+
+            associateDigitalCreditToCustomer: function () {
+                var self = this,
+                    order = self.getOrder(),
+                    customer = order.getCustomer();
+                var digitalCredits = self.getDigitalCreditsToAddToCustomerAccount();
+                return _.each(digitalCredits, function(cred) {
+                    return customer.apiAddStoreCredit(cred.get('code')).then(function (associateResult) {
+                        return associateResult;
+                    });
+                });
             },
 
             removeCredit: function (id) {
@@ -997,13 +1029,17 @@
 
                 if (this.get("createAccount") && !this.customerCreated) {
                     process.push(this.addNewCustomer);
-                } 
+                }
 
                 var card = billingInfo.get('card');
                 if (billingInfo.get('paymentType') === "CreditCard" && card.get('isCardInfoSaved') && (this.get('createAccount') || require.mozuData('user').isAuthenticated)) {
                     process.push(this.saveCustomerCard);
                 }
 
+                //if ((this.get('createAccount') || require.mozuData('user').isAuthenticated) && billingInfo.getDigitalCreditsToAddToCustomerAccount().length > 0) {
+                //    process.push(this.associateDigitalCreditToCustomer);
+                //}
+               
                 process.push(this.apiCheckout);
                 
                 
