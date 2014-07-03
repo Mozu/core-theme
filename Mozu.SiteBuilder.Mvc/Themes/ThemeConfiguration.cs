@@ -52,6 +52,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
             [DataMember(Name = "isMobile")]
             public bool IsMobile { get; set; }
+            
+            [DataMember(Name = "isTablet")]
+            public bool IsTablet { get; set; }
         }
     }
 }

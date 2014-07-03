@@ -26,6 +26,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 Author = tmd.Configuration.About.Author,
                 IsDesktop = tmd.Configuration.About.IsDesktop,
                 IsMobile = tmd.Configuration.About.IsMobile,
+                IsTablet = tmd.Configuration.About.IsTablet,
+
                 Thumbnail = tmd.Thumbnail,
                 ThemePath = tmd.ThemePath ,
                 TimeStamp = tmd.TimeStamp,

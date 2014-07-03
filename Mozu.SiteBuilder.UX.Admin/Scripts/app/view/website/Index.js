@@ -478,9 +478,11 @@ Ext.define('Taco.view.website.Index', {
         id: "Core4"
         isDesktop: true
         isMobile: false
+        isTablet: false
         isSelected: true
         isSelectedDesktop: true
         isSelectedMobile: false
+        isSelectedTablet: false
         name: "Core4"
 
     },

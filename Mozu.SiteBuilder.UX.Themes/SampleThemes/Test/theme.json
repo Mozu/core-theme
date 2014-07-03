@@ -6,6 +6,7 @@
     "extends": "Core4",
     "isDesktop": true,
     "isMobile": true,
+    "isTablet": true,
     "defaultLanguage": "en-US"
   },
 

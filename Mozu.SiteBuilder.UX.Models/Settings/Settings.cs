@@ -184,6 +184,13 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
             get;
             set;
         }
+        
+        [DataMember(Name = "tabletTheme")]
+        public ThemeSelection TabletTheme
+        {
+            get;
+            set;
+        }
 
         [DataMember(Name = "googleAnalyticsId")]
         public string GoogleAnalyticsCode { get; set; }

@@ -48,7 +48,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             Desktop,
             Mobile,
-            Auto
+            Auto,
+            Tablet
         }
 
         public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings , Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IAuthenticationHelper authenticationHelper)
@@ -155,6 +156,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 if (mode == ThemeMode.Desktop) themeName = (SiteContext.GeneralSettings.DesktopTheme ?? new ThemeSelection()).Id;
                 if (mode == ThemeMode.Mobile) themeName = (SiteContext.GeneralSettings.MobileTheme ?? new ThemeSelection()).Id;
+                if (mode == ThemeMode.Tablet) themeName = (SiteContext.GeneralSettings.TabletTheme ?? new ThemeSelection()).Id;
                 _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, new HttpCookie(FORCE_THEME_COOKIE_NAME, themeName));
             }
             return new RedirectResult(redir ?? "/");

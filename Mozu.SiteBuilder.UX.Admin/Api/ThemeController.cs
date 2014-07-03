@@ -67,9 +67,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             public bool? IsMobile { get; set; }
 
+            public bool? IsTablet { get; set; }
+
             public bool? IsSelectedDesktop { get; set; }
 
             public bool? IsSelectedMobile { get; set; }
+
+            public bool? IsSelectedTablet { get; set; }
 
         [JsonIgnore]
             public Thumbnail Thumbnail { get; set; }
@@ -94,35 +98,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
          
 
-            public ThemeDTO(GeneralSettings genSettings, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null)
+            public ThemeDTO(GeneralSettings genSettings, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null, bool? isSelectedTablet = null)
             {
                 Name = theme.Name;
                 Author = theme.Author;
                 Thumbnail = theme.Thumbnail;
                 IsDesktop = theme.IsDesktop;
                 IsMobile = theme.IsMobile;
+                IsTablet = theme.IsTablet;
                 Id = theme.Id;
 
-                if (isSelectedDesktop.HasValue)
-                    IsSelectedDesktop = isSelectedDesktop.Value;
-                else if (genSettings.DesktopTheme != null &&  String.Equals(Id, genSettings.DesktopTheme.Id, StringComparison.InvariantCultureIgnoreCase))
-                    IsSelectedDesktop = true;
-                else
-                    IsSelectedDesktop = false;
-
-                if (isSelectedMobile.HasValue)
-                    IsSelectedMobile = isSelectedMobile.Value;
-                else if (genSettings.MobileTheme != null && String.Equals(Id, genSettings.MobileTheme.Id, StringComparison.InvariantCultureIgnoreCase))
-                    IsSelectedMobile = true;
-                else
-                    IsSelectedMobile = false;
+                IsSelectedDesktop = IsSelectedTheme(genSettings.DesktopTheme, isSelectedDesktop);
+                IsSelectedMobile = IsSelectedTheme(genSettings.MobileTheme, isSelectedMobile);
+                IsSelectedTablet = IsSelectedTheme(genSettings.TabletTheme, isSelectedTablet);
 
             }
 
+            private bool IsSelectedTheme(ThemeSelection themeSelection, bool? isSelected)
+            {
+                if (isSelected.HasValue)
+                    return isSelected.Value;
+                return ( themeSelection != null && 
+                    String.Equals(Id, themeSelection.Id, StringComparison.InvariantCultureIgnoreCase) );
+            }
 
 
-
-            
             /// <summary>
             /// Checks for equality by comparing theme names.
             /// </summary>
@@ -232,6 +232,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             List<ThemeDTO> themes = await msg.Content.ReadAsAsync<List<ThemeDTO>>();
             ThemeDTO newDesktop = themes.LastOrDefault(t => t.IsSelectedDesktop.Value);
             ThemeDTO newMobile = themes.LastOrDefault(t => t.IsSelectedMobile.Value);
+            ThemeDTO newTablet = themes.LastOrDefault(t => t.IsSelectedTablet.Value);
 
 
             
@@ -264,17 +265,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 settings.DesktopTheme.Id  =newDesktop.Id;
             }
 
-            if (newMobile != null)
-            {
-                settings.MobileTheme = settings.MobileTheme ?? new ThemeSelection();
-                settings.MobileTheme.Id = newMobile.Id;
-            }
-            else if ( settings.MobileTheme != null &&  themes.Any(t => t.Id == settings.MobileTheme.Id ))
-            {
-                // intent to un-set the mobile theme.
-                settings.MobileTheme.Id  = null;
-            }
-
+            settings.MobileTheme = GetThemeSelection(newMobile, settings.MobileTheme, themes);
+            settings.TabletTheme = GetThemeSelection(newTablet, settings.TabletTheme, themes);
+            
             _generalSettingsWebApiClient.UpdateThemeCore(settings);
 
             // the UI returns the ThemeDTO without a thumbnail (to minimize the payload). But if we pass the same ThemeDTO without
@@ -285,13 +278,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 from t in themes
                 let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id ))
                 let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && settings.MobileTheme != null && t.Equals(settings.MobileTheme.Id))
+                let isSelectedTablet = (newTablet != null && newTablet.Equals(t)) || (newTablet == null && settings.TabletTheme != null && t.Equals(settings.TabletTheme.Id))
                 let fullTheme = _themeRepository.GetTheme( new ThemeSelection(){ Id=t.Id} )
-                select new ThemeDTO(settings , fullTheme, isSelectedDesktop, isSelectedMobile);
+                select new ThemeDTO(settings , fullTheme, isSelectedDesktop, isSelectedMobile, isSelectedTablet);
 
             return List2(returnedThemesList.ToList());
         }
 
-
+        private static ThemeSelection GetThemeSelection(ThemeDTO themeDto, ThemeSelection themeSelection, IEnumerable<ThemeDTO> themes)
+        {
+            if (themeDto != null)
+            {
+                themeSelection = themeSelection ?? new ThemeSelection();
+                themeSelection.Id = themeDto.Id;
+            }
+            else if (themeSelection != null && themes.Any(t => t.Id == themeSelection.Id))
+            {
+                // intent to un-set the theme.
+                themeSelection.Id = null;
+            }
+            return themeSelection;
+        }
 
         ITenantsWebApiClient _tenantClient;
         private readonly IGeneralSettingWrapper _generalSettingsWebApiClient;

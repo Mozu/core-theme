@@ -4,7 +4,8 @@
         "name": "blue",
         "author": "Volusion",
         "isDesktop": true,
-        "isMobile": false
+        "isMobile": false,
+        "isTablet":  false
     },
 
     /* Settings: options for your theme. */

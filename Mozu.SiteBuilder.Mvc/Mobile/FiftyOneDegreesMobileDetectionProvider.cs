@@ -31,16 +31,33 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
         {
             get
             {
-                if (!(HttpCapabilitiesBase.BrowserCapabilitiesProvider is FiftyOne.Foundation.Mobile.Detection.MobileCapabilitiesProvider))
-                {
-                    LoggingService.LoggerFor<FiftyOneDegreesMobileDetectionProvider>().Error("BrowserCapabilitiesProvider is not the one provided by FiftyOne.Foundation as expected. Mobile Detection is disabled.");
-                    return false;
-                }
-                else
-                {
-                    return _context.Request.Browser.IsMobileDevice && !string.Equals( _context.Request.Browser["IsTablet"], "true", StringComparison.OrdinalIgnoreCase);
-                }
+                return IsMobile(isTablet: false);
             }
+        }
+        
+        /// <summary>
+        /// Returns true if the initiator of the current HTTP request is a tablet device.
+        /// </summary>
+        public bool IsCurrentRequestTablet
+        {
+            get {
+                return IsMobile(isTablet:true);
+            }
+        }
+
+        private bool IsMobile(bool isTablet)
+        {
+            if (
+                !(HttpCapabilitiesBase.BrowserCapabilitiesProvider is
+                    FiftyOne.Foundation.Mobile.Detection.MobileCapabilitiesProvider))
+            {
+                LoggingService.LoggerFor<FiftyOneDegreesMobileDetectionProvider>()
+                    .Error(
+                        "BrowserCapabilitiesProvider is not the one provided by FiftyOne.Foundation as expected. Mobile Detection is disabled.");
+                return false;
+            }
+            return _context.Request.Browser.IsMobileDevice &&
+                    isTablet == string.Equals(_context.Request.Browser["IsTablet"], "true", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

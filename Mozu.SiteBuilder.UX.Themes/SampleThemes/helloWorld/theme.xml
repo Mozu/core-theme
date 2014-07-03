@@ -6,5 +6,6 @@
   <extends>Core3</extends>
   <isDesktop>true</isDesktop>
   <isMobile>false</isMobile>
+  <isTablet>false</isTablet>
   
 </theme>

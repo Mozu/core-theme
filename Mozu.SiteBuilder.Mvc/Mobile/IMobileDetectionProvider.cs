@@ -11,5 +11,11 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
         /// Returns true if the initiator of the current HTTP request is a mobile device.
         /// </summary>
         bool IsCurrentRequestMobile { get; }
+        
+        /// <summary>
+        /// Returns true if the initiator of the current HTTP request is a tablet device.
+        /// </summary>
+        bool IsCurrentRequestTablet { get; }
+
     }
 }
