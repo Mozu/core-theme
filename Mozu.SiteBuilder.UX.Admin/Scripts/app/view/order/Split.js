@@ -40,7 +40,7 @@ Ext.define('Taco.view.order.Split', {
     initComponent: function () {
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderGrid');
 
-        this.editor = this.statics().eastConfigs.form;
+        this.editor = this.statics().eastConfigs.placeholder;
 
         this.config.east = [this.editor];
         
@@ -71,6 +71,25 @@ Ext.define('Taco.view.order.Split', {
         this.config.west = [this.orderList];
         
         this.callParent(arguments);
+
+        this.mon(this.getEast(), {
+            add: {
+                scope: this,
+                fn: 'handleAddToEast'
+            }
+        });
+    },
+
+    getAdditionalActions: function (ids) {
+        return this.editor.header.down('toolbar').queryBy(function (cmp) {
+            return ids.indexOf(cmp.getItemId()) > -1;
+        });
+    },
+
+    // override of template method in splitEditor.js. Used to delegate the title to the views
+    getEastTitle: function () {
+        var title = (this.editor && this.editor.getTitle) ? this.editor.getTitle() : 'Edit';
+        return title;
     },
 
     // override of template method in splitEditor.js. Used to delegate the title to the views
@@ -78,43 +97,94 @@ Ext.define('Taco.view.order.Split', {
         return this.orderList.getTitle();
     },
 
-    // override of template method in splitEditor.js. Used to delegate the title to the views
-    getEastTitle: function () {
-        var title = (this.editor && this.editor.getTitle) ? this.editor.getTitle() : "Edit";
-        return title;
+    handleAddToEast: function (ct, cmp) {
+        this.editor = cmp;
+        this.updateSplitTitle();
+
+        if (this.getRecord()) {
+            this.mon(this.editor, {
+                afterrender: {
+                    scope: this,
+                    fn: 'updateSplitActions'
+                },
+                afterlayout: {
+                    scope: this,
+                    single: true,
+                    fn: function () {
+                        this.editor.header.hide();
+                        var c = this.editor.getComponent(0);
+                        c.padding = 0;
+                        c.getLayout().innerCt.applyStyles({ padding: '0px' });
+                        c.doLayout();
+                    }
+                }
+            });
+        }
     },
 
     onRecordChange: function (nextRecord) {
-        if (nextRecord) {
-            this.replaceEastItems('form', { record: nextRecord });
-        } else {
-            this.replaceEastItems('placeholder');
-        }
-
-        this.callParent(arguments);
-    },
-
-    replaceEastItems: function (key, config) {
-        var east = this.getEast();
-        var defaults = this.statics().eastConfigs[key];
         var url = 'orders/split';
 
-        east.removeAll(true);
+        Ext.suspendLayouts();
+        this.callParent(arguments);
+        Ext.resumeLayouts();
 
-        if (defaults) {
-            config = Ext.apply({}, config || {}, defaults);
-        }
-
-        if (config && config.record) {
-            url = "orders/edit/" + config.record.getId();
-        }
-
-        if (key === 'form') {
-            // uriOrState, metadata, useReplace
-            Taco.core.StateManager.attemptNavigate(url, { complexMetaData: { container: east } });
+        if (nextRecord) {
+            url = 'orders/edit/' + nextRecord.getId();
+            Taco.core.StateManager.attemptNavigate(url, { complexMetaData: { container: this.getEast() } });
         } else {
-            east.removeAll();
-            east.add(config);
+            Taco.core.StateManager.attemptNavigate(url);
         }
+    },
+
+    updateSplitActions: function () {
+        var ids = Ext.Array.pluck(this.editor.additionalActions || [], 'itemId');
+        var buttons = this.getAdditionalActions(ids);
+        var toolbar = this.header.down('toolbar');
+
+        // after buttons are inserted into the toolbar, we need to re-layout the toolbar
+        // this is horrible, but at least it's not Ext.defer
+        this.mon(toolbar, {
+            afterlayout: {
+                scope: this,
+                single: true,
+                fn: function () {
+                    toolbar.doComponentLayout();
+                }
+            }
+        });
+        
+        // insert each additionalAction into the toolbar after the spacer
+        buttons.forEach(function (button, index) {
+            var id = button.getItemId();
+
+            if (toolbar.getComponent(id)) {
+                toolbar.remove(id);
+            }
+
+            toolbar.insert(index + 2, button);
+        }, this);
+
+        // clean up the managed listener
+        this.mun(this.editor, {
+            afterrender: {
+                scope: this,
+                fn: 'updateSplitActions'
+            }
+        });
+    },
+
+    updateSplitTitle: function () {
+        var record = this.getRecord();
+        var isEdit = this.editor && this.editor.isEdit && this.editor.isEdit();
+        var activeTitle = '<span class="taco-content-header-title-root">' + (this.getWestTitle() || 'Records') + '</span>';
+
+        if (record) {
+            activeTitle += (' / Order #' + record.get('orderNumber'));
+        }
+
+        Ext.suspendLayouts();
+        this.setTitle(activeTitle);
+        Ext.resumeLayouts();
     }
 });
