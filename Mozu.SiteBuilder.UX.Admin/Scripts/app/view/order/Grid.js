@@ -6,6 +6,7 @@ Ext.define('Taco.view.order.Grid', {
     //cls: Taco.baseCSSPrefix + 'searchlist',
 
     requires: [
+        'Taco.model.Category',
         'Taco.model.Order',
         'Taco.store.OrderGrid',
         'Taco.view.order.modal.ProductConfigurator'        

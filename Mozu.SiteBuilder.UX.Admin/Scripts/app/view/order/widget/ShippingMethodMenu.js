@@ -52,6 +52,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                 text: "loading..."
             });
 
+            
             if (me.showRuntimePricing) {
                 // need to wait for the runtime data to reload before rebuilding menu;
                 this.getRuntimePricing();
@@ -86,8 +87,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
         // need to wait for the runtime service to return order specific shipping pricing.
         if (me.showRuntimePricing) {
 
-            me.runtimeRates = null;
-            
+            me.runtimeRates = null;            
 
             if (!me.runtimeRequestActive) {
 
@@ -105,12 +105,17 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                                 // remove the id from the data as it will cause conflicts between the duplicated items when they are configured;
                                 delete itemConfig.id;
                                 me.runtimeRates.push(Ext.clone(itemConfig));
-                            })
+                            })                            
                             this.updateShippingMethodMenu();
                         } else {
-                            Taco.app.fireEvent('setmessage', "Error loading shipping methods", 'error');
-                            this.hide();
+                            //Taco.app.fireEvent('setmessage', "No shipping methods available", 'error');
+                            me.runtimeRates = []
+                            me.add({
+                                text: "No shipping methods available"
+                            });
+                            //this.hide();
                         }
+                        me.runtimeRequestActive = false;
                     },
                     scope: this
                 });
@@ -135,7 +140,11 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                 // need to make the first item get focus;
                 added[0].setActive(true);
             } else {
-                Taco.app.fireEvent('setmessage', "Error loading shipping methods", 'error');
+                
+                //Taco.app.fireEvent('setmessage', "No shipping methods available", 'error');                
+                me.add({
+                    text: "No shipping methods available"
+                });
             }
         }
         

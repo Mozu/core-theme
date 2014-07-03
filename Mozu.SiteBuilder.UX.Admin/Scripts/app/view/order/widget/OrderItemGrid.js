@@ -373,7 +373,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuDisabled: true,
                     align: "left",
                     tpl: [
-                        '{fulfillmentMethod} ({fulfillmentLocationCode})'
+                        '{fulfillmentMethod}',
+                        '<tpl if="values.fulfillmentMethod == \'Digital\'">',
+                        ' (Download)',
+                        '<tpl else>',
+                            ' ({fulfillmentLocationCode})',
+                        '</tpl>'
                     ],
                     editor : (this.getEditMode()) ? me.fulfillmentFieldComboEditor : null
                 }, {
@@ -1012,8 +1017,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error editing order item.";
-                
+                    msg = (json && json.message) ? json.message : "Error editing order item.";                
                 // reset the value to its default
                 var evt = e;
                 e.record.set(e.field, e.record.raw[e.field]);
