@@ -176,7 +176,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             ),
             */
             maskTpl: Ext.create('Ext.XTemplate',
-                '<span class="fulfillmentmethod">{fulfillmentMethod}</span> <span class="locationcode">({locationCode})</span>'
+                '<span class="fulfillmentmethod">{fulfillmentMethod}</span> <span class="locationcode"><tpl if="values.fulfillmentMethod == \'Digital\'"> (Download)<tpl else>({locationCode})</tpl></span>'
             ),
             listeners: {                
                 focus: {
