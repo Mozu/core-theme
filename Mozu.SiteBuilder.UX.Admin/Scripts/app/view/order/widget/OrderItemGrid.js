@@ -100,6 +100,13 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 record = e.record;
         
             if (editor.$className == "Taco.view.order.widget.FulfillmentPickerField") {
+
+                
+                // prevent the user from editing the fulfillment method of an electronic download since we don't support that yet.
+                if (record.data.fulfillmentMethod == "Digital") {
+                    return false
+                }
+
                 // neeed to set the productCode on the fulfillmentCombo editor so that the store can use it in its filter when opened;
                 var productCode = record.get("productCode"),
                     parentProductCode = record.get("parentProductCode"),
