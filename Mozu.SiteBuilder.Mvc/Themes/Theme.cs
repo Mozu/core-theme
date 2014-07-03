@@ -42,7 +42,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// Indicated whether this theme is intended to be used for mobile display.
         /// </summary>
         [DataMember(Name = "isMobile")]
-        public bool? IsMobile { get; set; }
+        public bool? IsMobile { get; set; }        
+        
+        /// <summary>
+        /// Indicated whether this theme is intended to be used for a tablet display.
+        /// </summary>
+        [DataMember(Name = "isTablet")]
+        public bool? IsTablet { get; set; }
 
         /// <summary>
         /// If this theme inherits from another theme, contains the inherited theme.

@@ -361,6 +361,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
                         _themeSelection = _generalSettings.MobileTheme;
                     }
+                    else if (_mobileDetectionProvider.IsCurrentRequestTablet && ( _generalSettings.TabletTheme != null && !string.IsNullOrEmpty(_generalSettings.TabletTheme.Id )))
+                    {
+                        _themeSelection = _generalSettings.TabletTheme;
+                    }
                     else
                     {
 #pragma warning disable 612

@@ -29,9 +29,13 @@ Ext.define('Taco.model.ThemeListing', {
             type: 'boolean',
             isHidden: true
         }, {
+            name: 'isSelectedTablet',
+            type: 'boolean',
+            isHidden: true
+        }, {
             name: 'isSelected',
             convert: function (value, record) {
-                return record.get('isSelectedDesktop') || record.get('isSelectedMobile');
+                return record.get('isSelectedDesktop') || record.get('isSelectedMobile') || record.get('isSelectedTablet');
             }
         }, {
             name:'thumbnail',
@@ -43,6 +47,10 @@ Ext.define('Taco.model.ThemeListing', {
             persist: false // *** This field is immutable
         }, {
             name: 'isMobile',
+            type: 'boolean',
+            persist: false // *** This field is immutable
+        }, {
+            name: 'isTablet',
             type: 'boolean',
             persist: false // *** This field is immutable
         }

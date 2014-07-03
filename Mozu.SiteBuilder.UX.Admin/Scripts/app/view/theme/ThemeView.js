@@ -43,6 +43,10 @@ Ext.define('Taco.view.theme.ThemeView', {
                                     '<div class="icon icon-mobile <tpl if="!values.data.isSelectedMobile">inactive</tpl>"></div>',
                                     '<div class="text <tpl if="!values.data.isSelectedMobile">inactive</tpl>">Mobile</div>',
                                 '</tpl>',
+                                '<tpl if="values.data.isTablet">',
+                                    '<div class="icon icon-tablet <tpl if="!values.data.isSelectedTablet">inactive</tpl>"></div>',
+                                    '<div class="text <tpl if="!values.data.isSelectedTablet">inactive</tpl>">Tablet</div>',
+                                '</tpl>',
                             '</li>',
                             '<li class="actions">',
                                 '<a class="action-preview" href="#">Preview</a>',
@@ -121,6 +125,10 @@ Ext.define('Taco.view.theme.ThemeView', {
 
                     if (model.get("isMobile")) {
                         this.swapSelection("isSelectedMobile", model);
+                    }
+
+                    if (model.get("isTablet")) {
+                        this.swapSelection("isSelectedTablet", model);
                     }
 
                     this.store.sync();

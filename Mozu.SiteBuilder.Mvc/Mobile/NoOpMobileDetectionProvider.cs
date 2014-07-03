@@ -12,5 +12,10 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
         {
             get { return false; }
         }
+
+        public bool IsCurrentRequestTablet
+        {
+            get { return false; }
+        }
     }
 }

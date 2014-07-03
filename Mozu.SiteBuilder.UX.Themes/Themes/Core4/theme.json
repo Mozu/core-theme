@@ -5,6 +5,7 @@
         "extends": null,
         "isDesktop": true,
         "isMobile": false,
+        "isTablet":  false,
         "defaultLanguage": "en-US"
     },
     "settings": {

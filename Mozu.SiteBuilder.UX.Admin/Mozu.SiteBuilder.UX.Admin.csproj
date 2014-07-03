@@ -975,6 +975,7 @@
     <Content Include="Scripts\resources\images\icons\icon-map.png" />
     <Content Include="Scripts\resources\images\icons\icon-people.png" />
     <Content Include="Scripts\resources\images\icons\icon-target.png" />
+    <Content Include="Scripts\resources\images\icons\icon-theme-tablet.png" />
     <Content Include="Scripts\resources\images\icons\icon-tools.png" />
     <Content Include="Scripts\resources\lib\ace\ace.js" />
     <Content Include="Scripts\resources\lib\ace\ext-beautify.js" />

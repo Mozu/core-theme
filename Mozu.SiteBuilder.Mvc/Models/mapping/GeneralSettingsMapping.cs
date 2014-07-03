@@ -67,6 +67,14 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                         return Deserialize(x.MobileTheme);
                     }
                     return null;
+                }))
+                .ForMember(m => m.TabletTheme, opt => opt.ResolveUsing(x =>
+                {
+                    if (!string.IsNullOrEmpty(x.TabletTheme))
+                    {
+                        return Deserialize(x.TabletTheme);
+                    }
+                    return null;
                 }));
 
             //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
@@ -78,10 +86,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.Theme, op => op.ResolveUsing(x => Serialize(x.DesktopTheme)))
                 .ForMember(dc => dc.MobileTheme, op => op.ResolveUsing(x => (x.MobileTheme == null || string.IsNullOrEmpty(x.MobileTheme.Id)) ? null : Serialize(x.MobileTheme)))
-                .ForMember(dc => dc.TemplateSiteId, op => op.ResolveUsing(x => x.TemplateSiteId))
-            
-                ;
-
+                .ForMember(dc => dc.TabletTheme, op => op.ResolveUsing(x => (x.TabletTheme == null || string.IsNullOrEmpty(x.TabletTheme.Id)) ? null : Serialize(x.TabletTheme)))
+                .ForMember(dc => dc.TemplateSiteId, op => op.ResolveUsing(x => x.TemplateSiteId));
            
         }
         static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");

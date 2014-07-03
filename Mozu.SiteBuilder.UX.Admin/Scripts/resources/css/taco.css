@@ -12,7 +12,7 @@
 .x-grid-header-ct .x-grid-hd-checker-on .x-column-header-text, .x-field .x-form-radio, .x-form-cb-checked .x-form-radio, .taco-date-value-input .x-form-date-trigger, .taco-date-value-input .x-form-trigger-click, .taco-hint-widget .taco-widgethandle, .taco-widget-drag, .taco-widget-edit, .taco-widget-remove, .taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-folder,
 .taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-category, .taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-blog, .taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-page,
 .taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-systempage,
-.taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-product, .taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-link, .taco-toolbox .taco-treelist .x-grid-row:nth-of-type(3) .x-tree-icon, .taco-theme-selector .menu .title a, .taco-theme-selector .icon-mobile, .taco-theme-selector .icon-desktop, .taco-masthead .taco-mozulogo, .taco-product-options .invalidate, .taco-image-field .taco-image-tiles > li .drag-handle, .taco-image-field .taco-image-tiles > li .remove:before, .taco-customer-editor .taco-editcontainer .address .edit, .taco-order-subform .taco-editcontainer-menu-button {
+.taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-product, .taco-toolbox .taco-treelist .x-grid-row .taco-nav-node-link, .taco-toolbox .taco-treelist .x-grid-row:nth-of-type(3) .x-tree-icon, .taco-theme-selector .menu .title a, .taco-theme-selector .icon-mobile, .taco-theme-selector .icon-tablet, .taco-theme-selector .icon-desktop, .taco-masthead .taco-mozulogo, .taco-product-options .invalidate, .taco-image-field .taco-image-tiles > li .drag-handle, .taco-image-field .taco-image-tiles > li .remove:before, .taco-customer-editor .taco-editcontainer .address .edit, .taco-order-subform .taco-editcontainer-menu-button {
   background: url('../images/icons-s848bd73da5.png') no-repeat;
 }
 
@@ -13705,6 +13705,12 @@ textarea.x-form-field:not(.x-form-focus):hover {
 }
 /* line 87, ../scss/taco/widgets/_themes.scss */
 .taco-theme-selector .icon-mobile {
+  width: 12px;
+  height: 18px;
+  background-position: 0 -4165px;
+}
+/* line 87, ../scss/taco/widgets/_themes.scss */
+.taco-theme-selector .icon-tablet {
   width: 12px;
   height: 18px;
   background-position: 0 -4165px;
