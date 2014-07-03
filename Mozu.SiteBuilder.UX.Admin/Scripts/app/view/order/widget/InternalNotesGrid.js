@@ -11,6 +11,14 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
 
     enableRowEditing: true,
 
+    viewConfig: {
+        emptyText: 'No items to display',
+        deferEmptyText: false
+    },
+
+    // need to have a minHeight for autoHeight grids that use a row editor. TODO: create override to fix the rowEditor so it can escape the autoHeight grid;
+    minHeight: 110,
+
     columns: [{
         dataIndex: 'text',
         text: 'Comment',
