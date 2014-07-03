@@ -12,6 +12,8 @@ Ext.define('Taco.view.order.Header', {
 
     width: '100%',
 
+    minHeight:120,
+
     header: false,
 
     title:"Customer",
