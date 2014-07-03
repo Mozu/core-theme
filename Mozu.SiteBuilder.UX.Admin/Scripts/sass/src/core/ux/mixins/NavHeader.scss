@@ -23,12 +23,15 @@
         padding: 10px 20px 10px 20px;        
         border-bottom: 1px solid #bfbfbf !important;
         .taco-content-header-title{
-            font-size: 2rem;
-            font-weight: 300;
+            font-size: 2.1rem;
+            font-weight: 600;
             line-height: 3rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+        .taco-content-header-title-root {
+            // color: $color-theme-red;
         }
     }
 }

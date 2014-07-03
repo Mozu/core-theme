@@ -82,10 +82,28 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
 
     /**
      * A template method for performing a save action.
-     *
-     * By default, this function does nothing.
      */
     doSave: Ext.emptyFn,
+
+    /**
+     * A template method for getting the east panel's title. This method is not auto-generated.
+     *
+     * By default, this function simply returns the split editor's title.
+     * @return {String} The east title.
+     */
+    getEastTitle: function () {
+        return this.getTitle();
+    },
+
+    /**
+     * A template method for getting the west panel's title. This method is not auto-generated.
+     *
+     * By default, this function simply returns the split editor's title.
+     * @return {String} The west title.
+     */
+    getWestTitle: function () {
+        return this.getTitle();
+    },
 
     /**
      * Include CSS classes.
@@ -97,13 +115,13 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
     },
 
     /**
-    *  Template method called just before the cancel event is fired.
-    */
+     * A template method called just before the cancel event is fired.
+     */
     onCancel: Ext.emptyFn,
 
     /**
-    *  Template method called just before the create event is fired.
-    */
+     * A template method called just before the create event is fired.
+     */
     onCreate : Ext.emptyFn,
 
     /**
@@ -118,12 +136,13 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
             this.getEast()[nextRecord ? 'expand' : 'collapse']();
             this.getWest()[nextRecord ? 'collapse' : 'expand']();
         }
+
         // this.updateSplitTitle();
     },
 
     /**
-    *  Template method called just before the save event is fired.
-    */
+     * A template method called just before the save event is fired.
+     */
     onSave: Ext.emptyFn,
 
     /**
@@ -154,19 +173,17 @@ Ext.define('Taco.core.ux.form.SplitEditor', {
         this.onRecordChange(nextRecord);
     },
 
-    // override this if you want to let your west sub panel to give you the title;
-    getWestTitle: function () {
-        return this.getTitle();
-    },
-
-    // override this if you want to let your west sub panel to give you the title;
-    getEastTitle: function () {
-        return this.getTitle();
-    },
-
+    /**
+     * Update the split editor's title by getting either the west or east panel's title.
+     * This method is not auto-generated.
+     *
+     * @private
+     */
     updateSplitTitle: function () {
-        var activeTitle = (this.getRecord() ? this.getWestTitle() : this.getEastTitle()) || 'Records';
+        var activeTitle = (this.getRecord() ? this.getEastTitle() : this.getWestTitle()) || 'Records';
 
+        Ext.suspendLayouts();
         this.setTitle(activeTitle);
+        Ext.resumeLayouts();
     }
 });
