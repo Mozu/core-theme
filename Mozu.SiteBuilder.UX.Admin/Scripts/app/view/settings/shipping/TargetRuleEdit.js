@@ -131,17 +131,13 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
                             me.editor.setShowPrintMargin(false);
 
                             me.editor.setFontSize('16px');
+                        
 
                             me.editor.renderer.setShowGutter(false);
                             me.originalData = me.editor.getValue();
                             me.editor.on('change', function (e) {
-                                var prevState = me.isDirtyFlag;
-                             
                                 var actualValue = me.editor.getValue();
-                                me.isDirtyFlag = (actualValue != me.originalData);
-                                if (prevState != me.isDirtyFlag) {
-                                    me.expressionValue.setValue(actualValue);
-                                }
+                                me.expressionValue.setValue(actualValue);
                             });
 
                         }
