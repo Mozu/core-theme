@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-06-25
+ * Mozu JavaScript SDK - v0.3.0 - 2014-07-03
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2497,23 +2497,25 @@ var ApiObject = require('./object');
     }
 
     var ApiCollectionConstructor = function (type, data, api, itemType) {
-        var self = this;
         ApiObject.apply(this, arguments);
         this.itemType = itemType;
-        if (!data) data = {};
-        if (!data.items) this.prop("items", data.items = []);
-        if (data.items.length > 0) this.add(data.items, true);
-        this.on('sync', function (raw) {
-            if (raw && raw.items) {
-                self.removeAll();
-                self.add(raw.items);
-            }
-        });
     };
 
     ApiCollectionConstructor.prototype = utils.extend(new ApiObject(), {
         isCollection: true,
         constructor: ApiCollectionConstructor,
+        postconstruct: function(type, data, api, itemType) {
+            var self = this;
+            if (!data) data = {};
+            if (!data.items) this.prop("items", data.items = []);
+            if (data.items.length > 0) this.add(data.items, true);
+            this.on('sync', function(raw) {
+                if (raw && raw.items) {
+                    self.removeAll();
+                    self.add(raw.items);
+                }
+            });
+        },
         add: function (newItems, /*private*/ noUpdate) {
             if (utils.getType(newItems) !== "Array") newItems = [newItems];
             Array.prototype.push.apply(this, utils.map(newItems, convertItem, this));
@@ -4673,6 +4675,12 @@ var process=require("__browserify_process");
         clone: function(obj) {
             return JSON.parse(JSON.stringify(obj)); // cheap copy :)
         },
+        compose: function(first, second) {
+            return function() {
+                first.call(this, arguments);
+                second.call(this, arguments);
+            }
+        },
         flatten: function (obj, into, prefix, separator, depth) {
             if (depth === 0) throw "Cannot flatten circular object.";
             if (!depth) depth = maxFlattenDepth;
@@ -4698,15 +4706,22 @@ var process=require("__browserify_process");
 
             return into;
         },
-        inherit: function (parent, more) {
-            var ApiInheritedObject = function () {
-                if (this.construct) this.construct.apply(this, arguments);
-                parent.apply(this, arguments);
-                if (this.postconstruct) this.postconstruct.apply(this, arguments);
+        inherit: (function(composedMethods) {
+            return function (parent, more) {
+                var ApiInheritedObject = function() {
+                    if (this.construct) this.construct.apply(this, arguments);
+                    parent.apply(this, arguments);
+                    if (this.postconstruct) this.postconstruct.apply(this, arguments);
+                },
+                parentObject = new parent();
+                for (var i = 0; i < composedMethods.length; i++) {
+                    if (parentObject[composedMethods[i]] && more[composedMethods[i]])
+                        more[composedMethods[i]] = utils.compose(parentObject[composedMethods[i]], more[composedMethods[i]]);
+                }
+                ApiInheritedObject.prototype = utils.extend(parentObject, more);
+                return ApiInheritedObject;
             };
-            ApiInheritedObject.prototype = utils.extend(new parent(), more);
-            return ApiInheritedObject;
-        },
+        })(['construct','postconstruct']),
         map: function (arr, fn, scope) {
             var newArr = [], len = arr.length;
             scope = scope || window;

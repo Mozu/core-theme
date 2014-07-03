@@ -18,11 +18,30 @@
 
     var Fixtures = {
         SampleProductCollection: {
-            items: [
-                {
-                    productCode: 'hi!'
-                }
-            ]
+            PageOne: {
+                items: [
+                    {
+                        productCode: 'firstProduct',
+                        name: 'First Product'
+                    },
+                    {
+                        productCode: 'secondProduct',
+                        name: 'Second Product'
+                    }
+                ]
+            },
+            PageTwo: {
+                items: [
+                    {
+                        productCode: 'thirdProduct',
+                        name: 'Third Product'
+                    },
+                    {
+                        productCode: 'fourthProduct',
+                        name: 'Fourth Product'
+                    }
+                ]
+            }
         },
         SampleProductCode: "Sample",
         SampleProductUrl: ServiceUrls.productService + 'Sample',
@@ -61,8 +80,9 @@
     before(function () {
         server = sinon.fakeServer.create();
 
-        server.respondWith('GET', ServiceUrls.productService, JSON.stringify(Fixtures.SampleProductCollection));
-        server.respondWith('GET', new RegExp(ServiceUrls.productService + "\\?.*"), JSON.stringify(Fixtures.SampleProductCollection));
+        server.respondWith('GET', ServiceUrls.productService, JSON.stringify(Fixtures.SampleProductCollection.PageOne));
+        server.respondWith('GET', new RegExp(ServiceUrls.productService + "\\?.*startIndex=2.*"), JSON.stringify(Fixtures.SampleProductCollection.PageTwo));
+        server.respondWith('GET', new RegExp(ServiceUrls.productService + "\\?.*"), JSON.stringify(Fixtures.SampleProductCollection.PageOne));
         server.respondWith('GET', new RegExp(Fixtures.SampleProductUrl + "\\?.*"), JSON.stringify(Fixtures.SampleProduct));
         server.respondWith('GET', ServiceUrls.cartService + "current", JSON.stringify(Fixtures.SampleCart));
         server.respondWith('DELETE', ServiceUrls.cartService + "current/items/", JSON.stringify(Fixtures.EmptyCart));
@@ -205,7 +225,7 @@
             });
 
             it("should fulfill the promise with the JSON returned from the service", function () {
-                return expect(api.request("GET", ServiceUrls.productService)).to.become(Fixtures.SampleProductCollection);
+                return expect(api.request("GET", ServiceUrls.productService)).to.become(Fixtures.SampleProductCollection.PageOne);
             });
 
 
@@ -268,7 +288,7 @@
                     expect(promise).to.eventually.be.an.instanceof(Mozu.ApiCollection),
                     expect(promise).to.eventually.have.property("type", "products"),
                     promise.then(function(products) {
-                        expect(products).to.have.property("data").that.is.deep.equal(Fixtures.SampleProductCollection);
+                        expect(products).to.have.property("data").that.is.deep.equal(Fixtures.SampleProductCollection.PageOne);
                     })
                 ]);
 
@@ -614,6 +634,10 @@
 
         describe("should, for collections returned by the API, be of a special ApiCollection type, that", function () {
             var productsCollection, origLen, newItems = [{}, {}, {}, {}, {}];
+            // testing independence
+            before(function() {
+                return api.get("products", { startIndex: 2 });
+            });
             beforeEach(function() {
                 return api.get("products").then(function (p) {
                     productsCollection = p;
@@ -628,10 +652,10 @@
                 expect(productsCollection).to.be.an.instanceof(Mozu.ApiCollection);
             });
             it("should be an array-like object with a length property", function () {
-                expect(productsCollection).to.have.property("length").that.is.a("number");
+                expect(productsCollection).to.have.an.ownProperty("length").and.to.have.a.property("length").that.is.a("number");
             });
             it("should have a string type property and a string itemType property, for the collection type and the type of its items", function() {
-                expect(productsCollection).to.have.a.property("type").that.is.a("string").and.is.to.equal("products");
+                expect(productsCollection).to.have.an.ownProperty("type").and.to.have.a.property("type").that.is.a("string").and.is.to.equal("products");
                 expect(productsCollection).to.have.a.property("itemType").that.is.a("string").and.is.to.equal("product");
             });
             it("should have an .add method that adds new items", function () {
@@ -643,12 +667,19 @@
             });
             it("should contain items of its item type", function() {
                 productsCollection.add(newItems);
+                expect(productsCollection).to.have.an.ownProperty('0');
                 expect(productsCollection[0]).to.be.an.instanceof(Mozu.ApiObject).and.to.have.a.property("type").that.is.to.equal(productsCollection.itemType);
             });
-            it("should increment its underlying data.Items property to stay in sync when items are added", function () {
+            it("should increment its underlying data.items property to stay in sync when items are added", function () {
                 expect(productsCollection.length).to.equal(productsCollection.prop("items").length);
                 productsCollection.add(newItems);
                 expect(productsCollection.length).to.equal(productsCollection.prop("items").length);
+            });
+            it("should have a \"removeAll()\" method that removes all its members", function() {
+                expect(productsCollection).to.respondTo('removeAll');
+                productsCollection.removeAll();
+                expect(productsCollection.length).to.equal(0);
+                expect(productsCollection[0]).to.not.exist;
             });
         });
             
