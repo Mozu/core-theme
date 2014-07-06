@@ -4,9 +4,21 @@
 </h3>
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
-        {% for payment in model.activePayments %}
-        {% if payment.billingInfo.paymentType == "Check" %}
-        <div class="mz-l-stack-section">
+      {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
+      <div class="mz-l-stack-section">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h4>
+          {% for payment in model.activeStoreCredits %}
+          <div class="mz-l-stack-section">
+            <span>
+              <strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.storeCreditCode }}
+            </span>
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+      {% for payment in model.activePayments %}
+      {% if payment.billingInfo.paymentType == "Check" %}
+      <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ payment.billingInfo.paymentType }}</h4>
             <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.check.checkNumber }}</span>
             <dl class="mz-propertylist">
@@ -38,14 +50,8 @@
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paypalExpress }}</h4>
             <span>{{ labels.paypalExpressSummary }}</span>
         </div>
-      {% endif %}
-      <!-- **** move outside of outer for loop and place within own for loop? -->
-      {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" %}
-      <div class="mz-l-stack-section">
-        <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h4>
-        <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.storeCreditCode }}</span> 
-        </div>
         {% endif %}
+      
       {% endfor %} 
 
         {% if model.billingContact.email %}
