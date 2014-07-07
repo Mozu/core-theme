@@ -76,6 +76,10 @@
 });
 function SetupModesAndViewForCreateTests (t, next, m) {
 
+    m.product = Ext.create('Taco.model.Product', {
+        masterCatalogId: Taco.app.context.masterCatalogs[0].id
+    });
+
     m.productExtra = Ext.create('Taco.model.ProductExtra', {
         "attributeFQN": "tenant~prod_extra_1",
         "isRequired": false,
@@ -107,6 +111,7 @@ function SetupModesAndViewForCreateTests (t, next, m) {
 
     m.form = Ext.create(
         'Taco.view.product.subform.ListExtraEditor', {
+            product:m.product,
             productExtra: m.productExtra,
             productTypeAttribute: m.productTypeAttribute,
             flex: 1,

@@ -1909,6 +1909,7 @@
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />
     <Content Include="Tests\HomePages\Mystic.cshtml" />
+    <Content Include="Tests\HomePages\Mystic.html" />
     <Content Include="Tests\integration\attribute\attribute-create.t.js" />
     <Content Include="Tests\index.html" />
     <Content Include="Tests\integration\entities\grid-t.js" />
@@ -2035,7 +2036,6 @@
     <Content Include="Tests\Mocks\Mystic1\Products1.json" />
     <Content Include="Tests\Mocks\Mystic1\ProductTypes1.json" />
     <Content Include="Tests\Mocks\Mystic1\Categories1.json" />
-    <Content Include="Tests\HomePages\WebPage1.cshtml" />
     <Content Include="Tests\specs\admin\chutzpah.json1" />
     <Content Include="Tests\Automation\phantomjs" />
     <Content Include="Tests\Automation\phantomjs.bat" />
