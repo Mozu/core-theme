@@ -182,7 +182,25 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get { return _mobileDetectionProvider.IsCurrentRequestCrawler; }
         }
-
+        
+        public bool IsMobile
+        {
+            get { return _mobileDetectionProvider.IsCurrentRequestMobile; }
+        }
+        
+        public bool IsTablet
+        {
+            get { return _mobileDetectionProvider.IsCurrentRequestTablet; }
+        }
+        
+        public bool IsDesktop
+        {
+            get
+            {
+                return (!_mobileDetectionProvider.IsCurrentRequestTablet &&
+                        !_mobileDetectionProvider.IsCurrentRequestTablet);
+            }
+        }
 
         public CmsPageContext CmsContext {get;set;}
 
