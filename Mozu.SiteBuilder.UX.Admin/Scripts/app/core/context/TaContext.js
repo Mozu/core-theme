@@ -48,6 +48,19 @@ Ext.define('Taco.core.context.TaContext', {
         }, this);
 
     },
+    formatCurrency: function (value) {
+        return this.masterCatalogs[0].formatCurrency(value);
+    },
+
+    formatCurrencyFromCode: function (code, value) {
+        var cur = this.currencies[code.toLowerCase()];
+        if (!cur) {
+            Ext.warn({ level: 'warn' }, 'missing currency code[' + code + ']');
+            return Ext.util.Format.currency(value, '$', 2);
+        }
+        return Ext.util.Format.currency(value, cur.symbol, cur.significantDecimalDigits);
+       
+    },
     isMultiSite:function() {
         var ret = false;
         Ext.each(this.masterCatalogs, function (sc) {
@@ -215,11 +228,13 @@ Ext.define('Taco.core.context.TaContext', {
         var me = this;
         me.urlToken = me.contextType +'-'+ data.id;
         me.currentCtx = me;
+        me.currencyLookup = {};
         
         Ext.each(data.masterCatalogs, function(sc,idx) {
             me.masterCatalogs[idx] = Ext.create('Taco.core.context.MasterCatalog', sc);
 
         });
+        
         if (this.isSingleSite()) {
             me.currentCtx = this.masterCatalogs[0].sites[0];
         }else if (!this.isMultiMasterCatalog()) {

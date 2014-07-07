@@ -621,7 +621,7 @@ Ext.define('Taco.model.Order', {
                             me.associations.each(function(association) {
                              var reader = association.getReader();
                              if (reader) {
-                                 association.read(me, reader, me.get(association.name));
+                                 association.read(me, reader, me.get(association.name)||[]);
                              }
                          });
 
@@ -644,6 +644,9 @@ Ext.define('Taco.model.Order', {
 
 
         this.self.load(me.getId(), loadConfig);
+    },
+    formatCurrency: function (value) {
+        return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
     },
     getAttributes: function() {
         return this.getOrCreateHasManyStore({

@@ -43,12 +43,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
                 .ForMember(x => x.Catalogs, op => op.ResolveUsing(x => x.Catalogs ))
+                .ForMember(x=> x.Currency ,op => op.ResolveUsing(x=> x.DefaultCurrencyCode))
+                .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
                 //ignores
                 .ForMember(x => x.ProductPublishingMode, op => op.Ignore())
                 .ForMember(x => x.Sites, op => op.Ignore())
                 ;
             AutoMapper.Mapper.CreateMap<DC.Catalog, TaContextCatalog>()
                       .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
+                      .ForMember(x => x.Currency, op => op.ResolveUsing(x => x.DefaultCurrencyCode))
+                      .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
                       .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name));
               //.ForMember(x => x.StagingHost, op => op.ResolveUsing(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
 
@@ -56,6 +60,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             AutoMapper.Mapper.CreateMap<DC.Site, TaContextSite>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
+                .ForMember(x => x.Currency, op => op.ResolveUsing(x => x.DefaultCurrencyCode))
+                .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
                 .ForMember(x => x.StagingHost, op => op.ResolveUsing(x => x.Domains == null 
                     ? null : 
                     x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()))

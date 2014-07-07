@@ -18,6 +18,10 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "masterCatalogs")]
         public List<MasterCatalog> MasterCatalogs { get; set; }
+
+
+        [DataMember(Name = "currencies")]
+        public Dictionary<string, Core.Currency> Currencies { get; set; }
     }
 
     [DataContract]
@@ -37,6 +41,17 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "catalogs")]
         public List<TaContextCatalog> Catalogs { get; set; }
+
+
+        [DataMember(Name = "locale")]
+        public string Locale { get; set; }
+
+
+        [DataMember(Name = "currency")]
+        public string Currency { get; set; }
+
+
+     
     }
 
 
@@ -48,6 +63,15 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
+
+        [DataMember(Name = "locale")]
+        public string Locale { get; set; }
+
+
+        [DataMember(Name = "currency")]
+        public string Currency { get; set; }
+
+      
 
 
     }
@@ -80,6 +104,17 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
          [DataMember(Name = "isMozuRendered")]
          public bool IsMozuRendered { get; set; }
+
+
+         [DataMember(Name = "locale")]
+         public string Locale { get; set; }
+
+
+         [DataMember(Name = "currency")]
+         public string Currency { get; set; }
+
+      
+
 
         
     }

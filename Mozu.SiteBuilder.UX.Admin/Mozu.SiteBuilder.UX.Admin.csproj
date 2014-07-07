@@ -223,9 +223,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Content.Contracts.1.9.0-dev003\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core">
-      <HintPath>..\packages\Mozu.Core.1.9.0-dev010\lib\net45\Mozu.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.Core, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.1.9.0-dev012\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api">
       <HintPath>..\packages\Mozu.Core.Api.1.9.0-dev010\lib\net45\Mozu.Core.Api.dll</HintPath>
@@ -2158,7 +2158,6 @@
     <Content Include="Scripts\app\core\ux\ComponentColumn.js" />
     <Content Include="Scripts\app\core\ux\ComplexDataView.js" />
     <Content Include="Scripts\app\core\ux\form\FieldGroup.js" />
-    <Content Include="Scripts\app\core\ux\form\TextFieldColumn.js" />
     <Content Include="Scripts\app\core\ux\form\Step.js" />
     <Content Include="Scripts\app\core\ux\form\StepContainer.js" />
     <Content Include="Scripts\app\core\ux\Hint.js" />
@@ -2284,7 +2283,6 @@
     <Content Include="Scripts\app\view\productOption\edit.js" />
     <Content Include="Scripts\app\view\product\Index.js" />
     <Content Include="Scripts\app\view\testing\Shim.js" />
-    <Content Include="Scripts\app\view\testing\StandaloneOption.js" />
     <Content Include="Scripts\app\view\theme\Index.js" />
     <Content Include="Scripts\app\view\Viewport.js" />
     <Content Include="Web.config">

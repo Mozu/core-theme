@@ -191,7 +191,11 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         return me.categoryStore;
     
     },
-    
+
+    formatCurrency: function (value) {
+        return Taco.app.context.findCatalog(this.getId()).formatCurrency(value);
+    },
+
     getUnfilteredCategoryStore: function () {
         var me = this, catalogId = this.getId();
         if (me.categoryStoreUnfiltered == null) {

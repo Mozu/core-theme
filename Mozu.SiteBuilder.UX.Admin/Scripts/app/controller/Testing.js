@@ -646,25 +646,7 @@ Ext.define('Taco.controller.Testing', {
     mutliFileAssociator: function () {
         Ext.create('Taco.view.fileManager.Associator');
     },
-    standAloneOptions: function (args) {
-        var me = this;
-        productId = args.id || 113;
-        Ext.ModelManager.getModel('Taco.model.Product').load(productId, {
-            success: function (data) {
-                me.createContentView('Taco.view.testing.standAloneOptions', {
-                    data: data,
-                    productOptions: data.productOptions()
-                });
-
-            },
-
-            failure: function () {
-                console.log(this, arguments);
-                Ext.Msg.alert('Failed Product load', arguments);
-            }
-        });
-
-    },
+   
 
     inventoryControlGrid: function (args) {
         var me = this,

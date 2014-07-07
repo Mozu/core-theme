@@ -157,7 +157,7 @@
                 renderer: function (value, metaData, record) {
                     var valueType = record.get('valueType');
                     if (valueType == 'flatrate') {
-                        return Ext.util.Format.usMoney(value);
+                        return Taco.app.context.getCurrent().formatCurrency(value);
                     }
                     return value + '%';
                 }

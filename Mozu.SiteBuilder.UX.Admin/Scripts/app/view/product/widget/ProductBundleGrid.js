@@ -106,7 +106,9 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 flex: 1
             }, {
                 dataIndex: 'price',
-                renderer: Ext.util.Format.usMoney,
+                renderer: function (value) {
+                    return me.product.formatCurrency(value);
+                },
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
@@ -114,7 +116,9 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
                 text: 'Price'
             }, {
                 dataIndex: 'salePrice',
-                renderer: Ext.util.Format.usMoney,
+                renderer: function (value) {
+                    return me.product.formatCurrency(value);
+                },
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,

@@ -61,6 +61,10 @@ Ext.define('Taco.model.StoreCredit', {
         {
             name: 'remainderToAccount',
             type: 'boolean'
+        },
+        {
+            name: 'currencyCode',
+            type:'string'
         }
     ],
 

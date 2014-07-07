@@ -49,16 +49,15 @@ Ext.define('Taco.view.product.Index', {
 
                 width: 70,
                 renderer: function (value, metaData, record) {
-                    value = record.getContextualValue('price');
-                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                    return record.getContextualValue('price', true) || '--';
+                   
                 }
             }, {
                 dataIndex: 'salePrice',
                 text: 'Sale Price',
                 width: 100,
                 renderer: function (value, metaData, record) {
-                    value = record.getContextualValue('salePrice');
-                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                    return record.getContextualValue('salePrice', true) || '--';
                 }
             }, {
                 dataIndex: 'productInCatalogs',
@@ -198,8 +197,8 @@ Ext.define('Taco.view.product.Index', {
                         '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
                         '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><a href="#" class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</a></div></td>',
-                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{price:this.formatPrice}</div></td>',
-                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{salePrice:this.formatPrice}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
+                        '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{isContentOverridden:this.formatOverridden}</div></td>',
                         '<td class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
@@ -208,8 +207,8 @@ Ext.define('Taco.view.product.Index', {
                             formatOverridden: function (value) {
                                 return value ? '<span class="overridden">Overridden</span>' : '';
                             },
-                            formatPrice: function (value) {
-                                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                            formatPrice: function (value, catalog) {
+                                return (value || value === 0) ? Taco.app.context.findCatalog(catalog).formatCurrency(value) : '--';
                             },
                             toCatalogName: function (value) {
                                 var catalog = Taco.app.context.findCatalog(value);
@@ -237,8 +236,8 @@ Ext.define('Taco.view.product.Index', {
             dataIndex: 'price',
             text: 'Price',
             width: 100,
-            renderer: function (value) {
-                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+            renderer: function (value, metaData, record) {
+                return (value || value === 0) ? record.formatCurrency(value) : '--';
             },
             editor: {
                 xtype: 'currencyfield',
@@ -252,8 +251,8 @@ Ext.define('Taco.view.product.Index', {
             dataIndex: 'salePrice',
             text: 'Sale Price',
             width: 100,
-            renderer: function (value) {
-                return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+            renderer: function (value, metaData, record) {
+                return (value || value === 0) ? record.formatCurrency(value) : '--';
             },
             editor: {
                 xtype: 'currencyfield',

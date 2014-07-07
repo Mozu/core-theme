@@ -53,6 +53,9 @@
         
         
     },
+    formatCurrency: function (value) {
+        return Taco.app.context.formatCurrencyFromCode(this.currency, value);
+    },
     
 
     getMasterCatalog: function () {

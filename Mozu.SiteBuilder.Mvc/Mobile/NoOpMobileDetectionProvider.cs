@@ -17,5 +17,10 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
         {
             get { return false; }
         }
+
+        public bool IsCurrentRequestCrawler
+        {
+            get { return false; }
+        }
     }
 }

@@ -102,7 +102,9 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     {
                         dataIndex: 'deltaPrice',
                         text: 'Price',
-                        renderer: Ext.util.Format.usMoney,
+                        renderer: function (value) {
+                            return (value || value === 0) ? me.product.formatCurrency(value) : '--';
+                        },
                         editor: {
                             xtype: 'currencyfield',
                             hideTrigger: true
@@ -148,7 +150,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                         dataIndex: 'price',
                         text: 'Mast Catalog Price',
                         renderer: function (v) {
-                            return v ? Ext.util.Format.usMoney(v) : undefined;
+                            return v ? me.product.formatCurrency(v) : undefined;
                         }
 
                     },
@@ -156,14 +158,16 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                         dataIndex: 'salePrice',
                         text: 'Mast Catalog Sale Price',
                         renderer: function (v) {
-                            return v ? Ext.util.Format.usMoney(v) : undefined;
+                            return v ? me.product.formatCurrency(v) : undefined;
                         }
 
                     },
                     {
                         dataIndex: 'deltaPrice',
                         text: 'Price',
-                        renderer: Ext.util.Format.usMoney,
+                        renderer: function (value) {
+                            return me.product.formatCurrency(value);
+                        },
                         editor: {
                             xtype: 'currencyfield',
                             hideTrigger: true

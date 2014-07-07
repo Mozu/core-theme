@@ -579,7 +579,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                        EntityLists = x.EntityLists,
                                        DocumentTypes = x.DocumentTypes,
                                        Priority = x.Priority,
-                                       Code = jsFile.OpenText().ReadToEnd()
+                                       Code = jsFile.ReadAllText()
                                    };
                         }
                         return null;

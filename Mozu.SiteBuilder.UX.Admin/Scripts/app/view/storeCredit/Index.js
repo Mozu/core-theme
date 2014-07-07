@@ -37,7 +37,7 @@ Ext.define('Taco.view.storeCredit.Index', {
             text: 'Issued Amount',
             flex: 1,
             renderer: function (value, metaData, record) {
-                return Ext.util.Format.usMoney(value);
+                return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
             },
             minWidth: 120
         }, {
@@ -62,7 +62,8 @@ Ext.define('Taco.view.storeCredit.Index', {
             text: 'Current Balance',
             flex: 1,
             renderer: function (value, metaData, record) {
-                return Ext.util.Format.usMoney(value);
+                return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
+                
             },
             minWidth: 120
         }, {

@@ -572,7 +572,7 @@ Ext.define('Taco.Application', {
         // add some utility stuff
         Ext.apply(Ext.form.field.VTypes, {
             currency: function (v) {
-                return v === Ext.util.Format.usMoney(v).replace('$', '');
+                return v === Ext.util.Format.currency(v, '', 2);
             },
             num: function (v) {
                 return v !== "" && !isNaN(v);

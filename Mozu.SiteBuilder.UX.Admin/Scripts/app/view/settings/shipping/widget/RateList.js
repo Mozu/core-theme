@@ -81,7 +81,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
                 menuDisabled: true,
                 tpl: [
                     '<div class="rate-item">',
-                        '<div><span class="name">{name}</span><span class="amount"><tpl if="type==\'CUSTOM_PERCENTAGE_PER_ORDER\'">{amount}%<tpl else>{amount:usMoney}</tpl></span></div>',
+                        '<div><span class="name">{name}</span><span class="amount"><tpl if="type==\'CUSTOM_PERCENTAGE_PER_ORDER\'">{amount}%<tpl else>{[Taco.app.context.getCurrent().formatCurrency(values.amount)]}</tpl></span></div>',
                         '<div class="type">',
                             '<tpl if="type == \'CUSTOM_FLAT_RATE_PER_ITEM_EXACT_AMOUNT\'">',
                                'Flat rate per item',
@@ -99,6 +99,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
                         '</tpl>',
                         '</div>',
                     '</div>', {
+
                         getCountryName: function (val) {
                             var countryRecord = me.countryStore.getById(val);
                             if (countryRecord) {
