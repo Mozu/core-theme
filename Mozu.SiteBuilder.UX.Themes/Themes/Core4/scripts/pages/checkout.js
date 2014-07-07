@@ -144,7 +144,9 @@
         },
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
-            this.listenTo(this.model, 'orderPayment', this.onOrderPaymentApplied, this);
+            this.listenTo(this.model, 'orderPayment', function (order, scope) {
+                    this.render();
+                }, this);
             this.codeEntered = !!this.model.get('digitalCreditCode');
         },
 
@@ -179,14 +181,11 @@
                 self.$el.removeClass('is-loading');
             });
         },
-
-
         stripNonNumericAndParseFloat: function (val) {
             if (!val) return 0;
             var result = parseFloat(val.replace(/[^\d\.]/g, ''));
             return isNaN(result) ? 0 : result;
         },
-
         applyDigitalCredit: function(e) {
             var val = $(e.currentTarget).prop('value'),
                 creditCode = $(e.currentTarget).attr('data-mz-credit-code-target');  //target
@@ -199,7 +198,6 @@
             this.model.applyDigitalCredit(creditCode, amtToApply, true);
             this.render();
         },
-
         onEnterDigitalCreditCode: function(model, code) {
             if (code && !this.codeEntered) {
                 this.codeEntered = true;
@@ -210,39 +208,26 @@
                 this.$el.find('button').prop('disabled', true);
             }
         },
-
         enableDigitalCredit: function(e) {
-            var creditCode = $(e.currentTarget).attr('data-mz-credit-code-source'), // or e.currentTarget.attributes.getNamedItem('data-mz-credit-code').value
+            var creditCode = $(e.currentTarget).attr('data-mz-credit-code-source'),
                 isEnabled = $(e.currentTarget).prop('checked') === true,
-                balance = $(e.currentTarget).attr('data-mz-credit-balance'),
                 targetCreditAmtEl = this.$el.find("input[data-mz-credit-code-target='" + creditCode + "']"),
                 me = this;
 
             if (isEnabled) {
                 targetCreditAmtEl.prop('disabled', false);
-                var creditBalance = this.stripNonNumericAndParseFloat(balance);
-                var remainingTotal = this.model.nonStoreCreditTotal();
-                var maxAmt = remainingTotal < creditBalance ? remainingTotal : creditBalance;
-                maxAmt = Math.round(maxAmt * 100) / 100.0; //round to 2 decimal places
-                this.model.applyDigitalCredit(creditCode, maxAmt, true);
+                me.model.applyDigitalCredit(creditCode, null, true);
             } else {
                 targetCreditAmtEl.prop('disabled', true);
-                this.model.applyDigitalCredit(creditCode, 0, false);
-                this.render();
+                me.model.applyDigitalCredit(creditCode, 0, false);
+                me.render();
             }
         },
-
         addRemainderToCustomer: function (e) {
             var creditCode = $(e.currentTarget).attr('data-mz-credit-code-to-tie-to-customer'),
                 isEnabled = $(e.currentTarget).prop('checked') === true;
             this.model.addRemainingCreditToCustomerAccount(creditCode, isEnabled);
         },
-
-        // todo: move to anon fn in listener - Greg Murray on 2014-07-01 
-        onOrderPaymentApplied: function(order, scope) {
-            this.render();
-        },
-
         handleEnterKey: function (e) {
             var source = $(e.currentTarget).attr('data-mz-value');
             if (!source) return;

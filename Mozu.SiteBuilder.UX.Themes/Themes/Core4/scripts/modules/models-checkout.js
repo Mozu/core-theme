@@ -295,13 +295,16 @@
                 return this.getOrder().apiModel.getActivePayments();
             },
             nonStoreCreditTotal: function () {
-                var order = this.getOrder(),
+                var me = this,
+                    order = this.getOrder(),
                     total = order.get('total'),
+                    result,
                     activeCredits = this.activeStoreCredits();
                 if (!activeCredits) return total;
-                return total - _.reduce(activeCredits, function (sum, credit) {
+                result = total - _.reduce(activeCredits, function (sum, credit) {
                     return sum + credit.amountRequested;
                 }, 0);
+                return me.roundToPlaces(result, 2);
             },
             savedPaymentMethods: function () {
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
@@ -462,6 +465,11 @@
                 digitalCredit = digitalCredit[0];
                 var previousAmount = digitalCredit.get('creditAmountApplied');
                 var previousEnabledState = digitalCredit.get('isEnabled');
+
+                if (creditAmountToApply == null) {
+                    creditAmountToApply = self.getMaxCreditToApply(digitalCredit, self);
+                }
+                
                 digitalCredit.set('creditAmountApplied', creditAmountToApply);
                 digitalCredit.set('remainingBalance',  digitalCredit.calculateRemainingBalance());
                 digitalCredit.set('isEnabled', isEnabled);
