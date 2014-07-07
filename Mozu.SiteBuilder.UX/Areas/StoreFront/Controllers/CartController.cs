@@ -8,8 +8,11 @@ using System.Web;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.Location.Contracts;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.Core.Settings;
+
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -36,9 +39,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         IOrderWebApiClient _orderWebApiClient;
         private readonly ICookieProvider _cookieProvider;
         private readonly ILocationRuntimeWebApiClient _locationClient;
+        private readonly ISettings _settings;
         
 
-        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient)
+        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings)
         {
             if(cartClient == null)
             {
@@ -50,6 +54,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _orderWebApiClient = orderWebApiClient;
             _cookieProvider = cookieProvider;
             _locationClient = locationClient;
+
+            _settings = settings;
         }
 
         private string BuildLocationsFilter(List<string> locationCodes)
@@ -74,14 +80,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.PageType = "cart";
            
             
-            var cart = (await _cartClient.GetOrCreateCart() ).ReadAsAsync().Result;
+            return (await RenderCartViewWithMessage(new List<Exception>()));
+        }
+
+        private async Task<ActionResult> RenderCartViewWithMessage(List<Exception> errors)
+        {
+            var cart = (await _cartClient.GetOrCreateCart()).ReadAsAsync().Result;
             LocationCollection locations = null;
             if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP))
             {
                 locations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
             }
 
-           
+
 
             var cartVM = Mapper.Map<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart>(cart);
 
@@ -98,13 +109,89 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         var location = locations.Items.Find(x => x.Code == cartVM.Items[i].FulfillmentLocationCode);
                         if (location != null)
                         {
-                            ((JObject) jItems[i]).Add("fulfillmentLocationName", location.Name);
+                            ((JObject)jItems[i]).Add("fulfillmentLocationName", location.Name);
                         }
                     }
                 }
             }
 
-            return View( "cart", jCart); // Mapper.Map<VMCart>(cart));
+            if (errors.Count > 0)
+            {
+                var messages = new JArray();
+                errors.ForEach(e => messages.Add(JObject.FromObject(new { message = e.Message }, jSerializer)));
+                jCart.Add("messages", messages);
+            }
+
+            return View("cart", jCart); // Mapper.Map<VMCart>(cart));
+        }
+
+        [System.Web.Http.HttpPost]
+        public async Task<ActionResult> Checkout(string id = null, HttpRequestMessage requestMessage = null)
+        {
+            Cart cart = null;
+            Exception error = null;
+            CommerceRuntime.Contracts.Orders.Order order = null;
+            if (id == null)
+            {
+                cart = (await _cartClient.GetOrCreateCart()).ReadAsSync();
+                id = cart.Id;
+            }
+
+            try
+            {
+                order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
+            }
+            catch (Exception e)
+            {
+                UpdateCartWithExceptionMessage(id, e);
+                error = e;
+            }
+            if (error != null)
+            {
+                return await RenderCartViewWithMessage(new List<Exception> { error });
+            }
+            else
+            {
+                return Redirect(CreateRedirectUrl("/checkout/" + order.Id).ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// not async as called from exception block
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="e"></param>
+        private void UpdateCartWithExceptionMessage(string cartId, Exception e)
+        {
+            var badCart = (_cartClient.GetCart(cartId)).Result.ReadAsSync();
+            badCart.ChangeMessages.Add(new ChangeMessage()
+            {
+                Message = string.Format("{0}{1}", e.Message, (e.InnerException != null)
+                    ? " : " + e.InnerException.Message
+                    : string.Empty),
+                Success = false,
+                SubjectType = "Product",
+            });
+            _cartClient.UpdateCart(badCart).Result.ReadAsSync();
+        }
+
+        private Uri CreateRedirectUrl(string path)
+        {
+            Uri redirectUrl = null;
+            if (_settings.CoreSettings.IsSSLValidationEnabled && this.PageContext.HandledByProxy && !this.PageContext.IsSecure)
+            {
+                var uriBuilder = new UriBuilder(PageContext.Url);
+                uriBuilder.Scheme = "https";
+                uriBuilder.Port = 443;
+                uriBuilder.Path = path;
+                redirectUrl = uriBuilder.Uri;
+            }
+            else
+            {
+                redirectUrl = new Uri(path, UriKind.Relative);
+            }
+            return redirectUrl;
         }
 
        
