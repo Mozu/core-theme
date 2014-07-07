@@ -27,7 +27,7 @@ Ext.define('Taco.view.report.Header', {
             '<label>Customer Profile</label>',
             '<div>Customer since: <strong>{[Ext.util.Format.date(values.createDate)]}</strong></div>',
             '<div>Total orders: <strong>{orderCount}</strong></div>',
-            '<div>Total spent: <strong>{[ Ext.util.Format.currency((values.totalSpent || 0), '', 2) ]}</strong></div>',
+            '<div>Total spent: <strong>{[ Ext.util.Format.currency((values.totalSpent || 0), "", 2) ]}</strong></div>',
         '</div>',
         '<div class="taco-order-detail-header-section origin-data">',
             '{createDate:date("F j, Y  g:i a")}',
