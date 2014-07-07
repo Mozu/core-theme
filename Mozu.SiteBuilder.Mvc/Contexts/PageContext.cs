@@ -197,7 +197,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                return (!_mobileDetectionProvider.IsCurrentRequestTablet &&
+                return (!_mobileDetectionProvider.IsCurrentRequestMobile &&
                         !_mobileDetectionProvider.IsCurrentRequestTablet);
             }
         }
