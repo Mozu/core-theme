@@ -36,7 +36,10 @@ Ext.define('Taco.view.website.widgetEditors.FeaturedProducts', {
             }, {
                 text: 'Price',
                 dataIndex: 'price',
-                format: Ext.util.Format.usMoney
+
+                renderer: function (value) {
+                    return Taco.app.context.getCurrent().formatCurrency( value);
+                },
             }]
         });
 

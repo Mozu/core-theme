@@ -485,7 +485,9 @@ Ext.define('Taco.model.Product', {
         Ext.Ajax.request(options);
 
     },
-
+    formatCurrency: function (value) {
+        return Taco.app.context.findMasterCatalog(this.get('masterCatalogId')).formatCurrency(value);
+    },
     publish: function (cfg) {
 
         var me = this,
@@ -548,7 +550,7 @@ Ext.define('Taco.model.Product', {
                 }, cfg);
         Ext.Ajax.request(options);
     },
-    getContextualValue: function (fieldName) {
+    getContextualValue: function (fieldName, formatCurrency) {
         var level = this, ctx = Taco.app.context.getCurrent();
         if (ctx.contextType == 's') {
 
@@ -556,6 +558,15 @@ Ext.define('Taco.model.Product', {
             if (level == null) {
                 level = this;
             }
+        } else if (ctx.contextType == 'c') {
+
+            level = this.getProductInCatalogs().getById(ctx.id);
+            if (level == null) {
+                level = this;
+            }
+        }
+        if (formatCurrency && level.get(fieldName)!= null ) {
+            return level.formatCurrency(level.get(fieldName));
         }
         return level.get(fieldName);
     },

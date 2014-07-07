@@ -149,6 +149,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return System.IO.File.OpenRead(FullPath);
         }
 
+        public string  ReadAllText()
+        {
+            using (var x = OpenText())
+            {
+                return x.ReadToEnd();
+            }
+        }
         public System.IO.TextReader OpenText()
         {
             return System.IO.File.OpenText(FullPath);

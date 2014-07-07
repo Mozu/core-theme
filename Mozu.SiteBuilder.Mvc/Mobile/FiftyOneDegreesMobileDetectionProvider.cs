@@ -59,5 +59,14 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
             return _context.Request.Browser.IsMobileDevice &&
                     isTablet == string.Equals(_context.Request.Browser["IsTablet"], "true", StringComparison.OrdinalIgnoreCase);
         }
+
+
+        public bool IsCurrentRequestCrawler
+        {
+            get
+            {
+                return string.Equals(_context.Request.Browser["IsCrawler"], "true", StringComparison.OrdinalIgnoreCase);
+            }
+        }
     }
 }

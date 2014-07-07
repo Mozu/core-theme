@@ -18,7 +18,7 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
                 {
                     text: 'Order Amount', dataIndex: 'total',
                     renderer: function (value, metaData, record) {
-                        return Ext.util.Format.usMoney(value);
+                        return record.formatCurrency(value);
                     },
                     flex: 1
                 },

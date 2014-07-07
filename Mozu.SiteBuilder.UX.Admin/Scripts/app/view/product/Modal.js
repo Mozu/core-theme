@@ -74,16 +74,15 @@ Ext.define('Taco.view.product.Modal', {
                 text: 'Price',
                 width: 70,
                 renderer: function (value, metaData, record) {
-                    value = record.getContextualValue('price');
-                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                    return record.getContextualValue('price', true)|| '--';
+                   
                 }
             }, {
                 dataIndex: 'salePrice',
                 text: 'Sale Price',
                 width: 100,
                 renderer: function (value, metaData, record) {
-                    value = record.getContextualValue('salePrice');
-                    return (value || value === 0) ? Ext.util.Format.usMoney(value) : '--';
+                    return record.getContextualValue('salePrice', true) || '--';
                 }
             }]
         });

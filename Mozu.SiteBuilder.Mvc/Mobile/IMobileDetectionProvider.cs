@@ -17,5 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.Mobile
         /// </summary>
         bool IsCurrentRequestTablet { get; }
 
+        bool IsCurrentRequestCrawler { get; }
+
     }
 }

@@ -104,13 +104,19 @@ Ext.define('Taco.shared.view.modal.StoreCredit', {
                         //width: 80,
                         flex: 1,
                         align: "right",
-                        renderer: 'usMoney'
+                        renderer: function (value,metaData,record) {
+                            return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
+                        }
+                        
+                        
                     },
                     {
                         text: 'Balance',
                         dataIndex: 'currentBalance',
                         align: "right",
-                        renderer: 'usMoney',
+                        renderer: function (value, metaData, record) {
+                            return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
+                        },
                         flex: 1
                         //width: 100,
                         /*,

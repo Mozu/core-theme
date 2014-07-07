@@ -331,7 +331,7 @@ Ext.define('Taco.view.product.subform.General', {
             tpl: [
                 "<tpl if='price'>",
                 "<span>Total price of individual products</span><br/>",
-                "<span class='taco-rolledup-price'>{price:usMoney}</span>",
+                "<span class='taco-rolledup-price'>{price}</span>",
                 "</tpl>"
             ]
         });
@@ -368,7 +368,7 @@ Ext.define('Taco.view.product.subform.General', {
             tpl: [
                 "<tpl if='price'>",
                 "<span>Total sale price of individual products</span><br/>",
-                "<span class='taco-rolledup-price'>{price:usMoney}</span>",
+                "<span class='taco-rolledup-price'>{price}</span>",
                 "</tpl>"
             ]
         });

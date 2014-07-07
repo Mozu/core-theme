@@ -27,19 +27,16 @@
         fieldLabel: 'template',
         name: 'template',
         allowBlank: true
-    }, {
-        fieldLabel: 'fungus',
-        name: 'FUNGLE DISCHARGE',
-        allowBlank: true
-    }],
-    initComponent: function() {
-        window.setTimeout(function () { alert('hey jon'); }, 5000);
-        this.callParent(arguments);
+    }
+    ],
+    initComponent: function () {
+        Object.getPrototypeOf(this).initComponent.apply(this, arguments);
     },
 
     setData: function (data) {
-        debugger;
-        this.getForm().setValues(data);
+        if (this.getForm()) {
+            this.getForm().setValues(data);
+        }
         this.data = data;
     },
     getData: function () {

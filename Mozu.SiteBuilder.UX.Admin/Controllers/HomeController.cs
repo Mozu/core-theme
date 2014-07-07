@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -54,10 +55,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
+        private CurrencyRepository _currencyRepository;
 
         public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient , Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
         {
-            
+            _currencyRepository = new CurrencyRepository();
             _logger = logger;
             _entityListsWebApiClient = entityListsWebApiClient.CloneWithoutUserClaims().CloneWithApiContext(x =>
             {
@@ -143,6 +145,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         //    return RazorView("index");
         //}
+        void AppendLocaleInfo()
+        {
+       //     symbol = CultureInfo
+       //.GetCultures(CultureTypes.AllCultures)
+       //.Where(c => !c.IsNeutralCulture)
+       //.Select(culture =>
+       //{
+       //    try
+       //    {
+       //        return new RegionInfo(culture.LCID);
+       //    }
+       //    catch
+       //    {
+       //        return null;
+       //    }
+       //})
+       //.Where(ri => ri != null && ri.ISOCurrencySymbol == ISOCurrencySymbol)
+       //.Select(ri => ri.CurrencySymbol)
+       //.FirstOrDefault();
+        }
        
         async Task<ActionResult> GetIndex()
         {
@@ -214,7 +236,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
             AutoMapper.Mapper.Map(masterCatalogs, taContext);
 
-            taContext.MasterCatalogs.ForEach(mc => (mc.Sites ?? new List<TaContextSite>()).ForEach(site => site.PublishingEnabled = sitePubList.Where(x=> x.Key == site.Id ).Select(x=> x.Value ).FirstOrDefault()   ));
+
+            taContext.Currencies = taContext.MasterCatalogs
+                .SelectMany(x => x.Catalogs)
+                .Select(x => x.Currency)
+                .Distinct()
+                .Select(x =>
+                {
+                    CurrencyCode cc;
+                    return Enum.TryParse(x, out cc) ? _currencyRepository.Get(cc) : null;
+                })
+                .Where(x => x != null).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
+
+           
+            taContext.MasterCatalogs.ForEach(mc => (mc.Sites ?? new List<TaContextSite>()).ForEach(site => site.PublishingEnabled = sitePubList.Where(x => x.Key == site.Id).Select(x => x.Value).FirstOrDefault()));
+
+            
+
 
             this.ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
             this.ViewData["taContext"] = taContext;

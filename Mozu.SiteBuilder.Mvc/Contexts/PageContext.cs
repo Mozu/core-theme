@@ -11,6 +11,7 @@ using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
@@ -96,12 +97,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISettings _settings;
+        private readonly IMobileDetectionProvider _mobileDetectionProvider;
 
-        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings)
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
             _settings = settings;
+            _mobileDetectionProvider = mobileDetectionProvider;
             this.IsEditMode = _apiContext.IsEditMode;
             IEnumerable<string> values;
 
@@ -173,6 +176,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string PageTypeId { get; set; }
         public List<KeyValuePair<string, string>> ShippingCountries { get; set; }
         public List<KeyValuePair<string, string>> BillingCountries { get; set; }
+
+
+        public bool IsCrawler
+        {
+            get { return _mobileDetectionProvider.IsCurrentRequestCrawler; }
+        }
 
 
         public CmsPageContext CmsContext {get;set;}

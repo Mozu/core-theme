@@ -47,6 +47,10 @@
 
     updateContentPublishingMode: function (value) {
         console.log('updateContentPublishingMode for Catalog ID', this.id, ' -> ', value);
-    }
+    },
 
+    formatCurrency: function (value) {
+        return Taco.app.context.formatCurrencyFromCode(this.currency, value);
+    },
+    
 });

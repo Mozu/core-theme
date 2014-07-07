@@ -54,9 +54,10 @@ Ext.define('Taco.shared.view.modal.Wishlist', {
                 },
                 items: [
                     { text: 'Product Code', dataIndex: 'product', renderer: function (product) { return product.productCode } },
-                    { text: 'Name', dataIndex: 'product', renderer: function (product) { return product.name }, flex:1 },
-                    { text: 'Price', dataIndex: 'product', renderer: function (product) { var value = product.price.price; return value ? Ext.util.Format.usMoney(value) : ""; } },
-                    { text: 'Sale Price', dataIndex: 'product', renderer: function (product) { var value = product.price.saleprice; return value ? Ext.util.Format.usMoney(value) : ""; } },
+                    { text: 'Name', dataIndex: 'product', renderer: function (product) { return product.name }, flex: 1 },
+                    //really need site context to format price properly... assuming its been set as the currenct to call whishlist
+                    { text: 'Price', dataIndex: 'product', renderer: function (product) { var value = product.price.price; return value ? Taco.app.context.getCurrent().formatCurrency(value) : ""; } },
+                    { text: 'Sale Price', dataIndex: 'product', renderer: function (product) { var value = product.price.saleprice; return value ? Taco.app.context.getCurrent().formatCurrency(value) : ""; } },
                     { text: 'Quantity', dataIndex: 'quantity' },
                     { text: 'Purchasable', dataIndex: 'purchasableStatusType' },
                     { text: 'Date Added', dataIndex: 'auditInfo', renderer: function (auditinfo) { return Ext.util.Format.date(auditinfo.createDate, 'm/d/Y'); } }
