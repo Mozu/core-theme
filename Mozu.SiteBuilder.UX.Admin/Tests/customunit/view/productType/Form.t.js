@@ -115,6 +115,38 @@
                 );
             });
 
+            t.xit("Should disable bundle type when creating digital credit/gift card goods type.", function (t) {
+
+                m = {};
+
+                t.chain(
+
+                    function arrange(next) {
+                        setUp({}, next);
+                    },
+
+                    function makeSelections(next) {
+                        setName('Gift Card');
+                        selectDigitalCreditCheckbox(next);
+                    },
+
+                    function verifyProductBundleIsDisabled(next) {
+                        //t.is(m.form.down('#productBundleItemId').isDisabled(), true, 'Product Bundle should be disabled after selecting Digital goods type');
+                        next();
+                    },
+
+                    function saveForm(next) {
+                        t.is(m.record.get('goodsType'), 'Physical', "Before save, goods type should be 'Physical'");
+                        m.form.save();
+                        next();
+                    },
+
+                    function assert(next) {
+                        t.is(m.record.get('goodsType'), 'DigitalCredit', "After save, goods type should be 'DigitalCredit'");
+                       // t.is(m.record.get('productUsages').indexOf('Bundle'), -1, 'Should not contain Product Bundle after saving');
+                    }
+                );
+            });
 
         });
 
