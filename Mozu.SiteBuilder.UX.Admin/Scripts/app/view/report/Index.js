@@ -110,7 +110,7 @@ Ext.define('Taco.view.report.Index', {
                     if (displayFormat == 'Number')
                         return Ext.util.Format.number(val, "0,000");
                     else if (displayFormat == 'Currency')
-                        return Ext.util.Format.usMoney(val);
+                        return Ext.util.Format.currency(val, '', 2);
                     else if (displayFormat == 'ShortDate') {
                         if (!val || Ext.isNumeric(val)) {
                             return val;
