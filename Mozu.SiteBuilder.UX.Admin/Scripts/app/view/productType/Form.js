@@ -6,21 +6,21 @@
 Ext.define('Taco.view.productType.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Taco.core.ux.form.field.MultiSelect', 
+        'Taco.core.ux.form.field.MultiSelect',
         'Taco.core.ux.BoxReorderer',
         'Taco.model.ProductTypeAttribute',
         'Taco.model.ProductType',
         'Taco.view.productType.AttributeGroup'
     ],
-    
+
     ui: 'subform',
 
     title: 'Product Type',
 
     attributeItemTpl: [
         '<tpl for=".">',
-            '<span class="', Taco.baseCSSPrefix, 'draghandle"></span>',
-            '<span class="', Taco.baseCSSPrefix, 'attribute-item-header-text">{attributeFQN}</span>',
+        '<span class="', Taco.baseCSSPrefix, 'draghandle"></span>',
+        '<span class="', Taco.baseCSSPrefix, 'attribute-item-header-text">{attributeFQN}</span>',
         '</tpl>'
     ],
 
@@ -33,10 +33,11 @@ Ext.define('Taco.view.productType.Form', {
             isExisting = Ext.isNumeric(prodTypeId);
 
         me.stores = me.stores || [];
-        me.stores.push(me.record.getOptions(), me.record.getExtras(), me.record.getProperties());
+        me.stores.push(options, extras, properties);
 
         me.productBundleUsageType = Ext.create('Ext.form.field.Checkbox', {
             name: "productUsagesField",
+            itemId: 'productBundleItemId',
             boxLabel: "Product Bundle",
             inputValue: "Bundle"
         });
@@ -92,67 +93,75 @@ Ext.define('Taco.view.productType.Form', {
         });
 
         me.items = [{
-            xtype: 'textfield',
-            itemId: 'nameItemId',
-            fieldLabel: 'Name',
-            labelPosition: 'top',
-            labelSeparator: '',
-            width: 700,
-            maxLength: 50,
-            emptyText: 'Enter a Product Type Name',
-            name: 'name',
-            allowBlank: false
-        },
-        {
-            xtype: "checkboxgroup",
-            columnWidth: .5,
-            name: "goodsTypeGroup",
-            layout: {
-                layout: "hbox"
+                xtype: 'textfield',
+                itemId: 'nameItemId',
+                fieldLabel: 'Name',
+                labelPosition: 'top',
+                labelSeparator: '',
+                width: 700,
+                maxLength: 50,
+                emptyText: 'Enter a Product Type Name',
+                name: 'name',
+                allowBlank: false
             },
-            
-            //listeners: {
-            //    change: {
-            //        fn: function(group, newValue, oldValue, eOpts) {
-            //            me.onUsageTypeChange(newValue);
-            //        },
-            //        scope: me
-            //    }
-            //},
-            allowBlank: true,
-            columns: 1,
-            defaults: {
-                disabled: isExisting
-            },
-            items: [
-                {
-                    xtype: "checkboxfield",
-                    name: "goodsTypeField",
-                    itemId: 'digitalCreditItemId',
-                    boxLabel: "This Product Type is a Digital Gift Card",
-                    inputValue: "DigitalCredit"
-                }
-            ]
-        },
+            me.productUsagesCheckboxGroup,
+            {
+                xtype: 'taco.producttype.attributegroup',
+                itemId: "optionsAttributeGroup",
+                productType: me.record,
+                type: 'options'
 
-        me.productUsagesCheckboxGroup,    
-        {
-            xtype: 'taco.producttype.attributegroup',
-            itemId: "optionsAttributeGroup",
-            productType: me.record,
-            type: 'options'
-            
-        }, {
-            xtype: 'taco.producttype.attributegroup',
-            itemId: "extrasAttributeGroup",
-            productType: me.record,
-            type: 'extras'
-        }, {
-            xtype: 'taco.producttype.attributegroup',
-            itemId: "propertiesAttributeGroup",
-            productType: me.record,
-            type: 'properties'
-        }];
+            }, {
+                xtype: 'taco.producttype.attributegroup',
+                itemId: "extrasAttributeGroup",
+                productType: me.record,
+                type: 'extras'
+            }, {
+                xtype: 'taco.producttype.attributegroup',
+                itemId: "propertiesAttributeGroup",
+                productType: me.record,
+                type: 'properties'
+            }, {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Advanced',
+                layout: "column",
+                margin: "0 0 20 0",
+                items: [
+                    {
+                        xtype: "checkboxgroup",
+                        columnWidth: .5,
+                        name: "goodsTypeGroup",
+                        layout: {
+                            layout: "hbox"
+                        },
+                        allowBlank: true,
+                        columns: 1,
+                        defaults: {
+                            disabled: isExisting
+                        },
+                        items: [
+                            {
+                                xtype: "checkboxfield",
+                                name: "goodsTypeField",
+                                itemId: 'digitalCreditItemId',
+                                boxLabel: "This Product Type is a Digital Gift Card",
+                                inputValue: "DigitalCredit",
+                                handler: function(el, isChecked) {
+                                    if (isChecked) {
+                                        if (me.productBundleUsageType.getValue()) {
+                                            me.productBundleUsageType.setValue(false);
+                                        }
+                                        me.productBundleUsageType.disable();
+                                    } else {
+                                        me.productBundleUsageType.enable();
+                                    }
+                                }
+                            }
+                        ]
+                    }
+               ]
+            }
+        ];
             
        
         me.callParent(arguments);
