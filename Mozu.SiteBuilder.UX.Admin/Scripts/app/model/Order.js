@@ -649,7 +649,7 @@ Ext.define('Taco.model.Order', {
         return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
     },
     getCurrencyCode: function () {
-        return Taco.app.context.findSite(this.get('siteId')).currency;
+        return Taco.app.context.findSite(this.get('siteId')).currencyCode;
     },
     getAttributes: function() {
         return this.getOrCreateHasManyStore({

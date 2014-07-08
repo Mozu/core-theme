@@ -94,7 +94,9 @@ Ext.define('Taco.core.context.TaContext', {
                 'x-vol-tenant': this.id,
                 'x-vol-master-catalog': this.getMasterCatalogId(),
                 'x-vol-catalog': this.getCatalogId(),
-                'x-vol-site': this.getSiteId()
+                'x-vol-site': this.getSiteId(),
+                'x-vol-locale': this.getCurrent().localeCode,
+                'x-vol-currency':this.getCurrent().currencyCode
             };
         Ext.Object.each(volHeaders, function (key, value) {
             if (value) {

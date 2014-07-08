@@ -467,6 +467,7 @@ Ext.define('Taco.model.Product', {
         }, {
             name: 'masterCatalogId',
             type: 'int',
+            useNull:true,
             persist:false
         }
 
@@ -490,11 +491,14 @@ Ext.define('Taco.model.Product', {
         return this.getMasterCatalog().formatCurrency(value);
     },
     getCurrencyCode: function () {
-        return Taco.app.context.findMasterCatalog(this.get('masterCatalogId')).currency;
+        return this.getMasterCatalog().currencyCode;
     },
     getMasterCatalog: function () {
-        
-        return Taco.app.context.findMasterCatalog(this.get('masterCatalogId'));
+        var mc = this.get('masterCatalogId');
+        if (mc == null) {
+            return Taco.app.context.getMasterCatalog();
+        }
+        return Taco.app.context.findMasterCatalog(mc);
     },
     publish: function (cfg) {
 

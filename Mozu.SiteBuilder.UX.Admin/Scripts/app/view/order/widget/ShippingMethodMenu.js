@@ -101,7 +101,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                             // need to process the runtime rates and convert them into menu consumable data;
                             this.runtimeShippingMethodsStore.each(function (record) {
                                 var itemConfig = Ext.clone(record.data);
-                                itemConfig.text = itemConfig.shippingMethodName + "<span class='taco-shippingmethod-price'>" + Ext.util.Format.currency(itemConfig.price) + "</span>";
+                                itemConfig.text = itemConfig.shippingMethodName + "<span class='taco-shippingmethod-price'>" + Taco.app.context.getCurrent().formatCurrency(itemConfig.price) + "</span>";
                                 // remove the id from the data as it will cause conflicts between the duplicated items when they are configured;
                                 delete itemConfig.id;
                                 me.runtimeRates.push(Ext.clone(itemConfig));

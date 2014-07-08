@@ -51,7 +51,7 @@
         return this.publishingEnabled;
     },
     formatCurrency: function (value) {
-        return Taco.app.context.formatCurrencyFromCode(this.currency, value);
+        return Taco.app.context.formatCurrencyFromCode(this.currencyCode, value);
     },
     updateContentPublishingMode: function (value) {
         this.publishingEnabled = value == 'Pending';
