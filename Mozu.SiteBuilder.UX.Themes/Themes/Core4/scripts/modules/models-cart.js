@@ -8,7 +8,8 @@
             return img || { ImageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
         },
         initialize: function() {
-            this.set({Url: "/product/" + this.get("productCode")})
+            var url = "/product/" + this.get("productCode");
+            this.set({ Url: url, url: url });
         }
     }),
 
