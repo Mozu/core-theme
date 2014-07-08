@@ -147,6 +147,8 @@ Ext.define('Taco.view.order.Split', {
 
     onRecordChange: function (record) {
        
+
+        Ext.suspendLayouts();
         this.getEast().removeAll(true);
         if (record) {
             this.getEast().add(Ext.create('Taco.view.order.Edit', {
@@ -154,7 +156,7 @@ Ext.define('Taco.view.order.Split', {
             }));
         }
         this.callParent(arguments);
-      
+        Ext.resumeLayouts(true);
        
     },
 
