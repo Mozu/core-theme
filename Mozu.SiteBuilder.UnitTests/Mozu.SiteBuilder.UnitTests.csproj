@@ -419,6 +419,7 @@
     <None Include="Diagrams\Admin\Api\cdCapabilities.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdOrderItem.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdReturns.cd" />
+    <None Include="Diagrams\Admin\Api\Models\ProductModels\cdAttribute.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdLocation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\Product.cd" />
