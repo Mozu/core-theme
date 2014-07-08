@@ -1925,6 +1925,7 @@
     <Content Include="Tests\Mocks\Entities\Editors\pages.js" />
     <Content Include="Tests\Mocks\Entities\Editors\mozu.extensiblity.subnavlinks.js" />
     <Content Include="Tests\Mocks\Entities\Editors\phipps.people.js" />
+    <None Include="Tests\Mocks\Mystic1\EmptyCollection.json" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1961,6 +1962,7 @@
     <Content Include="Tests\unit\view\customers\modal\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
     <Content Include="Tests\unit\view\customers\subform\information.t.js" />
+    <Content Include="Tests\unit\view\order\modal\AddGiftCard.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.js" />
     <Content Include="Tests\unit\view\order\widget\PaymentPanel.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
@@ -2042,6 +2044,7 @@
     <Content Include="Tests\Web.config" />
     <Content Include="Tests\Automation\CIRunner.bat" />
     <Content Include="Tests\Mocks\Mystic1\Orders2Payments.json" />
+    <Content Include="Tests\Mocks\Mystic1\StoreCredits1.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />

@@ -724,10 +724,10 @@
       "unpickedupItems": [],
       "availableActions": [],
       "authorizationInfo": {
-        "totalAmount": 0,
-        "amountCollected": 0,
-        "captureAmount": 0
-      },
+                    "amountCollected": 1045.85,
+                    "totalAmount": 1045.85,
+                    "captureAmount": 0
+                },
       "orderSummary": {
         "amountCollected": 0,
         "balance": 0,

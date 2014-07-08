@@ -17,7 +17,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.store.StoreCredits'
     ],
 
-    title: 'Payment & Billing Information',
+    title: 'Payments',
 
     config : {
         // order model
@@ -98,10 +98,11 @@ Ext.define('Taco.view.order.subform.Payment', {
                 addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment'),
                 requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck'),
                 addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual'),
-                addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard')
+                addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard'),
+                addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard')
             };
 
-        return [actions.addCreditCard, actions.requestCheck, actions.addManualCreditCard, actions.addGiftCard];
+        return Ext.Object.getValues(actions);
     },
     
     // initialize the views and actions menu
@@ -142,19 +143,31 @@ Ext.define('Taco.view.order.subform.Payment', {
         }
     },
 
+    setHeaderTitle: function(status) {
+        var header = this.getHeader();
+        if (header) {
+            header.setTitle('Status: ' + status);
+        } else {
+            this.on('afterrender', function() {
+                this.setHeaderTitle(status);
+            }, this, { single: true });
+        }
+
+    },
+
     initHeader: function (){
         var me = this,
            orderStatus = me.record.get('orderStatus'),
            canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
            paymentAuthInfo = me.record.get('authorizationInfo'),
-           total = me.record.get('total'),
+           total = paymentAuthInfo.totalAmount,
            amountCollected = paymentAuthInfo && paymentAuthInfo.amountCollected,
            paymentStatus = "Unpaid";
 
         if (amountCollected > 0  && amountCollected >= total) paymentStatus = "Fully Paid";
         if (amountCollected < total && amountCollected > 0) paymentStatus = "Partially Paid";
 
-        me.setTitle('Status: ' + paymentStatus);
+        this.setHeaderTitle(paymentStatus);
 
         Ext.Object.each(me.paymentActions, function(k, paymentAction) {
             paymentAction.setDisabled(!canAddPayment);
