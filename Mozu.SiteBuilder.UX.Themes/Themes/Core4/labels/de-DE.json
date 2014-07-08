@@ -11,18 +11,18 @@
     "october"   : "Oktober",
     "november"   : "November",
     "december"   : "Dezember",
-    "shortJanuary"   : "Jan", // ?
-    "shortFebruary"   : "Februar", // ?
-    "shortMarch"   : "Mar", // ?
-    "shortApril"   : "April", // ?
-    "shortMay"   : "Mai", // ?
-    "shortJune"   : "Juni", // ?
-    "shortJuly"   : "Juli", // ?   
-    "shortAugust"   : "August", // ?
-    "shortSeptember"   : "September", // ?
-    "shortOctober"   : "Oktober", // ?
-    "shortNovember"   : "November", // ?
-    "shortDecember"   : "Dezember", // ?
+    "shortJanuary"   : "Jan",
+    "shortFebruary"   : "Februar",
+    "shortMarch"   : "Mar",
+    "shortApril"   : "April",
+    "shortMay"   : "Mai",
+    "shortJune"   : "Juni",
+    "shortJuly"   : "Juli",   
+    "shortAugust"   : "August",
+    "shortSeptember"   : "September",
+    "shortOctober"   : "Oktober",
+    "shortNovember"   : "November",
+    "shortDecember"   : "Dezember",
     "sunday"   : "Sonntag",
     "monday"   : "Montag",
     "tuesday"   : "Dienstag",
@@ -38,10 +38,10 @@
     "shortFriday"   : "Fr",
     "shortSaturday"   : "Sa",
     "logOut"   : "Abmeldung",
-    "logIn"   : "Einloggen", //	Anmeldung? Anmelden?
+    "logIn"   : "Einloggen",
     "resetPassword"   : "Passwort zurücksetzen",
     "signUp"   : "Anmeldung",
-    "viewCart"   : "Einkaufswagen", //	Warenkorb anzeigen
+    "viewCart"   : "Einkaufswagen",
     "search"   : "Suche",
     "of"   : "von",
     "from"   : "aus",
@@ -59,7 +59,7 @@
     "subtotal"   : "Zwischensumme",
     "tax"   : "Steuer",
     "shippingHandling"   : "Versandkosten",
-    "additionalHandling"   : "Zusätzliche Handhabung", //	Gebühren für die Handhabung
+    "additionalHandling"   : "Zusätzliche Handhabung",
     "digitalCreditTotal"   : "Weniger   : Geschenkkarten",
     "digitalCreditSubtractFromOrderPrefix"   : "",
     "digitalCreditSubtractFromOrderSuffix"   : "",
@@ -362,8 +362,8 @@
     "upc"   : "UPC",
     "localStores"   : "Lokale Geschäfte",
     "findAtLocalStore"   : "Finden an einem lokalen Speicher",
-    "locationWait"   : "Wir suchen nach lokalen Geschäften suchen. Ihr Browser kann für die Erlaubnis, Ihren Standort zu fragen. Klicken Sie auf \ LINK \ to sort the search results by distance.",
-    "locationWaitProd"   : "Wir suchen lokale Geschäfte für <strong> {0} </ strong>. Ihr Browser kann für die Erlaubnis, Ihren Standort zu fragen. Klicken Sie auf \ LINK \  to sort the search results by distance.",
+    "locationWait"   : "Wir suchen nach lokalen Geschäften suchen. Ihr Browser kann für die Erlaubnis, Ihren Standort zu fragen. Klicken Sie auf \\ LINK \\ to sort the search results by distance.",
+    "locationWaitProd"   : "Wir suchen lokale Geschäfte für <strong> {0} </ strong>. Ihr Browser kann für die Erlaubnis, Ihren Standort zu fragen. Klicken Sie auf \\ LINK \\  to sort the search results by distance.",
     "storePickup"   : "Shop Abholen",
     "outOfStock"   : "Ausverkauft",
     "availableNow"   : "Jetzt erhältlich",
