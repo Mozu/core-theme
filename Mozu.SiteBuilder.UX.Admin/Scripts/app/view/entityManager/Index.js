@@ -10,7 +10,7 @@ Ext.define('Taco.view.entityManager.Index', {
         navHeader: 'Taco.core.ux.mixins.NavHeader',
         permissions: 'Taco.core.ux.mixins.Permissions'
     },
-    alias: 'widget.entityManagerGrid',
+    alias: 'widget.entityManager',
     requires: [
         'Taco.core.ux.form.Form',
         'Taco.view.entityManager.Lists',

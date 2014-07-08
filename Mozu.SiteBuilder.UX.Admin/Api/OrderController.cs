@@ -35,6 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private ICreditWebApiClient _creditWebApiClient;
         private ISiteBuilderApiContext _ctx;
+        private readonly CustomerController _customerController;
 
         /*
          * All order item operations have an updateMode attribute.
@@ -47,13 +48,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings, ISiteBuilderApiContext ctx)
+        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings, ISiteBuilderApiContext ctx, CustomerController customerController)
         {
             _settings = settings;
             _orderWebApiClient = orderWebApiClient;
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _creditWebApiClient = creditWebApiClient;
             _ctx = ctx;
+            _customerController = customerController;
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
@@ -67,8 +69,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
                 var order = (await _orderWebApiClient.GetOrder(pagingParams.id, draft)).ReadAsSync();
+
                 if (order != null)
-                    return List2<Order>( order.Map<Order>() );
+                {
+                    var single = order.Map<Order>();
+                    if (single.CustomerId.HasValue)
+                    {
+                        try
+                        {
+                            var custTask = await _customerController.List(new PagingParamaters() {id = single.CustomerId.Value.ToString()}, new FilterCollection());
+                            if (custTask.Success)
+                            {
+                                single.Customer = custTask.Items.FirstOrDefault();
+                            }
+                            
+                        }
+                        catch
+                        {
+                        }
+                        
+                    }
+                    return List2<Order>(single);
+                }
                 else
                     throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
             }
