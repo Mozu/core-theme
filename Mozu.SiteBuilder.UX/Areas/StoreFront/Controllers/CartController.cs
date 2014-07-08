@@ -78,12 +78,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
 
             PageContext.PageType = "cart";
-           
-            
-            return (await RenderCartViewWithMessage(new List<Exception>()));
+
+
+            return (await RenderCartViewWithMessage(null));
         }
 
-        private async Task<ActionResult> RenderCartViewWithMessage(List<Exception> errors)
+
+        private async Task<ActionResult> RenderCartViewWithMessage(Exception error)
         {
             var cart = (await _cartClient.GetOrCreateCart()).ReadAsAsync().Result;
             LocationCollection locations = null;
@@ -115,10 +116,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            if (errors.Count > 0)
+            if (error != null)
             {
                 var messages = new JArray();
-                errors.ForEach(e => messages.Add(JObject.FromObject(new { message = e.Message }, jSerializer)));
+                if (PageContext.IsDebugMode)
+                {
+                    throw error;
+                }
+                else
+                {
+                    messages.Add(JObject.FromObject(new { message = error.Message }, jSerializer));
+                }
                 jCart.Add("messages", messages);
             }
 
@@ -148,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             if (error != null)
             {
-                return await RenderCartViewWithMessage(new List<Exception> { error });
+                return await RenderCartViewWithMessage(error);
             }
             else
             {
