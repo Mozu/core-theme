@@ -287,25 +287,10 @@ Ext.define('Taco.view.order.widget.Package', {
         );
 
 
-        if (me.enabledMarkAsShippedButton) {
-
-            me.markAsShippedButton = Ext.create("Ext.button.Button", {
-                text: 'Mark As Shipped',
-                ui: 'action',
-                margin: "0 2px 0 0",
-                scale: 'medium',
-                handler: me.grid.markAsShipped,
-                scope: me
-            });
-        
-            titleRow.items.push(me.markAsShippedButton);
-        }
 
 
 
-
-
-        if (me.enableShippingMethodMenu) {
+        if (me.enableShippingMethodMenu && false) {
 
 
             // note: left this behavior in the grid to minimize bugs considering the late movement of this button to the outer class;
@@ -353,6 +338,22 @@ Ext.define('Taco.view.order.widget.Package', {
         var shippingMethodRecord = shippingMethodStore.getById(me.packageData.shippingMethodCode);
 
 
+
+        if (me.enabledPackingSlipButton) {
+            me.packingSlipButton = Ext.create("Ext.button.Button", {
+                text: 'Print Packing Slip',
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                handler: function () {
+                    
+                    me.viewPackingSlip()
+                },
+                scope: me
+            });            
+            titleRow.items.push(me.packingSlipButton);
+        }
+
         if (me.enableShippingLabelButton && shippingMethodRecord && shippingMethodRecord.get("rateProvider")!="custom") {
 
             me.shippingLabelButton = Ext.create("Ext.button.Button", {
@@ -371,21 +372,6 @@ Ext.define('Taco.view.order.widget.Package', {
 
         }
 
-        if (me.enabledPackingSlipButton) {
-            me.packingSlipButton = Ext.create("Ext.button.Button", {
-                text: 'View Packing Slip',
-                ui: 'action',
-                margin: "0 2px 0 0",
-                scale: 'medium',
-                handler: function () {
-                    
-                    me.viewPackingSlip()
-                },
-                scope: me
-            });            
-            titleRow.items.push(me.packingSlipButton);
-        }
-
 
 
 
@@ -397,13 +383,28 @@ Ext.define('Taco.view.order.widget.Package', {
                     ui: "action",
                     scale: "medium",
                     //margin: "0 2px 0 0",
-                    text: "Cancel Shipment",
+                    text: "Cancel",
                     handler: function () {
                         this.deletePackage()
                     },
                     scope: this
                 }
             )
+        }
+
+
+        if (me.enabledMarkAsShippedButton) {
+
+            me.markAsShippedButton = Ext.create("Ext.button.Button", {
+                text: 'Mark As Shipped',
+                ui: 'action',
+                margin: "0 2px 0 0",
+                scale: 'medium',
+                handler: me.grid.markAsShipped,
+                scope: me
+            });
+        
+            titleRow.items.push(me.markAsShippedButton);
         }
 
 

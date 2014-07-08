@@ -7,7 +7,6 @@ Ext.define('Taco.view.order.subform.Shipping', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.view.order.subform.ShippingSimple',
-        'Taco.view.order.widget.ShippingItemGrid',
         'Taco.view.order.widget.Package',
         'Taco.view.order.widget.UnpackagedItems',
         'Taco.store.PackagingTypes'
