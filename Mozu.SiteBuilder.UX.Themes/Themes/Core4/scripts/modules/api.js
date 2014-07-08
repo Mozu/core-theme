@@ -12,6 +12,8 @@ define(['sdk', 'jquery', 'hyprlive'], function(Mozu, $, Hypr) {
              .MasterCatalog(headers['x-vol-master-catalog'])
              .DataviewMode(headers['x-vol-dataview-mode'] || 'Live')
              .Site(headers['x-vol-site'])
+             .Locale(headers['x-vol-locale'])
+             .Currency(headers['x-vol-currency'])
              .AppClaims(headers['x-vol-app-claims'])
              .UserClaims(headers['x-vol-user-claims'])
              .api();
