@@ -20,6 +20,7 @@ Ext.define('Taco.view.order.modal.AuthAndCapture', {
             },
             items: [{
                 xtype: 'currencyfield',
+                currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
                 fieldLabel: 'Amount to Authorize and Capture',
                 selectOnFocus: true,

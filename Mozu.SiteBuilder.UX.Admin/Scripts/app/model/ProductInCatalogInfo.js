@@ -6,7 +6,7 @@
 
 Ext.define('Taco.model.ProductInCatalogInfo', {
     extend: 'Taco.core.data.Model',
-    //requires:['Taco.model.Product'],
+   
     fields:
     [
         {
@@ -192,8 +192,11 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
     
     },
 
+    getCatalog: function () {
+        return Taco.app.context.findCatalog(this.getId());
+    },
     formatCurrency: function (value) {
-        return Taco.app.context.findCatalog(this.getId()).formatCurrency(value);
+        return this.getCatalog().formatCurrency(value);
     },
 
     getUnfilteredCategoryStore: function () {

@@ -56,6 +56,7 @@ Ext.define('Taco.view.storeCredit.Form', {
 
         me.amount = Ext.widget({
             xtype: 'currencyfield',
+        
             name: 'currentBalance',
             fieldLabel: 'Amount',
             allowBlank: false

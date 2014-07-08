@@ -175,7 +175,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             xtype: "currencyfield",
             spinUpEnabled: false,
             spinDownEnabled: false,
-            emptyText: "$0.00",
+            emptyText: this.record.formatCurrency(0),
             width: fieldWidth,
             selectOnFocus: true,
             minValue:0,
@@ -198,7 +198,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
 
         this.shippingAdjustmentFieldInput = Ext.widget({
-            emptyText: "$0.00",
+           
+            currencyCode : this.record.getCurrencyCode(),
             xtype: "currencyfield",            
             spinUpEnabled: false,
             spinDownEnabled: false,

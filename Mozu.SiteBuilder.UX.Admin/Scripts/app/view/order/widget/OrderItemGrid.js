@@ -396,7 +396,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     align: "right",
-                    renderer: 'usMoney',
+                    renderer: function (value) {
+                        return me.record.formatCurrency(value);
+                    },
                     editor: (this.getEditMode()) ? {
                         xtype: 'numberfield',
                         showBorder:(this.getEditMode()),
@@ -442,7 +444,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     width: this.getRowTotalColumnWidth(),
                     sortable: false,
                     align: "right",
-                    renderer: 'usMoney',
+                    
+                    renderer: function (value) {
+                        return me.record.formatCurrency(value);
+                    },
                     dataIndex: 'displaySubtotal'
                 },
                 {

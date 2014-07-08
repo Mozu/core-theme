@@ -18,6 +18,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
             },
             items: [{
                 xtype: 'currencyfield',
+                currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
                 itemId : 'amount',
                 fieldLabel: 'Amount',

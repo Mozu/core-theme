@@ -831,7 +831,8 @@ Ext.define('Taco.view.order.widget.Package', {
                 fulfillmentContact: this.record.data.fulfillmentContact,
                 payments: this.record.data.payments,
                 order: this.record.data,
-                siteName: Taco.app.context.getSite().name
+                siteName: Taco.app.context.getSite().name,
+                orderRecord:this.record
             },
             win = window.open(),
             tpl;
@@ -912,8 +913,8 @@ Ext.define('Taco.view.order.widget.Package', {
                         '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
                         '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
                         '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{unitPrice:usMoney}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{total:usMoney}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{[values.orderRecord.formatCurrency(values.unitPrice)]}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{[values.orderRecord.formatCurrency(values.total)]}</td>',
                     '</tr></tpl>',
                 '</tbody></table>',
             '</div>'

@@ -26,7 +26,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) =>  x.Value  is string 
                     ? new DC.AttributeValueLocalizedContent
                       {
-                          LocaleCode = "??-??",
+                          //adding back hard codings per Jon roeder.
+                          LocaleCode = "en-US",
                           Value = x.Value as string
                       } 
                     : null))
@@ -219,8 +220,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     Content = new DC.AttributeLocalizedContent
                     {
                         Value = (source.Name ?? "").Trim()
-                        //,
-                        //LocaleCode = "??-??",
+                        ,
+                        //adding back hard codings per Jon roeder.
+                        LocaleCode = "en-US",
                     },
                     InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
                     DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),

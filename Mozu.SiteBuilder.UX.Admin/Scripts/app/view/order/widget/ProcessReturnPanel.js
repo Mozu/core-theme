@@ -211,7 +211,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 },
                 {
                     text: 'Amount Credited',
-                    renderer: Ext.util.Format.usMoney,
+                  
+                    renderer: function (value) {
+                        return me.order.formatCurrency(value);
+                    },
                     draggable: false,
                     sortable: false,
                     resizable: false,
@@ -256,10 +259,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             data: me.record.data
         });
         
-        me.totalLossAmount = Ext.create('Taco.core.ux.form.UnitField', {
+        me.totalLossAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'totalLossAmount',
-            unitString: '$',
             
+            currencyCode: Taco.app.context.getCurrent().currency,
             forcePrecision:true,
             unitAtEnd:false,
             fieldLabel: 'Total Loss',

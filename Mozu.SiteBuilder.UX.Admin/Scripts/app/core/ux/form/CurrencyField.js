@@ -3,12 +3,97 @@
  * Numeric input field for currencies.
  */
 Ext.define('Taco.core.ux.form.CurrencyField', {
-    extend: 'Taco.core.ux.form.UnitField',
+    extend: 'Ext.form.field.Number',
     alias: 'widget.currencyfield',
     cls: Taco.baseCSSPrefix + 'currencyfield',
-
+    hideTrigger:true,
     unitAtEnd: false,
-    unitString: '$',
+    unitString: ' ',
+    significantDecimalDigits: 2,
     // force the field to have the same number of decimal places as are defined in decimalPrecision; defualts to two
-    forcePrecision:true
+    forcePrecision: true,
+    currencyCode: null,
+
+    initComponent: function () {
+        var me = this, currency;
+        if (me.currencyCode) {
+            currency = Taco.app.context.currencies[me.currencyCode.toLowerCase()];
+            me.unitAtEnd = false;
+            me.unitString = currency.symbol;
+            me.significantDecimalDigits = currency.significantDecimalDigits;
+        }
+        me.callParent(arguments);
+    },
+
+
+
+
+ 
+
+    rawToValue: function (rawValue) {
+        var value = this.fixPrecision(this.parseValue(rawValue));
+        if (value === null) {
+            value = rawValue || null;
+        }
+        return value;
+    },
+
+    valueToRaw: function (value) {
+        var me = this,
+            decimalSeparator = me.decimalSeparator;
+        value = me.parseValue(value);
+        value = me.fixPrecision(value);
+        value = Ext.isNumber(value) ? value : parseFloat(String(value).replace(decimalSeparator, '.').replace(me.unitString, ''));
+        value = isNaN(value) ? '' :  Ext.util.Format.currency(value, this.unitString, this.significantDecimalDigits, this.unitAtEnd);
+        
+
+        return value;
+    },
+
+
+
+    parseValue: function (value) {
+        value = parseFloat(String(value).replace(this.decimalSeparator, '.').replace(this.unitString, ''));
+        return isNaN(value) ? null : value;
+    },
+    
+
+
+    getErrors: function (value) {
+        var me = this,
+            errors =  me.superclass.superclass.getErrors.call(this,arguments),
+            format = Ext.String.format,
+            num;
+
+        value = Ext.isDefined(value) ? value : this.processRawValue(this.getRawValue());
+
+        if (value.length < 1) { // if it's blank and textfield didn't flag it then it's valid
+            return errors;
+        }
+
+        value = String(value).replace(me.decimalSeparator, '.').replace(me.unitString, '');
+
+        if (isNaN(value)) {
+            errors.push(format(me.nanText, value));
+        }
+
+        num = me.parseValue(value);
+
+        if (me.minValue === 0 && num < 0) {
+            errors.push(this.negativeText);
+        }
+        else if (num < me.minValue) {
+            errors.push(format(me.minText, me.minValue));
+        }
+
+        if (num > me.maxValue) {
+            errors.push(format(me.maxText, me.maxValue));
+        }
+
+
+        return errors;
+    },
+
+
+
 });

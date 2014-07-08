@@ -62,7 +62,7 @@ Ext.define('Taco.view.discount.Index', {
 
                 // amount
                 if (value == "Amount") {
-                    return "$" + record.get("amount") + " OFF";
+                    return Taco.app.context.getCurrent().formatCurrency( record.get("amount") ) + " OFF";
                 }
 
                 // freeShipping
@@ -97,7 +97,7 @@ Ext.define('Taco.view.discount.Index', {
                 }
 
                 if (record.get("targetType") == "Order") {
-                    val += " Min. Order ($" + record.get("minimumOrderAmount") + ")";
+                    val += " Min. Order (" + Taco.app.context.getCurrent().formatCurrency(record.get("minimumOrderAmount")) + ")";
                 }
 
                 if (val === '') {

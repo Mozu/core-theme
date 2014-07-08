@@ -23,10 +23,12 @@ Ext.define('Taco.view.order.modal.ManualCreditPayment', {
                     fieldLabel: 'Gateway Interaction Id'
                 }, {
                     xtype: 'currencyfield',
+                    currencyCode: this.order.getCurrencyCode(),
                     name: 'amount',
                     width:200,
                     fieldLabel: 'Amount Captured',
-                    value: this.record.data.amountAuthorized
+                    value: this.record.data.amountAuthorized,
+                    
                 }, {
                     xtype: 'datetime',
                     name: 'interactionDate',

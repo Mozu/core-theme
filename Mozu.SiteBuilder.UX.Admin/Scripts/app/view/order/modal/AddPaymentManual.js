@@ -77,6 +77,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                     width: 105
                 }, {
                     xtype: 'currencyfield',
+                    currencyCode: this.order.getCurrencyCode(),
                     name: 'amount',
                     fieldLabel: 'Amount',
                     emptyText: '0',

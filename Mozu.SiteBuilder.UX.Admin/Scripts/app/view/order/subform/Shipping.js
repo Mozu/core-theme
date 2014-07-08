@@ -11,6 +11,7 @@ Ext.define('Taco.view.order.subform.Shipping', {
         'Taco.view.order.widget.Package',
         'Taco.view.order.widget.UnpackagedItems',
         'Taco.store.PackagingTypes'
+       
     ],
     
     title: 'Direct Ship',

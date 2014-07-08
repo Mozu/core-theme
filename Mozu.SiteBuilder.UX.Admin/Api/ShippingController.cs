@@ -152,6 +152,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             carrierConfiguration.CustomTableRates = Mapper.Map<List<DC.CustomTableRate>>(settings.CustomRates);
 
+
+            if (carrierConfiguration.CustomTableRates != null)
+            {
+                carrierConfiguration.CustomTableRates.ForEach(x =>
+                {
+                    x.Content.LocaleCode = x.Content.LocaleCode ?? this.SbApiContext.LocaleCode;
+                });
+            }
+
             var res = await _carrierConfigurationWebApiClient.UpdateConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId, carrierConfiguration);
             if (res.HasException)
             {

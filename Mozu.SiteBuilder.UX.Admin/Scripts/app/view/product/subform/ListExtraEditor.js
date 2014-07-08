@@ -107,6 +107,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                         },
                         editor: {
                             xtype: 'currencyfield',
+                            currencyCode: me.product.getCurrencyCode(),
                             hideTrigger: true
                         }
 
@@ -170,6 +171,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                         },
                         editor: {
                             xtype: 'currencyfield',
+                            currencyCode: me.product.getCurrencyCode(),
                             hideTrigger: true
                         }
 

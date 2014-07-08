@@ -31,7 +31,7 @@ Ext.define('Taco.view.order.subform.Attributes', {
             xtype: 'grid',
             store: this.attributeDefinitionStore,
             columns: [{
-                dataIndex: 'name',
+                dataIndex: 'adminName',
                 text: 'Name',
                 flex: 2
             }, {

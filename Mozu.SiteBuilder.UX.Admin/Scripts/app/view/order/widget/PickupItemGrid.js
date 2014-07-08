@@ -673,6 +673,7 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                 fulfillmentContact: this.order.data.fulfillmentContact,
                 payment: this.order.data.payments[0],
                 order: this.order.data,
+                orderRecord:this.order,
                 siteName: Taco.app.context.getSite().name
             },
             win = window.open(),
@@ -744,14 +745,14 @@ Ext.define('Taco.view.order.widget.PickupItemGrid', {
                         '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
                         '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
                         '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{unitPrice:usMoney}</td>',
-                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{total:usMoney}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{[values.orderRecord.formatCurrency(values.unitPrice)]}</td>',
+                        '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{[values.orderRecord.formatCurrency(values.total)]}</td>',
                     '</tr></tpl>',
                 '</tbody></table>',
             '</div>'
         );
 
-        console.log(data, this.data);
+        
         Ext.fly(win.document.body).setHTML(tpl.apply(data));
     }
     

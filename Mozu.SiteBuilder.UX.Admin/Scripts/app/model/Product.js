@@ -16,6 +16,7 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductVariation',
         'Taco.model.BundledProduct',
         'Taco.store.ProductTypes'
+     
     ],
     requiredStores: ['Taco.store.ProductTypes'],
     statics: {
@@ -486,7 +487,14 @@ Ext.define('Taco.model.Product', {
 
     },
     formatCurrency: function (value) {
-        return Taco.app.context.findMasterCatalog(this.get('masterCatalogId')).formatCurrency(value);
+        return this.getMasterCatalog().formatCurrency(value);
+    },
+    getCurrencyCode: function () {
+        return Taco.app.context.findMasterCatalog(this.get('masterCatalogId')).currency;
+    },
+    getMasterCatalog: function () {
+        
+        return Taco.app.context.findMasterCatalog(this.get('masterCatalogId'));
     },
     publish: function (cfg) {
 

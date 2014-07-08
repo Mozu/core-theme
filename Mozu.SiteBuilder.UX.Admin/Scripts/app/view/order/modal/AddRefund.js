@@ -119,7 +119,9 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 resizable: false,
                 menuDisabled: true,
                 dataIndex: 'amountCollected',
-                renderer: Ext.util.Format.usMoney
+                renderer: function (value) {
+                    return me.order.formatCurrency(value);
+                }
             }, {
                 text: 'Refund Amount',
                 width:150,
@@ -136,7 +138,9 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                     mouseWheelEnabled:false,
                     minValue: 0
                 },
-                renderer: Ext.util.Format.usMoney
+                renderer: function (value) {
+                    return me.order.formatCurrency(value);
+                }
             }],
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
