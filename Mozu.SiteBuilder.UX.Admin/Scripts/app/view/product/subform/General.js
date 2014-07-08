@@ -38,7 +38,7 @@ Ext.define('Taco.view.product.subform.General', {
             invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
 
         me.record = this.product;
-        me.currencyCode = me.productInCatalogInfo ? me.productInCatalogInfo.getCatalog().currency : me.product.getMasterCatalog().currency;
+        me.currencyCode = me.productInCatalogInfo ? me.productInCatalogInfo.getCatalog().currencyCode : me.product.getCurrencyCode();
         //used for data range validation key value lookup, since multiple pair of fields
         me.dateRangeFieldMap = {};
 

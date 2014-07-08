@@ -329,7 +329,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                     width: 300
                 }, {
                     xtype: 'currencyfield',
-                    currencyCode: Taco.app.context.getCurrent().currency,
+                    currencyCode: Taco.app.context.getCurrent().currencyCode,
                     emptyText: '0',
                     forcePrecision: true,
                     unitAtEnd: false,

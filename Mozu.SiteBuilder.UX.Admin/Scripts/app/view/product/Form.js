@@ -144,7 +144,23 @@ Ext.define('Taco.view.product.Form', {
 
     buildSiteForm: function (productInCatalogInfo) {
         var catalogId = productInCatalogInfo.get('catalogId'),
-            catalog = this.masterCatalog.findCatalog(catalogId);
+            catalog = this.masterCatalog.findCatalog(catalogId),
+            title = catalogId,
+            suffix = '';
+        if (catalog) {
+            title = catalog.name;
+
+            if (catalog.localeCode != this.masterCatalog.localeCode) {
+                suffix += catalog.localeCode;
+            }
+            if (catalog.currencyCode != this.masterCatalog.currencyCode) {
+                suffix += ((suffix.length)?' ':'')+ catalog.currencyCode;
+            }
+            if (suffix) {
+                suffix = " ["+suffix+"]";
+            }
+            title += suffix;
+        }
 
         return Ext.create('Taco.view.product.SiteForm', {
             isSingleSite: this.singleSiteCheck(),
@@ -156,7 +172,7 @@ Ext.define('Taco.view.product.Form', {
                 isSingleSite: this.isSingleSite
             },
             tabPickerId: '' + catalogId,
-            title: catalog ? catalog.name : catalogId
+            title: title
         });
     },
 
@@ -283,7 +299,9 @@ Ext.define('Taco.view.product.Form', {
      * @return {Boolean} True if the product is only on one site, false if it's shared
      */
     singleSiteCheck: function () {
-        return this.inSitesStore.count() === 1;
+        //changing to only run this mode if the user has only one catalogs off of the current master catalog
+        return Taco.app.context.getMasterCatalog().catalogs.length < 2;
+        //return this.inSitesStore.count() === 1;
     },
 
     /**

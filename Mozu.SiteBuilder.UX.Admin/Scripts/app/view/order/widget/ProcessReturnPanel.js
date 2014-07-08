@@ -262,7 +262,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         me.totalLossAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'totalLossAmount',
             
-            currencyCode: Taco.app.context.getCurrent().currency,
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
             forcePrecision:true,
             unitAtEnd:false,
             fieldLabel: 'Total Loss',

@@ -28,7 +28,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
-            currencyCode:Taco.app.context.getCurrent().currency,
+            currencyCode:Taco.app.context.getCurrent().currencyCode,
             emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
@@ -121,7 +121,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             name: 'minimumCategorySubtotalBeforeDiscounts',
 
             // hidden: this.record.get('scope') !== 'Order',
-            currencyCode: Taco.app.context.getCurrent().currency,
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
             forcePrecision: true,
             unitAtEnd: false,
             hideTrigger: true,
@@ -134,7 +134,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumLifetimeValueAmount',
             hidden: this.record.get('scope') !== 'Order',
-            currencyCode: Taco.app.context.getCurrent().currency,
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
             forcePrecision: true,
             unitAtEnd: false,
             hideTrigger: true,

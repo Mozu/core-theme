@@ -43,11 +43,11 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         public List<TaContextCatalog> Catalogs { get; set; }
 
 
-        [DataMember(Name = "locale")]
+        [DataMember(Name = "localeCode")]
         public string Locale { get; set; }
 
 
-        [DataMember(Name = "currency")]
+        [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
 
 
@@ -64,11 +64,11 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
-        [DataMember(Name = "locale")]
+        [DataMember(Name = "localeCode")]
         public string Locale { get; set; }
 
 
-        [DataMember(Name = "currency")]
+        [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
 
       
@@ -106,11 +106,11 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
          public bool IsMozuRendered { get; set; }
 
 
-         [DataMember(Name = "locale")]
+         [DataMember(Name = "localeCode")]
          public string Locale { get; set; }
 
 
-         [DataMember(Name = "currency")]
+         [DataMember(Name = "currencyCode")]
          public string Currency { get; set; }
 
       
