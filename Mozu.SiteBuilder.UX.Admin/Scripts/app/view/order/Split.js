@@ -5,7 +5,10 @@
 
 Ext.define('Taco.view.order.Split', {
     extend: 'Taco.core.ux.form.SplitEditor',
-    alias: 'widget.order.split',
+    alias: [
+        'widget.order-split',
+        'widget.order.split'
+    ],
     requires: [
         'Taco.model.Order',
         'Taco.view.order.Grid',
@@ -55,14 +58,15 @@ Ext.define('Taco.view.order.Split', {
                     scope: this,
                     fn: function (grid, record, item, index, e) {
                         if (e.getKey() == Ext.EventObject.ENTER) {
-                            this.setRecord(record)
+                            this.onSelectRecord(record);
                         }
                     }
                 },
                 itemclick: {
                     scope: this,
                     fn: function (grid, record, item, index, e) {
-                        this.setRecord(record);
+                    
+                        this.onSelectRecord(record);
                     }
                 }
             }
@@ -79,6 +83,9 @@ Ext.define('Taco.view.order.Split', {
             }
         });
     },
+
+    
+
 
     getAdditionalActions: function (ids) {
         return this.editor.header.down('toolbar').queryBy(function (cmp) {
@@ -122,23 +129,33 @@ Ext.define('Taco.view.order.Split', {
         }
     },
 
-    onRecordChange: function (nextRecord) {
-        var url = 'orders/split',
-            site; 
+    onSelectRecord: function (record) {
+        var url = 'orders',
+          site;
 
-      
-        if (nextRecord) {
-            url = 'orders/edit/' + nextRecord.getId();
-            site = Taco.app.context.findSite(nextRecord.get('siteId'));
+
+        if (record) {
+            url = 'orders/edit/' + record.getId();
+            site = Taco.app.context.findSite(record.get('siteId'));
             if (site != Taco.app.context.getCurrentContext()) {
                 Taco.app.context.currentCtx = site;
                 //Taco.app.context.setCurrentContext(site, false, false);
             }
-            
-            Taco.core.StateManager.attemptNavigate(url, { complexMetaData: { container: this.getEast() } });
-        } else {
-            Taco.core.StateManager.attemptNavigate(url);
         }
+        Taco.core.StateManager.attemptNavigate(url);
+    },
+
+    onRecordChange: function (record) {
+       
+        this.getEast().removeAll(true);
+        if (record) {
+            this.getEast().add(Ext.create('Taco.view.order.Edit', {
+                record: record
+            }));
+        }
+        this.callParent(arguments);
+      
+       
     },
 
     updateSplitActions: function () {

@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Globalization;
+
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
     using System;

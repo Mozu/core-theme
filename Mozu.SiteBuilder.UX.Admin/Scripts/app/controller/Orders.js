@@ -17,42 +17,49 @@ Ext.define('Taco.controller.Orders', {
 
 
     //todo:  changing to s until orders support siteId  in resource
-    createContentView: function (view, cfg) {
-        var ctx = Taco.app.context.getCurrentContext();
-        if (cfg.record && (ctx.contextType != 's' || (cfg.record.data.siteId && ctx.id != cfg.record.data.siteId))) {
-            Taco.app.context.setCurrentContext(Taco.app.context.findSite(cfg.record.data.siteId), false);
+    createContentView: function (viewName, cfg) {
+        var isEdit = viewName == this.editorView,
+            split;
+
+        Ext.suspendLayouts();
+
+        //removing initial view  to aviod events firing from the create of the view from messin with the 
+        split = Taco.app.contentView.down('order-split');
+       
+        if (!split) {
+            Taco.app.contentView.removeAll(true);
+            split = Ext.create(this.indexView);
+            Taco.app.contentView.add(split);
         }
-        return this.callParent(arguments);
-
-
-
-    },
-
-    orderlist: function () {
-        
-        this.createContentView("Taco.view.order.Grid", {
-            record: null,
-            options: null
-        });
-    },
-
-    index: function () {
-        this.createContentView("Taco.view.order.Split", {
-            record: null,
-            options: null
-        });
-
-
-    },
-
-    split: function () {
-        this.createContentView("Taco.view.order.Split", {
-            record: null,
-            options: null
-        });
 
         
+        if (cfg && cfg.record) {
+            split.setRecord(cfg.record);
+        } else {
+            split.setRecord(null);
+        }
+        
+        Ext.resumeLayouts(true);
+
+        return split;
+       
+
     },
+
+   
+
+    //edit: function (id, additionalParams, appState) {
+
+    //    Taco.model.Order.load( id,)
+    //    var split = Taco.app.viewPort.down('order.split');
+    //    if (!split) {
+    //        split = Ext.create('Taco.view.order.Split');
+
+    //    }
+    //    split.setRecord(record);
+    //},
+
+    
 
     create: function () {
         var ctx = Taco.app.context.getCurrentContext(),
