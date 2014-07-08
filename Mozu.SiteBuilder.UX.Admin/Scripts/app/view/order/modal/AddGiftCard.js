@@ -11,7 +11,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
     layout: 'fit',
 
     scale: 'large',
-    title: 'Add Gift Card',
+    title: 'Add Gift Card/Store Credit',
 
     initComponent: function () {
 
@@ -25,19 +25,23 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         this.callParent(arguments);
     },
     
+    getApplyingCreditData: function() {
+        return {
+            payments: Ext.Array.map(this.store.queryBy(function(record) { return record.get('amtToApply') > 0; }).getRange(), function(record) {
+                return record.getData();
+            }),
+            orderId: this.record.getId(),
+            customerId: this.record.get('customerId')
+        };
+    },
+
     doSave: function () {
         this.setLoading({
             msg: "Applying gift cards"
         }, this.body);
         
         var me = this,
-            data = {
-                payments: Ext.Array.map(this.storeCreditsStore.queryBy(function(record) { return record.get('amtToApply') > 0; }).getRange(), function(record) {
-                    return record.getData();
-                }),
-                orderId: this.record.getId(),
-                customerId: this.record.get('customerId')
-            };
+            data = this.getApplyingCreditData();
 
         this.record.addGiftCards({
             jsonData: data,

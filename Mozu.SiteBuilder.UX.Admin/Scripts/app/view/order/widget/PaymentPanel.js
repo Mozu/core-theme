@@ -338,7 +338,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     rollBackTransaction: function (item) {
         var me = this,
-            actionSimpleName = item.itemId.replace('Rollback', '');
+            actionName = item.itemId,
+            actionSimpleName = actionName.replace('Rollback', '');
         
         this.actionModal = Ext.MessageBox.show({
             title: 'Rollback',
