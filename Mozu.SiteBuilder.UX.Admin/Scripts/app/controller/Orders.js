@@ -31,15 +31,15 @@ Ext.define('Taco.controller.Orders', {
             split = Ext.create(this.indexView);
             Taco.app.contentView.add(split);
         }
-
-        
+      
+        Ext.resumeLayouts(true);
         if (cfg && cfg.record) {
             split.setRecord(cfg.record);
         } else {
             split.setRecord(null);
         }
-        
-        Ext.resumeLayouts(true);
+       
+       // Ext.resumeLayouts(true);
 
         return split;
        
