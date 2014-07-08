@@ -134,10 +134,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         this.displayAmount = Ext.widget('component', {
             cls: cls,
             tpl: [
-                '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{payment.amountAuthorized:usMoney}</strong></h4>',
-                '<h4><span class="{cls}-label">{labels.collected}:</span> <strong class="{cls}-value">{payment.amountCollected:usMoney}</strong></h4>',
+                '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}</strong></h4>',
+                '<h4><span class="{cls}-label">{labels.collected}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}</strong></h4>',
                 '<tpl if="payment.amountCredited != 0">',
-                '<h4><span class="{cls}-label">{labels.credited}:</span> <strong class="{cls}-value">{payment.amountCredited:usMoney}</strong></h4>',
+                '<h4><span class="{cls}-label">{labels.credited}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}</strong></h4>',
                 '</tpl>',
             ],
             data: {
@@ -147,6 +147,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     credited: 'Amount Credited',
                     authorized: 'Amount Authorized'
                 },
+                orderRecord: this.order, 
                 payment: this.record.data
             }
         });
@@ -245,7 +246,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 //                        '<span class="seperator">|</span>',
 //                            ' id: {id} ',
                         '<span class="seperator">|</span>',
-                            ' Amount: {amount:usMoney} ',
+                            ' Amount: {[Taco.app.context.getCurrent().formatCurrency(values.amount)]} ',
                         '<span class="seperator">|</span>',
                             'Type: {interactionType} ',
                         '<span class="seperator">|</span>',

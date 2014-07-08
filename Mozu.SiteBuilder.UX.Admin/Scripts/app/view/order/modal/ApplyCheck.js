@@ -29,6 +29,7 @@ Ext.define('Taco.view.order.modal.ApplyCheck', {
                 margin: '0 10 0 0'
             }, {
                 xtype: 'currencyfield',
+                currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
                 fieldLabel: 'Amount Collected',
                 value: this.record.data.amountAuthorized

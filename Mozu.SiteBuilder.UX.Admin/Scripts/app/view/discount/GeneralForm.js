@@ -106,7 +106,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                         this.amountInput.setValue(null);
                         return;
                     } else {
-                        this.amountInput.unitString = '$';
+                        this.amountInput.unitString = Taco.app.context.currencies[Taco.app.context.getCurrent().currency.toLowerCase()].symbol;
                         this.amountInput.unitAtEnd = false;
                     }
                     this.amountInput.setDisabled(false);
@@ -124,7 +124,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             forcePrecision:(this.record.get('amountType') === 'Amount'),
             margin: '0 0 0 10',
             unitAtEnd: this.record.get('amountType') === 'Percentage' ? true : false,
-            unitString: (this.record.get('amountType') === 'Percentage') ? '%' : '$',
+            unitString: (this.record.get('amountType') === 'Percentage') ? '%' : Taco.app.context.currencies[Taco.app.context.getCurrent().currency.toLowerCase()].symbol,
             hideTrigger: true,
             disabled: (this.record.get('amountType') === 'Free') ? true : false,
             labelStyle: 'visibility: hidden'

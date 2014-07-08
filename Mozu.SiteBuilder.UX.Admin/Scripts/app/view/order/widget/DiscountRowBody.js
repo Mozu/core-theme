@@ -165,7 +165,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    //'<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({unitPrice:usMoney})</div>',
+                   
                     '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '"></div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
@@ -173,7 +173,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     '<div style="text-align: right;" class="' + this.rowBodyDivCls + '"></div>',
                 '</td>',
                 '<td role="gridcell"  class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({total:usMoney})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.total)]})</div>',
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
                     
@@ -205,13 +205,13 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
 
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({unitPrice:usMoney})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.unitPrice)]})</div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                     '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({total:usMoney})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.total)]})</div>',
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
                     '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col">',

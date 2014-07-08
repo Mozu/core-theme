@@ -20,6 +20,7 @@ Ext.define('Taco.view.order.modal.AuthorizePayment', {
             },
             items: [{
                 xtype: 'currencyfield',
+                currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
                 fieldLabel: 'Amount to Authorize',
                 selectOnFocus: true,

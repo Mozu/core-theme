@@ -22,6 +22,7 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                 xtype: 'currencyfield',
                 name: 'amount',
                 fieldLabel: 'Amount to Capture',
+                currencyCode: this.order.getCurrencyCode(),
                 selectOnFocus: true,
                 width: 170,
                 value: Math.min(this.record.data.amountAuthorized, this.order.data.authorizationInfo.captureAmount)

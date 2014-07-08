@@ -179,13 +179,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 scale: "medium",
                 // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
                 disabled: !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
-                text: me.record.get("shippingMethodName") || "None Selected",
+                text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",
                 menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
                     showRuntimePricing: true,
                     orderId: me.record.getId(),
                     onShippingMethodChange: function (menu, selection) {
                         
-                        if (selection && selection.shippingMethodName) {
+                        if (selection && (selection.shippingMethodName || Ext.isNumeric(selection.price))) {
                             var data = {
                                 shippingMethodName: selection.shippingMethodName,
                                 shippingMethodCode: selection.shippingMethodCode
@@ -233,13 +233,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         
         '<tr class="subtotalrow">',
             '<td class="{tdCls}"><div class="{tdInnerCls}">SubTotal</div></td>',
-            '<td class="subtotalcell {tdCls}"><div class="{tdInnerCls}">{discountedSubtotal:usMoney}</div></td>',
+            '<td class="subtotalcell {tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.discountedSubtotal)]}</div></td>',
         '</tr>',
             
         '<tpl for="orderDiscounts">',
             '<tr class="discount ', '<tpl if="!isActive">suppressed<tpl else>active</tpl>', '">',
                 '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Discount ({description})</div></td>',
-                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls} negative-currency">({total:usMoney})</div></td>',
+                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(valuestotal)]})</div></td>',
                 '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
                     '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
                         'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
@@ -251,7 +251,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="values.storeCredit && values.storeCredit &gt; 0">',
             '<tr class="storeCredit ', '<tpl if="!isActive">suppressed<tpl else>active</tpl>', '">',
                 '<td class="{tdCls}"><div class="{tdInnerCls}">Store Credit</div></td>',
-                '<td class="{tdCls}"><div class="{tdInnerCls} negative-currency">({storeCredit:usMoney})</div></td>',
+                '<td class="{tdCls}"><div class="{tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.storeCredit)]})</div></td>',
             '</tr>',
         '</tpl>'
     ),
@@ -262,18 +262,18 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     subTpl_2: new Ext.XTemplate(
         '<tr>',
             '<td class="{tdCls}"><div class="{tdInnerCls}">Tax</div></td>',
-            '<td class="{tdCls}"><div class="{tdInnerCls}">{taxTotal:usMoney}</div></td>',
+            '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.taxTotal)]}</div></td>',
         '</tr>',
 
         '<tr class="row-group-start">',
             '<td class="{tdCls}"><div class="{tdInnerCls}">Shipping <tpl if="values.shippingMethodName">({shippingMethodName})</tpl>:</div></td>',
-            '<td class="{tdCls}"><div class="{tdInnerCls}">{shippingSubtotal:usMoney}</div></td>',
+            '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubtotal)]}</div></td>',
         '</tr>',
 
         '<tpl if="handlingTotal !== 0">',
             '<tr>',
                 '<td class="{tdCls}"><div class="{tdInnerCls}">Additional Handling</div></td>',
-                '<td class="{tdCls}"><div class="{tdInnerCls}">{handlingTotal:usMoney}</div></td>',
+                '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.handlingTotal)]}</div></td>',
             '</tr>',
         '</tpl>',
 
@@ -282,7 +282,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 '<tpl if="!isActive">suppressed<tpl else>active</tpl>',
             '">',
                 '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Discount ({description}):</div></td>',
-                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls} negative-currency">({total:usMoney})</div></td>',
+                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
                 '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
                     '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
                         'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
@@ -300,21 +300,21 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl if="shippingAdjustment.amount !==0 || shippingDiscounts.length">',
             '<tr>',
                 '<td class="{tdCls}"><div class="{tdInnerCls}">Shipping Total</div></td>',
-                '<td class="{tdCls}"><div class="{tdInnerCls}">{shippingTotal:usMoney}</div></td>',
+                '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingTotal)]}</div></td>',
             '</tr>',
         '</tpl>',
 
         '<tpl if="adjustmentTotal">',
             '<tr>',
                 '<td class="{tdCls}"><div class="{tdInnerCls}">{adjustmentDescription}</div></td>',
-                '<td class="{tdCls}"><div class="{tdInnerCls}">{adjustmentTotal:usMoney}</div></td>',
+                '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.adjustmentTotal)]}</div></td>',
             '</tr>',
         '</tpl>',
 
 
         '<tr class="row-group-start totalrow" >',
             '<td class="{tdCls}"><div class="{tdInnerCls}">OrderTotal</div></td>',
-            '<td class="totalcell {tdCls}"><div class="{tdInnerCls}">{total:usMoney}</div></td>',
+            '<td class="totalcell {tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.total)]}</div></td>',
         '</tr>'
     ),
         
@@ -386,30 +386,30 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 view : me,
                 getSubTpl: function (tplName, values) {                    
                     var tpl = this.view[tplName];
-                    var tplTxt = tpl.apply(values)                    
-                    return tplTxt
+                    tpl.getCurrencyFormat = this.getCurrencyFormat;
+                    var tplTxt = tpl.apply(values);
+                    return tplTxt;
                 },
-                getCurrencyFormat: function (v) {                    
-                    var UtilFormat = Ext.util.Format,
-                        retVal="",
-                        format = ",0.00",
-                        isNegative,
-                        v = v - 0;
+                getCurrencyFormat: function (v) {
+                    var retVal,
+                        isNegative;
+
+                    v = v - 0;
 
                     if (v < 0) {
                         isNegative = true;
                         v = -v;                        
-                    }                        
-                    v = UtilFormat.number(v, format);                    
-                                        
+                    }
+                    v = Taco.app.context.getCurrent().formatCurrency(v);
+                    
 
                     if (isNegative) {
-                        retVal = "($" + v + ")";
+                        retVal = "(" + v + ")";
                     } else {
-                        retVal = "$" + v;
+                        retVal =  v;
                     }
-                    
-                    return retVal
+
+                    return retVal;
                 }
             }
         ];

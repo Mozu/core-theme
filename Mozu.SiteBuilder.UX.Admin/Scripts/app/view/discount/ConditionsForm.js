@@ -11,7 +11,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         'Ext.ux.form.field.BoxSelect',
         'Taco.view.category.Modal',
         'Taco.view.product.Modal',
-        'Taco.view.customers.segments.Modal'
+        'Taco.view.customers.segments.Modal',
+        'Taco.core.ux.form.CurrencyField'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
@@ -21,13 +22,13 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     title: 'Discount Conditions',
 
     initComponent: function () {
-        this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.UnitField', {
+        this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumOrderAmount',
             fieldLabel: "Minimum Order Amount",
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
-            unitString: '$',
+            currencyCode:Taco.app.context.getCurrent().currency,
             emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
@@ -116,11 +117,11 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             minValue: 0
         });
 
-        this.minimumCategorySubtotalBeforeDiscounts = Ext.create('Taco.core.ux.form.UnitField', {
+        this.minimumCategorySubtotalBeforeDiscounts = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumCategorySubtotalBeforeDiscounts',
 
             // hidden: this.record.get('scope') !== 'Order',
-            unitString: '$',
+            currencyCode: Taco.app.context.getCurrent().currency,
             forcePrecision: true,
             unitAtEnd: false,
             hideTrigger: true,
@@ -130,10 +131,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             minValue: 0
         });
 
-        this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.UnitField', {
+        this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumLifetimeValueAmount',
             hidden: this.record.get('scope') !== 'Order',
-            unitString: '$',
+            currencyCode: Taco.app.context.getCurrent().currency,
             forcePrecision: true,
             unitAtEnd: false,
             hideTrigger: true,

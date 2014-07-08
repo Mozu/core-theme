@@ -20,11 +20,7 @@ Ext.define('Taco.core.ux.form.UnitField', {
     unitString: '_',
     // force the field to have two decimal places
     forcePrecision:false,
-    initComponent: function() {
-        var me = this;
-
-        me.callParent(arguments);
-    },
+  
 
     initEvents: function () {
         var me = this,

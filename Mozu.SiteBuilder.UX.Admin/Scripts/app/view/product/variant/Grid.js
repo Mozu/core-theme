@@ -50,6 +50,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             dataIndex: 'deltaPrice',
             editor: {
                 xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
                 allowBlank: !isDigitalCredit,
                 decimalPrecision: 2,
                 hideTrigger: true,
@@ -63,6 +64,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             hidden: true,
             editor: {
                 xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
                 decimalPrecision: 2,
                 hideTrigger: true,
                 keyNavEnabled: false,
@@ -75,6 +77,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             hidden: true,
             editor: {
                 xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
                 decimalPrecision: 2,
                 hideTrigger: true,
                 keyNavEnabled: false,
@@ -89,6 +92,7 @@ Ext.define('Taco.view.product.variant.Grid', {
             width: 185,
             editor: {
                 xtype: 'currencyfield',
+                currencyCode: this.product.getCurrencyCode(),
                 allowBlank: !isDigitalCredit,
                 decimalPrecision: 2,
                 hideTrigger: true,

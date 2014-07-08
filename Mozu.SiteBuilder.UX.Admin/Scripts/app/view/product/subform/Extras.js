@@ -9,7 +9,8 @@ Ext.define('Taco.view.product.subform.Extras', {
     alias: 'widget.productextrasform',
 
     requires: [
-        'Taco.view.product.subform.ListExtraEditor'
+        'Taco.view.product.subform.ListExtraEditor',
+        'Taco.core.ux.form.CurrencyField'
     ],
 
     title: 'Extras',
@@ -327,8 +328,8 @@ Ext.define('Taco.view.product.subform.Extras', {
                     html: 'Store Label',
                     width: 300
                 }, {
-                    xtype: 'unitfield',
-                    unitString: '$',
+                    xtype: 'currencyfield',
+                    currencyCode: Taco.app.context.getCurrent().currency,
                     emptyText: '0',
                     forcePrecision: true,
                     unitAtEnd: false,

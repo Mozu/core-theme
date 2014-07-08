@@ -40,6 +40,7 @@ Ext.define('Taco.view.order.modal.RequestCheck', {
                 name: 'amount',
                 width: 170,
                 fieldLabel: 'Amount Requested',
+                currencyCode: this.record.getCurrencyCode(),
                 value: this.record.get('total')
             }]
         });

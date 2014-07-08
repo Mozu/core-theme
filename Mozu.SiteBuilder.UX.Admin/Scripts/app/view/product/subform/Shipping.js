@@ -7,7 +7,8 @@
 Ext.define('Taco.view.product.subform.Shipping', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [
-        'Taco.view.product.widget.ProductFulfillmentTypes'
+        'Taco.view.product.widget.ProductFulfillmentTypes',
+         'Taco.core.ux.form.UnitField'
     ],
     alias: 'widget.productshippingsubform',
     title: 'Shipping',

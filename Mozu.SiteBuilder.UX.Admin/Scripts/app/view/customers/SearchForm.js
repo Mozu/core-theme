@@ -158,27 +158,7 @@ Ext.define('Taco.view.customers.SearchForm', {
 
 		// ============================================================= spent
 
-		me.spent = Ext.widget('container', {
-			layout: 'hbox',
-			defaults: {
-				xtype: 'textfield',
-				labelAlign: 'top',
-				width: 150,
-				emptyText: '$0.00'
-			},
-			items: [{
-				name: 'spendRangeLow'
-			}, {
-				xtype: 'label',
-				html: 'TO',
-				pack: 'center',
-				align: 'middle',
-				width: 30,
-				padding: '9 9 9 9'
-			}, {
-				name: 'spendRangeHigh'
-			}]
-		});
+		
 
 		// =============================================================
 

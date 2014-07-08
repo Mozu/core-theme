@@ -19,22 +19,22 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
             ptype: 'cellediting',
             clicksToEdit: 1,
             listeners: {
-                beforeedit: function(editor, context) {
+                beforeedit: function (editor, context) {
                     this.editingContext = context;
                     if (!context.value && context.field === "amtToApply") {
                         context.record.set('amtToApply', Math.min(context.record.get('currentBalance'), context.grid.getOrderBalance() - context.grid.getTotalCardBalance()));
                     }
                 },
-                edit: function(editor, e) {
+                edit: function (editor, e) {
                     e.grid.fireEvent('amountchanged', e.grid.getTotalCardBalance());
                 }
             }
         }
     ],
-    getOrderBalance: function() {
+    getOrderBalance: function () {
         return this.orderBalance;
     },
-    getTotalCardBalance: function() {
+    getTotalCardBalance: function () {
         return this.store.sum('amtToApply');
     },
     viewConfig: {
@@ -43,69 +43,78 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         markDirty: false
     },
     emptyText: "This customer has no gift cards or store credits.",
-    initComponent: function() {
+    initComponent: function () {
+        var me = this;
         this.orderBalance = this.order.get('authorizationInfo').captureAmount || 0;
+
+        this.columns = [
+            {
+                text: 'Card Code',
+                dataIndex: 'code',
+                flex: 1
+            },
+            {
+                text: 'Balance',
+                dataIndex: 'currentBalance',
+                renderer: function (value) {
+                    return me.order.formatCurrency(value);
+                }
+            },
+            {
+                dataIndex: 'amtToApply',
+                text: 'Amt. to Apply',
+                renderer: function (value) {
+                    return me.order.formatCurrency(value);
+                },
+                editor: {
+                    xtype: 'currencyfield',
+                    currencyCode: this.order.getCurrencyCode(),
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    msgTarget: 'giftCardErrorEl',
+                    validator: function (val) {
+                        var context = this.findParentByType('grid').findPlugin('cellediting').editingContext,
+                            record = context.record,
+                            grid = context.grid,
+                            orderBalance = grid.getOrderBalance();
+
+                        val = parseFloat(val);
+                        if (val > orderBalance) return grid.overOrderBalanceError;
+                        if (val > record.get('currentBalance')) return grid.overCardBalanceError;
+                        // optimizing for the upper two calls reduces the amount of times this expensive call is made
+                        if (grid.getTotalCardBalance() + val - record.get('amtToApply') > orderBalance) return grid.overOrderBalanceError;
+                        return true;
+
+                    }
+                }
+            },
+            {
+                dataIndex: 'remainderToAccount',
+                align: 'center',
+                text: 'Remainder to Acct.',
+                xtype: 'booleancolumn',
+                width: 180,
+                trueText: 'Yes',
+                falseText: 'No',
+
+                editor: {
+                    xtype: 'checkbox'
+                }
+
+            }
+        ];
         this.callParent(arguments);
     },
-    startInitialEdit: function() {
+    startInitialEdit: function () {
         if (this.store.count() > 0) {
             this.findPlugin('cellediting').startEditByPosition({ row: 0, column: 2 });
         }
     },
-    startEditAtCode: function(code) {
+    startEditAtCode: function (code) {
         this.findPlugin('cellediting').startEdit(this.store.getById(code), 2);
     },
-    columns: [
-        {
-            text: 'Card Code',
-            dataIndex: 'code',
-            flex: 1
-        },
-        {
-            text: 'Balance',
-            dataIndex: 'currentBalance',
-            renderer: Ext.util.Format.usMoney
-        },
-        {
-            dataIndex: 'amtToApply',
-            text: 'Amt. to Apply',
-            renderer: Ext.util.Format.usMoney,
-            editor: {
-                xtype: 'currencyfield',
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false,
-                msgTarget: 'giftCardErrorEl',
-                validator: function(val) {
-                    var context = this.findParentByType('grid').findPlugin('cellediting').editingContext,
-                        record = context.record,
-                        grid = context.grid,
-                        orderBalance = grid.getOrderBalance();
-
-                    val = parseFloat(val);
-                    if (val > orderBalance) return grid.overOrderBalanceError;
-                    if (val > record.get('currentBalance')) return grid.overCardBalanceError;
-                    // optimizing for the upper two calls reduces the amount of times this expensive call is made
-                    if (grid.getTotalCardBalance() + val - record.get('amtToApply') > orderBalance) return grid.overOrderBalanceError;
-                    return true;
-
-                }
-            }
-        },
-        {
-            dataIndex: 'remainderToAccount',
-            align: 'center',
-            text: 'Remainder to Acct.',
-            xtype: 'booleancolumn',
-            width: 180,
-            trueText: 'Yes',
-            falseText: 'No',
-
-            editor: {
-                xtype: 'checkbox'
-            }
-
-        }
-    ]
+    
+    
 });

@@ -38,7 +38,7 @@ Ext.define('Taco.view.product.subform.General', {
             invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
 
         me.record = this.product;
-
+        me.currencyCode = me.productInCatalogInfo ? me.productInCatalogInfo.getCatalog().currency : me.product.getMasterCatalog().currency;
         //used for data range validation key value lookup, since multiple pair of fields
         me.dateRangeFieldMap = {};
 
@@ -205,6 +205,7 @@ Ext.define('Taco.view.product.subform.General', {
             this.costField = Ext.widget({
                 xtype: 'currencyfield',
                 fieldLabel: 'Cost',
+                currencyCode:me.currencyCode,
                 name: 'cost',
                 required: false,
                 hideTrigger: true,
@@ -307,6 +308,7 @@ Ext.define('Taco.view.product.subform.General', {
             allowBlank: false,
             hideTrigger: true,
             mouseWheelEnabled: false,
+            currencyCode: me.currencyCode,
             selectOnFocus: true,
             emptyText: 'Enter price',
             listeners: {
@@ -340,6 +342,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'currencyfield',
             fieldLabel: 'Sale Price',
             name: 'salePrice',
+            currencyCode: me.currencyCode,
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true
@@ -353,7 +356,7 @@ Ext.define('Taco.view.product.subform.General', {
             disabled: (!isDigitalCredit || !(this.isGlobal || this.isSingleSite)),
             allowBlank: (!isDigitalCredit || (productUsage === "Configurable")),
             required: (isDigitalCredit && (productUsage != "Configurable")),
-            //minValue: .25,
+            currencyCode: me.currencyCode,
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true
@@ -377,6 +380,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'currencyfield',
             fieldLabel: 'MSRP',
             name: 'msrp',
+            currencyCode: me.currencyCode,
             hideTrigger: true,
             mouseWheelEnabled: false,
             selectOnFocus: true,
@@ -387,6 +391,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'currencyfield',
             fieldLabel: 'Minimum Advertised Price',
             name: 'map',
+            currencyCode: me.currencyCode,
             required: false,
             hideTrigger: true,
             mouseWheelEnabled: false,

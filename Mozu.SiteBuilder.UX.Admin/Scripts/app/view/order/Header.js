@@ -114,11 +114,11 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="orderSummary.totalItemCount &gt; 0">',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">{orderSummary.totalAmount:currency}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Items:</span>', '<span>{orderSummary.totalItemCount}</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span>Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Items:</span>', '<span>{orderSummary.totalItemCount}</span>', '</div></td>', '</tr>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Collected:</span>', '<span>{orderSummary.amountCollected:currency}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Shipped:</span>', '<span>{orderSummary.fulfilledItemCount}</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span>Collected:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Shipped:</span>', '<span>{orderSummary.fulfilledItemCount}</span>', '</div></td>', '</tr>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Balance:</span>', '<span>{orderSummary.balance:currency}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Remaining:</span>', '<span>{orderSummary.unfulfilledItemCount}</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span>Balance:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Remaining:</span>', '<span>{orderSummary.unfulfilledItemCount}</span>', '</div></td>', '</tr>',
 
                 '<tplelse>',
 
@@ -132,7 +132,7 @@ Ext.define('Taco.view.order.Header', {
 
                 '</table>'
             ],
-            data: this.record.getData()
+            data: Ext.apply( this.record.getData(), {orderRecord:this.record})
         });
 
         this.addressesCmp = Ext.widget({

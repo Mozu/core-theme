@@ -33,6 +33,7 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
                     fieldLabel: 'Gateway Interaction Id'
                 }, {
                     xtype: 'currencyfield',
+                    currencyCode: this.order.getCurrencyCode(),
                     name: 'amount',
                     fieldLabel: 'Amount Captured',
                     value: this.record.data.amountAuthorized,

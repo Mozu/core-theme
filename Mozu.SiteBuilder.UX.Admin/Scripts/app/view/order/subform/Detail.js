@@ -476,7 +476,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                     '</tpl></td>',
                     '<td class="order-totals">',
                         '<div class="label">Totals</div>',
-                        '<div class="price-total">{total:usMoney}</div>',
+                        '<div class="price-total">{[values.orderRecord.formatCurrency(values.total)]}</div>',
                         '<div class="item-total">{itemsOrdered} items</div>',
                     '</td>',
                 '</tr></tbody></table></div>',
@@ -496,9 +496,9 @@ Ext.define('Taco.view.order.subform.Detail', {
                                 '<td>{productCode}</td>',
                                 '<td>{productName}</td>',
                                 '<td><tpl if="fulfillmentLocationCode">{fulfillmentMethod} ({fulfillmentLocationCode})</tpl></td>',
-                                '<td>{unitPrice:usMoney}</td>',
+                                '<td>{[parent.orderRecord.formatCurrency(values.unitPrice)]}</td>',
                                 '<td>{quantity}</td>',
-                                '<td>{subtotal:usMoney}</td>',
+                                '<td>{[parent.orderRecord.formatCurrency(values.subtotal)]}</td>',
                             '</tpl></tr>',
                         '</tbody>',
                     '</table>',
@@ -519,7 +519,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                                 '<td>{cardType}</td>',
                                 '<td>{cardNumber}</td>',
                                 '<td><tpl if="expirationMonth">{expirationMonth}/{expirationYear}</tpl></td>',
-                                '<td>{amountCollected:usMoney}</td>',
+                                '<td>{[parent.orderRecord.formatCurrency(values.amountCollected)]}</td>',
                             '</tr>',
                         '</tpl></tbody>',
                     '</table>',
@@ -649,6 +649,9 @@ Ext.define('Taco.view.order.subform.Detail', {
             doc.head.appendChild(styleEl);
         }
 
-        tpl.overwrite(doc.body, me.record.getData(), false);
+      
+       
+
+        tpl.overwrite(doc.body, Ext.apply( me.record.getData(), { orderRecord: me.record }), false);
     }
 });

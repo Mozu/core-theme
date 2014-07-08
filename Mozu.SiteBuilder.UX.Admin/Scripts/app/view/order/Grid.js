@@ -161,7 +161,9 @@ Ext.define('Taco.view.order.Grid', {
                     stateId: 'orderTotal',
                     dataIndex: 'total',
                     text: 'Order Total',
-                    renderer: 'usMoney',
+                    renderer: function (value, metaData, record) {
+                        return record.formatCurrency(value);
+                    },
                     flex: 1,
                     minWidth: 100,
                     width: 100
@@ -259,7 +261,7 @@ Ext.define('Taco.view.order.Grid', {
                     sortable: false,
                     hidden: true,
                     renderer: function (value, metaData, record) {
-                        return Ext.util.Format.usMoney(value.amountCollected);
+                        return record.formatCurrency(value.amountCollected);
                     }
                 }, {
                     stateId: 'remainingAmount',
@@ -270,8 +272,9 @@ Ext.define('Taco.view.order.Grid', {
                     width: 120,
                     sortable: false,
                     hidden: true,
+                    
                     renderer: function (value, metaData, record) {
-                        return Ext.util.Format.usMoney(value.captureAmount);
+                        return record.formatCurrency(value.captureAmount);
                     }
                 }, {
                     stateId: 'ipAddress',
