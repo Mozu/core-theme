@@ -18,6 +18,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Logging;
+using Mozu.Core.Money;
 using Mozu.Core.Settings;
 using Mozu.MZDB.Contracts;
 using Mozu.MZDB.Contracts.Clients;
@@ -55,11 +56,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
-        private CurrencyRepository _currencyRepository;
-
+        
         public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient , Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
         {
-            _currencyRepository = new CurrencyRepository();
+            
             _logger = logger;
             _entityListsWebApiClient = entityListsWebApiClient.CloneWithoutUserClaims().CloneWithApiContext(x =>
             {
@@ -236,7 +236,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
             AutoMapper.Mapper.Map(masterCatalogs, taContext);
 
-
+            var emtpy = new Currency();
             taContext.Currencies = taContext.MasterCatalogs
                 .SelectMany(x => x.Catalogs)
                 .Select(x => x.Currency)
@@ -244,9 +244,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 .Select(x =>
                 {
                     CurrencyCode cc;
-                    return Enum.TryParse(x, out cc) ? _currencyRepository.Get(cc) : null;
+                    return Enum.TryParse(x, out cc) ? CurrencyRepository.Get(cc) : emtpy;
                 })
-                .Where(x => x != null).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
+                .Where(x => x.Symbol!= null ).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
 
            
             taContext.MasterCatalogs.ForEach(mc => (mc.Sites ?? new List<TaContextSite>()).ForEach(site => site.PublishingEnabled = sitePubList.Where(x => x.Key == site.Id).Select(x => x.Value).FirstOrDefault()));

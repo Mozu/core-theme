@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
 
         [DataMember(Name = "currencies")]
-        public Dictionary<string, Core.Currency> Currencies { get; set; }
+        public Dictionary<string, Mozu.Core.Money.Currency> Currencies { get; set; }
     }
 
     [DataContract]
