@@ -48,7 +48,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
         this.relayEvents(this.formContainer, ['add']);
 
         this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title', "hidden"]
+            fields: ['title', "tabTitle", "hidden"]
         });
 
         this.leftNav = Ext.widget({
@@ -74,7 +74,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
                 '<ul>',
                     '<tpl for=".">',
                         //'<tpl if="this.isVisible(values)">',
-                            '<li class="taco-form-tabform-nav-link">{title}</li>',
+                            '<li class="taco-form-tabform-nav-link"><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
                         //'</tpl>',
                     '</tpl>',
                 '</ul>',

@@ -19,6 +19,9 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     title: 'Payments',
 
+    // optional override of the title to be used in Tabs.
+    tabTitle:"Payments",
+
     config : {
         // order model
         originalRecord : null,
