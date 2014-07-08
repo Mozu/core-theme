@@ -248,5 +248,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal Total { get; set; }
 
         #endregion
+
+
+
+        public Customer Customer { get; set; }
     }
 }

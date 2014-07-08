@@ -564,6 +564,10 @@ Ext.define('Taco.model.Order', {
             "type": "string",
             persist: false
         }, {
+            "name": "customer",
+            "type": "auto",
+            persist: false
+        }, {
             "name": "validationResults",
             "type": "any",
             persist: false
@@ -666,8 +670,17 @@ Ext.define('Taco.model.Order', {
     },
     
     loadCustomer: function(cfg) {
-        var me = this;
-        
+        var me = this,
+            cust = this.get('customer');
+        if (cust && cust.id == this.get('customerId')) {
+            me.customer = new Taco.model.CustomerAccount(cust);
+            Ext.defer(function () {
+                if (cfg.callback) cfg.callback.call(cfg.scope || me, me.customer, null, true);
+                if (cfg.success) cfg.success.call(cfg.scope || me, me.customer);
+            }, 1);
+            
+            return;
+        }
         Taco.model.CustomerAccount.load(this.get('customerId'), {
             success: function(record, op) {
                 me.customer = record;
@@ -682,7 +695,16 @@ Ext.define('Taco.model.Order', {
         });
     },
 
-    getCustomer: function() {
+    getCustomer: function () {
+        if (this.customer) {
+            return this.customer;
+        }
+        var me = this,
+           cust = this.get('customer');
+        if (cust && cust.id == this.get('customerId')) {
+            me.customer = new Taco.model.CustomerAccount(cust);
+        }
+
         return this.customer || null;
     },
 
