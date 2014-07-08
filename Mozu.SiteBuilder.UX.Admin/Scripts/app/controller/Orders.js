@@ -12,7 +12,8 @@ Ext.define('Taco.controller.Orders', {
         'Taco.view.order.Edit'
     ],
     editorView: 'Taco.view.order.Edit',
-    views: ['order.Index'],
+    indexView: 'Taco.view.order.Split',
+   // views: ['order.Index'],
 
 
     //todo:  changing to s until orders support siteId  in resource
@@ -26,26 +27,22 @@ Ext.define('Taco.controller.Orders', {
 
 
     },
-    splitcontainer: function () {
 
-        this.createContentView("Taco.core.ux.content.SplitContainer", {
-            record: null,
-            options: null
-        });
-    },
-    spliteditor: function () {
-
-        this.createContentView("Taco.core.ux.form.SplitEditor", {
-            record: null,
-            options: null
-        });
-    },
     orderlist: function () {
         
         this.createContentView("Taco.view.order.Grid", {
             record: null,
             options: null
         });
+    },
+
+    index: function () {
+        this.createContentView("Taco.view.order.Split", {
+            record: null,
+            options: null
+        });
+
+
     },
 
     split: function () {

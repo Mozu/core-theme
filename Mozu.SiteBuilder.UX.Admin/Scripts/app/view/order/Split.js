@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.Split', {
         eastConfigs: {
             placeholder: {
                 xtype: 'component',
-                html: 'hello world'
+                html: ''
             },
             form: {
                 xtype: 'panel',
@@ -123,14 +123,18 @@ Ext.define('Taco.view.order.Split', {
     },
 
     onRecordChange: function (nextRecord) {
-        var url = 'orders/split';
+        var url = 'orders/split',
+            site; 
 
-        Ext.suspendLayouts();
-        this.callParent(arguments);
-        Ext.resumeLayouts();
-
+      
         if (nextRecord) {
             url = 'orders/edit/' + nextRecord.getId();
+            site = Taco.app.context.findSite(nextRecord.get('siteId'));
+            if (site != Taco.app.context.getCurrentContext()) {
+                Taco.app.context.currentCtx = site;
+                //Taco.app.context.setCurrentContext(site, false, false);
+            }
+            
             Taco.core.StateManager.attemptNavigate(url, { complexMetaData: { container: this.getEast() } });
         } else {
             Taco.core.StateManager.attemptNavigate(url);
