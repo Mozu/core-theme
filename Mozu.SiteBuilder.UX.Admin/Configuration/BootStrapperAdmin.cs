@@ -67,8 +67,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         protected override void InitializeFormatters(HttpConfiguration httpConfiguration)
         {
             base.InitializeFormatters(httpConfiguration);
-            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
-                new CamelCasePropertyNamesContractResolver();
+            var jSerSettings = httpConfiguration.Formatters.JsonFormatter.SerializerSettings;
+            jSerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            jSerSettings.Converters.Insert(0, new Newtonsoft.Json.Converters.StringEnumConverter()
+                                              {
+                                                  CamelCaseText = true
+                                              });
 
         }
 

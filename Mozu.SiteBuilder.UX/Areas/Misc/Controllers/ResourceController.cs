@@ -346,6 +346,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             siteContext.Add("cdnPrefix", SiteContext.CdnPrefix);
             siteContext.Add("secureHost", SiteContext.SecureHost );
             siteContext.Add("supportsInStorePickup", SiteContext.SupportsInStorePickup);
+            siteContext.Add("currencyInfo", SiteContext.CurrencyInfo);
+            
             
 
             return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
