@@ -395,6 +395,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Api\LocalizedDataControllerTest.cs" />
     <Compile Include="Admin\Api\LocationInventoryControllerTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\AdminMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\CustomerContactMappingTest.cs" />
@@ -417,6 +418,8 @@
     <None Include="app.config" />
     <None Include="App1.config" />
     <None Include="Diagrams\Admin\Api\cdCapabilities.cd" />
+    <None Include="Diagrams\Admin\Api\cdLocalizedData.cd" />
+    <None Include="Diagrams\Admin\Api\Models\LocalizedModels\foo.json" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdOrderItem.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdReturns.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdAttribute.cd" />
