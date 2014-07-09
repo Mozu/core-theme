@@ -1,5 +1,5 @@
 ﻿<form id="searchbox" class="mz-searchbox" action="/search">
-	<input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-field"  value="{{pageContext.search.query}}" name="query" />
+	<input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-field"  value="{{pageContext.search.query}}" name="query" data-mz-role="searchquery"" />
 	<button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
 	<select class="mz-searchbox-categories" name="facetValueFilter" 
             data-mz-contextify='[value="categoryId:{{ pageContext.categoryId }}"]'
@@ -13,4 +13,7 @@
         {% endpartial_cache %}
 	</select>
     {% require_script "modules/contextify" %}
+    {% if themeSettings.useSearchAutocomplete %}
+        {% require_script "modules/search-autocomplete" %}
+    {% endif %}
 </form>

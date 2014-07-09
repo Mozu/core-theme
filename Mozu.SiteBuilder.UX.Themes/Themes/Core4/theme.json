@@ -47,6 +47,9 @@
         "maxTopLevelNavItems": 8,
         "maxTopLevelNavLabelLength": 20,
 
+		"useSearchAutocomplete": true,
+		"autocompleteProducts": true,
+
         "showAddressTypeDropdown": true,
 
         "showCategoryFacets": true,

@@ -29,6 +29,7 @@
                 'modules/models-messages',
                 'modules/models-product',
                 'modules/scroll-nav',
+                'modules/search-autocomplete',
                 'modules/views-messages',
                 'modules/views-paging',
                 'modules/views-productlists'

@@ -472,6 +472,7 @@
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core4\scripts\modules\models-paymentmethods.js" />
     <Content Include="Themes\Core4\scripts\modules\scroll-nav.js" />
+    <Content Include="Themes\Core4\scripts\modules\search-autocomplete.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productlists.js" />
@@ -483,6 +484,7 @@
     <Content Include="Themes\Core4\scripts\vendor\isotope.min.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.colorbox-min.js" />
+    <Content Include="Themes\Core4\scripts\vendor\typeahead.bundle.js" />
     <Content Include="Themes\Core4\scripts\widgets\deal-of-the-day.js" />
     <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
@@ -599,7 +601,9 @@
     <Content Include="Themes\Core4\stylesheets\state\fades-in.less" />
     <Content Include="Themes\Core4\templates\modules\common\order-summary.hypr.live" />
     <Content Include="Themes\Core4\stylesheets\pages\checkout.less" />
-    <Content Include="Themes\Core4\templates\modules\web-fonts-loader.hypr" />
+    <Content Include="Themes\Core4\templates\modules\web-fonts-loader.hypr">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core4\stylesheets\pages\confirmation.less" />
     <Content Include="Themes\Core4\stylesheets\modules\common\validation-message.less" />
     <Content Include="Themes\Core4\templates\modules\product\faceted-products.hypr" />

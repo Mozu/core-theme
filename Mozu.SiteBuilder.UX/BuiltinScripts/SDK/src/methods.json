@@ -38,6 +38,10 @@
     },
     "collectionOf": "product"
   },
+  "suggest": {
+	"template": "{+searchService}suggest{?_*}",
+	"shortcutParam": "query"
+  },
   "customers": {
     "collectionOf": "customer"
   },
