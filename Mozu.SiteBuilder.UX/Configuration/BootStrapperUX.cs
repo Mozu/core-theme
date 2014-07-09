@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.Mvc.Users;
 
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -45,6 +46,21 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             
         }
+
+        protected override void InitializeFormatters(HttpConfiguration httpConfiguration)
+        {
+            base.InitializeFormatters(httpConfiguration);
+            var jSerSettings = httpConfiguration.Formatters.JsonFormatter.SerializerSettings;
+            jSerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            jSerSettings.Converters.Insert(0, new Newtonsoft.Json.Converters.StringEnumConverter()
+            {
+                CamelCaseText = true
+            });
+
+        }
+
+
         public override void InitializeAutoMapperProfiles(System.Web.Http.HttpConfiguration httpConfiguration)
         {
             base.InitializeAutoMapperProfiles(httpConfiguration);

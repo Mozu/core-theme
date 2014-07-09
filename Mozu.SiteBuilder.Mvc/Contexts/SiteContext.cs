@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -103,6 +104,19 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 CdnPrefix = null;
             }
+
+            Mozu.Core.Money.CurrencyCode cc;
+            if (Mozu.Core.Money.CurrencyCode.TryParse(siteBuilderApiContext.CurrencyCode, out cc))
+            {
+                this.CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
+
+                this.NumberFormat= new NumberFormatInfo()
+                        {
+                            CurrencyDecimalDigits = this.CurrencyInfo.Precision,
+                            CurrencySymbol = this.CurrencyInfo.Symbol
+                        };
+            }
+            
         }
 
         private string ProcessThemeOverride(HttpRequestMessage requestMessage, ICookieProvider cookieProvider)
@@ -451,6 +465,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
-        
+
+
+        public Core.Money.Currency CurrencyInfo { get; set; }
+
+        [Newtonsoft.Json.JsonIgnore()]
+        public NumberFormatInfo NumberFormat { get; set; }
     }
 }

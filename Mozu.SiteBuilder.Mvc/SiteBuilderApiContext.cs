@@ -293,9 +293,8 @@ namespace Mozu.SiteBuilder.Mvc
 
                 }
             }
-
-
-
+           
+            
 
 
 
@@ -413,5 +412,7 @@ namespace Mozu.SiteBuilder.Mvc
         }
 
         public LightweightUserClaims AdminUserClaim { get; set; }
+
+       
     }
 }

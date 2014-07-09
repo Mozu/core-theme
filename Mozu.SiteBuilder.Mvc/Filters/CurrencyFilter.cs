@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Globalization;
+using Mozu.SiteBuilder.Mvc.Tags;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
@@ -15,7 +16,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
     [NDjango.Interfaces.Name("currency")]
     
-    public class CurrencyFilter : NDjango.Interfaces.IFilter 
+    public class CurrencyFilter : NDjango.Interfaces.IFilterWithContext 
     {
         public object DefaultValue
         {
@@ -24,29 +25,36 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         public object PerformWithParam(object value, object parameter)
         {
-            var format = "C" + parameter;
-            var intVal = value as int?;
-            if (intVal.HasValue)
-            {
-                return intVal.Value.ToString(format);
-            }
-            var decVal = value as decimal?;
-            if (decVal.HasValue)
-            {
-                return decVal.Value.ToString(format);
-            }
-            var doubleVal = value as double?;
-            if (doubleVal.HasValue)
-            {
-                return doubleVal.Value.ToString(format);
-            }
-            return string.Empty;
+            throw new NotImplementedException();
         }
 
         
         public object Perform(object value)
         {
-            return this.PerformWithParam(value, null);
+            throw new NotImplementedException();
+        }
+
+        public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
+        {
+            
+            var siteContext = context.SiteContext();
+            var format = "C" + parameter.FirstOrDefault();
+            var intVal = value as int?;
+            if (intVal.HasValue)
+            {
+                return intVal.Value.ToString(format, siteContext.NumberFormat);
+            }
+            var decVal = value as decimal?;
+            if (decVal.HasValue)
+            {
+                return decVal.Value.ToString(format, siteContext.NumberFormat);
+            }
+            var doubleVal = value as double?;
+            if (doubleVal.HasValue)
+            {
+                return doubleVal.Value.ToString(format, siteContext.NumberFormat);
+            }
+            return string.Empty;
         }
     }
 }
