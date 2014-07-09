@@ -1,7 +1,7 @@
 ﻿/**
  * @class Taco.view.order.Grid
 */
-Ext.define('Taco.view.settings.shipping.Rules', {
+Ext.define('Taco.view.settings.localization.LocalizationRules', {
     extend: 'Taco.core.ux.browser.SearchList',
   
     requires: [
