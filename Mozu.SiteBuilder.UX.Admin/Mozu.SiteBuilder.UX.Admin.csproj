@@ -456,6 +456,7 @@
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
+    <Compile Include="Api\Models\Localization\LocalizedAttribute.cs" />
     <Compile Include="Api\Models\Navigation\NavigationTreeNode.cs" />
     <Compile Include="Api\Models\Order\AbstractOrderPackageItem.cs" />
     <Compile Include="Api\Models\Order\OrderDigitalPackage.cs" />
@@ -545,6 +546,7 @@
     <Compile Include="Api\ProductRuntimeController.cs" />
     <Compile Include="Api\ProductTypeController.cs" />
     <Compile Include="Api\RefrenceController.cs" />
+    <Compile Include="Api\LocalizedDataController.cs" />
     <Compile Include="Api\ThemeController.cs" />
     <Compile Include="Api\IUserHelper.cs" />
     <Compile Include="Api\ModelMapping\TenantMapping.cs" />
