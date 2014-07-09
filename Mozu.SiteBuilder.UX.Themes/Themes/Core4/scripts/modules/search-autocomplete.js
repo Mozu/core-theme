@@ -1,7 +1,7 @@
 ﻿define(['shim!vendor/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'modules/api'], function($, Hypr, api) {
 
     // bundled typeahead saves a lot of space but exports bloodhound to the root object, let's lose it
-    var BH = Bloodhound.noConflict();
+    var Bloodhound = window.Bloodhound.noConflict();
 
     //function getSuggestions(query, cb) {
     //    api.get('suggest', query).then(function(res) {
@@ -12,9 +12,9 @@
 
     var suggestConfig = api.getActionConfig('suggest', 'get', 'MZQUERY');
 
-    var mzSuggestions = new BH({
-        datumTokenizer: BH.tokenizers.obj.whitespace('suggestion'),
-        queryTokenizer: BH.tokenizers.whitespace,
+    var mzSuggestions = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('suggestion'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
             url: suggestConfig.url,
             wildcard: 'MZQUERY',
