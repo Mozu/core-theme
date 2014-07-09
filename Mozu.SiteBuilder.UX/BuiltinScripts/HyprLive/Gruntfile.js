@@ -119,9 +119,13 @@ module.exports = function(grunt) {
     });
 
     var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
+    // while zetlen swig's bower.json is still mysteriously out of whack, let's just never bower
+    //grunt.registerTask('default', order);
+    //grunt.registerTask('nobower', order.slice(1));
 
-    grunt.registerTask('default', order);
-    grunt.registerTask('nobower', order.slice(1));
+    grunt.registerTask('default', order.slice(1));
+
+
     //grunt.registerTask('test', ['connect:server', 'mocha']);
     //grunt.registerTask('testdebug', ['connect:browser']);
     //grunt.registerTask('notest', order.slice(0, -2));

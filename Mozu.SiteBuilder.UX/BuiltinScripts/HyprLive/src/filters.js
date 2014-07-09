@@ -13,8 +13,23 @@
         return sign + (symbolIsSuffix ? s + symbol : symbol + s);
     }
 
-    HyprLive.engine.setFilter('currency', function (num, symbol) {
-        return formatMoney(num);
+    var currencyInfo,
+        RoundingTypeConst = {
+            UpToCurrencyPrecision: 'upToCurrencyPrecision'
+        };
+    HyprLive.engine.setFilter('currency', function(num, symbol) {
+        if (!currencyInfo) {
+            try {
+                currencyInfo = HyprLive.engine.options.locals.siteContext.currencyInfo;
+            } catch (e) {
+                currencyInfo = {
+                    symbol: '$',
+                    precision: 2,
+                    roundingType: 'upToCurrencyPrecision'
+                };
+            }
+        }
+        return formatMoney(num, currencyInfo.precision, null, null, currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision);
     });
 
 
