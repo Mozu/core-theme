@@ -41,6 +41,7 @@
  * @requires Taco.controller.Themesettings
  * @requires Taco.controller.Account
  * @requires Taco.controller.GeneralSettings
+ * @requires Taco.controller.Localization
  
  * @requires Taco.controller.Orders
  * @requires Taco.controller.PhoneOrders

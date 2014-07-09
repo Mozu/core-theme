@@ -2,9 +2,9 @@
  * @class Taco.view.order.Grid
 */
 Ext.define('Taco.view.settings.localization.ProductVariants', {
-    requires:['Taco.store.ShippingZones'],
-    extend: 'Taco.view.settings.shipping.Rules',
-    alias :'widget.localizationvariantsgrid',
+    requires: ['Taco.store.LocalizedProductVariants'],
+    extend: 'Taco.view.settings.localization.LocalizationRules',
+    alias :'widget.localizedvariantsgrid',
 
     createButtonText: "Create New Zone",
     title: "Product Variants",
@@ -13,7 +13,7 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
     createRoute: 'localization/zonescreate',
     editorRoute: 'localization/zonesedit',
    
-    store: { type: 'Taco.store.ShippingZones' }
+    store: { type: 'Taco.store.LocalizedProductVariants' }
 });
 
 

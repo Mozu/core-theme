@@ -4,18 +4,19 @@ Ext.define('Taco.controller.Localization', {
     extend: 'Taco.core.Controller',
     requires: [
     ],
-    models: ['Taco.model.SiteShippingSettings', 'Taco.model.TargetRule'],
+    models: ['Taco.model.SiteShippingSettings', 'Taco.model.TargetRule',
+        'Taco.model.LocalizedAttribute', 'Taco.model.LocalizedAttributeValue', 'Taco.model.LocalizedProductProperty',
+        'Taco.model.LocalizedProductExtra', 'Taco.model.LocalizedProductVariant'],
     views: [
         'Taco.view.settings.localization.Attributes',
         'Taco.view.settings.localization.AttributeValues',
         'Taco.view.settings.localization.ProductProperties',
         'Taco.view.settings.localization.ProductExtras',
-        'Taco.view.settings.localization.ProductVariants',
-        'Taco.model.ProductHandlingFeeRule',
-        'Taco.model.OrderHandlingFeeRule'
-
+        'Taco.view.settings.localization.ProductVariants'
     ],
-    stores: ['Taco.store.ShippingZones'],
+    stores: ['Taco.store.ShippingZones',
+        'Taco.store.LocalizedAttributes', 'Taco.store.LocalizedAttributeValues', 'Taco.store.LocalizedProductProperties',
+        'Taco.store.LocalizedProductExtras', 'Taco.store.LocalizedProductVariants'],
     listView: null,
 
 
