@@ -13,7 +13,11 @@ Ext.define('Taco.model.NavigationItem', {
         name: 'showBreadCrumbs',
         type: "boolean",
         defaultValue: true
-    }, {
+    },  {
+        name: 'breadCrumbOnly',
+        type: "boolean",
+        defaultValue: false
+    },{
         name: 'behaviorIds'
        
     }, 'items'],

@@ -19,7 +19,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuView', {
         this.tpl = [
             '<tpl for=".">',
             //    '<tpl if="visible">',
-                    '<li class="taco-menu-item"  style="{[values.visible ? "" : "display:none" ]}" >',
+                    '<li class="taco-menu-item"  style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}" >',
                        '<a href="{address}" class="taco-menu-item-link taco-icon taco-icon-{icon}">{label}</a>',
                     '</li>',
               //  '<tpl else>',

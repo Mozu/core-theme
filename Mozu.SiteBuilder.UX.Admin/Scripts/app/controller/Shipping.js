@@ -44,7 +44,11 @@ Ext.define('Taco.controller.Shipping', {
     },
 
     zones: function () {
-        this.createContentView('Taco.view.settings.shipping.Zones');
+
+        this.confirmContext('Taco.view.settings.shipping.Zones', function () {
+            this.createContentView('Taco.view.settings.shipping.Zones');
+        });
+        
     },
     zonesedit: function (id, additionalParams, appState) {
         this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
@@ -59,7 +63,10 @@ Ext.define('Taco.controller.Shipping', {
         this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
     productRules: function () {
-        this.createContentView('Taco.view.settings.shipping.ProductRules');
+        this.confirmContext('Taco.view.settings.shipping.Zones', function () {
+            this.createContentView('Taco.view.settings.shipping.ProductRules');
+        });
+       
     },
     productRulesEdit: function (id, additionalParams, appState) {
         this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
@@ -75,7 +82,10 @@ Ext.define('Taco.controller.Shipping', {
 
     index: function (id, additionalParams, appState) {
 
-        this.createContentView('Taco.view.settings.shipping.MethodsAndFees');
+        this.confirmContext('Taco.view.settings.shipping.Zones', function () {
+            this.createContentView('Taco.view.settings.shipping.MethodsAndFees');
+        });
+     
     },
 
     shippingMethodCreate: function (id, additionalParams, appState) {
