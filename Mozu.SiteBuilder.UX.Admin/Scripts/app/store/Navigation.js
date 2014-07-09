@@ -51,7 +51,8 @@ Ext.define('Taco.store.Navigation', {
                             id: 'ext_sub_link_' + seed++,
                             label: nodePart,
                             address: isLeaf ? link.href : null,
-                            metaData :link
+                            metaData: link,
+                            breadCrumbOnly: true
                         };
                         parentNode.items.push(node);
                         parentNode = node;

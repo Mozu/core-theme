@@ -82,7 +82,7 @@ Ext.define('Taco.view.dashboard.Index', {
                 var subNavData = {};
                 subNavData['label'] = subEl.get('label');
                 subNavData['address'] = subEl.get('address');
-                if (subEl.get('visible')) {
+                if (subEl.get('visible') && !subEl.get('breadCrumbOnly')) {
                     subNav.push(subNavData);
                 }
             }, this);
