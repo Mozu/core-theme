@@ -29,6 +29,8 @@ modules/models-faceting.js
 shim!vendor/bootstrap-affix[jquery=jQuery]
 shim!vendor/bootstrap-scrollspy[jquery=jQuery]
 modules/scroll-nav.js
+shim!vendor/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery
+modules/search-autocomplete.js
 modules/views-paging.js
 modules/views-productlists.js
 
