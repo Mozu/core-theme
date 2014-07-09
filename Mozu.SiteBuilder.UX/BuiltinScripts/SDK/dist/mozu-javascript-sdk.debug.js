@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-07-03
+ * Mozu JavaScript SDK - v0.3.0 - 2014-07-08
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3126,6 +3126,12 @@ ApiInterfaceConstructor.prototype = {
             throw errorJSON;
         });
     },
+    getActionConfig: function(instanceOrType, actionName, data) {
+        var me = this,
+            obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
+            type = obj.type;
+        return ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
+    },
     all: function() {
         return utils.when.join.apply(utils.when, arguments);
     },
@@ -3208,6 +3214,10 @@ module.exports=
       "pageSize": 15
     },
     "collectionOf": "product"
+  },
+  "suggest": {
+	"template": "{+searchService}suggest{?_*}",
+	"shortcutParam": "query"
   },
   "customers": {
     "collectionOf": "customer"
