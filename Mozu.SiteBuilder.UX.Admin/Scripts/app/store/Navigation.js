@@ -296,32 +296,32 @@ Ext.define('Taco.store.Navigation', {
                     },{
                         "id": "localization",
                         "label": "Localization",
-                        "address": "localization",
+                        "address": "Localization",
                         "items": [
                             {
                                 "id": "localizationAttr",
                                 "label": "Attributes",
-                                "address": "localization"
+                                "address": "Localization"
                             },
                             {
                                 "id": "localizationAttrVal",
                                 "label": "Attribute Values",
-                                "address": "localization/attributeValues"
+                                "address": "Localization/attributeValues"
                             },
                             {
                                 "id": "localizationProp",
                                 "label": "Product Properties",
-                                "address": "localization/productProperties"
+                                "address": "Localization/productProperties"
                             },
                             {
                                 "id": "localizationExtra",
                                 "label": "Product Extras",
-                                "address": "localization/productExtras"
+                                "address": "Localization/productExtras"
                             },
                             {
                                 "id": "localizationVar",
                                 "label": "Product Variants",
-                                "address": "localization/productVariants"
+                                "address": "Localization/productVariants"
                             }
                         ]
                     },

@@ -39,6 +39,7 @@ Ext.application({
         'Themes',
         'Themesettings',
         'Shipping',
+        'Localization',
         'Entities',
         'GeneralSettings',
         'Tests',
