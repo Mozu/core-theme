@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-07-08
+ * Mozu JavaScript SDK - v0.3.0 - 2014-07-09
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3031,7 +3031,7 @@ ApiInterfaceConstructor.prototype = {
         var xhr;
         var triedRefresh = false;
         var makeRequest = function () {
-            var contextHeaders = me.context.asObject("x-vol-");
+            var contextHeaders = me.getRequestHeaders();
             xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
             // update context with response headers
             me.fire('success', rawJSON, xhr, requestConf);
@@ -3131,6 +3131,9 @@ ApiInterfaceConstructor.prototype = {
             obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
             type = obj.type;
         return ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
+    },
+    getRequestHeaders: function() {
+        return this.context.asObject("x-vol-");
     },
     all: function() {
         return utils.when.join.apply(utils.when, arguments);

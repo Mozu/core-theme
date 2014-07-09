@@ -47,6 +47,7 @@
         "maxTopLevelNavItems": 8,
         "maxTopLevelNavLabelLength": 20,
 
+		"searchExpandOnFocus": true,
 		"useSearchAutocomplete": true,
 		"autocompleteProducts": true,
 
