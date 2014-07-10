@@ -13,15 +13,18 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
     // force the field to have the same number of decimal places as are defined in decimalPrecision; defualts to two
     forcePrecision: true,
     currencyCode: null,
-
+    
     initComponent: function () {
+
         var me = this, currency;
+
         if (me.currencyCode) {
             currency = Taco.app.context.currencies[me.currencyCode.toLowerCase()];
             me.unitAtEnd = false;
             me.unitString = currency.symbol;
             me.significantDecimalDigits = currency.significantDecimalDigits;
         }
+        me.sepperatorRegexp = new RegExp(Ext.util.Format.thousandSeparator, 'gi');
         me.callParent(arguments);
     },
 
@@ -43,7 +46,7 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
             decimalSeparator = me.decimalSeparator;
         value = me.parseValue(value);
         value = me.fixPrecision(value);
-        value = Ext.isNumber(value) ? value : parseFloat(String(value).replace(decimalSeparator, '.').replace(me.unitString, ''));
+        value = Ext.isNumber(value) ? value : parseFloat(String(value).replace(this.decimalSeparator, '.').replace(this.unitString, '').replace(me.sepperatorRegexp, ''));
         value = isNaN(value) ? '' :  Ext.util.Format.currency(value, this.unitString, this.significantDecimalDigits, this.unitAtEnd);
         
 
@@ -53,7 +56,7 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
 
 
     parseValue: function (value) {
-        value = parseFloat(String(value).replace(this.decimalSeparator, '.').replace(this.unitString, ''));
+        value = parseFloat(String(value).replace(this.decimalSeparator, '.').replace(this.unitString, '').replace(this.sepperatorRegexp, ''));
         return isNaN(value) ? null : value;
     },
     
@@ -71,7 +74,7 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
             return errors;
         }
 
-        value = String(value).replace(me.decimalSeparator, '.').replace(me.unitString, '');
+        value = String(value).replace(this.decimalSeparator, '.').replace(this.unitString, '').replace(me.sepperatorRegexp, '');
 
         if (isNaN(value)) {
             errors.push(format(me.nanText, value));
