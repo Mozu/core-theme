@@ -1,5 +1,5 @@
-﻿Ext.create('Taco.core.ux.form.EntityEditorForm', {
-    title: 'A Simple core4 page to show jon',
+﻿Ext.create('Taco.core.ux.form.WebPageEditorForm', {
+    title: 'About us',
     items: [
         {
             fieldLabel: 'banner',

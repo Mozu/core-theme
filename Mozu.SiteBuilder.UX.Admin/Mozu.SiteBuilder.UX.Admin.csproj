@@ -704,6 +704,7 @@
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
+    <Content Include="Scripts\app\core\ux\form\WebPageEditorForm.js" />
     <Content Include="Scripts\app\core\ux\form\EntityEditorForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\code.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
@@ -963,7 +964,6 @@
     <Content Include="Scripts\app\view\website\settings\CatalogSeo.js" />
     <Content Include="Scripts\app\view\website\settings\CmsBaseForm.js" />
     <Content Include="Scripts\app\view\website\settings\EmailTemplate.js" />
-    <Content Include="Scripts\app\view\website\settings\DocumentSeo.js" />
     <Content Include="Scripts\app\view\website\settings\Template.js" />
     <Content Include="Scripts\app\view\website\settings\ProductDocument.js" />
     <Content Include="Scripts\app\view\website\WidgetEditor.js" />
@@ -976,7 +976,6 @@
     <Content Include="Scripts\app\view\website\settings\facets\FacetRangeQueryForm.js" />
     <Content Include="Scripts\app\view\website\settings\facets\FacetRangeQueryGroup.js" />
     <Content Include="Scripts\app\view\website\settings\facets\Facets.js" />
-    <Content Include="Scripts\app\view\website\settings\General.js" />
     <Content Include="Scripts\app\view\website\settings\WebDocument.js" />
     <Content Include="Scripts\app\view\website\Tree.js" />
     <Content Include="Scripts\app\view\website\Index.js" />
@@ -1948,7 +1947,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\makeadmintests.js" />
-    <Content Include="Tests\Mocks\Entities\Editors\default - Copy.js" />
     <Content Include="Tests\Mocks\Entities\Editors\default.js" />
     <Content Include="Tests\Mocks\Entities\Editors\EntityEditors.js" />
     <Content Include="Tests\Mocks\Entities\Editors\pages.js" />
