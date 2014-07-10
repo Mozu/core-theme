@@ -52,6 +52,68 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(result);
         }
 
+        [HttpGetRoute(UriTemplate = "attributes/edit/{attributeFqn}")]
+        public async Task<Response<SiteShippingSettings>> UpsertLocalizedAttributes(Models.Localization.LocalizedAttribute localizedAttribute, string attributeFqn)
+        {
+            //map to dc attribute.
+            //await _attributeWebApiClient.UpdateLocalizedContents()
+            throw new NotImplementedException();
+        }
+
+        [HttpGetRoute(UriTemplate = "attributevalues/read")]
+        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedAttributeValues([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            throw new NotImplementedException();
+        }
+        
+        [HttpGetRoute(UriTemplate = "attributevalues/edit")]
+        public async Task<Response<SiteShippingSettings>> UpsertLocalizedAttributeValues()
+        {
+            //await _attributeWebApiClient.UpdateAttributeVocabularyValueLocalizedContents()
+            throw new NotImplementedException();
+        } 
+
+        [HttpGetRoute(UriTemplate = "product/properties/read")]
+        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductProperties([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGetRoute(UriTemplate = "product/properties/edit")]
+        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductProperties()
+        {
+            //await _productWebApiClient.UpdatePropertyValueLocalizedContents();
+            throw new NotImplementedException();
+        } 
+        
+        [HttpGetRoute(UriTemplate = "productextras/read")]
+        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductExtras([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            
+            throw new NotImplementedException();
+        }
+
+        [HttpGetRoute(UriTemplate = "productextras/edit")]
+        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductExtras()
+        {
+            throw new NotImplementedException();
+        } 
+        
+        [HttpGetRoute(UriTemplate = "productvariants/read")]
+        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductVariants([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGetRoute(UriTemplate = "productvariants/edit")]
+        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductVariants()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        #region privates
+
         private List<LocalizedAttribute> CreateFakeAttributeData()
         {
             return new List<Models.Localization.LocalizedAttribute>
@@ -91,61 +153,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
         }
 
-        [HttpGetRoute(UriTemplate = "attributes/edit/{attributeFqn}")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedAttributes(Models.Localization.LocalizedAttribute localizedAttribute, string attributeFqn)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
 
-        [HttpGetRoute(UriTemplate = "attributevalues/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedAttributeValues([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
-        {
-            throw new NotImplementedException();
-        }
-        
-        [HttpGetRoute(UriTemplate = "attributevalues/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedAttributeValues()
-        {
-            throw new NotImplementedException();
-        } 
 
-        [HttpGetRoute(UriTemplate = "product/properties/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductProperties([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGetRoute(UriTemplate = "product/properties/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductProperties()
-        {
-            throw new NotImplementedException();
-        } 
-        
-        [HttpGetRoute(UriTemplate = "productextras/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductExtras([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGetRoute(UriTemplate = "productextras/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductExtras()
-        {
-            throw new NotImplementedException();
-        } 
-        
-        [HttpGetRoute(UriTemplate = "productvariants/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductVariants([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGetRoute(UriTemplate = "productvariants/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductVariants()
-        {
-            throw new NotImplementedException();
-        } 
-        
- 
-   
     }
 }
