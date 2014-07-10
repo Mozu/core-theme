@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.order.Grid
+ * @class Taco.view.settings.localization.LocalizationRules
 */
 Ext.define('Taco.view.settings.localization.LocalizationRules', {
     extend: 'Taco.core.ux.browser.SearchList',

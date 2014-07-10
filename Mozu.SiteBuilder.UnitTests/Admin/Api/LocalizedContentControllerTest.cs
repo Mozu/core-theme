@@ -9,7 +9,7 @@ using NSubstitute;
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api
 {
     [TestFixture]
-    public class LocalizedDataControllerTest
+    public class LocalizedContentControllerTest
     {
         [Ignore, TestCase("happy path case")]
         public void Given_A_When_B_Then_Should_Do_C(string scenario)

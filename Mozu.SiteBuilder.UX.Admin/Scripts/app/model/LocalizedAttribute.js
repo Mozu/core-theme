@@ -48,8 +48,8 @@ Ext.define('Taco.model.LocalizedAttribute', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/localizeddata/attributes/read',
-            update: '/admin/app/localizeddata/attributes/update'
+            read: '/admin/app/localizedcontent/attributes/read',
+            update: '/admin/app/localizedcontent/attributes/edit'
         },
         reader: {
             type: 'json',

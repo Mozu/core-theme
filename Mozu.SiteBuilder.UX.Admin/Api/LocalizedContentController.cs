@@ -24,8 +24,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    [WebApi("app/localizeddata", SuppressDescriptorGeneration = true)]
-    public class LocalizedDataController : BaseController
+    [WebApi("app/localizedcontent", SuppressDescriptorGeneration = true)]
+    public class LocalizedContentController : BaseController
     {
         private readonly IAttributeWebApiClient _attributeWebApiClient;
         private readonly IProductWebApiClient _productWebApiClient;
@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IApiContext _apiCtx;
 
 
-        public LocalizedDataController(IAttributeWebApiClient attributeWebApiClient, IProductWebApiClient productWebApiClient, IMasterCatalogWebApiClient masterCatalogWebApiClient,
+        public LocalizedContentController(IAttributeWebApiClient attributeWebApiClient, IProductWebApiClient productWebApiClient, IMasterCatalogWebApiClient masterCatalogWebApiClient,
             ISettings settings, IApiContext apiCtx)
         {
             _attributeWebApiClient = attributeWebApiClient;
@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new NotImplementedException();
         }
         
-        [HttpGetRoute(UriTemplate = "attributevalues/update")]
+        [HttpGetRoute(UriTemplate = "attributevalues/edit")]
         public async Task<Response<SiteShippingSettings>> UpsertLocalizedAttributeValues()
         {
             throw new NotImplementedException();
@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new NotImplementedException();
         }
 
-        [HttpGetRoute(UriTemplate = "product/properties/update")]
+        [HttpGetRoute(UriTemplate = "product/properties/edit")]
         public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductProperties()
         {
             throw new NotImplementedException();
@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new NotImplementedException();
         }
 
-        [HttpGetRoute(UriTemplate = "productextras/update")]
+        [HttpGetRoute(UriTemplate = "productextras/edit")]
         public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductExtras()
         {
             throw new NotImplementedException();
@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new NotImplementedException();
         }
 
-        [HttpGetRoute(UriTemplate = "productvariants/update")]
+        [HttpGetRoute(UriTemplate = "productvariants/edit")]
         public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductVariants()
         {
             throw new NotImplementedException();
