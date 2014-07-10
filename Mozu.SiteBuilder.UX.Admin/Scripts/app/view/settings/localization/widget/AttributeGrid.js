@@ -1,7 +1,7 @@
 ///**
-// * @class Taco.view.product.widget.ProductBundleGrid
+// * @class Taco.view.settings.localization.widget.AttributeGrid
 // */
-//Ext.define('Taco.view.settings.localization.widget.ProductBundleGrid', {
+//Ext.define('Taco.view.settings.localization.widget.AttributeGrid', {
 //    extend: 'Taco.core.ux.browser.SearchList',
 //    alias: 'widget.productbundlegrid',
 //    requires: [
@@ -139,74 +139,74 @@
 //                scope: me
 //            }
 //        ];
-//    },
-
-//    /**
-//    *  Open the product selector dialog, in order to add a product or bundle item;
-//    */
-//    addItem: function () {
-//        var me = this,
-//            productStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductBundlePicker');
-
-//        if (!productStore.hasLoaded()) {
-//            productStore.load();
-//        }
-        
-//        var productSelector = Ext.create('Taco.view.product.Modal', {
-//            store: productStore,
-//            listeners: {
-//                savesuccess: {
-//                    fn: function (modal, values) {
-                        
-//                        // add a default quantity of 1 to each selected record
-//                        var bundleStore = this.store;
-//                        var itemsToAdd = [];
-
-
-//                        Ext.Array.each(values, function (record) {
-                            
-//                            var item = Ext.create('Taco.model.BundledProduct', record.data);
-//                            item.set('quantity', 1);
-//                            // need to manually set the dirtystate on new records because they automatically get an id which ext uses to determine if there is a phantom (ie dirty);
-//                            item.setDirty();
-                            
-//                            itemsToAdd.push(item);
-
-//                            //remove any records from the store that match what we just added;
-//                            var existingRecord = bundleStore.getById(record.get("productCode"));
-//                            if (existingRecord) {
-//                                bundleStore.remove(existingRecord);
-//                            }
-//                        });
-
-//                        bundleStore.add(itemsToAdd);
-//                    },
-//                    scope: me
-//                }
-//            }
-//        });
-        
-//    },
-
-//    /**
-//    *  Remove a bundle itme from the grid;
-//    */
-//    removeItem: function (record) {
-//        var me = this;
-        
-//        Ext.MessageBox.show({
-//            title: 'Remove Item',
-//            rightJustifyButtons: true,
-//            reverseOrder: true,
-//            msg: 'Are you sure you want to remove this item?',
-//            closable: false,
-//            buttons: Ext.Msg.YESNO,
-//            fn: function (val) {
-//                if (val === 'yes') {
-//                    me.store.remove(record);
-//                    me.store.sync();
-//                }
-//            }
-//        });
 //    }
+
+//    ///**
+//    //*  Open the product selector dialog, in order to add a product or bundle item;
+//    //*/
+//    //addItem: function () {
+//    //    var me = this,
+//    //        productStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductBundlePicker');
+
+//    //    if (!productStore.hasLoaded()) {
+//    //        productStore.load();
+//    //    }
+        
+//    //    var productSelector = Ext.create('Taco.view.product.Modal', {
+//    //        store: productStore,
+//    //        listeners: {
+//    //            savesuccess: {
+//    //                fn: function (modal, values) {
+                        
+//    //                    // add a default quantity of 1 to each selected record
+//    //                    var bundleStore = this.store;
+//    //                    var itemsToAdd = [];
+
+
+//    //                    Ext.Array.each(values, function (record) {
+                            
+//    //                        var item = Ext.create('Taco.model.BundledProduct', record.data);
+//    //                        item.set('quantity', 1);
+//    //                        // need to manually set the dirtystate on new records because they automatically get an id which ext uses to determine if there is a phantom (ie dirty);
+//    //                        item.setDirty();
+                            
+//    //                        itemsToAdd.push(item);
+
+//    //                        //remove any records from the store that match what we just added;
+//    //                        var existingRecord = bundleStore.getById(record.get("productCode"));
+//    //                        if (existingRecord) {
+//    //                            bundleStore.remove(existingRecord);
+//    //                        }
+//    //                    });
+
+//    //                    bundleStore.add(itemsToAdd);
+//    //                },
+//    //                scope: me
+//    //            }
+//    //        }
+//    //    });
+        
+//    //},
+
+//    ///**
+//    //*  Remove a bundle itme from the grid;
+//    //*/
+//    //removeItem: function (record) {
+//    //    var me = this;
+        
+//    //    Ext.MessageBox.show({
+//    //        title: 'Remove Item',
+//    //        rightJustifyButtons: true,
+//    //        reverseOrder: true,
+//    //        msg: 'Are you sure you want to remove this item?',
+//    //        closable: false,
+//    //        buttons: Ext.Msg.YESNO,
+//    //        fn: function (val) {
+//    //            if (val === 'yes') {
+//    //                me.store.remove(record);
+//    //                me.store.sync();
+//    //            }
+//    //        }
+//    //    });
+//    //}
 //});
