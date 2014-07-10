@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 IsDesktop = tmd.Configuration.About.IsDesktop,
                 IsMobile = tmd.Configuration.About.IsMobile,
                 IsTablet = tmd.Configuration.About.IsTablet,
-
+                DefaultLanguage = tmd.Configuration.About.DefaultLanguage ?? "en-US",
                 Thumbnail = tmd.Thumbnail,
                 ThemePath = tmd.ThemePath ,
                 TimeStamp = tmd.TimeStamp,
@@ -51,12 +51,33 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 theme.EmailTemplates = Merge<PageTypeDefinition>(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id);
                 theme.Widgets = Merge<WidgetDefinition>(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id);
                 theme.MergedLabels = MergeLabels(tmd.Labels, parent.MergedLabels);
+          
                 theme.TimeStamp = parent.TimeStamp > theme.TimeStamp ? parent.TimeStamp : theme.TimeStamp;
             }
 
             theme.FileListing = tmd.FileListing;
-
+            SetFallbackLocales(theme);
             return theme;
+        }
+
+        private void SetFallbackLocales(Theme t)
+        {
+            ThemeLabelCollection defaultCollection;
+            if (!t.MergedLabels.TryGetValue(t.DefaultLanguage, out defaultCollection))
+            {
+                defaultCollection = new ThemeLabelCollection();
+                t.MergedLabels[t.DefaultLanguage] = defaultCollection;
+            }
+            foreach (var themeCollection in t.MergedLabels.Where(x=> !string.Equals(t.DefaultLanguage , x.Key )).Select(x=> x.Value))
+            {
+                foreach ( var key in defaultCollection.Keys)
+                {
+                    if (!themeCollection.ContainsKey(key))
+                    {
+                        themeCollection[key] = defaultCollection[key];
+                    }
+                }
+            }
         }
 
         private List<TOut> Merge<TOut>(List<TOut> themeValues, List<TOut> parentValues, Func<TOut, string> identifierMember)
@@ -89,11 +110,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 mergedDictionary[localeCode] = new ThemeLabelCollection();
                 if (themeValues.ContainsKey(localeCode))
                 {
-                    themeValues[localeCode].Each(lb => mergedDictionary[localeCode].Add(lb));
+                    themeValues[localeCode].Each(lb => mergedDictionary[localeCode].Add(lb.Key, lb.Value));
                 }
                 if (parentValues.ContainsKey(localeCode))
                 {
-                    parentValues[localeCode].Where(lb => !mergedDictionary[localeCode].Contains(lb.Id)).Each(lb => mergedDictionary[localeCode].Add(lb));
+                    parentValues[localeCode].Where(lb => !mergedDictionary[localeCode].ContainsKey(lb.Key )).Each(lb => mergedDictionary[localeCode].Add(lb.Key,lb.Value));
                 }
             }
 

@@ -23,6 +23,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NDjango.Interfaces;
 using Microsoft.FSharp.Core;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -241,6 +242,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                             foreach (var widget in column.Widgets)
                             {
+                                widget.Config = widget.Config ?? new JObject();
                                 bool isContent = widget.DefinitionId == "content";
                                 widget.isRichText = isContent;
 

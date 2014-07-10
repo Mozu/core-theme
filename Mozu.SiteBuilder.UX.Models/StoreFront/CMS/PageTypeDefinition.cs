@@ -22,14 +22,16 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [DataMember (Name = "template")]
         public string Template { get; set; }
 
+        [DataMember(Name = "customEditor")]
+        public string CustomEditor { get; set; }
+
         [DataMember (Name = "entityType")]
         public string EntityType { get; set; }
 
         [DataMember (Name = "documentType")]
         public string DocumentType { get; set; }
 
-        [DataMember(Name = "editor")]
-        public string Editor { get; set; }
+    
 
         [DataMember(Name = "userCreatable")]
         public bool? UserCreatable { get; set; }
@@ -41,6 +43,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         public List<ZoneRuntimeData> Zones { get; set; }
 
         public string FullPath { get; set; }
+
+         [DataMember(Name = "documentListName")]
+        public string DocumentListName { get; set; }
     }
 
     public class EditorDefinition

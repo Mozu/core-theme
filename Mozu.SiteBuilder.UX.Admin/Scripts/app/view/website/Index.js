@@ -25,7 +25,8 @@ Ext.define('Taco.view.website.Index', {
         'Ext.menu.CheckItem',
         'Taco.view.entityManager.Grid',
         'Taco.view.entityManager.DynamicFormContainer',
-        'Taco.store.EntityEditors'
+        'Taco.store.EntityEditors',
+        'Taco.store.PageTypeDefinitions'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -62,7 +63,9 @@ Ext.define('Taco.view.website.Index', {
 
 
 
-        this.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+        this.entityEditors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
+        this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
+        
         this.header = {
             title: false,
             items: [{

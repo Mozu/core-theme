@@ -118,6 +118,12 @@ Ext.define('Taco.view.entityManager.Index', {
 
     onOpenList: function (record) {
         var me = this;
+
+        if (!record.raw.metaData) {
+            return;
+        }
+
+
         me.contentContainer.removeAll();
 
         me.form = me.grid = null;

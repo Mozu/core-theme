@@ -130,6 +130,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         internal ThemeMetaData Source { get; set; }
 
         public DateTime TimeStamp { get; set; }
+
+        public string DefaultLanguage { get; set; }
     }
 
     public class ThemeFileSystemInfo

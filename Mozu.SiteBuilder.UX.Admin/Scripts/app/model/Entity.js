@@ -17,8 +17,8 @@ Ext.define('Taco.model.Entity', {
             });
             params = config.params|| {}
 
-            params.list = lookupInfo.list;
-            params.entityType = lookupInfo.entityType;
+            params.list = lookupInfo.list || lookupInfo.documentListName
+            params.entityType = lookupInfo.entityType||'cms'
             params.id = lookupInfo.id;
 
             config.params = params;

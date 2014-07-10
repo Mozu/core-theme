@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.ErrorHandler;
+using Mozu.Core.Mongo.JobScheduler;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -122,64 +124,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     cmsPageContext.RuntimeData = new List<ZoneRuntimeData>();
                    
 
-                    if (cmsPageContext.Page.Document != null)
-                    {
-                        var widgetRaw = (string) cmsPageContext.Page.Document.Get<string>(CmsConstants.Documents.widget_prop);
-                        
-                        var src = new DocumentRequest
-                                      {
-                                          Id = cmsPageContext.Page.Document.Id,
-                                          DocumentListName = cmsPageContext.Page.Document.DocumentListName
-                                      };
-                        
                     
-
-
-                        List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
-                        if (zoneData != null)
-                        {
-                            zoneData.ForEach(x => x.Source = src);
-                            cmsPageContext.RuntimeData.AddRange(zoneData);
-                        }
-                    }
-                    if (cmsPageContext.Template.Document != null)
-                    {
-                        var widgetRaw = (string) cmsPageContext.Template.Document.Get<string>(CmsConstants.Documents.widget_prop);
-                        
-                        var src = new DocumentRequest
-                                      {
-                                          Id = cmsPageContext.Template.Document.Id,
-                                          DocumentListName = cmsPageContext.Template.Document.DocumentListName
-                                      };
-                        
-                       
-
-                        List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
-                        if (zoneData != null)
-                        {
-                            zoneData.ForEach(x => x.Source = src);
-                            cmsPageContext.RuntimeData.AddRange(zoneData);
-                        }
-                    }
-                    if (cmsPageContext.SiteTemplate.Document != null)
-                    {
-                        var widgetRaw = (string) cmsPageContext.SiteTemplate.Document.Get<string>(CmsConstants.Documents.widget_prop);
-                        
-                        var src = new DocumentRequest
-                                      {
-                                          Id = cmsPageContext.SiteTemplate.Document.Id,
-                                          DocumentListName = cmsPageContext.SiteTemplate.Document.DocumentListName
-                                      };
-                        
-                        
-
-                        List<ZoneRuntimeData> zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
-                        if (zoneData != null)
-                        {
-                            zoneData.ForEach(x => x.Source = src);
-                            cmsPageContext.RuntimeData.AddRange(zoneData);
-                        }
-                    }
+                   
+                    AddRuntimeData(cmsPageContext.Page.Document, cmsPageContext);
+                    AddRuntimeData(cmsPageContext.Template.Document, cmsPageContext);
+                    AddRuntimeData(cmsPageContext.SiteTemplate.Document, cmsPageContext);
+                    
 
 
 
@@ -188,6 +138,35 @@ namespace Mozu.SiteBuilder.Mvc.CMS
            //     });
 
            
+        }
+
+        private void AddRuntimeData(Mozu.Content.Contracts.Document document, CmsPageContext cmsPageContext)
+        {
+            if (document == null)
+                return;
+            var widgetRawArray = document.Get<JArray>(CmsConstants.Documents.widget_prop);
+            List<ZoneRuntimeData> zoneData = widgetRawArray == null ? null : widgetRawArray.ToObject<List<ZoneRuntimeData>>();
+            if (zoneData == null)
+            {
+                var widgetRaw = (string)document.Get<string>(CmsConstants.Documents.widget_prop_old);
+                zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
+            }
+
+            var src = new DocumentRequest
+                      {
+                          Id = document.Id,
+                          DocumentListName = document.DocumentListName
+                      };
+
+
+
+
+
+            if (zoneData != null)
+            {
+                zoneData.ForEach(x => x.Source = src);
+                cmsPageContext.RuntimeData.AddRange(zoneData);
+            }
         }
 
         public void CreateTemplate_deleteme(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)

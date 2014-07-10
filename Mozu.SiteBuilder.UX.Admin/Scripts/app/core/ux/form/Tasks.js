@@ -62,7 +62,7 @@
                     task.updateForm.getForm().updateRecord(task.updateRecord);
                 }
 
-                console.log('updateRecord - success');
+                
                 tasks.callback();
             };
         } else if (task.saveRecord) {

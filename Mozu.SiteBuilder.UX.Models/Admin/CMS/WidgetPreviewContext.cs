@@ -115,7 +115,7 @@ using System.Runtime.Serialization;
           [DataMember(Name = "isRichText")]
         public bool isRichText { get; set; }
           [DataMember(Name = "config")]
-        public object Config { get; set; }
+        public JObject Config { get; set; }
           [DataMember(Name = "id")]
         public string Id { get; set; }
     }

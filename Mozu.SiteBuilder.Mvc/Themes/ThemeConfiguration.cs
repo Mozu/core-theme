@@ -55,6 +55,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             
             [DataMember(Name = "isTablet")]
             public bool IsTablet { get; set; }
+
+
+            [DataMember(Name = "defaultLanguage")]
+            public string DefaultLanguage { get; set; }
         }
     }
 }
