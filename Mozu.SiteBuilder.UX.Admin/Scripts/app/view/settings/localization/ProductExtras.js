@@ -3,7 +3,7 @@
 */
 Ext.define('Taco.view.settings.localization.ProductExtras', {
     requires: ['Taco.store.LocalizedProductExtras'],
-    extend: 'Taco.view.settings.localization.LocalizationRules',
+    extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias :'widget.localizedextrasgrid',
 
     createButtonText: "Create New Zone",

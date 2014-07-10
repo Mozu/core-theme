@@ -930,7 +930,7 @@
     <Content Include="Scripts\app\view\settings\localization\widget\WidgetPlaceholder.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
-    <Content Include="Scripts\app\view\settings\localization\LocalizationRules.js" />
+    <Content Include="Scripts\app\view\settings\localization\widget\LocalizationGrid.js" />
     <Content Include="Scripts\app\view\settings\localization\subform\SubformPlaceholder.js" />
     <Content Include="Scripts\app\view\settings\shipping\ProductRules.js" />
     <Content Include="Scripts\app\view\settings\shipping\MethodsAndFees.js" />

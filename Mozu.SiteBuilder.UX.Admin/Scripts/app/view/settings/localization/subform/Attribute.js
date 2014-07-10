@@ -1,33 +1,18 @@
 ﻿///**
-// * @class Taco.view.product.subform.Bundle 
+// * @class Taco.view.settings.localization.subform.Attribute 
 // *
 // */
 
 //Ext.define('Taco.view.settings.localization.subform.Attribute', {
-//    extend: 'Taco.view.product.subform.Subform',
+//    extend: 'Taco.core.ux.form.Form',
 //    requires: [
 //        'Taco.view.settings.localization.widget.AttributeGrid'
 //    ],
-//    itemId: 'bundleSubForm',
-//    title: 'Bundle Items',
+//    itemId: 'localizedAttributesSubForm',
+//    title: 'Attributes',
 //    margin: '20 0',
 //    initComponent: function () {
-//        var me = this,
-//            readOnly,
-//            requiredContent,
-//            visable;
-
-//        me.tools = [{
-//            xtype: 'button',
-//            ui: "action-primary",
-//            scale: "medium",
-//            margin: "0 0 20, 0",
-//            text: "Add",
-//            handler: function() {
-//                this.productBundleGrid.addItem();
-//            },
-//            scope: me
-//        }];
+//        var me = this;
 
 //        this.defaults = {
 //            width: 200,
@@ -40,25 +25,20 @@
 
 //        this.record = this.product;
 
-//        this.productBundleGrid = Ext.create('Taco.view.product.widget.ProductBundleGrid', {
+//        this.attributeGrid = Ext.create('Taco.view.settings.localization.widget.AttributeGrid', {
 //            product : me.product
 //        });
 
-//        readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
-//        visable = !readOnly || this.isEdit();
-//        requiredContent = this.isSingleSite || this.isGlobal;
+        
         
 //        this.items = [
-//            this.productBundleGrid
+//            this.attributeGrid
 //        ];
 
 //        this.callParent(arguments);
 
+//        me.mon(me.attributeGrid.store, 'datachanged', me.onStoreDataChanged, me);
         
-
-//        me.mon(me.productBundleGrid.store, 'datachanged', me.onStoreDataChanged, me);
-        
-
 //    },
     
 //    onStoreDataChanged: function (bundleStore) {
