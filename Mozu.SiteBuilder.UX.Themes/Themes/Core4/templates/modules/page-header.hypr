@@ -10,9 +10,3 @@
     {% endblock search-box %}
     
 </header>
-
-<h4>
-    {{ model.createDate|date(labels.dateFormat) }}
-    
-    {% now labels.dateFormat %}
-</h4>
