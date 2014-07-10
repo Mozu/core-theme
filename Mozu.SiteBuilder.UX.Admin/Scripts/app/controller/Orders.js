@@ -46,20 +46,20 @@ Ext.define('Taco.controller.Orders', {
 
     },
 
+    orderlist: function (cfg) {
+
+        var ctx = Taco.app.context.getCurrentContext();
+        if (cfg.record && (ctx.contextType != 's' || (cfg.record.data.siteId && ctx.id != cfg.record.data.siteId))) {
+            Taco.app.context.setCurrentContext(Taco.app.context.findSite(cfg.record.data.siteId), false);
+        }
+
+        this.superclass.createContentView("Taco.view.order.Grid", {
+            record: null,
+            options: null
+        });
+
+    },
    
-
-    //edit: function (id, additionalParams, appState) {
-
-    //    Taco.model.Order.load( id,)
-    //    var split = Taco.app.viewPort.down('order.split');
-    //    if (!split) {
-    //        split = Ext.create('Taco.view.order.Split');
-
-    //    }
-    //    split.setRecord(record);
-    //},
-
-    
 
     create: function () {
         var ctx = Taco.app.context.getCurrentContext(),
