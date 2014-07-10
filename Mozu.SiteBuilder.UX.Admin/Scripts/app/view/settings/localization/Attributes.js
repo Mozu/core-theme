@@ -2,7 +2,7 @@
  * @class Taco.view.order.Grid
 */
 Ext.define('Taco.view.settings.localization.Attributes', {
-    requires:['Taco.store.LocalizedAttributes'],
+    requires: ['Taco.store.LocalizedAttributes'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias :'widget.localizedattributesgrid',
 
@@ -19,8 +19,12 @@ Ext.define('Taco.view.settings.localization.Attributes', {
 
     // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function() {
-        var me = this;
-        return [
+        var me = this,
+            mc = Taco.app.context.getMasterCatalog(),
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(),
+            columns = [];
+
+        columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeFQN',
@@ -42,46 +46,70 @@ Ext.define('Taco.view.settings.localization.Attributes', {
                 text: 'Attribute Name (English)',
                 flex: 1,
                 width: 150
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'spanish',
-                text: 'Spanish',
-                flex: 1,
-                width: 150,
-                sortable: false,
-                resizable: false,
-                menuDisabled: true,
-                editor: {
-                    // defaults to textfield if no xtype is supplied
-                    xtype: "textfield",
-                    showBorder: true,
-                    hideTrigger: true,
-                    emptyText: "missing",
-                    msgTarget: "qtip",
-                    selectOnFocus: true,
-                    allowBlank: true
-                },
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'french',
-                text: 'French',
-                flex: 1,
-                width: 150,
-                sortable: false,
-                resizable: false,
-                menuDisabled: true,
-                editor: {
-                    // defaults to textfield if no xtype is supplied
-                    xtype: "textfield",
-                    showBorder: true,
-                    hideTrigger: true,
-                    emptyText: "missing",
-                    msgTarget: "qtip",
-                    selectOnFocus: true,
-                    allowBlank: true
-                },
             }
+             //}, {
+            //    xtype: 'gridcolumn',
+            //    dataIndex: 'spanish',
+            //    text: 'Spanish',
+            //    flex: 1,
+            //    width: 150,
+            //    sortable: false,
+            //    resizable: false,
+            //    menuDisabled: true,
+            //    editor: {
+            //        // defaults to textfield if no xtype is supplied
+            //        xtype: "textfield",
+            //        showBorder: true,
+            //        hideTrigger: true,
+            //        emptyText: "missing",
+            //        msgTarget: "qtip",
+            //        selectOnFocus: true,
+            //        allowBlank: true
+            //    },
+            //}, {
+            //    xtype: 'gridcolumn',
+            //    dataIndex: 'french',
+            //    text: 'French',
+            //    flex: 1,
+            //    width: 150,
+            //    sortable: false,
+            //    resizable: false,
+            //    menuDisabled: true,
+            //    editor: {
+            //        // defaults to textfield if no xtype is supplied
+            //        xtype: "textfield",
+            //        showBorder: true,
+            //        hideTrigger: true,
+            //        emptyText: "missing",
+            //        msgTarget: "qtip",
+            //        selectOnFocus: true,
+            //        allowBlank: true
+            //    },
         ];
+
+        // todo: move to superclass, getLocaleColumns, exclude primary? - Greg Murray on 2014-07-10 
+        Ext.Array.each(supportedLocales, function(locale) {
+            columns.push({
+                xtype: 'gridcolumn',
+                dataIndex: locale,
+                text: locale,
+                flex: 1,
+                width: 150,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                editor: {
+                    xtype: "textfield",
+                    showBorder: true,
+                    hideTrigger: true,
+                    emptyText: "missing",
+                    msgTarget: "qtip",
+                    selectOnFocus: true,
+                    allowBlank: true
+                },
+            });
+        });
+        return columns;
     }
 
 });
