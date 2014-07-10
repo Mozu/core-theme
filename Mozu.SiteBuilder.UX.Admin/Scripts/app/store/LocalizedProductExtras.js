@@ -17,8 +17,8 @@
         proxy: {
             type: 'ajax',
             api: {
-                read: '/admin/app/localization/attributes/read',
-                update: '/admin/app/localization/attributes/edit'
+                read: '/admin/app/localizedcontent/attributes/read',
+                update: '/admin/app/localizedcontent/attributes/edit'
             },
             reader: {
                 type: 'json',

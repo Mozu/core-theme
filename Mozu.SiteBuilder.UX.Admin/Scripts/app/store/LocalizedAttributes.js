@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.store.Discounts
+ * @class Taco.store.LocalizedAttributes
  */
 
     Ext.define('Taco.store.LocalizedAttributes', {
@@ -17,8 +17,8 @@
         proxy: {
             type: 'ajax',
             api: {
-                read: '/admin/app/localizeddata/attributes/read',
-                update: '/admin/app/localizeddata/attributes/edit'
+                read: '/admin/app/localizedcontent/attributes/read',
+                update: '/admin/app/localizedcontent/attributes/edit'
             },
             reader: {
                 type: 'json',

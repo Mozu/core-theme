@@ -88,8 +88,8 @@ Ext.define('Taco.model.LocalizedProductExtra', {
         //     destroy: '/admin/app/Test/testDestroy'
         // },
         api: {
-            read: '/admin/app/localization/attributes/read',
-            update: '/admin/app/localization/attributes/update'
+            read: '/admin/app/localizedcontent/attributes/read',
+            update: '/admin/app/localizedcontent/attributes/edit'
         },
         reader: {
             type: 'json',
