@@ -6,10 +6,14 @@ using System.Security.Policy;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Web.Http;
+using System.Web.UI;
 using Magnum.Extensions;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Logging;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Newtonsoft.Json.Linq;
 using DC=Mozu.Content.Contracts;
@@ -34,13 +38,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         //private readonly IDocumentListWebApiClient _docRepo;
         ICmsTypeHelper _cmsTypeHelper;
 
+     
         ICmsServiceWrapper _cmsService;
         private readonly IDocumentListWebApiClient _documentListWebApiClien;
         private readonly ILogger _logger;
         //ISessionDocumentStore _sessionDocStore;
         public CmsDocumentController(IDocumentListWebApiClient docRepo ,
       
-            IApiContext apiContext,
+            
           //  ISessionDocumentStore sessionDocStore,
             ICmsTypeHelper cmsTypeHelper,
              ICmsServiceWrapper cmsService,
@@ -48,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ILogger logger 
             )
         {
-
+            
             _cmsService = cmsService;
             _documentListWebApiClien = documentListWebApiClien;
             _logger = logger;
@@ -74,40 +79,93 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<DC.Document>>> Create(List<DC.Document> docs)
         {
-            var exitingTasks = docs.Select(doc => _cmsService.GetByPath2(doc.DocumentListName, doc.Name)).ToList();
-            await Task.WhenAll(exitingTasks);
-            var exiting = exitingTasks.Select(x => x.Result).Where(x => x.ResponseMessage.IsSuccessStatusCode).Select(x=>x.ReadAsSync()).ToList();
-            var updates = new List<DC.Document>();
-            exiting.ForEach(ed =>
+            var createTasks = new List<Task<ServiceClientResponse<DC.Document>>>();
+
+            SiteContext siteContext = null;
+            if (this.SbApiContext.SiteId.HasValue)
+            {
+                siteContext = this.Request.Resolve<SiteContext>();
+                await siteContext.Init();
+            }
+
+
+            foreach (var doc in docs)
+            {
+
+                
+                PageTypeDefinition pageDef = null;
+                if (siteContext != null)
                 {
-                    var idx = docs.FindIndex(x => string.Equals(x.DocumentListName, ed.DocumentListName, StringComparison.OrdinalIgnoreCase) && string.Equals(x.Name, ed.Name, StringComparison.OrdinalIgnoreCase));
-                    if (idx > -1)
+                    string temp;
+                    if (doc.TryGet("page_type_definition", out temp))
                     {
-                        updates.Add(docs[idx]);
-                        docs[idx].Id = ed.Id;
-                        docs.RemoveAt(idx);
+                        pageDef = siteContext.Theme.PageTypes.FirstOrDefault(x => x.Id == temp);
+                        if (pageDef == null)
+                        {
+                            throw new InvalidOperationException("invalid page type definition" + temp);
+                        }
                     }
 
-                });
+                    
+                    if (pageDef != null)
+                    {
+                        doc.DocumentType = string.IsNullOrEmpty(doc.DocumentType) ? pageDef.DocumentType : doc.DocumentType;
+                        doc.DocumentListName = string.IsNullOrEmpty(doc.DocumentListName) ? (string.IsNullOrEmpty(pageDef.DocumentListName)?"pages": pageDef.DocumentListName ): doc.DocumentListName;
+                        if (pageDef.Zones != null)
+                        {
+                            doc.Set(CmsConstants.Documents.widget_prop, pageDef.Zones);
+                        }
+                    }
+                }
+
+
+                if (string.IsNullOrEmpty(doc.DocumentType) || string.IsNullOrEmpty(doc.DocumentListName))
+                {
+
+                }
+                //todo rename stuff.
+                createTasks.Add(_documentListWebApiClien.CreateDocument(doc.DocumentListName, doc));
+
+            }
+
+            await Task.WhenAll(createTasks);
+            return List2(createTasks.Select(x=> x.Result.ReadAsSync()).ToList());
+           
+            //var exitingTasks = docs.Select(doc => _cmsService.GetByPath2(doc.DocumentListName, doc.Name)).ToList();
+            //await Task.WhenAll(exitingTasks);
+            //var exiting = exitingTasks.Select(x => x.Result).Where(x => x.ResponseMessage.IsSuccessStatusCode).Select(x=>x.ReadAsSync()).ToList();
+            //var updates = new List<DC.Document>();
+            //exiting.ForEach(ed =>
+            //    {
+            //        var idx = docs.FindIndex(x => string.Equals(x.DocumentListName, ed.DocumentListName, StringComparison.OrdinalIgnoreCase) && string.Equals(x.Name, ed.Name, StringComparison.OrdinalIgnoreCase));
+            //        if (idx > -1)
+            //        {
+            //            updates.Add(docs[idx]);
+            //            docs[idx].Id = ed.Id;
+            //            docs.RemoveAt(idx);
+            //        }
+
+            //    });
 
             
 
-            var tasks = docs.Select(doc => _cmsService.Create2(doc)).ToList();
-            await Task.WhenAll(tasks);
-            var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
+            //var tasks = docs.Select(doc => _cmsService.Create2(doc)).ToList();
+            //await Task.WhenAll(tasks);
+            //var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
 
-            if (updates.Count > 0)
-            {
-                var updateRes = await  this.Update(updates);
-                response.AddRange(updateRes.Items );
-            }
+            //if (updates.Count > 0)
+            //{
+            //    var updateRes = await  this.Update(updates);
+            //    response.AddRange(updateRes.Items );
+            //}
 
-            return List2(response);
+            //return List2(response);
         }
        
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<DC.Document>>> Update(List<DC.Document> docs)
         {
+
             var tasks = docs.Select(doc => _cmsService.Update2(doc)).ToList();
             await Task.WhenAll(tasks);
             var response = tasks.Select(x => x.Result.ReadAsSync()).Select(ConvertDocument).ToList();
@@ -130,7 +188,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var source = message.source;
             message.zones = message.zones ?? new List<AVM.ZoneRuntimeData>();
 
-            var docResult= (await _cmsService.GetByPath2(contentCollection: source.DocumentListName, name: source.Path));
+            var docResult = (await _documentListWebApiClien.GetTreeDocument(documentListName: source.DocumentListName, documentName: source.Path));
             DC.Document doc;
             bool exitst = false;
             if (docResult.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -173,7 +231,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            var zoneSerilized = Newtonsoft.Json.JsonConvert.SerializeObject(message.zones);
+          
 
             
           //  zoneSerilized
@@ -181,18 +239,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-            doc.Properties = new JObject();
-            doc.Set("widgets", zoneSerilized);
-
+            doc.Set(CmsConstants.Documents.widget_prop , message.zones);
+            
             if (exitst)
             {
-                doc = (await _cmsService.Update2(doc)).ReadAsSync();
+                doc = (await _documentListWebApiClien.UpdateDocument(doc.DocumentListName, doc.Id, doc)).ReadAsSync();
             }
             else
             {
-                doc = (await _cmsService.RawCreate2(doc)).ReadAsSync();
+                doc = (await _documentListWebApiClien.CreateDocument(doc.DocumentListName,doc)).ReadAsSync();
             }
-
+            message.zones= doc.Get<JArray>(CmsConstants.Documents.widget_prop).ToObject<List<AVM.ZoneRuntimeData>>();
             return List2(message.zones);
         }
 

@@ -1,53 +1,22 @@
-﻿Ext.create('Ext.form.Panel', {
+﻿Ext.create('Taco.core.ux.form.EntityEditorForm', {
     title: 'A Simple core4 page to show jon',
-
-
-
-    // Fields will be arranged vertically, stretched to full width
-    layout: 'anchor',
-    defaults: {
-        anchor: '100%'
-    },
-
-    // The fields
-    defaultType: 'textfield',
-    items: [{
-        fieldLabel: 'title',
-        name: 'title',
-        allowBlank: false
-    }, {
-        fieldLabel: 'meta_title',
-        name: 'meta_title',
-        allowBlank: false
-    }, {
-        fieldLabel: 'link_title',
-        name: 'link_title',
-        allowBlank: true
-    }, {
-        fieldLabel: 'template',
-        name: 'template',
-        allowBlank: true
-    }
-    ],
-    initComponent: function () {
-        Object.getPrototypeOf(this).initComponent.apply(this, arguments);
-    },
-
-    setData: function (data) {
-        if (this.getForm()) {
-            this.getForm().setValues(data);
+    items: [
+        {
+            fieldLabel: 'title',
+            name: 'title',
+            allowBlank: false
+        }, {
+            fieldLabel: 'meta_title',
+            name: 'meta_title',
+            allowBlank: false
+        }, {
+            fieldLabel: 'link_title',
+            name: 'link_title',
+            allowBlank: true
+        }, {
+            fieldLabel: 'template',
+            name: 'template',
+            allowBlank: true
         }
-        this.data = data;
-    },
-    getData: function () {
-
-        var data = this.getValues(false, false, false, true);
-
-
-        return Ext.applyIf(data, this.data);
-
-    }
-
-
-
+    ]
 });

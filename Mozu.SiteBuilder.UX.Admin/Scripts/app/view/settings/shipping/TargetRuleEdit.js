@@ -12,7 +12,8 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
         'Taco.core.ux.action.SecondaryButton',
         'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn',
         'Taco.store.ShippingZones',
-        'Taco.model.TargetRule'
+        'Taco.model.TargetRule',
+        'Taco.core.ux.form.field.Code'
     ],
 
     formCls: 'Taco.core.ux.form.Form',
@@ -22,18 +23,18 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
 
     autoScroll: true,
     initComponent: function () {
-        
-        var me =this,
+
+        var me = this,
             labels = {};
 
         if (this.record.get('domain') == 'Shipping.DestinationAddress') {
             this.title = 'Shipping Zone';
-        
+
             this.indexRoute = 'shipping/zones';
             this.editRoute = 'shipping/zonesedit';
-      
+
         }
-        if (this.record.get('domain' ) =='Product' ) {
+        if (this.record.get('domain') == 'Product') {
             this.title = 'Product Rule';
             this.indexRoute = 'shipping/productrules';
             this.editRoute = 'shipping/productrules/edit';
@@ -44,6 +45,7 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
             layout: {
                 type: 'vbox',
                 align: 'stretch'
+
             },
             title: this.title,
             items: [
@@ -61,95 +63,26 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
                     maxWidth: 400,
                 },
                 {
-                    xtype: 'hiddenfield',
-                    name: 'expression',
-                    itemId: 'expressionValue', 
-                 
-                    //listeners: {
-                    //    scope: me,
-                    //    render: function (cmp) {
-                    //        var me = this;
-                    //        var editDom = cmp.inputEl.dom;
-                    //        debugger;
-                    //        if (!ace) {
-                    //            return
-                    //        }
-
-                    //        me.editor = ace.edit(editDom);
-                    //        me.editor.setTheme("ace/theme/tomorrow");
-                    //        me.editor.getSession().setMode("ace/mode/mozufilter");
-                    //        me.originalData = me.editor.getValue();
-                    //        me.editor.on('change', function (e) {
-                    //            var prevState = me.isDirtyFlag;
-                    //            me.isDirtyFlag = (me.editor.getValue() != me.originalData);
-                    //            if (prevState != me.isDirtyFlag) {
-                    //                //Somebody fire the isDirtyFlag
-                    //            }
-                    //        });
-
-                    //    }
-                    //}
-
-
-                }
-
-             
-                ,
-                  {
-                      xtype: "component",
-                      html: '<label class="x-form-item-label x-unselectable x-form-item-label-top" unselectable="on">Expression</label>',
-                      padding: '0 0 5 0'
-                 
-                  }, 
-
-                {
                     xtype: "component",
-                    name: 'expressionEditor',
-                    itemId: "codeEditor",
-                    html: me.record.get('expression'),
-                    height: 300,
-                    width: 800,
-                    maxWidth: 800,
-                    listeners: {
-                        scope: me,
-                        render: function (cmp) {                            
-                            var me = this;
-                            var editDom = cmp.getEl().dom;
-                            if (!ace) {
-                                return;
-                            }
+                    html: '<label class="x-form-item-label x-unselectable x-form-item-label-top" unselectable="on">Expression</label>',
+                    padding: '0 0 5 0'
 
-                            me.editor = ace.edit(editDom);
-            
-                            me.editor.setTheme("ace/theme/textmate");
-                            me.editor.getSession().setMode("ace/mode/mozufilter");
-                            me.editor.setHighlightActiveLine(false);
-                            me.editor.getSession().setUseWrapMode(true);
+                },
+                {
+                    xtype: 'taco-codefield',
+                    name: 'expression',
+                    showGutter: false,
+                    mode: 'mozufilter',
+                    flex: 1
 
-                            me.editor.getSession().setWrapLimitRange(85, 85);
-                            me.editor.setPrintMarginColumn(85);
-                            me.editor.setShowPrintMargin(false);
-
-                            me.editor.setFontSize('16px');
-                        
-
-                            me.editor.renderer.setShowGutter(false);
-                            me.originalData = me.editor.getValue();
-                            me.editor.on('change', function (e) {
-                                var actualValue = me.editor.getValue();
-                                me.expressionValue.setValue(actualValue);
-                            });
-
-                        }
-                    }
                 }
             ]
 
         };
-     
+
 
         this.callParent(arguments);
-        me.expressionValue = me.down('#expressionValue');
+        // me.expressionValue = me.down('#expressionValue');
     },
     getIndexRoute: function () {
         return this.indexRoute;

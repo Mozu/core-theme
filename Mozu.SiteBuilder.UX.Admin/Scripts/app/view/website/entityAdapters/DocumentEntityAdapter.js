@@ -5,9 +5,11 @@
 Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
     requires: [
-        'Taco.model.CmsDocument',
+        'Taco.model.Entity',
         'Taco.view.website.settings.General',
-        'Taco.view.website.settings.DocumentSeo'
+        'Taco.view.website.settings.DocumentSeo',
+        'Taco.view.entityManager.DynamicFormContainer',
+        'Taco.core.ux.HtmlEditor'
     ],
     modelName: 'Taco.model.CmsDocument',
 
@@ -19,6 +21,7 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     },
 
     constructor: function () {
+       
         this.callParent(arguments);
     },
 
@@ -29,26 +32,57 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     },
 
     getPageSettings: function () {
-        var me = this;
+        var me = this,
+            doc = this.get(),
+            props = doc.data.properties || {},
+            ptd,
+            customerEditor,
+            ret = [
+                Ext.create('Taco.view.website.settings.General', {
+                    record: me.get()
+                }),
+                Ext.create('Taco.view.website.settings.DocumentSeo', {
+                    record: me.get()
+                })
+            ];
+        if (props.page_type_definition) {
+            ptd = me.manager.pageTypeDefinitions.getById(props.page_type_definition);
+            if (ptd&& ptd.raw.customEditor) {
+                customerEditor = me.manager.entityEditors.getById('theme_'+ ptd.raw.customEditor);
+            }
 
-        return [
-            Ext.create('Taco.view.website.settings.General', {
-                record: me.get()
-            }),
-            Ext.create('Taco.view.website.settings.DocumentSeo', {
-                record: me.get()
-            })            
-        ];
+        }
+        if (! customerEditor) {
+            customerEditor = me.manager.entityEditors.findEditor(doc);
+        }
+        if (customerEditor) {
+          
+          
+            if (customerEditor) {
+                me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: customerEditor, record: doc });
+                ret.push(me.dynamicFormContainer);
+            }
+            
+        }
+        
+
+        return ret;
     },
 
     getSaveTask: function () {
         var tasks = this.callParent(arguments);
+        if (this.dynamicFormContainer) {
+            tasks.add({
+                updateRecord: this.get(),
+                updateForm: this.dynamicFormContainer
+            });
+        }
         tasks.on('complete', function () {
             if (this.pageContext.cmsContext.page.path != this.get().data.name) {
                 Taco.core.StateManager.attemptNavigate('/website/page/' + this.get().data.name);
             }
         }, this, {
-            delay :200
+            delay: 200
         });
         return tasks;
     },
@@ -64,7 +98,7 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
             return;
         }
 
-        Taco.model.CmsDocument.load(this.getId(), {
+        Taco.model.Entity.load(this.getId(), {
             scope: this,
             success: function (record, operation) {
                 this.set(record);

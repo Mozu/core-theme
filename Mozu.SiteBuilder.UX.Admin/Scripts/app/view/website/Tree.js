@@ -423,26 +423,21 @@ Ext.define('Taco.view.website.Tree', {
                     scope: this,
                     fn: function (dialog) {
                         var values = dialog.getForm().getValues(),
+                            //docInfo =dialog.getForm().getForm().findField('docInfo'),
+                            //name= values.name,
+                            //title= values.title,
                             cmsDoc;
 
                         cmsDoc = Ext.create('Taco.model.CmsDocument', {
-                            documentType: values.docInfo.documentType,
-                            documentListName: values.docInfo.documentListName,
+                          //  documentType: values.docInfo.documentType,
+                        //    documentListName: values.docInfo.documentListName,
                             name: values.name,
-                            items: [{
-                                    key: "title",
-                                    value: values.title
-                                }, {
-                                    key: "meta_title",
-                                    value: values.title
-                                }, {
-                                    key: "page_type_definition",
-                                    value: values.docInfo
-                                },
-                                {
-                                    key: "link_title",
-                                    value: values.title                                        
-                                }]
+                            properties: {
+                                "title": values.title,
+                                "meta_title": values.title,
+                                "page_type_definition": values.docInfo,
+                                "link_title": values.title
+                            }
                         });
 
                         cmsDoc.save({

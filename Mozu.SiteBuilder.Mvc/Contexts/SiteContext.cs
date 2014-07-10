@@ -186,8 +186,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     {
                         tlc = Theme.MergedLabels["en-US"];
                     }
-                    _labels = tlc.ToDictionary();
-                    
+                    _labels = tlc;
+
                 }
                 return _labels;
             }

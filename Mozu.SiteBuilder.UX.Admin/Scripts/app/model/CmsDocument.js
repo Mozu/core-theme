@@ -50,10 +50,10 @@ Ext.define('Taco.model.CmsDocument', {
         },
     },
     constructor: function (data, id, raw, convertedData) {
-        if (raw) {
+        if (raw && raw.documentListName && raw.id) {
             raw.uniqueId = raw.documentListName + "/" + raw.id;
         }
-        if (data) {
+        if (data && data.documentListName && data.id) {
             data.uniqueId = data.documentListName + "/" + data.id;
         }
         
@@ -67,8 +67,11 @@ Ext.define('Taco.model.CmsDocument', {
             "name": "uniqueId",
             "type": "string",
             convert:function (v, r) {
-                if (r.raw) {
+                if (r.raw && r.raw.documentListName && r.raw.id) {
                     return r.raw.documentListName + "/" + r.raw.id;
+                }
+                if (r.datq && r.datq.documentListName && r.datq.id) {
+                    return r.datq.documentListName + "/" + r.datq.id;
                 }
                 return v;
             }
@@ -76,23 +79,27 @@ Ext.define('Taco.model.CmsDocument', {
         {
             "name": "id",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            defaultValue:null
         },
         {
             "name": "documentType",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            defaultValue: null
         },
         {
             "name": "name",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            defaultValue: null
         },
      
         {
             "name": "documentListName",
             "type": "string",
-            "useNull": true
+            "useNull": true,
+            defaultValue: null
         },
         {
             name: 'properties',
@@ -102,7 +109,8 @@ Ext.define('Taco.model.CmsDocument', {
 
         },
         {
-            name: 'publishState'
+            name: 'publishState',
+            defaultValue: null
         }
     ],
     idProperty:'uniqueId',

@@ -5,19 +5,22 @@
         navHeader: 'Taco.core.ux.mixins.NavHeader',
         permissions: 'Taco.core.ux.mixins.Permissions'
     },
-    requires:[
+    requires: [
         'Taco.shared.view.field.GridField',
         'Taco.shared.view.field.ArrayField',
-        'Ext.form.FieldSet'
+        'Taco.core.ux.form.field.Code',
+        'Ext.form.FieldSet',
+        'Taco.core.ux.form.EntityEditorForm',
+        'Taco.core.ux.form.field.SingleImageField'
     ],
     saveButtonEnabled: true,
-    createButtonEnabled: true,
+
     createButtonEnabled: false,
-    
+
     layout: 'fit',
     enableNavHeader: false,
- 
-    padding:'20px',
+
+    padding: '20px',
     initComponent: function () {
         this.data = Ext.clone(this.record.get('fields'));
         this.dynamicForm = eval(this.editor.get('code'));
@@ -28,7 +31,6 @@
 
         this.dynamicForm.data = this.data;
         this.dynamicForm.ui = 'subform';
-
 
 
         if (this.dynamicForm.initForm) {
@@ -43,28 +45,24 @@
 
 
         if (this.dynamicForm.initEditor) {
-            this.dynamicForm.initEditor(this.data, this.name, this.record.data );
+            this.dynamicForm.initEditor(this.data, this.name, this.record.data);
         }
-
-
-      
-
 
 
         if (this.dynamicForm.setData) {
-            this.dynamicForm.setData(this.data, this.name );
+            this.dynamicForm.setData(this.data, this.name);
         } else if (this.dynamicForm.getForm) {
             var form = this.dynamicForm.getForm().setValues(this.data);
         }
-                    
 
-       // if (this.dynamicForm.setParent) {
-       //     this.dynamicForm.setParent(this);
-       // }
-       //// this.title = this.dynamicForm.title || this.title;
-       // if (this.dynamicForm.getTitle) {
-       //     this.title = this.dynamicForm.getTitle();
-       // }
+
+        // if (this.dynamicForm.setParent) {
+        //     this.dynamicForm.setParent(this);
+        // }
+        //// this.title = this.dynamicForm.title || this.title;
+        // if (this.dynamicForm.getTitle) {
+        //     this.title = this.dynamicForm.getTitle();
+        // }
         this.items = [this.dynamicForm];
         if (this.enableNavHeader) {
             this.mixins.navHeader.init.apply(this);
@@ -72,36 +70,88 @@
         this.callParent(arguments);
     },
 
+    createSiteBuilderSaveTask: function () {
 
-    doSave: function () {
+        return {
+            scope: this,
+            fn: function (tasks) {
+                var me = this,
+                    containerData,
+                    data;
+                if (me.fireEvent('beforesave', me) === false) {
+                    me.resetSaveButton();
+                    return false;
+                }
+
+
+                if (me.dynamicForm.onBeforeSave && me.dynamicForm.onBeforeSave() === false) {
+                    me.resetSaveButton();
+                    return false;
+                }
+
+                if (me.dynamicForm.getContainerData) {
+                    containerData = me.dynamicForm.getContainerData();
+                }
+
+
+                if (me.dynamicForm.getData) {
+                    data = me.dynamicForm.getData();
+                }
+
+                data = data || (this.record.get('entityType') == 'mzdb' ? containerData.item : containerData.properties);
+
+                //this.record.data.properties = this.data;
+                //this.record.data.item = this.data;
+                if (this.record.get('entityType') == 'mzdb') {
+                    this.record.set('item', data);
+                } else {
+                    this.record.set('properties', data);
+                }
+                if (containerData) {
+                    delete containerData.item;
+                    delete containerData.properties;
+                    this.record.set(containerData);
+                }
+
+
+            }
+        };
+    },
+    persistFormValues:function (silientError) {
         var me = this,
-            containerData,
-            data;
+           containerData,
+           data;
         if (me.fireEvent('beforesave', me) === false) {
             me.resetSaveButton();
+            if (!silientError) {
+                throw false;
+            }
             return false;
         }
 
-       
-            if (me.dynamicForm.onBeforeSave && me.dynamicForm.onBeforeSave() === false) {
-                me.resetSaveButton();
-                return false;
-            }
 
-            if (me.dynamicForm.getContainerData) {
-                containerData = me.dynamicForm.getContainerData();
+        if (me.dynamicForm.onBeforeSave && me.dynamicForm.onBeforeSave() === false) {
+            me.resetSaveButton();
+            if (!silientError) {
+                throw false;
             }
-            
-           
-            if (me.dynamicForm.getData) {
-                data = me.dynamicForm.getData();
-            }
+            return false;
+        }
+
+        if (me.dynamicForm.getContainerData) {
+            containerData = me.dynamicForm.getContainerData();
+        }
+
+
+        if (me.dynamicForm.getData) {
+            data = me.dynamicForm.getData();
+        }
 
         data = data || (this.record.get('entityType') == 'mzdb' ? containerData.item : containerData.properties);
 
         //this.record.data.properties = this.data;
         //this.record.data.item = this.data;
-        if (this.record.get('entityType') =='mzdb') {
+        if (this.record.get('entityType') == 'mzdb') {
             this.record.set('item', data);
         } else {
             this.record.set('properties', data);
@@ -111,7 +161,14 @@
             delete containerData.properties;
             this.record.set(containerData);
         }
-        
+    },
+    doSave: function () {
+
+        var me = this;
+        if (me.persistFormValues(true)===false) {
+            return false;
+        }
+
         this.record.save({
             failure: function (record, operation) {
                 var msg = operation.error;

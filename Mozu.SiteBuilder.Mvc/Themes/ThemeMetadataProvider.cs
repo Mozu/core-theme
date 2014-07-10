@@ -180,16 +180,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             foreach (string labelJsonFile in Directory.GetFiles(labelsPath, "*.json"))
             {
                 string localeCode = Path.GetFileNameWithoutExtension(labelJsonFile);
-                ThemeLabelCollection labelCollection = new ThemeLabelCollection();
+                var labelCollection = new ThemeLabelCollection();
 
                 var labelJsonFileText = File.ReadAllText(labelJsonFile);
                 var labelsJson = JObject.Parse(labelJsonFileText);
 
-                var labels =
-                    from j in labelsJson.Children<JProperty>()
-                    select new ThemeLabel { Id = j.Name, Value = (string)j.Value, DeclaredInFile = labelJsonFile };
-
-                labelCollection.AddRange(labels);
+                foreach (var x in labelsJson.Children<JProperty>())
+                {
+                    labelCollection[x.Name] = (string) x.Value;
+                }
+                
 
                 returnValues[localeCode] = labelCollection;
             }

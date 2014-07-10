@@ -704,6 +704,8 @@
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
+    <Content Include="Scripts\app\core\ux\form\EntityEditorForm.js" />
+    <Content Include="Scripts\app\core\ux\form\field\code.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
     <Content Include="Scripts\app\core\ux\form\field\Category.js" />
@@ -718,6 +720,7 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
     <Content Include="Scripts\app\core\ux\mixins\LaunchEditor.js" />
     <Content Include="Scripts\app\core\ux\mixins\Permissions.js" />
     <Content Include="Scripts\app\core\ux\mixins\NavHeader.js" />
@@ -1420,6 +1423,9 @@
     <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />
     <Content Include="Scripts\sass\src\overrides\panel\Header.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\ShippingMethodMenu.scss" />
+    <Content Include="Api\cms\tenant-documenttypes.json" />
+    <Content Include="Api\cms\tenant-documentlists.json" />
+    <Content Include="Api\cms\entityeditors.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

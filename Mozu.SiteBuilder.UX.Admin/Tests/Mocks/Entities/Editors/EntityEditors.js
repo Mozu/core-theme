@@ -38,7 +38,8 @@ Ext.create('Ext.form.Panel', {
         }, {
             fieldLabel: 'Code',
             name: 'code',
-            xtype: 'textarea',
+            mode:'javascript',
+            xtype: 'taco-codefield',
             height: 400
         }
     ],

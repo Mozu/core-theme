@@ -38,7 +38,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             public const string doc_state_active = "active";
             public const string default_collection_name = "pages";
             public static string template = "template";
-            public const string widget_prop = "widgets";
+            public const string widget_prop_old = "widgets";
+            public const string widget_prop = "widgets2";
         }
     }
 }
