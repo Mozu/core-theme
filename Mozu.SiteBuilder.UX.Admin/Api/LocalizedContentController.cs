@@ -56,30 +56,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             return new List<Models.Localization.LocalizedAttribute>
             {
-                new LocalizedAttribute
+                CreatFakeAttrib("Color", "Coleur"),
+                CreatFakeAttrib("Size", "Dimension"),
+                CreatFakeAttrib("Material", "matériel")
+            };
+        }
+
+        private LocalizedAttribute CreatFakeAttrib(string attr, string frAttr)
+        {
+            return new LocalizedAttribute
+            {
+                AdminName = attr + ": Shirts",
+                AttributeFQN = "Tenant~" + attr + "-Shirts",
+                Description = attr,
+                Locale = "en-US",
+                Name = attr,
+                LocalizedValues = new List<LocalizedAttributeContent>
                 {
-                    AdminName = "Color",
-                    AttributeFQN = "Tenant~Color",
-                    Description = "Color",
-                    Locale = "en-US",
-                    Name = "Color",
-                    LocalizedValues = new List<LocalizedAttributeContent>
+                    new LocalizedAttributeContent
                     {
-                        new LocalizedAttributeContent
-                        {
-                            Locale = "fr-FR",
-                            Description = "Coleur",
-                            Exists = true,
-                            Name = "Coleur"
-                        },
-                        new LocalizedAttributeContent
-                        {
-                            Locale = "de-DE",
-                            Description = null,
-                            Exists = false,
-                            Name = null
-                        },
-                    }
+                        Locale = "fr-FR",
+                        Description = frAttr,
+                        Exists = true,
+                        Name = frAttr
+                    },
+                    new LocalizedAttributeContent
+                    {
+                        Locale = "de-DE",
+                        Description = null,
+                        Exists = false,
+                        Name = null
+                    },
                 }
             };
         }
