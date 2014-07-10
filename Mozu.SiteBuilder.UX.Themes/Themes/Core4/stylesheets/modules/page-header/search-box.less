@@ -58,23 +58,41 @@
     .tt-dropdown-menu {
         box-sizing: border-box;
         border: 1px solid @inputBorder;
-        border-width: 0 1px;
+        border-width: 1px;
         width: @expandedSearchWidth + 1;
         background: white;
     }
 
-    .tt-dataset-terms {
-        .tt-suggestion {
+    .tt-suggestion {
             margin: 0;
             padding: 0.4em 1em;
-            border-bottom: 1px solid @inputBorder;
+            border-bottom: 1px solid #f4f4f4;
             &.tt-cursor {
-                background: #eee;
+                background: #f4f4f4;
             }
         }
+
+    .tt-dataset-terms {
         p {
             margin: 0;
         }
     }
+
+    .tt-dataset-pages {
+        .tt-suggestion {
+            display: table;
+        }
+        .mz-itemlisting {
+            display: table-row;
+        }
+        .mz-itemlisting-thumb, .mz-itemlisting-details {
+            float: none;
+            display: table-cell;
+            padding: 0.5em;
+            vertical-align: top;
+        }
+    }
+
+
 
 }
