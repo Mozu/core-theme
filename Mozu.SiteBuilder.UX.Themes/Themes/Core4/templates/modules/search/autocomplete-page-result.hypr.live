@@ -1,0 +1,5 @@
+﻿{% with suggestionType|lower as type %}
+{% with "modules/search/autocomplete-listing-{0}"|string_format(type) as tpt %}
+{% include tpt with model=suggestion %}
+{% endwith %}
+{% endwith %}

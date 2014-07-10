@@ -11,12 +11,32 @@
             return api.getActionConfig('suggest', 'get', { query: qs, groups: groups }).url;
         },
         termsUrl = getApiUrl('terms'),
-        productsUrl = getApiUrl('products'),
+        productsUrl = getApiUrl('pages'),
         ajaxConfig = {
             headers: api.getRequestHeaders()
         },
         i,
         nonWordRe = /\W+/,
+        makeSuggestionGroupFilter = function(name) {
+            return function(res) {
+                var suggestionGroups = res.suggestionGroups,
+                    thisGroup;
+                for (i = suggestionGroups.length - 1; i >= 0; i--) {
+                    if (suggestionGroups[i].name === name) {
+                        thisGroup = suggestionGroups[i];
+                        break;
+                    }
+                }
+                return thisGroup.suggestions;
+            }
+        },
+
+        makeTemplateFn = function(name) {
+            var tpt = Hypr.getTemplate(name);
+            return function(obj) {
+                return tpt.render(obj);
+            };
+        },
 
     // create bloodhound instances for each type of suggestion
 
@@ -30,20 +50,24 @@
                 remote: {
                     url: termsUrl,
                     wildcard: eqs,
-                    filter: function(res) {
-                        var suggestionGroups = res.suggestionGroups,
-                            thisGroup;
-                        for (i = suggestionGroups.length - 1; i >= 0; i--) {
-                            if (suggestionGroups[i].name === "Terms") {
-                                thisGroup = suggestionGroups[i];
-                                break;
-                            }
-                        }
-                        return thisGroup.suggestions;
-                    },
+                    filter: makeSuggestionGroupFilter("Terms"),
+                    rateLimitWait: 100,
                     ajax: ajaxConfig
                 }
-            })
+            }),
+            pages: new Bloodhound({
+                datumTokenizer: function(datum) {
+                    return datum.suggestion.term.split(nonWordRe);
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: productsUrl,
+                    wildcard: eqs,
+                    filter: makeSuggestionGroupFilter("Pages"),
+                    rateLimitWait: 400,
+                    ajax: ajaxConfig
+                }
+            }),
         }
     };
 
@@ -54,8 +78,7 @@
     $(document).ready(function() {
         var $field = AutocompleteManager.$typeaheadField = $('[data-mz-role="searchquery"]');
         AutocompleteManager.typeaheadInstance = $field.typeahead({
-            minLength: 3,
-            highlight: true,
+            minLength: 3
         },
         {
             name: 'terms',
@@ -63,7 +86,21 @@
                 return datum.suggestion.term;
             },
             source: AutocompleteManager.datasets.terms.ttAdapter()
+        },
+        {
+            name: 'pages',
+            displayKey: function(datum) {
+                return datum.suggestion.productCode
+            },
+            templates: {
+                suggestion: makeTemplateFn('modules/search/autocomplete-page-result')
+            },
+            source: AutocompleteManager.datasets.pages.ttAdapter()
         }).data('ttTypeahead');
+        $field.on('typeahead:autocompleted', function(e, suggestion, set) {
+            console.log(suggestion);
+            if (suggestion.productCode) window.location = "/p/" + suggestion.productCode;
+        });
     });
 
     return AutocompleteManager;
