@@ -24,6 +24,8 @@ Ext.define('Taco.view.order.Split', {
     mixins: {
         navHeader: 'Taco.core.ux.mixins.NavHeader'
     },
+
+    createButtonEnabled: true,
     
     statics: {
         eastConfigs: {
@@ -76,6 +78,13 @@ Ext.define('Taco.view.order.Split', {
         
         this.callParent(arguments);
 
+        this.on({
+            cancel: {
+                scope: this,
+                fn: function () { this.onSelectRecord(null); }
+            }
+        });
+
         this.mon(this.getEast(), {
             add: {
                 scope: this,
@@ -84,8 +93,34 @@ Ext.define('Taco.view.order.Split', {
         });
     },
 
-    
+    createActionHandler: function () {
+        var me = this;
+        var ctx = Taco.app.context.getCurrentContext();
+        var record;
 
+        if (ctx.contextType !== 's') {
+            Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', 's').raw);
+            return;
+        }
+
+        Taco.app.setLoading();
+
+        record = Ext.create('Taco.model.Order');
+        record.save({
+            callback: function (records, operation, success) {
+
+                if (!success) {
+                    Taco.app.fireEvent('setmessage', "Error creating order", 'error');
+                    Taco.app.setLoading(false);
+                    return;
+                }
+
+                //changing the path to be edit instead of create so that the user can refresh the page and get back to it if they accidently navigate away;
+                Taco.core.StateManager.attemptNavigate('s-' + record.data.siteId + '/orders/edit/' + record.data.id);
+            },
+            scope: this
+        });
+    },
 
     getAdditionalActions: function (ids) {
         return this.editor.header.down('toolbar').queryBy(function (cmp) {
@@ -146,8 +181,6 @@ Ext.define('Taco.view.order.Split', {
     },
 
     onRecordChange: function (record) {
-       
-
         Ext.suspendLayouts();
         this.getEast().removeAll(true);
         if (record) {
@@ -157,7 +190,6 @@ Ext.define('Taco.view.order.Split', {
         }
         this.callParent(arguments);
         Ext.resumeLayouts(true);
-       
     },
 
     updateSplitActions: function () {

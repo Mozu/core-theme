@@ -246,8 +246,6 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
         
         (state || (state = {})).split = nextSplit;
 
-        console.log('getState transformed state into', state);
-
         return state;
     },
 
