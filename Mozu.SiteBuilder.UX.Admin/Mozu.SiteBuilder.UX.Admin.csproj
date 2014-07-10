@@ -1984,7 +1984,6 @@
     <Content Include="Tests\customunit\core\ux\form\model-binds.t.js" />
     <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\customunit\core\ux\tab\picker.t.js" />
-    <Content Include="Tests\customunit\view\website\settings\doc-seo.js" />
     <Content Include="Tests\unit\view\customers\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
@@ -2351,6 +2350,7 @@
     <Folder Include="Scripts\sass\src\core\ux\window\" />
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />
+    <Folder Include="Tests\customunit\view\website\settings\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
