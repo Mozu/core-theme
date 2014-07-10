@@ -929,7 +929,7 @@
     <Content Include="Scripts\app\view\settings\localization\ProductExtras.js" />
     <Content Include="Scripts\app\view\settings\localization\AttributeValues.js" />
     <Content Include="Scripts\app\view\settings\localization\subform\Attribute.js" />
-    <Content Include="Scripts\app\view\settings\localization\widget\AttributeGrid.js" />
+    <Content Include="Scripts\app\view\settings\localization\widget\OldAttributeGridOld.js" />
     <Content Include="Scripts\app\view\settings\localization\widget\WidgetPlaceholder.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />

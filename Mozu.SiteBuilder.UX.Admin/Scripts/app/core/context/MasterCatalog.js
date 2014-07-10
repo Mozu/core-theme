@@ -112,6 +112,30 @@
         return null;
     },
 
+    getSupportedLocales: function () {
+        var distinctLocales = [];
+        if (!this.catalogs) return distinctLocales;
+
+        Ext.each(this.catalogs, function (cat) {
+            if (distinctLocales.indexOf(cat.localeCode) == -1) {
+                distinctLocales.push(cat.localeCode);
+            }
+        });
+        return distinctLocales;
+    },
+
+    getSupportedCurrencies: function () {
+        var distinctCurrencies = [];
+        if (!this.catalogs) return distinctCurrencies;
+
+        Ext.each(this.catalogs, function (cat) {
+            if (distinctCurrencies.indexOf(cat.currencyCode) == -1) {
+                distinctCurrencies.push(cat.currencyCode);
+            }
+        });
+        return distinctCurrencies;
+    },
+
     updateProductPublishingMode: function (mode) {
         Ext.Ajax.request({
             url: '/admin/app/settings/publishing/product',
