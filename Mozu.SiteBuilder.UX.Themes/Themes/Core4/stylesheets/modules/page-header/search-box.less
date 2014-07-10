@@ -19,9 +19,6 @@
 
     .mz-searchbox-input {
         display: block;
-        /*position: absolute;
-        top: 0;
-        left: 0;*/
         box-sizing: border-box;
         width: 120px;
         height: 100%;
@@ -31,6 +28,10 @@
         .border-radius(0);
         font-size: 14px;
         line-height: 20px;
+        outline-width: 0;
+        &:focus {
+            outline-width: 0;
+        }
     }
 
     .mz-searchbox-button {
@@ -50,6 +51,7 @@
     }
 
     .mz-searchbox-categories {
+        vetical-align: top;
         width: 100px;
     }
 

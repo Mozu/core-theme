@@ -3,15 +3,6 @@
     // bundled typeahead saves a lot of space but exports bloodhound to the root object, let's lose it
     var Bloodhound = window.Bloodhound.noConflict();
 
-    //function getSuggestions(query, cb) {
-    //    api.get('suggest', query).then(function(res) {
-    //        cb(_.map(res.prop('suggestions')))
-    //    });
-    //}
-
-
-
-
     // bloodhound wants to make its own AJAX requests, and since it's got such good caching and tokenizing algorithms, i'm happy to help it
     // so instead of using the SDK to place the request, we just use it to get the URL configs and the required API headers
     var qs = '%QUERY',
