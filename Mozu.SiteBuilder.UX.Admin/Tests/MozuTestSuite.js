@@ -191,16 +191,7 @@ Harness.start(
                 ]
 },
 
-            {
-                group: 'WebSite',
-                expanded: true,
-                items: [
-                    {
-                        url: 'customunit/view/website/settings/doc-seo.js',
-                        title: 'web-doc-seo'
-                    }
-                ]
-            }, {
+            , {
                 group: 'StateManager',
                 items: [
                     {
