@@ -1,6 +1,6 @@
 ﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.searchExpandOnFocus %} mz-searchbox-expands{% endif %}" action="/search">
     <span class="mz-searchbox-field">
-        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" value="{{pageContext.search.query}}" name="query" data-mz-role="searchquery"" />
+        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
         <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
     </span>
 	<select class="mz-searchbox-categories" name="facetValueFilter" 
