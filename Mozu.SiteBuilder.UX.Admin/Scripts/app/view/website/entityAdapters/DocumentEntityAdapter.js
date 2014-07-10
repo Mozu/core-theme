@@ -6,8 +6,6 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
     requires: [
         'Taco.model.Entity',
-        'Taco.view.website.settings.General',
-        'Taco.view.website.settings.DocumentSeo',
         'Taco.view.entityManager.DynamicFormContainer',
         'Taco.core.ux.HtmlEditor'
     ],
@@ -34,24 +32,9 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     getPageSettings: function () {
         var me = this,
             doc = this.get(),
-            props = doc.data.properties || {},
-            ptd,
             customerEditor,
-            ret = [
-                Ext.create('Taco.view.website.settings.General', {
-                    record: me.get()
-                }),
-                Ext.create('Taco.view.website.settings.DocumentSeo', {
-                    record: me.get()
-                })
-            ];
-        if (props.page_type_definition) {
-            ptd = me.manager.pageTypeDefinitions.getById(props.page_type_definition);
-            if (ptd&& ptd.raw.customEditor) {
-                customerEditor = me.manager.entityEditors.getById('theme_'+ ptd.raw.customEditor);
-            }
-
-        }
+            ret = [];
+      
         if (! customerEditor) {
             customerEditor = me.manager.entityEditors.findEditor(doc);
         }
@@ -72,14 +55,19 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
     getSaveTask: function () {
         var tasks = this.callParent(arguments);
         if (this.dynamicFormContainer) {
-            tasks.add({
+            tasks.add([{
                 updateRecord: this.get(),
                 updateForm: this.dynamicFormContainer
-            });
+            },{
+                saveRecord: this.get()
+            }]);
         }
         tasks.on('complete', function () {
             if (this.pageContext.cmsContext.page.path != this.get().data.name) {
                 Taco.core.StateManager.attemptNavigate('/website/page/' + this.get().data.name);
+            } else {
+                //do this only if looking at web browser?
+                this.manager.reloadPage();
             }
         }, this, {
             delay: 200

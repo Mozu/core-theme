@@ -16,25 +16,8 @@ Ext.define('Taco.core.ux.form.EntityEditorForm', {
 
     // The fields
     defaultType: 'textfield',
-    items: [
-        {
-            fieldLabel: 'title',
-            name: 'title',
-            allowBlank: false
-        }, {
-            fieldLabel: 'meta_title',
-            name: 'meta_title',
-            allowBlank: false
-        }, {
-            fieldLabel: 'link_title',
-            name: 'link_title',
-            allowBlank: true
-        }, {
-            fieldLabel: 'template',
-            name: 'template',
-            allowBlank: true
-        }
-    ],
+
+  
 
 
     setData: function (data) {

@@ -11,16 +11,21 @@
         'Taco.core.ux.form.field.Code',
         'Ext.form.FieldSet',
         'Taco.core.ux.form.EntityEditorForm',
-        'Taco.core.ux.form.field.SingleImageField'
+        'Taco.core.ux.form.field.SingleImageField',
+        'Taco.core.ux.form.WebPageEditorForm',
+        'Taco.core.ux.HtmlEditor',
+        'Taco.core.ux.form.SlugField',
+        'Taco.core.ux.form.field.PageTemplate'
+
     ],
     saveButtonEnabled: true,
-
+    autoScroll :true,
     createButtonEnabled: false,
-
-    layout: 'fit',
+   // layout:'vbox',
+   // layout: 'default',
     enableNavHeader: false,
 
-    padding: '20px',
+  //  padding: '20px',
     initComponent: function () {
         this.data = Ext.clone(this.record.get('fields'));
         this.dynamicForm = eval(this.editor.get('code'));
@@ -70,53 +75,7 @@
         this.callParent(arguments);
     },
 
-    createSiteBuilderSaveTask: function () {
 
-        return {
-            scope: this,
-            fn: function (tasks) {
-                var me = this,
-                    containerData,
-                    data;
-                if (me.fireEvent('beforesave', me) === false) {
-                    me.resetSaveButton();
-                    return false;
-                }
-
-
-                if (me.dynamicForm.onBeforeSave && me.dynamicForm.onBeforeSave() === false) {
-                    me.resetSaveButton();
-                    return false;
-                }
-
-                if (me.dynamicForm.getContainerData) {
-                    containerData = me.dynamicForm.getContainerData();
-                }
-
-
-                if (me.dynamicForm.getData) {
-                    data = me.dynamicForm.getData();
-                }
-
-                data = data || (this.record.get('entityType') == 'mzdb' ? containerData.item : containerData.properties);
-
-                //this.record.data.properties = this.data;
-                //this.record.data.item = this.data;
-                if (this.record.get('entityType') == 'mzdb') {
-                    this.record.set('item', data);
-                } else {
-                    this.record.set('properties', data);
-                }
-                if (containerData) {
-                    delete containerData.item;
-                    delete containerData.properties;
-                    this.record.set(containerData);
-                }
-
-
-            }
-        };
-    },
     persistFormValues:function (silientError) {
         var me = this,
            containerData,

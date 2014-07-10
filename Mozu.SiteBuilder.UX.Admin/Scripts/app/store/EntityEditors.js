@@ -12,9 +12,33 @@ Ext.define('Taco.store.EntityEditors', {
             clearSort: false,
             autoLoad: true
         },
+
+        constructor: function () {
+            if (Taco.app.context.getCurrent().contextType == 's') {
+                this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
+            }
+            this.callParent(arguments);
+        },
+
+    //
+        
         findEditor: function (entityRecord) {
-            var ret = this.data.filterBy(function (item) {
+
+            var ret;
+            if (entityRecord.get('entityType') == 'cms' && this.pageTypeDefinitions && entityRecord.data && entityRecord.data.properties && entityRecord.data.properties.page_type_definition) {
+                ret = this.pageTypeDefinitions.getById( entityRecord.data.properties.page_type_definition);
+                if (ret ) {
+                    ret = this.getById('theme_' + ret.raw.customEditor);
+                } 
+            }
+            if (ret) {
+                return ret;
+            }
+
+            ret = this.data.filterBy(function (item) {
                 var isMatch = false;
+
+
                 if (entityRecord.get('entityType') == 'cms') {
                     isMatch = isMatch || Ext.Array.findBy((item.raw.documentTypes || []), function (crit) {
                         return crit && entityRecord.raw.documentType && crit.toLowerCase() == entityRecord.raw.documentType.toLowerCase();

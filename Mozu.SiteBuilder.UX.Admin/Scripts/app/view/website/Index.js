@@ -541,6 +541,9 @@ Ext.define('Taco.view.website.Index', {
         this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme);
         Taco.core.StateManager.addState('website/page' + config.url);
     },
+    reloadPage: function () {
+        this.iframe.getWin().location.reload();
+    },
 
     onDirtyChange: Ext.emptyFn,
 
@@ -818,7 +821,7 @@ Ext.define('Taco.view.website.Index', {
                 contentContainer.add( Ext.create('Taco.view.entityManager.DynamicFormContainer', {
                     record: record,
                     bubbleEvents: ['savesuccess', 'saveSuccess'],
-                    editor: me.editors.findEditor(record)
+                    editor: me.entityEditors.findEditor(record)
                 }));
                
 
