@@ -112,24 +112,27 @@
         return null;
     },
 
-    getSupportedLocales: function () {
-        var distinctLocales = [];
+    getSupportedLocales: function (excludeDefaultLocale) {
+        var distinctLocales = [],
+            defaultLocale = this.localeCode;
+
         if (!this.catalogs) return distinctLocales;
 
         Ext.each(this.catalogs, function (cat) {
-            if (distinctLocales.indexOf(cat.localeCode) == -1) {
+            if (distinctLocales.indexOf(cat.localeCode) == -1 && (!excludeDefaultLocale || defaultLocale !== cat.localeCode)) {
                 distinctLocales.push(cat.localeCode);
             }
         });
         return distinctLocales;
     },
 
-    getSupportedCurrencies: function () {
-        var distinctCurrencies = [];
+    getSupportedCurrencies: function (excludeDefaultCurrency) {
+        var distinctCurrencies = [],
+            defaultCurrencyCode = this.currencyCode;
         if (!this.catalogs) return distinctCurrencies;
 
         Ext.each(this.catalogs, function (cat) {
-            if (distinctCurrencies.indexOf(cat.currencyCode) == -1) {
+            if (distinctCurrencies.indexOf(cat.currencyCode) == -1 && (!excludeDefaultCurrency || defaultCurrencyCode !== cat.currencyCode)) {
                 distinctCurrencies.push(cat.currencyCode);
             }
         });
