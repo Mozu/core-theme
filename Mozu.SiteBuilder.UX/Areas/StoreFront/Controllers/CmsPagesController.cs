@@ -125,7 +125,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.Title = vm.Get<string>("title") as string;
             pc.MetaDescription = vm.Get<string>("meta_description") as string;
             pc.MetaTitle = vm.Get<string>("meta_title") as string;
-            pc.PageType = (string)(vm.Get<string>("page_type")) ?? "cmspage";
+            pc.PageType = (string) (vm.Get<string>("page_type"));
+
 
            
 
@@ -144,19 +145,34 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            var result = View("blank-page", vm);
+           
+            PageTypeDefinition pageDefinition = null;
 
-            var pageTypeDefinition = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");
-            if (!string.IsNullOrEmpty(pageTypeDefinition))
+            var pageTypeDefinitionKey = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");
+            if (!string.IsNullOrEmpty(pageTypeDefinitionKey))
             {
-                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinition, StringComparison.OrdinalIgnoreCase));
-                if (template != null)
-                {
-                    result.ViewName  = template.Template ;
-                }
+                pageDefinition = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
+                
                 
             }
-
+            if (pageDefinition == null)
+            {
+                pageDefinition = this.SiteContext.Theme.PageTypes.Where(x=> 
+                    !string.IsNullOrEmpty(x.Template)
+                    &&
+                    ( !string.IsNullOrEmpty(x.DocumentType)  || !string.IsNullOrEmpty(x.DocumentListName ))
+                    && 
+                    ( string.IsNullOrEmpty(x.DocumentType) || string.Equals( x.DocumentType , vm.DocumentType, StringComparison.OrdinalIgnoreCase ))
+                    && 
+                    ( string.IsNullOrEmpty(x.DocumentListName) || string.Equals( x.DocumentListName , vm.DocumentListName, StringComparison.OrdinalIgnoreCase ))
+                    ).OrderBy(
+                    x=> ((string.IsNullOrEmpty(x.DocumentType) ?0:1))+ ((string.IsNullOrEmpty(x.DocumentListName) ?0:2))
+                    ).FirstOrDefault()
+                ;
+            }
+            var template = pageDefinition != null ? pageDefinition.Template : "blank-page";
+           
+            var result = View(template, vm);
 
             
             return this.Request.CreateResponse(HttpStatusCode.OK, result);

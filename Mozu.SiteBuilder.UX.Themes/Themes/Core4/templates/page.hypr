@@ -103,8 +103,7 @@
 				{% endblock body-content %}
                 
                 {% dropzone "body-bottom" scope="template" %}
-						<h1>demo markup remove me before QA</h1>
-					{% include_entities "modules/entities/people"  with collection="phipps.people" as_paramater %}
+				
             </div>
 
             {% block page-footer %}

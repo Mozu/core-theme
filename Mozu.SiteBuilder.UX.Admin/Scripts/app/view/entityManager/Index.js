@@ -28,6 +28,8 @@ Ext.define('Taco.view.entityManager.Index', {
         type: 'hbox',
         align: 'stretch'
     },
+
+   
     doSave: function () {
         this.form.doSave.apply(this.form, arguments);
     },
@@ -37,7 +39,49 @@ Ext.define('Taco.view.entityManager.Index', {
             metaData = Taco.core.StateManager.getCurrentState().metaData,
             qs = metaData.args[metaData.args.length - 1];
 
+        me.additionalActions = [
+            {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'More',
+                margin: '0 0 0 10',
+                itemId:'moreActionButton',
+                scope: this,
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    listeners: {
+                        beforeshow: function (cmp) {
+                            cmp.down('#publishActionButton').disable(!(me.listmetaData.enablePublishing && me.getCurrentEntityRecord().data.publishState == 'staging'));
+                        },
+                    },
+                    items: [
+                        {
+                            text: 'Preview in Site',
+                            itemId: 'previewActionButton',
+                            
+                            handler: function (menuItem) {
+                                //scope is set to index on all action buttons by container.
+                                var record = me.getCurrentEntityRecord(),
+                                    siteId = Taco.app.context.getContextAtLevel('s').id;
 
+                                url = "/cms/" + record.get('documentListName') + "/" + record.get('name');
+                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
+                            }
+                        }, {
+                            itemId: 'publishActionButton',
+                            text: 'Publish',
+                            
+                            handler: function (menuItem) {
+                                //scope is set to index on all action buttons by container.
+                                alert('tbd');
+                            }
+                        }
+                    ]
+                }
+            }
+        ];
         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
 
         me.lists = Ext.create('Taco.view.entityManager.Lists', {
@@ -52,7 +96,6 @@ Ext.define('Taco.view.entityManager.Index', {
             flex: 1,
             layout: 'fit',
             listeners: {
-               
                 itemedit: me.onItemEdit,
                 create: me.onCreate,
 
@@ -110,9 +153,21 @@ Ext.define('Taco.view.entityManager.Index', {
         this.saveActionButton = this.saveActionButton || header.down('#saveActionButton');
         this.cancelActionButton = this.cancelActionButton || header.down('#cancelActionButton');
         this.createActionButton = this.createActionButton || header.down('#createActionButton');
+        this.moreActionButton = this.moreActionButton || header.down('#moreActionButton');
         this.saveActionButton.setVisible(me.form);
         this.cancelActionButton.setVisible(me.form);
         this.createActionButton.setVisible(me.grid);
+        this.moreActionButton.setVisible(me.getCurrentEntityRecord() && me.getCurrentEntityRecord().get('entityType') == 'cms');
+
+    },
+
+    getCurrentEntityRecord: function () {
+        var me = this;
+        return me.form ? me.form.record : null;
+    },
+    getListMetaData : function () {
+        var me = this;
+        return me.listmetaData;
 
     },
 
@@ -122,6 +177,8 @@ Ext.define('Taco.view.entityManager.Index', {
         if (!record.raw.metaData) {
             return;
         }
+
+        me.listmetaData = record.raw.metaData;
 
 
         me.contentContainer.removeAll();
@@ -154,7 +211,7 @@ Ext.define('Taco.view.entityManager.Index', {
                 xtype: 'menu',
                 itemHandler: function (cmp) {
                     record.set('documentType', cmp.text);
-                    me.loadEditor(record);
+                    me.promptCmsName(record);
                 }
 
             });
@@ -169,6 +226,16 @@ Ext.define('Taco.view.entityManager.Index', {
             return;
 
         }
+
+        me.promptCmsName(record);
+
+
+    },
+
+    promptCmsName: function (record) {
+
+        var me = this;
+
         if (record.get('entityType') == 'cms') {
             Ext.Msg.prompt({
                 title: 'File Name',
@@ -188,9 +255,8 @@ Ext.define('Taco.view.entityManager.Index', {
         } else {
             me.loadEditor(record);
         }
-
-
     },
+
     loadEditor: function (record) {
         var me = this;
         me.contentContainer.removeAll();
@@ -204,11 +270,11 @@ Ext.define('Taco.view.entityManager.Index', {
         me.showHideButtons();
     },
     onItemEdit: function (view, record) {
-       
+
         var me = this;
 
         record.reload({
-            success:function () {
+            success: function () {
                 me.contentContainer.removeAll();
                 me.grid = null;
                 me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
@@ -220,10 +286,9 @@ Ext.define('Taco.view.entityManager.Index', {
                 me.showHideButtons();
             }
         });
-        
-        
+
+
     }
-   
 
 
 });

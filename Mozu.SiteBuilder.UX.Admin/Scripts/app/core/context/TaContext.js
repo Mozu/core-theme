@@ -185,6 +185,42 @@ Ext.define('Taco.core.context.TaContext', {
         }
         return this.getCurrentContext().getSiteId();
     },
+
+    getContextAtLevel: function (level) {
+        var cur = this.getCurrentContext();
+        if (cur.contextType == level) {
+            return cur;
+        }
+        if (level == 's') {
+            switch (cur.contextType) {
+            case 't':
+                return this.masterCatalogs[0].sites[0];
+            default:
+                return this.sites[0];
+            }
+        }
+        if (level == 'c') {
+            switch (cur.contextType) {
+                case 't':
+                    return this.masterCatalogs[0].catalogs[0];
+                case 'm':
+                    return this.catalogs[0];
+                case 's':
+                    return this.catalog;
+            }
+        }
+        if (level == 'm') {
+            switch (cur.contextType) {
+                case 't':
+                    return this.masterCatalogs[0];
+                case 'c':
+                    return this.masterCatalog;
+                case 's':
+                    return this.masterCatalog;
+            }
+        }
+        return this;
+    },
    
     getMasterCatalogId: function () {
         if (this == this.getCurrentContext()) {

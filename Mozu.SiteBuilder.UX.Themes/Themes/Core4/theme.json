@@ -16,6 +16,13 @@
         "path": "web_page.js",
         "priority": 0.2
     }, {
+        "documentTypes": [
+            "post"
+        ],
+        "id": "post",
+        "path": "post.js",
+        "priority": 0.2
+    },{
         "id": "about-us",
         "path": "about-us.js"
     }, {
@@ -233,7 +240,11 @@
         "template": "login",
         "title": "Login",
         "userCreatable": false
-    }],
+    }, {
+           "documentType": "post",
+            "entityType": "web-page",
+            "template": "post"
+        }],
     "settings": {
         "allowWishlist": false,
         "autocompleteProducts": true,

@@ -148,15 +148,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                      DocumentType = "email",
                                      Name = GetCmsPage(emailTempalte),
                                      Properties= emailTempalte.Properties 
-                                     //Items = emailTempalte.Properties == null ? null : emailTempalte.Properties..Select(_=> _.k)
-                                     //Items = new List<VM.Admin.DocumentProperty>()
-                                     //{
-                                     //    new VM.Admin.DocumentProperty ()
-                                     //    {
-                                     //        Key = CmsConstants.Widgets.page_type_definition,
-                                     //        Value = "subject"
-                                     //    }
-                                     //}
                                  };
                 
                 
@@ -165,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 //_cmsService.Create ( )
                 //CreatePage("home page", "home", "home");
-
+                ResetContextInitilaztionTasks();
                 res = await Page("email", GetCmsPage(emailTempalte));
             }
 

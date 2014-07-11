@@ -28,7 +28,7 @@ Ext.define('Taco.store.EntityEditors', {
             if (entityRecord.get('entityType') == 'cms' && this.pageTypeDefinitions && entityRecord.data && entityRecord.data.properties && entityRecord.data.properties.page_type_definition) {
                 ret = this.pageTypeDefinitions.getById( entityRecord.data.properties.page_type_definition);
                 if (ret ) {
-                    ret = this.getById('theme_' + ret.raw.customEditor);
+                    ret = this.getById('theme_' + ret.data.customEditor);
                 } 
             }
             if (ret) {
@@ -40,15 +40,15 @@ Ext.define('Taco.store.EntityEditors', {
 
 
                 if (entityRecord.get('entityType') == 'cms') {
-                    isMatch = isMatch || Ext.Array.findBy((item.raw.documentTypes || []), function (crit) {
-                        return crit && entityRecord.raw.documentType && crit.toLowerCase() == entityRecord.raw.documentType.toLowerCase();
+                    isMatch = isMatch || Ext.Array.findBy((item.data.documentTypes || []), function (crit) {
+                        return crit && entityRecord.data.documentType && crit.toLowerCase() == entityRecord.data.documentType.toLowerCase();
                     });
-                    isMatch = isMatch || Ext.Array.findBy((item.raw.documentLists || []), function (crit) {
-                        return crit && entityRecord.raw.documentListName && crit.toLowerCase() == entityRecord.raw.documentListName.toLowerCase();
+                    isMatch = isMatch || Ext.Array.findBy((item.data.documentLists || []), function (crit) {
+                        return crit && entityRecord.data.documentListName && crit.toLowerCase() == entityRecord.data.documentListName.toLowerCase();
                     });
                 }
                 if (entityRecord.get('entityType') == 'mzdb') {
-                    isMatch = isMatch || Ext.Array.findBy((item.raw.entityLists || []), function (crit) {
+                    isMatch = isMatch || Ext.Array.findBy((item.data.entityLists || []), function (crit) {
 
                         return crit && entityRecord.get('entityListFullName') && crit.toLowerCase() == entityRecord.get('entityListFullName').toLowerCase();
                     });

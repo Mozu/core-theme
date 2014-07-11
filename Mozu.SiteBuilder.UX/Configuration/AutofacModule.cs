@@ -109,6 +109,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             builder.RegisterType<PropertyTypeWebApiClient>().As<IPropertyTypeWebApiClient>().InstancePerRequest();
+
+            //builder.Register(c =>
+            //{
+            //    var handler = c.Resolve<IServiceClientMessageHandler>();
+            //    var docClient = new DocumentTypeWebApiClient(handler);
+            //    docClient.Options.DisableCache = true;
+            //    return docClient;
+            //}  ).As<IDocumentTypeWebApiClient>().InstancePerRequest();
             builder.RegisterType<DocumentTypeWebApiClient>().As<IDocumentTypeWebApiClient>().InstancePerRequest();
 
             builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerRequest();
