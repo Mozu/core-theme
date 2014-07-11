@@ -1,4 +1,7 @@
 ﻿{
+	
+	"dateFormat": "j.n.Y",
+
     "january"   : "Januar",
     "february"   : "Februar",
     "march"   : "März",
