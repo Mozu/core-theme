@@ -47,34 +47,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
 
     enableQuickFilters: true,
 
-    advancedSearchConfig: {
-        advancedFormCls: 'Taco.core.ux.form.Form',
-
-        quickFilterData: [
-                        [{ hasRecord: false }, 'Missing Translation'],
-                            [{ hasRecord: true}, 'Has Translation'],
-                            [{}, 'All Records']
-                        ],
-
-//function () {
-//            //var mc = Taco.app.context.getMasterCatalog(),
-//            //    excludeDefaultLocale = true,
-//            //    supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
-//            //    quickFilters = [
-//            //        [{ hasRecord: false }, 'Missing Translation'],
-//            //        [{ hasRecord: true}, 'Has Translation'],
-//            //        [{}, 'All Records']
-//            //    ];
-
-//            //Ext.Array.each(supportedLocales, function(loc) {
-//            //    quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
-//            //    quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
-//            //});
-
-//            //return quickFilters;
-//            return [];
-//        }()
-    },
+    advancedSearchConfig: null,
 
     stateful: false,
 
@@ -109,6 +82,8 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             columns: this.getColumnConfig()
         });
 
+        this.advancedSearchConfig = this.getAdvancedSearchConfig();
+
         this.store = this.getStore();
 
         me.callParent(arguments);
@@ -118,9 +93,29 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             data.records[0].set('index', 1);
         }, this);
     },
-   
-    
-    
+
+    getAdvancedSearchConfig: function() {
+        var mc = Taco.app.context.getMasterCatalog(),
+            excludeDefaultLocale = true,
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+            quickFilters = [
+                            [{ hasRecord: false }, 'Missing Translation'],
+                            [{ hasRecord: true}, 'Has Translation'],
+                            [{}, 'All Records']
+                        ];
+
+            Ext.Array.each(supportedLocales, function(loc) {
+                quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
+                quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
+            });
+
+        return {
+            advancedFormCls: 'Taco.core.ux.form.Form',
+
+            quickFilterData: quickFilters
+        };
+    }
+
 });
 
 
