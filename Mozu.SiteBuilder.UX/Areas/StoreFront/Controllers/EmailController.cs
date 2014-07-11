@@ -11,12 +11,14 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Behaviors;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.Email;
@@ -24,6 +26,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Mozu.SiteBuilder.UX.TestData;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 //using VMOrder = Mozu.SiteBuilder.UX.Models.Checkout.or;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -138,11 +141,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             HttpResponseMessage res = await Page("email", GetCmsPage(emailTempalte));
             if (res.StatusCode == HttpStatusCode.NotFound)
             {
+                
                 var reqDoc = new DC.Document
                                  {
                                      DocumentListName = "email",
                                      DocumentType = "email",
-                                     Name = GetCmsPage(emailTempalte) 
+                                     Name = GetCmsPage(emailTempalte),
+                                     Properties= emailTempalte.Properties 
                                      //Items = emailTempalte.Properties == null ? null : emailTempalte.Properties..Select(_=> _.k)
                                      //Items = new List<VM.Admin.DocumentProperty>()
                                      //{
@@ -153,8 +158,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                      //    }
                                      //}
                                  };
-
-                Task<ServiceClientResponse<DC.Document>> task = _cmsService.Create2(reqDoc);
+                
+                
+                Task<ServiceClientResponse<DC.Document>> task = _docRepo.CreateDocument(reqDoc.DocumentListName, reqDoc);
                 await task;
 
                 //_cmsService.Create ( )
@@ -167,8 +173,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewResult vr = null;
             if (res.IsSuccessStatusCode)
             {
+               
+          
                 vr = ((ObjectContent) res.Content).Value as ViewResult;
                 vr.ViewName = emailTempalte.Template;
+                var doc = (DC.Document)vr.Model;
+                if (doc != null)
+                {
+                    doc.Set("page_type_definition", id);
+                }
+
                 ViewData["content"] = vr.Model;
             }
           
@@ -294,7 +308,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private string GetCmsPage(VM.PageTypeDefinition def)
         {
-            return def.Id.Replace(".", "~");
+            return def.Id;
+            //todo:dataconversion
+            //return def.Id.Replace(".", "~");
         }
 
         private class EmailRenderActionResult : ActionResult

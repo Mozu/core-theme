@@ -9,7 +9,7 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
         'Taco.view.entityManager.DynamicFormContainer',
         'Taco.core.ux.HtmlEditor'
     ],
-    modelName: 'Taco.model.CmsDocument',
+ 
 
     allowedActions: {
         copy: true,
@@ -18,10 +18,7 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
         publishPage: true
     },
 
-    constructor: function () {
-       
-        this.callParent(arguments);
-    },
+   
 
     getId: function () {
         if (!this.pageContext.cmsContext.page.documentListName || !this.pageContext.cmsContext.page.id)
