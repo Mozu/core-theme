@@ -146,7 +146,7 @@ Harness.start(
                 expanded: true,
                 items: [
                     {
-                        url: 'unit/view/order/header.t.js',
+                        url: 'customunit/view/order/header.t.js',
                         title: 'Order Header Unit Tests'
                     },
                     {
