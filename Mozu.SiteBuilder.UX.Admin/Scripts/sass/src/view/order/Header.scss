@@ -1,0 +1,55 @@
+.#{$vprefix}order-header {
+    background-color: $color-neutral-white;
+    border: 1px solid $color-neutral-75;
+
+    // links
+    a {
+        color: $color-theme-red;
+    }
+
+    // all labels
+    .label {
+        font-weight: bold;
+    }
+
+    // lighter, uppercase labels
+    .label-light {
+        color: $color-neutral-60;
+        font-weight: normal;
+        text-transform: uppercase;
+    }
+
+    // account name "banner"
+    .account-name {
+        border-bottom: 1px solid $color-neutral-85;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 7px 19px 3px;
+
+        .label {
+            font-size: 14px;
+            line-height: 18px;
+            margin-right: 10px;
+        }
+    }
+
+    .pane {
+        border-right: 1px solid $color-neutral-85;
+        margin: 10px 0px;
+        padding: 0px 19px;
+
+        div {
+            line-height: 15px;
+        }
+    }
+
+    .pane-addresses {
+        border-right-width: 0px;
+    }
+
+    &> .#{$prefix}panel-body {
+        border-width: 0px;
+        font-size: 14px;
+        line-height: 1;
+    }
+}

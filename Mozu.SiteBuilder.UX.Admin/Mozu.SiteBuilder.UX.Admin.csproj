@@ -876,6 +876,7 @@
     <Content Include="Scripts\app\view\order\widget\GiftCardForm.js" />
     <Content Include="Scripts\app\view\order\widget\GiftCardGrid.js" />
     <Content Include="Scripts\app\view\order\widget\InternalNotesGrid.js" />
+    <Content Include="Scripts\app\view\order\widget\ReturnableItemGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingMethodMenu.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\OrderTotalPanelEditable.js" />
@@ -1425,6 +1426,7 @@
     <Content Include="Api\cms\tenant-documenttypes.json" />
     <Content Include="Api\cms\tenant-documentlists.json" />
     <Content Include="Api\cms\entityeditors.json" />
+    <Content Include="Scripts\sass\src\view\order\Header.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
@@ -1952,7 +1954,6 @@
     <Content Include="Tests\Mocks\Entities\Editors\pages.js" />
     <Content Include="Tests\Mocks\Entities\Editors\mozu.extensiblity.subnavlinks.js" />
     <Content Include="Tests\Mocks\Entities\Editors\phipps.people.js" />
-    <None Include="Tests\Mocks\Mystic1\EmptyCollection.json" />
     <Content Include="Tests\MozuTestSuite.js" />
     <Content Include="Tests\mocha\requireJs\specs\admin\require-mocha-bdd-test.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -2072,7 +2073,6 @@
     <Content Include="Tests\Web.config" />
     <Content Include="Tests\Automation\CIRunner.bat" />
     <Content Include="Tests\Mocks\Mystic1\Orders2Payments.json" />
-    <Content Include="Tests\Mocks\Mystic1\StoreCredits1.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
