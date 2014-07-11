@@ -12,7 +12,6 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn',
         'Taco.store.ShippingZones',
         'Taco.model.TargetRule'
-
     ],
     contextConfig: {
         supportedLevels: ['m'],
@@ -51,24 +50,30 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     advancedSearchConfig: {
         advancedFormCls: 'Taco.core.ux.form.Form',
 
-        quickFilterData: function () {
-            var me = this,
-                mc = Taco.app.context.getMasterCatalog(),
-                excludeDefaultLocale = true,
-                supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
-                quickFilters = [
-                    [{ hasRecord: false }, 'Missing Translation'],
-                    [{ hasRecord: true}, 'Has Translation'],
-                    [{}, 'All Records']
-                ];
+        quickFilterData: [
+                        [{ hasRecord: false }, 'Missing Translation'],
+                            [{ hasRecord: true}, 'Has Translation'],
+                            [{}, 'All Records']
+                        ],
 
-            Ext.Array.each(supportedLocales, function(loc) {
-                quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
-                quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
-            });
+//function () {
+//            //var mc = Taco.app.context.getMasterCatalog(),
+//            //    excludeDefaultLocale = true,
+//            //    supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+//            //    quickFilters = [
+//            //        [{ hasRecord: false }, 'Missing Translation'],
+//            //        [{ hasRecord: true}, 'Has Translation'],
+//            //        [{}, 'All Records']
+//            //    ];
 
-            return quickFilters;
-        }()
+//            //Ext.Array.each(supportedLocales, function(loc) {
+//            //    quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
+//            //    quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
+//            //});
+
+//            //return quickFilters;
+//            return [];
+//        }()
     },
 
     stateful: false,
