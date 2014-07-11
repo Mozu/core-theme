@@ -13,12 +13,21 @@
             "web_page"
         ],
         "id": "web_page",
-        "path": "contenttypes/web_page.js",
+        "path": "web_page.js",
         "priority": 0.2
     }, {
         "id": "about-us",
         "path": "about-us.js"
-
+    }, {
+        "id": "email-orderconfirmation",
+        "path": "email-orderconfirmation.js"
+    }, {
+        "id": "email",
+        "path": "email.js",
+        "documentTypes": [
+            "email"
+        ],
+        "priority": 0.2
     }],
     "emailTemplates": [{
         "id": "order.shipped",
@@ -29,6 +38,7 @@
         "title": "Order Shipped"
     }, {
         "id": "order.changed",
+        "customEditor": "email-orderconfirmation",
         "properties": {
             "subject": "Order Confirmation #{model.orderNumber}"
         },
@@ -103,7 +113,7 @@
         "entityType": "webpage",
         "id": "about-us",
         "template": "about-us",
-         "customEditor": "about-us",
+        "customEditor": "about-us",
         "title": "About Us",
         "userCreatable": true,
         "zones": [{
@@ -133,7 +143,6 @@
         "id": "blank-page",
         "template": "blank-page",
         "title": "Blank Page",
-        
         "userCreatable": true
     }, {
         "documentType": "web_page",
@@ -142,7 +151,6 @@
         "id": "landing",
         "template": "blank-page",
         "title": "Landing Page",
-       
         "userCreatable": true
     }, {
         "documentType": "web_page",
