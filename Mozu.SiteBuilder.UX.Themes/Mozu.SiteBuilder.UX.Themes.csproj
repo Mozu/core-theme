@@ -154,15 +154,15 @@
     </Reference>
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.10\lib\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.9.0-dev001\lib\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.PowerPack, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.10\lib\FSharp.PowerPack.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.9.0-dev001\lib\FSharp.PowerPack.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.PowerPack.Compatibility, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.10\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.9.0-dev001\lib\FSharp.PowerPack.Compatibility.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Core, Version=0.87.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -325,11 +325,11 @@
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.10\lib\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.9.0-dev001\lib\NDjango.Core40.dll</HintPath>
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.8, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.7.0.10\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.9.0-dev001\lib\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -399,6 +399,7 @@
     <Content Include="Themes\Core4\admin\editors\email-orderconfirmation.js" />
     <Content Include="Themes\Core4\admin\editors\email.js" />
     <Content Include="Themes\Core4\admin\editors\about-us.js" />
+    <Content Include="Themes\Core4\admin\editors\post.js" />
     <Content Include="Themes\Core4\admin\editors\web_page.js" />
     <Content Include="Themes\Core4\compiled\scripts\build.txt" />
     <Content Include="Themes\Core4\compiled\scripts\modules\common.js" />
@@ -987,6 +988,12 @@
     <Content Include="Themes\Core4\templates\modules\search\autocomplete-page-result.hypr.live">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\pages\post.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\pages\blog.hypr" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

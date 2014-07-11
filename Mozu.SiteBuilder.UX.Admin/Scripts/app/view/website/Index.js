@@ -19,7 +19,6 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.widgetEditors.DealOfTheDay',
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
-        'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
         'Ext.ux.IFrame',
         'Taco.store.ThemeListing',
         'Ext.menu.CheckItem',

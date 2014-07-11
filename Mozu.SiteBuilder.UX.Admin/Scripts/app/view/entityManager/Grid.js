@@ -120,9 +120,9 @@ Ext.define('Taco.view.entityManager.Grid', {
         if (me.listMetaData.entityType == 'cms') {
             columns.push({
                 xtype: 'gridcolumn',
-                dataIndex: 'id',
+              
                 renderer: function (value, metaData, record) {
-                    return record.raw.name;
+                    return record.data.name;
 
                 },
 
@@ -130,6 +130,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 flex: 1,
                 width: 150,
             });
+           
         }
 
         Ext.Array.each(view.fields, function (viewField) {
@@ -148,6 +149,21 @@ Ext.define('Taco.view.entityManager.Grid', {
                 width: 150,
             });
         });
+        if (me.listMetaData.entityType == 'cms') {
+           
+            columns.push({
+                xtype: 'gridcolumn',
+
+                renderer: function (value, metaData, record) {
+                    return record.data.documentType;
+
+                },
+
+                text: 'content type',
+                flex: 1,
+                width: 150,
+            });
+        }
 
 
         columns.push({

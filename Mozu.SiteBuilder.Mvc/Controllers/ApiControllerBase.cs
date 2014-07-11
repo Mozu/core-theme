@@ -17,16 +17,17 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
     {
 
 
-      
+
 
         private ILifetimeScope _lifetimeScope;
+
         public ILifetimeScope LifetimeScope
         {
             get
             {
                 if (_lifetimeScope == null)
                 {
-                    _lifetimeScope = (ILifetimeScope)this.Request.GetDependencyScope().GetService(typeof(ILifetimeScope));
+                    _lifetimeScope = (ILifetimeScope) this.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
 
 
                 }
@@ -37,6 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 
         private ISiteBuilderApiContext _siteBuilderApiContext;
         private HttpContextBase _httpContextBase;
+
         public ISiteBuilderApiContext SbApiContext
         {
             get
@@ -53,19 +55,25 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         }
 
         private Task _contextInitTasks;
+
         public Task ContextInitilaztionTasks
         {
             get
             {
                 if (_contextInitTasks == null)
                 {
-                   _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService).InitCmsPageContext(this.PageContext), this.SiteContext.Init(), this.NavigationContext.ASyncGetTree());
+                    _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService).InitCmsPageContext(this.PageContext), this.SiteContext.Init(), this.NavigationContext.ASyncGetTree());
                 }
                 return _contextInitTasks;
             }
         }
 
-        private ICmsServiceWrapper _cmsService;
+        public void ResetContextInitilaztionTasks()
+        {
+            _contextInitTasks = null;
+        }
+
+    private ICmsServiceWrapper _cmsService;
         public ICmsServiceWrapper CmsService
         {
             get

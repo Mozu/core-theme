@@ -37,15 +37,16 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
           siteReq = me.pageContext.cmsContext.site;
 
         if (siteReq.id) {
-            Taco.model.CmsDocument.load({documentListName:siteReq.documentListName ,id:siteReq.id}, {
+            Taco.model.Entity.load({ documentListName: siteReq.documentListName, id: siteReq.id }, {
                 success: function (doc) {
                     me.set(doc);
                 }
             });
         } else {
-            cmsDoc = Ext.create('Taco.model.CmsDocument', {
+            cmsDoc = Ext.create('Taco.model.Entity', {
                 documentType: siteReq.documentType,
                 name: siteReq.path,
+                entityType: 'cms',
                 documentListName: siteReq.documentListName
             });
             me.set(cmsDoc);
