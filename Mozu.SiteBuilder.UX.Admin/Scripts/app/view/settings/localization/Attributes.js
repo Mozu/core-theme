@@ -21,7 +21,8 @@ Ext.define('Taco.view.settings.localization.Attributes', {
     getColumnConfig: function() {
         var me = this,
             mc = Taco.app.context.getMasterCatalog(),
-            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(),
+            excludeDefaultLocale = true,
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
             columns = [];
 
         columns = [
@@ -47,48 +48,33 @@ Ext.define('Taco.view.settings.localization.Attributes', {
                 flex: 1,
                 width: 150
             }
-             //}, {
-            //    xtype: 'gridcolumn',
-            //    dataIndex: 'spanish',
-            //    text: 'Spanish',
-            //    flex: 1,
-            //    width: 150,
-            //    sortable: false,
-            //    resizable: false,
-            //    menuDisabled: true,
-            //    editor: {
-            //        // defaults to textfield if no xtype is supplied
-            //        xtype: "textfield",
-            //        showBorder: true,
-            //        hideTrigger: true,
-            //        emptyText: "missing",
-            //        msgTarget: "qtip",
-            //        selectOnFocus: true,
-            //        allowBlank: true
-            //    },
-            //}, {
-            //    xtype: 'gridcolumn',
-            //    dataIndex: 'french',
-            //    text: 'French',
-            //    flex: 1,
-            //    width: 150,
-            //    sortable: false,
-            //    resizable: false,
-            //    menuDisabled: true,
-            //    editor: {
-            //        // defaults to textfield if no xtype is supplied
-            //        xtype: "textfield",
-            //        showBorder: true,
-            //        hideTrigger: true,
-            //        emptyText: "missing",
-            //        msgTarget: "qtip",
-            //        selectOnFocus: true,
-            //        allowBlank: true
-            //    },
         ];
 
-        // todo: move to superclass, getLocaleColumns, exclude primary? - Greg Murray on 2014-07-10 
-        Ext.Array.each(supportedLocales, function(locale) {
+        //// todo: move to superclass, getLocaleColumns, exclude primary? - Greg Murray on 2014-07-10 
+        //for (var i = 0; i < supportedLocales.length; i++) {
+        //    columns.push({
+        //        xtype: 'gridcolumn',
+        //        dataIndex: locale,
+        //        aryIndex: i,
+        //        text: locale,
+        //        flex: 1,
+        //        width: 150,
+        //        sortable: false,
+        //        resizable: false,
+        //        menuDisabled: true,
+        //        editor: {
+        //            xtype: "textfield",
+        //            showBorder: true,
+        //            hideTrigger: true,
+        //            emptyText: "missing",
+        //            msgTarget: "qtip",
+        //            selectOnFocus: true,
+        //            allowBlank: true
+        //        }
+        //    });
+        //}
+
+        Ext.Array.each(supportedLocales, function (locale) {
             columns.push({
                 xtype: 'gridcolumn',
                 dataIndex: locale,

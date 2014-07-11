@@ -51,11 +51,24 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     advancedSearchConfig: {
         advancedFormCls: 'Taco.core.ux.form.Form',
 
-        quickFilterData: [
-            [{ hasTranslations: false }, 'Missing Translation'],
-            [{ hasTranslations: true }, 'Provided Translation'],
-            [{ }, 'All Records']
-        ]
+        quickFilterData: function () {
+            var me = this,
+                mc = Taco.app.context.getMasterCatalog(),
+                excludeDefaultLocale = true,
+                supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+                quickFilters = [
+                    [{ hasRecord: false }, 'Missing Translation'],
+                    [{ hasRecord: true}, 'Has Translation'],
+                    [{}, 'All Records']
+                ];
+
+            Ext.Array.each(supportedLocales, function(loc) {
+                quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
+                quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
+            });
+
+            return quickFilters;
+        }()
     },
 
     stateful: false,
