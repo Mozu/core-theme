@@ -2,7 +2,7 @@
  * @class Taco.model.LocalizedAttribute
  */
 Ext.define('Taco.model.LocalizedAttribute', {
-    //requires: ['Taco.model.AttributeValue'],
+    requires: ['Taco.model.LocalizedAttributeContent'],
     extend: 'Taco.core.data.Model',
     fields: [{
             name: 'attributeFQN',
@@ -22,11 +22,17 @@ Ext.define('Taco.model.LocalizedAttribute', {
             type: 'string',
             useNull: true
         }, {
-            name: 'localizedValues',
+            name: 'localizedContent',
             type: 'auto',
-            defaultValue: []
+            defaultValue: {}
         }
+        //, {
+        //    name: 'localizedValues',
+        //    type: 'auto',
+        //    defaultValue: []
+        //}
     ],
+    idProperty: 'attributeFQN',
     validations: [{
             type: 'length',
             name: 'name',
@@ -47,9 +53,10 @@ Ext.define('Taco.model.LocalizedAttribute', {
     ],
     proxy: {
         type: 'ajaxproxy',
+        idParam: 'attributeFQN',
         api: {
             read: '/admin/app/localizedcontent/attributes/read',
-            update: '/admin/app/localizedcontent/attributes/edit'
+            //update: '/admin/app/localizedcontent/attributes/edit'
         },
         reader: {
             type: 'json',

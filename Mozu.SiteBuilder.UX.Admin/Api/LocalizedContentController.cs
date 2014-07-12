@@ -133,23 +133,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Description = attr,
                 Locale = "en-US",
                 Name = attr,
-                LocalizedValues = new List<LocalizedAttributeContent>
+                LocalizedContent = new Dictionary<string, LocalizedAttributeContent>()
                 {
-                    new LocalizedAttributeContent
-                    {
-                        Locale = "fr-FR",
-                        Description = frAttr,
-                        Exists = true,
-                        Name = frAttr
+                    { "fr-FR", 
+                        new LocalizedAttributeContent {
+                            Locale = "fr-FR",
+                            Description = frAttr,
+                            Exists = true,
+                            Name = frAttr
+                        }
                     },
-                    new LocalizedAttributeContent
-                    {
-                        Locale = "de-DE",
-                        Description = null,
-                        Exists = false,
-                        Name = null
-                    },
+                    { "ru-RU", 
+                        new LocalizedAttributeContent {
+                            Locale = "ru-RU",
+                            Description = null,
+                            Exists = true,
+                            Name = null
+                        }
+                    }
+
                 }
+                //LocalizedValues = new List<LocalizedAttributeContent>
+                //{
+                //    new LocalizedAttributeContent
+                //    {
+                //        Locale = "fr-FR",
+                //        Description = frAttr,
+                //        Exists = true,
+                //        Name = frAttr
+                //    },
+                //    new LocalizedAttributeContent
+                //    {
+                //        Locale = "de-DE",
+                //        Description = null,
+                //        Exists = false,
+                //        Name = null
+                //    },
+                //}
             };
         }
 

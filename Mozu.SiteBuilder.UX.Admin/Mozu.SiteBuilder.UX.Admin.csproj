@@ -734,6 +734,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\LocalizedAttributeContent.js" />
     <Content Include="Scripts\app\model\LocalizedProductExtra.js" />
     <Content Include="Scripts\app\model\LocalizedProductVariant.js" />
     <Content Include="Scripts\app\model\LocalizedProductProperty.js" />

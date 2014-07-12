@@ -77,7 +77,7 @@ Ext.define('Taco.view.settings.localization.Attributes', {
         Ext.Array.each(supportedLocales, function (locale) {
             columns.push({
                 xtype: 'gridcolumn',
-                dataIndex: locale,
+                dataIndex: this.record.localizedContent[locale], //  "localizedContent['" + locale + "']",
                 text: locale,
                 flex: 1,
                 width: 150,

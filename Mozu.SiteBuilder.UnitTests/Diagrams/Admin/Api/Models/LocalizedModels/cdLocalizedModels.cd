@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Localization.LocalizedAttribute">
+    <Position X="1" Y="1.25" Width="3.5" />
+    <Members>
+      <Method Name="LocalizedAttribute" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="LocalizedContent" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Localization.LocalizedAttributeContent">
+    <Position X="5" Y="3.75" Width="2.5" />
+    <Members>
+      <Method Name="LocalizedAttributeContent" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
