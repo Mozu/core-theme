@@ -64,12 +64,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(result);
         }
 
-        [HttpGetRoute(UriTemplate = "attributes/edit/{attributeFqn}")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedAttributes(Models.Localization.LocalizedAttribute localizedAttribute, string attributeFqn)
+        [HttpPostRoute(UriTemplate = "attributes/edit")]
+        public async Task<Response<JObject>> UpsertLocalizedAttributes(JObject jobject)
         {
+            var fakeData = CreatFakeJAttrib("Size", "Dimension3", "размер");
+            
+            var result = await Task.FromResult(fakeData);
+
+            return Single2(result);
+
             //map to dc attribute.
             //await _attributeWebApiClient.UpdateLocalizedContents()
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         [HttpGetRoute(UriTemplate = "attributevalues/read")]
