@@ -7,9 +7,10 @@ Ext.define('Taco.store.LocalizedAttributes', {
         return Ext.define('Taco.model.LocalizedAttribute' + Ext.id(), {
             extend: 'Ext.data.Model',
             fields: function () {
-                var mc = Taco.app.context.getMasterCatalog(),
+                var //mc = Taco.app.context.getMasterCatalog(),
                     excludeDefaultLocale = true,
-                    supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+                    supportedLocales = ['fr-FR', 'ru-RU'],
+                    //(!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
                     items = [
                         {
                             name: 'attributeFQN',
