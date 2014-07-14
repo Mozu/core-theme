@@ -69,7 +69,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             },
             listeners: {
                 'edit': {
-                    fn: function (editor, column, e) {
+                    fn: function (editor, column) {
                         column.record.commit();
                         column.record.save();
                     }
@@ -89,7 +89,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
 
         me.callParent(arguments);
 
-        this.mon(this.view, 'drop', function(node, data, overModel, dropPosition, eOpts) {
+        this.mon(this.view, 'drop', function(node, data) {
             // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
             data.records[0].set('index', 1);
         }, this);
