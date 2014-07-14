@@ -168,6 +168,39 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return themecfg;
         }
 
+        private enum Months : int
+        {
+
+            january = 1,
+            february = 2,
+            march = 3,
+            april = 4,
+            may = 5,
+            june = 6,
+            july = 7,
+            august = 8,
+            september = 9,
+            october = 10,
+            november = 11,
+            december = 12
+        }
+
+        private enum ShortMonths : int
+        {
+            shortJanuary = 1,
+            shortFebruary = 2,
+            shortMarch = 3,
+            shortApril = 4,
+            shortMay = 5,
+            shortJune = 6,
+            shortJuly = 7,
+            shortAugust = 8,
+            shortSeptember = 9,
+            shortOctober = 10,
+            shortNovember = 11,
+            shortDecember = 12
+        }
+
         private Dictionary<string, ThemeLabelCollection> LoadThemeLabels(string themePath)
         {
             Dictionary<string, ThemeLabelCollection> returnValues = new Dictionary<string, ThemeLabelCollection>(StringComparer.OrdinalIgnoreCase);
@@ -189,12 +222,59 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 {
                     labelCollection[x.Name] = (string) x.Value;
                 }
-                
+
+
+                AddLocalizedDateNames(labelJsonFile, labelCollection);
 
                 returnValues[localeCode] = labelCollection;
             }
 
+
+
             return returnValues;
+        }
+
+        private static void AddLocalizedDateNames(string labelJsonFile, ThemeLabelCollection labelCollection)
+        {
+            try
+            {
+                var ci = System.Globalization.CultureInfo.GetCultureInfo(labelJsonFile);
+                System.Diagnostics.Debug.WriteLine(ci.LCID.ToString());
+                for (int i = 1; i < 13; i++)
+                {
+                    var month = (Months) i;
+                    var shortMonth = (ShortMonths) i;
+                    string key = (month).ToString();
+                    string shortKey = (shortMonth).ToString();
+
+                    if (!labelCollection.ContainsKey(key))
+                    {
+                        labelCollection[key] = ci.DateTimeFormat.GetMonthName((int) month);
+                    }
+                    if (!labelCollection.ContainsKey(shortKey))
+                    {
+                        labelCollection[shortKey] = ci.DateTimeFormat.GetAbbreviatedMonthName((int) shortMonth);
+                    }
+                }
+                for (int i = 0; i < 7; i++)
+                {
+                    var day = (DayOfWeek) i;
+                    string key = day.ToString().ToLowerInvariant();
+                    var shortKey = "short" + day.ToString();
+                    if (!labelCollection.ContainsKey(key))
+                    {
+                        labelCollection[key] = ci.DateTimeFormat.GetDayName(day);
+                    }
+
+                    if (!labelCollection.ContainsKey(shortKey))
+                    {
+                        labelCollection[shortKey] = ci.DateTimeFormat.GetAbbreviatedDayName(day);
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>
