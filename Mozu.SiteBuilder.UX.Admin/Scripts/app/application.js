@@ -132,7 +132,7 @@ Ext.define('Taco.Application', {
         //'Products',
         //'PendingChanges',
         //'Inventory',
-        'Message',
+        'Message'
         //'Catalog',
         //'Testing',
         //'Discounts',

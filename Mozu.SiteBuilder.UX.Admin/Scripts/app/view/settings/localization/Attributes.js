@@ -78,7 +78,7 @@ Ext.define('Taco.view.settings.localization.Attributes', {
                     //        console.log(prevValue);
                     //    }
                     //}
-                },
+                }
             };
             columns.push(col);
         });
