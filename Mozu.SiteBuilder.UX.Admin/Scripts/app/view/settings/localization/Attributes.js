@@ -11,10 +11,13 @@ Ext.define('Taco.view.settings.localization.Attributes', {
 
     store: { type: 'Taco.store.LocalizedAttributes' },
 
-    modelName: 'Taco.model.LocalizedAttribute',
 
     getStore: function() {
         return { type: 'Taco.store.LocalizedAttributes' };
+    },
+
+    config: {
+        record: null
     },
 
     // override this method and adjust the columns if you need a grid with a subset of columns;
@@ -50,34 +53,15 @@ Ext.define('Taco.view.settings.localization.Attributes', {
             }
         ];
 
-        //// todo: move to superclass, getLocaleColumns, exclude primary? - Greg Murray on 2014-07-10 
-        //for (var i = 0; i < supportedLocales.length; i++) {
-        //    columns.push({
-        //        xtype: 'gridcolumn',
-        //        dataIndex: locale,
-        //        aryIndex: i,
-        //        text: locale,
-        //        flex: 1,
-        //        width: 150,
-        //        sortable: false,
-        //        resizable: false,
-        //        menuDisabled: true,
-        //        editor: {
-        //            xtype: "textfield",
-        //            showBorder: true,
-        //            hideTrigger: true,
-        //            emptyText: "missing",
-        //            msgTarget: "qtip",
-        //            selectOnFocus: true,
-        //            allowBlank: true
-        //        }
-        //    });
-        //}
+        // todo: take into account search filter to only show language? - Greg Murray on 2014-07-14 
+
+
+        // todo: move to superclass, getLocaleColumns, exclude primary? - Greg Murray on 2014-07-10 
 
         Ext.Array.each(supportedLocales, function (locale) {
-            columns.push({
+            var col = {
                 xtype: 'gridcolumn',
-                dataIndex: this.record.localizedContent[locale], //  "localizedContent['" + locale + "']",
+                dataIndex: locale + '_name',
                 text: locale,
                 flex: 1,
                 width: 150,
@@ -93,7 +77,8 @@ Ext.define('Taco.view.settings.localization.Attributes', {
                     selectOnFocus: true,
                     allowBlank: true
                 },
-            });
+            };
+            columns.push(col);
         });
         return columns;
     }

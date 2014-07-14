@@ -8,7 +8,7 @@ Ext.define('Taco.controller.Localization', {
     requires: [
     ],
     models: [
-        'Taco.model.LocalizedAttribute', 'Taco.model.LocalizedAttributeValue', 'Taco.model.LocalizedProductProperty',
+        'Taco.model.LocalizedAttributeValue', 'Taco.model.LocalizedProductProperty',
         'Taco.model.LocalizedProductExtra', 'Taco.model.LocalizedProductVariant'],
     views: [
         'Taco.view.settings.localization.Attributes',
