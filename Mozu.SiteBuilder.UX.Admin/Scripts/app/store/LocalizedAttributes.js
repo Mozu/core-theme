@@ -7,30 +7,33 @@ Ext.define('Taco.store.LocalizedAttributes', {
         return Ext.define('Taco.model.LocalizedAttribute' + Ext.id(), {
             extend: 'Ext.data.Model',
             fields: function () {
-                var //mc = Taco.app.context.getMasterCatalog(),
-                    excludeDefaultLocale = true,
-                    supportedLocales = ['fr-FR', 'ru-RU'],
-                    //(!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
-                    items = [
-                        {
-                            name: 'attributeFQN',
-                            type: 'string'
-                        }, {
-                            name: 'adminName',
-                            type: 'string'
-                        }, {
-                            name: 'name',
-                            type: 'string'
-                        }, {
-                            name: 'description',
-                            type: 'string',
-                            useNull: true
-                        }, {
-                            name: 'locale',
-                            type: 'string',
-                            useNull: true
-                        }
-                    ];
+                var items = [
+                    {
+                        name: 'attributeFQN',
+                        type: 'string'
+                    }, {
+                        name: 'adminName',
+                        type: 'string'
+                    }, {
+                        name: 'name',
+                        type: 'string'
+                    }, {
+                        name: 'description',
+                        type: 'string',
+                        useNull: true
+                    }, {
+                        name: 'locale',
+                        type: 'string',
+                        useNull: true
+                    }
+                ];
+                if (!Taco.app || !Taco.app.context){
+                    return items;
+                }
+                var mc = Taco.app.context.getMasterCatalog();
+                var excludeDefaultLocale = true;
+                var supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale);
+
                 Ext.Array.each(supportedLocales, function(loc) {
                     console.log(loc);
                     items.push({
