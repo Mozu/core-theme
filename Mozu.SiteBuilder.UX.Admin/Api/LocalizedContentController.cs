@@ -18,9 +18,12 @@ using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Localization;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -29,26 +32,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IAttributeWebApiClient _attributeWebApiClient;
         private readonly IProductWebApiClient _productWebApiClient;
+        private readonly IReportWebApiClient _reportWebApiClient;
         private readonly IMasterCatalogWebApiClient _masterCatalogWebApiClient;
         private readonly ISettings _settings;
         private readonly IApiContext _apiCtx;
 
 
-        public LocalizedContentController(IAttributeWebApiClient attributeWebApiClient, IProductWebApiClient productWebApiClient, IMasterCatalogWebApiClient masterCatalogWebApiClient,
+        public LocalizedContentController(IAttributeWebApiClient attributeWebApiClient, IProductWebApiClient productWebApiClient, IReportWebApiClient reportWebApiClient, IMasterCatalogWebApiClient masterCatalogWebApiClient,
             ISettings settings, IApiContext apiCtx)
         {
             _attributeWebApiClient = attributeWebApiClient;
             _productWebApiClient = productWebApiClient;
+            _reportWebApiClient = reportWebApiClient;
             _masterCatalogWebApiClient = masterCatalogWebApiClient;
             _settings = settings;
             _apiCtx = apiCtx;
         }
 
         [HttpGetRoute(UriTemplate = "attributes/read")]
-        public async Task<Response<List<Models.Localization.LocalizedAttribute>>> GetLocalizedAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<JObject>>> GetLocalizedAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var fakeData = CreateFakeAttributeData();
+
+            //var attrs = (await _reportWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+            //    filter: extFilter.query, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
+
+            var fakeData = CreateFakeAttributeJData();
+ 
             var result = await Task.FromResult(fakeData);
+
+            // todo: need count for paging - Greg Murray on 2014-07-14 
             return List2(result);
         }
 
@@ -63,6 +75,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "attributevalues/read")]
         public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedAttributeValues([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
+            //var attrValues = (await _reportWebApiClient.GetAttributeValuess(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+            //    filter: extFilter.query, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
+
+            // todo: automapper - Greg Murray on 2014-07-13 
             throw new NotImplementedException();
         }
         
@@ -114,64 +130,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         #region privates
 
-        private List<LocalizedAttribute> CreateFakeAttributeData()
+        private List<JObject> CreateFakeAttributeJData()
         {
-            return new List<Models.Localization.LocalizedAttribute>
-            {
-                CreatFakeAttrib("Color", "Coleur"),
-                CreatFakeAttrib("Size", "Dimension"),
-                CreatFakeAttrib("Material", "matériel")
-            };
+            var result = new List<JObject>();
+
+            result.Add(CreatFakeJAttrib("Color", "Coleur", "цвет"));
+            result.Add(CreatFakeJAttrib("Size", "Dimension", "размер"));
+            result.Add(CreatFakeJAttrib("Material", "matériel", "материал"));
+            return result;
         }
 
-        private LocalizedAttribute CreatFakeAttrib(string attr, string frAttr)
+        private JObject CreatFakeJAttrib(string attr, string attrFr, string attrRu)
         {
-            return new LocalizedAttribute
+            var attrib = new LocalizedAttribute
             {
                 AdminName = attr + ": Shirts",
                 AttributeFQN = "Tenant~" + attr + "-Shirts",
                 Description = attr,
                 Locale = "en-US",
                 Name = attr,
-                LocalizedContent = new Dictionary<string, LocalizedAttributeContent>()
-                {
-                    { "fr-FR", 
-                        new LocalizedAttributeContent {
-                            Locale = "fr-FR",
-                            Description = frAttr,
-                            Exists = true,
-                            Name = frAttr
-                        }
-                    },
-                    { "ru-RU", 
-                        new LocalizedAttributeContent {
-                            Locale = "ru-RU",
-                            Description = null,
-                            Exists = true,
-                            Name = null
-                        }
-                    }
-
-                }
-                //LocalizedValues = new List<LocalizedAttributeContent>
-                //{
-                //    new LocalizedAttributeContent
-                //    {
-                //        Locale = "fr-FR",
-                //        Description = frAttr,
-                //        Exists = true,
-                //        Name = frAttr
-                //    },
-                //    new LocalizedAttributeContent
-                //    {
-                //        Locale = "de-DE",
-                //        Description = null,
-                //        Exists = false,
-                //        Name = null
-                //    },
-                //}
             };
+            var j = JObject.FromObject(attrib, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+            j["fr-FR_name"] = attrFr;
+            j["ru-RU_name"] = attrRu;
+            return j;
         }
+        
 
         #endregion
 
