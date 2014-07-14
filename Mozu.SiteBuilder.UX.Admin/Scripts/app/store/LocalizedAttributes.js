@@ -35,7 +35,6 @@ Ext.define('Taco.store.LocalizedAttributes', {
                 var supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale);
 
                 Ext.Array.each(supportedLocales, function(loc) {
-                    console.log(loc);
                     items.push({
                         name: loc + '_name',
                         type: 'string',
@@ -49,9 +48,7 @@ Ext.define('Taco.store.LocalizedAttributes', {
                 idParam: 'attributeFQN',
                 api: {
                     read: '/admin/app/localizedcontent/attributes/read',
-                    update: function () {
-                        return '/admin/app/localizedcontent/attributes/edit/' + this.attributeFQN;
-                    }()
+                    update: '/admin/app/localizedcontent/attributes/edit'
                 },
                 reader: {
                     type: 'json',
@@ -60,7 +57,7 @@ Ext.define('Taco.store.LocalizedAttributes', {
                 },
                 writer: {
                     type: 'json',
-                    allowSingle: false
+                    allowSingle: true
                 }
             }
         });

@@ -3,9 +3,9 @@
 */
 Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     extend: 'Taco.core.ux.browser.SearchList',
-  
+
     requires: [
-         'Ext.Date',
+        'Ext.Date',
         'Ext.form.Panel', 'Taco.core.ux.BaseGrid',
         'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter',
         'Taco.core.ux.action.SecondaryButton',
@@ -18,7 +18,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         requiresContextOfType: ['m', 'c', 's']
     },
 
-    launchEditorOnClick: false,
+    launchEditorOnClick: false, 
 
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     //modelName: 'Taco.model.TargetRule',
@@ -41,7 +41,8 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     showActionsColumn: false,
 
     hideSearchToolbar: false,
-    selType: 'cellmodel',
+    //selType: 'cellmodel',
+    selType: 'rowmodel',
 
     autoScroll: true,
 
@@ -114,6 +115,10 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
 
             quickFilterData: quickFilters
         };
+    },
+
+    onRowEditorUpdate: function () {
+        this.callParent(arguments);
     }
 
 });

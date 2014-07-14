@@ -26,18 +26,13 @@ Ext.define('Taco.view.settings.localization.Attributes', {
             mc = Taco.app.context.getMasterCatalog(),
             excludeDefaultLocale = true,
             supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
-            columns = [];
-
-        columns = [
+            columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeFQN',
                 text: 'MC Attribute Id',
                 hideable: false,
                 minWidth: 300
-                //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-                //}
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'adminName',
@@ -76,6 +71,13 @@ Ext.define('Taco.view.settings.localization.Attributes', {
                     msgTarget: "qtip",
                     selectOnFocus: true,
                     allowBlank: true
+                    //,
+                    //listeners: {
+                    //    complete: function(scope, value, prevValue, eOpts) {
+                    //        console.log(value);
+                    //        console.log(prevValue);
+                    //    }
+                    //}
                 },
             };
             columns.push(col);
