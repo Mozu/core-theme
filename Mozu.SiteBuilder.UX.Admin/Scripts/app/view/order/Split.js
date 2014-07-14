@@ -26,6 +26,8 @@ Ext.define('Taco.view.order.Split', {
     },
 
     createButtonEnabled: true,
+    saveButtonVisible: false,
+    cancelButtonVisible: false,
     
     statics: {
         eastConfigs: {
@@ -78,13 +80,6 @@ Ext.define('Taco.view.order.Split', {
         
         this.callParent(arguments);
 
-        this.on({
-            cancel: {
-                scope: this,
-                fn: function () { this.onSelectRecord(null); }
-            }
-        });
-
         this.mon(this.getEast(), {
             add: {
                 scope: this,
@@ -123,6 +118,8 @@ Ext.define('Taco.view.order.Split', {
     },
 
     getAdditionalActions: function (ids) {
+        ids = Ext.Array.merge(ids, ['cancelActionButton', 'saveActionButton']);
+
         return this.editor.header.down('toolbar').queryBy(function (cmp) {
             return ids.indexOf(cmp.getItemId()) > -1;
         });
@@ -159,6 +156,14 @@ Ext.define('Taco.view.order.Split', {
                         c.getLayout().innerCt.applyStyles({ padding: '0px' });
                         c.doLayout();
                     }
+                },
+                cancel: {
+                    scope: this,
+                    fn: function () {
+                        this.setRecord(null);
+                        this.showAndHideSplitActions();
+                        this.updateSplitTitle();
+                    }
                 }
             });
         }
@@ -192,6 +197,24 @@ Ext.define('Taco.view.order.Split', {
         Ext.resumeLayouts(true);
     },
 
+    showAndHideSplitActions: function (toolbar) {
+        var record = this.getRecord();
+        var editorActions = ['cancelActionButton', 'saveActionButton', 'next', 'previous'];
+
+        toolbar = toolbar || this.header.down('toolbar');
+        toolbar.items.each(function (cmp) {
+            var id = cmp.getItemId ? cmp.getItemId() : null;
+
+            if (record) {
+                if (id === 'createActionButton') cmp.hide();
+                if (Ext.Array.contains(editorActions, id)) cmp.show();
+            } else {
+                if (id === 'createActionButton') cmp.show();
+                if (Ext.Array.contains(editorActions, id)) cmp.hide();
+            }
+        });
+    },
+
     updateSplitActions: function () {
         var ids = Ext.Array.pluck(this.editor.additionalActions || [], 'itemId');
         var buttons = this.getAdditionalActions(ids);
@@ -205,6 +228,8 @@ Ext.define('Taco.view.order.Split', {
                 single: true,
                 fn: function () {
                     toolbar.doComponentLayout();
+
+                    this.showAndHideSplitActions(toolbar);
                 }
             }
         });
