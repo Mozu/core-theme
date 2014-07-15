@@ -89,7 +89,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
             pageReq = me.pageContext.cmsContext.page;
 
         if (pageReq.id) {
-            Taco.record.Entity.load({ documentListName: pageReq.documentListName, id: pageReq.id }, {
+            Taco.model.Entity.load({ documentListName: pageReq.documentListName, id: pageReq.id }, {
                 success: function (doc) {
                     me.set(doc);
                 }
