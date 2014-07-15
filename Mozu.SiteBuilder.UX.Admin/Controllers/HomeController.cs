@@ -56,8 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
-        
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper,  ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient , Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
+
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient, Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
         {
             
             _logger = logger;
@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
             var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
             var tenantTask = _tenantsWebApi.GetTenantInternal(  _apiContext.TenantId , false );
-            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
+            // var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
             
             var siteUsersTask = _usersRepo.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, pageSize: 200, startIndex: 0);
             
@@ -180,7 +180,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection >> masterCatalogsTask;
              masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs( );
 
-             await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask);
+             await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask);//, adminSubNavExtensibiltyTask);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
             
@@ -198,20 +198,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 masterCatalogs = new DCproduct.MasterCatalogCollection() {Items = new List<DCproduct.MasterCatalog>()};
             }
-            if (adminSubNavExtensibiltyTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-            {
-                await _entityListsWebApiClient.CreateEntityList(new EntityList()
-                                                                {
-                                                                    NameSpace = "mozu.extensiblity",
-                                                                    ContextLevel = "Tenant",
-                                                                    IsVisibleInStorefront = false,
-                                                                    UseSystemAssignedId = true,
-                                                                    Name = "subNavLinks"
-                                                                });
-                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
-                await adminSubNavExtensibiltyTask;
+            //if (adminSubNavExtensibiltyTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            //{
+            //    await _entityListsWebApiClient.CreateEntityList(new EntityList()
+            //                                                    {
+            //                                                        NameSpace = "mozu.extensiblity",
+            //                                                        ContextLevel = "Tenant",
+            //                                                        IsVisibleInStorefront = false,
+            //                                                        UseSystemAssignedId = true,
+            //                                                        Name = "subNavLinks"
+            //                                                    });
+            //    adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
+            //    await adminSubNavExtensibiltyTask;
 
-            }
+            //}
            
 
             var user = new Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User()
@@ -265,7 +265,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
             this.ViewData["siteUsers"] = siteUsers.Items;
-            this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
+          //  this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
 
             // IE8 compatibility (http://hsivonen.fi/doctype/)
             this.Response.AddHeader("X-UA-Compatible", "IE=Edge");
