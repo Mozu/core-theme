@@ -89,18 +89,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(jResult);
         }
 
-        private JObject AddLocalizedNames(LocalizedAttribute attr, List<ReportAttributeLocalizedContent> reportAttributeLocalizedContents)
-        {
-            attr.SupportedLocales = reportAttributeLocalizedContents.Select(x => x.LocaleCode).ToList();
-            var jResult = JObject.FromObject(attr, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
-
-            foreach (var updatedLocalizedContent in reportAttributeLocalizedContents)
-            {
-                jResult[updatedLocalizedContent.LocaleCode + "_name"] = updatedLocalizedContent.Name;
-            }
-            return jResult;
-        }
-
         private JObject AddLocalizedNames(LocalizedAttribute attr, List<AttributeLocalizedContent> updatedResults)
         {
             attr.SupportedLocales = updatedResults.Select(x => x.LocaleCode).ToList();
@@ -178,6 +166,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             result.Add(CreatFakeJAttrib("Color", "Coleur", "цвет"));
             result.Add(CreatFakeJAttrib("Size", "Dimension", "размер"));
             result.Add(CreatFakeJAttrib("Material", "matériel", "материал"));
+            result.Add(CreatFakeJAttrib("Weight", "poids", "вес"));
             return result;
         }
 
