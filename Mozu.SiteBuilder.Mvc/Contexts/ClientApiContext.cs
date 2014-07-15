@@ -145,6 +145,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             Id = "ProductService",
                             InternalUrl = settings.Urls("service-url-ProductRuntimeWebApi")
                         },
+                         new ServiceInfo
+                        {
+                            Id = "DocumentListService",
+                            InternalUrl = settings.Urls("service-url-DocumentListWebApi")
+                        },
+                        new ServiceInfo
+                        {
+                            Id = "EntityListService",
+                            InternalUrl = settings.Urls("service-url-EntityListsWebApi")
+                        },
                         new ServiceInfo
                         {
                             Id = "CategoryService",
