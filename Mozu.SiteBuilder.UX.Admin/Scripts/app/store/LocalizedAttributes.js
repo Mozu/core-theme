@@ -25,6 +25,10 @@ Ext.define('Taco.store.LocalizedAttributes', {
                         name: 'locale',
                         type: 'string',
                         useNull: true
+                    }, {
+                        name: 'supportedLocales',
+                        type: 'auto',
+                        defaultValue: []
                     }
                 ];
                 if (!Taco.app || !Taco.app.context){
