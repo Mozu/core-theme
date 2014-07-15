@@ -32,6 +32,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             Mapper.AddProfile<TaxMapping>();
             Mapper.AddProfile<TenantMapping>();
             Mapper.AddProfile<UserMapping>();
+            Mapper.AddProfile<LocalizationMapping>();
 
             //replace with?
             //List<Type> types = _containerFactory.AssembliesToScan.SelectMany(assy => assy.GetTypes())
