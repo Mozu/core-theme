@@ -4,7 +4,13 @@
  */
 
 Ext.define('Taco.view.website.Index', {
-    extend: 'Taco.core.ux.content.Container',
+    // extend: 'Taco.core.ux.content.Container',
+    extend: 'Ext.panel.Panel',
+    mixins: {
+        //  editorwrapper: 'Taco.core.ux.form.EditorWrapper',
+        navHeader: 'Taco.core.ux.mixins.NavHeader',
+        permissions: 'Taco.core.ux.mixins.Permissions'
+    },
     requires: [
         'Taco.model.NavigationTreeNode',
         'Taco.store.NavigationTreeNodes',
@@ -31,11 +37,11 @@ Ext.define('Taco.view.website.Index', {
     itemId: 'websiteIndex',
 
     contextConfig: {
-        supportedLevels: ['s'],
+        //   supportedLevels: ['s'],
         requiresContextOfType: ['s'],
         hidden: true
     },
-
+    title: false,
     entityTypeEditConfig: {
         blog: 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
         'default': 'Taco.view.website.entityAdapters.DocumentEntityAdapter',
@@ -44,35 +50,36 @@ Ext.define('Taco.view.website.Index', {
         link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter',
         email: 'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter'
     },
-
+    enableNavHeader: true,
     options: {},
 
-    body: {
-        layout: {
-            type: 'fit'
-        },
-        padding: '0 0 0 0'
-    },
 
-    initComponent: function() {
+    layout: {
+        type: 'fit'
+    },
+    padding: '0 0 0 0',
+
+
+    initComponent: function () {
         var navStore,
             items,
             gridStore,
             me = this;
 
 
-
         this.entityEditors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
         this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
-        
-        this.header = {
-            title: false,
-            items: [{
+
+
+        this.actions = [
+            {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
                 text: 'Page Editor',
                 toggleGroup: 'websiteEditorTabs',
+                itemId: 'pageEditorTabButton',
+                buttonGroup: 'isWebPage',
                 allowDepress: false,
                 enableToggle: true,
                 pressed: true,
@@ -80,16 +87,19 @@ Ext.define('Taco.view.website.Index', {
                     borderRadius: '2px 0px 0px 2px'
                 },
                 scope: this,
-                handler: function() {
+                handler: function () {
                     var cardpanel = this.down('#editorCardPanel');
 
                     cardpanel.getLayout().setActiveItem(0);
-                }
+                },
+
             }, {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
+                buttonGroup: 'hasSettings',
                 text: 'Page Settings',
+                itemId: 'pageSettingsTabButton',
                 toggleGroup: 'websiteEditorTabs',
                 allowDepress: false,
                 enableToggle: true,
@@ -97,23 +107,25 @@ Ext.define('Taco.view.website.Index', {
                 style: {
                     borderRadius: '0px 2px 2px 0px'
                 },
-                handler: function() {
+                handler: function () {
                     var cardpanel = this.down('#editorCardPanel');
 
                     cardpanel.getLayout().setActiveItem(1);
                 },
-                toggleHandler: function(cmp, isPressed) {
+                toggleHandler: function (cmp, isPressed) {
                     this.down('#dropZonesCB').setDisabled(isPressed);
-                    this.down('#widgetsButton').setDisabled(isPressed);
+                    this.down('#widgetsActionButton').setDisabled(isPressed);
                 }
+
             }, {
                 xtype: 'checkboxfield',
                 itemId: 'dropZonesCB',
+                buttonGroup: 'isWebPageView',
                 boxLabel: 'View dropzones',
                 margin: '0 0 0 25',
-                flex: 1,
+            //    flex: 1,
                 scope: this,
-                handler: function(checkbox, checked) {
+                handler: function (checkbox, checked) {
                     this.showDropZones = checked;
                     if (checked) {
                         this.chorizoEditor.showDropZones();
@@ -121,38 +133,43 @@ Ext.define('Taco.view.website.Index', {
                         this.chorizoEditor.hideDropZones();
                     }
                 }
-            }],
-            actions: [{
+            }, '->',
+            {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
-                itemId: 'widgetsButton',
+            
+                itemId: 'widgetsActionButton',
                 text: 'Widgets',
+                buttonGroup: 'isWebPageView',
                 margin: '0 0 0 10',
                 scope: this,
-                handler: function() {
+                handler: function () {
                     this.chorizoEditor.widgets().toggle();
                 }
             }, {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
+                itemId: 'moreActionButton',
+                buttonGroup: 'isWebPage',
                 text: 'More',
                 margin: '0 0 0 10',
                 scope: this,
                 menu: {
                     plain: true,
                     shadow: false,
-                    items: [{
+                    items: [
+                        {
                             text: 'Live Version',
-                            handler: function(menuItem) {
+                            handler: function (menuItem) {
                                 //scope is set to index on all action buttons by container.
                                 var url = menuItem.up('button').scope.url;
                                 window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
                             }
                         }, {
                             text: 'Staging Version',
-                            handler: function(menuItem) {
+                            handler: function (menuItem) {
                                 //scope is set to index on all action buttons by container.
                                 var url = menuItem.up('button').scope.url;
                                 window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url), 'taco-preview');
@@ -163,12 +180,13 @@ Ext.define('Taco.view.website.Index', {
                         }, {
                             text: 'Resolution',
                             menu: {
-                                items: [{
+                                items: [
+                                    {
                                         text: 'Default',
                                         xtype: 'menucheckitem',
                                         checked: true,
                                         group: 'resolutions',
-                                        handler: function() {
+                                        handler: function () {
                                             var iframeOffset = me.down('#iframeOffset');
 
                                             iframeOffset.setWidth(0);
@@ -177,7 +195,7 @@ Ext.define('Taco.view.website.Index', {
                                         text: 'IPhone 5',
                                         xtype: 'menucheckitem',
                                         group: 'resolutions',
-                                        handler: function() {
+                                        handler: function () {
                                             var iframeW = me.iframe.getWidth(),
                                                 iframeOffset = me.down('#iframeOffset'),
                                                 iframeOffsetW = iframeOffset.getWidth();
@@ -188,7 +206,7 @@ Ext.define('Taco.view.website.Index', {
                                         text: '360',
                                         xtype: 'menucheckitem',
                                         group: 'resolutions',
-                                        handler: function() {
+                                        handler: function () {
                                             var iframeW = me.iframe.getWidth(),
                                                 iframeOffset = me.down('#iframeOffset'),
                                                 iframeOffsetW = iframeOffset.getWidth();
@@ -196,54 +214,67 @@ Ext.define('Taco.view.website.Index', {
                                             iframeOffset.setWidth(iframeOffsetW + iframeW - 360);
                                         }
                                     },
-
                                     {
                                         text: 'Ipad',
                                         xtype: 'menucheckitem',
                                         group: 'resolutions',
-                                        handler: function() {
+                                        handler: function () {
                                             var iframeW = me.iframe.getWidth(),
                                                 iframeOffset = me.down('#iframeOffset'),
                                                 iframeOffsetW = iframeOffset.getWidth();
                                             iframeOffset.setWidth(iframeOffsetW + iframeW - 1024);
                                         }
                                     }
-
-
                                 ]
                             }
                         }
-
                     ]
                 }
             }, {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
+                buttonGroup: 'isSavable',
+                itemId: 'cancelActionButton',
                 text: 'Cancel',
                 margin: '0 0 0 10'
             }, {
                 xtype: 'button',
-                itemId: 'save',
+                itemId: 'saveActionButton',
                 ui: 'action-primary',
                 scale: 'medium',
+                buttonGroup: 'isSavable',
                 text: 'Save',
                 margin: '0 0 0 10'
             }, {
                 xtype: 'button',
-                itemId: 'publishAction',
+                itemId: 'publishActionButton',
                 ui: 'action-primary',
                 scale: 'medium',
                 text: 'Publish',
                 margin: '0 0 0 10',
+                buttonGroup: 'isPublishable',
                 hidden: true,
                 disabled: true,
                 scope: this,
-                handler: function() {
+                handler: function () {
                     this.onPublish();
                 }
-            }]
-        };
+            },
+             {
+                 xtype: 'button',
+                
+                 itemId: 'createActionButton',
+                 buttonGroup: 'isCreatable',
+                 ui: 'action-primary',
+                 scale: 'medium',
+                 text: 'Create',
+                 margin: '0 0 0 10',
+                 scope:me,
+                 handler: me.OnCreateClick
+             }
+        ];
+
         this.controller = Taco.app.controllers.get('Website');
         this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
         this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
@@ -254,164 +285,185 @@ Ext.define('Taco.view.website.Index', {
             autoLoad: false
         });
 
-        items = [{
-            xtype: 'panel',
-            bodyStyle: {
-                'border-width': '0px 1px 0px 0px'
-            },
-            layout: {
-                type: 'border'
-            },
-            items: [{
+        me.items = [
+            {
                 xtype: 'panel',
-                itemId: 'editorCardPanel',
-                region: 'center',
-                layout: {
-                    type: 'card'
+                bodyStyle: {
+                    'border-width': '0px 1px 0px 0px'
                 },
-                items: [{
-                    xtype: 'panel',
-                    title: 'Editor',
-                    border: false,
-                    header: false,
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [{
-                        flex: 1,
-                        itemId: 'iframe',
-                        xtype: 'uxiframe',
-                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme))
-                    }, {
-                        xtype: 'splitter'
-
-                    }, {
-                        xtype: 'component',
-                        itemId: 'iframeOffset',
-                        width: 0
-                    }]
-                }, {
-                    xtype: 'panel',
-                    title: 'Settings',
-                    overflowY: 'auto',
-                    border: false,
-                    header: false,
-                    items: [{
-                        xtype: 'formform',
-                        itemId: 'pageSettings',
-                        ui: 'subform',
-                        title: 'Page Settings',
-                        margin: '20 30 10 30',
+                layout: {
+                    type: 'border'
+                },
+                items: [
+                    {
+                        xtype: 'panel',
+                        itemId: 'editorCardPanel',
+                        region: 'center',
+                      
+                        layout: {
+                            type: 'card'
+                        },
                         defaults: {
-                            margin: '10 0 10 0'
-                        }
-                    }]
-                }, {
-                    xtype: 'panel',
-                    title: 'Grid!!!',
-                    overflowY: 'auto',
-                    border: false,
-                    layout:'fit',
-                    itemId:'contentListContainer',
-                    header: false
-                }]
-            }, {
-                xtype: 'panel',
-                itemId: 'sideBar',
-                region: 'east',
-                title: 'Sidebar',
-                cls: 'taco-website-sidebar',
-                collapseDirection: 'right',
-                collapseMode: 'mini',
-                animCollapse: false,
-                collapsible: true,
-                header: false,
-                width: 240,
-                style: {
-                    overflow: 'visible'
-                },
-                split: {
-                    canResize: false,
-                    size: 10
-                },
-                layout: {
-                    type: 'card'
-                },
-                items: [{
-                    xtype: 'taco-website-tree',
-                    store: navStore
-                }, {
-                    xtype: 'gridpanel',
-                    title: 'Results',
-                    store: productStore,
-                    columns: [{
-                        dataIndex: 'productCode',
-                        text: 'Product Code',
-                        width: 100
-                    }, {
-                        dataIndex: 'productName',
-                        text: 'Name',
-                        flex: 1
-                    }],
-                    listeners: {
-                        itemclick: {
-                            scope: this,
-                            fn: 'onGridProductItemClick'
-                        }
-                    },
-                    dockedItems: [{
-                        xtype: 'pagingtoolbar',
-                        store: productStore, // same store GridPanel is using
-                        dock: 'bottom',
-                        displayInfo: true
-                    }, {
-                        dock: 'top',
-                        xtype: 'button',
-                        text: '← back',
-                        scope: this,
-                        handler: function(field) {
-                            this.sideBar.getLayout().setActiveItem(0);
-                        }
-                    }]
-                }],
-                dockedItems: [{
-                    xtype: 'container',
-                    dock: 'top',
-                    padding: '14 20 0 14',
-                    height: 60,
-                    items: [{
-                        //     xtype: 'component',
-                        //     html: '',
-                        //     cls: 'taco-collapse-handle',
-                        //     width: 15,
-                        //     height: 30,
-                        //     listeners: {
-                        //         click: {
-                        //             scope: this,
-                        //             element: 'el',
-                        //             fn: function (e, t) {
-                        //                 this.sideBar.toggleCollapse();
-                        //             }
-                        //         }
-                        //     }
-                        // }, {
-                        xtype: 'textfield',
-                        emptyText: 'Search',
-                        width: '100%',
-                        listeners: {
-                            change: this.onSearchTextChange,
-                            scope: this,
-                            buffer: 505
-                        }
-                    }]
-                }]
-            }]
-        }];
+                            listeners: {
+                                activate: me.onCardPanelItemActivate,
+                                scope: me
+                            }
+                        },
 
-        Ext.apply(this.body, {
-            items: items
-        });
+                        items: [
+                            {
+                                xtype: 'panel',
+                                title: 'Editor',
+                                border: false,
+                                header: false,
+                                itemId: 'pageEditor',
+                                isWebEditor:true,
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
+                                items: [
+                                    {
+                                        flex: 1,
+                                        itemId: 'iframe',
+                                        xtype: 'uxiframe',
+                                        src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme))
+                                    }, {
+                                        xtype: 'splitter'
+
+                                    }, {
+                                        xtype: 'component',
+                                        itemId: 'iframeOffset',
+                                        width: 0
+                                    }
+                                ]
+                            }, {
+                                xtype: 'panel',
+
+                                xtype: 'formform',
+                                title: 'Settings',
+                                isWebEditor: true,
+                                overflowY: 'auto',
+                                itemId:'pageSettingsContainer',
+                                border: false,
+                                header: false,
+                                items: [
+                                    {
+                                        xtype: 'formform',
+                                        itemId: 'pageSettings',
+                                        ui: 'subform',
+                                        title: 'Page Settings',
+                                        margin: '20 30 10 30',
+                                        defaults: {
+                                            margin: '10 0 10 0'
+                                        }
+                                    }
+                                ]
+                            }, {
+                                xtype: 'panel',
+                                title: 'Grid!!!',
+                               
+                                overflowY: 'auto',
+                                border: false,
+                                layout: 'fit',
+                                itemId: 'contentListContainer',
+                                header: false
+                            }
+                        ]
+                    }, {
+                        xtype: 'panel',
+                        itemId: 'sideBar',
+                        region: 'east',
+                        title: 'Sidebar',
+                        cls: 'taco-website-sidebar',
+                        collapseDirection: 'right',
+                        collapseMode: 'mini',
+                        animCollapse: false,
+                        collapsible: true,
+                        header: false,
+                        width: 240,
+                        style: {
+                            overflow: 'visible'
+                        },
+                        split: {
+                            canResize: false,
+                            size: 10
+                        },
+                        layout: {
+                            type: 'card'
+                        },
+                        items: [
+                            {
+                                xtype: 'taco-website-tree',
+                                store: navStore
+                            }, {
+                                xtype: 'gridpanel',
+                                title: 'Results',
+                                store: productStore,
+                                columns: [
+                                    {
+                                        dataIndex: 'productCode',
+                                        text: 'Product Code',
+                                        width: 100
+                                    }, {
+                                        dataIndex: 'productName',
+                                        text: 'Name',
+                                        flex: 1
+                                    }
+                                ],
+                                listeners: {
+                                    itemclick: {
+                                        scope: this,
+                                        fn: 'onGridProductItemClick'
+                                    }
+                                },
+                                dockedItems: [
+                                    {
+                                        xtype: 'pagingtoolbar',
+                                        store: productStore, // same store GridPanel is using
+                                        dock: 'bottom',
+                                        displayInfo: true
+                                    }, {
+                                        dock: 'top',
+                                        xtype: 'button',
+                                        text: '← back',
+                                        scope: this,
+                                        handler: function (field) {
+                                            this.sideBar.getLayout().setActiveItem(0);
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        dockedItems: [
+                            {
+                                xtype: 'container',
+                                dock: 'top',
+                                padding: '14 20 0 14',
+                                height: 60,
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        emptyText: 'Search',
+                                        width: '100%',
+                                        listeners: {
+                                            change: this.onSearchTextChange,
+                                            scope: this,
+                                            buffer: 505
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        if (this.enableNavHeader) {
+            //initialize the content navigation toolbar.
+            this.mixins.navHeader.init.apply(this);
+        }
 
         this.callParent(arguments);
 
@@ -424,11 +476,6 @@ Ext.define('Taco.view.website.Index', {
             }
         });
 
-        this.publishButton = this.down('#publishAction');
-        this.down('#publishAction').setVisible(Taco.app.context.getCurrent().isPublishingEnabled());
-
-
-        this.bindToForm();
 
         this.iframe = this.down('#iframe');
         this.pageSettings = this.down('#pageSettings');
@@ -447,23 +494,94 @@ Ext.define('Taco.view.website.Index', {
         this.tree.on('pagecreate', this.onPageCreate, this);
         this.tree.on('urlclick', this.onTreeUrlClick, this);
         this.tree.on('contentlistclick', this.onContentListClick, this);
+        this.on('render', function () {
+            var header = me.getHeader();
+
+            //me.standardToolBar = header.down('toolbar');
+           // me.standardToolBar.toolbarTypes = ['standard'];
+            //me.contentEditorToolbar = Ext.widget({
+            //    xtype: "toolbar",
+            //    cls: "taco-navheader-toolbar",
+            //    dock: 'top',
+            //    toolbarTypes:['contentEditor'],
+            //    hidden: true,
+            //    //padding: '10px 20px 10px 20px',
+            //    //style: "border-bottom: 1px solid #bfbfbf !important",
+            //    items: [
+                   
+            //    ]
+            //});
+
+           // me.header.add(me.contentEditorToolbar);
+
+            me.publishButton = header.down('#publishActionButton');
+            me.pageSettingsTabButton = header.down('#pageSettingsTabButton');
+            me.pageEditorTabButton = header.down('#pageEditorTabButton');
+            me.createActionButton = header.down('#createActionButton');
+            me.publishButton.setVisible(Taco.app.context.getCurrent().isPublishingEnabled());
+            if (!me.themeStore.isLoading()) {
+                me.onThemeLoad();
+            }
+            me.bindToForm();
+        });
+    },
+    showHideButtons:function (buttonGroups) {
+        var buttons = this.header.query('component[buttonGroup]');
+
+        Ext.Array.each(buttons, function (btn) {
+            if (btn.buttonGroup && buttonGroups.indexOf(btn.buttonGroup) > -1) {
+                btn.show();
+            } else {
+                btn.hide();
+            }
+        });
+
+    },
+    onCardPanelItemActivate: function (cmp) {
+        cmp.fireEvent('activecardchanged', this, cmp);
+        //var toolbars = this.header.query('toolbar'),
+        //    toolbarType = cmp.toolbarType;
+        //if (toolbarType) {
+        //    Ext.Array.each(toolbars, function (tb) {
+        //        if (tb.toolbarTypes.indexOf(toolbarType)>-1) {
+        //            tb.show();
+        //        } else {
+        //            tb.hide();
+        //        }
+        //    });
+        //}
     },
 
+    toggleCard: function (item) {
+        this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
 
-    onThemeLoad: function() {
+        this.cardpanel.getLayout().setActiveItem(item);
+    },
+    getActiveCard:function () {
+        this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
+
+        return  this.cardpanel.getLayout().getActiveItem();
+    },
+    onThemeLoad: function () {
+
+        if (!this.getHeader().$className) {
+            return;
+        }
+
         var me = this,
-            previewThemesMenu = this.down('#previewThemesMenu'),
+            previewThemesMenu = this.getHeader().down('#previewThemesMenu'),
             menu = {
                 items: []
             };
-        this.themeStore.each(function(themeRecord) {
+
+        this.themeStore.each(function (themeRecord) {
             menu.items.push({
                 xtype: 'menucheckitem',
                 text: themeRecord.get('name'),
                 //     icon: '/admin/Scripts/build/resources/images/menu/checked.gif',
                 checked: themeRecord.get('isSelectedDesktop'),
                 group: 'selectedTheme',
-                handler: function(menuItem) {
+                handler: function (menuItem) {
                     me.selectedTheme = themeRecord.get('id');
                     me.navigate({
                         url: me.url
@@ -476,27 +594,16 @@ Ext.define('Taco.view.website.Index', {
         previewThemesMenu.setMenu(menu);
 
 
-        author: "Volusion"
-        id: "Core4"
-        isDesktop: true
-        isMobile: false
-        isTablet: false
-        isSelected: true
-        isSelectedDesktop: true
-        isSelectedMobile: false
-        isSelectedTablet: false
-        name: "Core4"
-
     },
-    bindToForm: function() {
-        var primaryAction = this.down('#save');
+    bindToForm: function () {
+        var primaryAction = this.getHeader().down('#saveActionButton');
 
         this.down('#pageSettings').getForm().getBoundItems().add(primaryAction);
 
         primaryAction.setHandler(this.onSave, this);
     },
 
-    setPublishable: function(value) {
+    setPublishable: function (value) {
         if (value) {
             this.publishButton.enable();
         } else {
@@ -504,12 +611,12 @@ Ext.define('Taco.view.website.Index', {
         }
 
     },
-    onPageCreate: function(navRecord) {
+    onPageCreate: function (navRecord) {
         this.navigate({
             url: navRecord.get('url')
         });
     },
-    createEntityTypeAdapter: function(pageContext, editor) {
+    createEntityTypeAdapter: function (pageContext, editor) {
         var cls = this.entityTypeEditConfig[pageContext.pageType || "default"] || this.entityTypeEditConfig["default"];
 
         if ((pageContext.editMode || "").toLowerCase() == 'template') {
@@ -530,15 +637,27 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    getPageContext: function() {
+    getPageContext: function () {
         return this.iframe.getWin().require.mozuData('pagecontext');
     },
 
-    navigate: function(config) {
+    navigate: function (config) {
+      //  this.showHideButtons([]);
         this.url = config.url;
         console.log(config.url);
+        this.pageSettings.removeAll(true);
         this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme);
         Taco.core.StateManager.addState('website/page' + config.url);
+        if (config.view == 'page') {
+            this.toggleCard(0);
+        }
+        if (config.view == 'settings') {
+            this.toggleCard(1);
+        }
+        if (config.view == 'contentGrid') {
+            this.toggleCard(3);
+        }
+
     },
     reloadPage: function () {
         this.iframe.getWin().location.reload();
@@ -546,16 +665,24 @@ Ext.define('Taco.view.website.Index', {
 
     onDirtyChange: Ext.emptyFn,
 
-    onEntityTypeAdapterLoad: function() {
+    onEntityTypeAdapterLoad: function () {
         var settings = this.entitypeTypeHandler.getPageSettings();
 
         this.pageSettings.add(settings);
     },
 
-    onPageLoad: function(editor) {
+    onPageLoad: function (editor) {
         var me = this,
             pc = this.getPageContext();
 
+
+
+
+        this.showHideButtons(['isWebPage', 'hasSettings', 'isSavable', 'isWebPageView']);
+
+        if (!this.getActiveCard().isWebEditor) {
+            this.toggleCard(0);
+        }
 
         this.chorizoEditor = editor;
 
@@ -567,11 +694,10 @@ Ext.define('Taco.view.website.Index', {
             this.chorizoEditor.hideDropZones();
         }
 
-        this.pageSettings.removeAll(true);
 
         this.entitypeTypeHandler = this.createEntityTypeAdapter(pc, editor);
 
-        Ext.EventManager.on(this.iframe.getDoc(), 'click', function(e, target) {
+        Ext.EventManager.on(this.iframe.getDoc(), 'click', function (e, target) {
             //cancel if over a dropzone.   dont interfere with 
             if (this.chorizoEditor && this.chorizoEditor.isOverGrid()) {
                 e.stopEvent();
@@ -593,7 +719,7 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    onSave: function(button) {
+    onSave: function (button) {
         var tasks = this.entitypeTypeHandler.getSaveTask();
 
         // button.setDisabled(true);
@@ -601,7 +727,7 @@ Ext.define('Taco.view.website.Index', {
         button.setText('Saving...');
 
         tasks.on({
-            complete: function() {
+            complete: function () {
                 // button.setDisabled(false);
                 if (button) {
                     button.removeCls('taco-button-processing');
@@ -613,11 +739,11 @@ Ext.define('Taco.view.website.Index', {
         tasks.execute();
     },
 
-    onPublish: function() {
+    onPublish: function () {
         this.entitypeTypeHandler.publish();
     },
 
-    onWidgetDrop: function(cfg) {
+    onWidgetDrop: function (cfg) {
         var pageContext = this.getPageContext(),
             def = this.widgetDefinitions.getById(cfg.widgetTypeId),
             body = this.iframe.getDoc().body,
@@ -625,23 +751,24 @@ Ext.define('Taco.view.website.Index', {
                 zoneScope: 'page',
                 source: pageContext.cmsContext.page,
                 definitionId: cfg.widgetTypeId
-            }, serverRenderFn;
+            },
+            serverRenderFn;
 
         cfg.config = Ext.apply({}, def.get('defaultConfig'));
 
-        serverRenderFn = function(jsonData) {
+        serverRenderFn = function (jsonData) {
             Ext.fly(body).setStyle('cursor', 'wait');
             Ext.Ajax.request({
                 url: '/Widgets/preview',
                 jsonData: jsonData,
-                callback: function() {
+                callback: function () {
                     Ext.fly(body).setStyle('cursor', 'auto');
                 },
-                failure: function(response) {
+                failure: function (response) {
                     var res = Ext.JSON.decode(response.responseText);
                     Taco.MessageBox.alert('Error', 'There was a problem adding the widget: ' + res.message);
                 },
-                success: function(response) {
+                success: function (response) {
                     var ret = Ext.JSON.decode(response.responseText);
 
                     cfg.callback(ret.output, {
@@ -665,7 +792,7 @@ Ext.define('Taco.view.website.Index', {
                 widgetData: cfg.config,
                 title: def.get('displayName'),
                 listeners: {
-                    savesuccess: function(modal) {
+                    savesuccess: function (modal) {
                         jsonData.config = modal.widgetData;
 
                         serverRenderFn(jsonData);
@@ -680,7 +807,7 @@ Ext.define('Taco.view.website.Index', {
         }
     },
 
-    onWidgetEdit: function(cfg) {
+    onWidgetEdit: function (cfg) {
         var pageContext = this.getPageContext(),
             def = this.widgetDefinitions.getById(cfg.data.definitionId),
             body = this.iframe.getDoc().body,
@@ -688,9 +815,10 @@ Ext.define('Taco.view.website.Index', {
                 zoneScope: 'page',
                 source: pageContext.cmsContext.page,
                 definitionId: cfg.data.definitionId
-            }, callbackWrapper;
+            },
+            callbackWrapper;
 
-        callbackWrapper = function(ret, cfg) {
+        callbackWrapper = function (ret, cfg) {
             cfg.callback(ret.output, {
                 config: ret.config,
                 id: ret.id,
@@ -708,20 +836,20 @@ Ext.define('Taco.view.website.Index', {
                 widgetData: cfg.data.config,
                 title: def.get('displayName'),
                 listeners: {
-                    savesuccess: function(modal) {
+                    savesuccess: function (modal) {
                         jsonData.config = modal.widgetData;
                         Ext.fly(body).setStyle('cursor', 'wait');
                         Ext.Ajax.request({
                             url: '/Widgets/preview',
                             jsonData: jsonData,
-                            callback: function() {
+                            callback: function () {
                                 Ext.fly(body).setStyle('cursor', 'auto');
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 var ret = Ext.JSON.decode(response.responseText);
                                 callbackWrapper(ret, cfg);
                             },
-                            failure: function(response) {
+                            failure: function (response) {
                                 var res = Ext.JSON.decode(response.responseText);
                                 Taco.MessageBox.alert('Error', 'There was a problem adding the widget: ' + res.message);
                             }
@@ -734,7 +862,7 @@ Ext.define('Taco.view.website.Index', {
         }
     },
 
-    onSearchTextChange: function(field, newValue, oldValue, eOpts) {
+    onSearchTextChange: function (field, newValue, oldValue, eOpts) {
         var store = this.productGrid.store;
 
         if (!newValue) {
@@ -748,22 +876,24 @@ Ext.define('Taco.view.website.Index', {
 
         this.sideBar.getLayout().setActiveItem(this.productGrid);
         store.extraFilters.clear();
-        store.addFilter([{
-            id: 'all',
-            property: 'all',
-            value: newValue
-        }]);
+        store.addFilter([
+            {
+                id: 'all',
+                property: 'all',
+                value: newValue
+            }
+        ]);
         // store.extraFilters.add({ id: "categoryids", property: 'categoryids', value: navRecord.get('originalId') });
         store.load();
     },
 
-    onGridProductItemClick: function(grid, record) {
+    onGridProductItemClick: function (grid, record) {
         this.navigate({
             url: '/p/' + record.getId()
         });
     },
 
-    onShowProducts: function(navRecord) {
+    onShowProducts: function (navRecord) {
         var store = this.productGrid.store;
 
         this.sideBar.getLayout().setActiveItem(this.productGrid);
@@ -776,7 +906,7 @@ Ext.define('Taco.view.website.Index', {
         store.load();
     },
 
-    onTreeUrlClick: function(tree, url, record, item, index, e, eOpts) {
+    onTreeUrlClick: function (tree, url, record, item, index, e, eOpts) {
         this.navigate({
             url: url
         });
@@ -784,7 +914,6 @@ Ext.define('Taco.view.website.Index', {
     onContentListClick: function (tree, metaData, record, item, index, e, eOpts) {
 
         var me = this,
-            cardpanel =me.down('#editorCardPanel'),
             contentContainer = me.down('#contentListContainer');
 
         contentContainer.removeAll();
@@ -792,43 +921,130 @@ Ext.define('Taco.view.website.Index', {
         Ext.suspendLayouts();
         contentContainer.add(
             Ext.create('Taco.view.entityManager.Grid', {
+                    itemId: 'entityManagerGrid',
                     listeners: {
                         itemedit: me.onContentListItemEdit,
-                        scope:me
+                        scope: me
                     },
                     listMetaData: metaData
                 }
             ));
-
-        cardpanel.getLayout().setActiveItem(2);
+        me.toggleCard(2);
+        me.showHideButtons(['isCreatable']);
         Ext.resumeLayouts(true);
-       
+
     },
-    onContentListItemEdit:function (grid, record) {
+    OnCreateClick: function () {
         var me = this,
-          // cardpanel = me.down('#editorCardPanel'),
-           contentContainer = me.down('#contentListContainer');
+            contentContainer = me.down('#contentListContainer'),
+            grid = me.down('#entityManagerGrid'),
+            listMetaData = grid.listMetaData,
+            newRecord = new Taco.model.Entity({
+                entityListName: listMetaData.entityType == 'cms' ? null : listMetaData.name,
+                nameSpace: listMetaData.nameSpace,
+                documentListName: listMetaData.entityType == 'cms' ? listMetaData.name : null,
+                tenantId: Taco.app.context.getTenantId(),
+                entityType: listMetaData.entityType,
+                documentType: listMetaData.documentTypes && listMetaData.documentTypes.length ? listMetaData.documentTypes[0] : undefined,
+                properties: {},
+                item: {}
+
+            });
 
 
-        record.reload({
-            success: function () {
+        if (listMetaData.documentTypes && listMetaData.documentTypes.length > 1) {
+            menu = Ext.widget({
+                xtype: 'menu',
+                itemHandler: function (cmp) {
+                    newRecord.set('documentType', cmp.text);
+                    me.loadEntityEditor(newRecord);
+                }
 
-                Ext.suspendLayouts();
+            });
+            Ext.Array.each(listMetaData.documentTypes, function (dType) {
+                menu.add({
+                    text: dType,
+                    handler: menu.itemHandler
 
-                contentContainer.removeAll();
+                });
+            });
+            menu.showBy(me.createActionButton);
+            return;
 
-                contentContainer.add( Ext.create('Taco.view.entityManager.DynamicFormContainer', {
-                    record: record,
-                    bubbleEvents: ['savesuccess', 'saveSuccess'],
-                    editor: me.entityEditors.findEditor(record)
-                }));
-               
+        }
+        me.loadEntityEditor( newRecord)
+    },
 
-                Ext.resumeLayouts(true);
+    loadEntityEditor: function (record) {
+        var me = this,
+            contentContainer = me.down('#contentListContainer'),
+            form;
+
+
+
+        this.entitypeTypeHandler = Ext.create('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
+           // editor: editor,
+            record: record,
+            //pageContext: {
+            //    cmsContext: {
+            //        page: {
+            //            documentListName:record.get('documentListName'),
+            //            id:record.get('')
+            //        }
+            //    }  
+            //},
+            manager: this,
+            listeners: {
+                load: this.onEntityTypeAdapterLoad,
+                scope: this
             }
         });
+     //   this.showHideButtons(['isWebPage', 'hasSettings', 'isWebPageView', 'isSavable', 'isCreatable']);
+        this.showHideButtons([ 'hasSettings', 'isSavable']);
+        this.toggleCard(1);
 
 
+//contentContainer.removeAll();
+        //form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+        //    record: record,
+        //    bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
+        //    editor: me.entityEditors.findEditor(record)
+        //});
+        //contentContainer.add(form);
+
+    },
+
+
+    onContentListItemEdit: function (grid, record, listMetaData ) {
+        var me = this,
+            // cardpanel = me.down('#editorCardPanel'),
+            contentContainer = me.down('#contentListContainer');
+       
+
+        //todo if page.. navigate
+        // me.pageEditorTabButton.disable();
+
+        me.navigate({ url: '/cms/' + record.get('documentListName') + '/' + record.get('name'), view: 'settings' });
+        //me.toggleCard(1);
+        return;
+        //record.reload({
+        //    success: function () {
+
+
+        //        Ext.suspendLayouts();
+
+        //        contentContainer.removeAll();
+
+        //        contentContainer.add(Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+        //            record: record,
+        //            bubbleEvents: ['savesuccess', 'saveSuccess'],
+        //            editor: me.entityEditors.findEditor(record)
+        //        }));
+
+
+        //        Ext.resumeLayouts(true);
+        //    }
+        //});
 
 
     }

@@ -1,4 +1,4 @@
-Ext.create('Taco.core.ux.form.WebPageEditorForm', {
+Ext.create('Taco.core.ux.form.entities.WebPageEditorForm', {
     title: 'Web  Page',
 
 });

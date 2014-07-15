@@ -172,16 +172,17 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this,
             conf;
 
-      
-        // just call view.setTitle("new title here") to update the title;
-        me.titleCmp = Ext.create('Ext.Component', {
-            cls: "taco-content-header-title",
-           // flex: 1,
-            // todo: move this to the scss;
-            //style: "font-size: 2rem;font-weight: 300;line-height: 3rem;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;",
-            //html: "Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here "
-            html: this.getTitle()
-        });
+        if (me.title !== false) {
+            // just call view.setTitle("new title here") to update the title;
+            me.titleCmp = Ext.create('Ext.Component', {
+                cls: "taco-content-header-title",
+                // flex: 1,
+                // todo: move this to the scss;
+                //style: "font-size: 2rem;font-weight: 300;line-height: 3rem;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;",
+                //html: "Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here "
+                html: this.getTitle()
+            });
+        }
 
         conf = {
             xtype: "toolbar",
@@ -190,9 +191,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             //padding: '10px 20px 10px 20px',
             //style: "border-bottom: 1px solid #bfbfbf !important",
             items: [
-                me.titleCmp
+               
             ]
         };
+       
+        if (me.titleCmp) {
+            conf.items.push(me.titleCmp);
+        }
+            
+        
 
         if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
 
@@ -209,8 +216,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             conf.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
         }
-        conf.items.push('->');
-
+        if (conf.items.length) {
+            conf.items.push('->');
+        }
     
         
 

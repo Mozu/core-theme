@@ -2,8 +2,8 @@
  * @class Taco.core.ux.form.ColorField
  */
 
-Ext.define('Taco.core.ux.form.WebPageEditorForm', {
-    extend: 'Taco.core.ux.form.EntityEditorForm',
+Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
+    extend: 'Taco.core.ux.form.entities.EntityEditorForm',
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -54,7 +54,7 @@ Ext.define('Taco.core.ux.form.WebPageEditorForm', {
                     emptyText: '[page name]',
                     fieldLabel: 'Navigation Link Name'
                 }, {
-                    xtype: 'taco.field.pagetemplate',
+                    xtype: 'taco-field-pagetypes',
                     name: 'page_type_definition',
                     fieldLabel: 'Page Template',
                     entityType: 'webpage'

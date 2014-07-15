@@ -5,7 +5,10 @@
  */
 Ext.define('Taco.core.ux.form.field.PageTemplate', {
     extend: 'Taco.core.ux.form.SelectField',
-    alias: 'widget.taco.field.pagetemplate',
+    alias: [
+        'widget.taco.field.pagetemplate',
+        'widget.taco-field-pagetypes'
+    ],
     requires: ['Taco.store.PageTypeDefinitions', 'Taco.model.PageTypeDefinition'],
     queryMode: 'local',
     displayField: 'title',

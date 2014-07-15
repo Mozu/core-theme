@@ -4,7 +4,7 @@
 
 Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
-    requires:['Taco.view.website.settings.Template'],
+   
     modelName: 'Taco.model.CmsDocument',
 
     allowedActions: {
@@ -16,9 +16,19 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
 
   
 
+  
+
     getId: function () {
-        return this.pageContext.cmsContext.template.documentListName + "_" + this.pageContext.cmsContext.template.id;
+        if (this.record) {
+            return this.record.getLoadParams();
+        }
+        if (!this.pageContext.cmsContext.template.documentListName || !this.pageContext.cmsContext.template.id) {
+            return undefined;
+        }
+        return { documentListName: this.pageContext.cmsContext.template.documentListName, id: this.pageContext.cmsContext.template.id };
     },
+
+
 
   
     load:function () {
@@ -27,36 +37,24 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
           templReq = me.pageContext.cmsContext.template;
 
         if (templReq.id) {
-            Taco.model.CmsDocument.load({documentListName:templReq.documentListName ,id: templReq.id}, {
+            Taco.model.Entity.load({ documentListName: templReq.documentListName, id: templReq.id }, {
                 success: function (doc) {
                     me.set(doc);
                 }
             });
         } else {
-            cmsDoc = Ext.create('Taco.model.CmsDocument', {
+            cmsDoc = Ext.create('Taco.model.Entity', {
                 documentType: templReq.documentType,
                 name: templReq.path,
+                entityType:'cms',
                 documentListName: templReq.documentListName
             });
             me.set(cmsDoc);
         }
-    },
-    
-
-   
-    
-
-   
-  
-    getPageSettings: function () {
-        var me = this;
-
-        return [
-            
-            Ext.create('Taco.view.website.settings.Template', {
-                record: me.get()
-            })
-           
-        ];
     }
+    
+
+   
+    
+
 });

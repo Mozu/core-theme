@@ -5,8 +5,7 @@
 Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
     requires: [
-        'Taco.view.website.settings.CatalogSeo',
-        'Taco.view.website.settings.ProductDocument'
+        'Taco.view.website.settings.CatalogSeo'
     ],
     modelName: 'Taco.model.Product',
 
@@ -22,10 +21,10 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
             store = this.getStore();
 
 
-        me.model = store.getById(key);
+        me.record = store.getById(key);
 
 
-        if (me.model === null) {
+        if (me.record === null) {
             me.isLoading = true;
             modelFactory.load(key, {
                 success: function (record) {
@@ -33,22 +32,22 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
                 }
             });
         } else {
-            this.set(this.model);
+            this.set(this.record);
         }
 
         this.fetchCmsPageDoc();
 
 
     },
-    
-    set: function (model, add) {
+
+    set: function (record, add) {
         this.isLoading = false;
-        if (model.$className == this.modelName) {
-            this.model = model;
+        if (record.$className == this.modelName) {
+            this.record = record;
         } else {
-            this.cmsPageDoc = model;
+            this.cmsPageDoc = record;
         }
-        if (this.model && this.cmsPageDoc) {
+        if (this.record && this.cmsPageDoc) {
             this.fireEvent('load', this);
         }
 
@@ -74,12 +73,11 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
             me.set(cmsDoc);
         }
     },
-    
-    
+
 
     getId: function () {
         return this.pageContext.productCode;
-    },    
+    },
 
     getStore: function () {
         return Taco.core.data.StoreManager.getOrCreate('Taco.store.Products');
@@ -100,21 +98,25 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
                 return item.updateRecord && (item.updateRecord.modelName == 'Taco.model.ProductInCatalogInfo' || item.updateRecord.modelName == 'Taco.model.Product');
             }
         });
+        
         this.callParent(arguments);
     },
     getCmsPageDoc: function () {
         return this.cmsPageDoc;
     },
     getPageSettings: function () {
+
+        var ret = this.callParent(arguments);
         var me = this;
 
-        return [            
-            Ext.create('Taco.view.website.settings.ProductDocument', {
-                record: me.getCmsPageDoc()
-            }),
+        ret.push(
             Ext.create('Taco.view.website.settings.CatalogSeo', {
-                record: me.get().getProductInCatalog()
+                record: me.get()
             })
-        ];
+        );
+
+        return ret;
+
+
     }
 });

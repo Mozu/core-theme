@@ -10,9 +10,9 @@
         'Taco.shared.view.field.ArrayField',
         'Taco.core.ux.form.field.Code',
         'Ext.form.FieldSet',
-        'Taco.core.ux.form.EntityEditorForm',
+        'Taco.core.ux.form.entities.EntityEditorForm',
         'Taco.core.ux.form.field.SingleImageField',
-        'Taco.core.ux.form.WebPageEditorForm',
+        'Taco.core.ux.form.entities.WebPageEditorForm',
         'Taco.core.ux.HtmlEditor',
         'Taco.core.ux.form.SlugField',
         'Taco.core.ux.form.field.PageTemplate'
@@ -21,6 +21,7 @@
     saveButtonEnabled: true,
     autoScroll :true,
     createButtonEnabled: false,
+    showNameEditor:true,
    // layout:'vbox',
    // layout: 'default',
     enableNavHeader: false,
@@ -68,7 +69,22 @@
         // if (this.dynamicForm.getTitle) {
         //     this.title = this.dynamicForm.getTitle();
         // }
-        this.items = [this.dynamicForm];
+        this.items = [];
+        if (this.record.get('entityType') == 'cms' && this.showNameEditor ) {
+            this.items.push({
+                xtype: 'taco-slugfield',
+                itemId:'cms_entity_name',
+                allowBlank: false,
+                allowOnlyWhitespace: false,
+              //  name: 'name',
+                width: '100%',
+                value:this.record.get('name'),
+                fieldLabel: 'Entity Name'
+            });
+        }
+
+        this.items.push(this.dynamicForm);
+
         if (this.enableNavHeader) {
             this.mixins.navHeader.init.apply(this);
         }
@@ -114,6 +130,10 @@
             this.record.set('item', data);
         } else {
             this.record.set('properties', data);
+            if (this.showNameEditor) {
+                this.record.set('name', this.down('#cms_entity_name').getValue());
+            }
+            
         }
         if (containerData) {
             delete containerData.item;
