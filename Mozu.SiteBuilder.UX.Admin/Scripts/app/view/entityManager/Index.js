@@ -206,6 +206,8 @@ Ext.define('Taco.view.entityManager.Index', {
 
             }),
             menu;
+
+
         if (this.grid.listMetaData.documentTypes && this.grid.listMetaData.documentTypes.length > 1) {
             menu = Ext.widget({
                 xtype: 'menu',
@@ -234,27 +236,28 @@ Ext.define('Taco.view.entityManager.Index', {
 
     promptCmsName: function (record) {
 
+       
         var me = this;
-
-        if (record.get('entityType') == 'cms') {
-            Ext.Msg.prompt({
-                title: 'File Name',
-                msg: 'Please enter a file Name:  ',
-                width: 300,
-                buttons: Ext.Msg.OKCANCEL,
-                multiline: true,
-                fn: function (res, name) {
-                    if (res == 'ok') {
-                        record.set('name', name);
-                        me.loadEditor(record);
-                    }
-                },
-                //animateTarget: 'addAddressBtn',
-                icon: Ext.window.MessageBox.INFO
-            });
-        } else {
-            me.loadEditor(record);
-        }
+        me.loadEditor(record);
+        //if (record.get('entityType') == 'cms') {
+        //    Ext.Msg.prompt({
+        //        title: 'File Name',
+        //        msg: 'Please enter a file Name:  ',
+        //        width: 300,
+        //        buttons: Ext.Msg.OKCANCEL,
+        //        multiline: true,
+        //        fn: function (res, name) {
+        //            if (res == 'ok') {
+        //                record.set('name', name);
+        //                me.loadEditor(record);
+        //            }
+        //        },
+        //        //animateTarget: 'addAddressBtn',
+        //        icon: Ext.window.MessageBox.INFO
+        //    });
+        //} else {
+        //    me.loadEditor(record);
+        //}
     },
 
     loadEditor: function (record) {

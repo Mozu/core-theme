@@ -175,7 +175,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                     hideOnClick: false,
                     menuColumnHandler: function (item, eventData) {
                    
-                        me.fireEvent('itemedit', eventData.grid, eventData.record);
+                        me.fireEvent('itemedit', eventData.grid, eventData.record, eventData.grid.listMetaData);
                     }
                 }, {
                     text: 'Delete',
@@ -214,7 +214,7 @@ Ext.define('Taco.view.entityManager.Grid', {
         if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
 
-            me.fireEvent('itemedit', me, record);
+            me.fireEvent('itemedit', me, record, me.listMetaData);
         }
     }
     

@@ -1,4 +1,4 @@
-﻿Ext.create('Taco.core.ux.form.EntityEditorForm', {
+﻿Ext.create('Taco.core.ux.form.entities.EntityEditorForm', {
     title: 'Email',
     items: [
         {

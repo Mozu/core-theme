@@ -5,7 +5,7 @@
 Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
     requires: [
-        'Taco.view.website.settings.CategoryDocument',
+
         'Taco.view.website.settings.facets.Facets',
         'Taco.view.website.settings.CatalogSeo'
     ],
@@ -25,17 +25,17 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
             store = this.getStore();
 
 
-        me.model = store.getById(key);        
+        me.record = store.getById(key);        
 
 
-        if (me.model === null) {
+        if (me.record === null) {
             me.isLoading = true;
 
             if (store.isLoading()) {
                 store.on('load', function () {
                     me.isLoading = false;
-                    me.model = store.getById(key);
-                    me.set(me.model);
+                    me.record = store.getById(key);
+                    me.set(me.record);
                     
                 }, me, { single: true });
             } else {
@@ -43,7 +43,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
                 
             }
         } else {
-            this.set(this.model);
+            this.set(this.record);
         }
 
         this.fetchCmsPageDoc();
@@ -51,14 +51,14 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
 
     },
 
-    set: function (model, add) {
+    set: function (record, add) {
         this.isLoading = false;
-        if (model.$className == this.modelName) {
-            this.model = model;
+        if (record.$className == this.modelName) {
+            this.record = record;
         } else {
-            this.cmsPageDoc = model;
+            this.cmsPageDoc = record;
         }
-        if (this.model && this.cmsPageDoc) {
+        if (this.record && this.cmsPageDoc) {
             this.fireEvent('load', this);
         }
 
@@ -89,7 +89,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
             pageReq = me.pageContext.cmsContext.page;
 
         if (pageReq.id) {
-            Taco.model.Entity.load({ documentListName: pageReq.documentListName, id: pageReq.id }, {
+            Taco.record.Entity.load({ documentListName: pageReq.documentListName, id: pageReq.id }, {
                 success: function (doc) {
                     me.set(doc);
                 }
@@ -106,6 +106,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
     },
 
     addSaveTasks: function (tasks) {
+        this.callParent(arguments);
         if (this.get().getFacetSets()) {
             tasks.add({
                 store: this.get().getFacetSets(),
@@ -114,30 +115,35 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
                 }
             });
         }
-        this.callParent(arguments);
+      
+
+      
     },
 
     isDirty: function () {
-        if (this.model && this.model.facetSetStore) {
-            return this.model.facetSetStore.isDirty();
+        if (this.record && this.record.facetSetStore) {
+            return this.record.facetSetStore.isDirty();
         }
 
         return false;
     },
 
     getPageSettings: function () {
-        var me = this;
 
-        return [
+
+        var me = this,
+            ret = this.callParent(arguments);
+        
+        return ret.concat(
+        [
             Ext.create('Taco.view.website.settings.facets.Facets', {
                 record: me.get()
-            }),
-            Ext.create('Taco.view.website.settings.CategoryDocument', {
-                record: me.getCmsPageDoc()
             }),
             Ext.create('Taco.view.website.settings.CatalogSeo', {
                 record: me.get()
             })
-        ];
+        ]);
+
+
     }
 });

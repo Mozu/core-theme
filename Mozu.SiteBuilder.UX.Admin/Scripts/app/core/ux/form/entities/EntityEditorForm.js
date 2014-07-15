@@ -2,7 +2,7 @@
  * @class Taco.core.ux.form.ColorField
  */
 
-Ext.define('Taco.core.ux.form.EntityEditorForm', {
+Ext.define('Taco.core.ux.form.entities.EntityEditorForm', {
     extend: 'Ext.form.Panel',
    
 

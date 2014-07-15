@@ -1,5 +1,5 @@
 Ext.create('Ext.form.Panel', {
-    title: 'No template defined',
+    title:false,// 'No template defined',
 
 
 // Fields will be arranged vertically, stretched to full width

@@ -18,25 +18,69 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         this.manager.entitypeTypeHandler = this;
         this.load();
         this.initPublishableState();
+        this.mon(this.manager, 'activecardchanged', this.onManagerActiveItemChange, this);
     },
+
+    onManagerActiveItemChange: function (manager, activeItem) {
+        if (activeItem.itemId == 'pageEditor' && this.webPageNeedsRefresh) {
+            this.webPageNeedsRefresh = false;
+            this.manager.reloadPage();
+        }
+    },
+
+    getDocument:function () {
+        return this.get();
+    },
+
+    getPageSettings: function () {
+        var me = this,
+            doc = this.getDocument(),
+            customerEditor,
+            ret = [];
+
+        if (!customerEditor) {
+            customerEditor = me.manager.entityEditors.findEditor(doc);
+        }
+        if (customerEditor) {
+
+
+            if (customerEditor) {
+                me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: customerEditor, record: doc });
+                ret.push(me.dynamicFormContainer);
+            }
+
+        }
+
+
+        return ret;
+    },
+
 
     deleteRecord: function () {
         var me = this,
-            model = this.get();
+            record = this.get();
 
-        if (me.fireEvent('destroy', model) != false) {
-            if (model) {
-                model.destroy({
+        if (me.fireEvent('destroy', record) != false) {
+            if (record) {
+                record.destroy({
                     callback: function () {
-                        me.fireEvent('destroy', model);
+                        me.fireEvent('destroy', record);
                     }
                 });
             }
         }
     },
-
+    getId: function () {
+        if (this.record) {
+            return this.record.getLoadParams();
+        }
+        if (!this.pageContext.cmsContext.page.documentListName || !this.pageContext.cmsContext.page.id) {
+            return undefined;
+        }
+        return { documentListName: this.pageContext.cmsContext.page.documentListName, id: this.pageContext.cmsContext.page.id };
+    },
     get: function () {
-        return this.model;
+        return this.record;
     },
 
     getSaveTask: function () {
@@ -45,7 +89,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             zoneData = [],
             source,
             json;
-        //hack travis to fix.
+       
         me.editor.dirtyStateCheck();
         if (me.editor.isDirty()) {
             if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
@@ -92,6 +136,11 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 }
             });
         }
+
+        tasks.on('complete', function () {
+            me.webPageNeedsRefresh = true;
+        });
+
 
 
         this.addSaveTasks(tasks);
@@ -140,37 +189,74 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     },
 
     load: function () {
-        var me = this,
-            key = this.getId(),
-            modelFactory = Ext.ModelManager.getModel(this.modelName),
-            store = this.getStore();
+        var me = this;
 
-        me.model = store.getById(key);
-        if (me.model === null) {
-            me.isLoading = true;
-            modelFactory.load(key, {
-                success: function (record) {
-                    me.set(record, true);
-                }
-            });
-        } else {
-            this.set(this.model);
+        if (me.record) {
+            this.set(me.record);
+            return;
         }
+        if (!this.getId()) {
+            return;
+        }
+
+        Taco.model.Entity.load(this.getId(), {
+            scope: this,
+            success: function (record, operation) {
+                this.set(record);
+            }
+        });
     },
 
-    set: function (model, add) {
+
+    //load: function () {
+    //    var me = this,
+    //        key = this.getId(),
+    //        modelFactory = Ext.ModelManager.getModel(this.modelName),
+    //        store = this.getStore();
+    //    if (!me.record) {
+    //        me.record = store.getById(key);
+    //    }
+    //    if (me.record === null) {
+    //        me.isLoading = true;
+    //        modelFactory.load(key, {
+    //            success: function (record) {
+    //                me.set(record, true);
+    //            }
+    //        });
+    //    } else {
+    //        this.set(this.record);
+    //    }
+    //},
+
+    set: function (record, add) {
         this.isLoading = false;
-        this.model = model;
+        this.record = record;
         if (add) {
-            this.getStore().add(this.model);
+            this.getStore().add(this.record);
         }
-        this.fireEvent('load', model);
+        this.fireEvent('load', record);
     },
 
     addSaveTasks: function (tasks) {
         this.manager.pageSettings.addSaveTasks(tasks);
+        var tasks = this.callParent(arguments);
+        if (this.dynamicFormContainer) {
+            tasks.add([
+                {
+                    updateRecord: this.get(),
+                    updateForm: this.dynamicFormContainer
+                }, {
+                    saveRecord: this.get()
+                }
+            ]);
+        }
     },
-    getId: Ext.emptyFn,
+    getId: function () {
+        if (!this.pageContext.cmsContext.page || !this.pageContext.cmsContext.page.documentListName || !this.pageContext.cmsContext.page.id)
+            return undefined;
+        return { documentListName: this.pageContext.cmsContext.page.documentListName, id: this.pageContext.cmsContext.page.id };
+    },
+
     getStore: Ext.emptyFn,
     setHidden: Ext.emptyFn,
     unload: Ext.emptyFn
