@@ -6,7 +6,6 @@ Ext.define('Taco.view.settings.localization.Attributes', {
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias :'widget.localizedattributesgrid',
 
-
     title: "Attributes",
 
     store: { type: 'Taco.store.LocalizedAttributes' },
@@ -14,10 +13,6 @@ Ext.define('Taco.view.settings.localization.Attributes', {
 
     getStore: function() {
         return { type: 'Taco.store.LocalizedAttributes' };
-    },
-
-    config: {
-        record: null
     },
 
     // override this method and adjust the columns if you need a grid with a subset of columns;

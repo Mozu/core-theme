@@ -9,9 +9,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         'Ext.form.Panel', 'Taco.core.ux.BaseGrid',
         'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter',
         'Taco.core.ux.action.SecondaryButton',
-        'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn',
-        'Taco.store.ShippingZones',
-        'Taco.model.TargetRule'
+        'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn'
     ],
     contextConfig: {
         supportedLevels: ['m'],
@@ -67,14 +65,15 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
                     }
                 ]
             },
-            listeners: {
-                'edit': {
-                    fn: function (editor, column) {
-                        column.record.commit();
-                        column.record.save();
-                    }
-                }
-            },
+            //results in 3 posts for one column update.
+            //listeners: {
+            //    'edit': {
+            //        fn: function (editor, column) {
+            //            column.record.commit();
+            //            column.record.save();
+            //        }
+            //    }
+            //},
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
@@ -111,7 +110,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             });
 
         return {
-            advancedFormCls: 'Taco.core.ux.form.Form',
+            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchForm',
 
             quickFilterData: quickFilters
         };
