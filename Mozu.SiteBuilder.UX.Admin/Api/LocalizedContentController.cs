@@ -53,16 +53,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "attributes/read")]
         public async Task<Response<List<JObject>>> GetLocalizedAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var fakeData = CreateFakeAttributeJData();
-            var result = await Task.FromResult(fakeData);
-            return List2(result, 3);
+            //var fakeData = CreateFakeAttributeJData();
+            //var result = await Task.FromResult(fakeData);
+            //return List2(result, 3);
 
             // real code
-            //var attrs = (await _reportWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-            //    filter: extFilter.query, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
+            var attrs = (await _reportWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+                filter: extFilter.query, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
 
-            //var items = attrs.Items.Select(Mapper.Map<ReportAttribute, JObject>).Where(x => x != null).ToList();
-            //return List2(items, attrs.TotalCount);
+            var items = attrs.Items.Select(Mapper.Map<ReportAttribute, JObject>).Where(x => x != null).ToList();
+            return List2(items, attrs.TotalCount);
 
         }
 
@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         Name = localizedName
                                     }).ToList();
 
-            var updatedResults = (await _attributeWebApiClient.UpdateLocalizedContents(localizedContent, attr.AttributeFQN, TargetContextLevelType.MasterCatalog)).ReadAsSync();
+            var updatedResults = (await _attributeWebApiClient.UpdateLocalizedContents(localizedContent, attr.AttributeFQN, responseFields:null, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
             var jResult = AddLocalizedNames(attr, updatedResults);
             return Single2(jResult);
         }
