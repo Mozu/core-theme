@@ -996,10 +996,14 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading.gif" />
     <Content Include="Scripts\resources\images\icons\icon-barcode.png" />
     <Content Include="Scripts\resources\images\icons\icon-cart.png" />
+    <Content Include="Scripts\resources\images\icons\icon-checkbox-focus.png" />
+    <Content Include="Scripts\resources\images\icons\icon-checkbox-selected-focus.png" />
     <Content Include="Scripts\resources\images\icons\icon-cloud.png" />
     <Content Include="Scripts\resources\images\icons\icon-dashboard.png" />
     <Content Include="Scripts\resources\images\icons\icon-map.png" />
     <Content Include="Scripts\resources\images\icons\icon-people.png" />
+    <Content Include="Scripts\resources\images\icons\icon-radio-focus.png" />
+    <Content Include="Scripts\resources\images\icons\icon-radio-selected-focus.png" />
     <Content Include="Scripts\resources\images\icons\icon-target.png" />
     <Content Include="Scripts\resources\images\icons\icon-theme-tablet.png" />
     <Content Include="Scripts\resources\images\icons\icon-tools.png" />
@@ -1423,6 +1427,8 @@
     <Content Include="Scripts\sass\src\core\ux\form\FullEditor.scss" />
     <Content Include="Scripts\sass\src\overrides\panel\Header.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\ShippingMethodMenu.scss" />
+    <Content Include="Scripts\sass\src\core\ux\form\NavForm2.scss" />
+    <Content Include="Scripts\sass\src\core\ux\form\TabForm.scss" />
     <Content Include="Api\cms\tenant-documenttypes.json" />
     <Content Include="Api\cms\tenant-documentlists.json" />
     <Content Include="Api\cms\entityeditors.json" />

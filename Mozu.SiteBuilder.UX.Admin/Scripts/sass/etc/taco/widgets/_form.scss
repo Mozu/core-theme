@@ -96,12 +96,28 @@
   .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox .#{$prefix}column-header-text {
    @include icons-sprite(icon-checkbox);
   }
+  
+  .#{$prefix}field .#{$prefix}form-checkbox-focus,
+  .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-focus,
+  .#{$prefix}menu .#{$prefix}menu-item-unchecked-focus .#{$prefix}menu-item-icon,
+  .#{$prefix}grid-table .#{$prefix}grid-row-checker-focus,
+  .#{$prefix}grid-header-ct .#{$prefix}column-header-checkbox-focus .#{$prefix}column-header-text {
+	@include icons-sprite(icon-checkbox-focus);
+  }
+
   .#{$prefix}form-cb-checked .#{$prefix}form-checkbox,
   .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked,
   .#{$prefix}menu .#{$prefix}menu-item-checked .#{$prefix}menu-item-icon,
   .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker,
   .#{$prefix}grid-header-ct .#{$prefix}grid-hd-checker-on .#{$prefix}column-header-text {
- @include icons-sprite(icon-checkbox-selected);
+	@include icons-sprite(icon-checkbox-selected);
+  }
+
+  .#{$prefix}form-cb-checked .#{$prefix}form-checkbox-focus,
+  .#{$prefix}grid-cell-inner .#{$prefix}tree-checkbox-checked-focus,
+  .#{$prefix}menu .#{$prefix}menu-item-checked-focus .#{$prefix}menu-item-icon,
+  .#{$prefix}grid-table .#{$prefix}grid-row-selected .#{$prefix}grid-row-checker-focus {
+	@include icons-sprite(icon-checkbox-selected-focus);
   }
 
   .#{$prefix}field .#{$prefix}form-radio {
@@ -110,6 +126,17 @@
   .#{$prefix}form-cb-checked .#{$prefix}form-radio {
  @include icons-sprite(icon-radio-selected);
   }
+
+  .#{$prefix}field .#{$prefix}form-radio-focus {
+	@include icons-sprite(icon-radio-focus);
+  }
+  .#{$prefix}form-cb-checked .#{$prefix}form-radio-focus {
+ @include icons-sprite(icon-radio-selected-focus);
+  }
+
+
+
+
 
   // .#{$prefix}form-cb-label-after {
   //   font-size: 0.875em;
