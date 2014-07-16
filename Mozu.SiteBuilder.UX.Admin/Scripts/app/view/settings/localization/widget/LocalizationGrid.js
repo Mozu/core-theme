@@ -29,7 +29,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
 
     enableSearch: true,
     enablePaging: true,
-    enableRowEditing: true,
+    enableRowEditing: false,
     enableAutoSelect: true,
 
     createButtonEnabled: false,
@@ -39,8 +39,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     showActionsColumn: false,
 
     hideSearchToolbar: false,
-    //selType: 'cellmodel',
-    selType: 'rowmodel',
+    selType: 'cellmodel',
 
     autoScroll: true,
 
@@ -65,15 +64,18 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
                     }
                 ]
             },
-            //results in 3 posts for one column update.
-            //listeners: {
-            //    'edit': {
-            //        fn: function (editor, column) {
-            //            column.record.commit();
-            //            column.record.save();
-            //        }
-            //    }
-            //},
+            listeners: {
+                'edit': {
+                    fn: function (editor, column) {
+                        if (!column.record.dirty) {
+                            return;
+                        }
+
+                        column.record.commit();
+                        column.record.save();
+                    }
+                }
+            },
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
