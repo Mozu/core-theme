@@ -47,8 +47,8 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
 
     //required to be set
     advancedSearchConfig: null,
-    columnConfig: null,
-    storeConfig: null,
+    //columnConfig: null,
+    //storeConfig: null,
 
     stateful: false,
 
@@ -84,12 +84,15 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
                     clicksToEdit: 1
                 })
             ],
-            columns: me.columnConfig
+            columns: this.getColumnConfig()
+            //columns: me.columnConfig
         });
 
-        this.advancedSearchConfig = me.advancedSearchConfig;
+        //this.advancedSearchConfig = me.advancedSearchConfig;
+        this.advancedSearchConfig = this.getAdvancedSearchConfig();
 
-        this.store = me.storeConfig;
+        //this.store = me.storeConfig;
+        this.store = this.getStore();
 
         me.callParent(arguments);
 
