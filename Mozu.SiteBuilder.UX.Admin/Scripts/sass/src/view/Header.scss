@@ -147,6 +147,11 @@
           padding: 16px 2px 0px;
         }
 
+		a:focus{
+			color:$color-button-border;
+			text-decoration:underline;
+		}
+
         &.#{$vprefix}breadcrumb-item-selected {
           a {
             border-bottom: 2px solid $color-theme-base;
