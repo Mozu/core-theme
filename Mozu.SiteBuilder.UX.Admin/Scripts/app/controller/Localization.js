@@ -11,7 +11,8 @@ Ext.define('Taco.controller.Localization', {
         'Taco.model.LocalizedAttributeValue', 'Taco.model.LocalizedProductProperty',
         'Taco.model.LocalizedProductExtra', 'Taco.model.LocalizedProductVariant'],
     views: [
-        'Taco.view.settings.localization.Attributes',
+        //'Taco.view.settings.localization.Attributes',
+        'Taco.view.settings.localization.subform.Attributes',
         'Taco.view.settings.localization.AttributeValues',
         'Taco.view.settings.localization.ProductProperties',
         'Taco.view.settings.localization.ProductExtras',
@@ -21,8 +22,11 @@ Ext.define('Taco.controller.Localization', {
         'Taco.store.LocalizedProductExtras', 'Taco.store.LocalizedProductVariants'],
     listView: null,
 
+    //index: function () {
+    //    this.createContentView('Taco.view.settings.localization.Attributes');
+    //},
     index: function () {
-        this.createContentView('Taco.view.settings.localization.Attributes');
+        this.createContentView('Taco.view.settings.localization.subform.Attributes');
     },
     attributeValues: function () {
         this.createContentView('Taco.view.settings.localization.AttributeValues');

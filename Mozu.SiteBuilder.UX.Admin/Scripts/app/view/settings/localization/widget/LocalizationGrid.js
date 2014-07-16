@@ -45,7 +45,10 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
 
     enableQuickFilters: true,
 
+    //required to be set
     advancedSearchConfig: null,
+    columnConfig: null,
+    storeConfig: null,
 
     stateful: false,
 
@@ -81,12 +84,12 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
                     clicksToEdit: 1
                 })
             ],
-            columns: this.getColumnConfig()
+            columns: me.columnConfig
         });
 
-        this.advancedSearchConfig = this.getAdvancedSearchConfig();
+        this.advancedSearchConfig = me.advancedSearchConfig;
 
-        this.store = this.getStore();
+        this.store = me.storeConfig;
 
         me.callParent(arguments);
 
@@ -96,27 +99,6 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         }, this);
     },
 
-    getAdvancedSearchConfig: function() {
-        var mc = Taco.app.context.getMasterCatalog(),
-            excludeDefaultLocale = true,
-            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
-            quickFilters = [
-                            [{ hasRecord: false }, 'Missing Translation'],
-                            [{ hasRecord: true}, 'Has Translation'],
-                            [{}, 'All Records']
-                        ];
-
-            Ext.Array.each(supportedLocales, function(loc) {
-                quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
-                quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
-            });
-
-        return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchForm',
-
-            quickFilterData: quickFilters
-        };
-    },
 
     onRowEditorUpdate: function () {
         this.callParent(arguments);
