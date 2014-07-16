@@ -66,8 +66,8 @@ Ext.define('Taco.store.LocalizedAttributes', {
             }
         });
     }(),
-    remoteFilter: false,
-    remoteSort: false,
+    remoteFilter: true,
+    remoteSort: true,
     pageSize: 50,
     storeManagerConfig: {
         clearFilters: true,

@@ -23,6 +23,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Localization;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
+using Mozu.SiteBuilder.UX.Admin.Helpers.LocalizedContentHelpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -57,9 +58,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //var result = await Task.FromResult(fakeData);
             //return List2(result, 3);
 
+            var xFilter = extFilter.ToFilterString();
+
             // real code
             var attrs = (await _reportWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-                filter: extFilter.query, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
+                filter: xFilter, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
 
             var items = attrs.Items.Select(Mapper.Map<ReportAttribute, JObject>).Where(x => x != null).ToList();
             return List2(items, attrs.TotalCount);
