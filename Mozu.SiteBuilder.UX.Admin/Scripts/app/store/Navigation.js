@@ -6,14 +6,18 @@ Ext.define('Taco.store.Navigation', {
     model: 'Taco.model.NavigationItem',
     autoLoad: true,
     listeners: {
-       
         beforeload: function (store) {
             var data = store.getProxy().data,
                 seed = 0,
                 recursiveFind = function (key, val, items) {
                     var res;
-                    Ext.Array.each(items,function (item) {
-                        if (item[key] == val) {
+                    Ext.Array.each(items, function (item) {
+                        if (Ext.isFunction(key)) {
+                            if (key(item)) {
+                                res = item;
+                                return;
+                            }
+                        } else if (item[key] == val) {
                             res = item;
                             return;
                         }
@@ -21,14 +25,51 @@ Ext.define('Taco.store.Navigation', {
                             res = recursiveFind(key, val, item.items);
                         }
                     });
-                    
-                    return res;
-                };
 
-           
+                    return res;
+                },
+                pruneInvalidLocLinks = function (item) {
+                    if (item.items) {
+                        item.items = Ext.Array.filter(item.items, pruneInvalidLocLinks, this);
+                    }
+
+                    if (item.locAtts) {
+                        if (item.locAtts.length == 2 && !(isMultiLang || isMultiLang)) {
+                            return false;
+                        } else if (item.locAtts.indexOf("multiLang") > -1 && !isMultiLang) {
+                            return false;
+                        } else if (item.locAtts.indexOf("multCurrency") > -1 && !isMultiCurrency) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
+                isMultiCurrency,
+                isMultiLang;
+
+            Ext.Array.each(Taco.app.context.masterCatalogs, function (mc) {
+                if (mc.getSupportedCurrencies().length > 1) {
+                    isMultiCurrency = true;
+                }
+                if (mc.getSupportedLocales().length > 1) {
+                    isMultiLang = true;
+                }
+            });
+
+
+            data = Ext.Array.filter(data, pruneInvalidLocLinks, this);
+
+
+
             if (data.extensiblitySubNavLinksAdded || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
                 return;
             }
+
+
+
+         
+
+
             Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
                 //todo check security.
                 //todo handle escaping of delimiter
@@ -38,7 +79,7 @@ Ext.define('Taco.store.Navigation', {
                 if (!parentNode) {
                     return;
                 }
-               
+
                 Ext.Array.each(parts, function (nodePart, nodeIndex) {
                     var node = recursiveFind('label', nodePart, parentNode.items),
                         isLeaf = nodeIndex == parts.length - 1;
@@ -46,7 +87,7 @@ Ext.define('Taco.store.Navigation', {
 
 
                     if (!node || isLeaf || node.address) {
-                      
+
                         node = {
                             id: 'ext_sub_link_' + seed++,
                             label: nodePart,
@@ -73,7 +114,13 @@ Ext.define('Taco.store.Navigation', {
     filters: [
         {
             filterFn: function (record) {
-                var ret = true;
+                var ret = true,
+                    isMultiCurrency = false,
+                    isMultiLang = false;
+
+
+               
+
                 if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
                     Ext.each(record.raw.behaviorIds, function (behaviorId) {
                         if (Taco.user.behaviors && Ext.Array.indexOf(Taco.user.behaviors, behaviorId) === -1) {
@@ -293,35 +340,41 @@ Ext.define('Taco.store.Navigation', {
                             }
                         ]
 
-                    },{
+                    }, {
                         "id": "localization",
+                        "locAtts": ["multiLang", "multCurrency"],
                         "label": "Localization",
                         "address": "Localization",
                         "items": [
                             {
                                 "id": "localizationAttr",
                                 "label": "Attributes",
-                                "address": "Localization"
+                                "address": "Localization",
+                                "locAtts": ["multiLang"]
                             },
                             {
                                 "id": "localizationAttrVal",
                                 "label": "Attribute Values",
-                                "address": "Localization/attributeValues"
+                                "address": "Localization/attributeValues",
+                                "locAtts": ["multiLang"]
                             },
                             {
                                 "id": "localizationProp",
                                 "label": "Product Properties",
-                                "address": "Localization/productProperties"
+                                "address": "Localization/productProperties",
+                                "locAtts": ["multiLang"]
                             },
                             {
                                 "id": "localizationExtra",
                                 "label": "Product Extras",
-                                "address": "Localization/productExtras"
+                                "address": "Localization/productExtras",
+                                "locAtts": ["multCurrency"]
                             },
                             {
                                 "id": "localizationVar",
                                 "label": "Product Variants",
-                                "address": "Localization/productVariants"
+                                "address": "Localization/productVariants",
+                                "locAtts": ["multCurrency"]
                             }
                         ]
                     },
@@ -419,7 +472,7 @@ Ext.define('Taco.store.Navigation', {
                 "address": "capability"
             }]
         }*/, {
-            "id": "reports",
+                "id": "reports",
                 "label": "Reports",
                 "address": "reports",
                 "icon": "nav-dashboard",
