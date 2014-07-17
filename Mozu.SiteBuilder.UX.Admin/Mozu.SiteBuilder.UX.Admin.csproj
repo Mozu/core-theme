@@ -459,6 +459,7 @@
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
+    <Compile Include="Api\Models\Localization\LocalizedProductVariantPrice.cs" />
     <Compile Include="Api\Models\Localization\LocalizedAttribute.cs" />
     <Compile Include="Api\Models\Navigation\NavigationTreeNode.cs" />
     <Compile Include="Api\Models\Order\AbstractOrderPackageItem.cs" />
@@ -742,7 +743,6 @@
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\LocalizedProductExtra.js" />
-    <Content Include="Scripts\app\model\LocalizedProductVariant.js" />
     <Content Include="Scripts\app\model\LocalizedProductProperty.js" />
     <Content Include="Scripts\app\model\LocalizedAttributeValue.js" />
     <Content Include="Scripts\app\model\Card.js" />

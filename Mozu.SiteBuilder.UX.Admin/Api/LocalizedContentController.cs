@@ -92,17 +92,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(jResult);
         }
 
-        private JObject AddLocalizedNames(LocalizedAttribute attr, List<AttributeLocalizedContent> updatedResults)
-        {
-            attr.SupportedLocales = updatedResults.Select(x => x.LocaleCode).ToList();
-            var jResult = JObject.FromObject(attr, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
-
-            foreach (var updatedLocalizedContent in updatedResults)
-            {
-                jResult[updatedLocalizedContent.LocaleCode + "_name"] = updatedLocalizedContent.Name;
-            }
-            return jResult;
-        }
 
         [HttpGetRoute(UriTemplate = "attributevalues/read")]
         public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedAttributeValues([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
@@ -148,9 +137,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         } 
         
         [HttpGetRoute(UriTemplate = "productvariants/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductVariants([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<JObject>>> GetLocalizedProductVariants([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            throw new NotImplementedException();
+            var fakeData = CreateFakeVaraintData();
+            var result = await Task.FromResult(fakeData);
+            return List2(result, 4);
         }
 
         [HttpGetRoute(UriTemplate = "productvariants/edit")]
@@ -162,33 +153,88 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         #region privates
 
-        private List<JObject> CreateFakeAttributeJData()
+        private JObject AddLocalizedNames(LocalizedAttribute attr, List<AttributeLocalizedContent> updatedResults)
+        {
+            attr.SupportedLocales = updatedResults.Select(x => x.LocaleCode).ToList();
+            var jResult = JObject.FromObject(attr, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+
+            foreach (var updatedLocalizedContent in updatedResults)
+            {
+                jResult[updatedLocalizedContent.LocaleCode + "_name"] = updatedLocalizedContent.Name;
+            }
+            return jResult;
+        }
+
+        private List<JObject> CreateFakeVaraintData()
         {
             var result = new List<JObject>();
 
-            result.Add(CreatFakeJAttrib("Color", "Coleur", "цвет"));
-            result.Add(CreatFakeJAttrib("Size", "Dimension", "размер"));
-            result.Add(CreatFakeJAttrib("Material", "matériel", "материал"));
-            result.Add(CreatFakeJAttrib("Weight", "poids", "вес"));
+            result.Add(CreatFakeJVariant("T-Shirt", "Black", "S", 9.95M, 11.95M));
+            result.Add(CreatFakeJVariant("T-Shirt", "Yello", "M", 9.95M, 11.95M));
+            result.Add(CreatFakeJVariant("T-Shirt", "Blue", "XL", 11.95M, 14.95M));
+            result.Add(CreatFakeJVariant("T-Shirt", "Green", "XXXXXL", 9999.99M, 11000.00M));
             return result;
         }
 
-        private JObject CreatFakeJAttrib(string attr, string attrFr, string attrRu)
+        private JObject CreatFakeJVariant(string name, string color, string size, decimal price, decimal msrp)
         {
-            var attrib = new LocalizedAttribute
+            const decimal euroX = 0.74M;
+            const decimal rubX = 35M;
+            var attrib = new LocalizedProductVariantPrice
             {
-                AdminName = attr,
-                AttributeFQN = "Tenant~" + attr,
-                Description = attr,
-                Locale = "en-US",
-                Name = attr,
-                SupportedLocales = new List<string> { "fr-FR","ru-RU"}
+                VariantProductCode = Guid.NewGuid().ToString("N").Substring(0, 8),
+                ParentProductCode = Guid.NewGuid().ToString("N").Substring(0, 6),
+                ProductName = name,
+                Options = new List<string>
+                    {
+                        "color - "+ color, "size - " +size
+                    },
+                CurrencyCode = "USD",
+                DeltaPrice = price,
+                DeltaCost = price/2,
+                DeltaCreditValue = null,
+                DeltaMSRP = msrp,
+                SupportedCurrencies = new List<string> { "EUR", "RUB"}
             };
             var j = JObject.FromObject(attrib, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
-            j["fr-FR_name"] = attrFr;
-            j["ru-RU_name"] = attrRu;
+            j["price_EUR"] = price*euroX;
+            j["msrp_EUR"] = msrp*euroX;
+            j["credit_EUR"] = "";
+            j["price_RUB"] = price * rubX;
+            j["msrp_RUB"] = msrp * rubX;
+            j["credit_RUB"] = "";
+
             return j;
         }
+
+
+        //private List<JObject> CreateFakeAttributeJData()
+        //{
+        //    var result = new List<JObject>();
+
+        //    result.Add(CreatFakeJAttrib("Color", "Coleur", "цвет"));
+        //    result.Add(CreatFakeJAttrib("Size", "Dimension", "размер"));
+        //    result.Add(CreatFakeJAttrib("Material", "matériel", "материал"));
+        //    result.Add(CreatFakeJAttrib("Weight", "poids", "вес"));
+        //    return result;
+        //}
+
+        //private JObject CreatFakeJAttrib(string attr, string attrFr, string attrRu)
+        //{
+        //    var attrib = new LocalizedAttribute
+        //    {
+        //        AdminName = attr,
+        //        AttributeFQN = "Tenant~" + attr,
+        //        Description = attr,
+        //        Locale = "en-US",
+        //        Name = attr,
+        //        SupportedLocales = new List<string> { "fr-FR","ru-RU"}
+        //    };
+        //    var j = JObject.FromObject(attrib, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+        //    j["fr-FR_name"] = attrFr;
+        //    j["ru-RU_name"] = attrRu;
+        //    return j;
+        //}
         
 
         #endregion

@@ -19,23 +19,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Localization
 
         public List<string> SupportedLocales { get; set; } 
 
-        //public List<LocalizedAttributeContent> LocalizedValues { get; set; }
-
-        //public Dictionary<string, LocalizedAttributeContent> LocalizedContent { get; set; }
-
     }
-
-    public class LocalizedAttributeContent
-    {
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public string Locale { get; set; }
-
-        public bool Exists { get; set; }
-    }
-
-
 
 }
