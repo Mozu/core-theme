@@ -2,7 +2,7 @@
  * @class Taco.view.settings.localization.Attributes
 */
 Ext.define('Taco.view.settings.localization.Attributes', {
-    requires: ['Taco.store.LocalizedAttributes'],
+    requires: ['Taco.store.LocalizedAttributes', 'Taco.view.settings.localization.AdvancedSearchForm'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias :'widget.localizedattributesgrid',
 
