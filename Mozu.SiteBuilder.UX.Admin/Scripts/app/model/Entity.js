@@ -8,25 +8,26 @@ Ext.define('Taco.model.Entity', {
         
 
         load: function (lookupInfo, config) {
-            var params;
+            var params,
+                operation;
             config = Ext.apply({}, config);
            
             config = Ext.applyIf(config, {
                 action: 'read',
                 
             });
-            params = config.params|| {}
+            params = config.params || {}
 
             params.list = lookupInfo.list || lookupInfo.documentListName
-            params.entityType = lookupInfo.entityType||'cms'
+            params.entityType = lookupInfo.entityType || 'cms'
             params.id = lookupInfo.id;
 
             config.params = params;
 
 
-            var operation = new Ext.data.Operation(config),
-                scope = config.scope || this,
-                callback;
+            operation = new Ext.data.Operation(config);
+            scope = config.scope || this;
+              
 
             callback = function (operation) {
                 var record = null,
@@ -88,7 +89,7 @@ Ext.define('Taco.model.Entity', {
                 if (ret && Ext.isArray(ret)) {
                     tmp = {};
                     Ext.Array.each(ret, function (item) {
-                        tmp[item.propertyType] = item.value && Ext.isString(item.value) && (item.value.indexOf('[') == 0 || item.value.indexOf('{') == 0) && Ext.decode(item.value, true) ? Ext.decode(item.value) : item.value;
+                        tmp[item.propertyType] = item.value && Ext.isString(item.value) && (item.value.indexOf('[') === 0 || item.value.indexOf('{') === 0) && Ext.decode(item.value, true) ? Ext.decode(item.value) : item.value;
                     });
                     ret = tmp;
                 }
@@ -202,7 +203,14 @@ Ext.define('Taco.model.Entity', {
             useNull: true
         }
     ],
+    publish:function () {
+        var pubRecord = Ext.create('Taco.model.CmsDocumentDraft',
+            this.data);
+        pubRecord.set('isPublished', true);
+      
 
+        pubRecord.save.apply(pubRecord, arguments);
+    },
    
     proxy: {
         type: 'ajax',
