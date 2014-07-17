@@ -47,11 +47,12 @@
     getMasterCatalog: function() {
         return this.masterCatalog;
     },
-    isPublishingEnabled:function () {
-        return this.publishingEnabled;
-    },
+   
     formatCurrency: function (value) {
         return Taco.app.context.formatCurrencyFromCode(this.currencyCode, value);
+    },
+    isContentPublishingEnabled: function () {
+        return this.contentPublishingEnabled;
     },
     updateContentPublishingMode: function (value) {
         this.publishingEnabled = value == 'Pending';
@@ -59,8 +60,12 @@
         Ext.Ajax.request({
             url: '/admin/app/cmspublishing/enablePublishing',
             method: 'POST',
-            jsonData : {
-                id: this.id,
+            jsonData: {
+                context: {
+                    siteId: this.id,
+                    catalogId: this.getCatalogId(),
+                    masterCatalogId: this.getMasterCatalogId()
+                },
                 publishingEnabled: this.publishingEnabled
             },
             failure : function () {

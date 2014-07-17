@@ -66,6 +66,30 @@
         return null;
     },
     
+    isContentPublishingEnabled: function () {
+        return this.contentPublishingEnabled;
+    },
+    updateContentPublishingMode: function (value) {
+        this.publishingEnabled = value == 'Pending';
+        
+        Ext.Ajax.request({
+            url: '/admin/app/cmspublishing/enablePublishing',
+            method: 'POST',
+            jsonData : {
+                context: {
+                    masterCatalogId: this.id,
+                },
+                publishingEnabled: this.publishingEnabled
+            },
+            failure : function () {
+                console.log(arguments);
+            },
+            success: function (response) {
+                console.log(arguments);
+            }
+        });
+        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
+    },
     getSiteId: function () {
         //if (this.sites.length == 1) {
         //    return this.sites[0].getSiteId();

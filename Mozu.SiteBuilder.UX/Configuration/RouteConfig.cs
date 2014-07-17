@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                "StoreFront_pages_list",
-               "cms/{listname}",
+               "cms/{collection}",
                new { controller = "cmspages", action = "contentIndex" });
 
 

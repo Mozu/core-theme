@@ -9,6 +9,13 @@
         "name": "Core4"
     },
     "editors": [{
+        "documentLists": [
+            "snippets"
+        ],
+        "id": "snippet",
+        "path": "snippet.js",
+        "priority": 0.2
+    },{
         "documentTypes": [
             "web_page"
         ],

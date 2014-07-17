@@ -23,9 +23,9 @@ Ext.define('Taco.view.pendingChange.Cms', {
     
     publishAllText: "Publish All",
     
-    publishAll: function (type) {
+    publishAll: function (documentListName) {
         var me = this;
-        me.store.publishAll(type, function () {
+        me.store.publishAll(documentListName, function () {
             // removing notification per TFS #7653 and #7655
             //var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!';
             //Taco.app.fireEvent('setmessage', notice, 'success');
@@ -71,12 +71,16 @@ Ext.define('Taco.view.pendingChange.Cms', {
                     handler: function (item) {
                         item.up('contentcontainer').publishAll('page');
                     }
-                }, {
-                    text: 'Publish all templates',
-                    handler: function (item) {
-                        item.up('contentcontainer').publishAll('template');
-                    }
-                }]
+                }
+                //removeing bulk type of templates should be aggregate of document type / document list
+                //, {
+                //    text: 'Publish all templates',
+                //    handler: function (item) {
+                //        item.up('contentcontainer').publishAll('template');
+                //    }
+                //}
+
+                ]
             },
             handler: function (button) {
                 button.up('contentcontainer').publishAll();

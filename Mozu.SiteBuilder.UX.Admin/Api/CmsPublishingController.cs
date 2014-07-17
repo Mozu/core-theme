@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     
     public class PublishArgs
     {
-        public string DocType;
+        public string DocumentListName { get; set; }
 
        
     }
@@ -76,17 +76,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
+        public class EnablePublishingRequest
+        {
+            public Mozu.Core.ApiContext Context { get; set; }
+            public bool PublishingEnabled { get; set; }
+        }
         /// <summary>
         /// Publish a set of documents.
         /// </summary>
         [HttpPostRoute(UriTemplate = "enablePublishing")]
-        public async Task<Response<bool>> EnablePublishing( TaContextSite site )
+        public async Task<Response<bool>> EnablePublishing(EnablePublishingRequest request)
         {
-            var client =  _documentClient.CloneWithApiContext(x => x.SiteId = site.Id);
+
+            var client = _documentClient.CloneWithApiContext(x =>
+            {
+                x.SiteId = request.Context.SiteId;
+                x.MasterCatalogId = request.Context.MasterCatalogId;
+                x.CatalogId = request.Context.CatalogId;
+            });
             var res = (await client.GetDocumentLists(startIndex: 0, pageSize: 200)).ReadAsSync();
             var updateTasks= res.Items.Select(x =>
             {
-                x.EnablePublishing = site.PublishingEnabled ;
+                x.EnablePublishing = request.PublishingEnabled;
                 return client.UpdateDocumentList(x.Name, x);
             }).ToArray();
            await Task.WhenAll(updateTasks);
@@ -159,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             args = args ?? new PublishArgs();
 
             // TODO: The service does not currently support "null", so we pass HACK instead.
-            string documentListName = GetDocumentListNameFromDocType(args.DocType);
+            string documentListName = args.DocumentListName;
 
 
             if (documentListName == null)
@@ -193,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             args = args ?? new PublishArgs();
             // TODO: The service does not currently support "null", so we pass HACK instead.
-            string documentListName = GetDocumentListNameFromDocType(args.DocType);
+            string documentListName = (args.DocumentListName);
 
             // TODO: This method implementation should be thrown away when the Mozu service supports a DiscardAll().
             // See related note in PublishAll().
@@ -224,17 +235,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Translates the UI's idea of a document type (Page and Template) into the appropriate DocumentListName for a cms collection.
         /// If null or an unsupported document type is provided, this will return null.
         /// </summary>
-        private string GetDocumentListNameFromDocType(string type)
-        {
-            switch ((type ?? "").ToLower())
-            {
-                case "page":
-                    return "pages";
-                case "template":
-                    return "templates";
-                default:
-                    return null;
-            }
-        }
+        
     }
 }

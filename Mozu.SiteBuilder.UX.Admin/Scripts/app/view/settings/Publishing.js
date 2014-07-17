@@ -107,57 +107,14 @@ Ext.define('Taco.view.settings.Publishing', {
                     cellCls: 'content'
                 }, {}, {});
 
-                Ext.each(masterCatalog.sites, function (site) {
-                    var liveContentRadio,
-                        stagedContentRadio;
+                this.addContentPublishOptions(masterCatalog, subitems);
 
-                    liveContentRadio = Ext.widget({
-                        xtype: 'radio',
-                        inputValue: 'Live',
-                        checked: !site.isPublishingEnabled(),
-                        name: 'content-publishing-' + site.id,
-                        cellCls: 'site radio',
-                        listeners: {
-                            change: function (field) {
-                                site.updateContentPublishingMode(field.getValue() ? 'Live' : 'Pending');
-                            },
-                            click: {
-                                fn: function (e) {
-                                    this.confirmLive(liveContentRadio);
-                                },
-                                element: 'inputEl'
-                            },
-                            scope: this
-                        }
-                    });
-
-                    liveContentRadio.setValue = Ext.bind(function () {
-                        if (!this.suspendSetValue) {
-                            liveContentRadio.__proto__.setValue.apply(liveContentRadio, arguments);
-                        }
+                Ext.each(masterCatalog.catalogs, function (catalog) {
+                    this.addContentPublishOptions(catalog, subitems);
+                    Ext.each(catalog.sites, function (site) {
+                        this.addContentPublishOptions(site, subitems);
                     }, this);
 
-                    stagedContentRadio = Ext.widget({
-                        xtype: 'radio',
-                        inputValue: 'Pending',
-                        checked: site.isPublishingEnabled(),
-                        name: 'content-publishing-' + site.id,
-                        cellCls: 'site radio'
-                    });
-
-                    stagedContentRadio.setValue = Ext.bind(function () {
-                        if (!this.suspendSetValue) {
-                            stagedContentRadio.__proto__.setValue.apply(stagedContentRadio, arguments);
-                        }
-                    }, this);
-
-                    Ext.Array.push(subitems, {
-                        html: site.name,
-                        cellCls: 'site site-name'
-                    },
-                        liveContentRadio,
-                        stagedContentRadio
-                    );
                 }, this);
             }
 
@@ -179,6 +136,59 @@ Ext.define('Taco.view.settings.Publishing', {
         }, this);
 
         return items;
+    },
+
+    addContentPublishOptions: function (site, subitems) {
+        var liveContentRadio,
+                        stagedContentRadio;
+
+        liveContentRadio = Ext.widget({
+            xtype: 'radio',
+            inputValue: 'Live',
+            checked: !site.isContentPublishingEnabled(),
+            name: 'content-publishing-' + site.id,
+            cellCls: 'site radio',
+            listeners: {
+                change: function (field) {
+                    site.updateContentPublishingMode(field.getValue() ? 'Live' : 'Pending');
+                },
+                click: {
+                    fn: function (e) {
+                        this.confirmLive(liveContentRadio);
+                    },
+                    element: 'inputEl'
+                },
+                scope: this
+            }
+        });
+
+        liveContentRadio.setValue = Ext.bind(function () {
+            if (!this.suspendSetValue) {
+                liveContentRadio.__proto__.setValue.apply(liveContentRadio, arguments);
+            }
+        }, this);
+
+        stagedContentRadio = Ext.widget({
+            xtype: 'radio',
+            inputValue: 'Pending',
+            checked: site.isContentPublishingEnabled(),
+            name: 'content-publishing-' + site.id,
+            cellCls: 'site radio'
+        });
+
+        stagedContentRadio.setValue = Ext.bind(function () {
+            if (!this.suspendSetValue) {
+                stagedContentRadio.__proto__.setValue.apply(stagedContentRadio, arguments);
+            }
+        }, this);
+
+        Ext.Array.push(subitems, {
+            html: site.name,
+            cellCls: 'site site-name'
+        },
+            liveContentRadio,
+            stagedContentRadio
+        );
     },
 
     confirmLive: function (field) {

@@ -152,6 +152,33 @@ Ext.define('Taco.view.website.Tree', {
         });
 
         this.mon(this.getView(), {
+            beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
+           
+                if (data.records && data.records.length && data.records[0].get('nodeType') == 'contentlist') {
+                    dropHandlers.cancelDrop();
+                    var nodeData = {
+                            nodeType: 'link',
+                            iconCls: 'link',
+                            name: data.records[0].raw.metaData.name,
+                            url: '/cms/' + data.records[0].raw.metaData.name
+                        },
+                        node,
+                        overIndex = overModel.parentNode.indexOf(overModel);
+                    if (dropPosition == 'append') {
+                        node = overModel.appendChild(nodeData);
+                    }else if (dropPosition == 'before') {
+                        node = overModel.parentNode.insertChild(overIndex, nodeData);
+                    } else {
+                        node = overModel.parentNode.insertChild(overIndex, nodeData);
+                    }
+                    node.phantom = true;
+
+                    node.save();
+                }
+             
+
+             
+             },
             nodedragover: {
                 scope: this,
                 fn: function (targetNode, position, dragData, e) {

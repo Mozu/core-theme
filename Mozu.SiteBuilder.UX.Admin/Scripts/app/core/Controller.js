@@ -21,6 +21,14 @@ Ext.define('Taco.core.Controller', {
             requiredStoresLoading = false;
         options.loadingStores = options.loadingStores || [];
 
+
+        if (!Ext.isNumber(options.loadMaskTask)) {
+            options.loadMaskTask = Ext.defer(
+                function () {
+                    Taco.app.setLoading();
+                }, this, 200);
+        }
+
         if (model) {
             Ext.each(model.prototype.requiredStores, function (storeCfg) {
 
@@ -59,11 +67,13 @@ Ext.define('Taco.core.Controller', {
 
         }
 
-        if (requiredStoresLoading) {
-            Taco.app.setLoading();
-            return;
+
+        if (Ext.isNumber(options.loadMaskTask )) {
+            window.clearTimeout(options.loadMaskTask)
+            Taco.app.setLoading(false);
         }
-        Taco.app.setLoading(false);
+
+        
         if (Ext.isFunction(options)) {
             options.apply(this);
         } else {

@@ -25,6 +25,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.widgetEditors.DealOfTheDay',
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
+        'Taco.view.website.entityAdapters.DocumentCollectionEntityAdapter',
         'Ext.ux.IFrame',
         'Taco.store.ThemeListing',
         'Ext.menu.CheckItem',
@@ -48,7 +49,8 @@ Ext.define('Taco.view.website.Index', {
         category: 'Taco.view.website.entityAdapters.CategoryEntityAdapter',
         product: 'Taco.view.website.entityAdapters.ProductEntityAdapter',
         link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter',
-        email: 'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter'
+        email: 'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
+        documentCollection: 'Taco.view.website.entityAdapters.DocumentCollectionEntityAdapter'
     },
     enableNavHeader: true,
     options: {},
@@ -98,7 +100,7 @@ Ext.define('Taco.view.website.Index', {
                 ui: 'action',
                 scale: 'medium',
                 buttonGroup: 'hasSettings',
-                text: 'Page Settings',
+                text: 'Settings',
                 itemId: 'pageSettingsTabButton',
                 toggleGroup: 'websiteEditorTabs',
                 allowDepress: false,
@@ -111,6 +113,30 @@ Ext.define('Taco.view.website.Index', {
                     var cardpanel = this.down('#editorCardPanel');
 
                     cardpanel.getLayout().setActiveItem(1);
+                },
+                toggleHandler: function (cmp, isPressed) {
+                    this.down('#dropZonesCB').setDisabled(isPressed);
+                    this.down('#widgetsActionButton').setDisabled(isPressed);
+                }
+
+            }, {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                buttonGroup: 'isDocumentList',
+                text: 'Grid',
+                itemId: 'contentGridTabButton',
+                toggleGroup: 'websiteEditorTabs',
+                allowDepress: false,
+                enableToggle: true,
+                scope: this,
+                style: {
+                    borderRadius: '0px 2px 2px 0px'
+                },
+                handler: function () {
+                    var cardpanel = this.down('#editorCardPanel');
+
+                    cardpanel.getLayout().setActiveItem(2);
                 },
                 toggleHandler: function (cmp, isPressed) {
                     this.down('#dropZonesCB').setDisabled(isPressed);
@@ -236,6 +262,8 @@ Ext.define('Taco.view.website.Index', {
                 scale: 'medium',
                 buttonGroup: 'isSavable',
                 itemId: 'cancelActionButton',
+                handler: me.cancelActionHandler,
+                scope: me,
                 text: 'Cancel',
                 margin: '0 0 0 10'
             }, {
@@ -352,8 +380,8 @@ Ext.define('Taco.view.website.Index', {
                                         xtype: 'formform',
                                         itemId: 'pageSettings',
                                         ui: 'subform',
-                                        title: 'Page Settings',
-                                        margin: '20 30 10 30',
+                                        title: 'Settings',
+                                       // margin: '20 30 10 30',
                                         defaults: {
                                             margin: '10 0 10 0'
                                         }
@@ -518,20 +546,20 @@ Ext.define('Taco.view.website.Index', {
             me.pageSettingsTabButton = header.down('#pageSettingsTabButton');
             me.pageEditorTabButton = header.down('#pageEditorTabButton');
             me.createActionButton = header.down('#createActionButton');
-            me.publishButton.setVisible(Taco.app.context.getCurrent().isPublishingEnabled());
+            me.publishButton.setVisible(Taco.app.context.getCurrent().isContentPublishingEnabled());
             if (!me.themeStore.isLoading()) {
                 me.onThemeLoad();
             }
             me.bindToForm();
         });
     },
-    showHideButtons:function (buttonGroups) {
+    showHideButtons:function (buttonGroups, leaveExisting) {
         var buttons = this.header.query('component[buttonGroup]');
 
         Ext.Array.each(buttons, function (btn) {
             if (btn.buttonGroup && buttonGroups.indexOf(btn.buttonGroup) > -1) {
                 btn.show();
-            } else {
+            } else if (leaveExisting !== true ) {
                 btn.hide();
             }
         });
@@ -561,6 +589,13 @@ Ext.define('Taco.view.website.Index', {
         this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
 
         return  this.cardpanel.getLayout().getActiveItem();
+    },
+    doCancel: function () {
+
+        //simple reset to web viewer...
+        this.toggleCard(0);
+        this.reloadPage();
+
     },
     onThemeLoad: function () {
 
@@ -916,23 +951,45 @@ Ext.define('Taco.view.website.Index', {
         var me = this,
             contentContainer = me.down('#contentListContainer');
 
-        contentContainer.removeAll();
-
         Ext.suspendLayouts();
-        contentContainer.add(
-            Ext.create('Taco.view.entityManager.Grid', {
-                    itemId: 'entityManagerGrid',
-                    listeners: {
-                        itemedit: me.onContentListItemEdit,
-                        scope: me
-                    },
-                    listMetaData: metaData
-                }
-            ));
+        me.showEntityManagerGrid(metaData);
         me.toggleCard(2);
         me.showHideButtons(['isCreatable']);
         Ext.resumeLayouts(true);
 
+    },
+    showEntityManagerGrid: function (metaData) {
+        var me = this,
+            contentContainer = me.down('#contentListContainer');
+
+        if (Ext.isString(metaData)) {
+            if (this.tree.store.isLoading()) {
+                this.tree.store.on('load', function () {
+                    me.showEntityManagerGrid(metaData);
+                }, me, { single: true });
+                return;
+            }
+            
+            Ext.Object.each(this.tree.store.tree.nodeHash, function (key, value) {
+                if (value.raw.metaData && value.raw.metaData.entityType == 'cms' && value.raw.metaData.name == metaData) {
+                    metaData = value.raw.metaData;
+                 }
+            })
+        }
+
+
+        contentContainer.removeAll();
+        contentContainer.add(
+            Ext.create('Taco.view.entityManager.Grid', {
+                itemId: 'entityManagerGrid',
+                listeners: {
+                    itemedit: me.onContentListItemEdit,
+                    scope: me
+                },
+                listMetaData: metaData
+            }
+            ));
+      
     },
     OnCreateClick: function () {
         var me = this,
@@ -940,10 +997,11 @@ Ext.define('Taco.view.website.Index', {
             grid = me.down('#entityManagerGrid'),
             listMetaData = grid.listMetaData,
             newRecord = new Taco.model.Entity({
-                entityListName: listMetaData.entityType == 'cms' ? null : listMetaData.name,
-                nameSpace: listMetaData.nameSpace,
-                documentListName: listMetaData.entityType == 'cms' ? listMetaData.name : null,
+             
                 tenantId: Taco.app.context.getTenantId(),
+
+                listFQN: listMetaData.listFQN,
+                documentListName: listMetaData.listFQN || listMetaData.name,
                 entityType: listMetaData.entityType,
                 documentType: listMetaData.documentTypes && listMetaData.documentTypes.length ? listMetaData.documentTypes[0] : undefined,
                 properties: {},
@@ -981,7 +1039,7 @@ Ext.define('Taco.view.website.Index', {
             form;
 
 
-
+        this.pageSettings.removeAll(false);
         this.entitypeTypeHandler = Ext.create('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
            // editor: editor,
             record: record,
@@ -996,6 +1054,8 @@ Ext.define('Taco.view.website.Index', {
             manager: this,
             listeners: {
                 load: this.onEntityTypeAdapterLoad,
+                //todo see if isWebPage
+                //savesuccess: record.phantom ? 
                 scope: this
             }
         });
@@ -1023,6 +1083,8 @@ Ext.define('Taco.view.website.Index', {
 
         //todo if page.. navigate
         // me.pageEditorTabButton.disable();
+
+        //todo see if is isWebPage...
 
         me.navigate({ url: '/cms/' + record.get('documentListName') + '/' + record.get('name'), view: 'settings' });
         //me.toggleCard(1);

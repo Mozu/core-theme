@@ -13,10 +13,11 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
 
    
     addSaveTasks: function (tasks) {
-        var tasks = this.callParent(arguments);
+        this.callParent(arguments);
         
         tasks.on('complete', function () {
-            if (this.pageContext.cmsContext.page.path != this.get().data.name) {
+
+            if(this.pageContext && this.pageContext.cmsContext && this.pageContext.cmsContext.page.path != this.get().data.name) {
                 Taco.core.StateManager.attemptNavigate('/website/page/' + this.get().data.name);
             } 
         }, this, {

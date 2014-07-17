@@ -64,7 +64,7 @@ Ext.define('Taco.model.Entity', {
                     if (rec.raw.documentListName) {
                         return 'cms_' + rec.raw.documentListName + '_' + rec.raw.id;
                     } else {
-                        return 'entity_' + rec.raw.entityListName + '_' + rec.raw.id;
+                        return rec.raw.entityType + '_' + rec.raw.listFQN + '_' + rec.raw.id;
                     }
                 }
             },
@@ -114,32 +114,11 @@ Ext.define('Taco.model.Entity', {
             type: 'auto',
             useNull: true
         },
+   
         {
-            name: 'entityListName',
+            name: 'listFQN',
             type: 'auto',
-            useNull: true
-        },
-        {
-            name: 'entityListFullName',
-            type: 'auto',
-            persist: false,
-            convert: function (v, rec) {
-                if (rec.raw) {
-                    if (rec.raw.nameSpace) {
-                        return rec.raw.nameSpace + '.' + rec.raw.entityListName;
-                    } else {
-                        return rec.raw.entityListName || rec.raw.name;
-                    }
-                }
-                if (rec.data) {
-                    if (rec.data.nameSpace) {
-                        return rec.data.nameSpace + '.' + rec.data.entityListName;
-                    } else {
-                        return rec.data.entityListName||rec.data.name;
-                    }
-                }
-                return null;
-            }
+            persist: false
         },
         {
             name: 'item',
@@ -176,7 +155,41 @@ Ext.define('Taco.model.Entity', {
         {
             name: 'documentListName',
             type: 'auto',
-            useNull: true
+            useNull: true,
+            defaultValue:null,
+            //convert:function (v, r) {
+            //    if (!v) {
+            //        if (r.data && r.data.documentListName) {
+            //            return r.data.documentListName;
+            //        }
+            //        if (r.raw && r.raw.documentListName) {
+            //            return r.raw.documentListName;
+            //        }
+            //        if (r.data && r.data.listFQN) {
+            //            return r.data.listFQN;
+            //        }
+            //        if (r.data && r.raw.listFQN) {
+            //            return r.raw.listFQN;
+            //        }
+            //    }
+                
+            //},
+            //serialize:function (v, r) {
+            //    if (r.data && r.data.documentListName) {
+            //            return r.data.documentListName;
+            //        }
+            //        if (r.raw && r.raw.documentListName) {
+            //            return r.raw.documentListName;
+            //        }
+            //        if (r.data && r.data.listFQN) {
+            //            return r.data.listFQN;
+            //        }
+            //        if (r.data && r.raw.listFQN) {
+            //            return r.raw.listFQN;
+            //        }
+
+            //}
+
         },
         {
             name: 'publishState',

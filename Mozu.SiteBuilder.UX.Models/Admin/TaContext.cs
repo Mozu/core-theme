@@ -22,6 +22,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "currencies")]
         public Dictionary<string, Mozu.Core.Money.Currency> Currencies { get; set; }
+
+        [DataMember(Name = "contentPublishingEnabled")]
+        public bool? ContentPublishingEnabled { get; set; }
     }
 
     [DataContract]
@@ -51,7 +54,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         public string Currency { get; set; }
 
 
-     
+
+         [DataMember(Name = "contentPublishingEnabled")]
+        public bool? ContentPublishingEnabled { get; set; }
     }
 
 
@@ -71,7 +76,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
 
-      
+        [DataMember(Name = "contentPublishingEnabled")]
+        public bool? ContentPublishingEnabled { get; set; }
 
 
     }
@@ -90,8 +96,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "defaultHost")]
         public string DefaultHost { get; set; }
 
-        [DataMember(Name = "publishingEnabled")]
-        public bool PublishingEnabled { get; set; }
+        [DataMember(Name = "contentPublishingEnabled")]
+        public bool? ContentPublishingEnabled { get; set; }
 
 
 

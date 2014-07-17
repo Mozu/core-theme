@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
@@ -36,12 +37,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private const string CMS_DOCUMENT_ID_PROPERTY = "Id";
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
+        private readonly IDocumentTypeWebApiClient _documentTypeWebApiClient;
         //   private const string TBD = "duno";
-        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient)
+        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient)
 
         {
             _documentListWebApiClient = documentListWebApiClient;
             _entityListsWebApiClient = entityListsWebApiClient;
+            _documentTypeWebApiClient = documentTypeWebApiClient;
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
@@ -111,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<EntityContainer>();
-                    return _entityListsWebApiClient.InsertEntity(entityListFullName: entity.NameSpace + "." + entity.EntityListName, item: entity.Item);
+                    return _entityListsWebApiClient.InsertEntity(entityListFullName: entity.ListFQN, item: entity.Item);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -145,7 +148,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<EntityContainer>();
-                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.NameSpace + "." + entity.EntityListName, item: entity.Item, id: entity.Id);
+                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.ListFQN, item: entity.Item, id: entity.Id);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -156,6 +159,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
             }
+        }
+
+
+        [HttpGetRoute(UriTemplate = "documentTypes/read")]
+        public async Task<Response<List<CMS.DocumentType>>> ReadDocumentTypes(PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string list, string view = null)
+        {
+            var docTYpes = (await _documentTypeWebApiClient.CloneWithoutUserClaims().GetDocumentTypes(pageSize:200)).ReadAsSync();
+            return this.List2(docTYpes.Items, docTYpes.TotalCount);
         }
 
         [HttpGetRoute(UriTemplate = "read")]
