@@ -2,7 +2,7 @@
  * @class Taco.view.settings.localization.ProductVariants
 */
 Ext.define('Taco.view.settings.localization.ProductVariants', {
-    requires: ['Taco.store.LocalizedProductVariants'],
+    requires: ['Taco.store.LocalizedProductVariants', 'Taco.view.settings.localization.AdvancedSearchForm'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias: 'widget.localizedproductvariantsgrid',
 
@@ -21,20 +21,24 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
 
     // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function () {
-        var mc = Taco.app.context.getMasterCatalog(),
+        var ctx = Taco.app.context.getCurrentContext(),
+            ctxType = (!ctx) ? '' : ctx.contextType,
+            mc = Taco.app.context.getMasterCatalog(),
+            mcCurrency = (!mc) ? '' : ' (' + mc.currencyCode + ')',
+            mcName = (!mc) ? '' : mc.name + ' ',
             excludeDefaultCurrency = true,
-            supportedCurrencies = (!mc) ? [] : mc.getSupportedCurrencies(excludeDefaultCurrency),
+            supportedCurrencies = [],
             columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'productName',
-                text: 'MC Product Name',
+                text: mcName + 'Product Name',
                 hideable: false,
                 minWidth: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'options',
-                text: 'MC Product Options',
+                text: mcName + 'Product Options',
                 flex: 1,
                 width: 150,
                 renderer: function (options) {
@@ -44,35 +48,45 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'parentProductCode',
-                text: 'MC Parent Product Code',
+                text: mcName + 'Parent Product Code',
                 flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'variantProductCode',
-                text: 'MC Product Variation Code',
+                text: mcName + 'Product Variation Code',
                 flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaPrice',
-                text: 'MC Price',
+                text: mcName + 'Price' + mcCurrency,
                 flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaMSRP',
-                text: 'MC MSRP',
+                text: mcName + 'MSRP' + mcCurrency,
                 flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaCreditValue',
-                text: 'MC Credit Value',
+                text: mcName + 'Credit Value' + mcCurrency,
                 flex: 1,
                 width: 150
             }
             ];
+
+        if (ctxType === 'm' && mc) {
+            supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
+        }
+        else if (ctxType === 'c') {
+            var cat = Taco.app.context.getCatalog();
+            if (cat) {
+                supportedCurrencies.push(cat.currencyCode);
+            }
+        }
 
         // todo: take into account search filter to only show currency? - Greg Murray on 2014-07-14 
 
