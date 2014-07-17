@@ -1,34 +1,121 @@
 ﻿/**
- * @class Taco.store.Discounts
+ * @class Taco.store.LocalizedAttributes
  */
+Ext.define('Taco.store.LocalizedProductVariants', {
+    extend: 'Ext.data.Store',
+    model: function () {
+        return Ext.define('Taco.model.LocalizedProductVariants' + Ext.id(), {
+            extend: 'Ext.data.Model',
+            fields: function () {
+                var items = [
+                    {
+                        name: 'variantProductCode',
+                        type: 'string'
+                    }, {
+                        name: 'parentProductCode',
+                        type: 'string'
+                    }, {
+                        name: 'productName',
+                        type: 'string'
+                    }, {
+                        name: 'options',
+                        type: 'auto',
+                        defaultValue: []
+                    }, {
+                        name: 'currencyCode',
+                        type: 'string'
+                    }, {
+                        name: 'deltaPrice',
+                        type: 'float',
+                        useNull: true
+                    //}, {
+                    //    name: 'deltaCost',
+                    //    type: 'float',
+                    //    useNull: true
+                    }, {
+                        name: 'deltaCreditValue',
+                        type: 'float',
+                        useNull: true
+                    }, {
+                        name: 'deltaMSRP',
+                        type: 'float',
+                        useNull: true
+                    }, {
+                        name: 'supportedCurrencies',
+                        type: 'auto',
+                        defaultValue: []
+                    }
+                ];
+                if (!Taco.app || !Taco.app.context) {
+                    return items;
+                }
+                var mc = Taco.app.context.getMasterCatalog();
+                var excludeDefaultCurrency = true;
+                var supportedCurrencies = (!mc) ? [] : mc.getSupportedCurrencies(excludeDefaultCurrency);
 
-    Ext.define('Taco.store.LocalizedProductVariants', {
-        extend: 'Ext.data.Store',
-        model: 'Taco.model.LocalizedProductVariant',
-        remoteFilter: false,
-        remoteSort: false,
-        pageSize: 50,
-        storeManagerConfig: {
-            clearFilters: true,
-            contextLevel: 'mc',
-            clearSort: true,
-            autoLoad: true
-        },
-        proxy: {
-            type: 'ajax',
-            api: {
-                read: '/admin/app/localizedcontent/attributes/read',
-                update: '/admin/app/localizedcontent/attributes/edit'
-            },
-            reader: {
-                type: 'json',
-                root: 'items',
-                successProperty: 'success',
-                messageProperty: "message"
-            },
-            writer: {
-                allowSingle: false,
-                type: 'json'
+                Ext.Array.each(supportedCurrencies, function (cur) {
+                    items.push({
+                        name: 'price_' + cur,
+                        type: 'float',
+                        useNull: true
+                    });
+                    items.push({
+                        name: 'msrp_' + cur,
+                        type: 'float',
+                        useNull: true
+                    });
+                    items.push({
+                        name: 'credit_' + cur,
+                        type: 'float',
+                        useNull: true
+                    });
+                });
+                return items;
+            }(),
+            //validations: [{
+            //    type: 'length',
+            //    name: 'name',
+            //    min: 3,
+            //    max: 100
+            //}, {
+            //    type: 'presence',
+            //    name: 'name'
+            //}, {
+            //    type: 'length',
+            //    name: 'adminName',
+            //    min: 3,
+            //    max: 100
+            //}, {
+            //    type: 'presence',
+            //    name: 'adminName'
+            //}
+            //],
+            proxy: {
+                type: 'ajaxproxy',
+                idParam: 'attributeFQN',
+                api: {
+                    read: '/admin/app/localizedcontent/productvariants/read',
+                    update: '/admin/app/localizedcontent/productvariants/edit'
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success'
+                },
+                writer: {
+                    type: 'json',
+                    allowSingle: true
+                }
             }
-        }
-    });
+        });
+    }(),
+    remoteFilter: true,
+    remoteSort: true,
+    pageSize: 50,
+    storeManagerConfig: {
+        clearFilters: true,
+        contextLevel: 'mc',
+        clearSort: true,
+        autoLoad: true
+    }
+});
