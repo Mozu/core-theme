@@ -52,5 +52,29 @@
     formatCurrency: function (value) {
         return Taco.app.context.formatCurrencyFromCode(this.currencyCode, value);
     },
-    
+    isContentPublishingEnabled: function () {
+        return this.contentPublishingEnabled;
+    },
+    updateContentPublishingMode: function (value) {
+        this.publishingEnabled = value == 'Pending';
+
+        Ext.Ajax.request({
+            url: '/admin/app/cmspublishing/enablePublishing',
+            method: 'POST',
+            jsonData: {
+                context:{
+                    catalogId: this.id,
+                },
+                publishingEnabled: this.publishingEnabled
+               
+            },
+            failure: function () {
+                console.log(arguments);
+            },
+            success: function (response) {
+                console.log(arguments);
+            }
+        });
+        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
+    }
 });

@@ -73,6 +73,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Navigation
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+      
+
+        
+
         [IgnoreDataMember, JsonIgnore]
         public NavigationNodeType NodeType { get; set; }
 

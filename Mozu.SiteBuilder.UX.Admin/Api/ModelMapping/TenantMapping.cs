@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()))
                 //ignores
                 .ForMember(x => x.DefaultHost, op => op.Ignore())
-                .ForMember(x => x.PublishingEnabled, op => op.Ignore())
+                .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore())
                 ;
 
             AutoMapper.Mapper.CreateMap<Mozu.ProductAdmin.Contracts.MasterCatalogCollection , TaContext>()

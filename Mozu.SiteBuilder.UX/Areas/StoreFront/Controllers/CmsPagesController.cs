@@ -8,8 +8,10 @@ using System.Web;
 using Autofac;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
@@ -87,6 +89,39 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //}
         //
         // GET: /StoreFront/Details/5
+        [System.Web.Http.HttpGet]
+        public async Task<HttpResponseMessage> ContentIndex(string collection)
+        {
+
+            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.DocumentListName == collection && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
+            var template = pageType != null ? pageType.Template : "document-collection";
+
+
+
+
+            this.PageContext.CmsContext = new CmsPageContext()
+                                          {
+                                              Page = new DocumentRequest()
+                                                     {
+                                                         Path = collection + ".index",
+                                                         DocumentListName = "pages"
+                                                     },
+                                              Template = new DocumentRequest
+                                                         {
+                                                             Path = template
+                                                         }
+                                          };
+
+            this.PageContext.PageType = "documentCollection";
+            this.PageContext.ListName = collection;
+
+            await Task.WhenAll(this.ContextInitilaztionTasks);
+           
+            var view = View(template, new {listFQN=collection});
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, view);
+
+        }
 
         [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Page(string collection, string pageName)
@@ -141,11 +176,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (pc.CmsContext.Page.Document.TryGet<string>("redirect_url", out redir) && !string.IsNullOrEmpty(redir))
                 {
                     return this.Request.CreateResponse(HttpStatusCode.OK, this.Redirect(redir));
+         
                     ;
                 }
             }
 
-           
+         
             PageTypeDefinition pageDefinition = null;
 
             var pageTypeDefinitionKey = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");

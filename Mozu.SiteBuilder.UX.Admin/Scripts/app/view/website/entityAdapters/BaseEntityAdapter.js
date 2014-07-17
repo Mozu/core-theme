@@ -5,7 +5,7 @@
 Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     extend: 'Ext.util.Observable',
     requires: [],
-
+    showNameEditor: true,
     allowedActions: {
         copy: false,
         preview: false,
@@ -45,7 +45,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
 
 
             if (customerEditor) {
-                me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: customerEditor, record: doc });
+                me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: customerEditor, record: doc, showNameEditor: me.showNameEditor });
                 ret.push(me.dynamicFormContainer);
             }
 
@@ -89,56 +89,59 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             zoneData = [],
             source,
             json;
-       
-        me.editor.dirtyStateCheck();
-        if (me.editor.isDirty()) {
-            if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
-                source = me.pageContext.cmsContext.template;
-            } else if ((me.pageContext.editMode || "").toLowerCase() == 'site') {
-                source = me.pageContext.cmsContext.site;
-            } else {
-                source = me.pageContext.cmsContext.page;
-            }
 
-            Ext.each(me.editor.persistanceData(), function (zone) {
-               // if (!Ext.isEmpty(zone.rows)) {
+        if (me.editor) {
+            me.editor.dirtyStateCheck();
+            if (me.editor.isDirty()) {
+                if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
+                    source = me.pageContext.cmsContext.template;
+                } else if ((me.pageContext.editMode || "").toLowerCase() == 'site') {
+                    source = me.pageContext.cmsContext.site;
+                } else {
+                    source = me.pageContext.cmsContext.page;
+                }
+
+                Ext.each(me.editor.persistanceData(), function (zone) {
+                    // if (!Ext.isEmpty(zone.rows)) {
                     //todo: check pc for edit type... page/vs template
                     zone.source = source;
                     zoneData.push(zone);
-                //}
-            });
+                    //}
+                });
 
-            tasks.on('complete', function (endTasks) {
-                if (Ext.isEmpty(endTasks.errors)) {
-                    this.editor.resetDirtyState();
-                    this.manager.setPublishable(true);
-                }
+                tasks.on('complete', function (endTasks) {
+                    if (Ext.isEmpty(endTasks.errors)) {
+                        this.editor.resetDirtyState();
+                        this.manager.setPublishable(true);
+                    }
 
-            }, this);
+                }, this);
 
-            tasks.add({
-                fn: function (t) {
+                tasks.add({
+                    fn: function (t) {
 
-                    Ext.Ajax.request({
-                        url: '/admin/app/cmsdocument/widgetdata/update',
-                        method: 'post',
-                        jsonData: {
-                            zones: zoneData,
-                            source: source
-                        },
-                        success: function (response) {
-                            t.callback();
+                        Ext.Ajax.request({
+                            url: '/admin/app/cmsdocument/widgetdata/update',
+                            method: 'post',
+                            jsonData: {
+                                zones: zoneData,
+                                source: source
+                            },
+                            success: function (response) {
+                                t.callback();
 
-                        }
-                    });
+                            }
+                        });
 
 
-                }
-            });
+                    }
+                });
+            }
         }
 
         tasks.on('complete', function () {
             me.webPageNeedsRefresh = true;
+            me.fireEvent('savesuccess', me);
         });
 
 
@@ -239,7 +242,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
 
     addSaveTasks: function (tasks) {
         this.manager.pageSettings.addSaveTasks(tasks);
-        var tasks = this.callParent(arguments);
+  
         if (this.dynamicFormContainer) {
             tasks.add([
                 {

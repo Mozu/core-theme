@@ -17,7 +17,7 @@
             autoLoad: true
         },
         
-        publishAll: function (type, cb) {
+        publishAll: function (documentListName, cb) {
             var me  = this,
                 url = me.getProxy().api.publishAll;
 
@@ -29,7 +29,7 @@
             Ext.Ajax.request({
                 url: url,
                 method: "POST",
-                jsonData: type ? { docType: type } : '',
+                jsonData: documentListName ? { documentListName: documentListName } : '',
                 // jsonData: {foo: 'foo'},
                 success: function (response) {
                     me.reload();

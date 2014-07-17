@@ -238,7 +238,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             try
             {
-                var ci = System.Globalization.CultureInfo.GetCultureInfo(labelJsonFile);
+
+                var ci = System.Globalization.CultureInfo.GetCultureInfo(Path.GetFileNameWithoutExtension(labelJsonFile));
                 System.Diagnostics.Debug.WriteLine(ci.LCID.ToString());
                 for (int i = 1; i < 13; i++)
                 {

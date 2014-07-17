@@ -195,9 +195,8 @@ Ext.define('Taco.view.entityManager.Index', {
     onCreate: function () {
         var me = this,
             record = new Taco.model.Entity({
-                entityListName: this.grid.listMetaData.entityType == 'cms' ? null : this.grid.listMetaData.name,
-                nameSpace: this.grid.listMetaData.nameSpace,
-                documentListName: this.grid.listMetaData.entityType == 'cms' ? this.grid.listMetaData.name : null,
+                listFQN: this.grid.listMetaData.listFQN,
+                documentListName:  this.grid.listMetaData.listFQN || this.grid.listMetaData.name ,
                 tenantId: Taco.app.context.getTenantId(),
                 entityType: this.grid.listMetaData.entityType,
                 documentType: this.grid.listMetaData.documentTypes && this.grid.listMetaData.documentTypes.length ? this.grid.listMetaData.documentTypes[0] : undefined,

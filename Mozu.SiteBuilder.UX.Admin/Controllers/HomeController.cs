@@ -12,6 +12,7 @@ using System.Web.Http;
 using System.Web.Razor;
 using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
+using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -172,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
             var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
             var tenantTask = _tenantsWebApi.GetTenantInternal(  _apiContext.TenantId , false );
-            // var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
+            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
             
             var siteUsersTask = _usersRepo.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, pageSize: 200, startIndex: 0);
             
@@ -180,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection >> masterCatalogsTask;
              masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs( );
 
-             await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask);//, adminSubNavExtensibiltyTask);
+             await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask , adminSubNavExtensibiltyTask);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
             
@@ -198,20 +199,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 masterCatalogs = new DCproduct.MasterCatalogCollection() {Items = new List<DCproduct.MasterCatalog>()};
             }
-            //if (adminSubNavExtensibiltyTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-            //{
-            //    await _entityListsWebApiClient.CreateEntityList(new EntityList()
-            //                                                    {
-            //                                                        NameSpace = "mozu.extensiblity",
-            //                                                        ContextLevel = "Tenant",
-            //                                                        IsVisibleInStorefront = false,
-            //                                                        UseSystemAssignedId = true,
-            //                                                        Name = "subNavLinks"
-            //                                                    });
-            //    adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
-            //    await adminSubNavExtensibiltyTask;
+            if (adminSubNavExtensibiltyTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                await _entityListsWebApiClient.CreateEntityList(new EntityList()
+                                                                {
+                                                                    NameSpace = "mozu.extensiblity",
+                                                                    ContextLevel = "Tenant",
+                                                                    IsVisibleInStorefront = false,
+                                                                    UseSystemAssignedId = true,
+                                                                    Name = "subNavLinks"
+                                                                });
+                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "subNavLinks@mozu.extensiblity", pageSize: 6000);
+                await adminSubNavExtensibiltyTask;
 
-            //}
+            }
            
 
             var user = new Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User()
@@ -223,14 +224,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 Id = _apiContext.UserClaims.UserId
             };
 
-            var sitesListTasks = tenant.Sites.Select(x => _documentListWebApiClient.CloneWithApiContext(z=> z.SiteId = x.Id  )
-                .GetDocumentList("pages").ContinueWith(y =>new KeyValuePair<int, bool>(x.Id, y.Result.ResponseMessage.IsSuccessStatusCode? y.Result.ReadAsSync().EnablePublishing.GetValueOrDefault(false): false  )
-                    
-                )).ToArray();
+           
+            var masterCatalogPubDic= tenant.MasterCatalogs.Select(x =>
+            {
+                var client = _documentListWebApiClient.CloneWithApiContext(z =>
+                {
+                    z.MasterCatalogId = z.MasterCatalogId;
+                    z.CatalogId = null;
+                    z.SiteId = null;
+                });
+                return new Tuple<int, Task<ServiceClientResponse<DocumentListCollection>>> (x.Id, client.GetDocumentLists());
+
+            }).ToDictionary(x => x.Item1, y=>y.Item2 );
+
+            var catPubTaskDic = tenant.MasterCatalogs.SelectMany(x=>x.Catalogs ).Select(x =>
+            {
+                var client = _documentListWebApiClient.CloneWithApiContext(z =>
+                {
+                    z.MasterCatalogId = x.MasterCatalogId;
+                    z.CatalogId = x.Id;
+                    z.SiteId = null;
+                });
+                return new Tuple<int, Task<ServiceClientResponse<DocumentListCollection>>> (x.Id, client.GetDocumentLists());
+
+            }).ToDictionary(x => x.Item1, y=>y.Item2 );
+             var sitePubTaskDic = tenant.Sites.Select(x=> 
+             {
+                 var client = _documentListWebApiClient.CloneWithApiContext(z =>
+                 {
+                     z.MasterCatalogId = x.MasterCatalogId;
+                     z.CatalogId = x.CatalogId;
+                     z.SiteId = x.Id;
+                 });
+                return new Tuple<int, Task<ServiceClientResponse<DocumentListCollection>>> (x.Id, client.GetDocumentLists());
+
+            }).ToDictionary(x => x.Item1, y=>y.Item2 );
+
+
+
+            var pubTasks = masterCatalogPubDic.Values.Concat(catPubTaskDic.Values).Concat(sitePubTaskDic.Values).ToArray();
+
+            await Task.WhenAll(pubTasks);
             
-            await Task.WhenAll(sitesListTasks);
-            var sitePubList = sitesListTasks.Select(x => x.Result).ToList();
-            
+           
 
 
             var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
@@ -249,7 +285,48 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 .Where(x => x.Symbol!= null ).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
 
            
-            taContext.MasterCatalogs.ForEach(mc => (mc.Sites ?? new List<TaContextSite>()).ForEach(site => site.PublishingEnabled = sitePubList.Where(x => x.Key == site.Id).Select(x => x.Value).FirstOrDefault()));
+            //todo find better way for this.
+            taContext.MasterCatalogs.ForEach(mc =>
+            {
+                var res = masterCatalogPubDic[mc.Id].Result;
+                if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
+                {
+                    var lst = res.ReadAsSync().Items.Where(x => (x.Scope == null ||x.Scope == "masterCatalog") && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
+                    if (lst.Any())
+                    {
+                        mc.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
+                    }
+
+                    
+                }
+                mc.Sites.ForEach(s =>
+                {
+                     res = sitePubTaskDic[s.Id].Result;
+                    if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        var lst = res.ReadAsSync().Items.Where(x => (x.Scope == null || string.Equals(x.Scope, "site", StringComparison.OrdinalIgnoreCase) )&& x.SupportsPublishing.GetValueOrDefault(false)).ToList();
+                        if (lst.Any())
+                        {
+                            s.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
+                        }
+                    }
+                });
+                 mc.Catalogs.ForEach(cat =>
+                {
+                     res = catPubTaskDic[cat.Id].Result;
+                    if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        var lst = res.ReadAsSync().Items.Where(x => (x.Scope == null ||  x.Scope == "catalog")  &&  x.SupportsPublishing.GetValueOrDefault(false)).ToList();
+                        if (lst.Any())
+                        {
+                            cat.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
+                        }
+                    }
+                });
+
+
+                
+            });
 
             
 
@@ -265,7 +342,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
             this.ViewData["siteUsers"] = siteUsers.Items;
-          //  this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
+            this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
 
             // IE8 compatibility (http://hsivonen.fi/doctype/)
             this.Response.AddHeader("X-UA-Compatible", "IE=Edge");

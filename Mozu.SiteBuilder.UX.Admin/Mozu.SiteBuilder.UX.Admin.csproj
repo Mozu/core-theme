@@ -281,7 +281,8 @@
       <HintPath>..\packages\Mozu.Location.Contracts.1.8.0-dev001\lib\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.MZDB.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev007\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.9.0-dev009\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -739,6 +740,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\LocalizedProductExtra.js" />
     <Content Include="Scripts\app\model\LocalizedProductVariant.js" />
     <Content Include="Scripts\app\model\LocalizedProductProperty.js" />
@@ -806,6 +808,7 @@
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\Currencies.js" />
+    <Content Include="Scripts\app\store\DocumentTypes.js" />
     <Content Include="Scripts\app\store\Locales.js" />
     <Content Include="Scripts\app\store\InternalNotes.js" />
     <Content Include="Scripts\app\store\ConfiguredCreditCards.js" />
@@ -963,6 +966,7 @@
     <Content Include="Scripts\app\view\themeSettings\Addons.js" />
     <Content Include="Scripts\app\view\themeSettings\Edit.js" />
     <Content Include="Scripts\app\view\themeSettings\Form.js" />
+    <Content Include="Scripts\app\view\website\entityAdapters\DocumentCollectionEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\EmailTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\SiteTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\TemplateEntityAdapter.js" />

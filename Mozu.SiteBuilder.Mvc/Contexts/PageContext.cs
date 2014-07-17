@@ -332,5 +332,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
         public string SecureHost { get; set; }
+
+        public string ListName { get; set; }
     }
 }

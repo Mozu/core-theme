@@ -241,7 +241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                    {
                                                        AllowDrag = true,
                                                        AllowDrop = false,
-                                                       NodeType = NavigationNodeType.Page,
+                                                       NodeType = NavigationNodeType.ContentList,
                                                        Id = "_cmsContentTypes"+ x.Id,
                                                        MetaData = x.MetaData,
                                                        OriginalId = "_cmsContentTypes",
