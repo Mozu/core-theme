@@ -286,7 +286,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
            
             //todo find better way for this.
-            taContext.MasterCatalogs.ForEach(mc =>
+           (taContext.MasterCatalogs ?? new List<MasterCatalog>()).ForEach(mc =>
             {
                 var res = masterCatalogPubDic[mc.Id].Result;
                 if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
@@ -299,7 +299,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
                     
                 }
-                mc.Sites.ForEach(s =>
+                (mc.Sites ?? new List<TaContextSite>()).ForEach(s =>
                 {
                      res = sitePubTaskDic[s.Id].Result;
                     if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
@@ -311,7 +311,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                         }
                     }
                 });
-                 mc.Catalogs.ForEach(cat =>
+                (mc.Catalogs ?? new List<TaContextCatalog>()).ForEach(cat =>
                 {
                      res = catPubTaskDic[cat.Id].Result;
                     if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
