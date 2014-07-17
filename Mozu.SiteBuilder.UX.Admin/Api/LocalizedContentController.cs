@@ -58,6 +58,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //var result = await Task.FromResult(fakeData);
             //return List2(result, 3);
 
+            if (!_apiCtx.MasterCatalogId.HasValue)
+            {
+                return new Response<List<JObject>>();
+            }
+
             var xFilter = extFilter.ToFilterString();
 
             // real code
