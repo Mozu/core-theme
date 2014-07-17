@@ -34,7 +34,7 @@ Ext.define('Taco.store.Navigation', {
                     }
 
                     if (item.locAtts) {
-                        if (item.locAtts.length == 2 && !(isMultiLang || isMultiLang)) {
+                        if (item.locAtts.length == 2 && !(isMultiLang || isMultiCurrency)) {
                             return false;
                         } else if (item.locAtts.indexOf("multiLang") > -1 && !isMultiLang) {
                             return false;

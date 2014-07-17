@@ -46,7 +46,7 @@ Ext.define('Taco.view.entityManager.Index', {
                 scale: 'medium',
                 text: 'More',
                 margin: '0 0 0 10',
-                itemId:'moreActionButton',
+                itemId: 'moreActionButton',
                 scope: this,
                 menu: {
                     plain: true,
@@ -61,27 +61,40 @@ Ext.define('Taco.view.entityManager.Index', {
                             text: 'Preview in Site',
                             itemId: 'previewActionButton',
                             
-                            handler: function (menuItem) {
+                            handler: function () {
                                 //scope is set to index on all action buttons by container.
                                 var record = me.getCurrentEntityRecord(),
                                     siteId = Taco.app.context.getContextAtLevel('s').id;
 
                                 url = "/cms/" + record.get('documentListName') + "/" + record.get('name');
-                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
-                            }
-                        }, {
-                            itemId: 'publishActionButton',
-                            text: 'Publish',
-                            
-                            handler: function (menuItem) {
-                                //scope is set to index on all action buttons by container.
-                                alert('tbd');
+                                window.open('/_gosite/' + siteId + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
                             }
                         }
                     ]
                 }
+            },
+            {
+                xtype: 'button',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: 'Publish',
+                margin: '0 0 0 10',
+                itemId: 'publishActionButton',
+                beforeItemId: 'saveActionButton',
+                scope: this,
+                handler: function () {
+                    var record = me.getCurrentEntityRecord();
+                    record.publish({
+                        
+                        success: function () {
+                            record.data.publishState = 'active';
+                            me.showHideButtons();
+                        }
+                    });
+                }
             }
         ];
+        
         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
 
         me.lists = Ext.create('Taco.view.entityManager.Lists', {
@@ -125,7 +138,7 @@ Ext.define('Taco.view.entityManager.Index', {
 
                 var fn = function () {
                     var listRecord;
-                    Ext.Object.each(me.lists.store.tree.nodeHash, function (k, v, obj) {
+                    Ext.Object.each(me.lists.store.tree.nodeHash, function (k, v) {
                         var md = v.raw.metaData;
                         if (md && qs.entityType == md.entityType && qs.list == md.name) {
                             listRecord = v;
@@ -149,14 +162,29 @@ Ext.define('Taco.view.entityManager.Index', {
 
     showHideButtons: function () {
         var me = this,
-            header = this.getHeader();
+            header = this.getHeader(),
+            record = this.getCurrentEntityRecord(),
+            listMetaData = this.getListMetaData();
         this.saveActionButton = this.saveActionButton || header.down('#saveActionButton');
         this.cancelActionButton = this.cancelActionButton || header.down('#cancelActionButton');
         this.createActionButton = this.createActionButton || header.down('#createActionButton');
+        this.publishActionButton = this.publishActionButton || header.down('#publishActionButton');
         this.moreActionButton = this.moreActionButton || header.down('#moreActionButton');
         this.saveActionButton.setVisible(me.form);
         this.cancelActionButton.setVisible(me.form);
         this.createActionButton.setVisible(me.grid);
+        if (record && listMetaData.supportsPublishing) {
+            this.publishActionButton.setVisible(true);
+            if (record.get('publishState') == 'draft') {
+                this.publishActionButton.enable();
+            } else {
+                this.publishActionButton.disable();
+            }
+            
+        } else {
+            this.publishActionButton.setVisible(false);
+        }
+        
         this.moreActionButton.setVisible(me.getCurrentEntityRecord() && me.getCurrentEntityRecord().get('entityType') == 'cms');
 
     },
@@ -196,7 +224,7 @@ Ext.define('Taco.view.entityManager.Index', {
         var me = this,
             record = new Taco.model.Entity({
                 listFQN: this.grid.listMetaData.listFQN,
-                documentListName:  this.grid.listMetaData.listFQN || this.grid.listMetaData.name ,
+                documentListName:  this.grid.listMetaData.listFQN || this.grid.listMetaData.name,
                 tenantId: Taco.app.context.getTenantId(),
                 entityType: this.grid.listMetaData.entityType,
                 documentType: this.grid.listMetaData.documentTypes && this.grid.listMetaData.documentTypes.length ? this.grid.listMetaData.documentTypes[0] : undefined,
@@ -281,7 +309,7 @@ Ext.define('Taco.view.entityManager.Index', {
                 me.grid = null;
                 me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
                     record: record,
-                    bubbleEvents: ['savesuccess', 'saveSuccess'],
+                    bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
                     editor: me.editors.findEditor(record)
                 });
                 me.contentContainer.add(me.form);
@@ -290,6 +318,11 @@ Ext.define('Taco.view.entityManager.Index', {
         });
 
 
+    },
+    saveSuccess: function () {
+        this.mixins.navHeader.saveSuccess.call(this, arguments);
+        
+        this.showHideButtons();
     }
 
 

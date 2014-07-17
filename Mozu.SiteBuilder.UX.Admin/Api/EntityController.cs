@@ -475,12 +475,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 }
                             };
                 }
+
                 x.Views = views;
             }
 
            
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
-
+            ret["listFQN"] = string.IsNullOrEmpty(x.NameSpace) ? x.Name : x.Name + "@" + x.NameSpace;
             ret["entityType"] = "mzdb";
             // ret.Add("views", JArray.FromObject(views, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())));
             return ret;
@@ -521,7 +522,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
             ret["entityType"] = "cms";
-
+            ret["listFQN"] = x.Name;
             return ret;
         }
 
