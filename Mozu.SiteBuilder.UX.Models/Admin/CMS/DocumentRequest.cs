@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
     public class DocumentRequest
     {
         public string Id { get; set; }
-        public string DocumentListName { get; set; }
+        public string ListFQN { get; set; }
         private string _path;
         public string Path {
             get
@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
                 }
                 
             }}
-        public string DocumentType { get; set; }
+        public string DocumentTypeFQN { get; set; }
         [System.Runtime.Serialization.IgnoreDataMember()]
         public Mozu.Content.Contracts.Document Document { get; set; }
 

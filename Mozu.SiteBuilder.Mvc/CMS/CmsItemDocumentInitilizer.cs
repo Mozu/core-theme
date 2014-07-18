@@ -33,11 +33,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 if (request.Id != null)
                 {
-                    task = _cmsServiceWrapper.Get2(request.DocumentListName ?? defaultCollection, request.Id);
+                    task = _cmsServiceWrapper.Get2(request.ListFQN ?? defaultCollection, request.Id);
                 }
                 if (request.Path != null)
                 {
-                    task = _cmsServiceWrapper.GetByPath2(request.DocumentListName ?? defaultCollection, request.Path);
+                    task = _cmsServiceWrapper.GetByPath2(request.ListFQN ?? defaultCollection, request.Path);
                 }
             }
             return task != null;
@@ -55,15 +55,15 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             Task<ServiceClientResponse<Document>> templateTask = null;
             Task<ServiceClientResponse<Document>> siteTemplateTask = null;
             var tasks = new List<Task<ServiceClientResponse<Document>>>();
-            if (cmsPageContext.Page.Document == null && ProcessDocumentRequest(cmsPageContext.Page, "pages", out pageTask))
+            if (cmsPageContext.Page.Document == null && ProcessDocumentRequest(cmsPageContext.Page, "pages@mozu", out pageTask))
             {
                 tasks.Add(pageTask);
             }
-            if (cmsPageContext.SiteTemplate.Document == null && ProcessDocumentRequest(cmsPageContext.SiteTemplate, "templates", out siteTemplateTask))
+            if (cmsPageContext.SiteTemplate.Document == null && ProcessDocumentRequest(cmsPageContext.SiteTemplate, "pageTemplateContent@mozu", out siteTemplateTask))
             {
                 tasks.Add(siteTemplateTask);
             }
-            if (cmsPageContext.Template.Document == null && ProcessDocumentRequest(cmsPageContext.Template, "templates", out templateTask))
+            if (cmsPageContext.Template.Document == null && ProcessDocumentRequest(cmsPageContext.Template, "pageTemplateContent@mozu", out templateTask))
             {
                 tasks.Add(templateTask);
             }
@@ -102,10 +102,10 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                                 cmsPageContext.Template = new DocumentRequest
                                                               {
                                                                   Path = templateName,
-                                                                  DocumentListName = "templates"
+                                                                  ListFQN = "pageTemplateContent"
                                                               };
                             }
-                            templateTask = _cmsServiceWrapper.GetByPath2("templates", templateName);
+                            templateTask = _cmsServiceWrapper.GetByPath2("pageTemplateContent", templateName);
                             //todo....
                             await templateTask.ConfigureAwait(false);
                            // tasks.Add(templateTask);
@@ -146,16 +146,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 return;
             var widgetRawArray = document.Get<JArray>(CmsConstants.Documents.widget_prop);
             List<ZoneRuntimeData> zoneData = widgetRawArray == null ? null : widgetRawArray.ToObject<List<ZoneRuntimeData>>();
-            if (zoneData == null)
-            {
-                var widgetRaw = (string)document.Get<string>(CmsConstants.Documents.widget_prop_old);
-                zoneData = string.IsNullOrEmpty(widgetRaw) ? null : JsonConvert.DeserializeObject<List<ZoneRuntimeData>>(widgetRaw);
-            }
+            
 
             var src = new DocumentRequest
                       {
                           Id = document.Id,
-                          DocumentListName = document.DocumentListName
+                          ListFQN = document.ListFQN
                       };
 
 
@@ -180,8 +176,8 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             task = _cmsServiceWrapper.RawCreate2(
                 new Document
                     {
-                        DocumentListName = "templates",
-                        DocumentType = "page_template",
+                        ListFQN = "pageTemplateContent@mozu",
+                        DocumentTypeFQN = "pageTemplateContent@mozu",
                         Name = Path.GetFileName(req.Path),
                       //  Path = Path.GetDirectoryName(req.Path)
                     });

@@ -19,10 +19,10 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
         if (this.record) {
             return this.record.getLoadParams();
         }
-        if (!this.pageContext.cmsContext.site.documentListName || !this.pageContext.cmsContext.site.id) {
+        if (!this.pageContext.cmsContext.site.listFQN || !this.pageContext.cmsContext.site.id) {
             return undefined;
         }
-        return { documentListName: this.pageContext.cmsContext.site.documentListName, id: this.pageContext.cmsContext.site.id };
+        return { listFQN: this.pageContext.cmsContext.site.listFQN, id: this.pageContext.cmsContext.site.id };
     },
 
 
@@ -32,17 +32,17 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
             templReq = me.pageContext.cmsContext.site;
 
         if (templReq.id) {
-            Taco.model.CmsDocument.load({ documentListName: templReq.documentListName, id: templReq.id }, {
+            Taco.model.CmsDocument.load({ listFQN: templReq.listFQN, id: templReq.id }, {
                 success: function (doc) {
                     me.set(doc);
                 }
             });
         } else {
             cmsDoc = Ext.create('Taco.model.Entity', {
-                documentType: templReq.documentType,
+                documentTypeFQN: templReq.documentTypeFQN,
                 name: templReq.path,
                 entityType: 'cms',
-                documentListName: templReq.documentListName
+                listFQN: templReq.listFQN
             });
             me.set(cmsDoc);
         }

@@ -24,22 +24,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<VM.Facet, DC.Facet>();
 
             //Mapper.CreateMap<DC.Document, VM.Document>()
-            //    .ForMember (x=> x.DocumentType ,  op=> op.MapFrom ( x=> x.DocumentType ))
-            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.DocumentListName  ))
+            //    .ForMember (x=> x.DocumentTypeFQN ,  op=> op.MapFrom ( x=> x.DocumentTypeFQN ))
+            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ListFQN  ))
                 
             //    .ConstructUsingServiceLocator();
             //Mapper.CreateMap<DC.Document, VM.WidgetInstance >()
-            //    .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
+            //    .ForMember(x => x.DocumentTypeFQN, op => op.MapFrom(x => x.DocumentTypeFQN))
             //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ContentCollection))
             //    .AfterMap((x, y) => y.Init())
            //     .ConstructUsingServiceLocator();
             //Mapper.CreateMap<DC.Document, VM.Blog >()
-            //    .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
-            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.DocumentListName))
+            //    .ForMember(x => x.DocumentTypeFQN, op => op.MapFrom(x => x.DocumentTypeFQN))
+            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ListFQN))
             //    .ConstructUsingServiceLocator();
             //Mapper.CreateMap<DC.Document, VM.Post >()
-            //    .ForMember(x => x.DocumentType, op => op.MapFrom(x => x.DocumentType))
-            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.DocumentListName))
+            //    .ForMember(x => x.DocumentTypeFQN, op => op.MapFrom(x => x.DocumentTypeFQN))
+            //    .ForMember(x => x.Collection, op => op.MapFrom(_ => _.ListFQN))
             //    .ConstructUsingServiceLocator(); 
             //Mapper.CreateMap<VM.Document, DC.Document>();
             //Mapper.CreateMap<DC.PropertyValue, VM.CmsProperty>()
@@ -69,8 +69,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
             Mapper.CreateMap<Mozu.Content.Contracts.DocumentDraftSummary, Mozu.SiteBuilder.UX.Models.Admin.CMS.DocumentDraft>()
                 .ForMember(d => d.Id, m => m.MapFrom(dc => dc.Id))
-                .ForMember(d => d.DraftType, m => m.ResolveUsing(dc => dc.DocumentListName.ToLowerInvariant() == "pages" ? "Page" : "Other"))
-                .ForMember(d => d.DocumentListName,m => m.ResolveUsing(dc => dc.DocumentListName))
+                .ForMember(d => d.DraftType, m => m.ResolveUsing(dc => dc.ListFQN.ToLowerInvariant() == "pages@mozu" ? "Page" : "Other"))
+                .ForMember(d => d.ListFQN,m => m.ResolveUsing(dc => dc.ListFQN))
 
                 .ForMember(d => d.Name, m => m.ResolveUsing(dc => dc.Name))
                 .ForMember(d => d.ModificationType, m => m.ResolveUsing(dc => dc.PublishType))
@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
         
         string blurg (DC.Document doc )
         {
-            return doc.DocumentType;
+            return doc.DocumentTypeFQN;
         }
     }
 }

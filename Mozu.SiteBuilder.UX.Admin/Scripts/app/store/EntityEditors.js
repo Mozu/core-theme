@@ -41,16 +41,16 @@ Ext.define('Taco.store.EntityEditors', {
 
                 if (entityRecord.get('entityType') == 'cms') {
                     isMatch = isMatch || Ext.Array.findBy((item.data.documentTypes || []), function (crit) {
-                        return crit && entityRecord.data.documentType && crit.toLowerCase() == entityRecord.data.documentType.toLowerCase();
+                        return crit && entityRecord.data.documentTypeFQN && crit.toLowerCase() == entityRecord.data.documentTypeFQN.toLowerCase();
                     });
                     isMatch = isMatch || Ext.Array.findBy((item.data.documentLists || []), function (crit) {
-                        return crit && entityRecord.data.documentListName && crit.toLowerCase() == entityRecord.data.documentListName.toLowerCase();
+                        return crit && entityRecord.data.listFQN && crit.toLowerCase() == entityRecord.data.listFQN.toLowerCase();
                     });
                 }
                 if (entityRecord.get('entityType') == 'mzdb') {
                     isMatch = isMatch || Ext.Array.findBy((item.data.entityLists || []), function (crit) {
 
-                        return crit && entityRecord.get('entityListFullName') && crit.toLowerCase() == entityRecord.get('entityListFullName').toLowerCase();
+                        return crit && entityRecord.get('listFQN') && crit.toLowerCase() == entityRecord.get('listFQN').toLowerCase();
                     });
                 }
                 return isMatch;

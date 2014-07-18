@@ -103,10 +103,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var catTask = _productCategoryRuntimeWebApiClient.GetCategoryTree();
 
             // get the list of pages
-            var pageTask = _documentClient.GetDocuments(documentListName: "pages", pageSize: 250);
+            var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 250);
 
             // get the list of blogs
-            // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentType eq blog" );
+            // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentTypeFQN eq blog" );
 
             // get our navigation data authority
             var navTask = _navRepo.GetNavigationSetAsync();
@@ -181,12 +181,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                             node = new SuperNavigationNode {
                                 Name = (string)page.Get<string>("link_title") ?? page.Name,
                                 NodeType = NavigationNodeType.Page,
-                                Id = "page^^" + page.DocumentListName + "^^" + page.Id,
+                                Id = "page^^" + page.ListFQN + "^^" + page.Id,
                                 ParentId = navmeta.ParentId,
                                 OriginalId = page.Id,
-                                OriginalDocumentListName = page.DocumentListName,
+                                OriginalDocumentListName = page.ListFQN,
                                 Index = navmeta.Index,
-                                Url = String.Equals(page.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.DocumentListName + "/" + page.Name
+                                Url = String.Equals(page.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + page.Name : "/" + page.ListFQN + "/" + page.Name
                             };
                         }
                         else
@@ -242,12 +242,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     select new SuperNavigationNode {
                         Name = (string)p.Get<string>("link_title") ?? p.Name,
                         NodeType = NavigationNodeType.Page,
-                        Id = "page^^" + p.DocumentListName + "^^" + p.Id,
+                        Id = "page^^" + p.ListFQN + "^^" + p.Id,
                         ParentId = UNLINKED_PAGES_NODE_ID,
                         OriginalId = p.Id,
-                        OriginalDocumentListName = p.DocumentListName,
+                        OriginalDocumentListName = p.ListFQN,
                         Index = 0,
-                        Url = String.Equals(p.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + p.Name : "/" + p.DocumentListName + "/" + p.Name,
+                        Url = String.Equals(p.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + p.Name : "/" + p.ListFQN + "/" + p.Name,
                     };
                 masterList.AddRange(allUnassigned);
 

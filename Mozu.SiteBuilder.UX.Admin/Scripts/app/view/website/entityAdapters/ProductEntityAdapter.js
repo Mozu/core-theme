@@ -58,7 +58,7 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
             pageReq = me.pageContext.cmsContext.page;
 
         if (pageReq.id) {
-            Taco.model.Entity.load({ documentListName: pageReq.documentListName, id: pageReq.id }, {
+            Taco.model.Entity.load({ listFQN: pageReq.listFQN, id: pageReq.id }, {
                 success: function (doc) {
                     me.set(doc);
                 }
@@ -66,9 +66,9 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
         } else {
             cmsDoc = Ext.create('Taco.model.Entity', {
                 entityType: 'cms',
-                documentType: pageReq.documentType,
+                documentTypeFQN: pageReq.documentTypeFQN,
                 name: pageReq.path,
-                documentListName: pageReq.documentListName
+                listFQN: pageReq.listFQN
             });
             me.set(cmsDoc);
         }

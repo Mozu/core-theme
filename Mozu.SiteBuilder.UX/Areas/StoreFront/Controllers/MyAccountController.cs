@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Template = new DocumentRequest()
                 {
                     Path = "my-account",
-                    DocumentType = "page_template"
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
                 }
 
             };

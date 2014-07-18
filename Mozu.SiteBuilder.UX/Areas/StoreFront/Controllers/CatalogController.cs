@@ -98,8 +98,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                              Page = new DocumentRequest
                                                         {
                                                             Path = "product-" + productCode,
-                                                            DocumentListName = "catalog_pages",
-                                                            DocumentType = "catalog_page"
+                                                            ListFQN = "catalogContent@mozu",
+                                                            DocumentTypeFQN = "productContent@mozu"
                                                         }
                                          };
             ViewResult result = View("product", product);
@@ -253,8 +253,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                              Page = new DocumentRequest
                                                         {
                                                             Path = "category-" + categoryId,
-                                                            DocumentListName = "catalog_pages",
-                                                            DocumentType = "catalog_page"
+                                                            ListFQN = "catalogContent@mozu",
+                                                            DocumentTypeFQN = "categoryContent@mozu"
+                                                         
                                                         }
                                          };
 

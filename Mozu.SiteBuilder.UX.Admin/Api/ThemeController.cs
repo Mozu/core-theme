@@ -4,6 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Contracts.Provisioning;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -33,6 +37,7 @@ using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Site = Mozu.SiteBuilder.UX.Admin.Api.Models.Testing.Site;
 using Theme = Mozu.SiteBuilder.Mvc.Themes.Theme;
+using AutoMapper;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -130,6 +135,106 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return otherTheme != null && this.Id == otherTheme.Id;
             }
+        }
+
+
+        [HttpPutRoute(UriTemplate = "CMSPROVISION")]
+       
+        public async Task<HttpResponseMessage> what()
+        {
+            var tenantService = this.Request.Resolve<Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient>().CloneWithoutUserClaims();
+            var cmsProv = this.Request.Resolve<Mozu.Content.Contracts.Clients.IProvisioningWebApiClient>().CloneWithoutUserClaims();
+             
+            int startIndex = 0;
+            while (true)
+            {
+                var res = (await tenantService.GetTenants(false, false, startIndex, 200)).ReadAsSync();
+
+                foreach (var tenant in res.Items)
+                {
+                    ProvisionCMSMAYBE(tenant, cmsProv);
+                }
+
+                startIndex += 200;
+                if (res.Items.Count == 0)
+                {
+                    break;
+                    
+                }
+
+            }
+            return this.Request.CreateResponse();
+
+        }
+
+
+        private void ProvisionCMSMAYBE(Tenant.Contracts.Tenant tenant, Mozu.Content.Contracts.Clients.IProvisioningWebApiClient cmsProv)
+        {
+
+
+            var tenantCmsReq = new CreateTenantRequest()
+                               {
+                                   TenantId = tenant.Id,
+                                   MasterCatalogs = tenant.MasterCatalogs == null ? null :
+                                       tenant.MasterCatalogs.Select(mc => new CreateMasterCatalogRequest()
+                                                                          {
+                                                                              MasterCatalogId = mc.Id,
+                                                                              TenantId = mc.TenantId,
+                                                                              DefaultCurrencyCode = mc.DefaultCurrencyCode,
+                                                                              DefaultLocaleCode = mc.DefaultLocaleCode,
+                                                                              Sites = tenant.Sites == null ? null : tenant.Sites.Where(x => mc.Catalogs != null && mc.Catalogs.Any(c => c.Id == x.CatalogId))
+                                                                                  .Select(site => new CreateSiteRequest()
+                                                                                                  {
+                                                                                                      SiteId = site.Id,
+                                                                                                      MasterCatalogId = site.MasterCatalogId,
+                                                                                                      CatalogId = site.CatalogId,
+                                                                                                      TenantId = site.TenantId,
+                                                                                                      CurrencyCode = site.DefaultCurrencyCode,
+                                                                                                      LocaleCode = site.DefaultLocaleCode,
+                                                                                                      CountryCode = site.CountryCode,
+                                                                                                      CatalogRequest = mc.Catalogs.Where(x => x.Id == site.CatalogId)
+                                                                                                          .Select(cat => new CreateCatalogRequest()
+                                                                                                                         {
+                                                                                                                             CatalogId = cat.Id,
+                                                                                                                             DefaultCurrencyCode = cat.DefaultCurrencyCode,
+                                                                                                                             DefaultLocaleCode = cat.DefaultLocaleCode,
+                                                                                                                             MasterCatalogId = cat.MasterCatalogId,
+                                                                                                                             TenantId = cat.TenantId
+                                                                                                                         }).First()
+                                                                                                  }).ToList()
+                                                                          }).ToList()
+                               };
+
+            cmsProv.CreateTenant(tenantCmsReq, 1);
+        }
+
+        [HttpGetRoute(UriTemplate = "sitethumbNail")]
+        public async Task<HttpResponseMessage> GetThumbBySite(int siteId)
+        {
+            var genSettingsClient = this.Request.Resolve<Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient>().CloneWithApiContext(x => x.SiteId = siteId);
+            var settings = Mapper.Map<GeneralSettings>((await genSettingsClient.GetGeneralSettings()).ReadAsSync());
+
+            Theme theme = null;
+            try
+            {
+                theme =_themeRepository.GetTheme(settings.DesktopTheme);
+            }
+            catch
+            {
+                theme = _themeRepository.GetTheme(new ThemeSelection() {Id = "core4"});
+            }
+
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new ByteArrayContent(theme.Thumbnail.Contents);
+
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/" + System.IO.Path.GetExtension(theme.Thumbnail.Name).Replace(".", ""));
+
+            return response;
+
+
+
+
         }
 
         [HttpGetRoute(UriTemplate = "list")]

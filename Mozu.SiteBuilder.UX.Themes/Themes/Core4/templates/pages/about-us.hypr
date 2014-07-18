@@ -4,10 +4,8 @@
 
 
  {% block body-content %}
-	 <div>steve</div>
-	 <div>{{model.properties.blurb|safe}}
-	 
-	 <div>
-	 <div>nosteve</div>
+
+	 <div>{{model.properties.blurb|safe}}<div>
+
 	{% dropzone "body" scope="page" %}
 {% endblock body-content %}

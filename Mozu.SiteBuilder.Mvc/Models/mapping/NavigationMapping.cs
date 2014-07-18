@@ -84,29 +84,29 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 ;
 
             Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleTreeNavigationNode>()
-               .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.DocumentListName, x.Id)))
+               .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.ListFQN, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
-               .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.DocumentListName))
+               .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.ListFQN))
                .ForMember(d => d.ParentId, opt => opt.UseValue(null))
                .ForMember(d => d.Name, opt => opt.ResolveUsing(x =>
                    x.Get<string>("link_title").GetNullIfWhiteSpace() ?? x.Get<string>("title").GetNullIfWhiteSpace() ?? x.Name))
-                   .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase)? "/"+ x.Name:   "/" + x.DocumentListName + "/" + x.Name))
+                   .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.ListFQN + "/" + x.Name))
                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
                .ForMember(d => d.Index, opt => opt.UseValue(null))
-               .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentType == "blog" || x.DocumentType == "page"))
+               .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentTypeFQN == "blog" || x.DocumentTypeFQN == "page"))
                ;
 
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
             Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleRuntimeNavigationNode>()
-               .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.DocumentListName, x.Id)))
+               .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.ListFQN, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
-               .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.DocumentListName))
+               .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.ListFQN))
                .ForMember(d => d.ParentId, opt => opt.UseValue(null))
                .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.Name))
-               .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.DocumentListName, "pages", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.DocumentListName + "/" + x.Name))
+               .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.ListFQN + "/" + x.Name))
                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
                .ForMember(d => d.Index, opt => opt.UseValue(null))
-             //  .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentType == "blog"))
+             //  .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentTypeFQN == "blog"))
               // .As<IRuntimeNavigationNode>()
                ;
 	

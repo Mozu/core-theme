@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private const string MZDB_LIST_PROPERTY = "EntityListName";
         private const string MZDB_DOCUMENT_ID_PROPERTY = "Id";
-        private const string CMS_LIST_PROPERTY = "DocumentListName";
+        private const string CMS_LIST_PROPERTY = "ListFQN";
         private const string CMS_DOCUMENT_ID_PROPERTY = "Id";
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (documents.First().Value<string>("entityType") == "cms")
             {
                 List<Task<ServiceClientResponse<StreamContent>>> tasks = documents.Select(doc =>
-                    _documentListWebApiClient.DeleteDocument(documentListName: (string) doc.GetValue(CMS_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase), documentId: (string) doc.GetValue(CMS_DOCUMENT_ID_PROPERTY, StringComparison.OrdinalIgnoreCase))
+                    _documentListWebApiClient.DeleteDocument(documentListName: (string)doc.GetValue(CMS_LIST_PROPERTY, StringComparison.OrdinalIgnoreCase), documentId: (string)doc.GetValue(CMS_DOCUMENT_ID_PROPERTY, StringComparison.OrdinalIgnoreCase))
                     ).ToList();
 
 
@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<Task<ServiceClientResponse<DC.Document>>> tasks = documents.Select(doc =>
                 {
                     var cmsDoc = doc.ToObject<DC.Document>();
-                    return _documentListWebApiClient.CreateDocument(documentListName: cmsDoc.DocumentListName, document: cmsDoc);
+                    return _documentListWebApiClient.CreateDocument(documentListName: cmsDoc.ListFQN, document: cmsDoc);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<Task<ServiceClientResponse<DC.Document>>> tasks = documents.Select(doc =>
                 {
                     var cmsDoc = doc.ToObject<DC.Document>();
-                    return _documentListWebApiClient.UpdateDocument(documentListName: cmsDoc.DocumentListName, documentId: cmsDoc.Id, document: cmsDoc);
+                    return _documentListWebApiClient.UpdateDocument(documentListName: cmsDoc.ListFQN, documentId: cmsDoc.Id, document: cmsDoc);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -185,7 +185,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (!string.IsNullOrEmpty(pagingParams.id))
                 {
 
-                    var doc  = (await _documentListWebApiClient.GetDocument(documentListName: list, documentId: pagingParams.id )).ReadAsSync();
+                    var doc = (await _documentListWebApiClient.GetDocument(documentListName: list, documentId: pagingParams.id)).ReadAsSync();
                     res = new DC.DocumentCollection()
                           {
                               Items = new List<DC.Document>() {doc},
@@ -239,47 +239,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-
-        //[HttpGetRoute(UriTemplate = "lists/read")]
-        //public async Task<Response<List<JObject>>> ReadLists(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string listName = null)
-        //{
-        //    var nodes = new List<Object>();
-        //    if (entityType == "cms" || string.IsNullOrEmpty(entityType))
-        //    {
-        //        var cms = new Node() { Text = "content", Id = "cms", Expanded = true, Items = new List<Node>() };
-        //        nodes.Add(cms);
-
-        //        string sortBy = null;
-        //        string filter = null;
-        //        try //todo:remove when support is there for tenant.
-        //        {
-        //            var res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
-        //            if (res.Items != null)
-        //            {
-        //                res.Items.ForEach(x => cms.Items.Add(new Node() { Text = x.Name, Id = "cms_" + x.Name, MetaData = AddViews(x), Leaf = true }));
-        //            }
-        //        }
-        //        catch
-        //        {
-        //        }
-
-        //    }
-        //    if (entityType == "mzdb" || string.IsNullOrEmpty(entityType))
-        //    {
-        //        var mzdb = new Node() { Text = "entities", Id = "mzdb", Expanded = true, Items = new List<Node>() };
-        //        nodes.Add(mzdb);
-        //        string sortBy = null;
-        //        string filter = null;
-        //        var res = (await _entityListsWebApiClient.GetEntityLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
-        //        if (res.Items != null)
-        //        {
-        //            res.Items.ForEach(x => mzdb.Items.Add(new Node() { Text = x.Name, Id = "mzdb_" + x.NameSpace + "." + x.Name, MetaData = AddViews(x), Leaf = true }));
-        //        }
-
-
-        //    }
-        //    return List2(nodes);
-        //}
 
         [HttpGetRoute(UriTemplate = "lists/tree")]
         public async Task<Response<List<Node>>> ReadListsTree(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string view = null)
@@ -347,137 +306,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private JObject AddViews(EntityList x)
         {
-            List<ListView> views = null;
-            if (x.Views == null || x.Views.Count == 0)
-            {
-
-
-                if (string.Equals(x.Name, "subNavLinks", StringComparison.OrdinalIgnoreCase))
-                {
-                    views = new List<ListView>()
-                            {
-                                new ListView()
-                                {
-                                    Name = "default-fake",
-                                    Usages = new List<string>() {"entityManager"},
-                                    Fields = new List<ListViewField>()
-                                             {
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "parentId",
-                                                     Type = "string"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "path",
-                                                     Type = "any",
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "href",
-                                                     Type = "string"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "windowTitle",
-                                                     Type = "string"
-                                                 }
-                                             },
-                                    Security = "public"
-                                }
-                            };
-                }
-                else
-                {
-                    views = new List<ListView>()
-                            {
-                                new ListView()
-                                {
-                                    Name = "default-fake",
-                                    Usages = new List<string> {"entityManager"},
-                                    Fields = new List<ListViewField>()
-                                             {
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "name",
-                                                     Type = "string"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "email",
-                                                     Type = "string"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "phone",
-                                                     Type = "string"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "age",
-                                                     Type = "string"
-                                                 }
-                                             },
-                                    Security = "public"
-                                },
-                                new ListView()
-                                {
-                                    Name = "alt1-fake",
-                                    Usages = new List<string> {"entityManager"},
-                                    Fields = new List<ListViewField>()
-                                             {
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "name",
-                                                     Type = "string"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "email",
-                                                     Type = "string"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "registere",
-                                                     Type = "datetime"
-                                                 },
-                                                 new ListViewField()
-                                                 {
-                                                     IsQueryable = true,
-                                                     IsSortable = true,
-                                                     Name = "favoriteFruit",
-                                                     Type = "string"
-                                                 }
-                                             },
-                                    Security = "public"
-                                }
-                            };
-                }
-
-                x.Views = views;
-            }
+           
 
            
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
@@ -489,40 +318,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private JObject AddViews(DC.DocumentList x)
         {
-            var views = new List<DC.View>()
-                        {
+            //var views = new List<DC.View>()
+            //            {
                             
-                            new DC.View()
-                            {
-                                Name = "-fake",
-                                Usages = new List<string>() {"entityManager"},
-                                Fields = new List<DC.ViewFields>()
-                                         {
-                                             new DC.ViewFields()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "link_title",
-                                                 Type = "string"
-                                             },
-                                             new DC.ViewFields()
-                                             {
-                                                 IsQueryable = true,
-                                                 IsSortable = true,
-                                                 Name = "meta_title",
-                                                 Type = "string"
-                                             }
-                                         },
-                                Security = "public"
-                            }
-                        };
-            if (x.Views == null || x.Views.Count == 0)
-            {
-                x.Views = views;
-            }
+            //                new DC.View()
+            //                {
+            //                    Name = "-fake",
+            //                    Usages = new List<string>() {"entityManager"},
+            //                    Fields = new List<DC.ViewFields>()
+            //                             {
+            //                                 new DC.ViewFields()
+            //                                 {
+            //                                     IsQueryable = true,
+            //                                     IsSortable = true,
+            //                                     Name = "link_title",
+            //                                     Type = "string"
+            //                                 },
+            //                                 new DC.ViewFields()
+            //                                 {
+            //                                     IsQueryable = true,
+            //                                     IsSortable = true,
+            //                                     Name = "meta_title",
+            //                                     Type = "string"
+            //                                 }
+            //                             },
+            //                    Security = "public"
+            //                }
+            //            };
+            //if (x.Views == null || x.Views.Count == 0)
+            //{
+            //    x.Views = views;
+            //}
             JObject ret = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
             ret["entityType"] = "cms";
-            ret["listFQN"] = x.Name;
+            //ret["listFQN"] = x.Name;
             return ret;
         }
 
@@ -531,27 +360,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<EditorResult>>> ReadEditor()
 
         {
-            ServiceClientResponse<DC.DocumentCollection> cmsEditorsTask = await _documentListWebApiClient.GetDocuments(documentListName: "entityEditors", targetContextLevel: TargetContextLevelType.MasterCatalog, pageSize: 600, startIndex: 0);
+            ServiceClientResponse<DC.DocumentCollection> cmsEditorsTask = await _documentListWebApiClient.GetDocuments(documentListName: "entityEditors@mozu", targetContextLevel: TargetContextLevelType.Tenant, pageSize: 600, startIndex: 0);
 
-
-            List<EditorResult> editors = Directory.GetFiles(HttpRuntime.AppDomainAppPath + @"\Tests\Mocks\Entities\Editors\").Select(js => new EditorResult
-                                                                                                                                           {
-                                                                                                                                               Id = Path.GetFileNameWithoutExtension(js).ToLower(),
-                                                                                                                                               DocumentTypes = new List<string>()
-                                                                                                                                                               {
-                                                                                                                                                                   Path.GetFileNameWithoutExtension(js).ToLower()
-                                                                                                                                                               },
-                                                                                                                                               EntityLists = new List<string>()
-                                                                                                                                                             {
-                                                                                                                                                                 Path.GetFileNameWithoutExtension(js).ToLower()
-                                                                                                                                                             },
-                                                                                                                                               DocumentLists = new List<string>()
-                                                                                                                                                               {
-                                                                                                                                                                   Path.GetFileNameWithoutExtension(js).ToLower()
-                                                                                                                                                               },
-                                                                                                                                               Priority = 0,
-                                                                                                                                               Code = File.ReadAllText(js)
-                                                                                                                                           }).ToList();
+            List<EditorResult> editors = new List<EditorResult>();
+            //List<EditorResult> editors = Directory.GetFiles(HttpRuntime.AppDomainAppPath + @"\Tests\Mocks\Entities\Editors\").Select(js => new EditorResult
+            //                                                                                                                               {
+            //                                                                                                                                   Id = Path.GetFileNameWithoutExtension(js).ToLower(),
+            //                                                                                                                                   DocumentTypes = new List<string>()
+            //                                                                                                                                                   {
+            //                                                                                                                                                       Path.GetFileNameWithoutExtension(js).ToLower()
+            //                                                                                                                                                   },
+            //                                                                                                                                   EntityLists = new List<string>()
+            //                                                                                                                                                 {
+            //                                                                                                                                                     Path.GetFileNameWithoutExtension(js).ToLower()
+            //                                                                                                                                                 },
+            //                                                                                                                                   DocumentLists = new List<string>()
+            //                                                                                                                                                   {
+            //                                                                                                                                                       Path.GetFileNameWithoutExtension(js).ToLower()
+            //                                                                                                                                                   },
+            //                                                                                                                                   Priority = 0,
+            //                                                                                                                                   Code = File.ReadAllText(js)
+            //                                                                                                                               }).ToList();
 
             if (!cmsEditorsTask.HasException)
             {
@@ -718,7 +547,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //    }
 
 
-//    public class DocumentType
+//    public class DocumentTypeFQN
 //    {
 //        //public string Id { get; set; }
 
@@ -898,13 +727,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //        //public string Path { get; set; }
 
 
-//        public string DocumentType { get; set; }
+//        public string DocumentTypeFQN { get; set; }
 
 //        //
 //        //public string FolderId { get; set; }
 
 
-//        public string DocumentListName { get; set; }
+//        public string ListFQN { get; set; }
 
 
 //        public long? ContentLength { get; set; }

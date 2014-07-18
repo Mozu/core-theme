@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Template = new DocumentRequest()
                 {
                     Path = "login",
-                    DocumentType = "page_template"
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
                 }
 
             };

@@ -132,8 +132,8 @@ Ext.define('Taco.view.entityManager.Grid', {
             });
            
         }
-
-        Ext.Array.each(view.fields, function (viewField) {
+        view = view || { fields: [] };
+        Ext.Array.each(view.fields||[], function (viewField) {
             columns.push({
                 xtype: 'gridcolumn',
                 dataIndex: viewField.name,
@@ -155,7 +155,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 xtype: 'gridcolumn',
 
                 renderer: function (value, metaData, record) {
-                    return record.data.documentType;
+                    return record.data.documentTypeFQN;
 
                 },
 

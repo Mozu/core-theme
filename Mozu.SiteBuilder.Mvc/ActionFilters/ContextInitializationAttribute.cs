@@ -3,8 +3,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using System.Web.Mvc;
+using System.Web.UI;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Controllers;
+using IActionFilter = System.Web.Http.Filters.IActionFilter;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
@@ -15,7 +18,23 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             var controller = (ApiControllerBase)actionContext.ControllerContext.Controller;
             if (controller != null || !controller.ContextInitilaztionTasks.IsCompleted)
             {
-                return continuation().ContinueWith(x => controller.ContextInitilaztionTasks.ContinueWith(y => x.Result)).Unwrap();
+                return continuation().ContinueWith(x => 
+                    
+                    {
+                        if (controller.ContextInitilaztionTasks.IsCompleted &&
+                            controller.PageContext != null &&
+                            controller.PageContext.CmsContext != null &&
+                            !controller.PageContext.CmsContext.Initialized)
+                        {
+                            return new CmsHelper(controller.CmsService).InitCmsPageContext(controller.PageContext).ContinueWith(y => x.Result);
+
+                        }
+                        else
+                        {
+                            return controller.ContextInitilaztionTasks.ContinueWith(y => x.Result);    
+                        }
+                        
+                    }).Unwrap();
             }
             return continuation();
         }

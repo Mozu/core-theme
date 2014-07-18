@@ -10,7 +10,8 @@ Ext.define('Taco.view.themesettings.Form', {
         'Taco.core.ux.BoxReorderer',
         'Taco.model.ProductTypeAttribute',
         'Taco.model.ProductType',
-        'Taco.view.productType.AttributeGroup'
+        'Taco.view.productType.AttributeGroup',
+        'Taco.core.ux.form.ColorField'
     ],
     
     title: 'Theme Settings',

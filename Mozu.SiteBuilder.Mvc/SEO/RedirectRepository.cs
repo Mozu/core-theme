@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.Core.Api.Client;
 using  Mozu.Core.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -48,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             if (_redirectEntryListTask == null)
             {
                 var client = siteId == null ? _documentListWebApiClient : _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId);
-                return _redirectEntryListTask = client.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
+                return _redirectEntryListTask = client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
                     {
                         Dictionary<string, RedirectEntry> ret = null;
                         var gtRes = gdt.Result;
@@ -67,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                 ret = _cache[key] as Dictionary<string, RedirectEntry>;
                                 if (ret == null)
                                 {
-                                    var res = client.GetDocumentContent("settings", doc.Id).Result;
+                                    var res = client.GetDocumentContent("siteSettings@mozu", doc.Id).Result;
                                     if (res.ResponseMessage.IsSuccessStatusCode && res.ResponseMessage.Content.Headers.ContentLength > 0)
                                     {
 
@@ -105,7 +106,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects,int? siteId)
         {
             var client = siteId.HasValue ? _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId) : _documentListWebApiClient;
-            return client.GetTreeDocument("settings", FileName).ContinueWith(gdt =>
+            return client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
                 {
                     bool exists = false;
                    
@@ -116,7 +117,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     }
                     if (!exists)
                     {
-                        gtRes = client.CreateDocument("settings", new Document() { Name = FileName, DocumentType = "document" }).Result;
+                        gtRes = client.CreateDocument("siteSettings@mozu", new Document() { Name = FileName, DocumentTypeFQN = "document@mozu" , Properties=new JObject()}).Result;
                         
                     }
                   
@@ -127,9 +128,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     Newtonsoft.Json.JsonSerializer.CreateDefault().Serialize(jw, redirects);
                     jw.Flush();
                     stream.Position = 0;
-                    client.UpdateDocumentContent("settings", doc.Id, stream).Wait();
+                    client.UpdateDocumentContent("siteSettings@mozu", doc.Id, stream).Wait();
                     doc.Set("data", DateTime.UtcNow.ToString());
-                    doc = client.UpdateDocument("settings", doc.Id, doc).Result.ReadAsSync();
+                    doc = client.UpdateDocument("siteSettings@mozu", doc.Id, doc).Result.ReadAsSync();
                     var key = CreateKey(doc);
                     _cache[key] = redirects;
 

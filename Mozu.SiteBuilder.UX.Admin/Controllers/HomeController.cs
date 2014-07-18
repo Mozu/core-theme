@@ -18,6 +18,7 @@ using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Logging;
 using Mozu.Core.Money;
 using Mozu.Core.Settings;
@@ -173,7 +174,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
             var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
             var tenantTask = _tenantsWebApi.GetTenantInternal(  _apiContext.TenantId , false );
-            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "mozu.extensiblity.subNavLinks", pageSize: 6000);
+            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "subNavLinks@mozu.extensiblity", pageSize: 6000);
             
             var siteUsersTask = _usersRepo.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, pageSize: 200, startIndex: 0);
             
@@ -189,6 +190,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var userDC = userDcTask.Result.ReadAsSync();
             var roles = rolesTask.Result;
             var tenant = tenantTask.Result.ReadAsSync();
+
+            ProvisionCMSMAYBE(tenant);
+
+
             var siteUsers = siteUsersTask.Result.ReadAsSync();
             DCproduct.MasterCatalogCollection masterCatalogs = null;
             try
@@ -291,7 +296,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 var res = masterCatalogPubDic[mc.Id].Result;
                 if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
                 {
-                    var lst = res.ReadAsSync().Items.Where(x => (x.Scope == null ||x.Scope == "masterCatalog") && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
+                    var lst = res.ReadAsSync().Items.Where(x => (x.ScopeType == null || x.ScopeType == "masterCatalog") && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
                     if (lst.Any())
                     {
                         mc.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
@@ -304,7 +309,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                      res = sitePubTaskDic[s.Id].Result;
                     if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
                     {
-                        var lst = res.ReadAsSync().Items.Where(x => (x.Scope == null || string.Equals(x.Scope, "site", StringComparison.OrdinalIgnoreCase) )&& x.SupportsPublishing.GetValueOrDefault(false)).ToList();
+                        var lst = res.ReadAsSync().Items.Where(x => (x.ScopeType == null || string.Equals(x.ScopeType, "site", StringComparison.OrdinalIgnoreCase)) && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
                         if (lst.Any())
                         {
                             s.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
@@ -316,7 +321,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                      res = catPubTaskDic[cat.Id].Result;
                     if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
                     {
-                        var lst = res.ReadAsSync().Items.Where(x => (x.Scope == null ||  x.Scope == "catalog")  &&  x.SupportsPublishing.GetValueOrDefault(false)).ToList();
+                        var lst = res.ReadAsSync().Items.Where(x => (x.ScopeType == null || x.ScopeType == "catalog") && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
                         if (lst.Any())
                         {
                             cat.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
@@ -362,6 +367,48 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
             return RazorView("index");
             
+        }
+
+        private void ProvisionCMSMAYBE(Tenant.Contracts.Tenant tenant)
+        {
+            if (this.Request.RequestUri.ToString().Contains("provisioncms"))
+            {
+                var cmsProv = this.Request.Resolve<Mozu.Content.Contracts.Clients.IProvisioningWebApiClient>().CloneWithoutUserClaims();
+                var tenantCmsReq = new CreateTenantRequest()
+                                   {
+                                       TenantId = tenant.Id,
+                                       MasterCatalogs = tenant.MasterCatalogs == null ? null :
+                                           tenant.MasterCatalogs.Select(mc => new CreateMasterCatalogRequest()
+                                                                              {
+                                                                                  MasterCatalogId = mc.Id,
+                                                                                  TenantId = mc.TenantId,
+                                                                                  DefaultCurrencyCode = mc.DefaultCurrencyCode,
+                                                                                  DefaultLocaleCode = mc.DefaultLocaleCode,
+                                                                                  Sites = tenant.Sites == null ? null : tenant.Sites.Where(x => mc.Catalogs != null && mc.Catalogs.Any(c => c.Id == x.CatalogId))
+                                                                                      .Select(site => new CreateSiteRequest()
+                                                                                                      {
+                                                                                                          SiteId = site.Id,
+                                                                                                          MasterCatalogId = site.MasterCatalogId,
+                                                                                                          CatalogId = site.CatalogId,
+                                                                                                          TenantId = site.TenantId,
+                                                                                                          CurrencyCode = site.DefaultCurrencyCode,
+                                                                                                          LocaleCode = site.DefaultLocaleCode,
+                                                                                                          CountryCode = site.CountryCode,
+                                                                                                          CatalogRequest = mc.Catalogs.Where(x => x.Id == site.CatalogId)
+                                                                                                              .Select(cat => new CreateCatalogRequest()
+                                                                                                                             {
+                                                                                                                                 CatalogId = cat.Id,
+                                                                                                                                 DefaultCurrencyCode = cat.DefaultCurrencyCode,
+                                                                                                                                 DefaultLocaleCode = cat.DefaultLocaleCode,
+                                                                                                                                 MasterCatalogId = cat.MasterCatalogId,
+                                                                                                                                 TenantId = cat.TenantId
+                                                                                                                             }).First()
+                                                                                                      }).ToList()
+                                                                              }).ToList()
+                                   };
+
+                cmsProv.CreateTenant(tenantCmsReq, 1);
+            }
         }
 
         public Task<List<UserRole>> GetUserSitesRoles(string userId)

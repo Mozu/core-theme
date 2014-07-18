@@ -74,10 +74,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         if (this.record) {
             return this.record.getLoadParams();
         }
-        if (!this.pageContext.cmsContext.page.documentListName || !this.pageContext.cmsContext.page.id) {
+        if (!this.pageContext.cmsContext.page.listFQN || !this.pageContext.cmsContext.page.id) {
             return undefined;
         }
-        return { documentListName: this.pageContext.cmsContext.page.documentListName, id: this.pageContext.cmsContext.page.id };
+        return { listFQN: this.pageContext.cmsContext.page.listFQN, id: this.pageContext.cmsContext.page.id };
     },
     get: function () {
         return this.record;
@@ -255,9 +255,9 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }
     },
     getId: function () {
-        if (!this.pageContext.cmsContext.page || !this.pageContext.cmsContext.page.documentListName || !this.pageContext.cmsContext.page.id)
+        if (!this.pageContext.cmsContext.page || !this.pageContext.cmsContext.page.listFQN || !this.pageContext.cmsContext.page.id)
             return undefined;
-        return { documentListName: this.pageContext.cmsContext.page.documentListName, id: this.pageContext.cmsContext.page.id };
+        return { listFQN: this.pageContext.cmsContext.page.listFQN, id: this.pageContext.cmsContext.page.id };
     },
 
     getStore: Ext.emptyFn,

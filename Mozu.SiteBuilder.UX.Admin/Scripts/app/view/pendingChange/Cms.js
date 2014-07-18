@@ -23,9 +23,9 @@ Ext.define('Taco.view.pendingChange.Cms', {
     
     publishAllText: "Publish All",
     
-    publishAll: function (documentListName) {
+    publishAll: function (listFQN) {
         var me = this;
-        me.store.publishAll(documentListName, function () {
+        me.store.publishAll(listFQN, function () {
             // removing notification per TFS #7653 and #7655
             //var notice = type ? 'All ' + type + ' changes published!' : 'All changes published!';
             //Taco.app.fireEvent('setmessage', notice, 'success');

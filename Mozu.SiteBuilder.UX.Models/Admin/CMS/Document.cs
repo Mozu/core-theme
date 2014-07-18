@@ -9,8 +9,8 @@
 //        [DataMember(Name = "id")]
 //        public string Id { get; set; }
 
-//        [DataMember(Name = "documentType")]
-//        public string DocumentType { get; set; }
+//        [DataMember(Name = "documentTypeFQN")]
+//        public string DocumentTypeFQN { get; set; }
 
 //        [DataMember(Name = "name")]
 //        public string Name { get; set; }
@@ -18,8 +18,8 @@
 //        [DataMember(Name = "documentId")]
 //        public string DocumentId { get; set; }
 
-//        [DataMember(Name = "documentListName")]
-//        public string DocumentListName { get; set; }
+//        [DataMember(Name = "listFQN")]
+//        public string ListFQN { get; set; }
 
 //        [DataMember(Name = "publishState")]
 //        public string PublishState { get; set; }

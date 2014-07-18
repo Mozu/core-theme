@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Template = new DocumentRequest()
                 {
                     Path = "cart",
-                    DocumentType = "page_template"
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
                 }
 
             };

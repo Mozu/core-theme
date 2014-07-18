@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// </summary>
     internal class NavigationRepository : INavigationRepository
     {
-        private const string NAVIGATION_CONTENT_COLLECTION = "settings";
+        private const string NAVIGATION_CONTENT_COLLECTION = "siteSettings@mozu";
         private const string NAVIGATION_FILE_NAME = "navigation";
 
         private ICmsServiceWrapper _cmsService;
@@ -83,8 +83,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             var doc = new DC.Document
                       {
                           Name = NAVIGATION_FILE_NAME,
-                          DocumentType = "document",
-                          DocumentListName = NAVIGATION_CONTENT_COLLECTION,
+                          DocumentTypeFQN = "document@mozu",
+                          ListFQN = NAVIGATION_CONTENT_COLLECTION,
                           Properties = new JObject()
                       };
 

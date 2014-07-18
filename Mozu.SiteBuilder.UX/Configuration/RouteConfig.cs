@@ -37,8 +37,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                "StoreFront_pages",
-               "pages/{pageName}", 
-               new { controller = "cmspages", action = "Page", collection = "pages" });
+               "pages/{pageName}",
+               new { controller = "cmspages", action = "Page", collection = "pages@mozu" });
 
 
             routes.MapHttpRoute(
@@ -271,20 +271,20 @@ namespace Mozu.SiteBuilder.UX.Configuration
             routes.MapHttpRoute(
                 "Misc_content",
                 "files/{tenant}/{mastercat}/{documentId}",
-                new {action = "index", controller = "content", collection = "files", site = -1}
+                new { action = "index", controller = "content", collection = "files@mozu", site = -1 }
                 );
 
 
             routes.MapHttpRoute(
                 "Misc_content_2",
                 "cms/{site}/files/{documentId}",
-                new { action = "index", controller = "content", collection = "files", tenant = -1, mastercat =-1}
+                new { action = "index", controller = "content", collection = "files@mozu", tenant = -1, mastercat = -1 }
                 );
 
             routes.MapHttpRoute(
                 "Misc_content_3",
                 "cms/files/{documentId}",
-                new { action = "index", controller = "content", collection = "files", tenant = -1, mastercat = -1, site = -1 }
+                new { action = "index", controller = "content", collection = "files@mozu", tenant = -1, mastercat = -1, site = -1 }
                 );
 
            
@@ -405,7 +405,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             routes.MapHttpRoute(
                "StoreFront_pages_seo",
                "{pageName}",
-               new { controller = "cmspages", action = "Page", collection = "pages" });
+               new { controller = "cmspages", action = "Page", collection = "pages@mozu" });
 
 
 

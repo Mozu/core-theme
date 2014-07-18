@@ -5,7 +5,7 @@
 Ext.define('Taco.view.themesettings.Addons', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
-        'Ext.ux.ItemSelector',
+        
         'Ext.ux.form.field.BoxSelect'
     ],
 
@@ -39,14 +39,6 @@ Ext.define('Taco.view.themesettings.Addons', {
             }
         });
 
-        //me.itemSelect = Ext.create('Ext.ux.ItemSelector', {
-        //    width:600,
-        //    store: me.store,
-        //    displayField: 'name',
-        //    value: ['Orange'],
-        //    imagePath: '../ux/images/',
-        //    valueField:'id'
-        //});
 
         this.itemSelect = Ext.create('Ext.ux.form.field.BoxSelect', {
             width: 600,

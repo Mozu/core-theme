@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         private Task<ServiceClientResponse<Document>> UpdateSettings(JObject values, string themeId)
         {
-            return _cmsService.GetByPath2("settings", this.GetFileName(themeId))
+            return _cmsService.GetByPath2("siteSettings@mozu", this.GetFileName(themeId))
                 .ContinueWith<Task<ServiceClientResponse<Document>>>(t =>
                 {
                     var res = t.Result;
@@ -110,8 +110,8 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                         var doc = new Document
                                   {
                                       Name = this.GetFileName(themeId),
-                                      DocumentType = "theme_settings",
-                                      DocumentListName = "settings",
+                                      DocumentTypeFQN = "document@mozu",
+                                      ListFQN = "siteSettings@mozu",
                                       Properties = new JObject(
                                           new JProperty("theme", themeId),
                                           new JProperty("tags", new JArray(new object[] {"something"})),
@@ -144,7 +144,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
             //if (_getInstanceValues == null)
             //{
-                _getInstanceValues = _cmsService.GetByPath2("settings", this.GetFileName(themeId)).ContinueWith<JObject>(
+            _getInstanceValues = _cmsService.GetByPath2("siteSettings@mozu", this.GetFileName(themeId)).ContinueWith<JObject>(
                     res =>
                     {
                         JObject value = null;

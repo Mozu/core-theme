@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         private const string DefaultRobotsTxt = @"User-agent: *
 Disallow: /admin/";
 
-        public const string ContentCollection = "settings";
+        public const string ContentCollection = "siteSettings@mozu";
 
         private IDocumentListWebApiClient _documentWebApiClient;
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
@@ -55,7 +55,7 @@ Disallow: /admin/";
         //                           {
         //                               Name = fileName,
         //                               //ContentMimeType = "text/html",
-        //                               DocumentType = "document",
+        //                               DocumentTypeFQN = "document@mozu",
         //                               ContentCollection = ContentCollection,
         //                           };
 
@@ -146,8 +146,8 @@ Disallow: /admin/";
             {
                 Name = name,
                 ContentMimeType = mimeType,
-                DocumentType = "document",
-                DocumentListName = ContentCollection,
+                DocumentTypeFQN = "document@mozu",
+                ListFQN = ContentCollection,
             };
 
             var response = await _documentWebApiClient.CreateDocument(ContentCollection, document).ConfigureAwait(false);

@@ -93,9 +93,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (docIds != null && docIds.Count==0)
             {
-                res = (dynamic) (await service.GetDocument(documentListName: list, documentId: docIds[0]));
+                res = (dynamic)(await service.GetDocument(documentListName: list, documentId: docIds[0]));
             }
-            res = (dynamic) (await service.GetDocuments(documentListName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
+            res = (dynamic)(await service.GetDocuments(documentListName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
 
 
 

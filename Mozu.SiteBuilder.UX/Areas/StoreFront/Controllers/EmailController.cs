@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public EmailController(IDocumentListWebApiClient docRepo,
                                IDocumentTypeWebApiClient docTypeRepo,
                                ICmsServiceWrapper cmsService,
-                               ICmsTypeHelper cmsTypeHelper,
+                               //ICmsTypeHelper cmsTypeHelper,
                                ICustomerAccountWebApiClient customerAccountWebApiClient,
                                HyprViewEngine hyprViewEngine,
                                 Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,
@@ -115,7 +115,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                 Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient
 
             )
-            : base(docRepo, docTypeRepo, cmsService, cmsTypeHelper, customerAccountWebApiClient, hyprViewEngine)
+            : base(docRepo, docTypeRepo, cmsService, 
+            //cmsTypeHelper, 
+            customerAccountWebApiClient, hyprViewEngine)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
@@ -138,26 +140,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
            
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
-            HttpResponseMessage res = await Page("email", GetCmsPage(emailTempalte));
+            HttpResponseMessage res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTempalte));
             if (res.StatusCode == HttpStatusCode.NotFound)
             {
                 
                 var reqDoc = new DC.Document
                                  {
-                                     DocumentListName = "email",
-                                     DocumentType = "email",
+                                     ListFQN = "emailTemplateContent@mozu",
+                                     DocumentTypeFQN = "emailTemplateContent@mozu",
                                      Name = GetCmsPage(emailTempalte),
                                      Properties= emailTempalte.Properties 
                                  };
                 
                 
-                Task<ServiceClientResponse<DC.Document>> task = _docRepo.CreateDocument(reqDoc.DocumentListName, reqDoc);
+                Task<ServiceClientResponse<DC.Document>> task = _docRepo.CreateDocument(reqDoc.ListFQN, reqDoc);
                 await task;
 
                 //_cmsService.Create ( )
                 //CreatePage("home page", "home", "home");
                 ResetContextInitilaztionTasks();
-                res = await Page("email", GetCmsPage(emailTempalte));
+                res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTempalte));
             }
 
             PageContext.PageType = "email";
@@ -228,7 +230,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
-            HttpResponseMessage v = await Page("email", GetCmsPage(emailTempalte));
+            HttpResponseMessage v = await Page("emailTemplateContent@mozu", GetCmsPage(emailTempalte));
             object cmdContent = null;
             var vr = ((ObjectContent) v.Content).Value as ViewResult;
             if (vr != null)
