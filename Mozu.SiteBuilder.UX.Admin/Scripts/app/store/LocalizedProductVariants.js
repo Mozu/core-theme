@@ -49,9 +49,25 @@ Ext.define('Taco.store.LocalizedProductVariants', {
                 if (!Taco.app || !Taco.app.context) {
                     return items;
                 }
-                var mc = Taco.app.context.getMasterCatalog();
-                var excludeDefaultCurrency = true;
-                var supportedCurrencies = (!mc) ? [] : mc.getSupportedCurrencies(excludeDefaultCurrency);
+                var ctx = Taco.app.context.getCurrentContext(),
+                    ctxType = (!ctx) ? '' : ctx.contextType,
+                    supportedCurrencies = [],
+                    excludeDefaultCurrency = true,
+                    mc,
+                    cat;
+
+                if (ctxType === 'm') {
+                    mc = Taco.app.context.getMasterCatalog();
+                    if (mc) {
+                        supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
+                    }
+                }
+                else if (ctxType === 'c') {
+                    cat = Taco.app.context.getCatalog();
+                    if (cat) {
+                        supportedCurrencies.push(cat.currencyCode);
+                    }
+                }
 
                 Ext.Array.each(supportedCurrencies, function (cur) {
                     items.push({
@@ -92,7 +108,7 @@ Ext.define('Taco.store.LocalizedProductVariants', {
             //],
             proxy: {
                 type: 'ajaxproxy',
-                idParam: 'attributeFQN',
+                idParam: 'variantProductCode',
                 api: {
                     read: '/admin/app/localizedcontent/productvariants/read',
                     update: '/admin/app/localizedcontent/productvariants/edit'

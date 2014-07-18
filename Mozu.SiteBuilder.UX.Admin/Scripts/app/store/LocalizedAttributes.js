@@ -71,7 +71,7 @@ Ext.define('Taco.store.LocalizedAttributes', {
     pageSize: 50,
     storeManagerConfig: {
         clearFilters: true,
-        contextLevel: 'mc',
+        contextLevel: 'm',
         clearSort: true,
         autoLoad: true
     }
