@@ -52,7 +52,6 @@ Ext.define('Taco.view.order.Split', {
         this.config.east = [this.editor];
         
         this.orderList = Ext.create('Taco.view.order.Grid', {
-
             header: false, // hides the header (the title)
             addContentViewPadding: false,
             enableNavHeader: false, // disables the navHeader Mixin
@@ -75,6 +74,8 @@ Ext.define('Taco.view.order.Split', {
                 }
             }
         });
+
+        this.createButtonCfg = this.orderList.getCreateButtonConfig();
 
         this.config.west = [this.orderList];
         
@@ -159,20 +160,34 @@ Ext.define('Taco.view.order.Split', {
                 },
                 cancel: {
                     scope: this,
-                    fn: function () {
-                        this.setRecord(null);
-                        this.showAndHideSplitActions();
-                        this.updateSplitTitle();
-                    }
+                    fn: function () { this.setRecord(null); }
                 }
             });
         }
     },
 
-    onSelectRecord: function (record) {
-        var url = 'orders',
-          site;
+    onRecordChange: function (record) {
+        Ext.suspendLayouts();
 
+        this.getEast().removeAll(true);
+
+        if (record) {
+            this.getEast().add(Ext.create('Taco.view.order.Edit', {
+                record: record
+            }));
+        }
+
+        this.callParent(arguments);
+
+        this.showAndHideSplitActions();
+        this.updateSplitTitle();
+
+        Ext.resumeLayouts(true);
+    },
+
+    onSelectRecord: function (record) {
+        var url = 'orders';
+        var site;
 
         if (record) {
             url = 'orders/edit/' + record.getId();
@@ -182,19 +197,8 @@ Ext.define('Taco.view.order.Split', {
                 //Taco.app.context.setCurrentContext(site, false, false);
             }
         }
-        Taco.core.StateManager.attemptNavigate(url);
-    },
 
-    onRecordChange: function (record) {
-        Ext.suspendLayouts();
-        this.getEast().removeAll(true);
-        if (record) {
-            this.getEast().add(Ext.create('Taco.view.order.Edit', {
-                record: record
-            }));
-        }
-        this.callParent(arguments);
-        Ext.resumeLayouts(true);
+        Taco.core.StateManager.attemptNavigate(url);
     },
 
     showAndHideSplitActions: function (toolbar) {
