@@ -87,22 +87,22 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Navigation
             Assert.AreEqual(NavigationNodeType.Page, set[1].NodeType);
         }
 
-        [Test]
-        public void Test_Deserialize_old_string()
-        {
-            NavigationSet set = JsonConvert.DeserializeObject<NavigationSet>(_oldFormatJson, _converter);
+        //[Test]
+        //public void Test_Deserialize_old_string()
+        //{
+        //    NavigationSet set = JsonConvert.DeserializeObject<NavigationSet>(_oldFormatJson, _converter);
 
-            Assert.That(set.Count == 1);
+        //    Assert.That(set.Count == 1);
 
-            Assert.AreEqual("page^^pages^^0818cc78-19b3-4ed7-bbd1-1f5218403fef", set[0].Id);
-            Assert.AreEqual("0818cc78-19b3-4ed7-bbd1-1f5218403fef", set[0].OriginalId);
-            Assert.AreEqual("pages@mozu", set[0].OriginalCollection);
-            Assert.AreEqual("_navigation", set[0].ParentId);
-            Assert.AreEqual("home", set[0].Name);
-            Assert.AreEqual("/default", set[0].Url);
-            Assert.AreEqual(1, set[0].Index);
-            Assert.AreEqual(NavigationNodeType.Page, set[0].NodeType);
-        }
+        //    Assert.AreEqual("page^^pages^^0818cc78-19b3-4ed7-bbd1-1f5218403fef", set[0].Id);
+        //    Assert.AreEqual("0818cc78-19b3-4ed7-bbd1-1f5218403fef", set[0].OriginalId);
+        //    Assert.AreEqual("pages@mozu", set[0].OriginalCollection);
+        //    Assert.AreEqual("_navigation", set[0].ParentId);
+        //    Assert.AreEqual("home", set[0].Name);
+        //    Assert.AreEqual("/default", set[0].Url);
+        //    Assert.AreEqual(1, set[0].Index);
+        //    Assert.AreEqual(NavigationNodeType.Page, set[0].NodeType);
+        //}
 
         [Test]
         public void Test_Deserialize_weird_nodetype()
