@@ -17,7 +17,7 @@ Ext.define('Taco.model.CmsDocument', {
             config = Ext.applyIf(config, {
                 action: 'read',
                 id: lookupInfo.id,
-                documentListName: lookupInfo.documentListName
+                listFQN: lookupInfo.listFQN
 
             });
 
@@ -50,11 +50,11 @@ Ext.define('Taco.model.CmsDocument', {
         },
     },
     constructor: function (data, id, raw, convertedData) {
-        if (raw && raw.documentListName && raw.id) {
-            raw.uniqueId = raw.documentListName + "/" + raw.id;
+        if (raw && raw.listFQN && raw.id) {
+            raw.uniqueId = raw.listFQN + "/" + raw.id;
         }
-        if (data && data.documentListName && data.id) {
-            data.uniqueId = data.documentListName + "/" + data.id;
+        if (data && data.listFQN && data.id) {
+            data.uniqueId = data.listFQN + "/" + data.id;
         }
         
         this.callParent(arguments);
@@ -67,11 +67,11 @@ Ext.define('Taco.model.CmsDocument', {
             "name": "uniqueId",
             "type": "string",
             convert:function (v, r) {
-                if (r.raw && r.raw.documentListName && r.raw.id) {
-                    return r.raw.documentListName + "/" + r.raw.id;
+                if (r.raw && r.raw.listFQN && r.raw.id) {
+                    return r.raw.listFQN + "/" + r.raw.id;
                 }
-                if (r.datq && r.datq.documentListName && r.datq.id) {
-                    return r.datq.documentListName + "/" + r.datq.id;
+                if (r.datq && r.datq.listFQN && r.datq.id) {
+                    return r.datq.listFQN + "/" + r.datq.id;
                 }
                 return v;
             }
@@ -83,7 +83,7 @@ Ext.define('Taco.model.CmsDocument', {
             defaultValue:null
         },
         {
-            "name": "documentType",
+            "name": "documentTypeFQN",
             "type": "string",
             "useNull": true,
             defaultValue: null
@@ -96,7 +96,7 @@ Ext.define('Taco.model.CmsDocument', {
         },
      
         {
-            "name": "documentListName",
+            "name": "listFQN",
             "type": "string",
             "useNull": true,
             defaultValue: null

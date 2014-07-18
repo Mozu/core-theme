@@ -1001,9 +1001,9 @@ Ext.define('Taco.view.website.Index', {
                 tenantId: Taco.app.context.getTenantId(),
 
                 listFQN: listMetaData.listFQN,
-                documentListName: listMetaData.listFQN || listMetaData.name,
+                listFQN: listMetaData.listFQN || listMetaData.name,
                 entityType: listMetaData.entityType,
-                documentType: listMetaData.documentTypes && listMetaData.documentTypes.length ? listMetaData.documentTypes[0] : undefined,
+                documentTypeFQN: listMetaData.documentTypes && listMetaData.documentTypes.length ? listMetaData.documentTypes[0] : undefined,
                 properties: {},
                 item: {}
 
@@ -1014,7 +1014,7 @@ Ext.define('Taco.view.website.Index', {
             menu = Ext.widget({
                 xtype: 'menu',
                 itemHandler: function (cmp) {
-                    newRecord.set('documentType', cmp.text);
+                    newRecord.set('documentTypeFQN', cmp.text);
                     me.loadEntityEditor(newRecord);
                 }
 
@@ -1046,7 +1046,7 @@ Ext.define('Taco.view.website.Index', {
             //pageContext: {
             //    cmsContext: {
             //        page: {
-            //            documentListName:record.get('documentListName'),
+            //            listFQN:record.get('listFQN'),
             //            id:record.get('')
             //        }
             //    }  
@@ -1086,7 +1086,7 @@ Ext.define('Taco.view.website.Index', {
 
         //todo see if is isWebPage...
 
-        me.navigate({ url: '/cms/' + record.get('documentListName') + '/' + record.get('name'), view: 'settings' });
+        me.navigate({ url: '/cms/' + record.get('listFQN') + '/' + record.get('name'), view: 'settings' });
         //me.toggleCard(1);
         return;
         //record.reload({

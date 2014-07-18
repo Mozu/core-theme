@@ -3690,19 +3690,19 @@ module.exports=
     },
     "document": {
         "get": {
-            "template": "{+cmsService}{/documentListName,documentId}/{?version,status}",
+            "template": "{+cmsService}{/listFQN,documentId}/{?version,status}",
             "shortcutParam": "documentId",
             "defaultParams": {
-                "documentListName": "default"
+                "listFQN": "default"
             }
         }
     },
     "documentbyname": {
         "get": {
-            "template": "{+cmsService}{documentListName}/documentTree/{documentName}/{?folderPath,version,status}",
+            "template": "{+cmsService}{listFQN}/documentTree/{documentName}/{?folderPath,version,status}",
             "shortcutParam": "documentName",
             "defaultParams": {
-                "documentListName": "default"
+                "listFQN": "default"
             }
         }
     },

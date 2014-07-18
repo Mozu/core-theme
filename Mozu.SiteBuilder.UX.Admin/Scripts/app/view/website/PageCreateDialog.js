@@ -67,8 +67,8 @@
                         cmsDoc;
 
                     cmsDoc = Ext.create('Taco.model.CmsDocument', {
-                        //  documentType: values.docInfo.documentType,
-                        //    documentListName: values.docInfo.documentListName,
+                        //  documentTypeFQN: values.docInfo.documentTypeFQN,
+                        //    listFQN: values.docInfo.listFQN,
                         name: values.name,
                         properties: {
                             "title": values.title,
@@ -82,10 +82,10 @@
                         success: function (cmsRecord) {
 
                             var navRecord = Ext.create('Taco.model.NavigationTreeNode', {
-                                id: 'page^^' + cmsRecord.get('documentListName') + '^^' + cmsRecord.get('id'),
+                                id: 'page^^' + cmsRecord.get('listFQN') + '^^' + cmsRecord.get('id'),
                                 editAction: 'move',
                                 nodeType: 'page',
-                                originalDocumentListName: cmsRecord.get('documentListName'),
+                                originalDocumentListName: cmsRecord.get('listFQN'),
                                 url: '/' + cmsRecord.get('name'),
                                 name: values.title
                             });

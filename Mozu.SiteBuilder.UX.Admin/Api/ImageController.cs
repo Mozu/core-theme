@@ -63,16 +63,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //    //    Value = doc.ProductId
             //    //}            
             //};
-            //var productFolder = (await _folderRepo.GetByPath("files", "/products")).ReadAsSync();
+            //var productFolder = (await _folderRepo.GetByPath("files@mozu", "/products")).ReadAsSync();
             //if (productFolder == null)
             //{
-            //    productFolder = (await _folderRepo.Create("files", new DC.Folder() { DocumentListName = "files", Name = "products", Path = "/" })).ReadAsSync();
+            //    productFolder = (await _folderRepo.Create("files@mozu", new DC.Folder() { ListFQN = "files@mozu", Name = "products", Path = "/" })).ReadAsSync();
 
             //}
             string fileName = doc.FileName;
            // string filter = String.Format("FolderId eq '{0}' and name sw \"{1}\"", productFolder.Id, Path.GetFileNameWithoutExtension(fileName));
 
-            var task = _cmsService.GetList2(contentCollection: "files" );
+            var task = _cmsService.GetList2(contentCollection: "files@mozu");
 
             var matchingFiles = (await task).ReadAsSync();
 
@@ -91,18 +91,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
            
             var cmsDoc = new DC.Document()
             {
-                DocumentType = "image",
+                DocumentTypeFQN = "image@mozu",
               //  FolderId = productFolder.Id,
                 //Properties = properties,
-                DocumentListName = "files",
+                ListFQN = "files@mozu",
                 //ContentSummary = new ContentStreamSummary()
                 //{
                 //   // MimeType = "image/jpeg"
                 //}
                 Name = fileName
             };
-            
-            var result = (await _docRepo.CreateDocument("files", cmsDoc)).ReadAsSync();
+
+            var result = (await _docRepo.CreateDocument("files@mozu", cmsDoc)).ReadAsSync();
             
             // TODO: Get AutoMapper set up
             doc.Id = result.Id;
@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             using(var fs = fileinfo.OpenRead())
             {
-                result = _docRepo.UpdateDocumentContent("files", docid, fs).Result.ResponseMessage;                
+                result = _docRepo.UpdateDocumentContent("files@mozu", docid, fs).Result.ResponseMessage;                
             }
 
             return Message<string>(result.IsSuccessStatusCode, "File uploaded");

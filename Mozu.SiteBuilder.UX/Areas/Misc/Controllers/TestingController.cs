@@ -128,8 +128,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Page = new DocumentRequest()
                 {
                     Path = "widgettest",
-                    DocumentListName = "pages",
-                    DocumentType = "web_page"
+                    ListFQN = "pages@mozu",
+                    DocumentTypeFQN = "web_page"
                 }
 
             };

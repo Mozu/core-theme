@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected IDocumentTypeWebApiClient _docTypeRepo;
         protected ICmsServiceWrapper _cmsService;
         
-        protected ICmsTypeHelper _cmsTypeHelper;
+        //protected ICmsTypeHelper _cmsTypeHelper;
         
         private readonly HyprViewEngine _hyprViewEngine;
       
@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IDocumentTypeWebApiClient docTypeRepo,
             
             ICmsServiceWrapper cmsService,
-            ICmsTypeHelper cmsTypeHelper,
+            //ICmsTypeHelper cmsTypeHelper,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
             HyprViewEngine hyprViewEngine
 
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
             
-            _cmsTypeHelper= cmsTypeHelper;
+            //_cmsTypeHelper= cmsTypeHelper;
             _hyprViewEngine = hyprViewEngine;
 
         }
@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> ContentIndex(string collection)
         {
 
-            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.DocumentListName == collection && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
+            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.ListFQN == collection && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
             var template = pageType != null ? pageType.Template : "document-collection";
 
 
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                               Page = new DocumentRequest()
                                                      {
                                                          Path = collection + ".index",
-                                                         DocumentListName = "pages"
+                                                         ListFQN = "pages@mozu"
                                                      },
                                               Template = new DocumentRequest
                                                          {
@@ -137,7 +137,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                     Page = new DocumentRequest()
                                                {
                                                    Path = pageName,
-                                                   DocumentListName = collection
+                                                   ListFQN = collection
                                                }
 
                                 };
@@ -196,18 +196,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 pageDefinition = this.SiteContext.Theme.PageTypes.Where(x=> 
                     !string.IsNullOrEmpty(x.Template)
                     &&
-                    ( !string.IsNullOrEmpty(x.DocumentType)  || !string.IsNullOrEmpty(x.DocumentListName ))
+                    ( !string.IsNullOrEmpty(x.DocumentTypeFQN)  || !string.IsNullOrEmpty(x.ListFQN ))
                     && 
-                    ( string.IsNullOrEmpty(x.DocumentType) || string.Equals( x.DocumentType , vm.DocumentType, StringComparison.OrdinalIgnoreCase ))
+                    ( string.IsNullOrEmpty(x.DocumentTypeFQN) || string.Equals( x.DocumentTypeFQN , vm.DocumentTypeFQN, StringComparison.OrdinalIgnoreCase ))
                     && 
-                    ( string.IsNullOrEmpty(x.DocumentListName) || string.Equals( x.DocumentListName , vm.DocumentListName, StringComparison.OrdinalIgnoreCase ))
+                    ( string.IsNullOrEmpty(x.ListFQN) || string.Equals( x.ListFQN , vm.ListFQN, StringComparison.OrdinalIgnoreCase ))
                     ).OrderBy(
-                    x=> ((string.IsNullOrEmpty(x.DocumentType) ?0:1))+ ((string.IsNullOrEmpty(x.DocumentListName) ?0:2))
+                    x=> ((string.IsNullOrEmpty(x.DocumentTypeFQN) ?0:1))+ ((string.IsNullOrEmpty(x.ListFQN) ?0:2))
                     ).FirstOrDefault()
                 ;
             }
             var template = pageDefinition != null ? pageDefinition.Template : "blank-page";
-           
+
+
+            if (PageContext.CmsContext.Template == null || PageContext.CmsContext.Template.Path != template)
+            {
+                this.PageContext.CmsContext.Template = new DocumentRequest()
+                                                       {
+                                                           Path = template
+                                                       };
+               
+
+            }
+
+
+
             var result = View(template, vm);
 
             
@@ -231,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //    var doc = new DC.Document()
         //    {
         //        Id = Guid.NewGuid().ToString(),
-        //        DocumentType = "web_page",
+        //        DocumentTypeFQN = "web_page",
         //        Properties = new List<DC.PropertyValue>(),
         //        Name = pageName
         //    };

@@ -15,12 +15,12 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public interface ICmsTypeHelper
-    {
-        DocumentType GetDocumentType(string name);
-        PropertyType GetPropertyType(string name);
+    //public interface ICmsTypeHelper
+    //{
+    //    DocumentTypeFQN GetDocumentType(string name);
+    //    PropertyType GetPropertyType(string name);
 
-    }
+    //}
 
 
     public interface IThemeEntityDefinitionProvider

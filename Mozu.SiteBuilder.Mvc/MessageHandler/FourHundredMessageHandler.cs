@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 Initialized = false,
                 Template = new DocumentRequest()
                 {
-                    DocumentListName = "templates",
+                    ListFQN = "pageTemplateContent@mozu",
                     Path = "404"
                 }
             };

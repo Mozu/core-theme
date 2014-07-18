@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerRequest();
 
             builder.RegisterType<CmsServiceWrapper2>().As<ICmsServiceWrapper>().InstancePerDependency();
-            builder.RegisterType<CmsTypeHelper>().As<ICmsTypeHelper>().InstancePerDependency();
+        //    builder.RegisterType<CmsTypeHelper>().As<ICmsTypeHelper>().InstancePerDependency();
             builder.RegisterType<ThemeEntityDefinitionProvider>().As<IThemeEntityDefinitionProvider>().InstancePerDependency();
 
             builder.RegisterType<ExceptionContextLogWrapper>();

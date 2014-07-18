@@ -80,7 +80,7 @@
 //                 {
 //                     if (_posts == null)
 //                     {
-//                         _posts = _cmsService.GetList2(contentCollection: "blogs", pageSize: 10, filter: "DocumentType eq post", sortBy: "InsertDate desc")
+//                         _posts = _cmsService.GetList2(contentCollection: "blogs", pageSize: 10, filter: "DocumentTypeFQN eq post", sortBy: "InsertDate desc")
 //                             .Result.ReadAsSync().Items
 //                             .Map<List<Post>>();
 //                     }
@@ -115,7 +115,7 @@
 //                 {
 //                     if (_blog == null)
 //                     {
-//                         _blog = _cmsService.GetList2(contentCollection: "blogs", filter: "DocumentType eq blog", pageSize: 1)
+//                         _blog = _cmsService.GetList2(contentCollection: "blogs", filter: "DocumentTypeFQN eq blog", pageSize: 1)
 //                             .Result.ReadAsSync().Items.Select(x => AutoMapper.Mapper.Map<Blog>(x)).FirstOrDefault();
 //                         if (_blog != null)
 //                             _blog.Tags = Tags;
@@ -143,7 +143,7 @@
 //         {
 //             var blog = _cache.Blog;
 
-//             blog.posts = _cmsService.GetList2(contentCollection: "blogs", filter: String.Format("DocumentType eq post and Properties.tags eq '{0}'", id), pageSize: 20)
+//             blog.posts = _cmsService.GetList2(contentCollection: "blogs", filter: String.Format("DocumentTypeFQN eq post and Properties.tags eq '{0}'", id), pageSize: 20)
 //                 .Result.ReadAsSync().Items.Select(x => Mapper.Map<Post>(x)).ToList();
 //             var pc = this.PageContext;
 //             //pc.CollectionId = "blogs";

@@ -160,7 +160,7 @@ Ext.define('Taco.view.website.Tree', {
                             nodeType: 'link',
                             iconCls: 'link',
                             name: data.records[0].raw.metaData.name,
-                            url: '/cms/' + data.records[0].raw.metaData.name
+                            url: '/cms/' + data.records[0].raw.metaData.listFQN
                         },
                         node,
                         overIndex = overModel.parentNode.indexOf(overModel);
@@ -321,7 +321,7 @@ Ext.define('Taco.view.website.Tree', {
         var cmsDoc = Ext.create('Taco.model.CmsDocument', {
             //uniqueId: record.get('originalDocumentListName') + '_' + record.get('originalId'),
             id: record.get('originalId'),
-            documentListName: record.get('originalDocumentListName')
+            listFQN: record.get('originalDocumentListName')
         });
         cmsDoc.destroy({
             success: function () {
@@ -456,8 +456,8 @@ Ext.define('Taco.view.website.Tree', {
                             cmsDoc;
 
                         cmsDoc = Ext.create('Taco.model.CmsDocument', {
-                          //  documentType: values.docInfo.documentType,
-                        //    documentListName: values.docInfo.documentListName,
+                          //  documentTypeFQN: values.docInfo.documentTypeFQN,
+                        //    listFQN: values.docInfo.listFQN,
                             name: values.name,
                             properties: {
                                 "title": values.title,
@@ -471,10 +471,10 @@ Ext.define('Taco.view.website.Tree', {
                             success: function (cmsRecord) {
                                 
                                 var navRecord = Ext.create('Taco.model.NavigationTreeNode', {
-                                    id: 'page^^' + cmsRecord.get('documentListName') + '^^' + cmsRecord.get('id'),
+                                    id: 'page^^' + cmsRecord.get('listFQN') + '^^' + cmsRecord.get('id'),
                                     editAction: 'move',
                                     nodeType: 'page',
-                                    originalDocumentListName: cmsRecord.get('documentListName'),
+                                    originalDocumentListName: cmsRecord.get('listFQN'),
                                     url: '/' + cmsRecord.get('name'),
                                     name: values.title                                    
                                 });

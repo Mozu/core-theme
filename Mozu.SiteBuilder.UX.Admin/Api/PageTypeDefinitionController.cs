@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
          //static HashSet<int> g_provisioned = new HashSet<int>();
         //private readonly IDocumentListWebApiClient _docRepo;
-        ICmsTypeHelper _cmsTypeHelper;
+        //ICmsTypeHelper _cmsTypeHelper;
         IDocumentListWebApiClient _docRepo;
         ICmsServiceWrapper _cmsService;
         private readonly SiteContext _siteContext;
@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public PageTypeDefinitionController(
             IDocumentListWebApiClient docRepo,
             IApiContext apiContext,
-            ICmsTypeHelper cmsTypeHelper,
+            //ICmsTypeHelper cmsTypeHelper,
             ICmsServiceWrapper cmsService ,
             SiteContext siteContext)//, IPageTypeProvider pageTypeProvider)
         {
@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _siteContext = siteContext;
 
             //   _pageTypeProvider = pageTypeProvider;
-            _cmsTypeHelper = cmsTypeHelper;
+            //_cmsTypeHelper = cmsTypeHelper;
         
         }
 

@@ -20,7 +20,7 @@ Ext.define('Taco.model.CmsDocumentDraft', {
             "useNull": true
         },
         {
-            "name": "documentListName",
+            "name": "listFQN",
             "type": "string",
             "useNull": true
         },

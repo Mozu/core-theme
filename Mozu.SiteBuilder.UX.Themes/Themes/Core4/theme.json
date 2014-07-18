@@ -10,36 +10,36 @@
     },
     "editors": [{
         "documentLists": [
-            "snippets"
+            "snippets@mozu"
         ],
-        "id": "snippet",
+        "id": "snippet@mozu",
         "path": "snippet.js",
         "priority": 0.2
-    },{
+    }, {
         "documentTypes": [
-            "web_page"
+            "web_page@mozu"
         ],
-        "id": "web_page",
+        "id": "web_page@mozu",
         "path": "web_page.js",
         "priority": 0.2
     }, {
         "documentTypes": [
-            "post"
+            "post@mozu"
         ],
-        "id": "post",
+        "id": "post@mozu",
         "path": "post.js",
         "priority": 0.2
-    },{
-        "id": "about-us",
+    }, {
+        "id": "about-us@mozu",
         "path": "about-us.js"
     }, {
         "id": "email-orderconfirmation",
         "path": "email-orderconfirmation.js"
     }, {
-        "id": "email",
+        "id": "email@mozu",
         "path": "email.js",
-        "documentTypes": [
-            "email"
+        "documentLists": [
+            "emailTemplateContent@mozu"
         ],
         "priority": 0.2
     }],
@@ -248,10 +248,10 @@
         "title": "Login",
         "userCreatable": false
     }, {
-           "documentType": "post",
-            "entityType": "web-page",
-            "template": "post"
-        }],
+        "documentType": "post",
+        "entityType": "web-page",
+        "template": "post"
+    }],
     "settings": {
         "allowWishlist": false,
         "autocompleteProducts": true,

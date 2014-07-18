@@ -395,7 +395,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
           [System.Web.Http.HttpGet]
         public ActionResult Download(string collection, string documentId)
         {
-            var doc = _docRepo.GetDocument( documentListName:collection, documentId:documentId ).Result.ReadAsSync();
+            var doc = _docRepo.GetDocument(documentListName: collection, documentId: documentId).Result.ReadAsSync();
             var content = _docRepo.GetDocumentContent(collection, documentId).Result.ResponseMessage.Content;
             var stream = content.ReadAsStreamAsync().Result;
 

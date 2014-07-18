@@ -66,7 +66,7 @@ Ext.define('Taco.view.entityManager.Index', {
                                 var record = me.getCurrentEntityRecord(),
                                     siteId = Taco.app.context.getContextAtLevel('s').id;
 
-                                url = "/cms/" + record.get('documentListName') + "/" + record.get('name');
+                                url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
                                 window.open('/_gosite/' + siteId + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
                             }
                         }
@@ -224,10 +224,10 @@ Ext.define('Taco.view.entityManager.Index', {
         var me = this,
             record = new Taco.model.Entity({
                 listFQN: this.grid.listMetaData.listFQN,
-                documentListName:  this.grid.listMetaData.listFQN || this.grid.listMetaData.name,
+                listFQN:  this.grid.listMetaData.listFQN || this.grid.listMetaData.name,
                 tenantId: Taco.app.context.getTenantId(),
                 entityType: this.grid.listMetaData.entityType,
-                documentType: this.grid.listMetaData.documentTypes && this.grid.listMetaData.documentTypes.length ? this.grid.listMetaData.documentTypes[0] : undefined,
+                documentTypeFQN: this.grid.listMetaData.documentTypes && this.grid.listMetaData.documentTypes.length ? this.grid.listMetaData.documentTypes[0] : undefined,
                 properties: {},
                 item: {}
 
@@ -239,7 +239,7 @@ Ext.define('Taco.view.entityManager.Index', {
             menu = Ext.widget({
                 xtype: 'menu',
                 itemHandler: function (cmp) {
-                    record.set('documentType', cmp.text);
+                    record.set('documentTypeFQN', cmp.text);
                     me.promptCmsName(record);
                 }
 

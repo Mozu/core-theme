@@ -1,7 +1,7 @@
 ﻿/**
  * @class Taco.model.LocationType
  */
-Ext.define('Taco.model.DocumentType', {
+Ext.define('Taco.model.DocumentTypeFQN', {
     extend: 'Taco.core.data.Model',
     idProperty: "name",
    

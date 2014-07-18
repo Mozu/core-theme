@@ -18,7 +18,7 @@ Ext.define('Taco.model.Entity', {
             });
             params = config.params || {}
 
-            params.list = lookupInfo.list || lookupInfo.documentListName
+            params.list = lookupInfo.list || lookupInfo.listFQN
             params.entityType = lookupInfo.entityType || 'cms'
             params.id = lookupInfo.id;
 
@@ -51,7 +51,7 @@ Ext.define('Taco.model.Entity', {
     },
     getLoadParams:function () {
       return {
-          list: this.get('documentListName') || this.get('entityListFullName'),
+          list: this.get('listFQN') ,
           entityType: this.get('entityType'),
           id: this.get('id')
       }  
@@ -62,8 +62,8 @@ Ext.define('Taco.model.Entity', {
             "type": "string",
             convert: function (v, rec) {
                 if (rec.raw) {
-                    if (rec.raw.documentListName) {
-                        return 'cms_' + rec.raw.documentListName + '_' + rec.raw.id;
+                    if (rec.raw.listFQN) {
+                        return 'cms_' + rec.raw.listFQN + '_' + rec.raw.id;
                     } else {
                         return rec.raw.entityType + '_' + rec.raw.listFQN + '_' + rec.raw.id;
                     }
@@ -149,22 +149,22 @@ Ext.define('Taco.model.Entity', {
             useNull: true
         },
         {
-            name: 'documentType',
+            name: 'documentTypeFQN',
             type: 'auto',
             useNull: true
         },
         {
-            name: 'documentListName',
+            name: 'listFQN',
             type: 'auto',
             useNull: true,
             defaultValue:null,
             //convert:function (v, r) {
             //    if (!v) {
-            //        if (r.data && r.data.documentListName) {
-            //            return r.data.documentListName;
+            //        if (r.data && r.data.listFQN) {
+            //            return r.data.listFQN;
             //        }
-            //        if (r.raw && r.raw.documentListName) {
-            //            return r.raw.documentListName;
+            //        if (r.raw && r.raw.listFQN) {
+            //            return r.raw.listFQN;
             //        }
             //        if (r.data && r.data.listFQN) {
             //            return r.data.listFQN;
@@ -176,11 +176,11 @@ Ext.define('Taco.model.Entity', {
                 
             //},
             //serialize:function (v, r) {
-            //    if (r.data && r.data.documentListName) {
-            //            return r.data.documentListName;
+            //    if (r.data && r.data.listFQN) {
+            //            return r.data.listFQN;
             //        }
-            //        if (r.raw && r.raw.documentListName) {
-            //            return r.raw.documentListName;
+            //        if (r.raw && r.raw.listFQN) {
+            //            return r.raw.listFQN;
             //        }
             //        if (r.data && r.data.listFQN) {
             //            return r.data.listFQN;

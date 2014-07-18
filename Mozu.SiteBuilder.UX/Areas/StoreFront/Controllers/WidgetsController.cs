@@ -30,13 +30,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
 
         
-        ICmsTypeHelper _cmsTypeHelper;
+     //   ICmsTypeHelper _cmsTypeHelper;
         private readonly HyprViewEngine _viewEngine;
         ICmsServiceWrapper _cmsService;
         private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
 
 
-        public WidgetsController(HyprViewEngine viewEngine, ICmsTypeHelper cmsTypeHelper, ICmsServiceWrapper cmsService, IThemeEntityDefinitionProvider themeEntityDefinitionProvider)
+        public WidgetsController(HyprViewEngine viewEngine, /*ICmsTypeHelper cmsTypeHelper,*/ ICmsServiceWrapper cmsService, IThemeEntityDefinitionProvider themeEntityDefinitionProvider)
         {
             _viewEngine = viewEngine;
 
@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
 
 
-            _cmsTypeHelper = cmsTypeHelper;
+            //_cmsTypeHelper = cmsTypeHelper;
         }
 
 

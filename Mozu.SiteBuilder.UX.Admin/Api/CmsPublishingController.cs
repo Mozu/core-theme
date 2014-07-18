@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     
     public class PublishArgs
     {
-        public string DocumentListName { get; set; }
+        public string ListFQN { get; set; }
 
        
     }
@@ -128,12 +128,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 throw result.ReadException();
             }
-           // IEnumerable<IGrouping<string, DocumentDraft>> documentListGroups = draftsReadyForPublishing.GroupBy(doc => doc.DocumentListName);
+           // IEnumerable<IGrouping<string, DocumentDraft>> documentListGroups = draftsReadyForPublishing.GroupBy(doc => doc.ListFQN);
 
             //foreach (IGrouping<string, DocumentDraft> docGroup in documentListGroups)
             //{
             //    List<string> docIds = docGroup.Select(doc => doc.Id).ToList();
-            //    var result = await _documentPublishingWebApiClient.PublishDocuments(documentIds:docGroup.Key.ToList() /*documentListName: */ docGroup.Key, /*documentIds: */ docIds);
+            //    var result = await _documentPublishingWebApiClient.PublishDocuments(documentIds:docGroup.Key.ToList() /*listFQN: */ docGroup.Key, /*documentIds: */ docIds);
             //    returnedIds.AddRange(result.ReadAsAsync().Result);
             //}
 
@@ -170,10 +170,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             args = args ?? new PublishArgs();
 
             // TODO: The service does not currently support "null", so we pass HACK instead.
-            string documentListName = args.DocumentListName;
+            string listFQN = args.ListFQN;
 
 
-            if (documentListName == null)
+            if (listFQN == null)
             {
                 var res = await _documentPublishingWebApiClient.PublishDocuments(null);
                 if (res.HasException)
@@ -184,7 +184,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
            
             else
             {
-                var res = await _documentPublishingWebApiClient.PublishDocuments(null, documentLists: documentListName);
+                var res = await _documentPublishingWebApiClient.PublishDocuments(null, documentLists: listFQN);
                 if (res.HasException)
                 {
                     throw res.ReadException();
@@ -204,12 +204,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             args = args ?? new PublishArgs();
             // TODO: The service does not currently support "null", so we pass HACK instead.
-            string documentListName = (args.DocumentListName);
+            string listFQN = (args.ListFQN);
 
             // TODO: This method implementation should be thrown away when the Mozu service supports a DiscardAll().
             // See related note in PublishAll().
 
-            if (documentListName == null)
+            if (listFQN == null)
             {
                 var res = await _documentPublishingWebApiClient.DeleteDocumentDrafts(null);
                 if (res.HasException)
@@ -219,7 +219,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                var res = await _documentPublishingWebApiClient.DeleteDocumentDrafts(null, documentLists: documentListName);
+                var res = await _documentPublishingWebApiClient.DeleteDocumentDrafts(null, documentLists: listFQN);
                 if (res.HasException)
                 {
                     throw res.ReadException();
@@ -232,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         /// <summary>
-        /// Translates the UI's idea of a document type (Page and Template) into the appropriate DocumentListName for a cms collection.
+        /// Translates the UI's idea of a document type (Page and Template) into the appropriate ListFQN for a cms collection.
         /// If null or an unsupported document type is provided, this will return null.
         /// </summary>
         

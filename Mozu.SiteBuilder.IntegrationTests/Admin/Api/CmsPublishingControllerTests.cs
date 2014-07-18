@@ -27,13 +27,13 @@
 //                new DC.DocumentDraftSummary {
 //                    Id = Guid.NewGuid(),
 //                    Name = "Test Document 1",
-//                    DocumentListName = "Pages1"
+//                    ListFQN = "Pages1"
 
 //                },
 //                new DC.DocumentDraftSummary {
 //                    Id = Guid.NewGuid(),
 //                    Name = "Test Document 2",
-//                    DocumentListName = "Pages2"
+//                    ListFQN = "Pages2"
 //                }
 //            }
 //        };
@@ -90,7 +90,7 @@
 //            List<DocumentDraft> itemlist = new List<DocumentDraft> { d };
 
 //            var response = _testedController.Publish(itemlist).Result;
-//            _documentClient.Received(1).PublishDocuments(d.DocumentListName, Arg.Is<List<string>>(arg => arg.Count == 1 && arg[0] == d.Id));
+//            _documentClient.Received(1).PublishDocuments(d.ListFQN, Arg.Is<List<string>>(arg => arg.Count == 1 && arg[0] == d.Id));
 
 //            response.Success.ShouldBeTrue();
 //            response.Items[0].ShouldEqual(d.Id);
@@ -115,7 +115,7 @@
 
 //            var response = _testedController.Discard(itemlist).Result;
 
-//            _documentClient.Received(1).Discard(d.DocumentListName, Arg.Is<List<string>>(arg => arg.Count == 1 && arg[0] == d.Id));
+//            _documentClient.Received(1).Discard(d.ListFQN, Arg.Is<List<string>>(arg => arg.Count == 1 && arg[0] == d.Id));
 
 //            response.Success.ShouldBeTrue();
 //            response.Items[0].ShouldEqual(d.Id);

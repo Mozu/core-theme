@@ -23,13 +23,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
     {
         ISiteBuilderApiContext _apiContext;
         IDocumentListWebApiClient _docRepo;
-        ICmsTypeHelper _cmsTypeHelper;
+        
         private readonly ILifetimeScope _lifetimescope;
 
 
         public CmsServiceWrapper2(IDocumentListWebApiClient docRepo,
             ISiteBuilderApiContext apiContext,
-            ICmsTypeHelper cmsTypeHelper,
             ILifetimeScope lifetimescope
             )
         {
@@ -42,7 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 _docRepo = _docRepo.CloneWithoutUserClaims();
             }
             
-            _cmsTypeHelper = cmsTypeHelper;
+          //  _cmsTypeHelper = cmsTypeHelper;
             _lifetimescope = lifetimescope;
         }
 
@@ -50,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             doc.Properties = doc.Properties ?? new JObject();
 
-            var documentTypeId = doc.Get<string>(CmsConstants.Widgets.page_type_definition);
+            var documentTypeId = doc.Get<string>(CmsConstants.Documents.page_type_definition);
             PageTypeDefinition pageTypeDef = null;
             var themeEntityDefinitionProvider = _lifetimescope.Resolve<IThemeEntityDefinitionProvider>();
             if (documentTypeId == null)
@@ -71,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             var d = doc;
 
             d.Name = string.IsNullOrEmpty(d.Name) ? Guid.NewGuid().ToString() : d.Name;
-            d.DocumentType = string.IsNullOrEmpty(d.DocumentType) ? pageTypeDef.DocumentType : d.DocumentType;
+            d.DocumentTypeFQN = string.IsNullOrEmpty(d.DocumentTypeFQN) ? pageTypeDef.DocumentTypeFQN : d.DocumentTypeFQN;
 
             if (string.IsNullOrEmpty(d.Get<string>(CmsConstants.Documents.template)))
             {
@@ -81,7 +80,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
 
 
-            d.DocumentListName = string.IsNullOrEmpty(d.DocumentListName) ? CmsConstants.Documents.default_collection_name : d.DocumentListName;
+            d.ListFQN = string.IsNullOrEmpty(d.ListFQN) ? CmsConstants.Documents.default_collection_name : d.ListFQN;
 
             if (pageTypeDef.Zones != null && pageTypeDef.Zones.Count> 0)
             {
@@ -91,7 +90,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
 
            
-            var task = _docRepo.CreateDocument( d.DocumentListName, d);
+            var task = _docRepo.CreateDocument( d.ListFQN, d);
             return task;
         }
 
@@ -124,7 +123,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             //remove when patch comes back.
             if (doc.Properties["widgets"]== null )
             {
-                var d = _docRepo.GetDocument(documentListName: doc.DocumentListName, documentId: doc.Id).Result.ReadAsSync();
+                var d = _docRepo.GetDocument(documentListName: doc.ListFQN, documentId: doc.Id).Result.ReadAsSync();
 
                 // doc.Set("widgets", );
                 JToken widgets;
@@ -134,7 +133,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 }
 
             }
-            return _docRepo.UpdateDocument(doc.DocumentListName, doc.Id, doc);
+            return _docRepo.UpdateDocument(doc.ListFQN, doc.Id, doc);
         }
 
 
@@ -147,7 +146,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.DocumentCollection >> GetList2(string contentCollection = null, string filter = null, string sortBy = null, int? pageSize = 25, int? startIndex = 0)
         {
-            return _docRepo.GetDocuments( 
+            return _docRepo.GetDocuments(
                     documentListName: contentCollection, 
                               filter: filter, 
        
@@ -160,7 +159,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status = null )
         {
-            var task = _docRepo.GetTreeDocument(  
+            var task = _docRepo.GetTreeDocument(
                 documentListName: contentCollection,
                     documentName: name
                     //,
@@ -209,19 +208,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         public Task<ServiceClientResponse<DC.Document>> RawCreate2(DC.Document doc)
         {
-            return _docRepo.CreateDocument(doc.DocumentListName, doc
+            return _docRepo.CreateDocument(doc.ListFQN, doc
                 //,publishState:"latest"
                 );
         }
 
         public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document doc)
         {
-            return Delete2(doc.DocumentListName, doc.Id);
+            return Delete2(doc.ListFQN, doc.Id);
         }
 
-        public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string documentListName, string documentId)
+        public Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string listFQN, string documentId)
         {
-            return _docRepo.DeleteDocument(documentListName, documentId)
+            return _docRepo.DeleteDocument(listFQN, documentId)
                 //, _apiContext.CmsDraftState)
                 .ContinueWith(t => new Tuple<bool, ServiceClientResponse<StreamContent>>(t.Result.ResponseMessage.IsSuccessStatusCode, t.Result));
         }

@@ -50,14 +50,14 @@
 //        [DataMember(Name = "properties")]
 //        public CmsPropertyCollection Properties { get; set; }
 
-//        [DataMember(Name = "documentType")]
+//        [DataMember(Name = "documentTypeFQN")]
 //        public string DocumentTypeName { get; set; }
         
 //        [DataMember(Name="collection")]
 //        public string Collection { get; set; }
 
         
-//        //public DocumentType DocType { get; set; }
+//        //public DocumentTypeFQN DocType { get; set; }
 
 //        ICmsTypeHelper _th;
 //        public ICmsTypeHelper TypeHelper
@@ -103,7 +103,7 @@
 //                return retValue;
 //            }
 //        }
-//        public string DocumentType { get; set; }
+//        public string DocumentTypeFQN { get; set; }
 
 //        public DateTime? InsertDate { get; set; }
 //        public string Name { get; set; }
@@ -127,7 +127,7 @@
 //            //mmd = new ModelMetadata(ModelMetadataProviders.Current, this.GetType(), () => prop.GetValue(this, null), prop.PropertyType, propertyName);
 //            mmd["documentId"] = this.Id;
 //            mmd["collection"] = this.Collection;
-//            mmd["documentType"] = this.DocumentTypeName;
+//            mmd["documentTypeFQN"] = this.DocumentTypeName;
 //            mmd["fieldName"] = propertyName.ToLowerInvariant();
 //            mmd["isShadow"] = this.IsPreview ;
             
@@ -175,7 +175,7 @@
 //            mmd["data-attribute-name"] = "data-editing-widget";
 //            mmd["documentId"] = this.Id;
 //            mmd["collection"] = this.Collection;
-//            mmd["documentType"] = this.DocumentTypeName ;
+//            mmd["documentTypeFQN"] = this.DocumentTypeName ;
 
 //            mmd["isShadow"] = this.IsPreview;
             

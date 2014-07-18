@@ -50,12 +50,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 resItems.Add(new SiteDirectoryNode()
                 {
                     name = "Pages",
-                    id = "folder" + STRINGSPLITDELIM + "pages" ,
+                    id = "folder" + STRINGSPLITDELIM + "pages@mozu",
 
                     leaf = false 
                 });
 
-                var blogTask = _cmsService.GetList2(contentCollection: "blogs", filter: "DocumentType eq blog", pageSize: 1);
+                var blogTask = _cmsService.GetList2(contentCollection: "blogs", filter: "DocumentTypeFQN eq blog", pageSize: 1);
 
                 var blogDoc = (await blogTask).ReadAsSync().Items.FirstOrDefault();
                 if (blogDoc != null)
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 new SiteDirectoryNode (){
                                     name = x.Name, 
                                     leaf = true,
-                                    url = "/" + x.DocumentListName + "/" + x.Name  
+                                    url = "/" + x.ListFQN + "/" + x.Name  
 
                                 });
                         resItems.AddRange( pages )   ;

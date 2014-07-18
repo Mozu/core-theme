@@ -46,9 +46,9 @@ Ext.define('Taco.view.website.entityAdapters.DocumentCollectionEntityAdapter', {
         }
         record = Ext.create('Taco.model.Entity', {
             entityType: 'cms',
-            documentType: this.pageContext.cmsContext.page.documentType||"web_page",
+            documentTypeFQN: this.pageContext.cmsContext.page.documentTypeFQN||"web_page",
             name: this.pageContext.cmsContext.page.path,
-            documentListName: this.pageContext.cmsContext.page.documentListName
+            listFQN: this.pageContext.cmsContext.page.listFQN
         });
         me.set(record);
 

@@ -6,9 +6,9 @@ Ext.define('Taco.view.siteSelection.Index', {
     cls: 'taco-theme-selector',
     
     initComponent: function () {
-        var me = this;
-        var dataStore = { "site": [] };
-        var contextStore = Ext.clone(Taco.app.context.getStore());
+        var me = this,
+            dataStore = { "site": [] },
+            contextStore = Ext.clone(Taco.app.context.getStore());
         
 
         this.header = {
@@ -21,7 +21,7 @@ Ext.define('Taco.view.siteSelection.Index', {
         } }]);
 
         
-        Ext.Array.forEach(contextStore.data.items, function (el, index, arr) {
+        Ext.Array.forEach(contextStore.data.items, function (el) {
             dataStore.site.push({ "id": el.data.id, "name": el.data.name, "urlToken": el.data.urlToken });
         }, me);
 
@@ -47,7 +47,7 @@ Ext.define('Taco.view.siteSelection.Index', {
                                         '</li>',
                                     '</ul>',
                                     '<div class="title-large">{[values.name]}</div>',
-                                    '<img class="thumbnail" src="/_gosite/{[values.id]}?transfer=sitethumbnail&environment=staging&ts={[Ext.Date.now()]}" >',
+                                    '<img class="thumbnail" style="max-width:300px;max-height:300px" src="/admin/app/themes/sitethumbNail?siteId={[values.id]}&ts={[Ext.Date.now()]}" >',
                                 '</li>',
                     '</tpl>',
                 '</ul>',
@@ -61,7 +61,7 @@ Ext.define('Taco.view.siteSelection.Index', {
                         delegate: '[data-url]',
                         fn: function (event, node) {
                             event.stopEvent();
-                            var site = Taco.app.context.findSite(parseInt(node.dataset.siteid));
+                            var site = Taco.app.context.findSite(parseInt(node.dataset.siteid,10));
                             Taco.app.context.setCurrentContext(site);
                             Taco.core.StateManager.attemptNavigate(node.dataset.url);
                         }

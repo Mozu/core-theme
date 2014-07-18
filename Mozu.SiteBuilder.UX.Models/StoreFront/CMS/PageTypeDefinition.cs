@@ -28,8 +28,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [DataMember (Name = "entityType")]
         public string EntityType { get; set; }
 
-        [DataMember (Name = "documentType")]
-        public string DocumentType { get; set; }
+        [DataMember (Name = "documentTypeFQN")]
+        public string DocumentTypeFQN { get; set; }
 
     
 
@@ -44,8 +44,37 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
 
         public string FullPath { get; set; }
 
+         [DataMember(Name = "listFQN")]
+        public string ListFQN { get; set; }
+
+
          [DataMember(Name = "documentListName")]
-        public string DocumentListName { get; set; }
+         public string DocumentListName  {
+            get { return null; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.ListFQN = value + (value.Contains("@") ? null : "@mozu");
+                }
+            }
+        }
+
+
+        [DataMember(Name = "documentType")]
+        public string DocumentType
+        {
+            get { return null; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.DocumentTypeFQN = value + (value.Contains("@") ? null : "@mozu");
+                }
+            }
+        }
+
+
     }
 
     public class EditorDefinition

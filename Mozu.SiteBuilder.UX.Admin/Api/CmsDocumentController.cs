@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         //static HashSet<int> g_provisioned = new HashSet<int>();
         //private readonly IDocumentListWebApiClient _docRepo;
-        ICmsTypeHelper _cmsTypeHelper;
+        //ICmsTypeHelper _cmsTypeHelper;
 
      
         ICmsServiceWrapper _cmsService;
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
       
             
           //  ISessionDocumentStore sessionDocStore,
-            ICmsTypeHelper cmsTypeHelper,
+            //ICmsTypeHelper cmsTypeHelper,
              ICmsServiceWrapper cmsService,
             Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClien,
             ILogger logger 
@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _logger = logger;
             //  _docRepo = docRepo;
          //   _sessionDocStore = sessionDocStore;
-            _cmsTypeHelper = cmsTypeHelper;
+         //   _cmsTypeHelper = cmsTypeHelper;
          //   provHelper.ProvisionCms();
            
 
@@ -109,8 +109,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     
                     if (pageDef != null)
                     {
-                        doc.DocumentType = string.IsNullOrEmpty(doc.DocumentType) ? pageDef.DocumentType : doc.DocumentType;
-                        doc.DocumentListName = string.IsNullOrEmpty(doc.DocumentListName) ? (string.IsNullOrEmpty(pageDef.DocumentListName)?"pages": pageDef.DocumentListName ): doc.DocumentListName;
+                        doc.DocumentTypeFQN = string.IsNullOrEmpty(doc.DocumentTypeFQN) ? pageDef.DocumentTypeFQN : doc.DocumentTypeFQN;
+                        doc.ListFQN = string.IsNullOrEmpty(doc.ListFQN) ? (string.IsNullOrEmpty(pageDef.ListFQN)?"pages@mozu": pageDef.ListFQN ): doc.ListFQN;
                         if (pageDef.Zones != null)
                         {
                             doc.Set(CmsConstants.Documents.widget_prop, pageDef.Zones);
@@ -119,25 +119,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
 
 
-                if (string.IsNullOrEmpty(doc.DocumentType) || string.IsNullOrEmpty(doc.DocumentListName))
+                if (string.IsNullOrEmpty(doc.DocumentTypeFQN) || string.IsNullOrEmpty(doc.ListFQN))
                 {
 
                 }
                 //todo rename stuff.
-                createTasks.Add(_documentListWebApiClien.CreateDocument(doc.DocumentListName, doc));
+                createTasks.Add(_documentListWebApiClien.CreateDocument(doc.ListFQN, doc));
 
             }
 
             await Task.WhenAll(createTasks);
             return List2(createTasks.Select(x=> x.Result.ReadAsSync()).ToList());
            
-            //var exitingTasks = docs.Select(doc => _cmsService.GetByPath2(doc.DocumentListName, doc.Name)).ToList();
+            //var exitingTasks = docs.Select(doc => _cmsService.GetByPath2(doc.ListFQN, doc.Name)).ToList();
             //await Task.WhenAll(exitingTasks);
             //var exiting = exitingTasks.Select(x => x.Result).Where(x => x.ResponseMessage.IsSuccessStatusCode).Select(x=>x.ReadAsSync()).ToList();
             //var updates = new List<DC.Document>();
             //exiting.ForEach(ed =>
             //    {
-            //        var idx = docs.FindIndex(x => string.Equals(x.DocumentListName, ed.DocumentListName, StringComparison.OrdinalIgnoreCase) && string.Equals(x.Name, ed.Name, StringComparison.OrdinalIgnoreCase));
+            //        var idx = docs.FindIndex(x => string.Equals(x.ListFQN, ed.ListFQN, StringComparison.OrdinalIgnoreCase) && string.Equals(x.Name, ed.Name, StringComparison.OrdinalIgnoreCase));
             //        if (idx > -1)
             //        {
             //            updates.Add(docs[idx]);
@@ -188,16 +188,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var source = message.source;
             message.zones = message.zones ?? new List<AVM.ZoneRuntimeData>();
 
-            var docResult = (await _documentListWebApiClien.GetTreeDocument(documentListName: source.DocumentListName, documentName: source.Path));
+            var docResult = (await _documentListWebApiClien.GetTreeDocument(documentListName: source.ListFQN, documentName: source.Path));
             DC.Document doc;
             bool exitst = false;
             if (docResult.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
                 doc = new DC.Document()
                       {
-                          DocumentListName = source.DocumentListName,
+                          ListFQN = source.ListFQN,
                           Name = source.Path,
-                          DocumentType = source.DocumentType
+                          DocumentTypeFQN = source.DocumentTypeFQN
                       };
             }
             else
@@ -243,23 +243,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             if (exitst)
             {
-                doc = (await _documentListWebApiClien.UpdateDocument(doc.DocumentListName, doc.Id, doc)).ReadAsSync();
+                doc = (await _documentListWebApiClien.UpdateDocument(doc.ListFQN, doc.Id, doc)).ReadAsSync();
             }
             else
             {
-                doc = (await _documentListWebApiClien.CreateDocument(doc.DocumentListName,doc)).ReadAsSync();
+                doc = (await _documentListWebApiClien.CreateDocument(doc.ListFQN,doc)).ReadAsSync();
             }
             message.zones= doc.Get<JArray>(CmsConstants.Documents.widget_prop).ToObject<List<AVM.ZoneRuntimeData>>();
             return List2(message.zones);
         }
 
 		[HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<DC.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string id=null, string documentListName= CmsConstants.Documents.default_collection_name)
+        public async Task<Response<List<DC.Document>>> ReadDocument([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string id=null, string listFQN= CmsConstants.Documents.default_collection_name)
         {
             DC.DocumentCollection  results = null;
             if (id == null)
             {
-                results = (await _cmsService.GetList2(contentCollection: documentListName, pageSize: int.MaxValue)).ReadAsSync();
+                results = (await _cmsService.GetList2(contentCollection: listFQN, pageSize: int.MaxValue)).ReadAsSync();
             }
             else
             {
@@ -270,7 +270,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     Items = new List<DC.Document>()
                     {
-                        (await _documentListWebApiClien.GetDocument(documentListName: documentListName, documentId: id)).ReadAsSync()
+                        (await _documentListWebApiClien.GetDocument(documentListName: listFQN, documentId: id)).ReadAsSync()
                     },
                     TotalCount = 1,
                     PageSize = 12,
@@ -289,15 +289,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //var doc = new DC.Document();
             //doc.Id = result.Id;
 
-            //doc.DocumentType = result.DocumentType;
+            //doc.DocumentTypeFQN = result.DocumentTypeFQN;
             //doc.PublishState = result.PublishState;
 
             //doc.Properties = result.Properties;
                         
          
-            //doc.DocumentListName = result.DocumentListName  ;
+            //doc.ListFQN = result.ListFQN  ;
             //doc.Name = result.Name;
-            //doc.Id = doc.DocumentListName + "_" + doc.Id;
+            //doc.Id = doc.ListFQN + "_" + doc.Id;
            
             //if (doc.Properties != null)
             //{

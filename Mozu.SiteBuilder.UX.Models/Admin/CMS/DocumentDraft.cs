@@ -24,8 +24,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         /// <summary>
         /// The document list name.
         /// </summary>
-        [DataMember(Name = "documentListName")]
-        public string DocumentListName { get; set; }
+        [DataMember(Name = "listFQN")]
+        public string ListFQN { get; set; }
 
         /// <summary>
         /// Document name.

@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Navigation
 
             Assert.AreEqual("page^^pages^^0818cc78-19b3-4ed7-bbd1-1f5218403fef", set[0].Id);
             Assert.AreEqual("0818cc78-19b3-4ed7-bbd1-1f5218403fef", set[0].OriginalId);
-            Assert.AreEqual("pages", set[0].OriginalCollection);
+            Assert.AreEqual("pages@mozu", set[0].OriginalCollection);
             Assert.AreEqual("_navigation", set[0].ParentId);
             Assert.AreEqual("home", set[0].Name);
             Assert.AreEqual("/default", set[0].Url);

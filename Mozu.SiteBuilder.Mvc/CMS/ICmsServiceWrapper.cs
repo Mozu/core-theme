@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
         Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(DC.Document document);
 
-        Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string documentListName, string documentId);
+        Task<Tuple<bool, ServiceClientResponse<StreamContent>>> Delete2(string listFQN, string documentId);
 
         Task<ServiceClientResponse<DC.Document>> GetByPath2(string contentCollection, string name, string status=null);
 
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         List<KeyValuePair<string, bool>> _sort;
         List<string> _filters;
         public string Collection{get;set;}
-        public string DocumentType { get; set; }
+        public string DocumentTypeFQN { get; set; }
         public bool HasFilters
         {
             get { return _filters != null && _filters.Count > 0; }
@@ -104,9 +104,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             {
                 this.Filters.Add(string.Format("Path eq \"{0}\"", FolderPath));
             }
-            if (!string.IsNullOrEmpty(DocumentType))
+            if (!string.IsNullOrEmpty(DocumentTypeFQN))
             {
-                this.Filters.Add("DocumentType eq " + DocumentType);
+                this.Filters.Add("DocumentTypeFQN eq " + DocumentTypeFQN);
             }
             if (this.HasFilters)
             {

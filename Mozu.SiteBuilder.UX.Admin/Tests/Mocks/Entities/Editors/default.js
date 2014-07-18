@@ -1,8 +1,8 @@
 Ext.create('Ext.form.Panel', {
-    title:false,// 'No template defined',
+    title:false,
 
 
-// Fields will be arranged vertically, stretched to full width
+
     layout: 'anchor',
     defaults: {
         anchor: '100%'
@@ -14,7 +14,7 @@ Ext.create('Ext.form.Panel', {
 
 
     setData: function (data) {
-        //this.getForm().setValues(data);
+    
 
         Ext.Object.each(data, function (k, v) {
             var editor;
