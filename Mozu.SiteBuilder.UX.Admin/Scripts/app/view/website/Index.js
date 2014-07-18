@@ -971,7 +971,7 @@ Ext.define('Taco.view.website.Index', {
             }
             
             Ext.Object.each(this.tree.store.tree.nodeHash, function (key, value) {
-                if (value.raw.metaData && value.raw.metaData.entityType == 'cms' && value.raw.metaData.name == metaData) {
+                if (value.raw.metaData && value.raw.metaData.entityType == 'cms' && value.raw.metaData.listFQN == metaData) {
                     metaData = value.raw.metaData;
                  }
             })
