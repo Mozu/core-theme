@@ -17,46 +17,46 @@ Ext.define('Taco.view.settings.localization.Attributes', {
 
     // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function() {
-        var me = this,
-            mc = Taco.app.context.getMasterCatalog(),
+        var mc = Taco.app.context.getMasterCatalog(),
             excludeDefaultLocale = true,
             supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+            mcName = (!mc) ? '' : mc.name + ' ',
+            mcLocale = (!mc) ? '' : ' (' + mc.localeCode + ')',
             columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeFQN',
-                text: 'MC Attribute Id',
-                hideable: false,
+                text: mcName + 'Attribute Id',
+                hideable: true,
                 minWidth: 300
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'adminName',
-                text: 'MC Attribute Admin Name',
-                flex: 1,
-                width: 150
+                text: mcName + 'Attribute Admin Name',
+                hideable: true,
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'name',
-                text: 'Attribute Name (English)',
-                flex: 1,
+                text: mcName + 'Attribute Name' + mcLocale,
+                hideable: true,
+                //flex: 1,
                 width: 150
             }
         ];
 
         // todo: take into account search filter to only show language? - Greg Murray on 2014-07-14 
 
-
-        // todo: move to superclass, getLocaleColumns, exclude primary? - Greg Murray on 2014-07-10 
-
         Ext.Array.each(supportedLocales, function (locale) {
             var col = {
                 xtype: 'gridcolumn',
                 dataIndex: locale + '_name',
-                text: locale,
-                flex: 1,
+                text: 'Attribute Name (' + locale + ')',
+                hideable: true,
+                //flex: 1,
                 width: 150,
                 sortable: false,
-                resizable: false,
+                resizable: true,
                 menuDisabled: true,
                 editor: {
                     xtype: "textfield",

@@ -37,6 +37,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     cancelButtonEnabled: false,
 
     showActionsColumn: false,
+    enableColumnHide: true,
 
     hideSearchToolbar: false,
     selType: 'cellmodel',
@@ -51,6 +52,8 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
     //storeConfig: null,
 
     stateful: false,
+    width: "100%",
+    scroll: 'vertical',
 
     //stateId: 'statefulOrderGrid',
 

@@ -2,11 +2,11 @@
  * @class Taco.view.settings.localization.ProductVariants
 */
 Ext.define('Taco.view.settings.localization.ProductVariants', {
-    requires: ['Taco.store.LocalizedProductVariants', 'Taco.view.settings.localization.AdvancedSearchForm'],
+    requires: ['Taco.store.LocalizedProductVariants', 'Taco.view.settings.localization.AdvancedSearchForm', 'Taco.core.ux.form.CurrencyField'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias: 'widget.localizedproductvariantsgrid',
 
-    title: "Product Variantion Pricing Grid",
+    title: "Product Variation Pricing Grid",
 
     store: { type: 'Taco.store.LocalizedProductVariants' },
 
@@ -33,14 +33,15 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                 xtype: 'gridcolumn',
                 dataIndex: 'productName',
                 text: mcName + 'Product Name',
-                hideable: false,
-                minWidth: 150
+                hideable: true,
+                minWidth: 150,
+                width:200
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'options',
                 text: mcName + 'Product Options',
                 flex: 1,
-                width: 150,
+                //width: 150,
                 renderer: function (options) {
                     if (!options || options.length == 0) return '';
                     return options.join('; ');
@@ -49,31 +50,35 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                 xtype: 'gridcolumn',
                 dataIndex: 'parentProductCode',
                 text: mcName + 'Parent Product Code',
-                flex: 1,
+                hideable: true,
+                //flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'variantProductCode',
                 text: mcName + 'Product Variation Code',
-                flex: 1,
+                //flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaPrice',
                 text: mcName + 'Price' + mcCurrency,
-                flex: 1,
+                hideable: true,
+                //flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaMSRP',
                 text: mcName + 'MSRP' + mcCurrency,
-                flex: 1,
+                hideable: true,
+                //flex: 1,
                 width: 150
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaCreditValue',
                 text: mcName + 'Credit Value' + mcCurrency,
-                flex: 1,
+                hideable: true,
+                //flex: 1,
                 width: 150
             }
             ];
@@ -96,10 +101,11 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                     xtype: 'gridcolumn',
                     dataIndex: dataIdx,
                     text: colText,
-                    flex: 1,
+                    hideable: true,
+                    //flex: 1,
                     width: 150,
                     sortable: false,
-                    resizable: false,
+                    resizable: true,
                     menuDisabled: true,
                     editor: {
                         xtype: "currencyfield",

@@ -12,17 +12,16 @@ using Microsoft.FSharp.Text.StructuredFormat;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
-using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Domain;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
-using Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
+using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Localization;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocalizedContentHelpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -38,6 +37,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IMasterCatalogWebApiClient _masterCatalogWebApiClient;
         private readonly ISettings _settings;
         private readonly IApiContext _apiCtx;
+
+        private TargetContextLevelType TargetContextLevel
+        {
+            get
+            {
+                return (_apiCtx.CatalogId.HasValue)
+                    ? TargetContextLevelType.Catalog
+                    : TargetContextLevelType.MasterCatalog;
+            }
+        }
 
 
         public LocalizedContentController(IAttributeWebApiClient attributeWebApiClient, IProductWebApiClient productWebApiClient, IReportWebApiClient reportWebApiClient, IMasterCatalogWebApiClient masterCatalogWebApiClient,
@@ -63,13 +72,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return new Response<List<JObject>>();
             }
 
-            var xFilter = extFilter.ToFilterString();
-
             // real code
             var attrs = (await _reportWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-                filter: xFilter, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
+                filter: extFilter.ToFilterString(), targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
 
-            var items = attrs.Items.Select(Mapper.Map<ReportAttribute, JObject>).Where(x => x != null).ToList();
+            var items = attrs.Items.Select(Mapper.Map<DC.ReportAttribute, JObject>).Where(x => x != null).ToList();
             return List2(items, attrs.TotalCount);
 
         }
@@ -86,20 +93,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var localizedContent = (from supportedLocale in attr.SupportedLocales
                                     let localizedName = (string)jObject[supportedLocale + "_name"]
                                     where localizedName != null
-                                    select new AttributeLocalizedContent
+                                    select new DC.AttributeLocalizedContent
                                     {
                                         LocaleCode = supportedLocale,
                                         Name = localizedName
                                     }).ToList();
 
             var updatedResults = (await _attributeWebApiClient.UpdateLocalizedContents(localizedContent, attr.AttributeFQN, responseFields:null, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
-            var jResult = AddLocalizedNames(attr, updatedResults);
+            var jResult = ReportLocalizedConverterHelper.AddLocalizedNames(attr, updatedResults);
             return Single2(jResult);
         }
 
-
         [HttpGetRoute(UriTemplate = "attributevalues/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedAttributeValues([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<JObject>>> GetLocalizedAttributeValues([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             //var attrValues = (await _reportWebApiClient.GetAttributeValuess(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
             //    filter: extFilter.query, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
@@ -107,36 +113,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // todo: automapper - Greg Murray on 2014-07-13 
             throw new NotImplementedException();
         }
-        
-        [HttpGetRoute(UriTemplate = "attributevalues/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedAttributeValues()
+
+        [HttpPostRoute(UriTemplate = "attributevalues/edit")]
+        public async Task<Response<JObject>> UpsertLocalizedAttributeValues(JObject jObject)
         {
             //await _attributeWebApiClient.UpdateAttributeVocabularyValueLocalizedContents()
             throw new NotImplementedException();
         } 
 
         [HttpGetRoute(UriTemplate = "product/properties/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductProperties([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<JObject>>> GetLocalizedProductProperties([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             throw new NotImplementedException();
         }
 
-        [HttpGetRoute(UriTemplate = "product/properties/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductProperties()
+        [HttpPostRoute(UriTemplate = "product/properties/edit")]
+        public async Task<Response<JObject>> UpsertLocalizedProductProperties(JObject jObject)
         {
             //await _productWebApiClient.UpdatePropertyValueLocalizedContents();
             throw new NotImplementedException();
         } 
         
         [HttpGetRoute(UriTemplate = "productextras/read")]
-        public async Task<Response<List<Models.Attributes.Attribute>>> GetLocalizedProductExtras([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<JObject>>> GetLocalizedProductExtras([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             
             throw new NotImplementedException();
         }
 
-        [HttpGetRoute(UriTemplate = "productextras/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductExtras()
+        [HttpPostRoute(UriTemplate = "productextras/edit")]
+        public async Task<Response<JObject>> UpsertLocalizedProductExtras(JObject jObject)
         {
             throw new NotImplementedException();
         } 
@@ -144,33 +150,52 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "productvariants/read")]
         public async Task<Response<List<JObject>>> GetLocalizedProductVariants([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            var fakeData = CreateFakeVaraintData();
-            var result = await Task.FromResult(fakeData);
-            return List2(result, 4);
+            if (!_apiCtx.MasterCatalogId.HasValue)
+            {
+                return new Response<List<JObject>>();
+            }
+
+            var productVariants = (await _reportWebApiClient.GetProductVariations(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+                filter: extFilter.ToFilterString(), targetContextLevel: TargetContextLevel)).ReadAsSync();
+
+            var items = productVariants.Items.Select(Mapper.Map<DC.ReportProductVariation, JObject>).Where(x => x != null).ToList();
+            return List2(items, productVariants.TotalCount);            
+            
+            //var fakeData = CreateFakeVariantData();
+            //var result = await Task.FromResult(fakeData);
+            //return List2(result, 4);
+
         }
 
-        [HttpGetRoute(UriTemplate = "productvariants/edit")]
-        public async Task<Response<SiteShippingSettings>> UpsertLocalizedProductVariants()
+        [HttpPostRoute(UriTemplate = "productvariants/edit")]
+        public async Task<Response<JObject>> UpsertLocalizedProductVariants(JObject jObject)
         {
-            throw new NotImplementedException();
+            var variantPrice = jObject.ToObject<LocalizedProductVariantPrice>();
+            var localizedPrices = (from supportedCurrency in variantPrice.SupportedCurrencies
+                                    let localizedPrice = (decimal?)jObject["price_" + supportedCurrency]
+                                    let localizedMsrp = (decimal?)jObject["msrp_" + supportedCurrency]
+                                    let localizedCredit = (decimal?)jObject["credit_" + supportedCurrency]
+                                    //where localizedPrice != null
+                                    select new DC.ProductVariationDeltaPrice
+                                    {
+                                        CurrencyCode = supportedCurrency,
+                                        Value = localizedPrice,
+                                        MSRP = localizedMsrp,
+                                        CreditValue = localizedCredit
+                                    }).ToList();
+
+            var updatedResults = (await _productWebApiClient.UpdateProductVariationLocalizedDeltaPrices(localizedPrices, variantPrice.ParentProductCode, 
+                responseFields: null, targetContextLevel: TargetContextLevel, variationKey:variantPrice.VariantProductCode)).ReadAsSync();
+            var jResult = ReportLocalizedConverterHelper.AddLocalizedPrices(variantPrice, updatedResults);
+            return Single2(jResult);
         }
 
 
         #region privates
 
-        private JObject AddLocalizedNames(LocalizedAttribute attr, List<AttributeLocalizedContent> updatedResults)
-        {
-            attr.SupportedLocales = updatedResults.Select(x => x.LocaleCode).ToList();
-            var jResult = JObject.FromObject(attr, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
 
-            foreach (var updatedLocalizedContent in updatedResults)
-            {
-                jResult[updatedLocalizedContent.LocaleCode + "_name"] = updatedLocalizedContent.Name;
-            }
-            return jResult;
-        }
 
-        private List<JObject> CreateFakeVaraintData()
+        private List<JObject> CreateFakeVariantData()
         {
             var result = new List<JObject>();
 
