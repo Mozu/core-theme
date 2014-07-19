@@ -294,7 +294,7 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.10.0-dev004\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.10.0-dev006\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -459,6 +459,7 @@
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
+    <Compile Include="Api\Models\Localization\LocalizedProductExtraPrice.cs" />
     <Compile Include="Api\Models\Localization\LocalizedProductVariantPrice.cs" />
     <Compile Include="Api\Models\Localization\LocalizedAttribute.cs" />
     <Compile Include="Api\Models\Navigation\NavigationTreeNode.cs" />

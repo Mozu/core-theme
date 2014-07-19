@@ -7,17 +7,18 @@ using Newtonsoft.Json.Converters;
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Localization
 {
     
-    public class LocalizedProductVariantPrice
+    public class LocalizedProductExtraPrice
     {
         //PK
-        public string VariantProductCode { get; set; }
+        public string ProductCode { get; set; }
 
-        public string ParentProductCode { get; set; }
+        public string AttributeFQN { get; set; }
 
         public string ProductName { get; set; }
+        
+        public string AdminName { get; set; }
 
-        //array -> string - render template.
-        public List<string> Options { get; set; }
+        public string AttributeName { get; set; }
 
 
         //global price
@@ -26,9 +27,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Localization
         
         public decimal? DeltaPrice { get; set; }
 
-        public decimal? DeltaCreditValue { get; set; }
-
-        public decimal? DeltaMSRP { get; set; }
 
         public List<string> SupportedCurrencies { get; set; } 
 
