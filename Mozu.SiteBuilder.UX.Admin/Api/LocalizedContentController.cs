@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (!_apiCtx.MasterCatalogId.HasValue)
             {
-                return new Response<List<JObject>>();
+                return List2(new List<JObject>(), 0);
             }
 
             // real code
@@ -152,7 +152,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (!_apiCtx.MasterCatalogId.HasValue)
             {
-                return new Response<List<JObject>>();
+                return List2(new List<JObject>(), 0); 
             }
 
             var productVariants = (await _reportWebApiClient.GetProductVariations(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
@@ -221,7 +221,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     },
                 CurrencyCode = "USD",
                 DeltaPrice = price,
-                DeltaCost = price/2,
                 DeltaCreditValue = null,
                 DeltaMSRP = msrp,
                 SupportedCurrencies = new List<string> { "EUR", "RUB"}

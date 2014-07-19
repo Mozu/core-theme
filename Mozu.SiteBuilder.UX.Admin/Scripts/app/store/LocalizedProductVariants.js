@@ -28,10 +28,6 @@ Ext.define('Taco.store.LocalizedProductVariants', {
                         name: 'deltaPrice',
                         type: 'float',
                         useNull: true
-                    //}, {
-                    //    name: 'deltaCost',
-                    //    type: 'float',
-                    //    useNull: true
                     }, {
                         name: 'deltaCreditValue',
                         type: 'float',

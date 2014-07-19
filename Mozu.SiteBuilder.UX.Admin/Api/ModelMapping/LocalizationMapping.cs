@@ -50,21 +50,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             #endregion
 
+            #region Product Extras
+
+            Mapper.CreateMap<DC.ReportProductExtra, LocalizedProductExtraPrice>()
+                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
+                .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.ProductName))
+                .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(dc => dc.AttributeFQN))
+                .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AdminName))
+                //.ForMember(x => x.AttributeName, op => op.ResolveUsing(dc => dc.Value))
+                .ForMember(x => x.CurrencyCode, op => op.ResolveUsing(dc => dc.CurrencyCode))
+                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(dc => dc.DeltaPrice))
+                .ForMember(x => x.SupportedCurrencies, op => op.ResolveUsing(dc => (dc.LocalizedDeltaPrices != null)
+                    ? dc.LocalizedDeltaPrices.Select(x => x.CurrencyCode).ToList()
+                    : new List<string>()))
+                ;
+
+            Mapper.CreateMap<DC.ReportProductExtra, JObject>().ConvertUsing<ReportLocalizedProductExtraConverter>();
+
+
+            #endregion
+
             #region Product Variants
 
             Mapper.CreateMap<DC.ReportProductVariation, LocalizedProductVariantPrice>()
                 .ForMember(x => x.ParentProductCode, op => op.ResolveUsing(dc => dc.ParentProductCode))
                 .ForMember(x => x.VariantProductCode, op => op.ResolveUsing(dc => dc.VariantProductCode))
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.ProductName))
-                .ForMember(x => x.DeltaMSRP,
-                    op => op.ResolveUsing(dc => (dc.DeltaPrice != null) ? dc.DeltaPrice.MSRP : (decimal?) null))
-                .ForMember(x => x.DeltaPrice,
-                    op => op.ResolveUsing(dc => (dc.DeltaPrice != null) ? dc.DeltaPrice.Value : (decimal?) null))
-                .ForMember(x => x.DeltaCreditValue,
-                    op => op.ResolveUsing(dc => (dc.DeltaPrice != null) ? dc.DeltaPrice.CreditValue : (decimal?) null))
-                .ForMember(x => x.CurrencyCode,
-                    op => op.ResolveUsing(dc => (dc.DeltaPrice != null) ? dc.DeltaPrice.CurrencyCode : null))
-                .ForMember(x => x.DeltaCost, op => op.Ignore())
+                .ForMember(x => x.DeltaMSRP, op => op.ResolveUsing(dc => dc.MSRP))
+                .ForMember(x => x.DeltaCreditValue, op => op.ResolveUsing(dc => dc.CreditValue))
+                .ForMember(x => x.DeltaPrice, op => op.MapFrom(dc => dc.Value)) //get ambiguous reference with ResolveUsing.
+                .ForMember(x => x.CurrencyCode, op => op.ResolveUsing(dc => dc.CurrencyCode ))
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => (dc.Options != null) 
                     ? dc.Options.Select(x => string.Format("{0} - {1}", x.AdminName, x.Value)).ToList()
                     : new List<string>()))
@@ -92,6 +107,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
 
     }
+
+    public class ReportLocalizedProductExtraConverter : ITypeConverter<DC.ReportProductExtra, JObject>
+    {
+        public JObject Convert(ResolutionContext context)
+        {
+            var variant = context.SourceValue as DC.ReportProductExtra;
+            if (variant == null) return null;
+
+            var localizedExtra = Mapper.Map<LocalizedProductExtraPrice>(variant);
+            var jObj = ReportLocalizedConverterHelper.AddLocalizedPrices(localizedExtra, variant.LocalizedDeltaPrices);
+            return jObj;
+        }
+    }
+    
     public class ReportLocalizedProductVariantConverter : ITypeConverter<DC.ReportProductVariation, JObject>
     {
         public JObject Convert(ResolutionContext context)
@@ -148,6 +177,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private const string CREDIT_FORMAT = "credit_{0}";
 
 
+        public static JObject AddLocalizedPrices(LocalizedProductExtraPrice extra, List<DC.ReportProductExtraDeltaPrice> reportLocalizedPrices)
+        {
+            extra.SupportedCurrencies = reportLocalizedPrices.Select(x => x.CurrencyCode).Distinct().ToList();
+            var jResult = JObject.FromObject(extra, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+
+            foreach (var localizedPrice in reportLocalizedPrices)
+            {
+                jResult[string.Format(PRICE_FORMAT, localizedPrice.CurrencyCode)] = localizedPrice.DeltaPrice;
+            }
+            return jResult;
+        }
+        
         public static JObject AddLocalizedPrices(LocalizedProductVariantPrice variant, List<DC.ReportProductVariationDeltaPrice> reportLocalizedPrices)
         {
             variant.SupportedCurrencies = reportLocalizedPrices.Select(x => x.CurrencyCode).Distinct().ToList();

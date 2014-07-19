@@ -135,13 +135,37 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             Assert.That(actual.VariantProductCode, Is.EqualTo(reportVariant.VariantProductCode), scenario);
             Assert.That(actual.ProductName, Is.EqualTo(reportVariant.ProductName), scenario);
             Assert.That(actual.Options.Count, Is.EqualTo(reportVariant.Options.Count), scenario);
-            Assert.That(actual.DeltaPrice, Is.EqualTo(reportVariant.DeltaPrice.Value), scenario);
-            Assert.That(actual.DeltaMSRP, Is.EqualTo(reportVariant.DeltaPrice.MSRP), scenario);
-            Assert.That(actual.DeltaCreditValue, Is.EqualTo(reportVariant.DeltaPrice.CreditValue), scenario);
-            Assert.That(actual.CurrencyCode, Is.EqualTo(reportVariant.DeltaPrice.CurrencyCode), scenario);
+            Assert.That(actual.DeltaPrice, Is.EqualTo(reportVariant.Value), scenario);
+            Assert.That(actual.DeltaMSRP, Is.EqualTo(reportVariant.MSRP), scenario);
+            Assert.That(actual.DeltaCreditValue, Is.EqualTo(reportVariant.CreditValue), scenario);
+            Assert.That(actual.CurrencyCode, Is.EqualTo(reportVariant.CurrencyCode), scenario);
         }
 
-        private static ReportProductVariation ConstructReportVariant(string[] locales, decimal?[] prices, List<ReportProductOption> options = null)
+        private static ReportProductExtra ConstructReportExtra(string[] curencies, decimal?[] prices)
+        {
+            return new ReportProductExtra
+            {
+                CurrencyCode = "USD",
+                DeltaPrice = 100M,
+                ProductCode = "zzz",
+                AttributeFQN = "zzz2",
+                AdminName = "admin name",
+                ProductName = "Soufle poker",
+                LocalizedDeltaPrices = ConstructLocalizedExtraPrices(curencies, prices)
+            };
+        }
+
+        private static List<ReportProductExtraDeltaPrice> ConstructLocalizedExtraPrices(string[] currencies, decimal?[] prices)
+        {
+            return currencies.Select((t, i) => new ReportProductExtraDeltaPrice
+            {
+                CurrencyCode = t,
+                DeltaPrice = prices[i],
+                Exists = prices[i].HasValue,
+            }).ToList();
+        }
+        
+        private static ReportProductVariation ConstructReportVariant(string[] curencies, decimal?[] prices, List<ReportProductOption> options = null)
         {
             if (options == null)
             {
@@ -163,22 +187,18 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             }
             return new ReportProductVariation
             {
-                DeltaPrice = new ReportProductVariationDeltaPrice
-                {
-                    CurrencyCode = "USD",
-                    Value = 100M,
-                    MSRP = 119.95M,
-                    Exists = true
-                },
+                CurrencyCode = "USD",
+                Value = 100M,
+                MSRP = 119.95M,
                 ParentProductCode = "zzz",
                 VariantProductCode = "zzz2",
                 ProductName = "Soufle poker",
                 Options = options,
-                LocalizedDeltaPrices = ConstructLocalizedPrices(locales, prices)
+                LocalizedDeltaPrices = ConstructLocalizedVariationPrices(curencies, prices)
             };
         }
 
-        private static List<ReportProductVariationDeltaPrice> ConstructLocalizedPrices(string[] currencies, decimal?[] prices)
+        private static List<ReportProductVariationDeltaPrice> ConstructLocalizedVariationPrices(string[] currencies, decimal?[] prices)
         {
             return currencies.Select((t, i) => new ReportProductVariationDeltaPrice
             {
