@@ -188,6 +188,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             }
             return jResult;
         }
+
+        // todo: refactor using generics - Greg Murray on 2014-07-19 
+        public static JObject AddLocalizedPrices(LocalizedProductExtraPrice extra, List<DC.ProductExtraValueDeltaPrice> reportLocalizedPrices)
+        {
+            extra.SupportedCurrencies = reportLocalizedPrices.Select(x => x.CurrencyCode).Distinct().ToList();
+            var jResult = JObject.FromObject(extra, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+
+            foreach (var localizedPrice in reportLocalizedPrices)
+            {
+                jResult[string.Format(PRICE_FORMAT, localizedPrice.CurrencyCode)] = localizedPrice.DeltaPrice;
+            }
+            return jResult;
+        }
         
         public static JObject AddLocalizedPrices(LocalizedProductVariantPrice variant, List<DC.ReportProductVariationDeltaPrice> reportLocalizedPrices)
         {

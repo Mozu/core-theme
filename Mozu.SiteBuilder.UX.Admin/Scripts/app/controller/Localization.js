@@ -1,15 +1,8 @@
 ﻿/**
  * @class Taco.controller.Localization
- * @author GM
- * The Localization controller
  */
 Ext.define('Taco.controller.Localization', {
     extend: 'Taco.core.Controller',
-    //requires: [
-    //],
-    models: [
-        'Taco.model.LocalizedAttributeValue', 'Taco.model.LocalizedProductProperty',
-        'Taco.model.LocalizedProductExtra'],
     views: [
         'Taco.view.settings.localization.Attributes',
         //'Taco.view.settings.localization.subform.Attributes',

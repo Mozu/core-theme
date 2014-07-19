@@ -137,14 +137,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "productextras/read")]
         public async Task<Response<List<JObject>>> GetLocalizedProductExtras([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            
-            throw new NotImplementedException();
+            if (!_apiCtx.MasterCatalogId.HasValue)
+            {
+                return List2(new List<JObject>(), 0);
+            }
+
+            var productExtras = (await _reportWebApiClient.GetProductExtras(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+                filter: extFilter.ToFilterString(), targetContextLevel: TargetContextLevel)).ReadAsSync();
+
+            var items = productExtras.Items.Select(Mapper.Map<DC.ReportProductExtra, JObject>).Where(x => x != null).ToList();
+            return List2(items, productExtras.TotalCount);   
         }
 
         [HttpPostRoute(UriTemplate = "productextras/edit")]
         public async Task<Response<JObject>> UpsertLocalizedProductExtras(JObject jObject)
         {
-            throw new NotImplementedException();
+            var extraPrice = jObject.ToObject<LocalizedProductExtraPrice>();
+            var localizedPrices = (from supportedCurrency in extraPrice.SupportedCurrencies
+                                   let localizedPrice = (decimal?)jObject["price_" + supportedCurrency]
+
+                                   //where localizedPrice != null
+                                   select new DC.ProductExtraValueDeltaPrice
+                                   {
+                                       CurrencyCode = supportedCurrency,
+                                       DeltaPrice = localizedPrice.GetValueOrDefault()
+                                   }).ToList();
+
+            var updatedResults = (await _productWebApiClient.UpdateExtraValueLocalizedDeltaPrices(localizedPrices, extraPrice.ProductCode, extraPrice.AttributeFQN,
+                responseFields: null, targetContextLevel: TargetContextLevel, value: extraPrice.AttributeName)).ReadAsSync();
+            var jResult = ReportLocalizedConverterHelper.AddLocalizedPrices(extraPrice, updatedResults);
+            return Single2(jResult);
         } 
         
         [HttpGetRoute(UriTemplate = "productvariants/read")]
