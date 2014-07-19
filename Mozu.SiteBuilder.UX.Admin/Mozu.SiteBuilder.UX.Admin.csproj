@@ -743,9 +743,6 @@
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
-    <Content Include="Scripts\app\model\LocalizedProductExtra.js" />
-    <Content Include="Scripts\app\model\LocalizedProductProperty.js" />
-    <Content Include="Scripts\app\model\LocalizedAttributeValue.js" />
     <Content Include="Scripts\app\model\Card.js" />
     <Content Include="Scripts\app\model\InternalNote.js" />
     <Content Include="Scripts\app\model\Channel.js" />
@@ -756,6 +753,8 @@
     <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\EntityEditor.js" />
     <Content Include="Scripts\app\model\Entity.js" />
+    <Content Include="Scripts\app\model\LocalizedAttributeValue.js" />
+    <Content Include="Scripts\app\model\LocalizedProductProperty.js" />
     <Content Include="Scripts\app\model\ProductHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\OrderHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />

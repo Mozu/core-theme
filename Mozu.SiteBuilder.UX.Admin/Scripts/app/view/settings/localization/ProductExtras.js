@@ -2,38 +2,139 @@
  * @class Taco.view.order.Grid
 */
 Ext.define('Taco.view.settings.localization.ProductExtras', {
-    requires: ['Taco.store.LocalizedProductExtras'],
+    requires: ['Taco.store.LocalizedProductExtras', 'Taco.view.settings.localization.AdvancedSearchForm', 'Taco.core.ux.form.CurrencyField'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
-    alias :'widget.localizedextrasgrid',
+    alias: 'widget.localizedproductextrasgrid',
 
-    title: "Product Extras",
-  
-   
+    title: "Product Extras Pricing Grid",
+
     store: { type: 'Taco.store.LocalizedProductExtras' },
 
-    // override this method and adjust the columns if your need a grid with a subset of columns;
+    contextConfig: {
+        supportedLevels: ['m', 'c'],
+        requiresContextOfType: ['m', 'c', 's']
+    },
+
+    getStore: function () {
+        return { type: 'Taco.store.LocalizedProductExtras' };
+    },
+
+    // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function () {
-        var me = this;
-        return [
+        var ctx = Taco.app.context.getCurrentContext(),
+            ctxType = (!ctx) ? '' : ctx.contextType,
+            mc = Taco.app.context.getMasterCatalog(),
+            mcCurrency = (!mc) ? '' : ' (' + mc.currencyCode + ')',
+            mcName = (!mc) ? '' : mc.name + ' ',
+            excludeDefaultCurrency = true,
+            supportedCurrencies = [],
+            columns = [
             {
                 xtype: 'gridcolumn',
-                dataIndex: 'code',
-                text: 'Code',
-                hideable: false,
-
-                minWidth: 300
-                //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-                //}
+                dataIndex: 'productName',
+                text: mcName + 'Product Name',
+                hideable: true,
+                minWidth: 150,
+                width: 200
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'description',
-                text: 'Description',
-                flex: 1,
+                dataIndex: 'productCode',
+                text: mcName + 'Product Code',
+                hideable: true,
+                //flex: 1,
+                width: 150
+            
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'attributeFQN',
+                text: mcName + 'Attribute Id',
+                //flex: 1,
+                width: 150
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'adminName',
+                text: mcName + 'Attribute Admin Name',
+                //flex: 1,
+                width: 150
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'attributeName',
+                text: mcName + 'Attribute Name',
+                //flex: 1,
+                width: 150
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'deltaPrice',
+                text: mcName + 'Price' + mcCurrency,
+                hideable: true,
+                //flex: 1,
                 width: 150
             }
-        ];
-    }
-});
+            ];
 
+        if (ctxType === 'm' && mc) {
+            supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
+        }
+        else if (ctxType === 'c') {
+            var cat = Taco.app.context.getCatalog();
+            if (cat) {
+                supportedCurrencies.push(cat.currencyCode);
+            }
+        }
+
+        // todo: take into account search filter to only show currency? - Greg Murray on 2014-07-14 
+
+        Ext.Array.each(supportedCurrencies, function (currency) {
+            function createCurrencyColumn(dataIdx, colText) {
+                return {
+                    xtype: 'gridcolumn',
+                    dataIndex: dataIdx,
+                    text: colText,
+                    hideable: true,
+                    //flex: 1,
+                    width: 150,
+                    sortable: false,
+                    resizable: true,
+                    menuDisabled: true,
+                    editor: {
+                        xtype: "currencyfield",
+                        showBorder: true,
+                        hideTrigger: true,
+                        emptyText: "missing",
+                        msgTarget: "qtip",
+                        selectOnFocus: true,
+                        allowBlank: true
+                    }
+                };
+            }
+
+            columns.push(createCurrencyColumn('price_' + currency, 'Price (' + currency + ')'));
+
+        });
+        return columns;
+    },
+
+    getAdvancedSearchConfig: function () {
+        var mc = Taco.app.context.getMasterCatalog(),
+            excludeDefaultCurrency = true,
+            supportedCurrencies = (!mc) ? [] : mc.getSupportedCurrencies(excludeDefaultCurrency),
+            quickFilters = [
+                            [{ hasRecord: false }, 'Missing Currency'],
+                            [{ hasRecord: true }, 'Has Currency'],
+                            [{}, 'All Records']
+            ];
+
+        Ext.Array.each(supportedCurrencies, function (cur) {
+            quickFilters.push([{ localeNotExists: cur }, 'Missing ' + cur]);
+            quickFilters.push([{ localeExists: cur }, 'Has ' + cur]);
+        });
+
+        return {
+            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchForm',
+
+            quickFilterData: quickFilters
+        };
+    }
+
+});
 

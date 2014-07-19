@@ -6,14 +6,18 @@
       <Method Name="LocalizedAttribute" Hidden="true" />
     </Members>
     <TypeIdentifier />
-    <ShowAsCollectionAssociation>
-      <Property Name="LocalizedContent" />
-    </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Localization.LocalizedAttributeContent">
-    <Position X="5" Y="3.75" Width="2.5" />
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Localization.LocalizedProductVariantPrice">
+    <Position X="8.75" Y="4.75" Width="3" />
     <Members>
-      <Method Name="LocalizedAttributeContent" Hidden="true" />
+      <Method Name="LocalizedProductVariantPrice" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Localization.LocalizedProductExtraPrice">
+    <Position X="1.75" Y="4.75" Width="3" />
+    <Members>
+      <Method Name="LocalizedProductExtraPrice" Hidden="true" />
     </Members>
     <TypeIdentifier />
   </Class>
