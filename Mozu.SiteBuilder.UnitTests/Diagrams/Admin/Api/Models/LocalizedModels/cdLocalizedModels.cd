@@ -21,5 +21,12 @@
     </Members>
     <TypeIdentifier />
   </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Localization.LocalizedProductProperty">
+    <Position X="8.25" Y="1.5" Width="2.5" />
+    <Members>
+      <Method Name="LocalizedProductProperty" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -72,7 +72,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(new List<JObject>(), 0);
             }
 
-            // real code
             var attrs = (await _reportWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
                 filter: extFilter.ToFilterString(), targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
 
@@ -100,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     }).ToList();
 
             var updatedResults = (await _attributeWebApiClient.UpdateLocalizedContents(localizedContent, attr.AttributeFQN, responseFields:null, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
-            var jResult = ReportLocalizedConverterHelper.AddLocalizedNames(attr, updatedResults);
+            var jResult = ReportAttributeConverterHelper.AddLocalizedNames(attr, updatedResults);
             return Single2(jResult);
         }
 
@@ -121,17 +120,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new NotImplementedException();
         } 
 
-        [HttpGetRoute(UriTemplate = "product/properties/read")]
+        [HttpGetRoute(UriTemplate = "productproperties/read")]
         public async Task<Response<List<JObject>>> GetLocalizedProductProperties([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            throw new NotImplementedException();
+            if (!_apiCtx.MasterCatalogId.HasValue)
+            {
+                return List2(new List<JObject>(), 0);
+            }
+
+            var attrs = (await _reportWebApiClient.GetProductProperties(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+                filter: extFilter.ToFilterString(), targetContextLevel: TargetContextLevel)).ReadAsSync();
+
+            var items = attrs.Items.Select(Mapper.Map<DC.ReportProductProperty, JObject>).Where(x => x != null).ToList();
+            return List2(items, attrs.TotalCount);
         }
 
-        [HttpPostRoute(UriTemplate = "product/properties/edit")]
+        [HttpPostRoute(UriTemplate = "productproperties/edit")]
         public async Task<Response<JObject>> UpsertLocalizedProductProperties(JObject jObject)
         {
-            //await _productWebApiClient.UpdatePropertyValueLocalizedContents();
-            throw new NotImplementedException();
+            var localizedProp = jObject.ToObject<LocalizedProductProperty>();
+            var localizedContent = (from supportedLocale in localizedProp.SupportedLocales
+                                    let localizedName = (string)jObject["value_" + supportedLocale]
+                                    where localizedName != null
+                                    select new DC.ProductPropertyValueLocalizedContent
+                                    {
+                                        LocaleCode = supportedLocale,
+                                        StringValue = localizedName,
+                                    }).ToList();
+
+
+            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContents(localizedContent, localizedProp.ProductCode, localizedProp.AttributeFQN, 
+                localizedProp.StringValue, targetContextLevel: TargetContextLevel)).ReadAsSync();
+            var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedProp, updatedResults, (property, locales) => property.SupportedLocales = locales,
+                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
+            return Single2(jResult);
         } 
         
         [HttpGetRoute(UriTemplate = "productextras/read")]

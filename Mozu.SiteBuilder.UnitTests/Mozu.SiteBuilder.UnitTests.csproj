@@ -398,8 +398,11 @@
     <Compile Include="Admin\Api\LocalizedContentControllerTest.cs" />
     <Compile Include="Admin\Api\LocationInventoryControllerTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\AdminMappingTest.cs" />
-    <Compile Include="Admin\Api\ModelMapping\LocalizationMappingTest.cs" />
+    <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedProductPropertyMappingTest.cs" />
+    <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedAttributeMappingTest.cs" />
+    <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedProductExtraMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\CustomerContactMappingTest.cs" />
+    <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedProductVariantMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperMapFromPerfTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperMapFromWithoutNullChecksPerfTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperResolveUsingPerfTest.cs" />
