@@ -8,6 +8,11 @@ Ext.define('Taco.view.settings.localization.Attributes', {
 
     title: "Attributes",
 
+    contextConfig: {
+        supportedLevels: ['m'],
+        requiresContextOfType: ['m', 'c', 's']
+    },
+
     store: { type: 'Taco.store.LocalizedAttributes' },
 
 

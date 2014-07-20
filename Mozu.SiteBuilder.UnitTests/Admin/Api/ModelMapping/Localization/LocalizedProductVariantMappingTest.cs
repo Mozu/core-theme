@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
-using Burrows;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Localization;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using DC = Mozu.Customer.Contracts;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
-namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
+namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Localization
 {
     [TestFixture]
-    public class LocalizationMappingTest
+    public class LocalizedProductVariantMappingTest
     {
         [TestFixtureSetUp]
         public void FixtureSetup()
@@ -29,75 +24,6 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
         {
             Mapper.Reset();
         }
-
-        #region Attribute
-
-        [TestCase("normal", new []{"fr-FR","ru-RU","es-ES","fr-CA"}, new[]{"Coleur","цвет",null,""})]
-        [TestCase("empty", new string[0], new string[0])]
-        public void It_Should_Map_ReportAttribute_LocalizedContent_To_JObject(string scenario, string[] locales, string[] names)
-        {
-            //arrange
-            var reportAttribute = ConstructReportAttribute(locales, names);
-
-            //act
-            var actual = Mapper.Map<ReportAttribute, JObject>(reportAttribute);
-
-            //assert
-            for (int i = 0; i < locales.Length; i++)
-            {
-                Assert.That((string)actual[locales[i] + "_name"], Is.EqualTo(names[i]), scenario);
-            }
-
-        }
-        
-        [TestCase("normal", new []{"fr-FR","ru-RU","es-ES","fr-CA"}, new[]{"Coleur","цвет",null,""})]
-        [TestCase("empty", new string[0], new string[0])]
-        public void It_Should_Map_ReportAttribute_To_LocalizedAttribute(string scenario, string[] locales, string[] names)
-        {
-            //arrange
-            var reportAttribute = ConstructReportAttribute(locales, names);
-
-            //act
-            var jObject = Mapper.Map<ReportAttribute, JObject>(reportAttribute);
-            var actual = jObject.ToObject<LocalizedAttribute>();
-
-            //assert
-            Assert.That(actual.AdminName, Is.EqualTo(reportAttribute.AdminName), scenario);
-            Assert.That(actual.AttributeFQN, Is.EqualTo(reportAttribute.AttributeFQN), scenario);
-            Assert.That(actual.Description, Is.EqualTo(reportAttribute.Description), scenario);
-            Assert.That(actual.Locale, Is.EqualTo(reportAttribute.LocaleCode), scenario);
-            Assert.That(actual.Name, Is.EqualTo(reportAttribute.Name), scenario);
-
-            var matched =
-                locales.Select(x => reportAttribute.LocalizedValues.Select(y => y.LocaleCode).Contains(x)).ToList();
-            Assert.That(matched.Count, Is.EqualTo(locales.Length));
-
-        }
-
-        private static ReportAttribute ConstructReportAttribute(string[] locales, string[] names)
-        {
-            return new ReportAttribute
-            {
-                AdminName = "adminName",
-                AttributeFQN = "tenant~color",
-                Description = null,
-                LocaleCode = "en-US",
-                Name = "Color",
-                LocalizedValues = ConstructLocalizedValues(locales, names)
-            };
-        }
-
-        private static List<ReportAttributeLocalizedContent> ConstructLocalizedValues(string[] locales, string[] names)
-        {
-            return locales.Select((t, i) => new ReportAttributeLocalizedContent
-            {
-                LocaleCode = t, Name = names[i], Exists = (!string.IsNullOrEmpty(names[i]))
-            }).ToList();
-        }
-
-        #endregion
-        
-        #region Variant
 
         [TestCase("normal", new []{"EUR","RUB"}, new[]{"76.82", "3533.44"})]
         [TestCase("empty", new string[0], new string[0])]
@@ -141,29 +67,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             Assert.That(actual.CurrencyCode, Is.EqualTo(reportVariant.CurrencyCode), scenario);
         }
 
-        private static ReportProductExtra ConstructReportExtra(string[] curencies, decimal?[] prices)
-        {
-            return new ReportProductExtra
-            {
-                CurrencyCode = "USD",
-                DeltaPrice = 100M,
-                ProductCode = "zzz",
-                AttributeFQN = "zzz2",
-                AdminName = "admin name",
-                ProductName = "Soufle poker",
-                LocalizedDeltaPrices = ConstructLocalizedExtraPrices(curencies, prices)
-            };
-        }
-
-        private static List<ReportProductExtraDeltaPrice> ConstructLocalizedExtraPrices(string[] currencies, decimal?[] prices)
-        {
-            return currencies.Select((t, i) => new ReportProductExtraDeltaPrice
-            {
-                CurrencyCode = t,
-                DeltaPrice = prices[i],
-                Exists = prices[i].HasValue,
-            }).ToList();
-        }
+        
         
         private static ReportProductVariation ConstructReportVariant(string[] curencies, decimal?[] prices, List<ReportProductOption> options = null)
         {
@@ -207,7 +111,6 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             }).ToList();
         }
 
-        #endregion
 
     }
 }

@@ -92,19 +92,56 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         });
 
         //this.advancedSearchConfig = me.advancedSearchConfig;
-        this.advancedSearchConfig = this.getAdvancedSearchConfig();
+        if (me.getAdvancedSearchConfig) {
+            me.advancedSearchConfig = this.getAdvancedSearchConfig();
+        }
 
         //this.store = me.storeConfig;
-        this.store = this.getStore();
+        me.store = this.getStore();
 
         me.callParent(arguments);
 
-        this.mon(this.view, 'drop', function(node, data) {
+        me.mon(this.view, 'drop', function(node, data) {
             // need top set a model member to dirty the record so that the store will persist the change; the value you set isn't persisted;
             data.records[0].set('index', 1);
         }, this);
     },
 
+    getSupportedCurrencies: function() {
+        var ctx = Taco.app.context.getCurrentContext(),
+            ctxType = (!ctx) ? '' : ctx.contextType,
+            mc = Taco.app.context.getMasterCatalog(),
+            excludeDefaultCurrency = true,
+            supportedCurrencies = [];
+        if (ctxType === 'm' && mc) {
+            supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
+        }
+        else if (ctxType === 'c') {
+            var cat = Taco.app.context.getCatalog();
+            if (cat) {
+                supportedCurrencies.push(cat.currencyCode);
+            }
+        }
+        return supportedCurrencies;
+    },
+
+    getSupportedLocales: function () {
+        var ctx = Taco.app.context.getCurrentContext(),
+            ctxType = (!ctx) ? '' : ctx.contextType,
+            mc = Taco.app.context.getMasterCatalog(),
+            excludeDefaultLocale = true,
+            supportedLocales = [];
+        if (ctxType === 'm' && mc) {
+            supportedLocales = mc.getSupportedLocales(excludeDefaultLocale);
+        }
+        else if (ctxType === 'c') {
+            var cat = Taco.app.context.getCatalog();
+            if (cat) {
+                supportedLocales.push(cat.localeCode);
+            }
+        }
+        return supportedLocales;
+    },
 
     onRowEditorUpdate: function () {
         this.callParent(arguments);
