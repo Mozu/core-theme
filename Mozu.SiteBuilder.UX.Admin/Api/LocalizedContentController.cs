@@ -34,8 +34,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IAttributeWebApiClient _attributeWebApiClient;
         private readonly IProductWebApiClient _productWebApiClient;
         private readonly IReportWebApiClient _reportWebApiClient;
-        private readonly IMasterCatalogWebApiClient _masterCatalogWebApiClient;
-        private readonly ISettings _settings;
         private readonly IApiContext _apiCtx;
 
         private TargetContextLevelType TargetContextLevel
@@ -48,15 +46,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-
-        public LocalizedContentController(IAttributeWebApiClient attributeWebApiClient, IProductWebApiClient productWebApiClient, IReportWebApiClient reportWebApiClient, IMasterCatalogWebApiClient masterCatalogWebApiClient,
-            ISettings settings, IApiContext apiCtx)
+        public LocalizedContentController(IAttributeWebApiClient attributeWebApiClient, IProductWebApiClient productWebApiClient, IReportWebApiClient reportWebApiClient, IApiContext apiCtx)
         {
             _attributeWebApiClient = attributeWebApiClient;
             _productWebApiClient = productWebApiClient;
             _reportWebApiClient = reportWebApiClient;
-            _masterCatalogWebApiClient = masterCatalogWebApiClient;
-            _settings = settings;
             _apiCtx = apiCtx;
         }
 
@@ -106,18 +100,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "attributevalues/read")]
         public async Task<Response<List<JObject>>> GetLocalizedAttributeValues([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
-            //var attrValues = (await _reportWebApiClient.GetAttributeValuess(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-            //    filter: extFilter.query, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
+            if (!_apiCtx.MasterCatalogId.HasValue)
+            {
+                return List2(new List<JObject>(), 0);
+            }
 
-            // todo: automapper - Greg Murray on 2014-07-13 
-            throw new NotImplementedException();
+            var attrs = (await _reportWebApiClient.GetAttributeValues(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy:null,
+                filter: extFilter.ToFilterString(), targetContextLevel: TargetContextLevel)).ReadAsSync();
+
+            var items = attrs.Items.Select(Mapper.Map<DC.ReportAttributeValue, JObject>).Where(x => x != null).ToList();
+            return List2(items, attrs.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "attributevalues/edit")]
         public async Task<Response<JObject>> UpsertLocalizedAttributeValues(JObject jObject)
         {
-            //await _attributeWebApiClient.UpdateAttributeVocabularyValueLocalizedContents()
-            throw new NotImplementedException();
+            var localizedAttrValue = jObject.ToObject<LocalizedAttributeValue>();
+            var attrLocalizedContent = (from supportedLocale in localizedAttrValue.SupportedLocales
+                                    let localizedName = (string)jObject["value_" + supportedLocale]
+                                    where localizedName != null
+                                    select new DC.AttributeVocabularyValueLocalizedContent
+                                    {
+                                        LocaleCode = supportedLocale,
+                                        StringValue = localizedName
+                                    }).ToList();
+
+            var updatedResults = (await _attributeWebApiClient.UpdateAttributeVocabularyValueLocalizedContents(attrLocalizedContent, localizedAttrValue.AttributeFQN, 
+                localizedAttrValue.StringValue, responseFields: null, targetContextLevel: TargetContextLevel)).ReadAsSync();
+
+            var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, updatedResults, (property, locales) => property.SupportedLocales = locales,
+                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
+
+            return Single2(jResult);
         } 
 
         [HttpGetRoute(UriTemplate = "productproperties/read")]

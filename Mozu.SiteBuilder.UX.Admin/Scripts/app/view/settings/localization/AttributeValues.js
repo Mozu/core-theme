@@ -1,42 +1,110 @@
 ﻿/**
- * @class Taco.view.order.Grid
+ * @class Taco.view.settings.localization.AttributeValues
 */
 Ext.define('Taco.view.settings.localization.AttributeValues', {
-    requires:['Taco.store.LocalizedAttributeValues'],
+    requires:['Taco.store.LocalizedAttributeValues', 'Taco.view.settings.localization.AdvancedSearchForm'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
-    alias :'widget.localizedattrvaluesgrid',
+    alias: 'widget.localizedattributevaluesgrid',
 
-    createButtonText: "Create New Zone",
-    title: "Attribute Values",
-  
+    title: "Attribute Value Localization Grid",
 
-    createRoute: 'localization/zonescreate',
-    editorRoute: 'localization/zonesedit',
-   
+    contextConfig: {
+        supportedLevels: ['m'],
+        requiresContextOfType: ['m', 'c', 's']
+    },
+
     store: { type: 'Taco.store.LocalizedAttributeValues' },
 
-    // override this method and adjust the columns if your need a grid with a subset of columns;
+
+    getStore: function () {
+        return { type: 'Taco.store.LocalizedAttributeValues' };
+    },
+
+    // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function () {
-        var me = this;
-        return [
+        var mc = Taco.app.context.getMasterCatalog(),
+            excludeDefaultLocale = true,
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+            mcName = (!mc) ? '' : mc.name + ' ',
+            mcLocale = (!mc) ? '' : ' (' + mc.localeCode + ')',
+            columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeFQN',
-                text: 'MC Attribute Id',
-                hideable: false,
+                text: mcName + 'Attribute Id',
+                hideable: true,
                 minWidth: 300
-                //renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-                //    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-                //}
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'adminName',
-                text: 'MC Attribute Id',
-                flex: 1,
+                text: mcName + 'Attribute Admin Name',
+                hideable: true,
+                flex: 1
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'attributeName',
+                text: mcName + 'Attribute Name' + mcLocale,
+                hideable: true,
+                //flex: 1,
+                width: 150
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'stringValue',
+                text: mcName + 'Label' + mcLocale,
+                hideable: true,
+                //flex: 1,
                 width: 150
             }
-        ];
+            ];
+
+        // todo: take into account search filter to only show language? - Greg Murray on 2014-07-14 
+
+        Ext.Array.each(supportedLocales, function (locale) {
+            var col = {
+                xtype: 'gridcolumn',
+                dataIndex: 'value_' + locale,
+                text: 'Label (' + locale + ')',
+                hideable: true,
+                //flex: 1,
+                width: 150,
+                sortable: false,
+                resizable: true,
+                menuDisabled: true,
+                editor: {
+                    xtype: "textfield",
+                    showBorder: true,
+                    hideTrigger: true,
+                    emptyText: "missing",
+                    msgTarget: "qtip",
+                    selectOnFocus: true,
+                    allowBlank: true
+                }
+            };
+            columns.push(col);
+        });
+        return columns;
+    },
+
+    getAdvancedSearchConfig: function () {
+        var mc = Taco.app.context.getMasterCatalog(),
+            excludeDefaultLocale = true,
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
+            quickFilters = [
+                            [{ hasRecord: false }, 'Missing Translation'],
+                            [{ hasRecord: true }, 'Has Translation'],
+                            [{}, 'All Records']
+            ];
+
+        Ext.Array.each(supportedLocales, function (loc) {
+            quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
+            quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
+        });
+
+        return {
+            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchForm',
+
+            quickFilterData: quickFilters
+        };
     }
+
 });
-
-

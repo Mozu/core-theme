@@ -27,10 +27,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             MapReportAttributeToLocalizedAttribute();
+            MapReportAttributeValueToLocalizedAttributeValue();
 
             MapReportProductPropertyToLocalizedProductProperty();
             MapReportProductExtraToLocalizedProductExtraPrice();
             MapReportProductVariationToLocalizedProductVariantPrice();
+        }
+
+        private static void MapReportAttributeToLocalizedAttribute()
+        {
+
+            Mapper.CreateMap<DC.ReportAttribute, LocalizedAttribute>()
+                .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(dc => dc.AttributeFQN))
+                .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AdminName))
+                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Name))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
+                .ForMember(x => x.Locale, op => op.ResolveUsing(dc => dc.LocaleCode))
+                .ForMember(x => x.SupportedLocales,
+                    op => op.ResolveUsing(dc => (dc.LocalizedValues != null && dc.LocalizedValues.Count > 0)
+                        ? dc.LocalizedValues.Select(x => x.LocaleCode).ToList()
+                        : new List<string>()))
+                ;
+
+            Mapper.CreateMap<DC.ReportAttribute, JObject>().ConvertUsing<ReportLocalizedAttributeConverter>();
+        }
+
+        private static void MapReportAttributeValueToLocalizedAttributeValue()
+        {
+            Mapper.CreateMap<DC.ReportAttributeValue, LocalizedAttributeValue>()
+                .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(dc => dc.AttributeFQN))
+                .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AdminName))
+                .ForMember(x => x.AttributeName, op => op.MapFrom(dc => dc.Value as string))
+                .ForMember(x => x.StringValue, op => op.ResolveUsing(dc => dc.StringValue))
+                .ForMember(x => x.LocaleCode, op => op.ResolveUsing(dc => dc.LocaleCode))
+                .ForMember(x => x.SupportedLocales,
+                    op => op.ResolveUsing(dc => (dc.LocalizedValues != null && dc.LocalizedValues.Count > 0)
+                        ? dc.LocalizedValues.Select(x => x.LocaleCode).ToList()
+                        : new List<string>()))
+                ;
+
+            Mapper.CreateMap<DC.ReportAttributeValue, JObject>().ConvertUsing<ReportLocalizedAttributeValueConverter>();
         }
 
         private static void MapReportProductVariationToLocalizedProductVariantPrice()
@@ -86,29 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.ReportProductProperty, JObject>().ConvertUsing<ReportLocalizedProductPropertyConverter>();
         }
 
-        private static void MapReportAttributeToLocalizedAttribute()
-        {
-            //not used?
-            //Mapper.CreateMap<LocalizedAttribute, DC.AttributeLocalizedContent>()
-            //    .ForMember(dc => dc.LocaleCode, op => op.ResolveUsing(x => x.Locale))
-            //    .ForMember(dc => dc.Name, op => op.ResolveUsing(x => x.Name))
-            //    .ForMember(dc => dc.Description, op => op.ResolveUsing(x => x.Description))
-            //    ;
-
-            Mapper.CreateMap<DC.ReportAttribute, LocalizedAttribute>()
-                .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(dc => dc.AttributeFQN))
-                .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AdminName))
-                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Name))
-                .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
-                .ForMember(x => x.Locale, op => op.ResolveUsing(dc => dc.LocaleCode))
-                .ForMember(x => x.SupportedLocales,
-                    op => op.ResolveUsing(dc => (dc.LocalizedValues != null && dc.LocalizedValues.Count > 0)
-                        ? dc.LocalizedValues.Select(x => x.LocaleCode).ToList()
-                        : new List<string>()))
-                ;
-
-            Mapper.CreateMap<DC.ReportAttribute, JObject>().ConvertUsing<ReportLocalizedAttributeConverter>();
-        }
+        
     }
 
     public class ReportLocalizedAttributeConverter : ITypeConverter<DC.ReportAttribute, JObject>
@@ -120,6 +134,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             var localizedAttr = Mapper.Map<LocalizedAttribute>(attr);
             var jObj = ReportAttributeConverterHelper.AddLocalizedNames(localizedAttr, attr.LocalizedValues);
+            return jObj;
+        }
+
+    }
+
+    public class ReportLocalizedAttributeValueConverter : ITypeConverter<DC.ReportAttributeValue, JObject>
+    {
+        public JObject Convert(ResolutionContext context)
+        {
+            var attrValue = context.SourceValue as DC.ReportAttributeValue;
+            if (attrValue == null) return null;
+
+            var localizedAttrValue = Mapper.Map<LocalizedAttributeValue>(attrValue);
+            //var jObj = ReportAttributeConverterHelper.AddLocalizedNames(localizedAttr, attr.LocalizedValues);
+
+            var jObj = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, attrValue.LocalizedValues, 
+                (property, locales) => property.SupportedLocales = locales, rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
+
             return jObj;
         }
 
