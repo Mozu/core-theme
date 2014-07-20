@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.order.Grid
+ * @class Taco.view.settings.localization.ProductExtras
 */
 Ext.define('Taco.view.settings.localization.ProductExtras', {
     requires: ['Taco.store.LocalizedProductExtras', 'Taco.view.settings.localization.AdvancedSearchForm', 'Taco.core.ux.form.CurrencyField'],

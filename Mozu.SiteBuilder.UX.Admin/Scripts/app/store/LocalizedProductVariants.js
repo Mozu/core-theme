@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.store.LocalizedAttributes
+ * @class Taco.store.LocalizedProductVariants
  */
 Ext.define('Taco.store.LocalizedProductVariants', {
     extend: 'Ext.data.Store',

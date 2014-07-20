@@ -1,7 +1,6 @@
 ﻿/**
  * @class Taco.store.LocalizedProductExtras
  */
-
 Ext.define('Taco.store.LocalizedProductExtras', {
     extend: 'Ext.data.Store',
     model: function () {

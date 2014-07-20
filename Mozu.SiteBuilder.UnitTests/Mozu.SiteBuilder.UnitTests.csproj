@@ -398,6 +398,7 @@
     <Compile Include="Admin\Api\LocalizedContentControllerTest.cs" />
     <Compile Include="Admin\Api\LocationInventoryControllerTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\AdminMappingTest.cs" />
+    <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedAttributeValueMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedProductPropertyMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedAttributeMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedProductExtraMappingTest.cs" />
