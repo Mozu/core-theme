@@ -5,7 +5,7 @@
          {
              fieldLabel: 'content',
              xtype: 'taco-htmleditor',
-             name: 'body'
+             name: 'content'
          }
     ]
 });

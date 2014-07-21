@@ -1,0 +1,1 @@
+﻿{% include_content "widgets/cms/snippet-render" with  list=Model.config.listName id=Model.config.snippetId as_parameter %}

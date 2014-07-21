@@ -9,7 +9,7 @@
         "name": "Core4"
     },
     "editors": [{
-        "documentLists": [
+        "documentTypes": [
             "snippets@mozu"
         ],
         "id": "snippet@mozu",
@@ -767,6 +767,31 @@
             "*"
         ]
     }, {
+       "displayName": "snippet" ,
+           "displayTemplate": "cms/snippet",
+           "editViewFields": [{
+            "fieldLabel": "snippet",
+            "name": "snippetId",
+            "width": "100%",
+            "store": {
+                "type": "Taco.store.Entities",
+                "listName": "siteSnippets@mozu",
+                "entityType": "cms"
+            },
+            "displayField": "name",
+            "valueField": "id",
+            "xtype": "combo"
+            }, 
+             {
+                   "xtype": "hidden",
+                   "value": "siteSnippets@mozu",
+                   "name": "listName"
+               }],
+        "id": "cms-snippet",
+        "validPageTypes": [
+            "*"
+        ]
+    } ,{
         "defaultConfig": {
             "hrBorderColor": "#000",
             "hrBorderStyle": "solid",
@@ -794,7 +819,7 @@
             "height": 400,
             "name": "body",
             "width": "100%",
-            "xtype": "textareafield"
+            "xtype": "taco-code"
         }],
         "icon": "/resources/admin/widgets/07_code.png",
         "id": "html",
