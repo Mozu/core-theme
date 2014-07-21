@@ -934,7 +934,8 @@
     <Content Include="Scripts\app\view\report\Header.js" />
     <Content Include="Scripts\app\view\report\Index.js" />
     <Content Include="Scripts\app\view\report\SidebarList.js" />
-    <Content Include="Scripts\app\view\settings\localization\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\settings\localization\AdvancedSearchCurrencyForm.js" />
+    <Content Include="Scripts\app\view\settings\localization\AdvancedSearchLocaleForm.js" />
     <Content Include="Scripts\app\view\settings\localization\modal\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductVariants.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductProperties.js" />
@@ -943,6 +944,8 @@
     <Content Include="Scripts\app\view\settings\localization\AttributeValues.js" />
     <Content Include="Scripts\app\view\settings\localization\subform\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\subform\Subform.js" />
+    <Content Include="Scripts\app\view\settings\localization\util\Locales.js" />
+    <Content Include="Scripts\app\view\settings\localization\util\Currencies.js" />
     <Content Include="Scripts\app\view\settings\paymentAndCheckout\ExternalGateway.js" />
     <Content Include="Scripts\app\view\settings\Publishing.js" />
     <Content Include="Scripts\app\view\settings\localization\widget\LocalizationGrid.js" />

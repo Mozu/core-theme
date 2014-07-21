@@ -40,7 +40,7 @@ Ext.define('Taco.store.LocalizedAttributes', {
 
                 Ext.Array.each(supportedLocales, function(loc) {
                     items.push({
-                        name: loc + '_name',
+                        name: 'name_' + loc,
                         type: 'string',
                         useNull: true
                     });

@@ -143,6 +143,38 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         return supportedLocales;
     },
 
+    getQuickFilterLocaleData: function () {
+        // need to 
+        var supportedLocales = this.getSupportedLocales(),
+              quickFilters = [
+                              [{ hasRecord: false }, 'Missing Translation'],
+                              [{ hasRecord: true }, 'Has Translation'],
+                              [{}, 'All Records']
+              ];
+
+        Ext.Array.each(supportedLocales, function (loc) {
+            quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
+            quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
+        });
+        return quickFilters;
+    },
+
+    getQuickFilterCurrencyData: function () {
+        // need to 
+        var supportedCurrencies = this.getSupportedCurrencies(),
+            quickFilters = [
+                            [{ hasRecord: false }, 'Missing Currency'],
+                            [{ hasRecord: true }, 'Has Currency'],
+                            [{}, 'All Records']
+            ];
+
+        Ext.Array.each(supportedCurrencies, function (cur) {
+            quickFilters.push([{ localeNotExists: cur }, 'Missing ' + cur]);
+            quickFilters.push([{ localeExists: cur }, 'Has ' + cur]);
+        });
+        return quickFilters;
+    },
+
     onRowEditorUpdate: function () {
         this.callParent(arguments);
     }

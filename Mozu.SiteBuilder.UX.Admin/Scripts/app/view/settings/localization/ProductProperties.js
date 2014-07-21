@@ -2,7 +2,7 @@
  * @class Taco.view.settings.localization.ProductProperties
 */
 Ext.define('Taco.view.settings.localization.ProductProperties', {
-    requires: ['Taco.store.LocalizedProductProperties', 'Taco.view.settings.localization.AdvancedSearchForm'],
+    requires: ['Taco.store.LocalizedProductProperties', 'Taco.view.settings.localization.AdvancedSearchLocaleForm'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias: 'widget.localizedproductpropertiesgrid',
 
@@ -77,22 +77,10 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
     },
 
     getAdvancedSearchConfig: function () {
-        var supportedLocales = this.getSupportedLocales(),
-            quickFilters = [
-                            [{ hasRecord: false }, 'Missing Translation'],
-                            [{ hasRecord: true }, 'Has Translation'],
-                            [{}, 'All Records']
-            ];
-
-        Ext.Array.each(supportedLocales, function (loc) {
-            quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
-            quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
-        });
-
         return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchForm',
+            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchLocaleForm',
 
-            quickFilterData: quickFilters
+            quickFilterData: this.getQuickFilterLocaleData()
         };
     }
 

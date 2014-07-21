@@ -65,7 +65,7 @@
 //        Ext.Array.each(supportedLocales, function (locale) {
 //            var col = {
 //                xtype: 'gridcolumn',
-//                dataIndex: locale + '_name',
+//                dataIndex: 'name_' + locale,
 //                text: locale,
 //                flex: 1,
 //                width: 150,

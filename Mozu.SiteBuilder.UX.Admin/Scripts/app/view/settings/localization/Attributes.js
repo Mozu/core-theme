@@ -2,7 +2,7 @@
  * @class Taco.view.settings.localization.Attributes
 */
 Ext.define('Taco.view.settings.localization.Attributes', {
-    requires: ['Taco.store.LocalizedAttributes', 'Taco.view.settings.localization.AdvancedSearchForm'],
+    requires: ['Taco.store.LocalizedAttributes', 'Taco.view.settings.localization.AdvancedSearchLocaleForm'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias :'widget.localizedattributesgrid',
 
@@ -48,7 +48,7 @@ Ext.define('Taco.view.settings.localization.Attributes', {
         Ext.Array.each(supportedLocales, function (locale) {
             var col = {
                 xtype: 'gridcolumn',
-                dataIndex: locale + '_name',
+                dataIndex: 'name_' + locale,
                 text: 'Attribute Name (' + locale + ')',
                 flex: 1,
                 editor: {
@@ -66,26 +66,13 @@ Ext.define('Taco.view.settings.localization.Attributes', {
         return columns;
     },
 
-    getAdvancedSearchConfig: function() {
-        var mc = Taco.app.context.getMasterCatalog(),
-            excludeDefaultLocale = true,
-            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
-            quickFilters = [
-                            [{ hasRecord: false }, 'Missing Translation'],
-                            [{ hasRecord: true}, 'Has Translation'],
-                            [{}, 'All Records']
-                        ];
-
-            Ext.Array.each(supportedLocales, function(loc) {
-                quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
-                quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
-            });
-
+    getAdvancedSearchConfig: function () {
         return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchForm',
+            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchLocaleForm',
 
-            quickFilterData: quickFilters
+            quickFilterData: this.getQuickFilterLocaleData()
         };
+        //return Taco.view.settings.localization.util.LocaleUtil.getAdvancedSearchConfig();
     }
 
 });
