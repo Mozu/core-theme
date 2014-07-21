@@ -15,7 +15,8 @@
         'Taco.core.ux.form.entities.WebPageEditorForm',
         'Taco.core.ux.HtmlEditor',
         'Taco.core.ux.form.SlugField',
-        'Taco.core.ux.form.field.PageTemplate'
+        'Taco.core.ux.form.field.PageTemplate',
+        'Taco.core.ux.form.field.BaseImageField'
 
     ],
     saveButtonEnabled: true,
