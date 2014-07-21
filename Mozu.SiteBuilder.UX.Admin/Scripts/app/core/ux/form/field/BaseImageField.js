@@ -15,7 +15,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
     inputType: 'hidden',
     mode: 'mozufilter',
     showGutter: true,
-    
+     
     initComponent: function () {
         var me = this;
         me.on('render', function () {

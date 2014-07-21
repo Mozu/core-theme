@@ -45,6 +45,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var view = arguments.GetValueOrDefault<string>("view");
 
             var tempCol = arguments.GetValueOrDefault<IEnumerable>("ids");
+            var id = arguments.GetValueOrDefault<string>("id");
+
             List <string> docIds = null;
             if (tempCol != null)
             {
@@ -52,7 +54,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 query = string.Join( ", or", docIds.Select(x => string.Format("ID eq \"{0}\"", x)));
                 ;
             }
-          
+            if (!string.IsNullOrEmpty(id))
+            {
+                query = string.Format("id eq \"{0}\"", id);
+            }
             var service = context.Resolve<IDocumentListWebApiClient>();
 
 

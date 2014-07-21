@@ -5,7 +5,7 @@
 
 Ext.define('Taco.core.ux.form.field.Code', {
     extend: 'Ext.form.field.Base',
-    alias: ['widget.taco-codefield'],
+    alias: ['widget.taco-codefield', 'widget.taco-code'],
     requires: [
     ],
    // height: 300,
