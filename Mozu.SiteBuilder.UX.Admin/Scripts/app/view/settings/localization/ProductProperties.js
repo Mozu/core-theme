@@ -62,7 +62,7 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
                 flex: 1,
                 sortable: false,
                 editor: {
-                    xtype: "textfield",
+                    xtype: "textarea",
                     showBorder: true,
                     hideTrigger: true,
                     emptyText: "missing",

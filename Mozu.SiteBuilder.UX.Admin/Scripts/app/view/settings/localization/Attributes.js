@@ -52,7 +52,7 @@ Ext.define('Taco.view.settings.localization.Attributes', {
                 text: 'Attribute Name (' + locale + ')',
                 flex: 1,
                 editor: {
-                    xtype: "textfield",
+                    xtype: "textarea",
                     showBorder: true,
                     hideTrigger: true,
                     emptyText: "missing",
