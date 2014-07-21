@@ -77,14 +77,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "attributes/edit")]
         public async Task<Response<JObject>> UpsertLocalizedAttributes(JObject jObject)
         {
-            //var fakeData = CreatFakeJAttrib("Size", "Dimension3", "размер");
-            //var result = await Task.FromResult(fakeData);
-            //return Single2(result);
-
-            //real code
             var attr = jObject.ToObject<LocalizedAttribute>();
             var localizedContent = (from supportedLocale in attr.SupportedLocales
-                                    let localizedName = (string)jObject[supportedLocale + "_name"]
+                                    let localizedName = (string)jObject["name_" + supportedLocale]
                                     where localizedName != null
                                     select new DC.AttributeLocalizedContent
                                     {
@@ -247,85 +242,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var jResult = ReportLocalizedConverterHelper.AddLocalizedPrices(variantPrice, updatedResults);
             return Single2(jResult);
         }
-
-
-        #region privates
-
-
-
-        private List<JObject> CreateFakeVariantData()
-        {
-            var result = new List<JObject>();
-
-            result.Add(CreatFakeJVariant("T-Shirt", "Black", "S", 9.95M, 11.95M));
-            result.Add(CreatFakeJVariant("T-Shirt", "Yello", "M", 9.95M, 11.95M));
-            result.Add(CreatFakeJVariant("T-Shirt", "Blue", "XL", 11.95M, 14.95M));
-            result.Add(CreatFakeJVariant("T-Shirt", "Green", "XXXXXL", 9999.99M, 11000.00M));
-            return result;
-        }
-
-        private JObject CreatFakeJVariant(string name, string color, string size, decimal price, decimal msrp)
-        {
-            const decimal euroX = 0.74M;
-            const decimal rubX = 35M;
-            var attrib = new LocalizedProductVariantPrice
-            {
-                VariantProductCode = Guid.NewGuid().ToString("N").Substring(0, 8),
-                ParentProductCode = Guid.NewGuid().ToString("N").Substring(0, 6),
-                ProductName = name,
-                Options = new List<string>
-                    {
-                        "color - "+ color, "size - " +size
-                    },
-                CurrencyCode = "USD",
-                DeltaPrice = price,
-                DeltaCreditValue = null,
-                DeltaMSRP = msrp,
-                SupportedCurrencies = new List<string> { "EUR", "RUB"}
-            };
-            var j = JObject.FromObject(attrib, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
-            j["price_EUR"] = price*euroX;
-            j["msrp_EUR"] = msrp*euroX;
-            j["credit_EUR"] = "";
-            j["price_RUB"] = price * rubX;
-            j["msrp_RUB"] = msrp * rubX;
-            j["credit_RUB"] = "";
-
-            return j;
-        }
-
-
-        //private List<JObject> CreateFakeAttributeJData()
-        //{
-        //    var result = new List<JObject>();
-
-        //    result.Add(CreatFakeJAttrib("Color", "Coleur", "цвет"));
-        //    result.Add(CreatFakeJAttrib("Size", "Dimension", "размер"));
-        //    result.Add(CreatFakeJAttrib("Material", "matériel", "материал"));
-        //    result.Add(CreatFakeJAttrib("Weight", "poids", "вес"));
-        //    return result;
-        //}
-
-        //private JObject CreatFakeJAttrib(string attr, string attrFr, string attrRu)
-        //{
-        //    var attrib = new LocalizedAttribute
-        //    {
-        //        AdminName = attr,
-        //        AttributeFQN = "Tenant~" + attr,
-        //        Description = attr,
-        //        Locale = "en-US",
-        //        Name = attr,
-        //        SupportedLocales = new List<string> { "fr-FR","ru-RU"}
-        //    };
-        //    var j = JObject.FromObject(attrib, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
-        //    j["fr-FR_name"] = attrFr;
-        //    j["ru-RU_name"] = attrRu;
-        //    return j;
-        //}
-        
-
-        #endregion
-
 
     }
 }

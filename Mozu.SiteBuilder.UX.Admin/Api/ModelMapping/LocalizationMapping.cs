@@ -214,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             foreach (var updatedLocalizedContent in reportAttributeLocalizedContents)
             {
-                jResult[updatedLocalizedContent.LocaleCode + "_name"] = updatedLocalizedContent.Name;
+                jResult["name_" + updatedLocalizedContent.LocaleCode] = updatedLocalizedContent.Name;
             }
             return jResult;
         }
@@ -232,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             foreach (var updatedLocalizedContent in updatedResults)
             {
-                jResult[updatedLocalizedContent.LocaleCode + "_name"] = updatedLocalizedContent.Name;
+                jResult["name_" + updatedLocalizedContent.LocaleCode] = updatedLocalizedContent.Name;
             }
             return jResult;
         }

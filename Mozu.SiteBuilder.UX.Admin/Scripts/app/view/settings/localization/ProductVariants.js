@@ -2,7 +2,7 @@
  * @class Taco.view.settings.localization.ProductVariants
 */
 Ext.define('Taco.view.settings.localization.ProductVariants', {
-    requires: ['Taco.store.LocalizedProductVariants', 'Taco.view.settings.localization.AdvancedSearchForm', 'Taco.core.ux.form.CurrencyField'],
+    requires: ['Taco.store.LocalizedProductVariants', 'Taco.view.settings.localization.AdvancedSearchCurrencyForm', 'Taco.core.ux.form.CurrencyField'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias: 'widget.localizedproductvariantsgrid',
 
@@ -109,24 +109,11 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
     },
 
     getAdvancedSearchConfig: function () {
-        var mc = Taco.app.context.getMasterCatalog(),
-            excludeDefaultCurrency = true,
-            supportedCurrencies = (!mc) ? [] : mc.getSupportedCurrencies(excludeDefaultCurrency),
-            quickFilters = [
-                            [{ hasRecord: false }, 'Missing Currency'],
-                            [{ hasRecord: true }, 'Has Currency'],
-                            [{}, 'All Records']
-            ];
-
-        Ext.Array.each(supportedCurrencies, function (cur) {
-            quickFilters.push([{ localeNotExists: cur }, 'Missing ' + cur]);
-            quickFilters.push([{ localeExists: cur }, 'Has ' + cur]);
-        });
-
+        
         return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchForm',
+            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchCurrencyForm',
 
-            quickFilterData: quickFilters
+            quickFilterData: this.getQuickFilterCurrencyData() //quickFilters
         };
     }
 

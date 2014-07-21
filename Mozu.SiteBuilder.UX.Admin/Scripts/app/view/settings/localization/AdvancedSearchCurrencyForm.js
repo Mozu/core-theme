@@ -1,7 +1,7 @@
 ﻿/**
- * @class Taco.view.settings.localization.AdvancedSearchForm
+ * @class Taco.view.settings.localization.AdvancedSearchCurrencyForm
  */
-Ext.define('Taco.view.settings.localization.AdvancedSearchForm', {
+Ext.define('Taco.view.settings.localization.AdvancedSearchCurrencyForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         //'Taco.core.ux.form.field.AdminUser',
@@ -32,6 +32,27 @@ Ext.define('Taco.view.settings.localization.AdvancedSearchForm', {
                     fieldLabel: 'Keyword Search'
                 }
             ];
+            if (this.advancedSearchConfig && this.advancedSearchConfig.quickFilterData) { //&& this.enableQuickFilters
+
+                this.items.push(
+                {
+                    xtype: 'combo',
+                    margin: '0 0 0 20',
+                    itemId: 'quickFilter',
+                    queryMode: 'local',
+                    typeAhead: false,
+                    isSelectField: true,
+                    emptyText: 'Quick Filter',
+                    store: this.advancedSearchConfig.quickFilterData
+                    //  value: this.getQuickFilterFromStore(),
+                    //listeners: {
+                    //    change: this.onQuickFilterChange,
+                    //    beforeselect: this.onBeforeSelect,
+                    //    scope: this
+                    //}
+                });
+            }
+
         //,
         //{
         //    xtype: 'combobox',

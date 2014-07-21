@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Localization
             //assert
             for (int i = 0; i < locales.Length; i++)
             {
-                Assert.That((string)actual[locales[i] + "_name"], Is.EqualTo(names[i]), scenario);
+                Assert.That((string)actual["name_" + locales[i]], Is.EqualTo(names[i]), scenario);
             }
 
         }
