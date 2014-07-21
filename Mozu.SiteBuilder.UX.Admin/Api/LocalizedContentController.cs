@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     }).ToList();
 
             var updatedResults = (await _attributeWebApiClient.UpdateAttributeVocabularyValueLocalizedContents(attrLocalizedContent, localizedAttrValue.AttributeFQN, 
-                localizedAttrValue.StringValue, responseFields: null, targetContextLevel: TargetContextLevel)).ReadAsSync();
+                localizedAttrValue.AttributeName, responseFields: null, targetContextLevel: TargetContextLevel)).ReadAsSync();
 
             var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, updatedResults, (property, locales) => property.SupportedLocales = locales,
                 rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
@@ -157,8 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         StringValue = localizedName,
                                     }).ToList();
 
-
-            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContents(localizedContent, localizedProp.ProductCode, localizedProp.AttributeFQN, 
+            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContents(localizedContent, localizedProp.ProductCode, localizedProp.AttributeFQN,
                 localizedProp.StringValue, targetContextLevel: TargetContextLevel)).ReadAsSync();
             var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedProp, updatedResults, (property, locales) => property.SupportedLocales = locales,
                 rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
@@ -213,11 +212,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var items = productVariants.Items.Select(Mapper.Map<DC.ReportProductVariation, JObject>).Where(x => x != null).ToList();
             return List2(items, productVariants.TotalCount);            
-            
-            //var fakeData = CreateFakeVariantData();
-            //var result = await Task.FromResult(fakeData);
-            //return List2(result, 4);
-
         }
 
         [HttpPostRoute(UriTemplate = "productvariants/edit")]
@@ -237,8 +231,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         CreditValue = localizedCredit
                                     }).ToList();
 
-            var updatedResults = (await _productWebApiClient.UpdateProductVariationLocalizedDeltaPrices(localizedPrices, variantPrice.ParentProductCode, 
-                responseFields: null, targetContextLevel: TargetContextLevel, variationKey:variantPrice.VariantProductCode)).ReadAsSync();
+            var updatedResults = (await _productWebApiClient.UpdateProductVariationLocalizedDeltaPrices(localizedPrices, productCode:variantPrice.ParentProductCode, 
+                variationKey:variantPrice.VariantProductCode, targetContextLevel: TargetContextLevel)).ReadAsSync();
             var jResult = ReportLocalizedConverterHelper.AddLocalizedPrices(variantPrice, updatedResults);
             return Single2(jResult);
         }
