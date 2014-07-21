@@ -214,8 +214,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     order.UnpackagedItems = new List<OrderPackageItem>();
                     order.UnpickedupItems = new List<OrderPickupItem>();
+                    order.UndeliveredDigitalItems = new List<OrderDigitalPackageItem>();
 
-                    var GetDesiredQuantityByPickupMethod = new Func<string, string, int>((productCode, fulfillmentMethod) => {
+                    var GetDesiredQuantityByFulfillmentMethod = new Func<string, string, int>((productCode, fulfillmentMethod) => {
                         int unbundledQuantity =
                             (from orderItem in order.Items
                              where orderItem.ProductCode == productCode
@@ -256,16 +257,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
                     });
 
+                    var GetUnitPrice = new Func<string, decimal>(productCode => {
+                        return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).UnitPrice;
+                    });
+
                     foreach (var productCode in productCodes)
                     {
                         var productName = GetProductName(productCode);
-                        var desiredPackageQuantity = GetDesiredQuantityByPickupMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
-                        var desiredPickupQuantity = GetDesiredQuantityByPickupMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
+                        var desiredPackageQuantity = GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
+                        var desiredPickupQuantity = GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
+                        var desiredDigitalQuantity = GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.DIGITAL);
                         var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+                        var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
 
                         // if there are more desired products than created packages contain, add this product to unpackagedItems.
-                        if ((desiredPackageQuantity > packagedQuantity))
+                        if (desiredPackageQuantity > packagedQuantity)
                         {
                             int remainingQuantity = desiredPackageQuantity - packagedQuantity;
 
@@ -275,8 +282,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                             if (remainingQuantity > 0)
                             {
-                                order.UnpackagedItems.Add(new OrderPackageItem
-                                    {
+                                order.UnpackagedItems.Add(new OrderPackageItem {
                                         ProductCode = productCode,
                                         ProductName = GetProductName(productCode),
                                         Weight = GetUnitWeight(productCode) * remainingQuantity,
@@ -288,7 +294,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         }
 
                         // if there are more desired products than created pickups contain, add this product to unpickedupItems.
-                        if ((desiredPickupQuantity > pickedQuantity))
+                        if (desiredPickupQuantity > pickedQuantity)
                         {
                             int remainingQuantity = desiredPickupQuantity - pickedQuantity;
 
@@ -298,8 +304,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                             if (remainingQuantity > 0)
                             {
-                                order.UnpickedupItems.Add(new OrderPickupItem
-                                    {
+                                order.UnpickedupItems.Add(new OrderPickupItem {
                                         ProductCode = productCode,
                                         ProductName = GetProductName(productCode),
                                         Quantity = remainingQuantity,
@@ -308,6 +313,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     });
                             }
                         }
+
+                        // if there are more desired digital fulfillments than created digital fulfillments contain, add this product to undeliveredDigitalItems.
+                        if (desiredDigitalQuantity > digitallyFulfilled)
+                        {
+                            int remainingQuantity = desiredDigitalQuantity - digitallyFulfilled;
+                            order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem {
+                                ProductCode = productCode,
+                                ProductName = GetProductName(productCode),
+                                Quantity = remainingQuantity,
+                                GiftCardCode = null,
+
+                                // TODO: are these accurate in the case of a bundle? should they even be included?
+                                UnitPrice = GetUnitPrice(productCode),
+                                Total = GetUnitPrice(productCode) * remainingQuantity,
+                            });
+                        }
+
                     }
                 })
                 .AfterMap((dc, order) =>

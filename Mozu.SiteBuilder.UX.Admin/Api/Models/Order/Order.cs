@@ -111,6 +111,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public List<OrderPickupItem> UnpickedupItems { get; set; }
 
+        public List<OrderDigitalPackageItem> UndeliveredDigitalItems { get; set; }
+
         public List<string> AvailableActions { get; set; }
         #endregion
 
