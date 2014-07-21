@@ -19,7 +19,6 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
         return { type: 'Taco.store.LocalizedProductProperties' };
     },
 
-    // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function () {
         var mc = Taco.app.context.getMasterCatalog(),
             supportedLocales = [],
@@ -30,50 +29,38 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
                     xtype: 'gridcolumn',
                     dataIndex: 'productCode',
                     text: mcName + 'Product Code',
-                    hideable: true,
-                    minWidth: 300
+                    flex: 1
                 },{
                     xtype: 'gridcolumn',
                     dataIndex: 'productName',
                     text: mcName + 'Product Name',
-                    hideable: true,
-                    minWidth: 300
+                    flex: 1
                 },{
                     xtype: 'gridcolumn',
                     dataIndex: 'attributeFQN',
                     text: mcName + 'Attribute Id',
-                    hideable: true,
-                    minWidth: 300
+                    flex: 1
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'adminName',
                     text: mcName + 'Attribute Admin Name',
-                    hideable: true,
                     flex: 1
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'stringValue',
                     text: mcName + 'Text' + mcLocale,
-                    hideable: true,
-                    //flex: 1,
-                    width: 150
+                    flex: 1
                 }
             ];
         supportedLocales = this.getSupportedLocales();
-
-        // todo: take into account search filter to only show language? - Greg Murray on 2014-07-14 
 
         Ext.Array.each(supportedLocales, function (locale) {
             var col = {
                 xtype: 'gridcolumn',
                 dataIndex: 'value_' + locale,
                 text: 'Text (' + locale + ')',
-                hideable: true,
-                //flex: 1,
-                width: 150,
+                flex: 1,
                 sortable: false,
-                resizable: true,
-                menuDisabled: true,
                 editor: {
                     xtype: "textfield",
                     showBorder: true,
