@@ -616,11 +616,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             orderId = me.record.get("id"),
             data= Ext.clone(gridRecord.data);
 
-        /*                
+        
         var mask = me.setLoading({
             msg: "Saving"
         }, me.body);
-        */
+        
             
 
         /*
@@ -649,11 +649,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 ]
                     },
             failure: function (response) {
-                //me.setLoading(false, me.body);
+                me.setLoading(false, me.body);
                 gridRecord.reject();
-                },
+
+            },
             success: function (response) {
-                //me.setLoading(false, me.body);
+                
 
                 //gridRecord.commit();
                 // success handling here
@@ -661,12 +662,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 if (!json || !json.success) {
                     // service didnt' return data properly                    
                     gridRecord.reject();
+                    me.setLoading(false, me.body);
                             return;
                 }
-                gridRecord.commit();                
-                                        },
-                                        scope: this
-                            });
+                gridRecord.commit();
+                me.setLoading(false, me.body);
+                //need to fire this event to get the record to reload
+                me.fireEvent("saveSuccess", json);
+            },
+            scope: this
+        });
     },
 
 

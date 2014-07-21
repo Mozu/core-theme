@@ -258,6 +258,8 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
     clearInputMask: function () {
         var me = this;
         
+        me.field.fireEvent('clearinputmask', this);
+
         if (me.field.triggerWrap && me.mask && me.maskMsg) {
             me.field.triggerWrap.unmask();
             delete me.mask;

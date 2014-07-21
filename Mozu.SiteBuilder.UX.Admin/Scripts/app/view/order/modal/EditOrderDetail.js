@@ -42,6 +42,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         itemId: 'secondaryAction',
         handler: function () {
             // we just close the dialog since this ui is chatty save;
+            // need to check to see if we have any unpersisted changes;
+            
             this.close();
         }
     }, {
@@ -85,6 +87,12 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         this.title = this.titleTemplate.apply({
             orderNumber: me.record ? me.record.get('orderNumber') : '<New>'
         });
+
+        
+        //onBeforeClose
+        me.mon(me, 'beforecancel', me.onBeforeCancel);
+        me.mon(me, 'beforesave', me.onBeforeSave);
+
 
         this.callParent(arguments);
 
@@ -227,19 +235,29 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             listeners: {
                 'save': {
                     fn: function () {
+                        me.saveInProgress = true;
                         me.setLoading(true, me.body);
                     },
                     scope: me
                 },
                 'savesuccess': {
                     fn: function () {
+                        me.saveInProgress = false;
                         me.setLoading(false, me.body);
-                        me.reloadData();
+                        // if user tries to save(collapse) the order while already in the middle of a persistance call. we need to wait until the call returns;
+                        if (me.deferSave) {
+                            // user hit save button while another request was being persisted or when data was left unpersisted;
+                            me.detailGrid.saveDraftOrder();
+                        } else {
+                            me.reloadData();
+                        }
                     },
                     scope: me
                 },
                 'savefailure': {
                     fn: function () {
+                        me.saveInProgress = false;
+                        me.deferSave = false;
                         me.setLoading(false, me.body);                        
                     },
                     scope: me
@@ -300,7 +318,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             record: me.record,
             store: me.record.itemsStore,
             autoHeight: true,
-            listeners: {
+            listeners: {                
                 'selectionchange': function (selModel, selected) {                    
                     //var pos = selModel.getCurrentPosition()
                     //me.detailGrid.view.focusRow(pos.row);
@@ -326,19 +344,27 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                 },
                 // this is the save draft button use case
                 'save': function () {
+                     me.saveInProgress = true;
                      me.setLoading({
                          //maskCls: "x-mask taco-white-mask"
                      }, me.body);
-                     me.setHasDraft(true);
-                     //me.close();
+                     me.setHasDraft(true);                     
                 },
-                'saveSuccess': function (data) {                    
+                'saveSuccess': function (data) {
+                    me.saveInProgress = false;
                     me.setLoading(false, me.body);
                     //me.fireEvent('saveSuccess', data);
-                    me.reloadData();
-                    //me.saveSuccess(data)
+                    if (me.deferSave) {
+                        // user hit save button while another request was being persisted or when data was left unpersisted;
+                        me.detailGrid.saveDraftOrder();
+                    } else {
+                        me.reloadData();
+                    }
+                                        //me.saveSuccess(data)
                 },
-                'saveFailure': function (error) {                    
+                'saveFailure': function (error) {
+                    me.saveInProgress = false;
+                    me.deferSave = false;
                     me.setLoading(false, me.body);
                     me.fireEvent('saveFailure', error);
                 }
@@ -380,7 +406,61 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         )
         
     },
-        
+
+    onBeforeSave: function () {
+        var me = this;
+        return me.checkAddItemToolbar(true);
+    },
+
+    onBeforeCancel: function () {
+        var me = this;
+        return me.checkAddItemToolbar(false);
+    },
+
+    // before canceling or saving the order, check to see if there is any unpersisted order items in the addOrderItemToolbar;
+    checkAddItemToolbar: function (isSave) {
+        var me = this,
+            msg;
+
+        // if user has valid add item data prompt them to add the item;
+        if (me.detailGrid.addProductToolbar.isValid()) {
+            msg = (isSave) ? 'Do you want to add the configured order item before saving this order?' : 'Do you want to add the configured item before closing the order editor?'
+
+            Ext.MessageBox.show({
+                title: 'Add order item?',
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: msg,
+                closable: false,
+                buttons: Ext.Msg.YESNO,
+                fn: function (rec) {
+                    if (rec === 'yes') {                        ;
+                        
+                        if (isSave) {
+                            me.deferSave = true;
+                        }
+                        // persist the item
+                        me.detailGrid.addProductToolbar.save();
+                    } else {
+                        // clear out the add order item toolbar and call the original action;
+                        me.detailGrid.addProductToolbar.reset();
+                        if (isSave) {
+                            me.save();
+                        } else {
+                            me.close();
+                        }
+                    }
+                }
+            });
+
+            return false;
+        } else {
+            return true
+        }
+    },
+
     doSave: function () {
         var me = this;        
         me.saveDraftOrder();
@@ -391,11 +471,28 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         var me = this;
         me.detailGrid.removeDraftOrder();
     },
-    
+
+    // check to see if there are unpersisted fields that need to be handled;
+    needsToPersist : function (cfg){        
+        var me = this;
+        
+        if (me.totalRow.needsToPersist()) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
     //overwrites the original order with the draft order;
     saveDraftOrder: function () {
         var me = this;
-        me.detailGrid.saveDraftOrder();
+        if (me.needsToPersist() || me.saveInProgress) {
+            // need to wait to save until any persistance calls complete;
+            me.deferSave = true;
+            console.log('deferSave')
+        } else {
+            me.detailGrid.saveDraftOrder();
+        }
     },
 
     constrainResizer: function () {

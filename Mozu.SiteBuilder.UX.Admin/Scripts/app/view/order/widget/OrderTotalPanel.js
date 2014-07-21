@@ -43,7 +43,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         me.callParent(arguments);
     },
 
-    applyRecord: function (record) {
+    applyRecord: function (record) {        
         this.masterTable.update(record.getData());
         this.updateShippingMethodButton(record);
         return record
@@ -52,10 +52,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     updateShippingMethodButton: function (record) {
         var me = this,
             shippingMethodButton = me.down("#shippingMethodButton")
-    
+         
         if (shippingMethodButton) {
             // check if there is a valid contact by checking for one of its members; must also have order items;
-            if (record.get("fulfillmentContact").postalOrZipCode && record.get("items").length) {
+            // also need to check tif there is shippable items;
+            if (record.isShippable() && record.get("fulfillmentContact").postalOrZipCode && record.get("items").length) {
                 shippingMethodButton.enable();
             } else {
                 shippingMethodButton.disable();
@@ -171,14 +172,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         
 
         //only show this field if this is a phone order in pending status or when editing a draft;
-        if (this.record.get("orderStatus") == "Pending" || this.record.get("isDraft")) {
+        if (this.record.get("orderStatus") == "Pending" || this.record.get("isDraft")) {            
             var shippingMethodButton = Ext.widget({
                 itemId:"shippingMethodButton",
                 xtype: 'button',
                 ui: "action",
                 scale: "medium",
                 // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
-                disabled: !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
+                disabled: !this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
                 text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",
                 menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
                     showRuntimePricing: true,
@@ -239,7 +240,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl for="orderDiscounts">',
             '<tr class="discount ', '<tpl if="!isActive">suppressed<tpl else>active</tpl>', '">',
                 '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Discount ({description})</div></td>',
-                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(valuestotal)]})</div></td>',
+                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
                 '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
                     '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
                         'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
