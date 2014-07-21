@@ -19,7 +19,6 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
         return { type: 'Taco.store.LocalizedProductVariants' };
     },
 
-    // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function () {
         var ctx = Taco.app.context.getCurrentContext(),
             ctxType = (!ctx) ? '' : ctx.contextType,
@@ -33,15 +32,12 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                 xtype: 'gridcolumn',
                 dataIndex: 'productName',
                 text: mcName + 'Product Name',
-                hideable: true,
-                minWidth: 150,
-                width:200
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'options',
                 text: mcName + 'Product Options',
                 flex: 1,
-                //width: 150,
                 renderer: function (options) {
                     if (!options || options.length == 0) return '';
                     return options.join('; ');
@@ -50,36 +46,27 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                 xtype: 'gridcolumn',
                 dataIndex: 'parentProductCode',
                 text: mcName + 'Parent Product Code',
-                hideable: true,
-                //flex: 1,
-                width: 150
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'variantProductCode',
                 text: mcName + 'Product Variation Code',
-                //flex: 1,
-                width: 150
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaPrice',
                 text: mcName + 'Price' + mcCurrency,
-                hideable: true,
-                //flex: 1,
-                width: 150
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaMSRP',
                 text: mcName + 'MSRP' + mcCurrency,
-                hideable: true,
-                //flex: 1,
-                width: 150
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaCreditValue',
                 text: mcName + 'Credit Value' + mcCurrency,
-                hideable: true,
-                //flex: 1,
-                width: 150
+                flex: 1
             }
             ];
 
@@ -93,20 +80,14 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
             }
         }
 
-        // todo: take into account search filter to only show currency? - Greg Murray on 2014-07-14 
-
         Ext.Array.each(supportedCurrencies, function (currency) {
             function createCurrencyColumn(dataIdx, colText) {
                 return {
                     xtype: 'gridcolumn',
                     dataIndex: dataIdx,
                     text: colText,
-                    hideable: true,
-                    //flex: 1,
-                    width: 150,
+                    flex: 1,
                     sortable: false,
-                    resizable: true,
-                    menuDisabled: true,
                     editor: {
                         xtype: "currencyfield",
                         showBorder: true,

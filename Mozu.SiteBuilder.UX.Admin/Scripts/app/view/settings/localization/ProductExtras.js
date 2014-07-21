@@ -19,7 +19,6 @@ Ext.define('Taco.view.settings.localization.ProductExtras', {
         return { type: 'Taco.store.LocalizedProductExtras' };
     },
 
-    // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function () {
         var ctx = Taco.app.context.getCurrentContext(),
             ctxType = (!ctx) ? '' : ctx.contextType,
@@ -33,42 +32,32 @@ Ext.define('Taco.view.settings.localization.ProductExtras', {
                 xtype: 'gridcolumn',
                 dataIndex: 'productName',
                 text: mcName + 'Product Name',
-                hideable: true,
-                minWidth: 150,
-                width: 200
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'productCode',
                 text: mcName + 'Product Code',
-                hideable: true,
-                //flex: 1,
-                width: 150
-            
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeFQN',
                 text: mcName + 'Attribute Id',
-                //flex: 1,
-                width: 150
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'adminName',
                 text: mcName + 'Attribute Admin Name',
-                //flex: 1,
-                width: 150
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeName',
                 text: mcName + 'Attribute Name',
-                //flex: 1,
-                width: 150
+                flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaPrice',
                 text: mcName + 'Price' + mcCurrency,
-                hideable: true,
-                //flex: 1,
-                width: 150
+                flex: 1
             }
             ];
 
@@ -82,20 +71,14 @@ Ext.define('Taco.view.settings.localization.ProductExtras', {
             }
         }
 
-        // todo: take into account search filter to only show currency? - Greg Murray on 2014-07-14 
-
         Ext.Array.each(supportedCurrencies, function (currency) {
             function createCurrencyColumn(dataIdx, colText) {
                 return {
                     xtype: 'gridcolumn',
                     dataIndex: dataIdx,
                     text: colText,
-                    hideable: true,
-                    //flex: 1,
-                    width: 150,
+                    flex: 1,
                     sortable: false,
-                    resizable: true,
-                    menuDisabled: true,
                     editor: {
                         xtype: "currencyfield",
                         showBorder: true,

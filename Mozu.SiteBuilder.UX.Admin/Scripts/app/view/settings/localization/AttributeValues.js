@@ -15,12 +15,10 @@ Ext.define('Taco.view.settings.localization.AttributeValues', {
 
     store: { type: 'Taco.store.LocalizedAttributeValues' },
 
-
     getStore: function () {
         return { type: 'Taco.store.LocalizedAttributeValues' };
     },
 
-    // override this method and adjust the columns if you need a grid with a subset of columns;
     getColumnConfig: function () {
         var mc = Taco.app.context.getMasterCatalog(),
             excludeDefaultLocale = true,
@@ -28,48 +26,36 @@ Ext.define('Taco.view.settings.localization.AttributeValues', {
             mcName = (!mc) ? '' : mc.name + ' ',
             mcLocale = (!mc) ? '' : ' (' + mc.localeCode + ')',
             columns = [
-            {
-                xtype: 'gridcolumn',
-                dataIndex: 'attributeFQN',
-                text: mcName + 'Attribute Id',
-                hideable: true,
-                minWidth: 300
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'adminName',
-                text: mcName + 'Attribute Admin Name',
-                hideable: true,
-                flex: 1
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'attributeName',
-                text: mcName + 'Attribute Name' + mcLocale,
-                hideable: true,
-                //flex: 1,
-                width: 150
-            }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'stringValue',
-                text: mcName + 'Label' + mcLocale,
-                hideable: true,
-                //flex: 1,
-                width: 150
-            }
+                {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'attributeFQN',
+                    text: mcName + 'Attribute Id',
+                    flex: 1
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'adminName',
+                    text: mcName + 'Attribute Admin Name',
+                    flex: 1
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'attributeName',
+                    text: mcName + 'Attribute Name' + mcLocale,
+                    flex: 1
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'stringValue',
+                    text: mcName + 'Label' + mcLocale,
+                    flex: 1
+                }
             ];
-
-        // todo: take into account search filter to only show language? - Greg Murray on 2014-07-14 
 
         Ext.Array.each(supportedLocales, function (locale) {
             var col = {
                 xtype: 'gridcolumn',
                 dataIndex: 'value_' + locale,
                 text: 'Label (' + locale + ')',
-                hideable: true,
-                //flex: 1,
-                width: 150,
+                flex:1,
                 sortable: false,
-                resizable: true,
-                menuDisabled: true,
                 editor: {
                     xtype: "textfield",
                     showBorder: true,
