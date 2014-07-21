@@ -1002,6 +1002,12 @@
   <ItemGroup>
     <Content Include="Themes\Core4\templates\modules\content\document-list.hypr" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\Widgets\cms\snippet.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\templates\Widgets\cms\snippet-render.hypr" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -288,13 +288,21 @@ Ext.define('Taco.view.entityManager.Index', {
     },
 
     loadEditor: function (record) {
-        var me = this;
+        var me = this,
+            editor = me.editors.findEditor(record);
+        if (!editor) {
+            Taco.MessageBox.alert(
+                'Sorry!',
+                'No editor defined for this type'
+                                   );
+            return;
+        }
         me.contentContainer.removeAll();
         me.grid = null;
         me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
             record: record,
             bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
-            editor: me.editors.findEditor(record)
+            editor: editor
         });
         me.contentContainer.add(me.form);
         me.showHideButtons();

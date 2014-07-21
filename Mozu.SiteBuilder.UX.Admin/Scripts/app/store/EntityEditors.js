@@ -7,8 +7,9 @@ Ext.define('Taco.store.EntityEditors', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.EntityEditor',
         storeManagerConfig: {
+            createOnly:true,
             clearFilters: false,
-            contextLevel: 't,c,mc,m,s',
+        //    contextLevel: 't,c,mc,m,s',
             clearSort: false,
             autoLoad: true
         },

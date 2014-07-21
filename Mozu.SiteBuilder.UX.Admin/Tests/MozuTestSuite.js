@@ -105,7 +105,21 @@ Harness.start(
                         title: 'Cascading Model Binding'
                     }
                 ]
-            }, {
+            },
+            //C:\projects\mzt\UI\Dev\Dev-branch\Mozu.SiteBuilder\Mozu.SiteBuilder.UX.Admin\Tests\customunit\core\ux\form\field\BaseImageFiled.js
+             {
+                 group: 'field',
+                 expanded: true,
+                 items: [
+                     {
+                         url: 'customunit/core/ux/form/field/BaseImageField.t.js',
+                         
+                     }
+                 ]
+             },
+
+
+            {
                 group: 'Grids',
                 expanded: true,
                 items: [
