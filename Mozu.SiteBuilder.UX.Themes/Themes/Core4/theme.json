@@ -819,7 +819,8 @@
             "height": 400,
             "name": "body",
             "width": "100%",
-            "xtype": "taco-code"
+            "mode": "html",
+            "xtype": "taco-codefield"
         }],
         "icon": "/resources/admin/widgets/07_code.png",
         "id": "html",

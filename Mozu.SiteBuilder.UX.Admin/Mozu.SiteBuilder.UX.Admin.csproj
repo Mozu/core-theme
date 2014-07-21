@@ -717,7 +717,7 @@
     <Content Include="Scripts\app\core\ux\form\entities\ProductEditorForm.js" />
     <Content Include="Scripts\app\core\ux\form\entities\WebPageEditorForm.js" />
     <Content Include="Scripts\app\core\ux\form\entities\EntityEditorForm.js" />
-    <Content Include="Scripts\app\core\ux\form\field\BaseImageFiled.js" />
+    <Content Include="Scripts\app\core\ux\form\field\BaseImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\code.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
