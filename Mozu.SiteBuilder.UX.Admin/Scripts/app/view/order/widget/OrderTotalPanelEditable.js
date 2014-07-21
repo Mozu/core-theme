@@ -400,7 +400,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             fieldLabel: "Customer Notes",            
             value: customerNotesText,
             placeholder: placeholder,
-            readOnly: !(this.record.get("orderStatus") == "Pending"),
+            disabled: !(this.record.get("orderStatus") == "Pending"),
             listeners: {
                 blur: {
                     fn: me.onCustomerNoteChange,
@@ -414,8 +414,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     },
 
     onCustomerNoteChange: function (field, e, eOpts) {
-        if (field.isDirty()) {
-            
+
+
+        if (field.isDirty()) {          
             this.record.setCustomerNote({
                 jsonData: {
                     orderId: this.record.getId(),
@@ -427,6 +428,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     if (!json || !json.success) {
                         return;
                     }
+                    
+                    // reset the orginal value of the field so that the isDirty flag is accurate;
+                    this.customerNoteField.originalValue = this.customerNoteField.getValue();
                     this.fireEvent('saveSuccess', json);
                 },
                 failure: function (response) {
@@ -524,7 +528,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         //this.updateData(record.getData());
         //this.masterTable.update(record.getData());
         
-
         var me = this;
         if (record) {
 
@@ -536,23 +539,45 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 tdInnerCls: "taco-grid-cell-inner "
             });
 
+            // do a quick check to make sure the component hasn't been destroyed;            
+            if (!this.masterTable || !this.masterTable.el) {
+                return;
+            }
+
             // update the sub XTemplates
             var subTpl_1_el = this.masterTable.el.down("[itemId = taco-subTpl_1]");
-            this["subTpl_1"].overwrite(subTpl_1_el, data);
-
             var subTpl_2_el = this.masterTable.el.down("[itemId = taco-subTpl_2]");
-            this["subTpl_2"].overwrite(subTpl_2_el, data);
-
             var subTpl_3_el = this.masterTable.el.down("[itemId = taco-subTpl_3]");
+
+            this["subTpl_1"].overwrite(subTpl_1_el, data);
+            this["subTpl_2"].overwrite(subTpl_2_el, data);
             this["subTpl_3"].overwrite(subTpl_3_el, data);
             // update the ext components 
-
-
-            
             this.updateShippingMethodButton(record);
         }
 
         return record
+    },
+
+    // check to see if there is unpersisted content;
+    needsToPersist: function () {
+        var me = this;
+        
+
+        if (me.customerNoteField.getValue() != this.record.data.customerNote) {            
+            return true;
+        }
+
+        if (me.orderAdjustmentFieldInput.getValue() != Math.abs(this.record.data.orderAdjustment.amount)) {            
+            return true;
+        }
+
+
+        if (me.shippingAdjustmentFieldInput.getValue() != Math.abs(this.record.data.shippingAdjustment.amount)) {                    
+            return true
+        }
+
+        return false;
     },
 
     /**

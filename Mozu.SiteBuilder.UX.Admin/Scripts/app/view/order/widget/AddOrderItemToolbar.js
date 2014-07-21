@@ -80,10 +80,15 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             }
         })
 
-        me.rowTotalField = Ext.widget({
-            xtype: "displayfield",
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            width: this.gridColumns[5].width,
+        me.addItemButton = Ext.widget({            
+            xtype: "button",
+            ui: "action",
+            scale:"medium",
+            fieldBodyCls: "order-addproducttoolbar-cell",            
+            text: "Add",
+            disabled: true,
+            handler: this.save,
+            scope:this,
             value: ""
         });
 
@@ -196,11 +201,16 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                     scope: me
                 },
                 // custom event added as part of the InputMask plugin;
-                'clearinputmask': function (field) {                    
-                    field.reset();
+                'clearinputmask': function (field) {
+                    
+                    //field.reset();
                     // clear the cached values on the toolbar;
                     me.setFulfillmentMethod("")
                     me.setLocationCode("");
+                    
+                    me.quantityField.disable();
+                    me.addItemButton.disable();
+                    
                 },
                 'specialkey': {
                     fn: function (field, e) {
@@ -237,8 +247,9 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                             // need to manually blur this field due to a bug in extjs where combo's with trigger don't blur properly;
                             combo.blur();
                             combo.triggerBlur()
-
+                            me.quantityField.enable();
                             me.quantityField.focus();
+                            me.addItemButton.enable();
                         }
 
                         // cancel the selection so that the same product can be reselected again;
@@ -258,7 +269,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             this.fulfillmentPickerField,
             this.priceField,
             this.quantityField,
-            this.rowTotalField,
+            this.addItemButton,
             {
                 xtype: "component",
                 width: this.gridColumns[6].width
@@ -469,6 +480,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         me.quantityField.disable();
 
         me.priceField.setValue("");
+
+        me.addItemButton.disable();
     }
 });
 
