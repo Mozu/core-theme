@@ -5,7 +5,7 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
     ],
     alias: 'widget.taco-order-fulfillment',
 
-    title: 'Fulfillment',
+    tabTitle: 'Fulfillment',
 
     initComponent: function() {
 
