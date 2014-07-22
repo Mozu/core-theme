@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using AutoMapper;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Localization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -311,14 +309,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
 
         // todo: refactor using generics - Greg Murray on 2014-07-19 
-        public static JObject AddLocalizedPrices(LocalizedProductExtraPrice extra, List<DC.ProductExtraValueDeltaPrice> reportLocalizedPrices)
+        public static JObject AddLocalizedPrices(LocalizedProductExtraPrice extra, List<DC.ProductExtraValueDeltaPrice> updatedResults)
         {
-            extra.SupportedCurrencies = reportLocalizedPrices.Select(x => x.CurrencyCode).Distinct().ToList();
+            RemoveDefaultCurrency(extra.CurrencyCode, updatedResults, deltaPrice => deltaPrice.CurrencyCode);
+            var missingCurrencies = GetMissingSupportedCurrencies(extra.SupportedCurrencies, updatedResults.Select(x => x.CurrencyCode));
+
+            extra.SupportedCurrencies = updatedResults.Select(x => x.CurrencyCode).Concat(missingCurrencies).ToList();
             var jResult = JObject.FromObject(extra, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
 
-            foreach (var localizedPrice in reportLocalizedPrices)
+            foreach (var localizedPrice in updatedResults)
             {
                 jResult[string.Format(PRICE_FORMAT, localizedPrice.CurrencyCode)] = localizedPrice.DeltaPrice;
+            }
+            //have to do this becuase DeltaPrice is not nullable and results in 0.
+            foreach (var currencyCode in missingCurrencies)
+            {
+                jResult[string.Format(PRICE_FORMAT, currencyCode)] = null;
             }
             return jResult;
         }
@@ -339,10 +345,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         public static JObject AddLocalizedPrices(LocalizedProductVariantPrice variant, List<DC.ProductVariationDeltaPrice> updatedResults)
         {
-            RemoveDefaultCurrency(variant, updatedResults);
-            AddMissingSupportedCurrencies(variant, updatedResults);
+            RemoveDefaultCurrency(variant.CurrencyCode, updatedResults, x=>x.CurrencyCode);
+            var missingCurrencies = GetMissingSupportedCurrencies(variant.SupportedCurrencies, updatedResults.Select(x => x.CurrencyCode));
 
-            variant.SupportedCurrencies = updatedResults.Select(x => x.CurrencyCode).ToList();
+            variant.SupportedCurrencies = updatedResults.Select(x => x.CurrencyCode).Concat(missingCurrencies).ToList();
             var jResult = JObject.FromObject(variant, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
 
             foreach (var updatedLocalizedPrice in updatedResults)
@@ -351,21 +357,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 jResult[string.Format(MSRP_FORMAT, updatedLocalizedPrice.CurrencyCode)] = updatedLocalizedPrice.MSRP;
                 jResult[string.Format(CREDIT_FORMAT, updatedLocalizedPrice.CurrencyCode)] = updatedLocalizedPrice.CreditValue;
             }
+            //have to do this becuase DeltaPrice is not nullable and results in 0.
+            foreach (var currencyCode in missingCurrencies)
+            {
+                jResult[string.Format(PRICE_FORMAT, currencyCode)] = null;
+                jResult[string.Format(MSRP_FORMAT, currencyCode)] = null;
+                jResult[string.Format(CREDIT_FORMAT, currencyCode)] = null;
+            }
             return jResult;
         }
 
-        private static void AddMissingSupportedCurrencies(LocalizedProductVariantPrice variant, List<DC.ProductVariationDeltaPrice> updatedResults)
+        private static IEnumerable<string> GetMissingSupportedCurrencies(IEnumerable<string> supportedCurrencies, IEnumerable<string> updatedResultCurrencies)
         {
-            var missingCurrencies = variant.SupportedCurrencies
-                .Except(updatedResults.Select(x => x.CurrencyCode))
-                .Select(missingCurrency => new DC.ProductVariationDeltaPrice {CurrencyCode = missingCurrency})
+            return supportedCurrencies
+                .Except(updatedResultCurrencies)
                 .ToList();
-            updatedResults.AddRange(missingCurrencies);
         }
 
-        private static void RemoveDefaultCurrency(LocalizedProductVariantPrice variant, List<DC.ProductVariationDeltaPrice> updatedResults)
+        private static void RemoveDefaultCurrency<T>(string defaultCurrencyCode, List<T> updatedResults, Func<T, string> getCurrencyCodeFunc) 
+            where T : class
         {
-            var defaultCurrency = updatedResults.FirstOrDefault(x => variant.CurrencyCode.EqualsIgnoreCase(x.CurrencyCode));
+            var defaultCurrency = updatedResults.FirstOrDefault(x => defaultCurrencyCode.EqualsIgnoreCase(getCurrencyCodeFunc(x)));
             if (defaultCurrency != null)
                 updatedResults.Remove(defaultCurrency);
         }

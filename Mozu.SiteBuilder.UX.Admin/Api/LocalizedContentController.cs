@@ -186,8 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var extraPrice = jObject.ToObject<LocalizedProductExtraPrice>();
             var localizedPrices = (from supportedCurrency in extraPrice.SupportedCurrencies
                                    let localizedPrice = (decimal?)jObject["price_" + supportedCurrency]
-
-                                   //where localizedPrice != null
+                                   where localizedPrice != null
                                    select new DC.ProductExtraValueDeltaPrice
                                    {
                                        CurrencyCode = supportedCurrency,
