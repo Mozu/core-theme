@@ -9,6 +9,32 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
 
     initComponent: function() {
 
+        this.items = [];
+
+        this.buildInfoHeader();
+
+        this.buildPendingPickups();
+
+        this.buildUnPickedUpPackages();
+
+        this.buildPickedUpPackages();
+
         this.callParent(arguments);
+    },
+
+    buildInfoHeader: function() {
+        
+    },
+
+    buildPendingPickups: function() {
+        
+    },
+
+    buildUnPickedUpPackages: function() {
+        
+    },
+
+    buildPickedUpPackages: function() {
+        
     }
 });

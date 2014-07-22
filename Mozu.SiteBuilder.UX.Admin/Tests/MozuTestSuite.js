@@ -166,6 +166,10 @@ Harness.start(
                     {
                         url: 'customunit/view/order/pendingreview-should-not-allow-add-payment.js',
                         title: 'PendingReview Should Not Allow Add Payment'
+                    },
+                    {
+                        url: 'unit/view/order/subform/fulfillment.t.js',
+                        title: 'Customer Fulfillment Tests'
                     }
                 ]
             }, {
