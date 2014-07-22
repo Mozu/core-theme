@@ -158,7 +158,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         if (amountCollected > 0  && amountCollected >= total) paymentStatus = "Fully Paid";
         if (amountCollected < total && amountCollected > 0) paymentStatus = "Partially Paid";
 
-        this.setHeaderTitle("Status: <strong>" + paymentStatus + "</strong>");
+        this.setHeaderTitle('<span class="label">Status:</span><span data-handle="order-payment-status">' + paymentStatus + '</span>');
 
         Ext.Object.each(me.paymentActions, function(k, paymentAction) {
             paymentAction.setDisabled(!canAddPayment);
