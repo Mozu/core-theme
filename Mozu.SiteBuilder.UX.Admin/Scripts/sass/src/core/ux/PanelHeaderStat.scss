@@ -1,0 +1,14 @@
+﻿.#{$vprefix}panelheaderstat {
+	min-width: 80px;
+    .#{$vprefix}panelheaderstat-label {
+		display: block;
+        color: $color-neutral-60;
+		font-size: 14px;
+        font-weight: normal;
+		text-transform: uppercase;
+    }
+	.#{$vprefix}panelheaderstat-value {
+		display: block;
+		//text-align: right;
+	}
+}

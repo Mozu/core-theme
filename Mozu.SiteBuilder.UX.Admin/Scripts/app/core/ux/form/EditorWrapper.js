@@ -75,8 +75,9 @@
             
             this.items.push(
                 {
-                    xtype: "container",
+                    xtype: 'container',
                     padding:20,
+                    cls: 'taco-editor-wrapper',
                     items: [this.form]
                 }
             );

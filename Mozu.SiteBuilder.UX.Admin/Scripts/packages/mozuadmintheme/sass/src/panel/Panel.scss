@@ -280,20 +280,20 @@ $color-neutral-98: rgb(249, 249, 249);
     $ui-header-inner-border-width: 0px,
     $ui-header-text-padding: 0px,
     $ui-header-text-transform: capitalize,
-    $ui-header-padding: 10px 0px 10px 0px,
+    $ui-header-padding: 10px 10px 10px 10px,
     $ui-header-icon-width: 16px,
     $ui-header-icon-height: 16px,
-    $ui-header-icon-spacing: 16px,
+    $ui-header-icon-spacing: 0px,
     $ui-header-icon-background-position: 0px 0px,
     $ui-header-glyph-color: $color-neutral-20,
     $ui-header-glyph-opacity: 1,
 
-    $ui-tool-spacing: 16px,
+    $ui-tool-spacing: 0px,
     $ui-tool-background-image: $panel-tool-background-image,
 
-    $ui-body-color: $color-neutral-20,    
+    $ui-body-color: $color-neutral-20,
     $ui-body-border-color: $color-neutral-75,
-    $ui-body-border-width: 1px 0px 0px,    
+    $ui-body-border-width: 1px 0px 0px,
     $ui-body-border-style: solid,
     $ui-body-background-color: $color-neutral-transparent,
     $ui-body-font-size: 16px,
@@ -313,8 +313,8 @@ $color-neutral-98: rgb(249, 249, 249);
 /* SUBFORM SECTION CHILD PANEL UI RULES */
 
 .#{$prefix}panel-subform-section-child {
-    background-color: $color-neutral-90;
+    background-color: $color-neutral-95;
     border-style:solid;
     border-width:1px;
-    padding:0px 10px 0px 10px;    
+    padding: 0px;
 }

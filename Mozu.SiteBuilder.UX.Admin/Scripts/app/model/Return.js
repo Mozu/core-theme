@@ -4,6 +4,44 @@
 Ext.define('Taco.model.Return', {
     extend: 'Taco.core.data.Model',
     requires: ['Taco.model.ReturnItem', 'Taco.model.OrderPayment'],
+
+    statics: (function() {
+
+        var constants = {
+                reasons: {
+                    DAMAGED: 'Damaged',
+                    DEFECTIVE: 'Defective',
+                    MISSING_PARTS: 'MissingParts',
+                    DIFFERENT_EXPECTATIONS: 'DifferentExpectations',
+                    LATE: 'Late',
+                    NO_LONGER_WANTED: 'NoLongerWanted', 
+                    OTHER: 'Other'
+                },
+                statuses: {
+                    AUTHORIZED: "Authorized",
+                    CANCELLED: "Cancelled",
+                    CLOSED: "Closed",
+                    CREATED: "Created",
+                    PENDING: "Pending",
+                    RECEIVED: "Received",
+                    REFUNDED: "Refunded",
+                    REJECTED: "Rejected",
+                    RESTOCKED: "Restocked",
+                    SHIPPED: "Shipped"
+                }
+            }, 
+            storeReasons = Ext.Array.map(Ext.Object.getValues(constants.reasons),  function toStoreReason (s) {
+                return [s, Taco.core.util.Common.camelToSpace(s)];
+            });
+
+
+        return {
+            constants: constants,
+            getValidReasons: function() {
+                return storeReasons;
+            }
+        };
+    }()),
    
     fields: [
         {

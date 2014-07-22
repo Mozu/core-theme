@@ -146,18 +146,6 @@ Ext.define('Taco.view.order.subform.Payment', {
         }
     },
 
-    setHeaderTitle: function(status) {
-        var header = this.getHeader();
-        if (header) {
-            header.setTitle('Status: ' + status);
-        } else {
-            this.on('afterrender', function() {
-                this.setHeaderTitle(status);
-            }, this, { single: true });
-        }
-
-    },
-
     initHeader: function (){
         var me = this,
            orderStatus = me.record.get('orderStatus'),
@@ -170,7 +158,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         if (amountCollected > 0  && amountCollected >= total) paymentStatus = "Fully Paid";
         if (amountCollected < total && amountCollected > 0) paymentStatus = "Partially Paid";
 
-        this.setHeaderTitle(paymentStatus);
+        this.setHeaderTitle("Status: <strong>" + paymentStatus + "</strong>");
 
         Ext.Object.each(me.paymentActions, function(k, paymentAction) {
             paymentAction.setDisabled(!canAddPayment);

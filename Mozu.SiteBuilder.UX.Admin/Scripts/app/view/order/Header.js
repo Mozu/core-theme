@@ -12,11 +12,17 @@ Ext.define('Taco.view.order.Header', {
 
     width: '100%',
 
-    minHeight:120,
+    minHeight: 120,
+
+    bodyPadding: 0,
 
     header: false,
 
-    title:"Customer",
+    cls: 'taco-order-header',
+
+    title: 'Customer',
+
+    ui: 'default',
 
     navigation: false,
 
@@ -65,8 +71,9 @@ Ext.define('Taco.view.order.Header', {
         this.customerCmp = Ext.widget({
             xtype: 'component',
             itemId: 'customerCmp',
+            cls: 'account-name',
             tpl: [
-                'Account ',
+                '<span class="label label-light">Account</span>',
                 '<tpl if="id">',
                 '<a href="/admin/customers/{id}" data-handle="customerName">', '{firstNameSafe} {lastNameSafe}', '</a>',
                 '</tpl>'
@@ -78,20 +85,21 @@ Ext.define('Taco.view.order.Header', {
         this.detailCmp = Ext.widget({
             xtype: 'component',
             itemId: 'detailCmp',
-            flex: 1,
-            tpl: ['<div>', 'Order # {orderNumber}', '</div>',
+            cls: 'pane pane-detail',
+            flex: 27,
+            tpl: ['<div class="order-number">', '<span class="label">Order #</span>{orderNumber}', '</div>',
 
-                '<div>', 'Order Date: {createDate:date("m/d/Y h:i a")}', '</div>',
+                '<div class="create-date">', '<span class="label">Order Date:</span>{createDate:date("m/d/Y h:i a")}', '</div>',
 
-                '<div>', 'Last Updated: {updateDate:date("m/d/Y h:i a")}', '</div>',
+                '<div class="update-date">', '<span class="label">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</div>',
 
-                '<div>', 'Site: <a href="http://{siteName}" target="_blank">{siteName}</a>', '</div>',
+                '<div class="site">', '<span class="label">Site:</span><a href="http://{siteName}" target="_blank">{siteName}</a>', '</div>',
 
-                '<div>', 'Channel: <span data-handle="channelName">{orderType}', '</div>',
+                '<div class="channel">', '<span class="label">Channel:</span><span data-handle="channelName">{orderType}', '</div>',
 
                 '<tpl if="orderType === \'Online\'">',
 
-                '<div data-handle="ipAddress">', 'IP Address: ', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</div>',
+                '<div class="ip-address" data-handle="ipAddress">', '<span class="label">IP Address:</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</div>',
 
                 '</tpl>',
 
@@ -105,28 +113,29 @@ Ext.define('Taco.view.order.Header', {
         this.statusCmp = Ext.widget({
             xtype: 'component',
             itemId: 'statusCmp',
-            flex: 1,
+            cls: 'pane pane-status',
+            flex: 33,
             tpl: ['<table class="taco-order-header-status">',
 
-                '<tr>', '<td colspan="2">Order Status: <span data-handle="orderStatus">{orderStatus}</span></td>', '</tr>',
+                '<tr>', '<td colspan="2"><div class="order-status"><span class="label">Order Status:</span><span data-handle="orderStatus">{orderStatus}</span></div></td>', '</tr>',
 
-                '<tr>', '<td>Payment</td>', '<td>Fulfillment</td>', '</tr>',
+                '<tr>', '<td><span class="label-light">Payment</span></td>', '<td><span class="label-light">Fulfillment</span></td>', '</tr>',
 
                 '<tpl if="orderSummary.totalItemCount &gt; 0">',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Items:</span>', '<span>{orderSummary.totalItemCount}</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span class="label">Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Items:</span>', '<span>{orderSummary.totalItemCount}</span>', '</div></td>', '</tr>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Collected:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Shipped:</span>', '<span>{orderSummary.fulfilledItemCount}</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span class="label">Collected:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Shipped:</span>', '<span>{orderSummary.fulfilledItemCount}</span>', '</div></td>', '</tr>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Balance:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Remaining:</span>', '<span>{orderSummary.unfulfilledItemCount}</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span class="label">Balance:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Remaining:</span>', '<span>{orderSummary.unfulfilledItemCount}</span>', '</div></td>', '</tr>',
 
                 '<tplelse>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Items:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span class="label">Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Items:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Collected:</span>', '<span>N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Shipped:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span class="label">Collected:</span>', '<span>N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Shipped:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span>Balance:</span>', '<span>N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span>Remaining:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
+                '<tr>', '<td><div class="taco-justify">', '<span class="label">Balance:</span>', '<span>N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Remaining:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
 
                 '</tpl>',
 
@@ -138,16 +147,15 @@ Ext.define('Taco.view.order.Header', {
         this.addressesCmp = Ext.widget({
             xtype: 'component',
             itemId: 'addressesCmp',
-            flex: 2,
             tpl: [
-                '<table><tr><td>Billing Address</td><td>Shipping Address</td></tr>',
+                '<table><tr><td><span class="label-light">Billing Address</span></td><td><span class="label-light">Shipping Address</span></td></tr>',
 
 
                 '<tr><td>',
 
                 '<tpl if="billingContact && billingContact.address1">',
 
-                '{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}<br>',
+                '<span class="label">{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}</span><br>',
 
                 '{billingContact.address1}<br>',
 
@@ -169,7 +177,7 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="fulfillmentContact && fulfillmentContact.address1">',
 
-                '{fulfillmentContact.firstName}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName}</tpl> {fulfillmentContact.lastName}<br>',
+                '<span class="label">{fulfillmentContact.firstName}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName}</tpl> {fulfillmentContact.lastName}</span><br>',
 
                 '{fulfillmentContact.address1}<br>',
 
@@ -195,11 +203,16 @@ Ext.define('Taco.view.order.Header', {
         this.addressesContainer = Ext.widget({
             xtype: 'container',
             itemId: 'addressesContainer',
-            flex: 2,
+            cls: 'pane pane-addresses',
+            flex: 40,
             hidden: this.record.getCustomer() == null,
             items: [{
                 xtype: 'component',
-                html: 'Order Addresses'
+                cls: 'order-addresses',
+                autoEl: {
+                    tag: 'div',
+                    html: '<span class="label">Order Addresses</span>'
+                }
             }, {
                 xtype: 'button',
                 ui: 'link',
@@ -212,7 +225,6 @@ Ext.define('Taco.view.order.Header', {
         this.customerSelector = Ext.widget({
             xtype: 'taco-customerfield',
             itemId: 'customerSelector',
-            flex: 1,
             width: '100%',
             emptyText: 'Customer Search',
             listeners: {
@@ -226,7 +238,8 @@ Ext.define('Taco.view.order.Header', {
         this.customerSelectionContainer = Ext.widget({
             xtype: 'container',
             itemId: 'customerSelectionContainer',
-            flex: 2,
+            cls: 'pane pane-customer',
+            flex: 40,
             hidden: this.record.getCustomer() !== null,
             items: [
                 this.customerSelector, {
