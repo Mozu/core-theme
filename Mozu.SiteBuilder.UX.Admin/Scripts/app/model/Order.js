@@ -89,11 +89,12 @@ Ext.define('Taco.model.Order', {
             type: "string",
             convert: function(value, record) {
                 var siteId = record.get('siteId'),
-                    siteName = "";
+                    site,
+                    siteName = '';
                 
                 if (siteId) {
-                    var site = Taco.app.context.findSite(siteId);
-                    siteName = site.name;
+                    site = Taco.app.context.findSite(siteId);
+                    if (site) return siteName = site.name;
                 } 
                 return siteName;
             }
@@ -789,86 +790,6 @@ Ext.define('Taco.model.Order', {
         }
     },
     
-
-
-    /*
-     ****************************************************
-     *   Begin order payment service interaction methods
-     ****************************************************
-     */
-
-
-//     onAjaxSuccess: function(callback, response) {
-//        var me = this,
-//            reader = me.getProxy().getReader(),
-//            results = reader.read(response),
-//            newRecord = results && results.records ? results.records[0] : null;
-//
-//
-//        // set all the new data
-//        me.set(newRecord.data);
-//
-//        // for each of the associations, set all their new data
-//        me.items().loadData(me.get('items'));
-//        me.items().each(function(item) {
-//            item.discounts().loadData(item.get('discounts'));
-//            item.shippingDiscounts().loadData(item.get('shippingDiscounts'));
-//        });
-//
-//        me.payments().loadData(me.get('payments'));
-//        me.payments().each(function(payment) {
-//            payment.interactions().loadData(payment.get('interactions'));
-//        });
-//        me.shippingDiscounts().loadData(me.get('shippingDiscounts'));
-//
-//        // commit the changes.
-//        me.commit();
-//
-//        if (callback) {
-//            callback(response);
-//        }
-//     },
-//
-//     onAjaxFailure: function(callback, response) {
-//        var me = this,
-//            json = Ext.decode(response.responseText, true);
-//        if (callback) {
-//            callback(response);
-//        }
-//     },
-
-
-    /**
-     * service call to capture payment for an order     
-     * @param {Object} config  A configuration object     
-     * config object:
-     * 
-        {
-            jsonData: {
-                orderId: "987654321",
-                amount:  "100.65",
-                
-                ...payment entity members...
-
-
-            },
-            success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    return;
-                }
-            },
-            failure: function (response) {
-                // error handling here
-            },
-            scope: this
-        }
-
-     *
-     */
-    
     getShippingMethods: function() {
         if (!this.shippingMethods) {
             this.shippingMethods = Ext.create('Ext.data.Store', {
@@ -1235,39 +1156,6 @@ Ext.define('Taco.model.Order', {
      ****************************************************
      */
 
-     
-
-    /**
-     * service call to create a package
-     * @param {Object} config  A configuration object     
-     * config object:
-     * 
-        {
-            jsonData: {
-                package: {
-                   ... package entity ...
-                    
-                    items: [],
-                    orderId: "02baa4864fdce01ec8d8cc0000000059"
-                    
-                }
-            },
-            success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    // service didnt' return data properly
-                    return;
-                }
-            },
-            failure: function (response) {
-                // error handling here
-            },
-            scope: this
-        }
-
-     *
-     */
     createPackage: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/create',
@@ -1383,6 +1271,17 @@ Ext.define('Taco.model.Order', {
         Ext.apply(config, {
             url: '/admin/app/order/shipping/package/markshipped',
             method: "POST"
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+
+
+    prepareShipment: function(config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/shipping/package/prepareshipment',
+            method: 'POST'
         });
 
         Ext.Ajax.request(config);

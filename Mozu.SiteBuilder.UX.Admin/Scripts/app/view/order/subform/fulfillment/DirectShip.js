@@ -1,7 +1,8 @@
 Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
     extend: 'Taco.view.order.subform.fulfillment.Container',
     requires: [
-
+        'Taco.view.order.subform.fulfillment.DirectShipPackage',
+        'Taco.view.order.widget.ShippingItemGrid'
     ],
     alias: 'widget.taco-order-fulfillment-direct-ship',
 
@@ -9,6 +10,20 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
 
     initComponent: function() {
 
+        this.items = [];
+
+        this.buildInfoHeader();
+
+        this.buildPendingPackages();
+
+        this.buildUnShippedPackages();
+
+        this.buildShippedPackages();
+
+        this.callParent(arguments);
+    },
+
+    buildInfoHeader: function() {
         this.infoContainer = Ext.widget({
             xtype: 'container',
             padding: '0 0 10 0',
@@ -38,50 +53,41 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                     textAlign: 'right'
                 },
                 tpl: [
-                    'Pending Items: {}<br>',
-                    'Fulfilled Items: {}<br>',
-                    '<span class="taco-order-label">Direct Ship Items: {}</span>'
+                    'Pending Items: {itemsNotShipped}<br>',
+                    'Fulfilled Items: {itemsShipped}<br>',
+                    '<span class="taco-order-label">Direct Ship Items: {totalDirectShipItems}</span>'
                 ]
             }]
         });
 
-        this.grid = Ext.create('Taco.view.order.widget.ShippingItemGrid', {
+        this.items.push(this.infoContainer);
+    },
 
-            isPackage: false,
-
-            //the unpackaged items data to be loaded by the store
-            data: this.record.get('unpackagedItems'),
-
+    buildPendingPackages: function() {
+        this.pendingGrid = Ext.create('Taco.view.order.subform.fulfillment.Grid', {
             record: this.record,
-
-            isUnShippedItems: true,
-
-            // configs for the grid
-            editMode: true,
-
-            enableCellEditing: true,
-
-            enableCheckBoxSelection: true,
-
-            enableActionColumn: false,
-
-            enableToolbar: true,
-
-            enableMoveMenu: true,
-
-            enableShippingMethodMenu: false,
-
-            enableShippingLabelButton: false,
-
-            enabledPackingSlipButton: false,
-
-            enabledRemoveButton: false,
-
-            enabledMarkAsShippedButton: false
+            data: this.record.get('unpackagedItems'),
+            unfulfilledFieldName: 'unShippedPackages'
         });
 
-        this.items = [this.infoContainer, this.grid];
+        this.items.push(this.pendingGrid);
+    },
 
-        this.callParent(arguments);
+    buildUnShippedPackages: function() {
+        Ext.each(this.record.get('unShippedPackages'), function (packageData) {
+            this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DirectShipPackage', {
+                record: this.record,
+                packageData: packageData
+            }));
+        }, this);
+    },
+
+    buildShippedPackages: function() {
+        Ext.each(this.record.get('shippedPackages'), function (packageData) {
+            this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DirectShipPackage', {
+                record: this.record,
+                packageData: packageData
+            }));
+        }, this);
     }
 });
