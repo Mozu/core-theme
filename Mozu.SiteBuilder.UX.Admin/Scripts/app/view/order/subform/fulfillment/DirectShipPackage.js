@@ -48,6 +48,43 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     '<tpl if="workPhone"><br>{workPhone}</tpl>'
                 ],
                 data: this.packageData.contact
+            }, {
+                xtype: 'container',
+                defaults: {
+                    xtype: 'component'
+                },
+                items: [{
+                    html: 'Shipping Method'
+                }, {
+                    html: this.packageData.shippingMethodName
+                }, {
+                    tpl: [
+                        'Total Weight:<br>{weight}'
+                    ],
+                    data: this.packageData
+                }]
+            }, {
+                xtype: 'container',
+                defaults: {
+                    xtype: 'component'
+                },
+                items: [{
+                    html: 'Packaging Type'
+                }, {
+                    html: this.packageData.packagingType
+                }]
+            }, {
+                xtype: 'container',
+                items: [{
+                    xtype: 'component',
+                    html: 'Tracking Number:'
+                }, {
+                    xtype: 'button',
+                    ui: 'link',
+                    text: this.packageData.trackingNumber || '(Add)',
+                    handler: this.handleAddTrackingNumber,
+                    scope: this
+                }]
             }]
         });
 
@@ -68,7 +105,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             handler: this.handleCancel
         }, {
             text: 'Mark as Shipped',
-            hidden: this.packageData.status === 'Fulfilled' || !this.packageData.shippingId,
+            hidden: this.packageData.status === 'Fulfilled' || !this.packageData.shipmentId,
             handler: this.handleMarkAsShipped
         }];
 
