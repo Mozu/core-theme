@@ -879,6 +879,14 @@
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\DeclineCheck.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\Container.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\DigitalDelivery.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\DirectShip.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\DirectShipPackage.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\Grid.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\InStorePackage.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\InStorePickup.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\Package.js" />
     <Content Include="Scripts\app\view\order\subform\InternalNotes.js" />
     <Content Include="Scripts\app\view\order\subform\InstorePickup.js" />
     <Content Include="Scripts\app\view\order\subform\Attributes.js" />
@@ -1446,6 +1454,8 @@
     <Content Include="Scripts\sass\src\view\order\Header.scss" />
     <Content Include="Scripts\sass\src\core\ux\PanelHeaderStat.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\ReturnableItemGrid.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Header.scss" />
+    <Content Include="Scripts\sass\src\view\order\subform\Fulfillment.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

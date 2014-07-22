@@ -35,8 +35,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 xtype: 'component'
             },
             items: [{
+                padding: '0 10 0 0',
                 tpl: [
-                    'Ship To:<br>',
+                    '<span class="label">Ship To:</span><br>',
                     '{firstName}<tpl if="middleName"> {middleName}</tpl> {lastName}<br>',
                     '{address1}<br>',
                     '<tpl if="address2">{address2}<br></tpl>',
@@ -50,34 +51,40 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 data: this.packageData.contact
             }, {
                 xtype: 'container',
+                padding: '0 10 0 0',
                 defaults: {
                     xtype: 'component'
                 },
                 items: [{
-                    html: 'Shipping Method'
+                    html: 'Shipping Method:',
+                    cls: 'label'
                 }, {
                     html: this.packageData.shippingMethodName
                 }, {
                     tpl: [
-                        'Total Weight:<br>{weight}'
+                        '<span class="label">Total Weight:</span><br>{weight}'
                     ],
                     data: this.packageData
                 }]
             }, {
                 xtype: 'container',
+                padding: '0 10 0 0',
                 defaults: {
                     xtype: 'component'
                 },
                 items: [{
-                    html: 'Packaging Type'
+                    html: 'Packaging Type:',
+                    cls: 'label'
                 }, {
                     html: this.packageData.packagingType
                 }]
             }, {
                 xtype: 'container',
+                padding: '0 10 0 0',
                 items: [{
                     xtype: 'component',
-                    html: 'Tracking Number:'
+                    html: 'Tracking Number:',
+                    cls: 'label'
                 }, {
                     xtype: 'button',
                     ui: 'link',
@@ -109,24 +116,10 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             handler: this.handleMarkAsShipped
         }];
 
-        this.collapsedInfo = {
-            xtype: 'component',
-            flex: 1,
-            tpl: [
-                '{date} | Tracking Number {trackingNumber} | {itemCount} ',
-                'item<tpl if="itemCount !== 1">s</tpl>'
-            ],
-            data: {
-                date: Ext.Date.format(new Date(this.packageData.shipDate), 'm/d/Y h:i:s a'),
-                trackingNumber: this.packageData.trackingNumber,
-                itemCount: this.packageData.totalQuantity
-            }
-        };
-
-        this.collapsedActions = {
+        this.collapsedActions = [{
             text: 'Print Packing Slip',
             handler: this.handlePrintPackingSlip
-        };
+        }]
 
         this.callParent(arguments);
     },
@@ -271,9 +264,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             methodName: 'markPackagesShipped',
             errorMsg: 'Error marking as shipped',
             data: {
-                orderId: this.record.getId(),
-                packageIds: [this.packageData.id]
-            }
+            orderId: this.record.getId(),
+            packageIds: [this.packageData.id]
+        }
         });
     }
 });

@@ -1,7 +1,19 @@
+/**
+ * @class Taco.view.order.subform.fulfillment.Package
+ */
 Ext.define('Taco.view.order.subform.fulfillment.Package', {
     extend: 'Ext.panel.Panel',
+
+    ui: 'subform-section-child',
     cls: 'taco-order-package',
-    padding: '20 0 0 0',
+    margin: '10 0 10 0',
+    bodyPadding: '10 10 10 10',
+    header: false,
+
+    layout: {
+        type: 'card'
+    },
+
     config: {
         title: '',
         details: null,
@@ -12,10 +24,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
 
     packageData: null,
 
-    layout: 'card',
-
     initComponent: function() {
-
         var availableActions = [];
 
         this.header = false;
@@ -34,36 +43,42 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             xtype: 'container',
             layout: {
                 type: 'hbox',
-                align: 'stretch'
+                align: 'middle'
             },
             defaults: {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
                 scope: this,
-                margin: '0 0 0 8'
+                margin: '0 0 0 10'
             },
             items: Ext.Array.push([{
                 xtype: 'button',
                 text: '-',
                 ui: 'action',
                 scale: 'medium',
+                margin: '0 0 0 0',
                 hidden: !this.isCollapsible,
                 handler: this.handleCollapse,
                 scope: this
             }, {
                 xtype: 'component',
                 html: this.title,
-                margin: 0,
-                flex: 1
+                flex: 1,
+                style: {
+                    'font-weight': 'bold'
+                }
             }], availableActions)
         });
 
         this.statusContainer = Ext.widget({
             xtype: 'container',
+            cls: 'taco-order-package-details',
+            margin: '10 0 0 0',
+            padding: '0 0 10 0',
             items: [{
                     xtype: 'component',
-                    html: 'Status: ' + this.packageData.status
+                    html: '<span class="label">Status:</span>' + this.packageData.status
                 },
                 this.details
             ]
@@ -82,14 +97,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             xtype: 'container',
             layout: {
                 type: 'hbox',
-                align: 'stretch'
+                align: 'middle'
             },
             defaults: {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
                 scope: this,
-                margin: '0 0 0 8'
+                margin: '0 0 0 10'
             },
             items: []
         });
@@ -100,7 +115,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
                 handler: this.handleExpand
             }, {
                 xtype: 'component',
-                html: this.title
+                html: this.title,
+                style: {
+                    'font-weight': 'bold'
+                }
             }]);
 
             if (this.collapsedInfo) this.closedContainer.add(this.collapsedInfo);
