@@ -23,44 +23,46 @@ Ext.define('Taco.view.settings.localization.ProductExtras', {
         var ctx = Taco.app.context.getCurrentContext(),
             ctxType = (!ctx) ? '' : ctx.contextType,
             mc = Taco.app.context.getMasterCatalog(),
-            mcCurrency = (!mc) ? '' : ' (' + mc.currencyCode + ')',
-            mcName = (!mc) ? '' : mc.name + ' ',
+            mcCurrency = (!mc) ? '' : mc.currencyCode + ' ',
+            mcName = (!mc) ? '' : ': ' + mc.name,
             excludeDefaultCurrency = true,
             supportedCurrencies = [],
             columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'productName',
-                text: mcName + 'Product Name',
+                text: 'Product Name' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'productCode',
-                text: mcName + 'Product Code',
+                text: 'Product Code' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeFQN',
-                text: mcName + 'Attribute Id',
+                text: 'Attribute Id' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'adminName',
-                text: mcName + 'Attribute Admin Name',
+                text: 'Attribute Admin Name' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'attributeName',
-                text: mcName + 'Attribute Name',
+                text: 'Attribute Name' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaPrice',
-                text: mcName + 'Price' + mcCurrency,
+                text: mcCurrency + 'Price' + mcName,
                 flex: 1
             }
             ];
 
+
+// todo: move to superclass - Greg Murray on 2014-07-22 
         if (ctxType === 'm' && mc) {
             supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
         }
@@ -91,7 +93,7 @@ Ext.define('Taco.view.settings.localization.ProductExtras', {
                 };
             }
 
-            columns.push(createCurrencyColumn('price_' + currency, 'Price (' + currency + ')'));
+            columns.push(createCurrencyColumn('price_' + currency, currency + ' Price'));
 
         });
         return columns;

@@ -23,20 +23,20 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
         var ctx = Taco.app.context.getCurrentContext(),
             ctxType = (!ctx) ? '' : ctx.contextType,
             mc = Taco.app.context.getMasterCatalog(),
-            mcCurrency = (!mc) ? '' : ' (' + mc.currencyCode + ')',
-            mcName = (!mc) ? '' : mc.name + ' ',
+            mcCurrency = (!mc) ? '' : mc.currencyCode + ' ',
+            mcName = (!mc) ? '' : ': ' + mc.name,
             excludeDefaultCurrency = true,
             supportedCurrencies = [],
             columns = [
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'productName',
-                text: mcName + 'Product Name',
+                text: 'Product Name' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'options',
-                text: mcName + 'Product Options',
+                text: 'Product Options' + mcName,
                 flex: 1,
                 renderer: function (options) {
                     if (!options || options.length == 0) return '';
@@ -45,27 +45,27 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'parentProductCode',
-                text: mcName + 'Parent Product Code',
+                text: 'Parent Product Code' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'variantProductCode',
-                text: mcName + 'Product Variation Code',
+                text: 'Product Variation Code' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaPrice',
-                text: mcName + 'Price' + mcCurrency,
+                text: mcCurrency + 'Extra Price' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaMSRP',
-                text: mcName + 'MSRP' + mcCurrency,
+                text: mcCurrency + 'MSRP' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'deltaCreditValue',
-                text: mcName + 'Credit Value' + mcCurrency,
+                text: mcCurrency + 'Extra Credit Value' + mcName,
                 flex: 1
             }
             ];
@@ -100,9 +100,9 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                 };
             }
 
-            columns.push(createCurrencyColumn('price_' + currency, 'Price (' + currency + ')'));
-            columns.push(createCurrencyColumn('msrp_' + currency, 'MSRP (' + currency + ')'));
-            columns.push(createCurrencyColumn('credit_' + currency, 'Credit Value (' + currency + ')'));
+            columns.push(createCurrencyColumn('price_' + currency, currency + ' Extra Price'));
+            columns.push(createCurrencyColumn('msrp_' + currency, currency + ' MSRP'));
+            columns.push(createCurrencyColumn('credit_' + currency, currency + ' Extra Credit Value'));
 
         });
         return columns;

@@ -22,33 +22,33 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
     getColumnConfig: function () {
         var mc = Taco.app.context.getMasterCatalog(),
             supportedLocales = [],
-            mcName = (!mc) ? '' : mc.name + ' ',
-            mcLocale = (!mc) ? '' : ' (' + mc.localeCode + ')',
+            mcName = (!mc) ? '' : ': ' + mc.name,
+            mcLocale = (!mc) ? '' : mc.localeCode + ' ',
             columns = [
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'productCode',
-                    text: mcName + 'Product Code',
+                    text: 'Product Code' + mcName,
                     flex: 1
                 },{
                     xtype: 'gridcolumn',
                     dataIndex: 'productName',
-                    text: mcName + 'Product Name',
+                    text: 'Product Name' + mcName,
                     flex: 1
                 },{
                     xtype: 'gridcolumn',
                     dataIndex: 'attributeFQN',
-                    text: mcName + 'Attribute Id',
+                    text: 'Attribute Id' + mcName,
                     flex: 1
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'adminName',
-                    text: mcName + 'Attribute Admin Name',
+                    text: 'Attribute Admin Name' + mcName,
                     flex: 1
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'stringValue',
-                    text: mcName + 'Text' + mcLocale,
+                    text: mcLocale + 'Text' + mcName,
                     flex: 1
                 }
             ];
@@ -58,7 +58,7 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
             var col = {
                 xtype: 'gridcolumn',
                 dataIndex: 'value_' + locale,
-                text: 'Text (' + locale + ')',
+                text: locale + ' Text',
                 flex: 1,
                 sortable: false,
                 editor: {
