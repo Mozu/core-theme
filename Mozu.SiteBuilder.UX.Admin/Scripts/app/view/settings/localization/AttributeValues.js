@@ -23,28 +23,28 @@ Ext.define('Taco.view.settings.localization.AttributeValues', {
         var mc = Taco.app.context.getMasterCatalog(),
             excludeDefaultLocale = true,
             supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
-            mcName = (!mc) ? '' : mc.name + ' ',
-            mcLocale = (!mc) ? '' : ' (' + mc.localeCode + ')',
+            mcName = (!mc) ? '' : ': ' + mc.name,
+            mcLocale = (!mc) ? '' : mc.localeCode + ' ',
             columns = [
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'attributeFQN',
-                    text: mcName + 'Attribute Id',
+                    text: 'Attribute Id' + mcName,
                     flex: 1
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'adminName',
-                    text: mcName + 'Attribute Admin Name',
+                    text: 'Attribute Admin Name' + mcName,
                     flex: 1
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'attributeName',
-                    text: mcName + 'Attribute Name' + mcLocale,
+                    text: mcLocale + 'Attribute Name' + mcName,
                     flex: 1
                 }, {
                     xtype: 'gridcolumn',
                     dataIndex: 'stringValue',
-                    text: mcName + 'Label' + mcLocale,
+                    text: mcLocale + 'Label' + mcName,
                     flex: 1
                 }
             ];
@@ -53,7 +53,7 @@ Ext.define('Taco.view.settings.localization.AttributeValues', {
             var col = {
                 xtype: 'gridcolumn',
                 dataIndex: 'value_' + locale,
-                text: 'Label (' + locale + ')',
+                text: locale + ' Label',
                 flex:1,
                 sortable: false,
                 editor: {
