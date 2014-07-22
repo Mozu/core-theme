@@ -26,6 +26,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
     buildInfoHeader: function() {
         this.infoContainer = Ext.widget({
             xtype: 'container',
+            cls: 'taco-order-fulfillment-info-header',
             padding: '0 0 10 0',
             layout: {
                 type: 'hbox',
@@ -38,13 +39,13 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
             items: [{
                 padding: '0 50 0 0',
                 tpl: [
-                    '<span class="taco-order-label">Preferred Shipping Method:</span><br>',
+                    '<span class="label">Preferred Shipping Method:</span><br>',
                     '{shippingMethodName}'
                 ]
             }, {
-                padding: '0 50, 0 0',
+                padding: '0 50 0 0',
                 tpl: [
-                    '<span class="taco-order-label">Total Weight:</span><br>',
+                    '<span class="label">Total Weight:</span><br>',
                     '61 lbs'
                 ]
             }, {
@@ -53,9 +54,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                     textAlign: 'right'
                 },
                 tpl: [
-                    'Pending Items: {itemsNotShipped}<br>',
-                    'Fulfilled Items: {itemsShipped}<br>',
-                    '<span class="taco-order-label">Direct Ship Items: {totalDirectShipItems}</span>'
+                    '<span class="label">Pending Items:</span>{itemsNotShipped}<br>',
+                    '<span class="label">Fulfilled Items:</span>{itemsShipped}<br>',
+                    '<span class="label">Direct Ship Items:</span>{totalDirectShipItems}'
                 ]
             }]
         });

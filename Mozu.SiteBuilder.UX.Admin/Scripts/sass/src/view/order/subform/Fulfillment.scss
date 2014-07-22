@@ -1,10 +1,20 @@
 ﻿.#{$vprefix}order-package {
     .label {
         font-weight: bold;
+        margin-right: 3px;
     }
 
     .#{$vprefix}order-package-details {
         font-size: 14px;
         line-height: 16px;
+    }
+}
+
+.#{$vprefix}order-fulfillment-info-header {
+    font-size: 14px;
+
+    .label {
+        font-weight: bold;
+        margin-right: 3px;
     }
 }
