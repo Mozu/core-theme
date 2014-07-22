@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Localization
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Locale { get; set; }
+        public string LocaleCode { get; set; }
 
         public List<string> SupportedLocales { get; set; } 
 

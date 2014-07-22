@@ -15,7 +15,7 @@ Ext.define('Taco.store.LocalizedProductProperties', {
                         name: 'adminName',
                         type: 'string'
                     }, {
-                        name: 'attributeValue',
+                        name: 'canonicalValue',
                         type: 'string'
                     }, {
                         name: 'stringValue',
@@ -29,7 +29,7 @@ Ext.define('Taco.store.LocalizedProductProperties', {
                         type: 'string',
                         useNull: true
                     }, {
-                        name: 'locale',
+                        name: 'localeCode',
                         type: 'string',
                         useNull: true
                     }, {

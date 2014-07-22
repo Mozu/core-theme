@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Localization
             Assert.That(actual.AdminName, Is.EqualTo(reportAttribute.AdminName), scenario);
             Assert.That(actual.AttributeFQN, Is.EqualTo(reportAttribute.AttributeFQN), scenario);
             Assert.That(actual.Description, Is.EqualTo(reportAttribute.Description), scenario);
-            Assert.That(actual.Locale, Is.EqualTo(reportAttribute.LocaleCode), scenario);
+            Assert.That(actual.LocaleCode, Is.EqualTo(reportAttribute.LocaleCode), scenario);
             Assert.That(actual.Name, Is.EqualTo(reportAttribute.Name), scenario);
 
             var matched =

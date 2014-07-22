@@ -22,7 +22,7 @@ Ext.define('Taco.store.LocalizedAttributes', {
                         type: 'string',
                         useNull: true
                     }, {
-                        name: 'locale',
+                        name: 'localeCode',
                         type: 'string',
                         useNull: true
                     }, {

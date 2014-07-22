@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var localizedAttrValue = jObject.ToObject<LocalizedAttributeValue>();
             var attrLocalizedContent = (from supportedLocale in localizedAttrValue.SupportedLocales
                                     let localizedName = (string)jObject["value_" + supportedLocale]
-                                    where localizedName != null
+                                    where ! string.IsNullOrEmpty(localizedName)
                                     select new DC.AttributeVocabularyValueLocalizedContent
                                     {
                                         LocaleCode = supportedLocale,
@@ -125,7 +125,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 localizedAttrValue.AttributeName, responseFields: null, targetContextLevel: TargetContextLevel)).ReadAsSync();
 
             var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, updatedResults, (property, locales) => property.SupportedLocales = locales,
-                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
+                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue, localizedAttrValue.LocaleCode, localizedAttrValue.SupportedLocales);
 
             return Single2(jResult);
         } 
@@ -151,17 +151,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var localizedProp = jObject.ToObject<LocalizedProductProperty>();
             var localizedContent = (from supportedLocale in localizedProp.SupportedLocales
                                     let localizedName = (string)jObject["value_" + supportedLocale]
-                                    where localizedName != null
+                                    where !string.IsNullOrEmpty(localizedName)
                                     select new DC.ProductPropertyValueLocalizedContent
                                     {
                                         LocaleCode = supportedLocale,
                                         StringValue = localizedName,
                                     }).ToList();
-
-            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContents(localizedContent, localizedProp.ProductCode, localizedProp.AttributeFQN,
-                localizedProp.StringValue, targetContextLevel: TargetContextLevel)).ReadAsSync();
+            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContents(localizedContent, productCode: localizedProp.ProductCode, attributeFQN: localizedProp.AttributeFQN,
+                value: localizedProp.CanonicalValue, targetContextLevel: TargetContextLevel)).ReadAsSync();
             var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedProp, updatedResults, (property, locales) => property.SupportedLocales = locales,
-                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
+                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue, localizedProp.LocaleCode, localizedProp.SupportedLocales);
+            
             return Single2(jResult);
         } 
         

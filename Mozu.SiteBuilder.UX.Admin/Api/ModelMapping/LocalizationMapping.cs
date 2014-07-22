@@ -37,11 +37,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
 
             Mapper.CreateMap<DC.ReportAttribute, LocalizedAttribute>()
-                .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(dc => dc.AttributeFQN))
-                .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AdminName))
-                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Name))
-                .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
-                .ForMember(x => x.Locale, op => op.ResolveUsing(dc => dc.LocaleCode))
                 .ForMember(x => x.SupportedLocales,
                     op => op.ResolveUsing(dc => (dc.LocalizedValues != null && dc.LocalizedValues.Count > 0)
                         ? dc.LocalizedValues.Select(x => x.LocaleCode).ToList()
@@ -101,11 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private static void MapReportProductPropertyToLocalizedProductProperty()
         {
             Mapper.CreateMap<DC.ReportProductProperty, LocalizedProductProperty>()
-                .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(dc => dc.AttributeFQN))
-                .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AdminName))
-                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
-                .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.ProductName))
-                .ForMember(x => x.LocaleCode, op => op.ResolveUsing(dc => dc.LocaleCode))
+                .ForMember(x => x.CanonicalValue, op => op.MapFrom(dc => dc.Value))
                 .ForMember(x => x.SupportedLocales,
                     op => op.ResolveUsing(dc => (dc.LocalizedValues != null && dc.LocalizedValues.Count > 0)
                         ? dc.LocalizedValues.Select(x => x.LocaleCode).ToList()
@@ -143,7 +134,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //var jObj = ReportAttributeConverterHelper.AddLocalizedNames(localizedAttr, attr.LocalizedValues);
 
             var jObj = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, attrValue.LocalizedValues, 
-                (property, locales) => property.SupportedLocales = locales, rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
+                (property, locales) => property.SupportedLocales = locales, rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue,
+                localizedAttrValue.LocaleCode, localizedAttrValue.SupportedLocales);
 
             return jObj;
         }
@@ -160,7 +152,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var localizedAttr = Mapper.Map<LocalizedProductProperty>(attr);
             //var jObj = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttr, attr.LocalizedValues);
             var jObj = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttr, attr.LocalizedValues, (property, locales) => property.SupportedLocales = locales,
-                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue);
+                rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue,
+                localizedAttr.LocaleCode, localizedAttr.SupportedLocales);
             return jObj;
         }
 
@@ -239,17 +232,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         /// </summary>
         /// <param name="prop"></param>
         /// <param name="attrValueLocalizedContents"></param>
-        /// <returns></returns>
+        /// <example>var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", 
+        ///         localizedAttrValue, updatedResults, 
+        ///         (property, locales) => property.SupportedLocales = locales,
+        ///         rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue,
+        ///         localizedAttrValue.LocaleCode, localizedAttrValue.SupportedLocales);</example>
+        /// <returns>jObject with "name_fr-FR", etc.</returns>
         public static JObject AddLocalizedValues<T1, T2>(string prefix, T1 prop, List<T2> attrValueLocalizedContents, 
-            Action<T1, List<string>> supportedLocalesAction, Func<T2, string> getLocaleCodeFunc, Func<T2, string> getValueFunc) 
+            Action<T1, List<string>> supportedLocalesAction, Func<T2, string> getLocaleCodeFunc, Func<T2, string> getValueFunc, 
+            string defaultLocaleCode, List<string> supportedLocales) 
             where T1 : class where T2: class
         {
-            supportedLocalesAction(prop, attrValueLocalizedContents.Select(getLocaleCodeFunc).ToList());
+
+            RemoveDefault(defaultLocaleCode, attrValueLocalizedContents, getLocaleCodeFunc);
+            var missingLocales = GetMissingSupportedItems(supportedLocales, attrValueLocalizedContents.Select(getLocaleCodeFunc));
+
+
+            supportedLocalesAction(prop, attrValueLocalizedContents.Select(getLocaleCodeFunc).Concat(missingLocales).ToList());
             var jResult = JObject.FromObject(prop, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
 
             foreach (var updatedLocalizedContent in attrValueLocalizedContents)
             {
                 jResult[prefix + getLocaleCodeFunc(updatedLocalizedContent)] = getValueFunc(updatedLocalizedContent);
+            }
+            foreach (var loc in missingLocales)
+            {
+                jResult[prefix + loc] = null;
             }
             return jResult;
         }
@@ -311,8 +319,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         // todo: refactor using generics - Greg Murray on 2014-07-19 
         public static JObject AddLocalizedPrices(LocalizedProductExtraPrice extra, List<DC.ProductExtraValueDeltaPrice> updatedResults)
         {
-            RemoveDefaultCurrency(extra.CurrencyCode, updatedResults, deltaPrice => deltaPrice.CurrencyCode);
-            var missingCurrencies = GetMissingSupportedCurrencies(extra.SupportedCurrencies, updatedResults.Select(x => x.CurrencyCode));
+            RemoveDefault(extra.CurrencyCode, updatedResults, deltaPrice => deltaPrice.CurrencyCode);
+            var missingCurrencies = GetMissingSupportedItems(extra.SupportedCurrencies, updatedResults.Select(x => x.CurrencyCode));
 
             extra.SupportedCurrencies = updatedResults.Select(x => x.CurrencyCode).Concat(missingCurrencies).ToList();
             var jResult = JObject.FromObject(extra, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
@@ -345,8 +353,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         public static JObject AddLocalizedPrices(LocalizedProductVariantPrice variant, List<DC.ProductVariationDeltaPrice> updatedResults)
         {
-            RemoveDefaultCurrency(variant.CurrencyCode, updatedResults, x=>x.CurrencyCode);
-            var missingCurrencies = GetMissingSupportedCurrencies(variant.SupportedCurrencies, updatedResults.Select(x => x.CurrencyCode));
+            RemoveDefault(variant.CurrencyCode, updatedResults, x=>x.CurrencyCode);
+            var missingCurrencies = GetMissingSupportedItems(variant.SupportedCurrencies, updatedResults.Select(x => x.CurrencyCode));
 
             variant.SupportedCurrencies = updatedResults.Select(x => x.CurrencyCode).Concat(missingCurrencies).ToList();
             var jResult = JObject.FromObject(variant, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
@@ -367,19 +375,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             return jResult;
         }
 
-        private static IEnumerable<string> GetMissingSupportedCurrencies(IEnumerable<string> supportedCurrencies, IEnumerable<string> updatedResultCurrencies)
+        private static IEnumerable<string> GetMissingSupportedItems(IEnumerable<string> supportedItems, IEnumerable<string> updatedResultItems)
         {
-            return supportedCurrencies
-                .Except(updatedResultCurrencies)
+            return supportedItems
+                .Except(updatedResultItems)
                 .ToList();
         }
 
-        private static void RemoveDefaultCurrency<T>(string defaultCurrencyCode, List<T> updatedResults, Func<T, string> getCurrencyCodeFunc) 
+        private static void RemoveDefault<T>(string defaultCode, List<T> updatedResults, Func<T, string> getCodeFunc) 
             where T : class
         {
-            var defaultCurrency = updatedResults.FirstOrDefault(x => defaultCurrencyCode.EqualsIgnoreCase(getCurrencyCodeFunc(x)));
-            if (defaultCurrency != null)
-                updatedResults.Remove(defaultCurrency);
+            var defaultItem = updatedResults.FirstOrDefault(x => defaultCode.EqualsIgnoreCase(getCodeFunc(x)));
+            if (defaultItem != null)
+                updatedResults.Remove(defaultItem);
         }
     }
     
