@@ -9,29 +9,38 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
 
     initComponent: function() {
 
-        this.title = 'Status: ' + this.record.get('fulfillmentStatus');
+        this.record.on({
+            reload: this.buildComponents,
+            scope: this
+        });
+       
+        this.callParent(arguments);
 
-        this.items = [];
+        this.buildComponents();
+    },
 
+    buildComponents: function() {
+        
+        this.removeAll();
 
         if (this.record.get('packages').length || this.record.get('unpackagedItems').length) {
-            this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DirectShip', {
+            this.add(Ext.create('Taco.view.order.subform.fulfillment.DirectShip', {
                 record: this.record
             }));
         }
 
         if (this.record.get('pickups').length || this.record.get('unpickedupItems').length) {
-            this.items.push(Ext.create('Taco.view.order.subform.fulfillment.InStorePickup', {
+            this.add(Ext.create('Taco.view.order.subform.fulfillment.InStorePickup', {
                 record: this.record
             }));
         }
 
         if (this.record.get('digitalPackages').length) {
-            this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DigitalDelivery', {
+            this.add(Ext.create('Taco.view.order.subform.fulfillment.DigitalDelivery', {
                 record: this.record
             }));
         }
 
-        this.callParent(arguments);
+        this.title = 'Status: ' + this.record.get('fulfillmentStatus');
     }
 });

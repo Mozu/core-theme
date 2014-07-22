@@ -408,6 +408,12 @@ Ext.define('Taco.model.Order', {
             "defaultValue": []
         },
 
+        {
+            "name": "undeliveredDigitalItems",
+            "type": "array",
+            "defaultValue": []
+        },
+
         // array of items that are pending in the pickup Instore pickup section and have not been added to a pickup yet;
         {
             "name": "unpickedupItems",
