@@ -253,8 +253,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         return bundleItem.UnitWeight;
                     });
 
-                    var GetFulfillmentLocationCode = new Func<string, string>(productCode => {
-                        return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
+                    // get a single location code by fulfillment type. This is handy for fulfillmentType = DirectShip, which can only originate from one location.
+                    var GetAFulfillmentLocationCodeByFulfillmentMethod = new Func<string, string, string>((productCode, fulfillmentMethod) =>
+                    {
+                        return
+                            (from i in order.Items
+                             where i.ProductCode == productCode
+                             where i.FulfillmentMethod == fulfillmentMethod
+                             select i.FulfillmentLocationCode
+                            ).First();
+                        //return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
+                    });
+
+                    // get all fulfillment locations for a fulfillment method. This applies to in-store pickup, which can have multiple locations.
+                    var GetAllFulfillmentLocationCodeByFulfillmentMethod = new Func<string, string, IDictionary<string, int>>((productCode, fulfillmentMethod) => {
+                        return
+                            (from i in order.Items
+                             where i.ProductCode == productCode
+                             where i.FulfillmentMethod == fulfillmentMethod
+                             group i by i.FulfillmentLocationCode into g
+                             select g
+                            ).ToDictionary(g => g.Key, g => g.Sum(i => i.Quantity));
+                        //return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
+                    });
+
+                    var GetNumberOfPickedUpItemsByProductCodeAndLocationCode = new Func<string, string, int>((productCode, locationCode) => {
+                        return
+                            (from p in order.Pickups
+                             from i in p.Items
+                             where p.FulfillmentLocationCode == locationCode
+                             where i.ProductCode == productCode
+                             select i.Quantity
+                            ).Sum();
                     });
 
                     var GetUnitPrice = new Func<string, decimal>(productCode => {
@@ -282,14 +312,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                             if (remainingQuantity > 0)
                             {
-                                order.UnpackagedItems.Add(new OrderPackageItem {
-                                        ProductCode = productCode,
-                                        ProductName = GetProductName(productCode),
-                                        Weight = GetUnitWeight(productCode) * remainingQuantity,
-                                        Quantity = remainingQuantity,
-                                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
-                                        FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
-                                    });
+                                var fulfillmentLocationForThisProduct = GetAFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
+
+                                order.UnpackagedItems.Add(new OrderPackageItem
+                                {
+                                    ProductCode = productCode,
+                                    ProductName = GetProductName(productCode),
+                                    Weight = GetUnitWeight(productCode) * remainingQuantity,
+                                    Quantity = remainingQuantity,
+                                    FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
+                                    FulfillmentLocationCode = fulfillmentLocationForThisProduct
+                                });
                             }
                         }
 
@@ -304,13 +337,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                             if (remainingQuantity > 0)
                             {
-                                order.UnpickedupItems.Add(new OrderPickupItem {
+                                // Dictionary that is fullfilmentLocationCode : quantity
+                                var fulfillmentLocationsForThisProduct = GetAllFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
+
+                                foreach (var f in fulfillmentLocationsForThisProduct)
+                                {
+                                    var quantityAtThisLocation = Math.Min(remainingQuantity, f.Value) - GetNumberOfPickedUpItemsByProductCodeAndLocationCode(productCode, f.Key);
+
+                                    if (quantityAtThisLocation <= 0)
+                                        continue;
+
+                                    order.UnpickedupItems.Add(new OrderPickupItem {
                                         ProductCode = productCode,
                                         ProductName = GetProductName(productCode),
-                                        Quantity = remainingQuantity,
+                                        Quantity = quantityAtThisLocation,
                                         FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
-                                        FulfillmentLocationCode = GetFulfillmentLocationCode(productCode)
+                                        FulfillmentLocationCode = f.Key
                                     });
+
+                                    remainingQuantity -= f.Value;
+                                }
                             }
                         }
 
