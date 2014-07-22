@@ -56,6 +56,7 @@ Ext.application({
         'Website',
         'LocationInventory',
         'SiteSelection',
-        'Redirects'
+        'Redirects',
+        'SiteRoutes'
     ],
 });

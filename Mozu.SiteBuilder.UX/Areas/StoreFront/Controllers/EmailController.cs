@@ -30,6 +30,7 @@ using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 //using VMOrder = Mozu.SiteBuilder.UX.Models.Checkout.or;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.SEO;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -112,12 +113,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                HyprViewEngine hyprViewEngine,
                                 Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,
                                 ILogger logger,
-                                Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient
+                                Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
+            ISiteRouteHandler siteRouteHandler
 
             )
             : base(docRepo, docTypeRepo, cmsService, 
             //cmsTypeHelper, 
-            customerAccountWebApiClient, hyprViewEngine)
+            customerAccountWebApiClient, hyprViewEngine, siteRouteHandler)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;

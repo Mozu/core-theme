@@ -480,10 +480,13 @@
     <Compile Include="Ux\Controllers\CheckoutControllerTests.cs" />
     <Compile Include="Ux\Controllers\SearchControllerTests.cs" />
     <Compile Include="Ux\Models\CaseInsensitiveNamingContainerExtensionTests.cs" />
+    <Compile Include="Ux\Routing\SiteRouteTests.cs" />
     <Compile Include="WebApiClientTestExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Mobile\Default.aspx" />
+    <Content Include="Mobile\Default.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="Siesta\SiestaRunner.js" />
     <None Include="App.config">
       <SubType>Designer</SubType>

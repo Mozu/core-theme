@@ -4,15 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
-
+using System.Web.Http.Routing;
 using Autofac;
+using Magnum.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.UX.Models.Navigation;
+using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 
@@ -33,7 +37,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
-  
+    
     public class CmsPagesController : BaseApiController
     {
 
@@ -44,8 +48,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //protected ICmsTypeHelper _cmsTypeHelper;
         
         private readonly HyprViewEngine _hyprViewEngine;
-      
-     
+        private readonly ISiteRouteHandler _siteRouteHandler;
+
 
         public CmsPagesController(
             IDocumentListWebApiClient docRepo,
@@ -54,7 +58,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             //ICmsTypeHelper cmsTypeHelper,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
-            HyprViewEngine hyprViewEngine
+            HyprViewEngine hyprViewEngine,
+            ISiteRouteHandler siteRouteHandler
 
             )
         {
@@ -65,12 +70,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             //_cmsTypeHelper= cmsTypeHelper;
             _hyprViewEngine = hyprViewEngine;
-
+            _siteRouteHandler = siteRouteHandler;
         }
 
+     
 
-
-
+        
        
 
       
@@ -90,11 +95,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Details/5
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> ContentIndex(string collection)
+        public async Task<HttpResponseMessage> ContentIndex(string list,string listView= null)
         {
+            //todo move to actoin
+            var resp= _siteRouteHandler.ProcessSeoRedirect();
+            if (resp != null)
+            {
+                return resp;
+            }
 
-            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.ListFQN == collection && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
-            var template = pageType != null ? pageType.Template : "document-collection";
+            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.ListFQN == list && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
+            var template = pageType != null ? pageType.Template : "document-list";
 
 
 
@@ -103,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                           {
                                               Page = new DocumentRequest()
                                                      {
-                                                         Path = collection + ".index",
+                                                         Path = list + (!string.IsNullOrEmpty(listView) ? "-" + listView : "") + ".index",
                                                          ListFQN = "pages@mozu"
                                                      },
                                               Template = new DocumentRequest
@@ -112,21 +123,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                          }
                                           };
 
-            this.PageContext.PageType = "documentCollection";
-            this.PageContext.ListName = collection;
+            this.PageContext.PageType = "documentList";
+            this.PageContext.ListName = list;
+            this.PageContext.ListViewName = listView;
 
             await Task.WhenAll(this.ContextInitilaztionTasks);
            
-            var view = View(template, new {listFQN=collection});
+            var view = View(template, new {listFQN=list});
 
             return this.Request.CreateResponse(HttpStatusCode.OK, view);
 
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> Page(string collection, string pageName)
+        public async Task<HttpResponseMessage> Page(string list, string name)
         {
-
+            //todo move to actoin
+            var resp = _siteRouteHandler.ProcessSeoRedirect();
+            if (resp != null)
+            {
+                return resp;
+            }
 
             var pc = this.PageContext;
 
@@ -136,8 +153,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                 {
                                     Page = new DocumentRequest()
                                                {
-                                                   Path = pageName,
-                                                   ListFQN = collection
+                                                   Path = name,
+                                                   ListFQN = list
                                                }
 
                                 };
@@ -150,12 +167,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
             }
 
+           
+
+
+
             var vm = pc.CmsContext.Page.Document;
 
             SetNavigationContext(vm);
 
             //pc.WidgetCreationTags.Add(doc.ToWidgetStem());
-            pc.CollectionId = collection;
+            pc.ListName = list;
             pc.DocumentId = pc.CmsContext.Page.Document.Id;
             pc.Title = vm.Get<string>("title") as string;
             pc.MetaDescription = vm.Get<string>("meta_description") as string;
@@ -170,7 +191,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (pc.CmsContext.Page.Document.Get<bool>("hidden", false))
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, " not found");
-}
+                }
                 string redir;
 
                 if (pc.CmsContext.Page.Document.TryGet<string>("redirect_url", out redir) && !string.IsNullOrEmpty(redir))

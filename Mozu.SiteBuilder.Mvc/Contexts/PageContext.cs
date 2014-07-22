@@ -313,7 +313,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string FeedUrl { get; set; }
 
-        public string CollectionId { get; set; }
+        public string ListName { get; set; }
+
+        public string ListViewName { get; set; }
 
         public string DocumentId { get; set; }
 
@@ -333,6 +335,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string SecureHost { get; set; }
 
-        public string ListName { get; set; }
+ 
     }
 }

@@ -25,7 +25,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.widgetEditors.DealOfTheDay',
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
-        'Taco.view.website.entityAdapters.DocumentCollectionEntityAdapter',
+        'Taco.view.website.entityAdapters.DocumentListEntityAdapter',
         'Ext.ux.IFrame',
         'Taco.store.ThemeListing',
         'Ext.menu.CheckItem',
@@ -149,7 +149,7 @@ Ext.define('Taco.view.website.Index', {
                 buttonGroup: 'isWebPageView',
                 boxLabel: 'View dropzones',
                 margin: '0 0 0 25',
-            //    flex: 1,
+                //    flex: 1,
                 scope: this,
                 handler: function (checkbox, checked) {
                     this.showDropZones = checked;
@@ -164,7 +164,7 @@ Ext.define('Taco.view.website.Index', {
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',
-            
+
                 itemId: 'widgetsActionButton',
                 text: 'Widgets',
                 buttonGroup: 'isWebPageView',
@@ -289,18 +289,18 @@ Ext.define('Taco.view.website.Index', {
                     this.onPublish();
                 }
             },
-             {
-                 xtype: 'button',
-                
-                 itemId: 'createActionButton',
-                 buttonGroup: 'isCreatable',
-                 ui: 'action-primary',
-                 scale: 'medium',
-                 text: 'Create',
-                 margin: '0 0 0 10',
-                 scope:me,
-                 handler: me.OnCreateClick
-             }
+            {
+                xtype: 'button',
+
+                itemId: 'createActionButton',
+                buttonGroup: 'isCreatable',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: 'Create',
+                margin: '0 0 0 10',
+                scope: me,
+                handler: me.OnCreateClick
+            }
         ];
 
         this.controller = Taco.app.controllers.get('Website');
@@ -327,7 +327,7 @@ Ext.define('Taco.view.website.Index', {
                         xtype: 'panel',
                         itemId: 'editorCardPanel',
                         region: 'center',
-                      
+
                         layout: {
                             type: 'card'
                         },
@@ -345,7 +345,7 @@ Ext.define('Taco.view.website.Index', {
                                 border: false,
                                 header: false,
                                 itemId: 'pageEditor',
-                                isWebEditor:true,
+                                isWebEditor: true,
                                 layout: {
                                     type: 'hbox',
                                     align: 'stretch'
@@ -366,13 +366,11 @@ Ext.define('Taco.view.website.Index', {
                                     }
                                 ]
                             }, {
-                                xtype: 'panel',
-
                                 xtype: 'formform',
                                 title: 'Settings',
                                 isWebEditor: true,
                                 overflowY: 'auto',
-                                itemId:'pageSettingsContainer',
+                                itemId: 'pageSettingsContainer',
                                 border: false,
                                 header: false,
                                 items: [
@@ -381,7 +379,7 @@ Ext.define('Taco.view.website.Index', {
                                         itemId: 'pageSettings',
                                         ui: 'subform',
                                         title: 'Settings',
-                                       // margin: '20 30 10 30',
+                                        // margin: '20 30 10 30',
                                         defaults: {
                                             margin: '10 0 10 0'
                                         }
@@ -390,7 +388,7 @@ Ext.define('Taco.view.website.Index', {
                             }, {
                                 xtype: 'panel',
                                 title: 'Grid!!!',
-                               
+
                                 overflowY: 'auto',
                                 border: false,
                                 layout: 'fit',
@@ -526,7 +524,7 @@ Ext.define('Taco.view.website.Index', {
             var header = me.getHeader();
 
             //me.standardToolBar = header.down('toolbar');
-           // me.standardToolBar.toolbarTypes = ['standard'];
+            // me.standardToolBar.toolbarTypes = ['standard'];
             //me.contentEditorToolbar = Ext.widget({
             //    xtype: "toolbar",
             //    cls: "taco-navheader-toolbar",
@@ -536,11 +534,11 @@ Ext.define('Taco.view.website.Index', {
             //    //padding: '10px 20px 10px 20px',
             //    //style: "border-bottom: 1px solid #bfbfbf !important",
             //    items: [
-                   
+
             //    ]
             //});
 
-           // me.header.add(me.contentEditorToolbar);
+            // me.header.add(me.contentEditorToolbar);
 
             me.publishButton = header.down('#publishActionButton');
             me.pageSettingsTabButton = header.down('#pageSettingsTabButton');
@@ -553,13 +551,13 @@ Ext.define('Taco.view.website.Index', {
             me.bindToForm();
         });
     },
-    showHideButtons:function (buttonGroups, leaveExisting) {
+    showHideButtons: function (buttonGroups, leaveExisting) {
         var buttons = this.header.query('component[buttonGroup]');
 
         Ext.Array.each(buttons, function (btn) {
             if (btn.buttonGroup && buttonGroups.indexOf(btn.buttonGroup) > -1) {
                 btn.show();
-            } else if (leaveExisting !== true ) {
+            } else if (leaveExisting !== true) {
                 btn.hide();
             }
         });
@@ -579,7 +577,10 @@ Ext.define('Taco.view.website.Index', {
         //    });
         //}
     },
-
+    getCardPanel: function ()
+    {
+        return  this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
+    },
     toggleCard: function (item) {
         this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
 
@@ -677,6 +678,8 @@ Ext.define('Taco.view.website.Index', {
     },
 
     navigate: function (config) {
+
+        this.getCardPanel().setLoading(true);
       //  this.showHideButtons([]);
         this.url = config.url;
         console.log(config.url);
@@ -710,7 +713,7 @@ Ext.define('Taco.view.website.Index', {
         var me = this,
             pc = this.getPageContext();
 
-
+        this.getCardPanel().setLoading(false);
 
 
         this.showHideButtons(['isWebPage', 'hasSettings', 'isSavable', 'isWebPageView']);
@@ -1000,7 +1003,7 @@ Ext.define('Taco.view.website.Index', {
              
                 tenantId: Taco.app.context.getTenantId(),
 
-                listFQN: listMetaData.listFQN,
+             
                 listFQN: listMetaData.listFQN || listMetaData.name,
                 entityType: listMetaData.entityType,
                 documentTypeFQN: listMetaData.documentTypes && listMetaData.documentTypes.length ? listMetaData.documentTypes[0] : undefined,
