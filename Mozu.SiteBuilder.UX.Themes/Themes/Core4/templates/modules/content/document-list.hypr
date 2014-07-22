@@ -3,7 +3,7 @@
     <ul class="mz-documentlist-list {% block list-classes %}{% endblock list-classes %}">
         {% for document in model.items %}
             <li class="mz-documentlist-item" >
-              <a href="\cms\{{document.documentListName}}\{{document.name}}">{{document.name}}</a>
+              <a href="\cms\{{document.listFQN}}\{{document.name}}">{{document.name}}</a>
             </li>
         {% endfor %}
     </ul>
