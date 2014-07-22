@@ -472,6 +472,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\Core4\scripts\modules\contextify.js" />
+    <Content Include="Themes\Core4\scripts\modules\models-documents.js" />
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
     <Content Include="Themes\Core4\scripts\modules\models-location.js" />
     <Content Include="Themes\Core4\scripts\modules\jquery-dateinput-localized.js" />
