@@ -31,6 +31,10 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
+            var httpContextBase = (HttpContextBase)request.Properties["MS_HttpContext"];
+
+            
+
             var repo = request.Resolve<IRedirectRepository>();
             var redirects = await repo.FetchRedirectEntries().ConfigureAwait(false);
             string stem = request.RequestUri.AbsolutePath;
@@ -53,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     var req = new HttpRequestMessage(HttpMethod.Get, ub.Uri);
                     //magic strings taken from decompiled source :(
                     
-                    var httpContextBase = (HttpContextBase)request.Properties["MS_HttpContext"];
+                    
                     var myHttpContext = new MyHttpContextBase(httpContextBase, url);
 
                     req.Properties["MS_HttpContext"] = myHttpContext;
@@ -85,6 +89,14 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     return resp;
                 }
             }
+
+            var routeHandler = request.Resolve<ISiteRouteHandler>();
+
+            await routeHandler.RouteIncomingRequest();
+            
+
+
+
             var response=  await base.SendAsync(request, cancellationToken);
 
             

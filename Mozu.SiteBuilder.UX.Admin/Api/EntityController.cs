@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
+using MongoDB.Bson;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -33,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private const string MZDB_LIST_PROPERTY = "EntityListName";
         private const string MZDB_DOCUMENT_ID_PROPERTY = "Id";
-        private const string CMS_LIST_PROPERTY = "ListFQN";
+        private const string CMS_LIST_PROPERTY = "listFQN";
         private const string CMS_DOCUMENT_ID_PROPERTY = "Id";
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
@@ -237,6 +238,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     return j;
                 }).ToList(), res.TotalCount);
             }
+        }
+
+
+
+        [HttpGetRoute(UriTemplate = "lists/read")]
+        public async Task<Response<List<JObject>>> ReadLists (PagingParamaters pagingParams, FilterCollection extFilter, string entityType )
+        {
+
+
+            if (entityType == "cms")
+            {
+                DC.DocumentListCollection res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+
+                var items = res.Items.Select(x => JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())))
+                    .Select(x =>
+                    {
+                        x["entityType"] = "cms";
+                        x["uniqueId"] = x.Value<string>("entityType") + "-" + x.Value<string>("listFQN");
+                        return x;
+
+                    }).ToList();
+                return this.List2(items, res.TotalCount);
+            }
+            else if (entityType == "mzdb")
+            {
+                EntityListCollection res = (await _entityListsWebApiClient.GetEntityLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+                var items = res.Items.Select(x => JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())))
+                    .Select(x =>
+                    {
+                        x["entityType"] = "mzdb";
+                        x["listFQN"] = string.IsNullOrEmpty(x.Value<string>("nameSpace")) ? x.Value<string>("name") : x.Value<string>("name") + "@" + x.Value<string>("nameSpace");
+                        x["uniqueId"] = x.Value<string>("entityType") + "-" + x.Value<string>("listFQN");
+                        return x;
+
+                    }).ToList();
+                return this.List2(items, res.TotalCount);
+            }
+            throw new NotImplementedException("unknown entity type-"+ entityType);
+
         }
 
 
@@ -733,7 +773,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 //        //public string FolderId { get; set; }
 
 
-//        public string ListFQN { get; set; }
+//        public string listFQN { get; set; }
 
 
 //        public long? ContentLength { get; set; }

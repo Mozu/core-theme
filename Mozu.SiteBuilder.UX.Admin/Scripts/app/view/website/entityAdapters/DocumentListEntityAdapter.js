@@ -2,7 +2,7 @@
  * @class Taco.view.website.entityAdapters.DocumentEntityAdapter
  */
 
-Ext.define('Taco.view.website.entityAdapters.DocumentCollectionEntityAdapter', {
+Ext.define('Taco.view.website.entityAdapters.DocumentListEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
     requires: [
         'Taco.model.Entity',

@@ -1,4 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Runtime.Serialization;
+using System.Web.Routing;
 
 namespace Mozu.SiteBuilder.UX.Models.Navigation
 {
@@ -23,4 +26,58 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public string EntityType { get; set; }
 
     }
+
+    public class SiteRouteHandler : IRouteHandler
+    {
+        private SiteRouteEntry _entry;
+
+        public SiteRouteEntry Entry
+        {
+            get
+            {
+                return _entry; 
+                
+            }
+            set { _entry = value; }
+        }
+
+
+        System.Web.IHttpHandler IRouteHandler.GetHttpHandler(RequestContext requestContext)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+
+    public enum PageTypes
+    {
+        documentList,
+        documentListView,
+        document
+    }
+
+
+
+
+    public class SiteRouteEntry
+    {
+        public int? Index { get; set; }
+        public string Name { get; set; }
+        public string Template { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public  PageTypes? PageType{ get; set; }
+        public string ListViewName { get; set; }
+        public string ListName { get; set; }
+
+        public bool? IsCanonical { get; set; }
+
+
+
+        
+
+    }
+
+   
+
+
 }

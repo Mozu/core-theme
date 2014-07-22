@@ -68,6 +68,9 @@ namespace Mozu.SiteBuilder.Mvc.Debugging.RouteDebug
             {
                 dictionary.Add(str2, context.Request.QueryString[str2]);
             }
+
+            
+
             VirtualPathData virtualPath = RouteTable.Routes.GetVirtualPath(this.RequestContext, dictionary);
             if (virtualPath != null)
             {
