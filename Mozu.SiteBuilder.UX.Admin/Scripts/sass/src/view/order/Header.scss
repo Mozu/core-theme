@@ -10,6 +10,7 @@
     // all labels
     .label {
         font-weight: bold;
+        margin-right: 3px;
     }
 
     // lighter, uppercase labels
@@ -73,6 +74,10 @@
 
     .pane-addresses {
         border-right-width: 0px;
+
+        td {
+            padding-right: 8px;
+        }
     }
 
     &> .#{$prefix}panel-body {
