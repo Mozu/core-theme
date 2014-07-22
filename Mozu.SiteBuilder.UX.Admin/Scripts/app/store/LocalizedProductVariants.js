@@ -12,6 +12,9 @@ Ext.define('Taco.store.LocalizedProductVariants', {
                         name: 'variantProductCode',
                         type: 'string'
                     }, {
+                        name: 'variationKey',
+                        type: 'string'
+                    }, {
                         name: 'parentProductCode',
                         type: 'string'
                     }, {

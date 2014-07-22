@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.FSharp.Text.StructuredFormat;
+using MongoDB.Driver.Linq;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -218,11 +219,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<JObject>> UpsertLocalizedProductVariants(JObject jObject)
         {
             var variantPrice = jObject.ToObject<LocalizedProductVariantPrice>();
-            var localizedPrices = (from supportedCurrency in variantPrice.SupportedCurrencies
+            var localizedDeltaPrices = (from supportedCurrency in variantPrice.SupportedCurrencies
                                     let localizedPrice = (decimal?)jObject["price_" + supportedCurrency]
                                     let localizedMsrp = (decimal?)jObject["msrp_" + supportedCurrency]
                                     let localizedCredit = (decimal?)jObject["credit_" + supportedCurrency]
-                                    //where localizedPrice != null
+                                    where ((localizedPrice != null && localizedPrice.HasValue) 
+                                        || (localizedMsrp != null && localizedMsrp.HasValue) 
+                                        || (localizedCredit != null && localizedCredit.HasValue))
                                     select new DC.ProductVariationDeltaPrice
                                     {
                                         CurrencyCode = supportedCurrency,
@@ -231,8 +234,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         CreditValue = localizedCredit
                                     }).ToList();
 
-            var updatedResults = (await _productWebApiClient.UpdateProductVariationLocalizedDeltaPrices(localizedPrices, productCode:variantPrice.ParentProductCode, 
-                variationKey:variantPrice.VariantProductCode, targetContextLevel: TargetContextLevel)).ReadAsSync();
+            var updatedResults = (await _productWebApiClient.UpdateProductVariationLocalizedDeltaPrices(localizedDeltaPrices, productCode:variantPrice.ParentProductCode, 
+                variationKey:variantPrice.VariationKey, targetContextLevel: TargetContextLevel)).ReadAsSync();
+
             var jResult = ReportLocalizedConverterHelper.AddLocalizedPrices(variantPrice, updatedResults);
             return Single2(jResult);
         }
