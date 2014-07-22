@@ -733,6 +733,7 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
     <Content Include="Scripts\app\core\ux\mixins\LaunchEditor.js" />
     <Content Include="Scripts\app\core\ux\mixins\Permissions.js" />
@@ -756,6 +757,7 @@
     <Content Include="Scripts\app\model\CustomerSegment.js" />
     <Content Include="Scripts\app\model\EntityEditor.js" />
     <Content Include="Scripts\app\model\Entity.js" />
+    <Content Include="Scripts\app\model\ReturnableItem.js" />
     <Content Include="Scripts\app\model\ProductHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\OrderHandlingFeeRule.js" />
     <Content Include="Scripts\app\model\LocationPickup.js" />
@@ -1442,6 +1444,8 @@
     <Content Include="Api\cms\tenant-documentlists.json" />
     <Content Include="Api\cms\entityeditors.json" />
     <Content Include="Scripts\sass\src\view\order\Header.scss" />
+    <Content Include="Scripts\sass\src\core\ux\PanelHeaderStat.scss" />
+    <Content Include="Scripts\sass\src\view\order\widget\ReturnableItemGrid.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

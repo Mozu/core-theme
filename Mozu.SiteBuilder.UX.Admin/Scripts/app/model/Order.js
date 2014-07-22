@@ -11,6 +11,16 @@ Ext.define('Taco.model.Order', {
         "Ext.data.association.HasOne"
     ],
     
+    statics: {
+        constants: {
+            packageStatuses: {
+                FULFILLED: "Fulfilled",
+                NOT_FULFILLED: "NotFulfilled",
+                PARTIALLY_FULFILLED: "PartiallyFulfilled"
+            }
+        }
+    },
+
     extend: 'Taco.core.data.Model',
     /**********************************************************    
     *   
@@ -1275,7 +1285,7 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
-
+    
 
 
     prepareShipment: function(config) {

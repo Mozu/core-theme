@@ -38,8 +38,36 @@
         margin: 10px 0px;
         padding: 0px 19px;
 
-        div {
-            line-height: 15px;
+        table {
+            border-collapse: collapse;
+        }
+
+        .label-light {
+            padding-bottom: 3px;
+        }
+
+        .order-number, .order-status, .order-addresses {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 26px;
+            margin-bottom: 8px;
+
+            .label {
+                color: $color-neutral-60;
+                font-weight: normal;
+            }
+        }
+
+        .order-status {
+            .label {
+                margin-right: 5px;
+            }
+        }
+
+        .order-addresses {
+            display: inline-block;
+            margin-right: 10px;
+            min-width: 50%;
         }
     }
 
@@ -49,7 +77,7 @@
 
     &> .#{$prefix}panel-body {
         border-width: 0px;
-        font-size: 14px;
-        line-height: 1;
+        font-size: 13px;
+        line-height: 1.25;
     }
 }

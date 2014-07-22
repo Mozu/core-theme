@@ -17,3 +17,11 @@
 .#{$prefix}tool-gear {
     @include icon-font($glyph-gear);
 }
+
+.#{$prefix}tool-collapse-top {
+    @include icon-font($glyph-arrowdown);
+}
+
+.#{$prefix}tool-expand-bottom {
+    @include icon-font($glyph-arrowright);
+}

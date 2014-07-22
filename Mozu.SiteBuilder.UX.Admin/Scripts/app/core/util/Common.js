@@ -64,5 +64,15 @@ Ext.define('Taco.core.util.Common', {
             }
         }
         return l;
-    }
+    },
+    camelToSpace: (function(re, cache, decamelLower, decamelUpper) {
+        return function(s, lower) {
+            return cache[s] || (cache[s] = s.replace(re, lower ? decamelLower : decamelUpper))
+        };
+    })(/([a-z])([A-Z])/g, {}, function decamelLower(match, p1, p2) {
+        return p1 + ' ' + p2.toLowerCase();
+    },
+    function decamelUpper(match, p1, p2) {
+        return p1 + ' ' + p2;
+    })
 });

@@ -4,6 +4,7 @@
 
 Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     extend: 'Ext.grid.Panel',
+    requires: ['Taco.model.Return'],
 
     title: 'Returnable Items',
 
@@ -22,7 +23,11 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         sortable: false,
         resizable: false,
         menuDisabled: true,
-        flex: 1
+        flex: 1,
+        renderer: function(val, md, record) {
+            var parentBundleName = record.get('parentBundleName');
+            return parentBundleName ? val + " <em class=\"taco-bundleditem-note\">(Bundled with <strong>" + parentBundleName + "</strong>)</em>" : val;
+        }
     }, {
         dataIndex: 'returnType',
         text: 'Type',
@@ -39,7 +44,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             store: ['Replace', 'Refund']
         }
     }, {
-        dataIndex: 'returnReason',
+        dataIndex: 'reason',
         text: 'Reason',
         draggable: false,
         sortable: false,
@@ -51,18 +56,18 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             allowOnlyWhitespace: false,
             editable: false,
             forceSelection: true,
-            store: ['Damaged', 'Defective', 'Missing Parts', 'Different Expectations', 'Late', 'No Longer Wanted', 'Other']
+            store: Taco.model.Return.getValidReasons()
         }
     }, {
+    //    dataIndex: 'quantity',
+    //    text: 'Qty Fulfilled',
+    //    draggable: false,
+    //    sortable: false,
+    //    resizable: false,
+    //    menuDisabled: true,
+    //    width:150
+    //}, {
         dataIndex: 'quantity',
-        text: 'Qty Fulfilled',
-        draggable: false,
-        sortable: false,
-        resizable: false,
-        menuDisabled: true,
-        width:150
-    }, {
-        dataIndex: 'returnQuantity',
         text: 'Qty to Return',
         draggable: false,
         sortable: false,
@@ -80,43 +85,84 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         }
     }],
 
+    viewConfig: {
+        getRowClass: function(record) {
+            return record.get('parentBundleName') && "taco-returnableitem-bundled" || '';
+        }
+    },
+
     plugins: [],
 
     config: {
         order: null,
         record: null
     },
-    
-    initComponent: function () {
-        var orderItems = this.order.get('items') || [];
-        var explodedItems;
 
-        explodedItems = Ext.Array.flatten(Ext.Array.map(orderItems, function (orderItem) {
-            if (!orderItem.bundledProducts || orderItem.bundledProducts.length <= 0) {
-                return orderItem;
-            } else {
-                return Ext.Array.map(orderItem.bundledProducts, function (bundledProduct) {
-                    return Ext.apply({}, bundledProduct, {
-                        productName: bundledProduct.name,
-                        parentItemId: orderItem.id,
-                        quantity: bundledProduct.quantity * orderItem.quantity
-                    });
+    getReturnedItemQuantityByProductCode: function() {
+        var returnedItemsByProductCode = {};
+        this.returnsStore.each(function(rtn) {
+            if (rtrn.get('status') !== Taco.model.Return.constants.statuses.CANCELLED) {
+                Ext.Array.each(rtn.get('items'), function(item) {
+                    if (!(item.productCode in returnedItemsByProductCode)) {
+                        returnedItemsByProductCode[item.productCode] = 0;
+                    }
+                    returnedItemsByProductCode[item.productCode] += item.quantity;
                 });
             }
-        }, this));
-
-        this.store = Ext.create('Ext.data.Store', {
-            fields: [
-                { type: 'string', name: 'id' },
-                { type: 'string', name: 'productCode' },
-                { type: 'string', name: 'productName' },
-                { type: 'string', name: 'returnType', defaultValue: 'Refund' },
-                { type: 'string', name: 'returnReason', defaultValue: 'Damaged' },
-                { type: 'number', name: 'quantity' },
-                { type: 'number', name: 'returnQuantity' }
-            ],
-            data: explodedItems
         });
+        return returnedItemsByProductCode;
+    },
+
+    getReturnableItemsStore: function() {
+
+        var returnedItemQuantities = this.getReturnedItemQuantityByProductCode(),
+            allReturned = function(orderItem) {
+                return orderItem.productCode in returnedItemQuantities && returnedItemQuantities[orderItem.productCode] >= orderItem.quantity;
+            }
+
+        var eligibleItems = [],
+            addItem = function(item, orderItemId, parentBundleName) {
+                if (!allReturned(item)) {
+                    eligibleItems.push({
+                        orderItemId: parentBundleName ? null : orderItemId,
+                        productCode: item.productCode,
+                        productName: item.productName || item.name,
+                        quantity: 0,
+                        parentBundleName: parentBundleName,
+                        parentItemId: parentBundleName && orderItemId
+                    });
+                }
+            }
+
+        Ext.Array.each(this.order.get('items'), function(orderItem) {
+            if (orderItem.bundledProducts && orderItem.bundledProducts.length > 0) {
+                Ext.Array.each(orderItem.bundledProducts, function(item) {
+                    addItem(item, orderItem.id, orderItem.productName);
+                });
+            } else {
+                addItem(orderItem, orderItem.id);
+            }
+        });
+
+        return Ext.create('Ext.data.Store', {
+            fields: [
+                { type: 'string',  name: 'productCode' },
+                { type: 'string',  name: 'productName' },
+                { type: 'string',  name: 'parentBundleName' },
+                { type: 'float',   name: 'unitPrice' },
+                { type: 'string',  name: 'returnType', defaultValue: 'Refund' },
+                { type: 'string',  name: 'reason', defaultValue: 'Damaged' },
+                { type: 'number',  name: 'quantity', defaultValue: 0 },
+                { type: 'string', name: 'orderItemId' },
+                { type: 'string', name: 'parentItemId'}
+            ],
+            data: eligibleItems
+        });
+    },
+    
+    initComponent: function () {
+        
+        this.store = this.getReturnableItemsStore();
 
         this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
@@ -133,28 +179,26 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         this.callParent(arguments);
 
         this.on({
-            edit: {
-                scope: this,
-                fn: 'onCreateStateChange'
-            },
+            //edit: {
+            //    scope: this,
+            //    fn: 'onCreateStateChange'
+            //},
             select: {
                 scope: this,
                 fn: 'handleSelect'
             },
-            boxready: {
-                scope: this,
-                fn: function () { this.addCls('return-item return-create'); }
-            }
+          //boxready: {
+          //    scope: this,
+          //    fn: function () { this.addCls('return-item return-create'); }
+          //}
         });
     },
 
     handleSelect: function (selModel, record, index) {
-        console.log('selected', record);
-
-        record.set('returnQuantity', record.get('quantity'));
+        if (!record.get('quantity')) record.set('quantity', 1);
     },
 
-    onCreateStateChange: function () {
-        console.log('hello world');
-    }
+    //onCreateStateChange: function () {
+    //    console.log('hello world');
+    //}
 });

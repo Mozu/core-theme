@@ -17,6 +17,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public int Quantity { get; set; }
 
+        public int QuantityFulfilled { get; set; }
+
         public bool IsPackagedStandAlone { get; set; }
 
         public int? ProductReservationId { get; set; }
@@ -78,6 +80,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal? UnitWeight { get; set; }
 
         public int Quantity { get; set; }
+
+        public int QuantityFulfilled { get; set; }
 
         public OrderItemDiscount ActiveDiscount { get; set; }
 
