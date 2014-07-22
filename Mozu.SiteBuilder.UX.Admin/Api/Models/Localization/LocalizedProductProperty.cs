@@ -12,20 +12,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Localization
         //PK
         public string ProductCode { get; set; }
 
-        public string AttributeFQN { get; set; }
-
         public string ProductName { get; set; }
+
+        public string AttributeFQN { get; set; }
         
         public string AdminName { get; set; }
 
+        public string CanonicalValue { get; set; }
 
         //global 
 
         public string LocaleCode { get; set; }
         
         public string StringValue { get; set; }
-        
-        public string AttributeValue { get; set; }
 
         public List<string> SupportedLocales { get; set; } 
 
