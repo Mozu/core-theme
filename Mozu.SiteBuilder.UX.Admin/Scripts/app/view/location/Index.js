@@ -109,6 +109,11 @@ Ext.define('Taco.view.location.Index', {
       
         selModel: {},
         columns: [{
+            dataIndex: 'code',
+            width: 150,
+            text: 'Code'
+
+        }, {
             dataIndex: 'name',
             width:200,
             text: 'Name'
