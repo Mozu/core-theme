@@ -3,6 +3,7 @@ using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using AutoMapper;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Localization;
@@ -338,6 +339,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         public static JObject AddLocalizedPrices(LocalizedProductVariantPrice variant, List<DC.ProductVariationDeltaPrice> updatedResults)
         {
+            RemoveDefaultCurrency(variant, updatedResults);
+            AddMissingSupportedCurrencies(variant, updatedResults);
+
             variant.SupportedCurrencies = updatedResults.Select(x => x.CurrencyCode).ToList();
             var jResult = JObject.FromObject(variant, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
 
@@ -350,6 +354,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             return jResult;
         }
 
+        private static void AddMissingSupportedCurrencies(LocalizedProductVariantPrice variant, List<DC.ProductVariationDeltaPrice> updatedResults)
+        {
+            var missingCurrencies = variant.SupportedCurrencies
+                .Except(updatedResults.Select(x => x.CurrencyCode))
+                .Select(missingCurrency => new DC.ProductVariationDeltaPrice {CurrencyCode = missingCurrency})
+                .ToList();
+            updatedResults.AddRange(missingCurrencies);
+        }
+
+        private static void RemoveDefaultCurrency(LocalizedProductVariantPrice variant, List<DC.ProductVariationDeltaPrice> updatedResults)
+        {
+            var defaultCurrency = updatedResults.FirstOrDefault(x => variant.CurrencyCode.EqualsIgnoreCase(x.CurrencyCode));
+            if (defaultCurrency != null)
+                updatedResults.Remove(defaultCurrency);
+        }
     }
     
     

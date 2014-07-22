@@ -44,12 +44,12 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                 }
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'parentProductCode',
+                dataIndex: 'parentProductCode', //'variantProductCode',
                 text: 'Parent Product Code' + mcName,
                 flex: 1
             }, {
                 xtype: 'gridcolumn',
-                dataIndex: 'variantProductCode',
+                dataIndex: 'variantProductCode', //'variationKey',
                 text: 'Product Variation Code' + mcName,
                 flex: 1
             }, {

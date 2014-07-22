@@ -12,6 +12,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Localization
         //PK
         public string VariantProductCode { get; set; }
 
+        public string VariationKey { get; set; }
+
         public string ParentProductCode { get; set; }
 
         public string ProductName { get; set; }
