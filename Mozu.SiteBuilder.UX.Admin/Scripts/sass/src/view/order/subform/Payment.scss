@@ -1,1 +1,13 @@
-﻿
+﻿.#{$vprefix}orderform-payment {
+    &> .#{$prefix}panel-header {
+        .#{$prefix}panel-header-text {
+            font-weight: bold;
+        }
+
+        .label {
+            color: rgb(153, 153, 153);
+            font-weight: normal;
+            margin-right: 5px;
+        }
+    }
+}

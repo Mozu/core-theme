@@ -189,9 +189,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
             xtype: 'toolbar',
             dock: 'bottom',
             plain: true,
-            style: 'background-color:#ffffff;padding-bottom:2px;',
+            padding: '10 0 0 0',
             enableOverflow: true,
-            items: ['->']
+            items: ['->'],
+            style: {
+                backgroundColor: 'transparent'
+            }
         };
 
         if (!this.isShippedPackage || true) {
