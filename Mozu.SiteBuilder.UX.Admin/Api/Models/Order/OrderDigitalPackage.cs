@@ -8,6 +8,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     {
         public string Id { get; set; }
         public string OrderId { get; set; }
+        public string Code { get; set; }
 
         public DateTime CreateDate { get; set; }
         public string FulfillmentEmailAddress { get; set; }

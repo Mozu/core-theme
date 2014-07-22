@@ -55,6 +55,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }).ToList();
             await Task.WhenAll(createTasks);
 
+            if (createTasks.Any(t => t.Result.HasException))
+            {
+                throw createTasks.First(t => t.Result.HasException).Result.ReadException();
+            }
+
             return List2( createTasks.Select(t => t.Result.ReadAsSync()).Map<List<OrderPickup>>() );
         }
 

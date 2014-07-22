@@ -132,32 +132,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Total quantity of things ordered.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsOrdered { get; set; }
 
         /// <summary>
         /// Total quantity of things unshipped.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsNotShipped { get; set; }
 
         /// <summary>
         /// Total quantity of things shipped.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsShipped { get; set; }
 
         /// <summary>
         /// Total quantity of things unpicked.
         /// </summary>
-        [JsonProperty(PropertyName = "itemsNotPickedup", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsNotPickedup { get; set; }
 
         /// <summary>
         /// Total quantity of things picked.
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ItemsPickedup { get; set; }
+
+        /// <summary>
+        /// Total quantity of things emailed.
+        /// </summary>
+        public int ItemsNotDigitallyFulfilled { get; set; }
+
+        /// <summary>
+        /// Total quantity of things not emailed.
+        /// </summary>
+        public int ItemsDigitallyFulfilled { get; set; }
 
         /// <summary>
         /// An optional order-level adjustment.

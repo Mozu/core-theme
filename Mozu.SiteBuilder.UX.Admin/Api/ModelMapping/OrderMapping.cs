@@ -338,13 +338,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.ItemsOrdered = order.Items.Sum(i => i.Quantity);
                     order.ItemsNotShipped = order.UnpackagedItems.Sum(i => i.Quantity);
                     order.ItemsNotPickedup = order.UnpickedupItems.Sum(i => i.Quantity);
-                    order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 
-                        ? 0 
-                        : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
-                    order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 
-                        ? 0 
-                        : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
-
+                    order.ItemsNotDigitallyFulfilled = order.UndeliveredDigitalItems.Sum(i => i.Quantity);
+                    order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 ? 0 : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsDigitallyFulfilled = order.DigitalPackages != null || order.DigitalPackages.Count == 0 ? 0 : order.DigitalPackages.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    
 
                     //List<BundledProduct> bundledProducts = order.Items.SelectMany(x => x.BundledProducts).ToList();
 
@@ -721,6 +719,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<ShippingDC.DigitalPackage, OrderDigitalPackage>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.Code))
                 .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
 
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))                
