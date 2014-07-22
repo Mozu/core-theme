@@ -147,8 +147,8 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         // need to 
         var supportedLocales = this.getSupportedLocales(),
               quickFilters = [
-                              [{ hasRecord: false }, 'Missing Translation'],
-                              [{ hasRecord: true }, 'Has Translation'],
+                              [{ exists: false }, 'Missing Translation'],
+                              [{ exists: true }, 'Has Translation'],
                               [{}, 'All Records']
               ];
 
@@ -163,8 +163,8 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
         // need to 
         var supportedCurrencies = this.getSupportedCurrencies(),
             quickFilters = [
-                            [{ hasRecord: false }, 'Missing Currency'],
-                            [{ hasRecord: true }, 'Has Currency'],
+                            [{ exists: false }, 'Missing Currency'],
+                            [{ exists: true }, 'Has Currency'],
                             [{}, 'All Records']
             ];
 

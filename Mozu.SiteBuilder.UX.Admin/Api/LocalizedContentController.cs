@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var attr = jObject.ToObject<LocalizedAttribute>();
             var localizedContent = (from supportedLocale in attr.SupportedLocales
                                     let localizedName = (string)jObject["name_" + supportedLocale]
-                                    where localizedName != null
+                                    where ! string.IsNullOrEmpty(localizedName)
                                     select new DC.AttributeLocalizedContent
                                     {
                                         LocaleCode = supportedLocale,
@@ -89,7 +89,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                     }).ToList();
 
             var updatedResults = (await _attributeWebApiClient.UpdateLocalizedContents(localizedContent, attr.AttributeFQN, responseFields:null, targetContextLevel: TargetContextLevelType.MasterCatalog)).ReadAsSync();
-            var jResult = ReportAttributeConverterHelper.AddLocalizedNames(attr, updatedResults);
+            var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("name_", attr, updatedResults, (property, locales) => property.SupportedLocales = locales,
+                rptContent => rptContent.LocaleCode, rptContent => rptContent.Name, attr.LocaleCode, attr.SupportedLocales);
             return Single2(jResult);
         }
 
