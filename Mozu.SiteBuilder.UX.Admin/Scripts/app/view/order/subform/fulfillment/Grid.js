@@ -8,6 +8,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
     config: {
         plugins: [],
         unfulfilledFieldName: null,
+        moveToNewText: 'New Package'
     },
 
     packageData: null,
@@ -202,7 +203,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
 
     buildMoveMenu: function() {
 
-        this.moveMenuAction = Ext.create('Ext.button.Split', {
+        this.moveMenuAction = Ext.create('Ext.button.Button', {
             ui: 'action',
             scale: 'medium',
             margin: '0 2 0 0',
@@ -240,7 +241,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
         unfulfilledPackages = this.record.get(this.getUnfulfilledFieldName());
 
         ret.push({
-            text: 'New Package',
+            text: this.getMoveToNewText(),
             newPackage: true
         });
 
@@ -248,7 +249,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
             if (this.packageData && unfulfilledPackage.id === this.packageData.id) return;
 
             ret.push({
-                text: 'Package ' + unfulfilledPackage.code,
+                text: unfulfilledPackage.code,
                 packageData: unfulfilledPackage
             });
         }, this);

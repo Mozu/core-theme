@@ -101,19 +101,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             }, {
                 xtype: 'component',
                 html: this.title
-            }, {
-                xtype: 'component',
-                flex: 1,
-                tpl: [
-                    '{date} | Tracking Number {trackingNumber} | {itemCount} ',
-                    'item<tpl if="itemCount !== 1">s</tpl>'
-                ],
-                data: {
-                    date: Ext.Date.format(new Date(this.packageData.shipDate), 'm/d/Y h:i:s a'),
-                    trackingNumber: this.packageData.trackingNumber,
-                    itemCount: this.packageData.totalQuantity
-                }
             }]);
+
+            if (this.collapsedInfo) this.closedContainer.add(this.collapsedInfo);
 
             if (this.collapsedActions) this.closedContainer.add(this.collapsedActions);
         }

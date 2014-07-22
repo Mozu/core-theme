@@ -18,7 +18,8 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
         this.grid = Ext.create('Taco.view.order.subform.fulfillment.Grid', {
             record: this.record,
             packageData: this.packageData,
-            unfulfilledFieldName: 'pendingPickups'
+            unfulfilledFieldName: 'pendingPickups',
+            moveToNewText: 'New Pickup'
         });
 
         if (!this.packageData.contact) {

@@ -70,7 +70,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
 
         this.pendingGrid = Ext.create('Taco.view.order.subform.fulfillment.Grid', {
             record: this.record,
-            data: this.record.get('unpackagedItems'),
+            data: items,
             unfulfilledFieldName: 'unShippedPackages'
         });
 
