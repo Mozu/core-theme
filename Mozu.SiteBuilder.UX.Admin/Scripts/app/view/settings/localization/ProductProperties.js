@@ -52,7 +52,7 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
                     flex: 1
                 }
             ];
-        supportedLocales = this.getSupportedLocales();
+        supportedLocales = Taco.view.settings.localization.util.Locales.getSupported();
 
         Ext.Array.each(supportedLocales, function (locale) {
             var col = {
