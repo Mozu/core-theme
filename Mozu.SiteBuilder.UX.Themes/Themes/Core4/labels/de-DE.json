@@ -14,7 +14,7 @@
     "save"   : "Sparen",
     "add"   : "Hinzufügen",
     "allRightsReserved"   : "Alle Rechte vorbehalten.",
-    "poweredBy"   : "Präsentiert von Mozu Einkaufswagen",
+    "poweredBy"   : "Präsentiert von Mozu",
     "product"   : "Produkt",
     "item"   : "Artikel",
     "price"   : "Preis",
@@ -354,7 +354,5 @@
     "notifyWidgetSuccess"   : "Sie werden benachrichtigt, sobald der Artikel wieder auf Lager ist.",
     "notifyWidgetError"   : "Es gab einen Fehler oder Forums. Bitte versuchen Sie es erneut.",
 
-	"dealOfTheDay"		 : "Angebot des Tages",
-
-	"poweredBy"  : "Angetrieben durch Mozu"
+	"dealOfTheDay"		 : "Angebot des Tages"
 }

@@ -13,7 +13,7 @@
   "save"                 : "Save",
   "add"                  : "Add",
   "allRightsReserved"    : "All rights reserved.",
-  "poweredBy"            : "Powered by Mozu Shopping Cart",
+  "poweredBy"            : "Powered by Mozu",
   "product"              : "Product",
   "item"                 : "Item",
   "price"                : "Price",
@@ -378,7 +378,5 @@
   "notifyWidgetSuccess"  : "You will be notified when this product is back in stock.",
   "notifyWidgetError"    : "There was an error subscribing. Please try again.",
 
-  "dealOfTheDay"		 : "Deal of the Day",
-
-  "poweredBy"			 : "Powered by Mozu"
+  "dealOfTheDay"		 : "Deal of the Day"
 }
