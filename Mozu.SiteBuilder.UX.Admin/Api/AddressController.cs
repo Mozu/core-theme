@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             _accountContactRepository = accountContactRepository;
 
-            _tenantsWebApiClient = tenantsWebApiClient;
+            _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
             _addressValidationWebApiClient = addressValidationWebApiClient.CloneWithApiContext(ctx => { ctx.MasterCatalogId = null; ctx.SiteId = null; }).CloneWithoutUserClaims();
         }
 
