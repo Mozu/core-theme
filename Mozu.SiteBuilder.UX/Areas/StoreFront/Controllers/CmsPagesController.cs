@@ -121,9 +121,47 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                          {
                                                              Path = template
                                                          }
+                                   
                                           };
 
-            this.PageContext.PageType = "documentList";
+         
+            await Task.WhenAll(this.ContextInitilaztionTasks);
+            if (this.PageContext.CmsContext.Page.Document != null)
+            {
+                PageTypeDefinition pageDefinition = null;
+                var pageTypeDefinitionKey = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");
+                if (!string.IsNullOrEmpty(pageTypeDefinitionKey))
+                {
+                    pageDefinition = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
+
+
+                }
+
+                //if (pageDefinition == null)
+                //{
+                //    pageDefinition = this.SiteContext.Theme.PageTypes.Where(x =>
+                //        !string.IsNullOrEmpty(x.Template)
+                //        &&
+                //        (!string.IsNullOrEmpty(x.DocumentTypeFQN) || !string.IsNullOrEmpty(x.ListFQN))
+                //        &&
+                //        (string.IsNullOrEmpty(x.DocumentTypeFQN) || string.Equals(x.DocumentTypeFQN, vm.DocumentTypeFQN, StringComparison.OrdinalIgnoreCase))
+                //        &&
+                //        (string.IsNullOrEmpty(x.ListFQN) || string.Equals(x.ListFQN, vm.ListFQN, StringComparison.OrdinalIgnoreCase))
+                //        ).OrderByDescending(
+                //            x =>
+                //            {
+                //                return ((string.IsNullOrEmpty(x.DocumentTypeFQN) ? 0 : 1)) + ((string.IsNullOrEmpty(x.ListFQN) ? 0 : 2));
+                //            }
+                //        ).ToList().FirstOrDefault();
+                //    ;
+                //}
+                template = pageDefinition != null ? pageDefinition.Template : template;
+
+            }
+
+
+
+            this.PageContext.PageType = template;
             this.PageContext.ListName = list;
             this.PageContext.ListViewName = listView;
 

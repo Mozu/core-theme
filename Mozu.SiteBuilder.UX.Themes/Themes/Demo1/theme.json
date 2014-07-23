@@ -26,5 +26,14 @@
         "title": "About Us",
         "userCreatable": true,
         "documentListName": "pokemon@gcta"
-    }]
+    },
+       {
+        "documentType": "web_page@mozu",
+        "entityType": "webpage",
+        "id": "pokemon-index",
+        "template": "pokemon-index",
+        "title": "Pokenmon Index",
+        "userCreatable": true
+    },
+    ]
 }

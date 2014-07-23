@@ -129,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     Path = "widgettest",
                     ListFQN = "pages@mozu",
-                    DocumentTypeFQN = "web_page"
+                    DocumentTypeFQN = "web_page@mozu"
                 }
 
             };
