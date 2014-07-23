@@ -60,7 +60,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         var me = this,
             record = this.get();
 
-        if (me.fireEvent('destroy', record) != false) {
+        if (me.fireEvent('destroy', record) !== false) {
             if (record) {
                 record.destroy({
                     callback: function () {

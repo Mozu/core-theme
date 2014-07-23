@@ -161,7 +161,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            this.PageContext.PageType = template;
+            this.PageContext.PageType = "documentList";
             this.PageContext.ListName = list;
             this.PageContext.ListViewName = listView;
 
