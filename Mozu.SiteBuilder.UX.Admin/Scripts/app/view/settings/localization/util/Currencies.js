@@ -28,14 +28,14 @@ Ext.define('Taco.view.settings.localization.util.Currencies', {
         // need to 
         var supportedCurrencies = Taco.view.settings.localization.util.Currencies.getSupported(),
             quickFilters = [
-                            [{ hasRecord: false }, 'Missing Currency'],
-                            [{ hasRecord: true }, 'Has Currency'],
-                            [{}, 'All Records']
+                            [{}, 'All Records'],
+                            [{ currencyExists: true }, 'Missing Currency'],
+                            [{ currencyNotExists: true }, 'Has Currency']
             ];
 
         Ext.Array.each(supportedCurrencies, function (cur) {
-            quickFilters.push([{ localeNotExists: cur }, 'Missing ' + cur]);
-            quickFilters.push([{ localeExists: cur }, 'Has ' + cur]);
+            quickFilters.push([{ currencyNotExists: cur }, 'Missing ' + cur]);
+            quickFilters.push([{ currencyExists: cur }, 'Has ' + cur]);
         });
         return quickFilters;
     },

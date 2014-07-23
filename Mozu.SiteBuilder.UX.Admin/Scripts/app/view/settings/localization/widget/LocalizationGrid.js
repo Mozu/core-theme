@@ -106,74 +106,7 @@ Ext.define('Taco.view.settings.localization.widget.LocalizationGrid', {
             data.records[0].set('index', 1);
         }, this);
     },
-
-    getSupportedCurrencies: function() {
-        var ctx = Taco.app.context.getCurrentContext(),
-            ctxType = (!ctx) ? '' : ctx.contextType,
-            mc = Taco.app.context.getMasterCatalog(),
-            excludeDefaultCurrency = true,
-            supportedCurrencies = [];
-        if (ctxType === 'm' && mc) {
-            supportedCurrencies = mc.getSupportedCurrencies(excludeDefaultCurrency);
-        }
-        else if (ctxType === 'c') {
-            var cat = Taco.app.context.getCatalog();
-            if (cat) {
-                supportedCurrencies.push(cat.currencyCode);
-            }
-        }
-        return supportedCurrencies;
-    },
-
-    getSupportedLocales: function () {
-        var ctx = Taco.app.context.getCurrentContext(),
-            ctxType = (!ctx) ? '' : ctx.contextType,
-            mc = Taco.app.context.getMasterCatalog(),
-            excludeDefaultLocale = true,
-            supportedLocales = [];
-        if (ctxType === 'm' && mc) {
-            supportedLocales = mc.getSupportedLocales(excludeDefaultLocale);
-        }
-        else if (ctxType === 'c') {
-            var cat = Taco.app.context.getCatalog();
-            if (cat) {
-                supportedLocales.push(cat.localeCode);
-            }
-        }
-        return supportedLocales;
-    },
-
-    getQuickFilterLocaleData: function () {
-        // need to 
-        var supportedLocales = this.getSupportedLocales(),
-              quickFilters = [
-                              [{ exists: false }, 'Missing Translation'],
-                              [{ exists: true }, 'Has Translation'],
-                              [{}, 'All Records']
-              ];
-
-        Ext.Array.each(supportedLocales, function (loc) {
-            quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
-            quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
-        });
-        return quickFilters;
-    },
-
-    getQuickFilterCurrencyData: function () {
-        // need to 
-        var supportedCurrencies = this.getSupportedCurrencies(),
-            quickFilters = [
-                            [{ exists: false }, 'Missing Currency'],
-                            [{ exists: true }, 'Has Currency'],
-                            [{}, 'All Records']
-            ];
-
-        Ext.Array.each(supportedCurrencies, function (cur) {
-            quickFilters.push([{ localeNotExists: cur }, 'Missing ' + cur]);
-            quickFilters.push([{ localeExists: cur }, 'Has ' + cur]);
-        });
-        return quickFilters;
-    },
+    
 
     onRowEditorUpdate: function () {
         this.callParent(arguments);
