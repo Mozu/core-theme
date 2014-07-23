@@ -622,6 +622,8 @@
     <Content Include="Themes\Core4\templates\pages\blank-page.hypr" />
     <Content Include="Themes\Core4\theme-ui.json" />
     <Content Include="Themes\Core4\thumb.tpt.png" />
+    <Content Include="Themes\Demo1\admin\editors\pokemon.js" />
+    <Content Include="Themes\Demo1\thumb.tpt.png" />
     <Content Include="ThemeTemplates\ExtendsCore4\labels\README.txt" />
     <Content Include="ThemeTemplates\ExtendsCore4\README.txt" />
     <Content Include="ThemeTemplates\ExtendsCore4\scripts\README.txt" />
@@ -830,6 +832,7 @@
     <Folder Include="SampleThemes\helloWorld\Modules\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Scripts\Pages\" />
+    <Folder Include="Themes\Demo1\templates\modeles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1008,6 +1011,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\Widgets\cms\snippet-render.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Demo1\theme.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Demo1\theme-ui.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Demo1\templates\pages\pokemon.hypr" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

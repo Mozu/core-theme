@@ -1,0 +1,44 @@
+﻿{% extends "page" %}
+
+{% block body-tag-classes %} mz-aboutus {% endblock body-tag-classes %}
+
+
+ {% block body-content %}
+ <h1>{{model.name}}</h1>
+
+
+
+
+	 <table>
+		<tr>
+			<td>
+				<img src="{{model.properties.imageUrl}}">
+			</td>
+			<td>
+					 <div>{{model.properties.description|safe}}<div>
+			<td>
+		</tr>
+		<tr>
+			<td>
+				<H3>Type</h3>
+			
+				<ul>
+				{%for item  in model.properties.types%}
+				
+					<li>s{{item}}</li>
+				{%endfor%}
+				</ul>
+				
+				
+			</td>
+			<td>
+				<H3>Category</h3>
+				<H3>{{model.properties.category}}</h3>
+
+			<td>
+		</tr>
+			
+	 </table>
+	
+	{% dropzone "body" scope="page" %}
+{% endblock body-content %}

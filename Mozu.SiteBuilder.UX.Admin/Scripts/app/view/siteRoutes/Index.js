@@ -4,7 +4,8 @@
 Ext.define('Taco.view.siteRoutes.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     requires: [
-        'Taco.model.SiteRouteEntry'
+        'Taco.model.SiteRouteEntry',
+        'Taco.store.EntityLists'
     ],
     typeName: 'Site Routes',
     gridHeaderLabel: 'Site Routes',

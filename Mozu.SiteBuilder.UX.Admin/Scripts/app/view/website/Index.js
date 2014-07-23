@@ -50,7 +50,7 @@ Ext.define('Taco.view.website.Index', {
         product: 'Taco.view.website.entityAdapters.ProductEntityAdapter',
         link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter',
         email: 'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
-        documentCollection: 'Taco.view.website.entityAdapters.DocumentCollectionEntityAdapter'
+        documentList: 'Taco.view.website.entityAdapters.DocumentListEntityAdapter'
     },
     enableNavHeader: true,
     options: {},
