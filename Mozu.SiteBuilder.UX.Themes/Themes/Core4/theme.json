@@ -247,12 +247,7 @@
         "template": "login",
         "title": "Login",
         "userCreatable": false
-    }, {
-           "documentType": "post",
-            "entityType": "web-page",
-            "template": "post",
-			"id": "post"
-        }],
+    }],
     "settings": {
         "allowWishlist": false,
         "autocompleteProducts": true,
