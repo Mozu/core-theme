@@ -25,7 +25,6 @@ Ext.define('Taco.view.settings.localization.util.Locales', {
     },
 
     getQuickFilterData: function () {
-        // need to 
         var supportedLocales = Taco.view.settings.localization.util.Locales.getSupported(),
               quickFilters = [
                               [{}, 'All Records'],
@@ -37,23 +36,6 @@ Ext.define('Taco.view.settings.localization.util.Locales', {
             quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
             quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
         });
-        return quickFilters;
-    },
-
-    getAdvancedSearchFilterData: function () {
-        // need to 
-        var supportedLocales = Taco.view.settings.localization.util.Locales.getSupported(),
-              quickFilters = [{ id: { exists: false }, name: 'Missing Translation' },
-                  { id: { exists: true }, name: 'Has Translation' }
-                              //[{ hasRecord: false }, 'Missing Translation'],
-                              //[{ hasRecord: true }, 'Has Translation'],
-                              //[{}, 'All Records']
-              ];
-
-        //Ext.Array.each(supportedLocales, function (loc) {
-        //    quickFilters.push([{ localeNotExists: loc }, 'Missing ' + loc]);
-        //    quickFilters.push([{ localeExists: loc }, 'Has ' + loc]);
-        //});
         return quickFilters;
     },
 
