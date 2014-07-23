@@ -37,6 +37,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
             }
             
             me.editor = ace.edit(editEl.dom);
+            me.editor.setValue(me.getValue() || null);
             window.code = me;
             window.editor = me.editor;
             me.editor.setTheme("ace/theme/textmate");
