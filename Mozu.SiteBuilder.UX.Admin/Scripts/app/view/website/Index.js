@@ -566,18 +566,8 @@ Ext.define('Taco.view.website.Index', {
 
     },
     onCardPanelItemActivate: function (cmp) {
-        cmp.fireEvent('activecardchanged', this, cmp);
-        //var toolbars = this.header.query('toolbar'),
-        //    toolbarType = cmp.toolbarType;
-        //if (toolbarType) {
-        //    Ext.Array.each(toolbars, function (tb) {
-        //        if (tb.toolbarTypes.indexOf(toolbarType)>-1) {
-        //            tb.show();
-        //        } else {
-        //            tb.hide();
-        //        }
-        //    });
-        //}
+        this.fireEvent('activecardchanged', this, cmp);
+        
     },
     getCardPanel: function () {
         return this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
