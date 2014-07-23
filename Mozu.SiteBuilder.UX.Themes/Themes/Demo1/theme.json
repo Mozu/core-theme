@@ -15,8 +15,8 @@
             "pokemon@gcta"
         ],
 
-        "priority": 0.2
-    }],
+        "priority": 5
+    }], 
     "pageTypes": [{
         "documentType": "web_page@mozu",
         "entityType": "webpage",
@@ -27,7 +27,7 @@
         "userCreatable": true,
         "documentListName": "pokemon@gcta"
     },
-       {
+       { 
         "documentType": "web_page@mozu",
         "entityType": "webpage",
         "id": "pokemon-index",
