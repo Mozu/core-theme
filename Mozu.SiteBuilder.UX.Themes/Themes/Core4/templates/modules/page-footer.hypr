@@ -5,7 +5,7 @@
             &copy; {% now "Y" %} {{ siteContext.generalSettings.websiteName }}. {{ labels.allRightsReserved }}
         </span> 
         <span class="mz-pagefooter-poweredby">
-             Powered by Mozu
+             {{ labels.poweredBy }}
         </span>
     </div>
 </footer>
