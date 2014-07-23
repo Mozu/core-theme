@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public WishlistController(IWishlistWebApiClient wishlistWebApiClient, ITenantsWebApiClient tenantsWebApiClient, IApiContext apiContext)
         {
             _wishlistWebApiClient = wishlistWebApiClient;
-            _tenantsWebApiClient = tenantsWebApiClient;
+            _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
             _apiContext = apiContext;
         }
 

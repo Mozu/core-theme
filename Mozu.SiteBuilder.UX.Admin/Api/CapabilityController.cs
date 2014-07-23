@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public CapabilityController(IApplicationsWebApiClient applicationsWebApiClient, ITenantsWebApiClient tenantsWebApiClient, ISecureCapabilityConfigUrlHelper secureConfigUrlHelper, IApiContext apiContext)
         {
             _applicationsWebApiClient = applicationsWebApiClient;
-            _tenantsWebApiClient = tenantsWebApiClient;
+            _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
             _secureConfigUrlHelper = secureConfigUrlHelper;
             _apiContext = apiContext;
         }
