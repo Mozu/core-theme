@@ -950,8 +950,6 @@
     <Content Include="Scripts\app\view\report\Header.js" />
     <Content Include="Scripts\app\view\report\Index.js" />
     <Content Include="Scripts\app\view\report\SidebarList.js" />
-    <Content Include="Scripts\app\view\settings\localization\AdvancedSearchCurrencyForm.js" />
-    <Content Include="Scripts\app\view\settings\localization\AdvancedSearchLocaleForm.js" />
     <Content Include="Scripts\app\view\settings\localization\modal\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductVariants.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductProperties.js" />

@@ -2,7 +2,7 @@
  * @class Taco.view.settings.localization.ProductProperties
 */
 Ext.define('Taco.view.settings.localization.ProductProperties', {
-    requires: ['Taco.store.LocalizedProductProperties', 'Taco.view.settings.localization.AdvancedSearchLocaleForm'],
+    requires: ['Taco.store.LocalizedProductProperties', 'Taco.view.settings.localization.util.Locales'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias: 'widget.localizedproductpropertiesgrid',
 
@@ -77,11 +77,7 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
     },
 
     getAdvancedSearchConfig: function () {
-        return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchLocaleForm',
-
-            quickFilterData: this.getQuickFilterLocaleData()
-        };
+        return Taco.view.settings.localization.util.Locales.getAdvancedSearchConfig();
     }
 
 });

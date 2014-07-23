@@ -150,7 +150,9 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
                     enableQuickFilters : this.enableQuickFilters,
                     quickFilterData: me.advancedSearchConfig.quickFilterData,
                     advancedForm: me.advancedSearchConfig.form,
-                    advancedFormCls: me.advancedSearchConfig.advancedFormCls,                    
+                    advancedFormCls: me.advancedSearchConfig.advancedFormCls,
+                    disableAdvancedSearch: (!me.advancedSearchConfig.disableAdvancedSearch) ? false : true,
+                    emptySearchText: (!me.advancedSearchConfig.emptySearchText) ? '' : me.advancedSearchConfig.emptySearchText,
                     store: me.store,
                     filterStores: me.advancedSearchConfig.stores,
                     value: this.options && this.options.query ? this.options.query : undefined

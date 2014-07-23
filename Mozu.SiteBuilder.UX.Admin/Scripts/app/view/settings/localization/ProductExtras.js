@@ -2,7 +2,8 @@
  * @class Taco.view.settings.localization.ProductExtras
 */
 Ext.define('Taco.view.settings.localization.ProductExtras', {
-    requires: ['Taco.store.LocalizedProductExtras', 'Taco.view.settings.localization.AdvancedSearchCurrencyForm', 'Taco.core.ux.form.CurrencyField'],
+    requires: ['Taco.store.LocalizedProductExtras', 'Taco.view.settings.localization.util.Currencies',
+        'Taco.core.ux.form.CurrencyField'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias: 'widget.localizedproductextrasgrid',
 
@@ -100,11 +101,7 @@ Ext.define('Taco.view.settings.localization.ProductExtras', {
     },
 
     getAdvancedSearchConfig: function () {
-        return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchCurrencyForm',
-
-            quickFilterData: this.getQuickFilterCurrencyData()
-        };
+        return Taco.view.settings.localization.util.Currencies.getAdvancedSearchConfig();
     }
 
 });
