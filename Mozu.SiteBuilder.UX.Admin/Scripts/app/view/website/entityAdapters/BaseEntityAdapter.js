@@ -17,7 +17,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         this.callParent(arguments);
         this.manager.entitypeTypeHandler = this;
         this.load();
-        this.initPublishableState();
+    
         this.mon(this.manager, 'activecardchanged', this.onManagerActiveItemChange, this);
     },
 
@@ -70,6 +70,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             }
         }
     },
+    
     getId: function () {
         if (this.record) {
             return this.record.getLoadParams();
@@ -112,7 +113,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 tasks.on('complete', function (endTasks) {
                     if (Ext.isEmpty(endTasks.errors)) {
                         this.editor.resetDirtyState();
-                        this.manager.setPublishable(true);
+                       // this.manager.setPublishable(true);
                     }
 
                 }, this);
@@ -151,17 +152,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         return tasks;
     },
 
-    initPublishableState: function () {
-        if (!this.pageContext || !this.pageContext.cmsContext) {
-            return;
-        }
-        Ext.Object.each(this.pageContext.cmsContext, function (key, value, myself) {
-            if (value && value.publishState == 'draft') {
-                this.manager.setPublishable(true);
-            }
-        }, this);
-
-    },
+  
 
     publish: function () {
         if (!this.pageContext || !this.pageContext.cmsContext) {
@@ -237,7 +228,30 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         if (add) {
             this.getStore().add(this.record);
         }
+        this.setPubState();
+        if (this.record) {
+            this.mon(this.record, 'aftercommit', this.setPubState, this);
+        }
         this.fireEvent('load', record);
+    },
+
+    setPubState: function () {
+        if (this.record && this.record.get('publishState') == 'draft') {
+            this.manager.showHideButtons(['isPublishable'], true);
+            this.manager.setPublishable(true);
+        }
+
+        if (!this.pageContext || !this.pageContext.cmsContext) {
+            return;
+        }
+        Ext.Object.each(this.pageContext.cmsContext, function (key, value, myself) {
+            if (value && value.publishState == 'draft') {
+                this.manager.setPublishable(true);
+            }
+        }, this);
+
+
+
     },
 
     addSaveTasks: function (tasks) {
@@ -254,11 +268,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             ]);
         }
     },
-    getId: function () {
-        if (!this.pageContext.cmsContext.page || !this.pageContext.cmsContext.page.listFQN || !this.pageContext.cmsContext.page.id)
-            return undefined;
-        return { listFQN: this.pageContext.cmsContext.page.listFQN, id: this.pageContext.cmsContext.page.id };
-    },
+    
 
     getStore: Ext.emptyFn,
     setHidden: Ext.emptyFn,
