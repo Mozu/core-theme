@@ -49,6 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 theme.MergedSettings = Merge<ThemeSetting>(tmd.Configuration.Settings, parent.MergedSettings, setting => setting.Id);
                 theme.PageTypes = Merge<PageTypeDefinition>(tmd.Configuration.PageTypes, parent.PageTypes, pt => pt.Id);
                 theme.EmailTemplates = Merge<PageTypeDefinition>(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id);
+                theme.Editors = Merge<EditorDefinition>(tmd.Configuration.Editors, parent.Editors, pt => pt.Id);
                 theme.Widgets = Merge<WidgetDefinition>(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id);
                 theme.MergedLabels = MergeLabels(tmd.Labels, parent.MergedLabels);
           

@@ -1,0 +1,30 @@
+{
+    "about": {
+        "author": "Volusion",
+        "defaultLanguage": "en-US",
+        "extends": "core4",
+        "isDesktop": true,
+        "isMobile": false,
+        "isTablet": false,
+        "name": "Core4"
+    },
+    "editors": [{
+        "id": "pokemon@gcta",
+        "path": "pokemon.js",
+        "documentLists": [
+            "pokemon@gcta"
+        ],
+
+        "priority": 0.2
+    }],
+    "pageTypes": [{
+        "documentType": "web_page@mozu",
+        "entityType": "webpage",
+        "id": "pokemon",
+        "template": "pokemon",
+        "customEditor": "pokemon@gcta",
+        "title": "About Us",
+        "userCreatable": true,
+        "documentListName": "pokemon@gcta"
+    }]
+}

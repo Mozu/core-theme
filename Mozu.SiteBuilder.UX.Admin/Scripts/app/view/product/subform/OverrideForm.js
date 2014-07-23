@@ -22,7 +22,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
     width: '100%',
     overrideFieldName: '',
     persistChangesToModel: true,
-    
+    overrideChangeDisabled: false,
     /**
      * @cfg
      */
@@ -44,6 +44,21 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
         this.isOverridden = this.productInCatalogInfo && this.productInCatalogInfo.get(this.overrideFieldName);
 
+        if (this.productInCatalogInfo) {
+            if ( (this.overrideFieldName == 'isContentOverridden' || this.overrideFieldName=='isSEOContentOverridden')&&
+                this.productInCatalogInfo.getCatalog().localeCode != this.product.getMasterCatalog().localeCode) {
+                this.isOverridden = true;
+                this.overrideChangeDisabled = true;
+            }
+            else  if ( this.overrideFieldName == 'isPriceOverridden'&&
+                this.productInCatalogInfo.getCatalog().currencyCode != this.product.getMasterCatalog().currencyCode) {
+                this.isOverridden = true;
+                this.overrideChangeDisabled = true;
+            } 
+
+
+        }
+
         this.formContainer = Ext.widget({
             xtype: 'container',
             width: "100%",
@@ -58,6 +73,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 boxLabel: 'Override global',
                 labelAlign: 'right',
                 allowModal: true,
+                disabled: this.overrideChangeDisabled,
                 cls: Taco.baseCSSPrefix + 'override-checkbox',
                 scope: this,
                 checked: this.isOverridden,

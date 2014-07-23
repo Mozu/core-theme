@@ -214,17 +214,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             if (pageDefinition == null)
             {
-                pageDefinition = this.SiteContext.Theme.PageTypes.Where(x=> 
+                pageDefinition = this.SiteContext.Theme.PageTypes.Where(x =>
                     !string.IsNullOrEmpty(x.Template)
                     &&
-                    ( !string.IsNullOrEmpty(x.DocumentTypeFQN)  || !string.IsNullOrEmpty(x.ListFQN ))
-                    && 
-                    ( string.IsNullOrEmpty(x.DocumentTypeFQN) || string.Equals( x.DocumentTypeFQN , vm.DocumentTypeFQN, StringComparison.OrdinalIgnoreCase ))
-                    && 
-                    ( string.IsNullOrEmpty(x.ListFQN) || string.Equals( x.ListFQN , vm.ListFQN, StringComparison.OrdinalIgnoreCase ))
-                    ).OrderBy(
-                    x=> ((string.IsNullOrEmpty(x.DocumentTypeFQN) ?0:1))+ ((string.IsNullOrEmpty(x.ListFQN) ?0:2))
-                    ).FirstOrDefault()
+                    (!string.IsNullOrEmpty(x.DocumentTypeFQN) || !string.IsNullOrEmpty(x.ListFQN))
+                    &&
+                    (string.IsNullOrEmpty(x.DocumentTypeFQN) || string.Equals(x.DocumentTypeFQN, vm.DocumentTypeFQN, StringComparison.OrdinalIgnoreCase))
+                    &&
+                    (string.IsNullOrEmpty(x.ListFQN) || string.Equals(x.ListFQN, vm.ListFQN, StringComparison.OrdinalIgnoreCase))
+                    ).OrderByDescending(
+                        x =>
+                        {
+                            return ((string.IsNullOrEmpty(x.DocumentTypeFQN) ? 0 : 1)) + ((string.IsNullOrEmpty(x.ListFQN) ? 0 : 2));
+                        }
+                    ).ToList().FirstOrDefault();
                 ;
             }
             var template = pageDefinition != null ? pageDefinition.Template : "blank-page";
