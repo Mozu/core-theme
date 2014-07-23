@@ -413,7 +413,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     case PageTypes.documentList:
                         {
                             dic.Add("controller", "cmspages");
-                            dic.Add("action", "Index");
+                            dic.Add("action", "contentIndex");
                             break;
                         }
                 }
