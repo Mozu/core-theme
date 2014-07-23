@@ -25,7 +25,6 @@ Ext.define('Taco.view.settings.localization.util.Currencies', {
     },
 
     getQuickFilterData: function () {
-        // need to 
         var supportedCurrencies = Taco.view.settings.localization.util.Currencies.getSupported(),
             quickFilters = [
                             [{}, 'All Records'],

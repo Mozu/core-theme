@@ -3,10 +3,10 @@
  */
 Ext.define('Taco.store.LocalizedProductVariants', {
     extend: 'Ext.data.Store',
-    model: function () {
+    model: (function () {
         return Ext.define('Taco.model.LocalizedProductVariants' + Ext.id(), {
             extend: 'Ext.data.Model',
-            fields: function () {
+            fields: (function () {
                 var items = [
                     {
                         name: 'variantProductCode',
@@ -86,7 +86,7 @@ Ext.define('Taco.store.LocalizedProductVariants', {
                     });
                 });
                 return items;
-            }(),
+            }()),
             //validations: [{
             //    type: 'length',
             //    name: 'name',
@@ -123,7 +123,7 @@ Ext.define('Taco.store.LocalizedProductVariants', {
                 }
             }
         });
-    }(),
+    }()),
     remoteFilter: true,
     remoteSort: true,
     pageSize: 50,

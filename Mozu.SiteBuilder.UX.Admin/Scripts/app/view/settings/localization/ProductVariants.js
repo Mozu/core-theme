@@ -40,7 +40,9 @@ Ext.define('Taco.view.settings.localization.ProductVariants', {
                 text: 'Product Options' + mcName,
                 flex: 1,
                 renderer: function (options) {
-                    if (!options || options.length == 0) return '';
+                    if (!options || options.length == 0) {
+                         return '';
+                    }
                     return options.join('; ');
                 }
             }, {
