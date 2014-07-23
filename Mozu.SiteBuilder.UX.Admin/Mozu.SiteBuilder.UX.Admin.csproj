@@ -884,8 +884,11 @@
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\DeclineCheck.js" />
     <Content Include="Scripts\app\view\order\modal\FulfillmentMethod.js" />
+    <Content Include="Scripts\app\view\order\subform\Fulfillment.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Container.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\DigitalDelivery.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\DigitalGrid.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\DigitalPackage.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\DirectShip.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\DirectShipPackage.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Grid.js" />
