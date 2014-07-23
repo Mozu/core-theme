@@ -30,6 +30,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     initFromStateManager: true,
 
     enableQuickFilters: true,
+    disableAdvancedSearch: false,
+    emptySearchText: '',
 
     initialValue: null,
 
@@ -61,25 +63,32 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             this.initialValue = this.currentFilterString = this.serializeFilterValue(this.getAdvancedSearchFromStore());
         }
 
-        this.items = [
+        this.items = [];
+        if (!this.disableAdvancedSearch) {
+            this.items.push(
+                {
+                    xtype: 'button',
+                    itemId: 'advancedFilter',
+                    ui: 'action',
+                    scale: 'medium',
+                    glyph: 'XE010@mozicons',
+                    width: 57,
+                    margin: '0 10 20 0',
+                    enableToggle: true,
+                    scope: this,
+                    toggleHandler: this.handleButtonToggle
+                }
+            );
+        }
+
+        this.items.push(
             {
-                xtype: 'button',
-                itemId: 'advancedFilter',
-                ui: 'action',
-                scale: 'medium',
-                glyph: 'XE010@mozicons',
-                width: 57,
-                margin: '0 10 20 0',
-                enableToggle: true,
-                scope: this,
-                toggleHandler: this.handleButtonToggle
-            },{
                 xtype: 'textfield',
                 itemId: 'textFilter',
                 margin: '0 0 20 0',
                 msgTarget: 'qtip',
                 flex: 1,
-                
+                emptyText: this.emptySearchText,
                 width: 400,
                 listeners: {
                     specialkey: {
@@ -87,8 +96,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                         fn: this.handleFieldSubmit
                     }
                 }
-            } 
-        ];
+            }
+        );
 
         if (this.quickFilterData && this.enableQuickFilters) {
    

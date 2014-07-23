@@ -2,7 +2,6 @@
  * @class Taco.view.settings.localization.util.Currencies
  * @singleton
  * common localization methods 
- * 
  */
 Ext.define('Taco.view.settings.localization.util.Currencies', {
     singleton:true,
@@ -27,7 +26,7 @@ Ext.define('Taco.view.settings.localization.util.Currencies', {
 
     getQuickFilterData: function () {
         // need to 
-        var supportedCurrencies = Taco.view.settings.localization.util.Currencies.getSupportedCurrencies(),
+        var supportedCurrencies = Taco.view.settings.localization.util.Currencies.getSupported(),
             quickFilters = [
                             [{ hasRecord: false }, 'Missing Currency'],
                             [{ hasRecord: true }, 'Has Currency'],
@@ -39,6 +38,14 @@ Ext.define('Taco.view.settings.localization.util.Currencies', {
             quickFilters.push([{ localeExists: cur }, 'Has ' + cur]);
         });
         return quickFilters;
+    },
+
+    getAdvancedSearchConfig: function () {
+        return {
+            emptySearchText: 'Search',
+            disableAdvancedSearch: true,
+            quickFilterData: Taco.view.settings.localization.util.Currencies.getQuickFilterData()
+        };
     }
 
 });

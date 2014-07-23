@@ -2,7 +2,7 @@
  * @class Taco.view.settings.localization.AttributeValues
 */
 Ext.define('Taco.view.settings.localization.AttributeValues', {
-    requires: ['Taco.store.LocalizedAttributeValues', 'Taco.view.settings.localization.AdvancedSearchLocaleForm'],
+    requires: ['Taco.store.LocalizedAttributeValues', 'Taco.view.settings.localization.util.Locales'],
     extend: 'Taco.view.settings.localization.widget.LocalizationGrid',
     alias: 'widget.localizedattributevaluesgrid',
 
@@ -72,11 +72,7 @@ Ext.define('Taco.view.settings.localization.AttributeValues', {
     },
 
     getAdvancedSearchConfig: function () {
-        return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchLocaleForm',
-
-            quickFilterData: this.getQuickFilterLocaleData()
-        };
+        return Taco.view.settings.localization.util.Locales.getAdvancedSearchConfig();
     }
 
 });

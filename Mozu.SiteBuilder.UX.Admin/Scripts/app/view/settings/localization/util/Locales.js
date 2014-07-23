@@ -59,10 +59,9 @@ Ext.define('Taco.view.settings.localization.util.Locales', {
 
     getAdvancedSearchConfig: function () {
         return {
-            advancedFormCls: 'Taco.view.settings.localization.AdvancedSearchLocaleForm',
-
+            emptySearchText: 'Search',
+            disableAdvancedSearch: true,
             quickFilterData: Taco.view.settings.localization.util.Locales.getQuickFilterData()
-                //Taco.view.settings.localization.util.Locales.getQuickFilterData()
         };
     }
 });
