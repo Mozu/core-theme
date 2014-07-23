@@ -28,9 +28,9 @@ Ext.define('Taco.view.settings.localization.util.Locales', {
         // need to 
         var supportedLocales = Taco.view.settings.localization.util.Locales.getSupported(),
               quickFilters = [
+                              [{}, 'All Records'],
                               [{ exists: false }, 'Missing Translation'],
-                              [{ exists: true }, 'Has Translation'],
-                              [{}, 'All Records']
+                              [{ exists: true }, 'Has Translation']
               ];
 
         Ext.Array.each(supportedLocales, function (loc) {
