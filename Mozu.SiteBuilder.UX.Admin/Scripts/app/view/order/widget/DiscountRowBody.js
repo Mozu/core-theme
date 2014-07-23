@@ -70,7 +70,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         var discounts = record.get("discounts"),
             orderItemId = record.get("id"),
             shippingDiscounts = record.get("shippingDiscounts"),
-            rowBodyCls = (discounts.length || shippingDiscounts.length) ? "hasDiscount" : "noDiscount",
+            rowBodyCls = ( (discounts && discounts.length) || (shippingDiscounts && shippingDiscounts.length)) ? "hasDiscount" : "noDiscount",
             rowBodyData = {
                 orderItemId:orderItemId,
                 discounts: record.get("discounts"),
@@ -78,6 +78,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             },
             headerCt = this.view.headerCt,
             colspan = headerCt.getColumnCount();
+
                         
         var rowBodyTemplate = new Ext.XTemplate(this.getRowBody());
         var rowBoxyTxt = rowBodyTemplate.apply(rowBodyData);

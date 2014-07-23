@@ -16,7 +16,8 @@
         'Taco.core.ux.HtmlEditor',
         'Taco.core.ux.form.SlugField',
         'Taco.core.ux.form.field.PageTemplate',
-        'Taco.core.ux.form.field.BaseImageField'
+        'Taco.core.ux.form.field.BaseImageField',
+        'Ext.form.field.Hidden'
 
     ],
     saveButtonEnabled: true,
