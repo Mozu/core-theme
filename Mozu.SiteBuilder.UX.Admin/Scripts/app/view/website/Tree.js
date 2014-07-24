@@ -52,7 +52,9 @@ Ext.define('Taco.view.website.Tree', {
             renderer: function (value, metaData, record) {
                 var output = '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
 
-                output += '<span class="taco-website-tree-menu-trigger"></span>';
+                if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
+                    output += '<span class="taco-website-tree-menu-trigger"></span>';
+                }
 
                 return output;
             },
