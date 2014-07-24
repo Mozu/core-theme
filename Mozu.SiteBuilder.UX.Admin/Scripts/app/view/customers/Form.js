@@ -17,12 +17,7 @@ Ext.define('Taco.view.customers.Form', {
             me = this,
             profile, contacts, orderGrid, shipingInfo, notes;
 
-        
-        this.title = [
-            data.firstName,
-            data.middleName,
-            data.lastName
-        ].join(' ');
+        this.title = (data.firstNameSafe ? (data.firstNameSafe + ' ' + data.lastNameSafe) : data.userName);
 
         this.segmentStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
 
