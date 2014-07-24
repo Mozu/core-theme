@@ -14,8 +14,7 @@ Ext.define('Taco.view.productType.Form', {
     ],
 
     ui: 'subform',
-
-    title: 'Product Type',
+    createTitle: 'Create New Product Type',
 
     attributeItemTpl: [
         '<tpl for=".">',
@@ -31,6 +30,8 @@ Ext.define('Taco.view.productType.Form', {
             properties = me.record.get('properties'),
             prodTypeId = me.record.get('id'),
             isExisting = Ext.isNumeric(prodTypeId);
+
+        this.title = this.record.data.name;
 
         me.stores = me.stores || [];
         me.stores.push(options, extras, properties);
