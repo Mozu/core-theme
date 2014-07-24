@@ -93,7 +93,7 @@ Ext.define('Taco.view.order.Header', {
 
                 '<div class="update-date">', '<span class="label">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</div>',
 
-                '<div class="site">', '<span class="label">Site:</span><a href="http://{siteName}" target="_blank">{siteName}</a>', '</div>',
+                '<div class="site">', '<span class="label">Site:</span><a href="/_gosite/{siteId}" target="_blank">{siteName}</a>', '</div>',
 
                 '<div class="channel">', '<span class="label">Channel:</span><span data-handle="channelName">{orderType}', '</div>',
 
