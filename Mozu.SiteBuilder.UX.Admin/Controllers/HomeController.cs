@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
     {
         private readonly ILogger _logger;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
-        private readonly IDocumentListWebApiClient _documentListWebApiClient;
+        
 
         private readonly IAuthenticationHelper _authenticationHelper;
         
@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         private IMasterCatalogWebApiClient _masterCatalogClient;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient, Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
         {
             
             _logger = logger;
@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 x.CatalogId = null;
                 x.MasterCatalogId = null;
             });
-            _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
+            
 
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
@@ -96,6 +96,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
             catch (Exception ex)
             {
+                if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] == "true")
+                {
+                    throw;
+                }
                 _logger.Error("error loading admin", ex);
                 var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
                 redir.Headers.Location = new System.Uri("/admin/auth/launchpad", UriKind.Relative);
@@ -230,46 +234,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             };
 
            
-            var masterCatalogPubDic= tenant.MasterCatalogs.Select(x =>
-            {
-                var client = _documentListWebApiClient.CloneWithApiContext(z =>
-                {
-                    z.MasterCatalogId = z.MasterCatalogId;
-                    z.CatalogId = null;
-                    z.SiteId = null;
-                });
-                return new Tuple<int, Task<ServiceClientResponse<DocumentListCollection>>> (x.Id, client.GetDocumentLists());
+            
 
-            }).ToDictionary(x => x.Item1, y=>y.Item2 );
-
-            var catPubTaskDic = tenant.MasterCatalogs.SelectMany(x=>x.Catalogs ).Select(x =>
-            {
-                var client = _documentListWebApiClient.CloneWithApiContext(z =>
-                {
-                    z.MasterCatalogId = x.MasterCatalogId;
-                    z.CatalogId = x.Id;
-                    z.SiteId = null;
-                });
-                return new Tuple<int, Task<ServiceClientResponse<DocumentListCollection>>> (x.Id, client.GetDocumentLists());
-
-            }).ToDictionary(x => x.Item1, y=>y.Item2 );
-             var sitePubTaskDic = tenant.Sites.Select(x=> 
-             {
-                 var client = _documentListWebApiClient.CloneWithApiContext(z =>
-                 {
-                     z.MasterCatalogId = x.MasterCatalogId;
-                     z.CatalogId = x.CatalogId;
-                     z.SiteId = x.Id;
-                 });
-                return new Tuple<int, Task<ServiceClientResponse<DocumentListCollection>>> (x.Id, client.GetDocumentLists());
-
-            }).ToDictionary(x => x.Item1, y=>y.Item2 );
+            
+            
 
 
 
-            var pubTasks = masterCatalogPubDic.Values.Concat(catPubTaskDic.Values).Concat(sitePubTaskDic.Values).ToArray();
+     
 
-            await Task.WhenAll(pubTasks);
+        
             
            
 
@@ -290,48 +264,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 .Where(x => x.Symbol!= null ).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
 
            
-            //todo find better way for this.
-           (taContext.MasterCatalogs ?? new List<MasterCatalog>()).ForEach(mc =>
-            {
-                var res = masterCatalogPubDic[mc.Id].Result;
-                if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
-                {
-                    var lst = res.ReadAsSync().Items.Where(x => (x.ScopeType == null || x.ScopeType == "masterCatalog") && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
-                    if (lst.Any())
-                    {
-                        mc.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
-                    }
-
-                    
-                }
-                (mc.Sites ?? new List<TaContextSite>()).ForEach(s =>
-                {
-                     res = sitePubTaskDic[s.Id].Result;
-                    if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        var lst = res.ReadAsSync().Items.Where(x => (x.ScopeType == null || string.Equals(x.ScopeType, "site", StringComparison.OrdinalIgnoreCase)) && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
-                        if (lst.Any())
-                        {
-                            s.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
-                        }
-                    }
-                });
-                (mc.Catalogs ?? new List<TaContextCatalog>()).ForEach(cat =>
-                {
-                     res = catPubTaskDic[cat.Id].Result;
-                    if (!res.HasException && res.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        var lst = res.ReadAsSync().Items.Where(x => (x.ScopeType == null || x.ScopeType == "catalog") && x.SupportsPublishing.GetValueOrDefault(false)).ToList();
-                        if (lst.Any())
-                        {
-                            cat.ContentPublishingEnabled = lst.Any(x => x.EnablePublishing.GetValueOrDefault(false));
-                        }
-                    }
-                });
-
-
-                
-            });
+            
+           
 
             
 

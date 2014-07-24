@@ -13,13 +13,40 @@ Ext.define('Taco.view.settings.Publishing', {
     hideCmsOptions: false,
 
     initComponent: function () {
-        
+
         this.header.title = 'Publish Settings';
 
-        //this.body.items = this.buildItems();
-        this.body.items = Ext.create('Ext.Container', {
-            items: this.buildItems()
+        this.contentPubStore = Ext.create('Ext.data.Store',
+        {
+            fields: [
+                "id",
+                "mcid",
+                "catid",
+                "siteid",
+                'isPubEnabled',
+                "scopeType"
+            ],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/cmspublishing/settingsList',
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success',
+                    messageProperty: "message"
+                }
+            },
+            listeners: {
+                load: this.onCcontentPubStore,
+                scope:this,
+            },
+            autoLoad:true
         });
+    
+
+
+//this.body.items = this.buildItems();
+        this.body.items = []
 
         this.callParent(arguments);
 
@@ -30,9 +57,34 @@ Ext.define('Taco.view.settings.Publishing', {
 
     },
 
+    onCcontentPubStore: function () {
+
+        this.contentPubStore.each(function (rec) {
+            var context, scope = rec.get('scopeType');
+            if (scope == 'm') {
+                context = Taco.app.context.findMasterCatalog(rec.get('mcid'));
+            }
+            if (scope == 'c') {
+                context = Taco.app.context.findCatalog(rec.get('catid'));
+            }
+            if (scope == 's') {
+                context = Taco.app.context.findSite(rec.get('siteid'));
+            }
+            context.contentPublishingEnabled = rec.get('isPubEnabled');
+        });
+        //contentPublishingEnabled
+
+
+        this.body.removeAll();
+        this.body.add(Ext.create('Ext.Container', {
+            items: this.buildItems()
+        }));
+    },
+
+
     buildItems: function () {
-        var items = [];
-        var me = this;
+        var items = [],
+            me = this;
 
         this.suspendSetValue = false;
 
@@ -107,6 +159,7 @@ Ext.define('Taco.view.settings.Publishing', {
                     cellCls: 'content'
                 }, {}, {});
 
+                
                 this.addContentPublishOptions(masterCatalog, subitems);
 
                 Ext.each(masterCatalog.catalogs, function (catalog) {
@@ -142,11 +195,14 @@ Ext.define('Taco.view.settings.Publishing', {
         var liveContentRadio,
                         stagedContentRadio;
 
+        if (!Ext.isBoolean(site.isContentPublishingEnabled())) {
+            return;
+        }
         liveContentRadio = Ext.widget({
             xtype: 'radio',
             inputValue: 'Live',
-            checked: !site.isContentPublishingEnabled(),
-            name: 'content-publishing-' + site.id,
+            checked:   !site.isContentPublishingEnabled(),
+            name: 'content-publishing-' + site.urlToken,
             cellCls: 'site radio',
             listeners: {
                 change: function (field) {
