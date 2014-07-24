@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -13,6 +14,9 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Newtonsoft.Json.Linq;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -29,6 +33,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
+
+
     /// <summary>
     /// Controller for CMS smiegels.
 	/// </summary>
@@ -38,15 +44,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
        
         private IDocumentListWebApiClient _documentClient;
         private readonly IDocumentPublishingWebApiClient _documentPublishingWebApiClient;
+        private readonly IDocumentListWebApiClient _documentListWebApiClient;
+        private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         //public CmsPublishingController(IMoreAwesomeDocumentWebApiClient documentClient)
-       public CmsPublishingController(IDocumentListWebApiClient documentClient, IDocumentPublishingWebApiClient documentPublishingWebApiClient )
+       public CmsPublishingController(IDocumentListWebApiClient documentClient, IDocumentPublishingWebApiClient documentPublishingWebApiClient , IDocumentListWebApiClient documentListWebApiClient, Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient)
         {
             _documentClient = documentClient;
             _documentPublishingWebApiClient = documentPublishingWebApiClient;
+            _documentListWebApiClient = documentListWebApiClient;
+            _tenantsWebApiClient = tenantsWebApiClient;
         }
 
         /// <summary>
@@ -75,6 +85,126 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(items, (int)res.TotalCount);
         }
 
+        public class GetListForSettingsPageResultItem
+        {
+            public string ScopeType { get; set; }
+            public int? mcid { get; set; }
+            public int? catid { get; set; }
+            public int? siteid { get; set; }
+
+            public int LevelId { get; set; }
+
+            public string id
+            {
+                get { return mcid + "-" + catid + "-" + siteid; }
+            }
+            [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
+            public bool? IsPubEnabled { get; set; }
+        }
+
+        /// Publish a set of documents.
+        /// </summary>
+        [HttpGetRoute(UriTemplate = "settingsList")]
+        public async Task<Response<List<GetListForSettingsPageResultItem>>> GetListForSettingsPage (EnablePublishingRequest request)
+        {
+            var tenant = (await _tenantsWebApiClient.CloneWithoutUserClaims().GetTenantInternal(this.SbApiContext.TenantId, false)).ReadAsSync();
+
+            var stuff = tenant.MasterCatalogs.Select(x =>
+            {
+                var client = _documentListWebApiClient.CloneWithApiContext(z =>
+                {
+                    z.MasterCatalogId = x.Id ;
+                    z.CatalogId = null;
+                    z.SiteId = null;
+                });
+                return new Tuple<GetListForSettingsPageResultItem, Task<ServiceClientResponse<DocumentListCollection>>>(
+                    new GetListForSettingsPageResultItem()
+                    {
+                        ScopeType = "m",
+                        mcid = x.Id ,
+                        LevelId = x.Id
+                    },
+                    client.GetDocumentLists());
+
+            }).Concat(
+
+                tenant.MasterCatalogs.SelectMany(x => x.Catalogs).Select(x =>
+                {
+                    var client = _documentListWebApiClient.CloneWithApiContext(z =>
+                    {
+                        z.MasterCatalogId = x.MasterCatalogId;
+                        z.CatalogId = x.Id;
+                        z.SiteId = null;
+                    });
+                    return new Tuple<GetListForSettingsPageResultItem, Task<ServiceClientResponse<DocumentListCollection>>>(
+                        new GetListForSettingsPageResultItem()
+                        {
+                            ScopeType = "c",
+                            mcid = x.MasterCatalogId,
+                            catid = x.Id ,
+                            LevelId = x.Id
+                        },
+                        client.GetDocumentLists());
+
+
+
+                })).Concat(
+                    tenant.Sites.Select(x =>
+                    {
+                        var client = _documentListWebApiClient.CloneWithApiContext(z =>
+                        {
+                            z.MasterCatalogId = x.MasterCatalogId;
+                            z.CatalogId = x.CatalogId;
+                            z.SiteId = x.Id;
+                        });
+                          return new Tuple<GetListForSettingsPageResultItem, Task<ServiceClientResponse<DocumentListCollection>>>(
+                              new GetListForSettingsPageResultItem()
+                               {
+                                   ScopeType = "s",
+                                   mcid = x.MasterCatalogId,
+                                   catid = x.CatalogId,
+                                   siteid = x.Id,
+                                   LevelId = x.Id
+                     
+                                },
+                        client.GetDocumentLists());
+
+                    })).ToList();
+
+
+
+
+
+
+
+            var pubTasks = stuff.Select(x => x.Item2).ToList();
+
+            await Task.WhenAll(pubTasks);
+
+            stuff.ForEach(x =>
+            {
+                if (x.Item2.Result.HasException || !x.Item2.Result.ResponseMessage.IsSuccessStatusCode)
+                {
+                    return;
+                }
+                var res = x.Item2.Result.ReadAsSync();
+                var lists = res.Items.Where(l =>
+                    (x.Item1.ScopeType == "m" && string.Equals(l.ScopeType, "mastercatalog", StringComparison.OrdinalIgnoreCase))
+                    ||
+                    (x.Item1.ScopeType == "c" && string.Equals(l.ScopeType, "catalog", StringComparison.OrdinalIgnoreCase))
+                    ||
+                    (x.Item1.ScopeType == "s" && string.Equals(l.ScopeType, "site", StringComparison.OrdinalIgnoreCase))
+                    ).Where(l=> l.SupportsPublishing .GetValueOrDefault(false )).ToList();
+
+                x.Item1.IsPubEnabled = lists.Count == 0 ? (bool?) null : lists.Any(l => l.EnablePublishing.GetValueOrDefault(false));
+
+
+
+            });
+
+
+            return List2(stuff.Select(x=>x.Item1).ToList());
+        }
 
         public class EnablePublishingRequest
         {
@@ -97,9 +227,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var res = (await client.GetDocumentLists(startIndex: 0, pageSize: 200)).ReadAsSync();
             var updateTasks= res.Items.Select(x =>
             {
+                if (request.Context.SiteId.HasValue)
+                {
+                    if (!string.Equals(x.ScopeType, "site", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return null;
+                    }
+                }
+                else if (request.Context.CatalogId.HasValue)
+                {
+                    if (!string.Equals(x.ScopeType, "catalog", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return null;
+                    }
+                }
+                else if (request.Context.MasterCatalogId.HasValue)
+                {
+                    if (!string.Equals(x.ScopeType, "mastercatalog", StringComparison.OrdinalIgnoreCase))
+
+                    {
+                        return null;
+                    }
+                }
+                if (!x.SupportsPublishing.GetValueOrDefault(false))
+                {
+                    return null;
+                }
                 x.EnablePublishing = request.PublishingEnabled;
                 return client.UpdateDocumentList(x.Name, x);
-            }).ToArray();
+            }).Where(x=> x!= null).ToArray();
            await Task.WhenAll(updateTasks);
            return  this.SuccessWithTotal2<bool>(0);
 

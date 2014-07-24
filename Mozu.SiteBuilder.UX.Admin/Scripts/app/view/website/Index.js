@@ -546,7 +546,7 @@ Ext.define('Taco.view.website.Index', {
             me.pageSettingsTabButton = header.down('#pageSettingsTabButton');
             me.pageEditorTabButton = header.down('#pageEditorTabButton');
             me.createActionButton = header.down('#createActionButton');
-            me.publishButton.setVisible(Taco.app.context.getCurrent().isContentPublishingEnabled());
+          //  me.publishButton.setVisible(Taco.app.context.getCurrent().isContentPublishingEnabled());
             if (!me.themeStore.isLoading()) {
                 me.onThemeLoad();
             }
