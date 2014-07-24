@@ -40,9 +40,9 @@ Ext.define('Taco.view.Header', {
             cls: Taco.baseCSSPrefix + 'breadcrumb',
             tpl: [
                 '<ul>',
-                '<a href="{address}" class="taco-icon taco-icon-{icon}">a{label}</a>',
+                '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
                 '<tpl for="items">',                    
-                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a class="{[values.items.length ? " taco-breadcrumb-menubutton" : ""]}" href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
+                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a class="{[values.items.length ? "taco-breadcrumb-menubutton" : ""]}" href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
                 '</tpl></ul>'
             ]
         });
