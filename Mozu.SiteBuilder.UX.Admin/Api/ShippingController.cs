@@ -27,7 +27,7 @@ using DC = Mozu.ShippingAdmin.Contracts;
 //using Mozu.UspsShippingAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
-using Mozu.SiteSettings.Shipping.Contracts.Clients;
+//using Mozu.SiteSettings.Shipping.Contracts.Clients;
 
 //using ShippingClass = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingClass;
 //using ShippingRate = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingRate;
@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
-        private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
+       // private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
         private readonly ICarrierConfigurationGlobalWebApiClient _carrierConfigurationGlobalWebApiClient;
         private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         private readonly ITargetRulesWebApiClient _targetRulesWebApiClient;
@@ -65,10 +65,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, IShippingSettingsWebApiClient siteShippingSettingsClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient, IApiContext apiCtx, Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient, ITargetRulesWebApiClient targetRulesWebApiClient, IShippingProfileWebApiClient shippingProfileWebApiClient, IShippingAdminProvisioningWebApiClient shippingAdminProvisioningWebApiClient)
+        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient, IApiContext apiCtx, Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient, ITargetRulesWebApiClient targetRulesWebApiClient, IShippingProfileWebApiClient shippingProfileWebApiClient, IShippingAdminProvisioningWebApiClient shippingAdminProvisioningWebApiClient)
         {
             _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
-            _siteShippingSettingsClient = siteShippingSettingsClient;
+          
             _carrierConfigurationGlobalWebApiClient = carrierConfigurationGlobalWebApiClient;
             _locationSettingsWebApiClient = locationSettingsWebApiClient;
             _targetRulesWebApiClient = targetRulesWebApiClient;
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<SiteShippingSettings>> GetSettings()
         {
 
-            var res = (await _siteShippingSettingsClient.GetSiteShippingSettings()).ReadAsSync();
+           
             var locRes = (await _locationSettingsWebApiClient.GetLocationUsages()).ReadAsSync();
             DC.CarrierConfiguration custSettings = null;
             try
@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 custSettings = new DC.CarrierConfiguration();
             }
-            var settings = Mapper.Map<SiteShippingSettings>(res);
+            var settings = new SiteShippingSettings();
             settings.CustomRates = Mapper.Map<List<CustomTableRate>>(custSettings.CustomTableRates);
 
             settings.ShippingLocationCode = locRes.Items.Where(x => x.LocationUsageTypeCode == "DS").Select(x => x.LocationCodes != null && x.LocationCodes.Count > 0 ? x.LocationCodes.First() : null).FirstOrDefault();
@@ -145,8 +145,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw ret2.ReadException();
             }
 
-            var dcSettings = Mapper.Map<Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings>(settings);
-            await _siteShippingSettingsClient.UpdateOrderHandlingFee(dcSettings.OrderHandlingFee);
+          
 
             var carrierConfiguration = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
 
