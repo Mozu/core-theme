@@ -34,15 +34,15 @@ Ext.define('Taco.view.Header', {
                 }
             }
         });
-
+        
         breadcrumb = Ext.create('Ext.Component', {
             flex: 1,
             cls: Taco.baseCSSPrefix + 'breadcrumb',
             tpl: [
                 '<ul>',
-                '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
-                '<tpl for="items">',
-                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
+                '<a href="{address}" class="taco-icon taco-icon-{icon}">a{label}</a>',
+                '<tpl for="items">',                    
+                    '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a class="{[values.items.length ? " taco-breadcrumb-menubutton" : ""]}" href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
                 '</tpl></ul>'
             ]
         });
@@ -158,6 +158,7 @@ Ext.define('Taco.view.Header', {
         
     },
     buildFlyoutMenuConfig: function (items, menuCfg) {
+        
         var me = this;
         Ext.Array.each(items, function (item) {
             var itemCfg = {
