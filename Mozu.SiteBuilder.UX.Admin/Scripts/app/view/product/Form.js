@@ -11,6 +11,7 @@ Ext.define('Taco.view.product.Form', {
     ],
     alias: ['widget.productform', 'widget.taco-productform' ],
     layout: 'fit',
+    createTitle: 'Create New Product',
     requireDirty: false,
     /**
      * @protected
