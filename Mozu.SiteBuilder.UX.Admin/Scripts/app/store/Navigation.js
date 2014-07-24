@@ -7,6 +7,9 @@ Ext.define('Taco.store.Navigation', {
     autoLoad: true,
     listeners: {
         beforeload: function (store) {
+            if (!Taco.app || !Taco.app.context) {
+                return;
+            }
             var data = store.getProxy().data,
                 seed = 0,
                 recursiveFind = function (key, val, items) {
@@ -46,7 +49,7 @@ Ext.define('Taco.store.Navigation', {
                 },
                 isMultiCurrency,
                 isMultiLang;
-
+            
             Ext.Array.each(Taco.app.context.masterCatalogs, function (mc) {
                 if (mc.getSupportedCurrencies().length > 1) {
                     isMultiCurrency = true;
