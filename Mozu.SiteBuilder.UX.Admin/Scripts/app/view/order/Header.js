@@ -75,7 +75,7 @@ Ext.define('Taco.view.order.Header', {
             tpl: [
                 '<span class="label label-light">Account</span>',
                 '<tpl if="id">',
-                '<a href="/admin/customers/{id}" data-handle="customerName">', '{firstNameSafe} {lastNameSafe}', '</a>',
+                '<a href="/admin/customers/edit/{id}" data-handle="customerName">', '{firstNameSafe} {lastNameSafe}', '</a>',
                 '</tpl>'
             ],
             data: this.record.getCustomer() ? this.record.getCustomer().getData() : {}
