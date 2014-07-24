@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Mozu.SiteSettings.Shipping.Contracts;
+
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
 {
