@@ -468,6 +468,7 @@
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
     <Compile Include="Api\Models\Order\OrderSummary.cs" />
+    <Compile Include="Api\OrderDigitalPackageController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />
     <Compile Include="Api\OrderPickupController.cs" />
