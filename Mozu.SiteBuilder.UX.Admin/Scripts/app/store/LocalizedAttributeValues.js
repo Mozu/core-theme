@@ -3,49 +3,34 @@
  */
 Ext.define('Taco.store.LocalizedAttributeValues', {
     extend: 'Ext.data.Store',
-    model: (function () {
-        return Ext.define('Taco.model.LocalizedAttributeValue' + Ext.id(), {
-            extend: 'Ext.data.Model',
-            fields: (function () {
-                var items = [
-                    {
-                        name: 'attributeFQN',
-                        type: 'string'
-                    }, {
-                        name: 'adminName',
-                        type: 'string'
-                    }, {
-                        name: 'attributeName',
-                        type: 'string'
-                    }, {
-                        name: 'stringValue',
-                        type: 'string'
-                    }, {
-                        name: 'localeCode',
-                        type: 'string',
-                        useNull: true
-                    }, {
-                        name: 'supportedLocales',
-                        type: 'auto',
-                        defaultValue: []
-                    }
-                ];
-                if (!Taco.app || !Taco.app.context) {
-                    return items;
-                }
-                var mc = Taco.app.context.getMasterCatalog();
-                var excludeDefaultLocale = true;
-                var supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale);
+    constructor: function (config) {
 
-                Ext.Array.each(supportedLocales, function (loc) {
-                    items.push({
-                        name: 'value_' + loc,
-                        type: 'string',
-                        useNull: true
-                    });
-                });
-                return items;
-            }()),
+        var modelCfg = {
+            extend: 'Ext.data.Model',
+            fields: [
+                {
+                    name: 'attributeFQN',
+                    type: 'string'
+                }, {
+                    name: 'adminName',
+                    type: 'string'
+                }, {
+                    name: 'attributeName',
+                    type: 'string'
+                }, {
+                    name: 'stringValue',
+                    type: 'string'
+                }, {
+                    name: 'localeCode',
+                    type: 'string',
+                    useNull: true
+                }, {
+                    name: 'supportedLocales',
+                    type: 'auto',
+                    defaultValue: []
+                }
+            ],
+            idParam: 'attributeFQN',
             proxy: {
                 type: 'ajaxproxy',
                 idParam: 'attributeFQN',
@@ -63,8 +48,29 @@ Ext.define('Taco.store.LocalizedAttributeValues', {
                     allowSingle: true
                 }
             }
-        });
-    }()),
+        };
+
+
+        if (Taco.app && Taco.app.context) {
+
+
+            var mc = Taco.app.context.getMasterCatalog();
+            var excludeDefaultLocale = true;
+            var supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale);
+
+            Ext.Array.each(supportedLocales, function (loc) {
+                modelCfg.fields.push({
+                    name: 'value_' + loc,
+                    type: 'string',
+                    useNull: true
+                });
+            });
+        }
+        this.model = Ext.define('Taco.model.LocalizedAttributeValue' + Ext.id(), modelCfg);
+
+        return this.callParent(arguments);
+
+    },
     remoteFilter: true,
     remoteSort: true,
     pageSize: 50,
