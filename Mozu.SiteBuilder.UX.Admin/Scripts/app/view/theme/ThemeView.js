@@ -20,7 +20,7 @@ Ext.define('Taco.view.theme.ThemeView', {
                 '<tpl if="name == true">',
                     'Applied Theme',
                 '<tpl else>',
-                    'Purchased Themes',
+                    'Available Themes',
                 '</tpl>',
             '</h2>',
 
