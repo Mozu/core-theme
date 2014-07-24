@@ -2,10 +2,10 @@
 using AutoMapper;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
-using Mozu.SiteSettings.Shipping.Contracts;
+
 using Newtonsoft.Json.Linq;
 using MSC = Mozu.ShippingAdmin.Contracts;
-using SiteShippingSettings = Mozu.SiteSettings.Shipping.Contracts.SiteShippingSettings;
+
 
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping

@@ -20,8 +20,8 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
-using Mozu.SiteSettings.Shipping.Contracts;
-using Mozu.SiteSettings.Shipping.Contracts.Clients;
+
+
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Linq;

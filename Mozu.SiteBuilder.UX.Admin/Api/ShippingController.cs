@@ -56,14 +56,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         static ShippingController()
         {
             FeatureDic = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Custom;
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.FedEx;
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Ups;
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Usps.CarrierId] = SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.Usps;
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId] = "customrates";
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId] = "fedexrates";
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId] = "upsrates";
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Usps.CarrierId] = "upsrates";
 
             
-
+            
         }
+
+
+        public static List<string> GetAllRATES()
+        {
+            List<string> list2 = new List<string>();
+            list2.Add("customrates");
+            list2.Add("fedexrates");
+            list2.Add("upsrates");
+            list2.Add("uspsrates");
+            return list2;
+        }
+
+ 
+
 
         public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient, IApiContext apiCtx, Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient, ITargetRulesWebApiClient targetRulesWebApiClient, IShippingProfileWebApiClient shippingProfileWebApiClient, IShippingAdminProvisioningWebApiClient shippingAdminProvisioningWebApiClient)
         {
@@ -492,7 +506,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var configurations = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
             var ret = new List<object>();
-            foreach (var rp in Mozu.SiteSettings.Shipping.Contracts.Constants.RateProviders.Mozu.GetAll())
+            foreach (var rp in GetAllRATES())
             {
                 var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
                 var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
