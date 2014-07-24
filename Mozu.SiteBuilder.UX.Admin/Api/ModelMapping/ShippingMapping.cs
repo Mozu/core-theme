@@ -84,33 +84,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 });
 
 
-            Mapper.CreateMap<SiteShippingSettings, Models.Shipping.SiteShippingSettings>()
-                //.ForMember(x => x.ActiveRateProviders, opt => opt.ResolveUsing(x => x.ActiveRateProviders))
-                .ForMember(x => x.OrderHandlingFee, opt => opt.ResolveUsing(x => x.OrderHandlingFee != null
-                    ? x.OrderHandlingFee.Amount : null))
-                //ignore
-                .ForMember(x => x.SiteShippingRegions, op => op.Ignore())
-                .ForMember(x => x.ShippingLocationCode, op => op.Ignore())
-                .ForMember(x => x.EnableInStorePickup, op => op.Ignore())
-                .ForMember(x => x.StorePickupLocationTypeCodes, op => op.Ignore())
-                .ForMember(x => x.CustomRates, op => op.Ignore())
-                ;
-            //  .ForMember(x => x.SiteShippingOriginAddress, opt => opt.ResolveUsing(x => x.SiteShippingOriginAddress));
-
-            Mapper.CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>()
-                //       .ForMember(x => x.ActiveRateProviders, opt => opt.ResolveUsing(x => x.ActiveRateProviders))
-                .ForMember(x => x.OrderHandlingFee, opt => opt.ResolveUsing(x => x.OrderHandlingFee.HasValue
-                    ? new SiteShippingHandlingFee
-                      {
-                          Amount = x.OrderHandlingFee
-                      }
-                    : null))
-                //ignores
-                .ForMember(dc => dc.SignatureRequirement, op => op.Ignore())
-                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-                ;
-            //     .ForMember(x => x.SiteShippingOriginAddress, opt => opt.ResolveUsing(x => x.SiteShippingOriginAddress));
-
+           
+         
 
             Mapper.CreateMap<Feature, Models.Feature>();
             Mapper.CreateMap<Models.Feature, Feature>();
