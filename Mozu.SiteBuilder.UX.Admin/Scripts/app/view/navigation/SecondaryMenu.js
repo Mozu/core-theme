@@ -61,15 +61,19 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 itemId: 'settingsMenu',
                 items: []
             }
-        }, {
-            xtype: 'button',
-            ui: 'link',
-            scale: 'medium',
-            text: 'Help',
-            handler: function () {
-                Taco.app.refreshStyle();
-            }
-        }, {
+        },
+
+        //{
+        //    xtype: 'button',
+        //    ui: 'link',
+        //    scale: 'medium',
+        //    text: 'Help',
+        //    handler: function () {
+        //        Taco.app.refreshStyle();
+        //    }
+        //},
+
+        {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
