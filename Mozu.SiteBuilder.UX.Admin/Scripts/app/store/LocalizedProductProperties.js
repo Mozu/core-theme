@@ -84,9 +84,7 @@ Ext.define('Taco.store.LocalizedProductProperties', {
     remoteSort: true,
     pageSize: 50,
     storeManagerConfig: {
-        clearFilters: true,
-        contextLevel: 'mc',
-        clearSort: true,
+        createOnly: true,
         autoLoad: true
     }
 });
