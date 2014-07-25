@@ -508,7 +508,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var ret = new List<object>();
             foreach (var rp in GetAllRATES())
             {
-                var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).First();
+                var key = FeatureDic.Where(x => string.Equals(x.Value, rp, StringComparison.OrdinalIgnoreCase)).Select(x => x.Key).FirstOrDefault();
+                if (string.IsNullOrEmpty(key))
+                    continue;
                 var configuration = configurations.Items.FirstOrDefault(conf => conf.Id == key);
                 if (configuration == null  || !configuration.Enabled)
                     continue;
