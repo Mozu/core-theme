@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using AutoMapper;
-using Microsoft.FSharp.Collections.Tagged;
-using MoreLinq;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -100,7 +98,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var filter = extFilter.ToFilterString();
                 var q = extFilter.ToQString();
                 int? qLimit = q == null ?(int?) null : 26;
-                var dcOrders = (await _orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
+                var responseGroups = "header,payment";
+                var dcOrders = (await _orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
                 
                 //trim out items for speedyness...
                 dcOrders.Items.ForEach(x=> { x.Items = new List<DCo.OrderItem>();
