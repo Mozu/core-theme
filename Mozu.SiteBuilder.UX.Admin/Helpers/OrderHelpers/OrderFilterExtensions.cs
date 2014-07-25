@@ -32,12 +32,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             // if (!string.IsNullOrEmpty(extFilter.query))
             //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
 
-            IEnumerable<string> stateMents = extFilter.Where(x => x.property != "all").Select(GetFilter).Where(x => !string.IsNullOrWhiteSpace(x));
-            if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase) || string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase)))
+            IEnumerable<string> statements = extFilter.Where(x => x.property != "all").Select(GetFilter).Where(x => !string.IsNullOrWhiteSpace(x));
+            if (!extFilter.Any(x => string.Equals(x.property, "status", StringComparison.OrdinalIgnoreCase) || string.Equals(x.property, "orderstatus", StringComparison.OrdinalIgnoreCase)))
             {
-                stateMents = stateMents.Concat(new[] { string.Format("({0})", defaultStatus) });
+                statements = statements.Concat(new[] { string.Format("({0})", defaultStatus) });
             }
-            return string.Join(" and ", stateMents);
+            return string.Join(" and ", statements);
         }
 
         public static string ToQString(this FilterCollection extFilter, bool? withVariations = null)
