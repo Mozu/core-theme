@@ -521,19 +521,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                
                 if (key == "custom")
                 {
+
                     var cheese =
                         from customRate in configuration.CustomTableRates
+                        let rateInfo = cConfig.Where(x=> string.Equals(x.Code,customRate.RateType, StringComparison.OrdinalIgnoreCase ) ).FirstOrDefault()
                         select new
                         {
                             Code = customRate.Id,
-                            Name = customRate.Content != null ? customRate.Content.Name : customRate.Id,
+                            Name = customRate.Content != null ? customRate.Content.Name : (rateInfo != null && rateInfo.Content != null && !string.IsNullOrEmpty( rateInfo.Content.Name)? rateInfo.Content .Name :   customRate.Id ),
                             IsProvider = false,
                             RateProvider = key,
                             IsActive = true,
                             RateType = customRate.RateType,
-                            IsConfigured = methods.Any(x=> x.Id == customRate.Id ),
-                            CustomValue =  customRate.Value
+                            IsConfigured = methods.Any(x => x.Id == customRate.Id),
+                            CustomValue = customRate.Value
                         };
+
+                    //var cheese =
+                    //   from st in cConfig
+                    //   let isConfigured = true
+                    //   select new
+                    //   {
+                    //       Code = st.Code,
+                    //       Name = st.Content != null ? st.Content.Name : st.Code,
+                    //       IsProvider = false,
+                    //       RateProvider = key,
+                    //       IsActive = true,
+                    //       IsInternational = true,
+                           
+                    //       Sequence = 0,
+                    //       IsConfigured = methods.Any(x => x.Id == st.Code),
+
+                    //       CustomValue = customRate.Value
+
+                    //   };
+
                     ret.AddRange(cheese);
                 }
                 else
