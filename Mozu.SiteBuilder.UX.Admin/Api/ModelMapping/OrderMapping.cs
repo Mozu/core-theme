@@ -643,7 +643,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             ? action : "Manual" + action).ToList();
                     }
                     // otherwise we should duplicate each available actions with a ManualXXX.
-                    else
+                    else if (!(payment.PaymentType == PaymentsDC.PaymentTypeConst.STORE_CREDIT && payment.Status == "Collected"))
                     {
                         int i, originalCount = payment.AvailableActions.Count;
                         for (i = 0; i < originalCount; i++)
