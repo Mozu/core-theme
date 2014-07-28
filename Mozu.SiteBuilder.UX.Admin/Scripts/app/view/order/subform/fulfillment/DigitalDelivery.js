@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
 
     title: 'Gift Card',
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.items = [];
 
@@ -20,7 +20,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
         this.callParent(arguments);
     },
 
-    buildInfoHeader: function() {
+    buildInfoHeader: function () {
         this.items.push(Ext.widget({
             xtype: 'container',
             padding: '0 0 10 0',
@@ -66,18 +66,18 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
         }));
     },
 
-    buildPendingDigitalItems: function() {
+    buildPendingDigitalItems: function () {
         var items = this.record.get('undeliveredDigitalItems');
 
         if (!items.length) return;
 
-        this.items.push(Ext.create('Taco.view.order.subform.fulfill.DigitalGrid', {
+        this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DigitalGrid', {
             data: items
         }));
     },
 
-    buildDeliveredDigitalItems: function() {
-        Ext.each(this.record.get('digitalPackages'), function(packageData) {
+    buildDeliveredDigitalItems: function () {
+        Ext.each(this.record.get('digitalPackages'), function (packageData) {
             this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DigitalPackage', {
                 record: this.record,
                 packageData: packageData
