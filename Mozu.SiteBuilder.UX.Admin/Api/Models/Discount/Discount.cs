@@ -48,8 +48,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> ExcludedProducts { get; set; }
 
 
-        
 
+        public int? MaximumQuantityPerRedemption { get; set; }
         
 
              /// <summary>
