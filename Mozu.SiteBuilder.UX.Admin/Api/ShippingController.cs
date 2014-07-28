@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId] = "customrates";
             FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId] = "fedexrates";
             FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId] = "upsrates";
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Usps.CarrierId] = "upsrates";
+            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Usps.CarrierId] = "uspsrates";
 
             
             
