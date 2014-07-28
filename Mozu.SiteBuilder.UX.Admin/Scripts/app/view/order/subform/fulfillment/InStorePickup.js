@@ -71,7 +71,9 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
             record: this.record,
             data: items,
             unfulfilledFieldName: 'pendingPickups',
-            moveToNewText: 'New Pickup'
+            moveToNewText: 'New Pickup',
+            createAction: 'createPickup',
+            moveAction: 'movePickupItems'
         }));
     },
 

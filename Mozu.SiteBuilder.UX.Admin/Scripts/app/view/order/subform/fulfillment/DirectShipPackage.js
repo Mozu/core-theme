@@ -116,10 +116,24 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             handler: this.handleMarkAsShipped
         }];
 
-        this.collapsedActions = [{
+        this.collapsedInfo = {
+            xtype: 'component',
+            flex: 1,
+            tpl: [
+                '{date} | Tracking Number {trackingNumber} | {itemCount} ',
+                'item<tpl if="itemCount !== 1">s</tpl>'
+            ],
+            data: {
+                date: Ext.Date.format(new Date(this.packageData.shipDate), 'm/d/Y h:i:s a'),
+                trackingNumber: this.packageData.trackingNumber,
+                itemCount: this.packageData.totalQuantity
+            }
+        };
+
+        this.collapsedActions = {
             text: 'Print Packing Slip',
             handler: this.handlePrintPackingSlip
-        }]
+        };
 
         this.callParent(arguments);
     },
