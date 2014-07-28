@@ -5,7 +5,7 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
         'Taco.view.order.subform.fulfillment.Grid'
     ],
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.title = 'Pickup: ' + this.packageData.code;
 
@@ -63,10 +63,24 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
             handler: this.handleFulfilled
         }];
 
+        this.collapsedInfo = {
+            xtype: 'component',
+            flex: 1,
+            tpl: [
+                '{date} | Location: {fulfillmentLocationCode} | {itemCount} ',
+                'item<tpl if="itemCount !== 1">s</tpl>'
+            ],
+            data: {
+                date: Ext.Date.format(new Date(this.packageData.fulfillmentDate), 'm/d/Y h:i:s a'),
+                fulfillmentLocationCode: this.packageData.fulfillmentLocationCode,
+                itemCount: this.packageData.totalQuantity
+            }
+        };
+
         this.callParent(arguments);
     },
 
-    handleCancel: function() {
+    handleCancel: function () {
         this.updateOrder({
             methodName: 'deletePickup',
             errorMsg: 'Error deleting pickup',
@@ -77,11 +91,11 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
         });
     },
 
-    handleReady: function() {
+    handleReady: function () {
 
     },
 
-    handleFulfilled: function() {
+    handleFulfilled: function () {
         this.updateOrder({
             methodName: 'markPickupFulfilled',
             errorMsg: 'Error marking pickup fulfilled',

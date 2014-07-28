@@ -3,7 +3,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
 
     packageData: null,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-shipping-shippingitemgrid'].join(' ');
 
@@ -53,7 +53,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
         this.callParent(arguments);
     },
 
-    getColumnConfig: function() {
+    getColumnConfig: function () {
         var columns = [];
 
         columns.push({
@@ -87,7 +87,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
             sortable: false,
             menuDisabled: true,
             align: 'left',
-            dataIndex: 'total'
+            dataIndex: 'unitPrice'
         });
 
 
