@@ -26,13 +26,15 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter',
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
         'Taco.view.website.entityAdapters.DocumentListEntityAdapter',
+        'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
         'Ext.ux.IFrame',
         'Taco.store.ThemeListing',
         'Ext.menu.CheckItem',
         'Taco.view.entityManager.Grid',
         'Taco.view.entityManager.DynamicFormContainer',
         'Taco.store.EntityEditors',
-        'Taco.store.PageTypeDefinitions'
+        'Taco.store.PageTypeDefinitions',
+        'Ext.ux.IFrame'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
