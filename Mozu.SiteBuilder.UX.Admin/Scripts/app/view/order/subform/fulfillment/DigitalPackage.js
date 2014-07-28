@@ -23,7 +23,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalPackage', {
         });
 
         if (!this.packageData.contact) {
-            this.packageData.contact = this.record.get('fulfillmentContact');
+            this.packageData.contact = this.record.get('billingContact');
         }
 
         this.details = Ext.widget({
@@ -34,6 +34,20 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalPackage', {
             text: 'Resend Email',
             handler: this.handleResendEmail
         }];
+
+        this.collapsedInfo = {
+            xtype: 'component',
+            flex: 1,
+            tpl: [
+                '{date} | Email: {email} | {itemCount} ',
+                'item<tpl if="itemCount !== 1">s</tpl>'
+            ],
+            data: {
+                date: Ext.Date.format(new Date(this.packageData.fulfillmentDate), 'm/d/Y h:i:s a'),
+                email: this.record.get('billingContact').email,
+                itemCount: this.packageData.totalQuantity
+            }
+        };
 
         this.callParent(arguments);
     },

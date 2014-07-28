@@ -24,7 +24,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
 
     packageData: null,
 
-    initComponent: function() {
+    initComponent: function () {
         var availableActions = [];
 
         this.header = false;
@@ -33,7 +33,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             this.isCollapsible = this.packageData.status === 'Fulfilled';
         }
 
-        Ext.each(this.actions, function(action) {
+        Ext.each(this.actions, function (action) {
             if (action.actionName && !Ext.Array.contains(this.packageData.availableActions, action.actionName)) return;
 
             availableActions.push(action);
@@ -55,6 +55,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             items: Ext.Array.push([{
                 xtype: 'button',
                 text: '-',
+                width: 50,
                 ui: 'action',
                 scale: 'medium',
                 margin: '0 0 0 0',
@@ -111,7 +112,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
 
         if (this.isCollapsible) {
             this.closedContainer.add([{
+                margin: '0 0 0 0',
                 text: '+',
+                width: 50,
                 handler: this.handleExpand
             }, {
                 xtype: 'component',
@@ -136,15 +139,15 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
         if (this.isCollapsible) this.getLayout().setActiveItem(this.closedContainer);
     },
 
-    handleCollapse: function() {
+    handleCollapse: function () {
         this.getLayout().setActiveItem(this.closedContainer);
     },
 
-    handleExpand: function() {
+    handleExpand: function () {
         this.getLayout().setActiveItem(this.openContainer);
     },
 
-    updateOrder: function(cfg) {
+    updateOrder: function (cfg) {
         Taco.app.viewPort.setLoading(true);
 
         cfg = Ext.applyIf({}, cfg, {
@@ -153,7 +156,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
 
         this.record[cfg.methodName]({
             jsonData: cfg.data,
-            success: function(response) {
+            success: function (response) {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     Taco.app.fireEvent('setmessage', cfg.errorMsg, 'error');
@@ -163,13 +166,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
                 if (cfg.reloadRecord) this.record.reload();
                 if (typeof cfg.success === 'function') cfg.success.apply(this);
             },
-            failure: function(response) {
+            failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.message) ? json.message : cfg.errorMsg;
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 if (typeof cfg.failure === 'function') cfg.failure.apply(this);
             },
-            callback: function() {
+            callback: function () {
                 Taco.app.viewPort.setLoading(false);
                 if (typeof cfg.callback === 'function') cfg.callback.apply(this);
             },
