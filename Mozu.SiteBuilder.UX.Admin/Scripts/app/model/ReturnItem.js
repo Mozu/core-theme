@@ -44,10 +44,15 @@ Ext.define('Taco.model.ReturnItem', {
             "useNull": true,
             defaultValue: 0
         }, {
-            "name": "priceSnapshot",
-            "type": "auto",
-            "useNull": true,
-            defaultValue: null
+            "name": "productLossAmount",
+            "type": "number",
+            "useNull": false,
+            defaultValue: 0
+        }, {
+            "name": "shippingLossAmount",
+            "type": "number",
+            "useNull": false,
+            defaultValue: 0
         }, {
             "name": "notes",
             "type": "auto",
