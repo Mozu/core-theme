@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using AttributeDC = Mozu.Core.Extensible.Contracts.Attribute;
 using AttributeModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
 
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/customerattributes", SuppressDescriptorGeneration = true)]
@@ -30,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
              if (!String.IsNullOrEmpty(pagingParams.id))
             {
-                var dcitem = (await _customerAttributeDefinitionWebApiClient.GetAttribute(pagingParams.id)).ReadAsSync();
+                var dcitem = (await _customerAttributeDefinitionWebApiClient.GetAttribute(System.Web.HttpUtility.UrlEncode(pagingParams.id))).ReadAsSync();
                 var vmitem = Mapper.Map<AttributeModel>(dcitem);
                 return this.List2(vmitem);
             }
