@@ -147,6 +147,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
     updateOrder: function(cfg) {
         Taco.app.viewPort.setLoading(true);
 
+        cfg = Ext.applyIf({}, cfg, {
+            reloadRecord: true
+        });
+
         this.record[cfg.methodName]({
             jsonData: cfg.data,
             success: function(response) {
@@ -156,7 +160,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
                     if (typeof cfg.failure === 'function') cfg.failure.apply(this);
                     return;
                 }
-                this.record.reload();
+                if (cfg.reloadRecord) this.record.reload();
                 if (typeof cfg.success === 'function') cfg.success.apply(this);
             },
             failure: function(response) {

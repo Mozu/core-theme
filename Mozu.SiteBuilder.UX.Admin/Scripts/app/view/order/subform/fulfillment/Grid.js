@@ -8,7 +8,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
     config: {
         plugins: [],
         unfulfilledFieldName: null,
-        moveToNewText: 'New Package'
+        moveToNewText: 'New Package',
+        createAction: 'createPackage',
+        moveAction: 'movePackageItems'
     },
 
     packageData: null,
@@ -263,7 +265,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
     moveSelectedItems: function(menu, item) {
         Taco.app.viewPort.setLoading(true);
 
-        this.record[item.newPackage ? 'createPackage' : 'movePackageItems']({
+        this.record[item.newPackage ? this.getCreateAction() : this.getMoveAction()]({
             jsonData: {
                 orderId: this.record.getId(),
                 sourcePackageId: this.packageData ? this.packageData.id : null,

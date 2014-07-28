@@ -5,7 +5,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalPackage', {
         'Taco.view.order.subform.fulfillment.DigitalGrid'
     ],
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.title = 'Gift Card Email: ' + this.packageData.code;
 
@@ -38,7 +38,29 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalPackage', {
         this.callParent(arguments);
     },
 
-    handleResendEmail: function() {
-        alert('send it yourself, don\'t be lazy');
+    handleResendEmail: function () {
+        this.updateOrder({
+            methodName: 'resendDigitalPackage',
+            errorMsg: 'Error sending Gift Card email',
+            reloadRecord: false,
+            data: {
+                orderId: this.record.getId(),
+                digitalPackageids: [this.packageData.id]
+            },
+            success: function () {
+                Taco.MessageBox.show({
+                    title: 'Resend E-mail',
+                    buttons: Ext.Msg.OK,
+                    msg: new Ext.XTemplate([
+                        '<p>Successfully resent e-mail containing:</p>',
+                        '<ul>',
+                        '<tpl for="items">',
+                            '<li>{productName} <i>{productCode}</i> {giftCardCode}</li>',
+                        '</tpl>',
+                        '</ul>'
+                    ]).apply(this.packageData)
+                });
+            }
+        });
     }
 });

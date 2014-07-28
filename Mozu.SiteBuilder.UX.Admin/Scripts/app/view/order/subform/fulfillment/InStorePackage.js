@@ -19,7 +19,9 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
             record: this.record,
             packageData: this.packageData,
             unfulfilledFieldName: 'pendingPickups',
-            moveToNewText: 'New Pickup'
+            moveToNewText: 'New Pickup',
+            createAction: 'createPickup',
+            moveAction: 'movePickupItems'
         });
 
         if (!this.packageData.contact) {
@@ -65,7 +67,14 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
     },
 
     handleCancel: function() {
-
+        this.updateOrder({
+            methodName: 'deletePickup',
+            errorMsg: 'Error deleting pickup',
+            data: {
+                orderId: this.record.getId(),
+                pickupIds: [this.packageData.id]
+            }
+        });
     },
 
     handleReady: function() {
@@ -73,6 +82,13 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
     },
 
     handleFulfilled: function() {
-
+        this.updateOrder({
+            methodName: 'markPickupFulfilled',
+            errorMsg: 'Error marking pickup fulfilled',
+            data: {
+                orderId: this.record.getId(),
+                pickupIds: [this.packageData.id]
+            }
+        });
     }
 });
