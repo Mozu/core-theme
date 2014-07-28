@@ -12,7 +12,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     title: 'Target Criteria',
 
     initComponent: function () {
-        var me  = this;
+        var me = this,
+            catStore,
+            productStore,
+            shippingStore;
 
         this.includeAllProductsInput = Ext.widget({
             xtype: 'checkbox',
@@ -36,7 +39,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             value: this.record.get('doesNotApplyToSalePrice') === true
         });
 
-        var catStore = this.record.getCategoryStore();
+        catStore = this.record.getCategoryStore();
         // reset the list's dirty state when its store first loads
 
         catStore.on({
@@ -136,7 +139,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             ]
         });
 
-        var productStore = this.record.getProductStore();
+        productStore = this.record.getProductStore();
 
         productStore.on({
             load: function () {
@@ -232,6 +235,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             ]
         });
 
+        this.maximumQuantityPerRedemptionTB = Ext.widget({
+            xtype: 'numberfield',
+            name: 'maximumQuantityPerRedemption',
+            hideTrigger: true,
+            width: 600,
+            minValue: 0,
+            labelAlign: 'top',
+            fieldLabel: 'Maximum Quantity Per Redemption'
+        })
 
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
@@ -251,19 +263,20 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.categoriesBox,
                 this.productsBox,
                 this.excludeCategoriesBox,
-                this.productsExcludeBox
+                this.productsExcludeBox,
+                this.maximumQuantityPerRedemptionTB
             ]
         });
 
         
-        var shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');        
+        shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');        
         shippingStore.filter(function (record) {            
             return (record.get('isConfigured') ||  record.get("rateProvider")=="custom");
         });
 
         this.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingMethods',
-            width: 520,
+           // width: 520,
             margin: 0,
             store: shippingStore,
             getStore: function () {

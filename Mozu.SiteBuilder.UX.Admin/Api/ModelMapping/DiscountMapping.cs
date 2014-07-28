@@ -61,6 +61,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? x.Target.IncludeAllProducts : null))
                 .ForMember(x => x.MinimumLifetimeValueAmount, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.MinimumLifetimeValueAmount : null))
+                .ForMember(x => x.MaximumQuantityPerRedemption, opt => opt.ResolveUsing(x => (x.Target  != null)
+                                    ? x.Target.MaximumQuantityPerRedemption : null))
+                    
+
                 .ForMember(x => x.Categories, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.Categories != null)
                     ? (x.Target.Categories).Select(_ => _.Id).ToList()
                     : (Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id).ToList()))
@@ -144,6 +148,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Target, opt => opt.ResolveUsing(x => new DC.DiscountTarget
                                                                        {
                                                                            Type = x.Target,
+                                                                           MaximumQuantityPerRedemption = x.MaximumQuantityPerRedemption ,
                                                                            Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedCategories = (x.ExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
