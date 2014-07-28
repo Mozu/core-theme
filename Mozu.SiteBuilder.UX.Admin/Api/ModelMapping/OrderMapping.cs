@@ -705,8 +705,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))                
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? dc.AuditInfo.CreateDate : null))
-                .ForMember(x => x.ShipDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
-                    ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.FulfillmentDate, op => op.ResolveUsing(dc => dc.FulfillmentDate))
+                .ForMember(x => x.ShipDate, op => op.ResolveUsing(dc => dc.FulfillmentDate))
                 .ForMember(x => x.TotalQuantity, op => op.ResolveUsing(dc => dc.Items != null ? dc.Items.Sum(i => i.Quantity) : 0)) // 0 quantity when no items
                 .ForMember(x => x.ChangeMessages, op => op.ResolveUsing(dc => dc.ChangeMessages))
                 //ignores

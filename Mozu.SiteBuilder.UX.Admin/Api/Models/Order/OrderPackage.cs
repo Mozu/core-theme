@@ -52,8 +52,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public DateTime CreateDate { get; set; }
 
+        public DateTime? FulfillmentDate { get; set; }
+
+        // deprecated
         public DateTime? ShipDate { get; set; }
 
+
         public List<DC.Commerce.ChangeMessage> ChangeMessages { get; set; }
+
     }
 }
