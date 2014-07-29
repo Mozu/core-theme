@@ -41,8 +41,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Siesta
 
         {
             "order/widget/paymentpanel.js"
-            //,
-            //"customers/modal/contacts.t.js"
+            ,
+            "customers/modal/contacts.t.js"
         };
 
 

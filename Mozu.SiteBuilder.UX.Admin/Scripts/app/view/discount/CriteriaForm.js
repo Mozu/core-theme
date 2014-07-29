@@ -270,9 +270,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         
         shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');        
-        shippingStore.filter(function (record) {            
-            return (record.get('isConfigured') ||  record.get("rateProvider")=="custom");
-        });
+       
 
         this.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingMethods',
