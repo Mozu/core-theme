@@ -69,11 +69,11 @@ Ext.define('Taco.store.Navigation', {
 
 
 
-            if (Taco.store.Navigation.getSubNavLinksLoaded()) {
+            if (Taco.store.Navigation.getSubNavLinksLoaded() || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
                 return;
             }
 
-
+             
 
          
 
