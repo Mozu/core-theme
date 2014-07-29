@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     try
                     {
                         var job = doc.Get<JObject>("data").ToObject<NavigationSet>()??new NavigationSet();
-                       
+                        return job;
                     }
                     catch 
                     {
