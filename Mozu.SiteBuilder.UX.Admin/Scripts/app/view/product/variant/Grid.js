@@ -16,16 +16,23 @@ Ext.define('Taco.view.product.variant.Grid', {
         var optionColumns = [],
             staticColumns,
             tplColumnHeader,
+            me=this,
             goodsType = this.productType.get('goodsType'),
             isPhysical = (goodsType === 'Physical'),
             isDigitalCredit = (goodsType === 'DigitalCredit'),
             fulfillmentData = (isPhysical) ? [{ "id": "DirectShip", "name": "Direct Ship" }, { "id": "InStorePickup", "name": "In Store Pickup" }]
             : [{ "id": "Digital", "name": "Email" }];
 
+      
+
         var fulfillmentTypeData = Ext.create('Ext.data.Store', {
             fields: ['id', 'name'],
             data: fulfillmentData
         });
+
+       
+
+        
 
         var fulfillmentEditor = {
             xtype: "combobox",
@@ -110,15 +117,19 @@ Ext.define('Taco.view.product.variant.Grid', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
             }
-        }, {
+        },
+
+        {
             text: 'Fulfillment Types',
             dataIndex: 'fulfillmentTypesSupported',
             hideable: true,
-            hidden: !isDigitalCredit,
+            hidden: true,
             width: 185,
             editor: fulfillmentEditor
             
-        }, {
+        },
+
+        {
             text: 'Mfg Part #',
             dataIndex: 'mfgPartNumber',
             hideable: true,
@@ -212,9 +223,21 @@ Ext.define('Taco.view.product.variant.Grid', {
 
         this.plugins = [this.rowEditor];
 
+
+
+        if (isDigitalCredit) {
+            this.store.whenLoaded(function () {
+                me.store.each(function (item) {
+                    item.set('fulfillmentTypesSupported', 'Digital');
+                });
+            });
+        }
+
+
         if (!this.store.hasLoaded()) {
             this.store.load();
         }
+
 
         this.callParent(arguments);
 
@@ -224,7 +247,7 @@ Ext.define('Taco.view.product.variant.Grid', {
     },
 
     onRowEdit: function (editor, e) {
-
+      
     },
 
     onRowCancelEdit: function (e) {
@@ -236,6 +259,9 @@ Ext.define('Taco.view.product.variant.Grid', {
     },
     
     addSaveTasks: function (tasks, updateRecord, saveRecord) {
+
+        
+
 
         this.callParent(arguments);
         var storeTask = tasks.tasks.findBy(function (innerTask) {

@@ -94,7 +94,7 @@ Ext.define('Taco.overrides.data.AbstractStore', {
             };
 
         if (this.hasCompletedLoading()) Ext.defer(fn, 1);
-        else this.on('load', fn);
+        else this.on('load', fn, this,{single:true});
     },
 
     removeOwnedListener: function (owner) {
