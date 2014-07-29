@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
@@ -63,17 +64,25 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     var res = docResult.Result;
                     string etag = res.ETag();
                     var doc = res.ReadAsSync();
-                    var jsonString = doc.Get<string>("data");
-                    if (!string.IsNullOrEmpty(jsonString))
+                    try
                     {
-                        var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
-                        navset.ETag = etag;
-                        return navset;
+                        var job = doc.Get<JObject>("data").ToObject<NavigationSet>()??new NavigationSet();
+                       
                     }
-                    else
+                    catch 
                     {
-                        IList<INavigationNode> navset = new NavigationSet();
-                        return navset;
+                        var jsonString = doc.Get<string>("data");
+                        if (!string.IsNullOrEmpty(jsonString))
+                        {
+                            var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
+                            navset.ETag = etag;
+                            return navset;
+                        }
+                        else
+                        {
+                            IList<INavigationNode> navset = new NavigationSet();
+                            return navset;
+                        }
                     }
                 });
         }
@@ -95,7 +104,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         private static void UpdateNavigationDocument(DC.Document doc, NavigationSet set)
         {
-            doc.Set("data", Newtonsoft.Json.JsonConvert.SerializeObject(set));
+            doc.Set("data", JObject.FromObject(set));
         }
 
 

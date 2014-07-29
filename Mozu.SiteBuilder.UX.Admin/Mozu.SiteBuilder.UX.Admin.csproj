@@ -1460,6 +1460,8 @@
     <Content Include="Scripts\sass\src\view\order\widget\ReturnableItemGrid.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Header.scss" />
     <Content Include="Scripts\sass\src\view\order\subform\Fulfillment.scss" />
+    <Content Include=".jshintrc" />
+    <Content Include=".tfignore" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
