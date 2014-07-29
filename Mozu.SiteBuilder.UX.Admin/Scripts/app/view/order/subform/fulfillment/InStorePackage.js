@@ -57,7 +57,8 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
             handler: this.handleCancel
         }, {
             text: 'Mark as Ready',
-            handler: this.handleReady
+            handler: this.handleReady,
+            hidden: true
         }, {
             text: 'Mark as Fulfilled',
             handler: this.handleFulfilled
