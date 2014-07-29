@@ -141,7 +141,7 @@ Ext.define('Taco.view.order.Header', {
 
                 '</table>'
             ],
-            data: Ext.apply( this.record.getData(), {orderRecord:this.record})
+            data: Ext.apply(this.record.getData(), { orderRecord: this.record })
         });
 
         this.addressesCmp = Ext.widget({
@@ -272,17 +272,14 @@ Ext.define('Taco.view.order.Header', {
             this.customerCmp,
             this.dataContainer
         ]);
-
-        
     },
 
     updateHeader: function() {
-
         Ext.suspendLayouts();
 
         this.customerCmp.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
         this.detailCmp.update(this.record.getData());
-        this.statusCmp.update(this.record.getData());
+        this.statusCmp.update(Ext.apply(this.record.getData(), { orderRecord: this.record }));
         this.addressesCmp.update(this.record.getData());
 
         this.addressesContainer[this.record.getCustomer() ? 'show' : 'hide']();
