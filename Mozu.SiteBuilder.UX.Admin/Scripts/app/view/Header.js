@@ -7,7 +7,8 @@ Ext.define('Taco.view.Header', {
         'Taco.view.navigation.PrimaryMenu',
         'Taco.view.navigation.SecondaryMenu',
         'Taco.core.ux.action.Action',
-        'Taco.view.navigation.ContextSwitcher'
+        'Taco.view.navigation.ContextSwitcher',
+        'Ext.form.action.StandardSubmit'
     ],
 
     autoEl: { tag: 'header' },
