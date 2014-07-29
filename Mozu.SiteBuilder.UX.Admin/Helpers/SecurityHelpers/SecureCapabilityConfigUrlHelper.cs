@@ -10,14 +10,26 @@ using Mozu.Core.Crypto;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
+using Newtonsoft.Json.Linq;
+using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
 {
     public interface ISecureCapabilityConfigUrlHelper
     {
         Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant);
+
+
+        SecureForm BulidSecureForm(string hashKey, Dictionary<string, string> body);
     }
 
+    public class SecureForm
+    {
+        public List<KeyValuePair<string, string>> Body { get; set; }
+
+        public string DateStamp { get; set; }
+        public string MessageHash { get; set; }
+    }
     public class SecureCapabilityConfigUrlHelper : ISecureCapabilityConfigUrlHelper
     {
         public const string X_VOL_RETURN_URL = "x-vol-return-url";
@@ -32,6 +44,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
             _apiContext = apiContext;
             _httpSpecDateProvider = httpSpecDateProvider;
         }
+
+
+
 
         public Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant)
         {
@@ -81,6 +96,74 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
                 capabilityId, RETURN_ANCHOR);
         }
 
+
+
+        public SecureForm BulidSecureForm(string hashKey,   Dictionary<string,string> body)
+        {
+            body = body ?? new Dictionary<string, string>();
+            //var sf = new SecureForm()
+            //         {
+            //            // Body = body,
+            //             QueryString = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase )
+            //         };
+            body[Constants.Headers.TENANT] = _apiContext.TenantId.ToString();
+            if (_apiContext.MasterCatalogId.HasValue)
+            {
+                body[Constants.Headers.MASTER_CATALOG] = _apiContext.MasterCatalogId.ToString();
+            }
+            if (_apiContext.CatalogId .HasValue)
+            {
+                body[Constants.Headers.CATALOG] = _apiContext.CatalogId.ToString();
+            }
+            if (_apiContext.SiteId .HasValue)
+            {
+                body[Constants.Headers.SITE] = _apiContext.SiteId.ToString();
+            }
+            if (_apiContext.UserClaims.UserId != null  )
+            {
+                body["userId"] = _apiContext.UserClaims.UserId;
+            }
+
+          
+
+
+
+            var kvPairList = body.Select(pair => pair).ToList();
+
+            var sb = new StringBuilder();
+            kvPairList.ForEach(kvp =>
+            {
+                if (sb.Length == 0)
+                {
+                    sb.Append("&");
+                }
+                sb.Append(System.Web.HttpUtility.UrlEncode(kvp.Key));
+                sb.Append("=");
+                sb.Append(System.Web.HttpUtility.UrlEncode(kvp.Value));
+            });
+
+         
+           
+            var dt = _httpSpecDateProvider.GetRfc1123Format();
+
+            var hashedMsg = ComputeHash(hashKey, dt, sb.ToString()); 
+
+
+            return new SecureForm()
+                   {
+                       Body = kvPairList,
+                       MessageHash = hashedMsg ,
+                       DateStamp = dt
+                   };
+
+          
+        }
+
+
+        public SecureForm BulidSecureForm(string hashKey, KeyValuePair<string, string> body)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>

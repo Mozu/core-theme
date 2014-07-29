@@ -5,7 +5,8 @@ Ext.define('Taco.view.capability.Form', {
     margin: '0 0 20 0',
     requires: [
         'Taco.store.Capability',
-        'Taco.core.ux.window.Window'
+        'Taco.core.ux.window.Window',
+        'Ext.ux.IFrame'
     ],
 
     title: 'Applications',

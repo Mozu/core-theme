@@ -41,6 +41,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _apiContext = apiContext;
         }
 
+
+	    [HttpPostRoute(UriTemplate = "createSecureForm")]
+        public async Task<Response<SecureForm>> BulidSecureForm([FromBody]  Dictionary<string, string> body, [FromUri] string appId)
+	    {
+	        var app = (await _applicationsWebApiClient.CloneWithoutUserClaims().GetApplication(appId)).ReadAsSync();
+	        var form = _secureConfigUrlHelper.BulidSecureForm(app.HashKey, body);
+
+            return this.Single2(form);
+	    }
+
 	    [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> CapList([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
 	    {
@@ -87,6 +97,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 	    }
 
        
+        
+
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<HttpResponseMessage>  Edit(List<VM.Capability >capabilities )
         {
