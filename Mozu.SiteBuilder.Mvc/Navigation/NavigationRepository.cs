@@ -66,7 +66,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     var doc = res.ReadAsSync();
                     try
                     {
-                        var job = doc.Get<JObject>("data").ToObject<NavigationSet>()??new NavigationSet();
+                        
+                        var job = doc.Get<JContainer>("data").ToObject<NavigationSet>()??new NavigationSet();
                         return job;
                     }
                     catch 
@@ -104,7 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         private static void UpdateNavigationDocument(DC.Document doc, NavigationSet set)
         {
-            doc.Set("data", JObject.FromObject(set));
+            doc.Set("data", JContainer.FromObject(set));
         }
 
 
