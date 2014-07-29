@@ -17,14 +17,25 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
         requiresContextOfType: ['s']
     },
     initComponent: function () {
+        var appliesTo = this.record.get('appliesTo'),
+            feeTypeStore = (appliesTo === 'product') ? [['flatrate', 'Flat Rate']] : [['flatrate', 'Flat Rate'], ['percentage', 'Order Percentage'], ['percentage_appliesToShippingRate', 'Shipping Percentage']];
+
         this.formCfg = {
             layout: {
                 type: 'vbox',
                 align: 'stretch'
             },
 
-            title: this.record.get('appliesTo') == 'product' ? 'Product Handling Fee Configuration' : 'Order Handling Fee Configuration',
+            title: appliesTo == 'product' ? 'Product Handling Fee Configuration' : 'Order Handling Fee Configuration',
             items: [
+                {
+                    fieldLabel: 'Priority',
+                    hidden: this.record.phantom,
+                    xtype: 'numberfield',
+                    hideTrigger: true,
+                    name: 'sequence',
+                    value: 999
+                },
                 {
                     xtype: 'boxselect',
                     name: 'shippingTargetRuleCodes',
@@ -49,8 +60,6 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
                     store: Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods')
 
                 },
-
-               
                 {
                     xtype: 'container',
                     layout: 'hbox',
@@ -61,28 +70,19 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
                             fieldLabel: 'Fee Type',
                             allowBlank: false,
                             editable: false,
+                            minWidth: 200,
                             value: 'flatrate',
-                            store: [
-                                ['percentage', 'percentage'],
-                                ['flatrate', 'flatrate']
-                            ]
-
+                            readOnly: (appliesTo == 'product'),
+                            store: feeTypeStore
                         },
                         {
                             fieldLabel: 'Fee',
                             xtype: 'textfield',
                             hideTrigger: true,
-                            name: 'value'
+                            name: 'value',
+                            minWidth: 200
                         }
                     ]
-                },
-                {
-                    fieldLabel: 'Priority',
-                    hidden: this.record.phantom,
-                    xtype: 'numberfield',
-                    hideTrigger: true,
-                    name: 'sequence',
-                    value: 999
                 }
             ]
         };

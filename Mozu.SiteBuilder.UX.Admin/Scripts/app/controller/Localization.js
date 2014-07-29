@@ -5,7 +5,6 @@ Ext.define('Taco.controller.Localization', {
     extend: 'Taco.core.Controller',
     views: [
         'Taco.view.settings.localization.Attributes',
-        //'Taco.view.settings.localization.subform.Attributes',
         'Taco.view.settings.localization.AttributeValues',
         'Taco.view.settings.localization.ProductProperties',
         'Taco.view.settings.localization.ProductExtras',
@@ -18,9 +17,7 @@ Ext.define('Taco.controller.Localization', {
     index: function () {
         this.createContentView('Taco.view.settings.localization.Attributes');
     },
-    //index: function () {
-    //    this.createContentView('Taco.view.settings.localization.subform.Attributes');
-    //},
+
     attributeValues: function () {
         this.createContentView('Taco.view.settings.localization.AttributeValues');
     },

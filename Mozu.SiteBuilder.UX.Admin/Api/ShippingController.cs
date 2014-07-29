@@ -22,6 +22,7 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
 //using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
+using Mozu.ShippingAdmin.Contracts.Profile;
 using DC = Mozu.ShippingAdmin.Contracts;
 //using Mozu.SiteSettings.Shipping.Contracts.Clients;
 //using Mozu.UspsShippingAdmin.Contracts.Clients;
@@ -43,6 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ShippingController : BaseController
     {
 
+        private const string SHIPPING_PERCENT_HANDLING_FEE = "percentage_appliesToShippingRate";
 
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
        // private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
@@ -367,6 +369,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 else
                 {
                     var single = (await _shippingProfileWebApiClient.GetOrderHandlingFeeRule(profileCode, pagingParams.id)).ReadAsSync();
+                    UpdateShippingHandlingFeesFromService(single);
                     return this.List2(single);
                 }
                 
@@ -379,10 +382,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 var resp = (await _shippingProfileWebApiClient.GetOrderHandlingFeeRules(profileCode)).ReadAsSync();
+                UpdateShippingHandlingFeesFromService(resp);
                 return this.List2(resp.Items.OrderBy(x => x.Sequence).ToList(), resp.TotalCount);
             }
 
         }
+
+        
 
         [HttpPostRoute(UriTemplate = "HandlingRules/edit")]
         public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule>>> ProductHandlingRuleEdit(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> handlingFeeRules)
@@ -399,6 +405,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
+                UpdateShippingHandlingFeesToService(handlingFeeRules);
+
                 var tasks = handlingFeeRules.Select(x => _shippingProfileWebApiClient.UpdateOrderHandlingFeeRule(profileCode, x.Id, x)).ToList();
                 await Task.WhenAll(tasks);
                 handlingFeeRules.Clear();
@@ -464,6 +472,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
+                UpdateShippingHandlingFeesToService(handlingFeeRules);
+
                 var fees = (await _shippingProfileWebApiClient.GetOrderHandlingFeeRules(profileCode)).ReadAsSync();
                 var next = fees != null ? fees.Items.OrderByDescending(x => x.Sequence).Select(x => x.Sequence).FirstOrDefault(0) : 0;
                 var tasks = handlingFeeRules.Select(x =>
@@ -478,15 +488,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-
-
         //product handling fees
-
-      
-
-
-
-
 
 
         [HttpGetRoute(UriTemplate = "carrierRates")]
@@ -668,7 +670,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
           
         }
 
+        /// <summary>
+        /// converts drop down value of shippingRate percentage to value type of percent & applies to of shipping.
+        /// </summary>
+        /// <param name="handlingFeeRules"></param>
+        private static void UpdateShippingHandlingFeesToService(List<HandlingFeeRule> handlingFeeRules)
+        {
+            foreach (
+                var handlingFeeRule in
+                    handlingFeeRules.Where(
+                        handlingFeeRule => SHIPPING_PERCENT_HANDLING_FEE.EqualsIgnoreCase(handlingFeeRule.ValueType)))
+            {
+                handlingFeeRule.ValueType = "percentage";
+                handlingFeeRule.AppliesTo = "shippingRate";
+            }
+        }
 
+        private static void UpdateShippingHandlingFeesFromService(HandlingFeeRule single)
+        {
+            if ("shippingrate".EqualsIgnoreCase(single.AppliesTo))
+            {
+                TranslateHandlingFeeFromService(single);
+            }
+        }
+
+        private static void UpdateShippingHandlingFeesFromService(HandlingFeeRuleCollection handlingFeeRules)
+        {
+            if (handlingFeeRules == null || handlingFeeRules.Items.IsNullOrEmpty())
+                return;
+            foreach (var feeRule in handlingFeeRules.Items.Where(x => "shippingrate".EqualsIgnoreCase(x.AppliesTo)))
+            {
+                TranslateHandlingFeeFromService(feeRule);
+            }
+        }
+
+        private static void TranslateHandlingFeeFromService(HandlingFeeRule feeRule)
+        {
+            feeRule.AppliesTo = "order";
+            feeRule.ValueType = SHIPPING_PERCENT_HANDLING_FEE;
+        }
    
     }
 }
