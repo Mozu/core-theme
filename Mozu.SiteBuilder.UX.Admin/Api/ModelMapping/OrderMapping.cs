@@ -342,7 +342,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                                 foreach (var f in fulfillmentLocationsForThisProduct)
                                 {
-                                    var quantityAtThisLocation = Math.Min(remainingQuantity, f.Value) - GetNumberOfPickedUpItemsByProductCodeAndLocationCode(productCode, f.Key);
+                                    var quantityAtThisLocation = Math.Min(remainingQuantity, f.Value - GetNumberOfPickedUpItemsByProductCodeAndLocationCode(productCode, f.Key));
 
                                     if (quantityAtThisLocation <= 0)
                                         continue;
@@ -633,7 +633,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsManual, op => op.Ignore()) //calculated field
                 .AfterMap((dc, payment) =>
                 {
-                    if (payment == null || payment.PaymentType == "Check")
+                    if (payment == null || payment.PaymentType == PaymentsDC.PaymentTypeConst.CHECK)
                         return;
 
                     // if the payment is manual, all available actions should actually be ManualXXX
