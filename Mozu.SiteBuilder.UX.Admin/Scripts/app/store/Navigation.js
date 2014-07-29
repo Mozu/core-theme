@@ -5,6 +5,11 @@ Ext.define('Taco.store.Navigation', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.NavigationItem',
     autoLoad: true,
+    statics: {
+        subNavLinksLoaded: false,
+        getSubNavLinksLoaded: function () { return this.subNavLinksLoaded; },
+        setSubNavLinksLoaded: function (val) {this.subNavLinksLoaded=val }
+    },
     listeners: {
         beforeload: function (store) {
             if (!Taco.app || !Taco.app.context) {
@@ -64,7 +69,7 @@ Ext.define('Taco.store.Navigation', {
 
 
 
-            if (data.extensiblitySubNavLinksAdded || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
+            if (Taco.store.Navigation.getSubNavLinksLoaded()) {
                 return;
             }
 
@@ -110,7 +115,7 @@ Ext.define('Taco.store.Navigation', {
                 });
 
             });
-            data.extensiblitySubNavLinksAdded = true;
+            Taco.store.Navigation.setSubNavLinksLoaded(true);
         }
     },
 

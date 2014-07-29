@@ -24,7 +24,7 @@ Ext.create('Ext.form.Panel', {
             fieldLabel: 'Path',
             name: 'path',
             xtype: 'boxselect',
-            delimiter :'/',
+            delimiter: '/',
             store: [],
             queryMode: 'local',
             forceSelection: false,
@@ -32,8 +32,11 @@ Ext.create('Ext.form.Panel', {
             createNewOnBlur: true,
         }, {
             name: 'href',
-            fieldLabel:'Href'
-            
+            fieldLabel: 'Href'
+
+        }, {
+            name: 'appId',
+            fieldLabel: 'Application Id'
         }, {
             fieldLabel: 'windowTitle',
             name: 'windowTitle'
