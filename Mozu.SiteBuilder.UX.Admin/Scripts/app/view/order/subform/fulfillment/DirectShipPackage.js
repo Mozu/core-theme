@@ -5,7 +5,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         'Taco.view.order.subform.fulfillment.Grid'
     ],
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.title = 'Package: ' + this.packageData.code;
 
@@ -90,7 +90,12 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     ui: 'link',
                     text: this.packageData.trackingNumber || '(Add)',
                     handler: this.handleAddTrackingNumber,
+                    hidden: !!this.packageData.shipmentId,
                     scope: this
+                }, {
+                    xtype: 'component',
+                    html: this.packageData.trackingNumber || '(n/a)',
+                    hidden: !this.packageData.shipmentId
                 }]
             }]
         });
@@ -138,7 +143,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         this.callParent(arguments);
     },
 
-    handlePrintPackingSlip: function() {
+    handlePrintPackingSlip: function () {
         var win = window.open(),
             data = {
                 shippingMethodName: this.packageData.shippingMethodName,
@@ -234,14 +239,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         Ext.fly(win.document.body).setHTML(html);
     },
 
-    handleViewShippingLabel: function() {
+    handleViewShippingLabel: function () {
         window.open(
             '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageData.id,
             'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageData.id
         );
     },
 
-    handleGetShippingLabel: function() {
+    handleGetShippingLabel: function () {
         this.updateOrder({
             methodName: 'prepareShipment',
             errorMsg: 'Error preparing shipping label',
@@ -254,7 +259,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         });
     },
 
-    handleAddTrackingNumber: function() {
+    handleAddTrackingNumber: function () {
         Ext.create('Taco.view.order.modal.EditTrackingNumber', {
             packageData: this.packageData,
             record: this.record,
@@ -262,7 +267,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         });
     },
 
-    handleCancel: function() {
+    handleCancel: function () {
         this.updateOrder({
             methodName: 'deletePackage',
             errorMsg: 'Error deleting package',
@@ -273,14 +278,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         });
     },
 
-    handleMarkAsShipped: function() {
+    handleMarkAsShipped: function () {
         this.updateOrder({
             methodName: 'markPackagesShipped',
             errorMsg: 'Error marking as shipped',
             data: {
-            orderId: this.record.getId(),
-            packageIds: [this.packageData.id]
-        }
+                orderId: this.record.getId(),
+                packageIds: [this.packageData.id]
+            }
         });
     }
 });
