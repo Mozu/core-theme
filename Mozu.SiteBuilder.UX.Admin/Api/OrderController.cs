@@ -404,7 +404,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     {
                         dcOrder.FulfillmentInfo = new DCs.FulfillmentInfo();
                     }
-                    dcOrder.BillingInfo.BillingContact = defaultCustomerShippingContact;
+                    dcOrder.FulfillmentInfo.FulfillmentContact = defaultCustomerShippingContact;
                 }
             }
 
