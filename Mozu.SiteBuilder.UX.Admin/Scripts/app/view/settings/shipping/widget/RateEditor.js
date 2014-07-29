@@ -6,7 +6,7 @@
 Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
-        'Taco.shared.view.field.CountryField'
+    
     ],
 
     closeAction: 'destroy',
@@ -72,9 +72,6 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false,
                 width: 160
-            }, {
-                xtype: 'taco-countryfield',
-                name: 'configuredCountries'
             }]
         });
 

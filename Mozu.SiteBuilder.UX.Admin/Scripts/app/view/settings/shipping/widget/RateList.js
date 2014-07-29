@@ -43,28 +43,15 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
         
         me.listData = me.record.get("customRates");
 
-        me.countryStore = Taco.core.data.StoreManager.getOrCreate({
-            type:'Taco.store.Countries',
-            autoLoad: true,
-            listeners: {
-                load: function () {
-                    // need to wait for the countryStore to load before loading the custom rate grid so that the country code can be converted to the readable version;
-                    me.store.loadData(me.listData);
-                    me.body.unmask();
-                },
-                scope: me
-            }
-        });
+      
         
         // add loading mask to grid while we wait for the countryStore to load;
         me.on('viewready', function () {
             // note that I have to use the mask instead of setLoading. SetLoading is floating and doesn't work with scrolling and is really buggy;
-            if (!me.countryStore.hasCompletedLoading()) {
-                me.body.mask("Loading");
-            } else {
+            
                 // load the store data now that the countryStore data is available to convert the code to the viewable name
                 me.store.loadData(me.listData);
-            }
+            
         }, me, {
             single: true
         });
@@ -93,21 +80,8 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
                                 '{type}',
                             '</tpl>',
                         '</div>',
-                        '<div class="countries"><span class="label">Countries:</span>',
-                        '<tpl for="configuredCountries">',
-                            '<tpl if="xindex &gt; 1">, </tpl>{[this.getCountryName(values)]}',
-                        '</tpl>',
-                        '</div>',
-                    '</div>', {
-
-                        getCountryName: function (val) {
-                            var countryRecord = me.countryStore.getById(val);
-                            if (countryRecord) {
-                               return countryRecord.get("name");
-                            }
-                            return val;
-                        }
-                    }
+                      
+                    '</div>'
                 ]
             },
             {
