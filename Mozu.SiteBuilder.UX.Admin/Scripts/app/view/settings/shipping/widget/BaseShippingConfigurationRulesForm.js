@@ -199,13 +199,8 @@
 
     },
     launchEditor: function (record, options) {
-        var complexMetaData = { record: record, options: options };
-        if (this.reFetchRecordOnEdit) {
-            delete complexMetaData.record;
-        }
-        
         Ext.defer(function() {
-            Taco.core.StateManager.attemptNavigate(this.editRoute +'/' + record.getId(), complexMetaData);
+            Taco.core.StateManager.attemptNavigate(this.editRoute + '/' + record.getId());
         }, 1, this);
     },
     onDeleteClick: function (item, eventData) {

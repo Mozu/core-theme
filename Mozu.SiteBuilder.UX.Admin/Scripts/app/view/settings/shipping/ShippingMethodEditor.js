@@ -26,6 +26,14 @@ Ext.define('Taco.view.settings.shipping.ShippingMethodEditor', {
             title: 'Shipping Methods',
             items: [
                 {
+                    fieldLabel: 'Priority',
+                    xtype: 'numberfield',
+                    hidden: this.record.phantom,
+                    hideTrigger:true,
+                    name: 'sequence',
+                    value:999
+                },
+                {
                     xtype: 'boxselect',
                     name: 'shippingTargetRuleCodes',
                     valueField: 'code',
@@ -48,14 +56,6 @@ Ext.define('Taco.view.settings.shipping.ShippingMethodEditor', {
                     fieldLabel: 'Shipping Methods',
                     store: Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods')
 
-                },
-                {
-                    fieldLabel: 'Priority',
-                    xtype: 'numberfield',
-                    hidden: this.record.phantom,
-                    hideTrigger:true,
-                    name: 'sequence',
-                    value:999
                 }
             ]
         };
