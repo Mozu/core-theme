@@ -1,24 +1,29 @@
-$color-errortext: $color-neutral-mid;
+$color-errortext: $color-neutral-dark;
 
 .#{$vprefix}view-error {
-	text-align: center;
-	font-size: px-to-rem(30);
-	margin-top: 50px;
+	font-size: px-to-rem(20);
 
 	h1 {
-		border-bottom: 4px solid $color-errortext;
 		color: $color-errortext;
-		display: inline-block;
-		font-size: px-to-rem(180);
-		font-weight: normal;
+		font-size: px-to-rem(48);
 		line-height: 1.0;
 		margin-bottom: 20px;
 	}
 
 	h2 {
 		color: $color-errortext;
-		font-size: px-to-rem(48);
-		margin-bottom: 20px;
+		font-size: px-to-rem(30);
+		margin: 5rem 0 1rem;
+	}
+
+	ul {
+		padding-left: 3rem;
+	}
+
+	li {
+		list-style-type: disc;
+		color: $color-errortext;
+		line-height: px-to-rem(30);
 	}
 
 	p {

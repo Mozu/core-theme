@@ -275,6 +275,9 @@ Ext.define('Taco.core.StateManager', {
             Taco.app.getController("Errors").Http404();
             //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');
         }
+
+        if (!controller) { return Taco.app.getController("Errors").Http404(); }
+
         if (controller.performAction) {
             ret = controller.performAction(params.action, params.args, [params]);
             if (ret !== false) {
@@ -289,7 +292,7 @@ Ext.define('Taco.core.StateManager', {
                     break;
                 }
             }
-            if (controller && controller[params.action]) {
+            if (controller[params.action]) {
 
                 return controller[params.action].apply(controller, Ext.Array.union(params.args, [params]));
             } else {
