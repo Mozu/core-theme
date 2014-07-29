@@ -72,7 +72,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
         if (!items.length) return;
 
         this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DigitalGrid', {
-            data: items
+            data: items,
+            record: this.record
         }));
     },
 

@@ -54,7 +54,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
     },
 
     getColumnConfig: function () {
-        var columns = [];
+        var columns = [],
+            order = this.record;
 
         columns.push({
             text: 'Code',
@@ -86,8 +87,11 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
             width: 80,
             sortable: false,
             menuDisabled: true,
-            align: 'left',
-            dataIndex: 'unitPrice'
+            align: 'right',
+            dataIndex: 'unitPrice',
+            renderer: function (value) {
+                return order.formatCurrency(value);
+            }
         });
 
 
@@ -100,6 +104,29 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
                 menuDisabled: true,
                 align: 'left',
                 dataIndex: 'giftCardCode'
+            });
+        } else {
+            columns.push({
+                text: 'Quantity',
+                draggable: false,
+                width: 80,
+                sortable: false,
+                menuDisabled: true,
+                align: 'center',
+                dataIndex: 'quantity'
+            });
+
+            columns.push({
+                text: 'Total',
+                draggable: false,
+                width: 100,
+                sortable: false,
+                menuDisabled: true,
+                align: 'right',
+                dataIndex: 'total',
+                renderer: function (value) {
+                    return order.formatCurrency(value);
+                }
             });
         }
 
