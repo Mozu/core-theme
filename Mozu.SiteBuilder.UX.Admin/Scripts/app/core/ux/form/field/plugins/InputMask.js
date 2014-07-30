@@ -185,7 +185,6 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
         if (cls) {
             maskCls += cls;
         }
-        //debugger;
         
         me.mask = me.field.inputCell.mask(data, "taco-combo-mask-msg");
         //me.mask = me.field.triggerWrap.mask(data, "taco-combo-mask-msg");        

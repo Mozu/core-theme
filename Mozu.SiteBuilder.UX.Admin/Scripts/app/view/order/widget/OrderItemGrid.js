@@ -67,6 +67,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         this.autoEl = {
             tabIndex: 0
         }
+        
 
         this.dockedItems = [];
 
@@ -220,9 +221,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 }
             },
 
+            selModel: Ext.create('Ext.selection.CellModel', {
+                enableFieldTabbing :true
+            //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
+            }),
+            /*
             selModel: {
-                selType: 'cellmodel'
+                selType: 'cellmodel',
+                
             },
+            */
 
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
@@ -724,28 +732,34 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         // when user keys up arrow pass focus back to grid;
         this.mon(this.addProductToolbar, 'gridfocus', function (field, e) {
             var me = this,
-                cellIndex = 1,
-                lastCellIndex = me.columns.length-1,
-                rowIndex = me.store.getCount() - 1;
+                cellIndex,
+                lastCellIndex = me.columns.length - 1,
+                lastRow = me.store.getCount() - 1,
+                rowIndex;
             
             // no grid data;
-            if (rowIndex == -1) {
+            if (lastRow == -1) {
                 // nothing to pass focus to in the grid, so we need to pass focus back to the field
                 this.addProductToolbar.productPickerField.focus(null, 10);
                 return;
             }
 
-            // if left key or or shift tab go to last cell in grid;
-            if (e.getKey() == e.LEFT || (e.getKey() == e.TAB && e.shiftKey)) {
+            // shift tab go to first cell in grid;
+            if (e.getKey() == e.TAB && e.shiftKey) {
                 // set the cell index to the last cell;
-                cellIndex = lastCellIndex;
+                cellIndex = 0;
+                rowIndex = 0;
+            } else if (e.getKey() == e.UP) {
+                cellIndex = 1;
+                rowIndex = lastRow
+            } else {
+                return
             }
-
+            
             // this line is required for extjs 4.2.2; not neaded for extjs 4.3 nightly;
-
             me.getSelectionModel().setCurrentPosition({ row: rowIndex, column: cellIndex });
             me.view.focusRow(rowIndex);
-        
+            
         },this);
 
         this.dockedItems.push(this.addProductToolbar);
