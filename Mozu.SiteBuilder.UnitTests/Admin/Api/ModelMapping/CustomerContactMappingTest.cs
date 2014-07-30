@@ -56,9 +56,22 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
         }
 
         [Test]
-        public void AddressType_should_map() {
+        public void AddressType_should_map_to_sb_contract() {
             var mapped = Mapper.Map<DC.CustomerContact, CustomerContact>(dcTest);
             Assert.AreEqual(Core.Api.Contracts.Address.AddressTypes.Residential, mapped.AddressType);
+        }
+        
+        [Test]
+        public void AddressType_should_map_to_dc_contract()
+        {
+            var custContact = new CustomerContact()
+            {
+                IsPrimaryShipping = true,
+                IsShipping = true
+            };
+            var mapped = Mapper.Map<DC.CustomerContact>(custContact);
+            Assert.IsTrue(mapped.Types[0].IsPrimary);
+            Assert.AreEqual("Shipping", mapped.Types[0].Name);
         }
     }
 }
