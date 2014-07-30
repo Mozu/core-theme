@@ -185,8 +185,10 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
         if (cls) {
             maskCls += cls;
         }
-
-        me.mask = me.field.triggerWrap.mask(data, "taco-combo-mask-msg");        
+        //debugger;
+        
+        me.mask = me.field.inputCell.mask(data, "taco-combo-mask-msg");
+        //me.mask = me.field.triggerWrap.mask(data, "taco-combo-mask-msg");        
         me.mask.addCls("taco-combo-mask");
         // hide the mask since it will prevent clicking on any extra triggers;
         me.mask.hide();
@@ -201,7 +203,8 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
         me.maskMsg = Ext.get(me.mask.dom.nextSibling);
         me.maskMsg.setStyle({
             'left': '0px',
-            'right': triggerWidth + 'px',
+            //'right': triggerWidth + 'px',
+            'right': '0px',
             'top': '0px',
             'bottom': '0px' 
         })
@@ -260,8 +263,8 @@ Ext.define('Taco.core.ux.form.field.plugins.InputMask', {
         
         me.field.fireEvent('clearinputmask', this);
 
-        if (me.field.triggerWrap && me.mask && me.maskMsg) {
-            me.field.triggerWrap.unmask();
+        if (me.field.inputCell && me.mask && me.maskMsg) {
+            me.field.inputCell.unmask();
             delete me.mask;
             delete me.maskMsg;            
         }
