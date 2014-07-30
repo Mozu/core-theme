@@ -251,7 +251,8 @@
                 contacts = this.get('contacts').toJSON(),
                 editingCardModel = {
                     contacts: contacts,
-                    hasSavedContacts: this.hasSavedContacts()
+                    hasSavedContacts: this.hasSavedContacts(),
+                    isCvvOptional:true
                 };
             if (toEdit) {
                 _.extend(editingCardModel, toEdit.toJSON({ helpers: true }));

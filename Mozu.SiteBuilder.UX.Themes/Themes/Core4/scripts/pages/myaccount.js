@@ -195,6 +195,7 @@
             'editingCard.expireMonth',
             'editingCard.expireYear',
             'editingCard.cvv',
+            'editingCard.isCvvOptional',
             'editingCard.contactId',
             'editingContact.firstName',
             'editingContact.lastNameOrSurname',
