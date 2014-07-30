@@ -54,11 +54,16 @@ Ext.define('Taco.controller.Shipping', {
         this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
     zonescreate: function (id, additionalParams, appState) {
+        var appStateData = { domain: 'Shipping.DestinationAddress' };
+        if (additionalParams && additionalParams.duplicateSource) {
+            appStateData.description = additionalParams.duplicateSource.description;
+            appStateData.expression = additionalParams.duplicateSource.expression;
+        }
+
         appState = appState || {};
         delete additionalParams.record;
-        appState.record = Ext.create('Taco.model.TargetRule', {
-            domain: 'Shipping.DestinationAddress'
-        });
+
+        appState.record = Ext.create('Taco.model.TargetRule', appStateData);
 
         this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
@@ -72,11 +77,15 @@ Ext.define('Taco.controller.Shipping', {
         this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
     productRulesCreate: function (id, additionalParams, appState) {
+        var appStateData = { domain: 'Product' };
+        if (additionalParams && additionalParams.duplicateSource) {
+            appStateData.description = additionalParams.duplicateSource.description;
+            appStateData.expression = additionalParams.duplicateSource.expression;
+        }
+
         appState = appState || {};
         delete additionalParams.record;
-        appState.record = Ext.create('Taco.model.TargetRule', {
-            domain: 'Product'
-        });
+        appState.record = Ext.create('Taco.model.TargetRule', appStateData);
         this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
 

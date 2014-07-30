@@ -53,6 +53,7 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
                     xtype: 'textfield',
                     name: 'code',
                     fieldLabel: 'Name',
+                    allowBlank: false,
                     maxWidth: 400
                 },
                 {
