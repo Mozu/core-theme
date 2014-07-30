@@ -3208,7 +3208,7 @@ module.exports=
         "collectionOf": "document"
     },
     "entityList": {
-        "template": "{+etityListService}{listName}/entities{?_*}",
+        "template": "{+entityListService}{listName}/entities{?_*}",
         "shortcutParam": "filter",
         "defaultParams": {
             "startIndex": 0,
@@ -3217,7 +3217,7 @@ module.exports=
         "collectionOf": "entity"
     },
     "entityView": {
-        "template": "{+etityListService}{listName}/views/{viewName}/entities{?_*}",
+        "template": "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
         "shortcutParam": "filter",
         "defaultParams": {
             "startIndex": 0,
@@ -3227,16 +3227,16 @@ module.exports=
         "collectionOf": "entity"
     },
     "entity": {
-        "template": "{+etityListService}{listName}/entities/{id}{?_*}",
+        "template": "{+entityListService}{listName}/entities/{id}{?_*}",
         "shortcutParam": "listName",
 
     },
     "entityContainer": {
-        "template": "{+etityListService}{listName}/entityContainers/{id}{?_*}",
+        "template": "{+entityListService}{listName}/entityContainers/{id}{?_*}",
         "shortcutParam": "listName"
     },
     "entityContainerList": {
-        "template": "{+etityListService}{listName}/entityContainers{?_*}",
+        "template": "{+entityListService}{listName}/entityContainers{?_*}",
         "shortcutParam": "filter",
         "defaultParams": {
             "startIndex": 0,
@@ -3245,7 +3245,7 @@ module.exports=
         "collectionOf": "entityContainer"
     },
     "entityContainerView": {
-        "template": "{+etityListService}{listName}/views/{viewName}/entityContainers{?_*}",
+        "template": "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
         "shortcutParam": "filter",
         "defaultParams": {
             "startIndex": 0,
@@ -3687,24 +3687,6 @@ module.exports=
     },
     "ordernote": {
         "template": "{+orderService}{orderId}/notes/{id}"
-    },
-    "document": {
-        "get": {
-            "template": "{+cmsService}{/documentListName,documentId}/{?version,status}",
-            "shortcutParam": "documentId",
-            "defaultParams": {
-                "documentListName": "default"
-            }
-        }
-    },
-    "documentbyname": {
-        "get": {
-            "template": "{+cmsService}{documentListName}/documentTree/{documentName}/{?folderPath,version,status}",
-            "shortcutParam": "documentName",
-            "defaultParams": {
-                "documentListName": "default"
-            }
-        }
     },
     "addressschemas": "{+referenceService}addressschemas",
     "wishlist": {
