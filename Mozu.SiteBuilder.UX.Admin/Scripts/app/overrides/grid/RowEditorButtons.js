@@ -79,7 +79,7 @@ Ext.define('Taco.overrides.grid.RowEditorButtons', {
     onRender: function () {
         this.callParent(arguments);
 
-        this.setMargin('5 0 -5 0');
+        this.setMargin('0 0 -5 0');
     },
 
     setButtonPosition: function (position) {
