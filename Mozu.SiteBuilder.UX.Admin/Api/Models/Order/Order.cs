@@ -31,6 +31,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public List<InvalidCoupon> InvalidCoupons { get; set; }
 
         /// <summary>
+        ///  Coupon codes attempted or attached to this order.
+        /// </summary>
+        public List<string> CouponCodes { get; set; }
+
+        /// <summary>
         /// A sequential order number, only populated for completed orders.
         /// </summary>
         public int? OrderNumber { get; set; }
