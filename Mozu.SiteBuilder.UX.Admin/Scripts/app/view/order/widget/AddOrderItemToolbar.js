@@ -86,7 +86,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             scale:"medium",
             fieldBodyCls: "order-addproducttoolbar-cell",            
             text: "Add",
-            disabled: true,
+            disabled: true,            
+            width: this.gridColumns[5].width,
             handler: this.save,
             scope:this,
             value: ""
@@ -95,8 +96,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
             plugins: [
                 'inputmask'
-            ],
-            width: this.gridColumns[0].width,
+            ],            
+            flex:1,
             style: "padding:5px",
             fieldBodyCls: "order-addproducttoolbar-cell",
             pageSize: me.getProductsPerPage(),
@@ -269,7 +270,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             this.fulfillmentPickerField,
             this.priceField,
             this.quantityField,
-            this.addItemButton,
+            this.addItemButton,            
             {
                 xtype: "component",
                 width: this.gridColumns[6].width

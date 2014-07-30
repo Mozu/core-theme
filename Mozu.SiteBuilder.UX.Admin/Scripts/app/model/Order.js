@@ -602,7 +602,7 @@ Ext.define('Taco.model.Order', {
             "name": "couponCodes",
             "type": "auto",
             "persist": false,
-            "defaultValue": ["88DD9CD9"],
+            "defaultValue": [],
             "useNull": true
         }, {
             "name": "invalidCoupons",

@@ -31,7 +31,8 @@
 
         t.requireOk('Taco.view.product.subform.General',
             'Taco.view.product.subform.Subform',
-            'Taco.core.ux.HtmlEditor',
+            //'Taco.core.ux.HtmlEditor',
+            'Ext.form.field.HtmlEditor',
             'Taco.view.product.subform.OverrideForm',
             'Ext.form.field.ComboBox',
             'Taco.view.product.subform.Bundle',

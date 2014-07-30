@@ -80,6 +80,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.form.field.Base',
         'Taco.overrides.form.field.ComboBox',
         'Taco.overrides.form.field.Number',
+        'Taco.overrides.form.field.HtmlEditor',
         'Taco.overrides.grid.RowEditor',
         'Taco.overrides.grid.RowEditorButtons',
         'Taco.overrides.grid.plugin.RowEditing',
@@ -218,45 +219,6 @@ Ext.define('Taco.Application', {
                         //dump(item, index, tab + '\t')
                     });
                 }
-            }
-        });
-
-        Ext.override(Ext.form.field.HtmlEditor, {
-            getValue: function () {
-                var me = this,
-                    value;
-                if (!me.rendered) {
-                    return me.value;
-                }
-                if (!me.sourceEditMode) {
-                    if (document.getElementById(me.iframeEl.id)) {
-                        me.syncValue();
-                    } else {
-                        console.log('damn');
-                    }
-                }
-                value = me.textareaEl.dom.value;
-                me.value = value;
-                return value;
-            },
-            relayCmd: function (cmd, value) {
-                if (!this.rendered) {
-                    this.on('afterrender', function (html) {
-                        html.relayCmd(cmd, value);
-                    }, this, { single: true });
-                    return;
-                }
-                Ext.defer(function () {
-                    var me = this;
-                    if (!this.rendered) {
-                        me.relayCmd(cmd, value);
-                        return;
-                    }
-
-                    me.focus();
-                    me.execCmd(cmd, value);
-                    me.updateToolbar();
-                }, 10, this);
             }
         });
 

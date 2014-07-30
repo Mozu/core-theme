@@ -8,7 +8,8 @@ Ext.define('Taco.view.product.subform.General', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productgeneralsubform',
     requires: [
-        'Taco.core.ux.HtmlEditor',
+        'Ext.form.field.HtmlEditor',
+        //'Taco.core.ux.HtmlEditor',
         'Taco.view.product.subform.OverrideForm',
         'Ext.form.field.ComboBox',
         'Taco.view.product.subform.Bundle',
@@ -540,6 +541,7 @@ Ext.define('Taco.view.product.subform.General', {
                         name: 'productFullDescription',
                         emptyText: 'Words, words, and more words.  Also, with lists.',
                         listeners: {
+                            
                             editmodechange: htmlEditorEditModeChangeHandler,
                             change: function(cmp, newValue) {
                                 cmp.productForm = cmp.productForm || cmp.up('productform');
