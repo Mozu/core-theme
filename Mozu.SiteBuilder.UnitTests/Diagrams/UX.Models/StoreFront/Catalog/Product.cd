@@ -84,7 +84,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.ProductPrice">
-    <Position X="4.75" Y="11.5" Width="1.5" />
+    <Position X="4.75" Y="12.5" Width="1.5" />
     <Members>
       <Method Name="ProductPrice" Hidden="true" />
     </Members>
@@ -102,6 +102,9 @@
       <Class Name="Mozu.ProductRuntime.Contracts.Product.FulfillmentTypeConst" Collapsed="true">
         <TypeIdentifier />
       </Class>
+      <Class Name="Mozu.ProductRuntime.Contracts.Product.GoodsTypeConst" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
       <Class Name="Mozu.ProductRuntime.Contracts.Product.PublishStateConst" Collapsed="true">
         <TypeIdentifier />
       </Class>
@@ -109,6 +112,7 @@
     <TypeIdentifier />
     <ShowAsAssociation>
       <Property Name="PurchasableState" />
+      <Property Name="InventoryInfo" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Mozu.ProductRuntime.Contracts.ProductPrice">
@@ -159,6 +163,21 @@
     <Members>
       <Method Name="ProductPurchasableState" Hidden="true" />
     </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.ProductRuntime.Contracts.ProductInventoryInfo">
+    <Position X="12.5" Y="3.75" Width="3" />
+    <Members>
+      <Method Name="ProductInventoryInfo" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Mozu.ProductRuntime.Contracts.ProductInventoryInfo.OutOfStockBehaviorConst">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
     <TypeIdentifier />
   </Class>
   <Font Name="Segoe UI" Size="9" />
