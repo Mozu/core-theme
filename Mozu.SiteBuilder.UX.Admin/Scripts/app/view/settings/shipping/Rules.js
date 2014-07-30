@@ -132,49 +132,52 @@ Ext.define('Taco.view.settings.shipping.Rules', {
                 text: 'Actions',
                 flex: 1,
                 menuItems: [{
-                    text: 'Add Customers',
+                    text: 'Edit',
                     requiredBehaviors: {
-                        model: 'Taco.model.CustomerAccount',
+                        model: 'Taco.model.TargetRule',
                         behavior: 'update'
                     },
                     menuColumnHandler: function (item, eventData) {
-                        var modal = Ext.create('Taco.view.customers.Segments.AddRemoveModal',
-                        {
-                            segmentId: eventData.record.getId(),
-                            batchMethod: 'add',
-                            segmentCode: eventData.record.get('code')
-                        });
+                        me.launchLoadedEditor(eventData.record);
                     }
-                }, {
-                    text: 'Remove Customers',
+                },
+
+                    // todo: implement - Greg Murray on 2014-07-29 
+
+                //{
+                //    text: 'Duplicate',
+                //    requiredBehaviors: {
+                //        model: 'Taco.model.TargetRule',
+                //        behavior: 'create'
+                //    },
+                //    menuColumnHandler: function (item, eventData) {
+                //        var modal = Ext.create('Taco.view.customers.Segments.AddRemoveModal',
+                //        {
+                //            segmentId: eventData.record.getId(),
+                //            batchMethod: 'remove',
+                //            segmentCode: eventData.record.get('code')
+                //        });
+                //    }
+                //},
+                {
+                    text: 'Delete',
                     requiredBehaviors: {
-                        model: 'Taco.model.CustomerAccount',
+                        model: 'Taco.model.TargetRule',
                         behavior: 'update'
                     },
                     menuColumnHandler: function (item, eventData) {
-                        var modal = Ext.create('Taco.view.customers.Segments.AddRemoveModal',
-                        {
-                            segmentId: eventData.record.getId(),
-                            batchMethod: 'remove',
-                            segmentCode: eventData.record.get('code')
-                        });
-                    }
-                }, {
-                    text: 'Delete Segment',
-                    requiredBehaviors: {
-                        model: 'Taco.model.CustomerAccount',
-                        behavior: 'update'
-                    },
-                    menuColumnHandler: function (item, eventData) {
-                        var modal = Ext.create('Taco.core.ux.window.Alert', {
-                            autoShow: true,
-                            closeAction: 'destroy',
-                            items: [
-                                {
-                                    html: 'Do you really want to Delete Segment: ' + eventData.record.get('code')
-                                }],
-                            listeners: {
-                                confirm: function () {
+
+                        Ext.MessageBox.show({
+                            title: 'Delete',
+                            // pushes the buttons to the right to be consistant with our dialog ux.
+                            rightJustifyButtons: true,
+                            // reverses the order of the buttons
+                            reverseOrder: true,
+                            msg: "Are you sure you want to delete " + eventData.record.get('code') + "?",
+                            closable: false,
+                            buttons: Ext.Msg.YESNO,
+                            fn: function (val) {
+                                if (val === 'yes') {
                                     me.store.remove([eventData.record]);
                                     me.store.sync();
                                 }
