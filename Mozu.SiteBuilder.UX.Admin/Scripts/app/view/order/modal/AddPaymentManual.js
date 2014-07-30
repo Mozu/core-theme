@@ -14,6 +14,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
     title: 'Add Manual Payment',
 
     initComponent: function () {
+        
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
                 type: 'vbox'
@@ -77,7 +78,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                     width: 105
                 }, {
                     xtype: 'currencyfield',
-                    currencyCode: this.order.getCurrencyCode(),
+                    currencyCode: this.record.getCurrencyCode(),
                     name: 'amount',
                     fieldLabel: 'Amount',
                     emptyText: '0',
