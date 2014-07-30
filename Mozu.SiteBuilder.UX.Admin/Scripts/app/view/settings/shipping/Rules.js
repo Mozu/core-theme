@@ -141,24 +141,22 @@ Ext.define('Taco.view.settings.shipping.Rules', {
                         me.launchLoadedEditor(eventData.record);
                     }
                 },
+                {
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.TargetRule',
+                        behavior: 'create'
+                    },
+                    menuColumnHandler: function(item, eventData) {
+                        Taco.core.StateManager.attemptNavigate(me.createRoute, {
+                            duplicateSource: {
+                                description: eventData.record.get('description'),
+                                expression: eventData.record.get('expression'),
+                            }
+                        });
+                    }
+                },
 
-                    // todo: implement - Greg Murray on 2014-07-29 
-
-                //{
-                //    text: 'Duplicate',
-                //    requiredBehaviors: {
-                //        model: 'Taco.model.TargetRule',
-                //        behavior: 'create'
-                //    },
-                //    menuColumnHandler: function (item, eventData) {
-                //        var modal = Ext.create('Taco.view.customers.Segments.AddRemoveModal',
-                //        {
-                //            segmentId: eventData.record.getId(),
-                //            batchMethod: 'remove',
-                //            segmentCode: eventData.record.get('code')
-                //        });
-                //    }
-                //},
                 {
                     text: 'Delete',
                     requiredBehaviors: {
