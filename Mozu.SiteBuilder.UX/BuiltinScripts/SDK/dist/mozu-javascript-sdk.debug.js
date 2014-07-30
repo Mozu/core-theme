@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-07-15
+ * Mozu JavaScript SDK - v0.3.0 - 2014-07-30
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3690,19 +3690,19 @@ module.exports=
     },
     "document": {
         "get": {
-            "template": "{+cmsService}{/listFQN,documentId}/{?version,status}",
+            "template": "{+cmsService}{/documentListName,documentId}/{?version,status}",
             "shortcutParam": "documentId",
             "defaultParams": {
-                "listFQN": "default"
+                "documentListName": "default"
             }
         }
     },
     "documentbyname": {
         "get": {
-            "template": "{+cmsService}{listFQN}/documentTree/{documentName}/{?folderPath,version,status}",
+            "template": "{+cmsService}{documentListName}/documentTree/{documentName}/{?folderPath,version,status}",
             "shortcutParam": "documentName",
             "defaultParams": {
-                "listFQN": "default"
+                "documentListName": "default"
             }
         }
     },
@@ -4130,7 +4130,7 @@ module.exports = (function() {
         var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
         if (!data.paymentOrCardType) errors.throwOnObject(obj, 'CARD_TYPE_MISSING');
         if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, 'CARD_NUMBER_MISSING');
-        if (!data.cvv) errors.throwOnObject(obj, 'CVV_MISSING');
+        if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
         maskedData = transform.toCardData(data)
         var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
         if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');

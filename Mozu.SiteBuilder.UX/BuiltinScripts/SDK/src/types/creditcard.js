@@ -68,7 +68,7 @@ module.exports = (function() {
         var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
         if (!data.paymentOrCardType) errors.throwOnObject(obj, 'CARD_TYPE_MISSING');
         if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, 'CARD_NUMBER_MISSING');
-        if (!data.cvv) errors.throwOnObject(obj, 'CVV_MISSING');
+        if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
         maskedData = transform.toCardData(data)
         var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
         if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
