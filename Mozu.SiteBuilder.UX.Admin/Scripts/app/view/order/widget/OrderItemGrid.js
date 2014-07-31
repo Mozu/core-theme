@@ -57,17 +57,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this,
             siteContext,
             editModeCls = (this.getEditMode()) ? " order-editable " : "";
-        
-
 
         // attribute names need to be looked up for each order item that contains an option. :(
         this.attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
 
         // set tabIndex on the grid so that it can be tabbed too;
-        this.autoEl = {
-            tabIndex: 0
+        if (this.getEditMode()) {
+            this.autoEl = {
+                tabIndex: 0
+            }
         }
-        
 
         this.dockedItems = [];
 
@@ -222,15 +221,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             },
 
             selModel: Ext.create('Ext.selection.CellModel', {
-                enableFieldTabbing :true
-            //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
+                enableFieldTabbing: true,
+                // this disables support for tabbing into the grid when not editable;
+                enableKeyNav : (this.getEditMode()) ? true : false
             }),
-            /*
-            selModel: {
-                selType: 'cellmodel',
-                
-            },
-            */
 
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
