@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,6 +9,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using DC = Mozu.SiteSettings.Order.Contracts;
+using Mozu.Core.Api.Contracts.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -51,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             return List2(ret);
-        } 
+        }
 
         /// <summary>
         /// Updates the active checkout settings
@@ -66,6 +68,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcOrderProcessingSettings = Mapper.Map<DC.OrderProcessingSettings>(settingReq);
 
             DC.Gateway gateway = null;
+
+
+            
+            //todo find out if this is site country or locale contry
+
+
             var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry("us"));
             if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
             {
@@ -73,22 +81,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var posted = dcPaymentSettings.Gateways.First();
+            List<Task> tasks = new List<Task>();
             if (gateway != null && gateway.GatewayAccount.GatewayDefinitionId == posted.GatewayAccount.GatewayDefinitionId)
             {
-                await _checkoutSettingsWebApiClient.UpdateGateway(gateway.GatewayAccount.Id, posted);
+                tasks.Add(_checkoutSettingsWebApiClient.UpdateGateway(gateway.GatewayAccount.Id, posted));
             }
             else
             {
-                await _checkoutSettingsWebApiClient.CreateGateway(posted);
+                tasks.Add(_checkoutSettingsWebApiClient.CreateGateway(posted));
             }
 
-            var tasks = new Task[] {
-                _checkoutSettingsWebApiClient.UpdatePaymentSettings(dcPaymentSettings),
-                _checkoutSettingsWebApiClient.UpdateCustomerCheckoutSettings(dcCheckoutSettings),
-                _checkoutSettingsWebApiClient.UpdateOrderProcessingSettings(dcOrderProcessingSettings)
-            };
+            tasks.Add(_checkoutSettingsWebApiClient.UpdatePaymentSettings(dcPaymentSettings));
+            tasks.Add(_checkoutSettingsWebApiClient.UpdateOrderProcessingSettings(dcOrderProcessingSettings));
+            tasks.Add(_checkoutSettingsWebApiClient.UpdateCustomerCheckoutSettings(dcCheckoutSettings));
+
+
 
             await Task.WhenAll(tasks);
+
+            tasks.ForEach(x =>
+            {
+                var y = (dynamic) x;
+
+
+                var serviceClientResponse = y.Result;
+
+
+                if (serviceClientResponse.HasException)
+                {
+                    throw (Exception )serviceClientResponse.ReadException();
+                }
+
+            });
+
             var newSettings = await GetSettings();
 
             return newSettings;
