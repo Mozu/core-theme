@@ -281,7 +281,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
             this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
             this.ViewData["siteUsers"] = siteUsers.Items;
-            this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
+
+            try
+            {
+                this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
+            }
+            catch (Exception err)
+            {
+                LoggingService.LoggerFor<HomeController>().Error(err.Message, err);
+            }
 
             // IE8 compatibility (http://hsivonen.fi/doctype/)
             this.Response.AddHeader("X-UA-Compatible", "IE=Edge");
