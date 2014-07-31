@@ -20,10 +20,36 @@ using Newtonsoft.Json;
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
     /// <summary>
-    ///     The include_content tag is a special kind of include tag
+    /// The include_documents tag is a special kind of include tag, that includes a named template, 
+    /// but also sets that template's Model to be a document list result 
+    /// 
+    /// It has a number of extra argumentss:
+    /// 
+    /// 
+    /// viewName=the path to the template
+    /// 
+    /// 
+    /// pageWithUrl=Set this to true to use URL parameters for paging. 
+    /// If this is true then the list will use StartIndex and PageSize parameters in the URL if they exist. 
+    /// Default false.
+    /// 
+    /// sortWithUrl=Set this to true to use URL parameters for sorting. 
+    /// If this is true then the list will use SortAsc or SortDesc parameters in the URL if they exist.
+    /// 
+    /// startIndex=refer to  content document list  documentation
+    /// 
+    /// pageSize=refer to content document list  documentation
+    /// 
+    /// query=refer to content document list api documentation
+    /// 
+    /// sort=refer to  content document list  documentation
+    /// 
+    /// listFQN the fully qualified name of the document list
+    /// 
+    /// view= optional entity view to use 
     /// </summary>
     [ParserNodes.DescriptionAttribute("tbd")]
-    [Name("include_content")]
+    [Name("include_documents")]
     public class IncludeContentTag : SimpleTagBaseAsync
     {
         protected override async Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, IContext context)
@@ -41,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             int pageSize = arguments.GetValueOrDefault("pageSize", 15);
             var query = arguments.GetValueOrDefault<string>("query");
             var sortBy = arguments.GetValueOrDefault<string>("sort");
-            var list = arguments.GetValueOrDefault<string>("list");
+            var list = arguments.GetValueOrDefault<string>("listFQN");
             var view = arguments.GetValueOrDefault<string>("view");
 
             var tempCol = arguments.GetValueOrDefault<IEnumerable>("ids");
