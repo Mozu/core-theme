@@ -117,12 +117,28 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             },
             success: function (record, operation) {
                 // when the shipping method changes we need to reload the order record to pickup the changes;
-                
+                debugger;
                 me.onShippingInfoChange()
                 
             },
-            failure: function () {
-
+            success: function (response) {
+                // success handling here
+                debugger;
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', "Error setting shipping method.", 'error');
+                    return;
+                }
+                //this.fireEvent('saveSuccess', json);
+                me.onShippingInfoChange()
+            },
+            failure: function (response) {
+                // error handling here
+                debugger;
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : "Error setting shipping method.";
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                this.fireEvent('saveFailure');
             },
             scope: me
         });
