@@ -150,7 +150,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
     updateOrder: function (cfg) {
         Taco.app.viewPort.setLoading(true);
 
-        cfg = Ext.applyIf({}, cfg, {
+        cfg = Ext.apply({}, cfg, {
             reloadRecord: true
         });
 
