@@ -10,7 +10,16 @@ Ext.define('Taco.model.CheckoutSettings', {
         { name: "externalPaymentWorkflows", type: "any", defaultValue: {} },
         { name: "gateway", type: "any", defaultValue: {} },
         { name: "payByMail", type: "boolean" },
-        { name: "paymentProcessingFlowType", type: "string" },
+        {
+            name: "paymentProcessingFlowType", type: "string" ,
+            serialize : function (v, r) {
+                if (v) {
+                    v = v.replace(/,/gi, '');
+                }
+                return v;
+            }
+
+        },
         {
             name: "supportedCards",
             type: "auto",
