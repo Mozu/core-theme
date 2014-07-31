@@ -102,7 +102,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                     if (res.ResponseMessage.IsSuccessStatusCode)
                     {
                         var doc = res.ReadAsSync();
-                        doc.Set("data", values.ToString(Formatting.None));
+                        doc.Set("data", values);
                         return _cmsService.Update2(doc);
                     }
                     else
@@ -155,19 +155,10 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                             var doc = res.Result.ReadAsSync();
 
                             _ts = doc.UpdateDate.GetValueOrDefault(DateTime.Today);
-                            var data = doc.Get<string>("data");
-                            if (data != null)
-                            {
-                                try
-                                {
-                                    value = JObject.Parse(data);
-                                }
-                                catch (JsonReaderException)
-                                {
-                                    value = new JObject();
-                                }
-                            }
-                          //  _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag ));
+
+                            value = doc.Get<JObject>("data");
+
+                            //  _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag ));
                         }
                         else
                         {
