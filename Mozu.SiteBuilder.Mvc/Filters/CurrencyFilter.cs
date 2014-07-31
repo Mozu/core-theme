@@ -36,24 +36,35 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
         {
-            
+            if (value == null)
+            {
+                return string.Empty;
+            }
             var siteContext = context.SiteContext();
             var format = "C" + parameter.FirstOrDefault();
-            var intVal = value as int?;
-            if (intVal.HasValue)
+            var convertable = value as IConvertible;
+            var formatProvider = value as IFormatProvider ?? System.Threading.Thread.CurrentThread.CurrentCulture;
+
+            if (convertable != null)
             {
-                return intVal.Value.ToString(format, siteContext.NumberFormat);
+                try
+                {
+                    return convertable.ToDecimal(formatProvider).ToString(format, siteContext.NumberFormat);
+                }
+                catch
+                {
+                    return string.Empty;
+                }
+                    
             }
-            var decVal = value as decimal?;
-            if (decVal.HasValue)
+            
+            decimal d;
+            if (Decimal.TryParse(value.ToString(), out d))
             {
-                return decVal.Value.ToString(format, siteContext.NumberFormat);
+                return d.ToString(format, siteContext.NumberFormat);
             }
-            var doubleVal = value as double?;
-            if (doubleVal.HasValue)
-            {
-                return doubleVal.Value.ToString(format, siteContext.NumberFormat);
-            }
+
+          
             return string.Empty;
         }
     }
