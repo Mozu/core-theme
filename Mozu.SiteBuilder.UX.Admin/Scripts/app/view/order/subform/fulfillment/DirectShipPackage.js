@@ -9,7 +9,6 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
         this.title = 'Package: ' + this.packageData.code;
 
-
         this.details = Ext.widget({
             xtype: 'component',
             html: 'header'
@@ -23,6 +22,18 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
         if (!this.packageData.contact) {
             this.packageData.contact = this.record.get('fulfillmentContact');
+        }
+
+        if (!this.packageData.shipmentId) {
+            this.shippingMethodsStore = this.record.getShippingMethods();
+
+            this.packagingTypeStore = Ext.create('Taco.store.PackagingTypes');
+
+            this.packagingTypeStore.load();
+
+            if (this.shippingMethodsStore.count() === 0 && !this.shippingMethodsStore.isLoading()) {
+                this.shippingMethodsStore.load();
+            }
         }
 
         this.details = Ext.widget({
@@ -57,7 +68,32 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 },
                 items: [{
                     html: 'Shipping Method:',
-                    cls: 'label'
+                    cls: 'label',
+                    hidden: !this.packageData.shipmentId
+                }, {
+                    xtype: 'button',
+                    ui: 'link',
+                    html: 'Shipping Method:',
+                    cls: 'label',
+                    hidden: !!this.packageData.shipmentId,
+                    listeners: {
+                        menushow: function (button, menu) {
+                            menu.removeAll();
+                            menu.add(this.buildShippingMethods());
+                        },
+                        scope: this
+                    },
+                    menu: {
+                        plain: true,
+                        listeners: {
+                            click: this.handleShippingMethod,
+                            scope: this,
+                            delegate: 'x-menu-item-link'
+                        },
+                        items: [{
+                            text: ''
+                        }]
+                    }
                 }, {
                     html: this.packageData.shippingMethodName
                 }, {
@@ -74,7 +110,32 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 },
                 items: [{
                     html: 'Packaging Type:',
-                    cls: 'label'
+                    cls: 'label',
+                    hidden: !this.packageData.shipmentId
+                }, {
+                    xtype: 'button',
+                    ui: 'link',
+                    html: 'Packaging Type:',
+                    cls: 'label',
+                    hidden: !!this.packageData.shipmentId,
+                    listeners: {
+                        menushow: function (button, menu) {
+                            menu.removeAll();
+                            menu.add(this.buildPackagingTypes());
+                        },
+                        scope: this
+                    },
+                    menu: {
+                        plain: true,
+                        listeners: {
+                            click: this.handlePackagingType,
+                            scope: this,
+                            delegate: 'x-menu-item-link'
+                        },
+                        items: [{
+                            text: ''
+                        }]
+                    }
                 }, {
                     html: this.packageData.packagingType
                 }]
@@ -287,5 +348,53 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 packageIds: [this.packageData.id]
             }
         });
+    },
+
+    handleShippingMethod: function (menu, item) {
+        this.packageData.shippingMethodCode = item.methodCode;
+        this.packageData.shippingMethodName = item.methodName;
+
+        this.updateOrder({
+            methodName: 'changeShippingMethod',
+            errorMsg: 'Error changing shipping method on package',
+            data: [this.packageData]
+        });
+    },
+
+    handlePackagingType: function (menu, item) {
+        this.packageData.packagingType = item.packagingType;
+
+        this.updateOrder({
+            methodName: 'changePackagingType',
+            errorMsg: 'Error changing packaging type on package',
+            data: [this.packageData]
+        });
+    },
+
+    buildShippingMethods: function () {
+        var ret = [];
+
+        this.shippingMethodsStore.each(function (method) {
+            ret.push({
+                text: method.get('shippingMethodName'),
+                methodName: method.get('shippingMethodName'),
+                methodCode: method.get('shippingMethodCode')
+            });
+        });
+
+        return ret;
+    },
+
+    buildPackagingTypes: function () {
+        var ret = [];
+
+        this.packagingTypeStore.each(function (type) {
+            ret.push({
+                text: type.get('text'),
+                packagingType: type.get('packagingType')
+            });
+        });
+
+        return ret;
     }
 });
