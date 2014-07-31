@@ -40,7 +40,7 @@ Ext.define('Taco.view.product.subform.Options', {
                         product: this.product,
                         productType: this.productType,
                         listeners: {
-                            hide: function () {
+                            close: function () {
                                 this.product.getVariations().whenLoaded(this.rebuild, this);
                             },
                             scope: this
