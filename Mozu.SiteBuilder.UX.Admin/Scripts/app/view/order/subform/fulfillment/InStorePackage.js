@@ -30,6 +30,7 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
 
         this.details = Ext.widget({
             xtype: 'container',
+            cls: 'taco-order-fulfillment-info-header',
             layout: {
                 type: 'hbox',
                 align: 'left'

@@ -1,11 +1,6 @@
 Ext.define('Taco.view.order.subform.fulfillment.Container', {
     extend: 'Ext.Panel',
-    requires: [
-    ],
     alias: 'widget.taco-order-fulfillment-container',
 
-    initComponent: function() {
-
-        this.callParent(arguments);
-    }
+    margin: '0 0 12 0'
 });

@@ -4,9 +4,58 @@
         margin-right: 3px;
     }
 
+    .expand {
+        
+    }
+
+    .collapse {
+
+    }
+
+    .collapsed {
+        font-size: 14px;
+
+        .collapsed-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+    }
+
     .#{$vprefix}order-package-details {
         font-size: 14px;
         line-height: 16px;
+    }
+}
+
+.#{$vprefix}order-fulfillment {
+    font-size: 14px;
+
+    .fulfillment-status {
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .label-large {
+        color: $color-neutral-60;
+        font-weight: normal;
+        margin-right: 8px;
+    }
+
+    .section-header {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    table.section-summary {
+        
+        td {
+            text-align: right;
+        }
+
+        tr td:first-child {
+            font-weight: bold;
+            padding-right: 8px;
+        }
     }
 }
 

@@ -96,6 +96,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
 
         this.closedContainer = Ext.widget({
             xtype: 'container',
+            cls: 'collapsed',
             layout: {
                 type: 'hbox',
                 align: 'middle'
@@ -119,9 +120,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
             }, {
                 xtype: 'component',
                 html: this.title,
-                style: {
-                    'font-weight': 'bold'
-                }
+                cls: 'collapsed-title'
             }]);
 
             if (this.collapsedInfo) this.closedContainer.add(this.collapsedInfo);
