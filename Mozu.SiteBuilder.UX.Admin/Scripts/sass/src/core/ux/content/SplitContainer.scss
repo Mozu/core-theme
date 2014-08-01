@@ -1,11 +1,11 @@
 ﻿.#{$vprefix}splitcontainer-splitter {
-    background-color: $color-neutral-75;
-    border-left: 4px solid $color-neutral-75;
+    background-color: $color-standard-border-dark;
+    border-left: 4px solid $color-standard-border-dark;
     overflow: hidden;
 }
 
 .#{$vprefix}splitcontainer-collapsetool {
-    background-color: $color-neutral-90;
+    background-color: $base-color;
     @include icon-font($glyph-arrowleft);
 
     &::after {

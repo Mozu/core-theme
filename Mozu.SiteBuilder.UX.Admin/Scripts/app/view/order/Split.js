@@ -261,7 +261,7 @@ Ext.define('Taco.view.order.Split', {
     updateSplitTitle: function () {
         var record = this.getRecord();
         var isEdit = this.editor && this.editor.isEdit && this.editor.isEdit();
-        var activeTitle = '<span class="taco-content-header-title-root">' + (this.getWestTitle() || 'Records') + '</span>';
+        var activeTitle = '<a href="/admin/orders" class="taco-content-header-title-root">' + (this.getWestTitle() || 'Records') + '</a>';
 
         if (record) {
             activeTitle += (' / Order #' + record.get('orderNumber'));

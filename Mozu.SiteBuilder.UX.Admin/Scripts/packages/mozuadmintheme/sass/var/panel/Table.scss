@@ -1,6 +1,6 @@
 /* GRID BODY */
 $grid-body-background-color: $color-neutral-white;
-$grid-body-border-color: $color-neutral-80;
+$grid-body-border-color: $color-standard-border;
 $grid-body-border-style: solid;
 $grid-body-border-width: 0px 1px 1px;
 
@@ -15,10 +15,10 @@ $grid-row-cell-selected-background-color: $color-selected;
 $grid-cell-selected-background-color: $color-selected;
 
 // border
-$grid-row-cell-border-color: $color-neutral-80;
+$grid-row-cell-border-color: $color-neutral-95;
 $grid-row-cell-border-style: solid;
 $grid-row-cell-border-width: 1px;
-$grid-row-cell-focus-border-color: $color-theme-blue-bright;
+$grid-row-cell-focus-border-color: $color-selected-border;
 $grid-row-cell-focus-border-style: $grid-row-cell-border-style;
 $grid-row-cell-over-border-color: $color-neutral-75;
 $grid-row-cell-over-border-style: $grid-row-cell-border-style;

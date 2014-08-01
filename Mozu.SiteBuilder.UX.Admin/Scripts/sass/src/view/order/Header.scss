@@ -1,10 +1,10 @@
 .#{$vprefix}order-header {
     background-color: $color-neutral-white;
-    border: 1px solid $color-neutral-75;
+    border: 1px solid $color-standard-border;
 
     // links
     a {
-        color: $color-theme-red;
+        color: $color-framework-blue-dark;
     }
 
     // all labels
@@ -22,7 +22,7 @@
 
     // account name "banner"
     .account-name {
-        border-bottom: 1px solid $color-neutral-85;
+        border-bottom: 1px solid $color-standard-border;
         font-size: 18px;
         font-weight: bold;
         padding: 7px 19px 3px;
@@ -35,7 +35,7 @@
     }
 
     .pane {
-        border-right: 1px solid $color-neutral-85;
+        border-right: 1px solid $color-standard-border;
         margin: 10px 0px;
         padding: 0px 19px;
 

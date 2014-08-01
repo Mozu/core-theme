@@ -1,10 +1,10 @@
 .taco-content-navcontainer {
     border-width: 0px;
-    background-color:#e6e6e6;
+    background-color: $base-color;
     padding: 0px;
 
     .taco-content-navcontainer-body {                
-        background-color:#e6e6e6;
+        background-color: $base-color;
     }
 
     .x-grid-body {
@@ -21,7 +21,7 @@
 .taco-navheader {
     .taco-navheader-toolbar{        
         padding: 10px 20px 10px 20px;        
-        border-bottom: 1px solid $color-neutral-75 !important;
+        border-bottom: 1px solid $color-standard-border !important;
         .taco-content-header-title{
             font-size: 2.1rem;
             font-weight: bold;
@@ -31,7 +31,7 @@
             white-space: nowrap;
         }
         .taco-content-header-title-root {
-            // color: $color-theme-red;
+            color: $color-framework-blue-dark;
         }
     }
 }
