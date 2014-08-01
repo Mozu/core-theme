@@ -9,6 +9,8 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
 
     initComponent: function () {
 
+        this.cls = [this.cls, 'taco-order-fulfillment'].join(' ');
+
         this.record.on({
             reload: this.buildComponents,
             scope: this
@@ -41,6 +43,6 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
             }));
         }
 
-        this.title = 'Status: ' + this.record.get('fulfillmentStatus');
+        this.title = '<span class="fulfillment-status"><span class="label-large">Status:</span>' + this.record.get('fulfillmentStatus') + '</span>';
     }
 });

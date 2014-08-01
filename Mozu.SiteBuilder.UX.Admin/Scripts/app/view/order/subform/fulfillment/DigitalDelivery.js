@@ -5,9 +5,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
     ],
     alias: 'widget.taco-order-fulfillment-digital-delivery',
 
-    title: 'Gift Card',
-
     initComponent: function () {
+
+        this.title = '<span class="section-header">Gift Card</span>',
 
         this.items = [];
 
@@ -24,6 +24,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
         this.items.push(Ext.widget({
             xtype: 'container',
             padding: '0 0 10 0',
+            cls: 'taco-order-fulfillment-info-header',
             layout: {
                 type: 'hbox',
                 align: 'stretch'
@@ -35,7 +36,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
             items: [{
                 padding: '0 50 0 0',
                 tpl: [
-                    '<span class="taco-order-label">Customer:</span><br>',
+                    '<span class="label">Customer:</span><br>',
                     '{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}<br>',
                     '{billingContact.address1}<br>',
                     '<tpl if="billingContact.address2">{billingContact.address2}<br></tpl>',
@@ -49,18 +50,26 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
             }, {
                 padding: '0 50 0 0',
                 tpl: [
-                    '<span class="taco-order-label">Email:</span><br>',
+                    '<span class="label">Email:</span><br>',
                     '<a href="mailto:{fulfillmentContact.email}">{fulfillmentContact.email}</a>'
                 ]
             }, {
                 flex: 1,
-                style: {
-                    textAlign: 'right'
-                },
+                html: ''
+            }, {
                 tpl: [
-                    'Pending Items: {itemsNotShipped}<br>',
-                    'Fulfilled Items: {itemsShipped}<br>',
-                    '<span class="taco-order-label">Digital Items: {totalDirectShipItems}</span>'
+                    '<table class="section-summary">',
+                        '<tr>',
+                            '<td>Pending Items:</td>',
+                            '<td>{itemsNotDigitallyFulfilled}</td>',
+                        '</tr><tr>',
+                            '<td>Fulfilled Items:</td>',
+                            '<td>{itemsDigitallyFulfilled}</td></tr>',
+                        '</tr><tr>',
+                            '<td>Digital Items:</td>',
+                            '<td>{totalPickupItems}<td>',
+                        '</tr>',
+                    '</table>'
                 ]
             }]
         }));

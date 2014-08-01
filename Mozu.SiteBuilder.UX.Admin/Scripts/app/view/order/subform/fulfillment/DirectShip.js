@@ -6,9 +6,10 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
     ],
     alias: 'widget.taco-order-fulfillment-direct-ship',
 
-    title: 'Direct Ship Items',
 
-    initComponent: function() {
+    initComponent: function () {
+
+        this.title = '<span class="section-header">Direct Ship Items</span>',
 
         this.items = [];
 
@@ -23,7 +24,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
         this.callParent(arguments);
     },
 
-    buildInfoHeader: function() {
+    buildInfoHeader: function () {
         this.infoContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-fulfillment-info-header',
@@ -50,13 +51,21 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                 ]
             }, {
                 flex: 1,
-                style: {
-                    textAlign: 'right'
-                },
+                html: '',
+            }, {
                 tpl: [
-                    '<span class="label">Pending Items:</span>{itemsNotShipped}<br>',
-                    '<span class="label">Fulfilled Items:</span>{itemsShipped}<br>',
-                    '<span class="label">Direct Ship Items:</span>{totalDirectShipItems}'
+                    '<table class="section-summary">',
+                        '<tr>',
+                            '<td>Pending Items:</td>',
+                            '<td>{itemsNotShipped}</td>',
+                        '</tr><tr>',
+                            '<td>Fulfilled Items:</td>',
+                            '<td>{itemsShipped}</td></tr>',
+                        '</tr><tr>',
+                            '<td>Direct Ship Items:</td>',
+                            '<td>{totalDirectShipItems}<td>',
+                        '</tr>',
+                    '</table>'
                 ]
             }]
         });
@@ -64,7 +73,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
         this.items.push(this.infoContainer);
     },
 
-    buildPendingPackages: function() {
+    buildPendingPackages: function () {
         var items = this.record.get('unpackagedItems');
 
         if (!items.length) return;
@@ -78,7 +87,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
         this.items.push(this.pendingGrid);
     },
 
-    buildUnShippedPackages: function() {
+    buildUnShippedPackages: function () {
         Ext.each(this.record.get('unShippedPackages'), function (packageData) {
             this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 record: this.record,
@@ -87,7 +96,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
         }, this);
     },
 
-    buildShippedPackages: function() {
+    buildShippedPackages: function () {
         Ext.each(this.record.get('shippedPackages'), function (packageData) {
             this.items.push(Ext.create('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 record: this.record,

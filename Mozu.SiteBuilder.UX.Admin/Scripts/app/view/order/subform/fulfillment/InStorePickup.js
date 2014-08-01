@@ -5,9 +5,9 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
     ],
     alias: 'widget.taco-order-fulfillment-in-store-pickup',
 
-    title: 'In-store Pickup',
+    initComponent: function () {
 
-    initComponent: function() {
+        this.title = '<span class="section-header">In-store Pickup</span>';
 
         this.items = [];
 
@@ -22,9 +22,10 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
         this.callParent(arguments);
     },
 
-    buildInfoHeader: function() {
+    buildInfoHeader: function () {
         this.items.push(Ext.widget({
             xtype: 'container',
+            cls: 'taco-order-fulfillment-info-header',
             padding: '0 0 10 0',
             layout: {
                 type: 'hbox',
@@ -37,7 +38,7 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
             items: [{
                 padding: '0 50 0 0',
                 tpl: [
-                    '<span class="taco-order-label">Customer:</span><br>',
+                    '<span class="label">Customer:</span><br>',
                     '{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}<br>',
                     '{billingContact.address1}<br>',
                     '<tpl if="billingContact.address2">{billingContact.address2}<br></tpl>',
@@ -50,19 +51,27 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
                 ]
             }, {
                 flex: 1,
-                style: {
-                    textAlign: 'right'
-                },
+                html: ''
+            }, {
                 tpl: [
-                    'Pending Items: {itemsNotPickedup}<br>',
-                    'Fulfilled Items: {itemsPickedup}<br>',
-                    '<span class="taco-order-label">In Store Pickup Items: {totalPickupItems}</span>'
+                    '<table class="section-summary">',
+                        '<tr>',
+                            '<td>Pending Items:</td>',
+                            '<td>{itemsNotPickedup}</td>',
+                        '</tr><tr>',
+                            '<td>Fulfilled Items:</td>',
+                            '<td>{itemsPickedup}</td></tr>',
+                        '</tr><tr>',
+                            '<td>In Store Pickup Items:</td>',
+                            '<td>{totalPickupItems}<td>',
+                        '</tr>',
+                    '</table>'
                 ]
             }]
         }));
     },
 
-    buildPendingPickups: function() {
+    buildPendingPickups: function () {
         var items = this.record.get('unpickedupItems');
 
         if (!items.length) return;
@@ -77,7 +86,7 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
         }));
     },
 
-    buildUnPickedUpPackages: function() {
+    buildUnPickedUpPackages: function () {
         Ext.each(this.record.get('pendingPickups'), function (packageData) {
             this.items.push(Ext.create('Taco.view.order.subform.fulfillment.InStorePackage', {
                 record: this.record,
@@ -86,7 +95,7 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
         }, this);
     },
 
-    buildPickedUpPackages: function() {
+    buildPickedUpPackages: function () {
         Ext.each(this.record.get('pickedupPackages'), function (packageData) {
             this.items.push(Ext.create('Taco.view.order.subform.fulfillment.InStorePackage', {
                 record: this.record,
