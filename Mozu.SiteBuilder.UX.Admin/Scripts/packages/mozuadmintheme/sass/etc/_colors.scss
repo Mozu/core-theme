@@ -26,7 +26,17 @@ $color-neutral-05:              darken($color-neutral-white, 95%); /* #0d0d0d   
 
 /* THEME COLORS */
 
-$color-theme-red:               rgb(210, 70, 60);
+//framework colors
+$color-framework-black:         rgb(56, 59, 60);
+$color-framework-red:           rgb(223, 48, 24);
+$color-framework-blue-light:    rgb(212, 226, 240);
+$color-framework-blue-dark:     rgb(38, 109, 181);
+$color-framework-gray-light:    rgb(238, 240, 240);
+$color-framework-gray-border:   rgb(221, 223, 223);
+$color-framework-gray:          rgb(187, 190, 191);
+$color-framework-gray-dark:     rgb(114, 119, 121);
+
+$color-theme-red:               $color-framework-red;  // rgb(210, 70, 60);
 $color-theme-red-light:         rgb(221, 93, 84);
 $color-theme-red-darker:        rgb(196, 66, 57);
 $color-theme-red-darkest:       rgb(145, 49, 42);
@@ -40,7 +50,13 @@ $color-theme-blue-bright:       rgb(60, 134, 210);
 $color-theme-blue-darker:       rgb(31, 68, 107);
 $color-theme-purple:            rgb(114, 25, 133);
 
-$base-color: $color-neutral-90;
+/* DERIVATIVE COLORS */
+
+$base-color: $color-framework-gray-light;
+
+$color-standard-border: $color-framework-gray-border;
+$color-standard-border-dark: $color-neutral-75;
+$color-standard-text: $color-framework-black;
 
 // message colors
 $color-status-success:  $color-theme-green;
@@ -49,8 +65,8 @@ $color-status-warning:  $color-theme-yellow;
 $color-status-error:    $color-theme-red;
 
 // highlight colors
-$color-selected: $color-theme-blue-light;
-$color-selected-border: rgb(162, 185, 214);
+$color-selected: $color-framework-blue-light;
+$color-selected-border: rgb(184, 200, 213); // rgb(162, 185, 214);
 
 // action colors
 $color-action-link: $color-theme-blue-darker;
@@ -59,18 +75,14 @@ $color-action-link: $color-theme-blue-darker;
 $color-button-border: $color-theme-blue-darker;
 $color-button-boxshadow: $color-theme-blue-darker;
 
-
-
-$color-action-foreground: $color-neutral-20;
+$color-action-foreground: $color-framework-black;
 $color-action-background: $color-neutral-95;
 $color-action-background-hover: $color-neutral-90;
 $color-action-background-active: $color-neutral-75;
 $color-action-outline: $color-neutral-75;
 $color-action-outline-hover: $color-neutral-70;
 $color-action-outline-active: $color-neutral-75;
-
 $color-action-outline-focus: rgb(55, 120, 213);
-
 
 $color-action-primary-foreground: $color-neutral-white;
 $color-action-primary-background: $color-theme-red;

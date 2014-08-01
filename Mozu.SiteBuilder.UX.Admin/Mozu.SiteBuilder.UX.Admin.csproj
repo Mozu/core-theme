@@ -1018,6 +1018,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading.gif" />
+    <Content Include="Scripts\resources\fonts\mozicons-2014.svg" />
     <Content Include="Scripts\resources\images\icons\icon-barcode.png" />
     <Content Include="Scripts\resources\images\icons\icon-cart.png" />
     <Content Include="Scripts\resources\images\icons\icon-checkbox-focus.png" />
@@ -1464,6 +1465,9 @@
     <Content Include="Scripts\sass\src\view\order\subform\Fulfillment.scss" />
     <Content Include=".jshintrc" />
     <Content Include=".tfignore" />
+    <Content Include="Scripts\resources\fonts\mozicons-2014.eot" />
+    <Content Include="Scripts\resources\fonts\mozicons-2014.ttf" />
+    <Content Include="Scripts\resources\fonts\mozicons-2014.woff" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

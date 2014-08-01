@@ -26,55 +26,79 @@ $color-neutral-05:              darken($color-neutral-white, 95%); /* #0d0d0d   
 
 /* THEME COLORS */
 
-$color-theme-red:               rgb(210, 70, 60);
+//framework colors
+$color-framework-black:         rgb(56, 59, 60);
+$color-framework-red:           rgb(223, 48, 24);
+$color-framework-blue-light:    rgb(212, 226, 240);
+$color-framework-blue-dark:     rgb(38, 109, 181);
+$color-framework-gray-light:    rgb(238, 240, 240);
+$color-framework-gray-border:   rgb(221, 223, 223);
+$color-framework-gray:          rgb(187, 190, 191);
+$color-framework-gray-dark:     rgb(114, 119, 121);
+
+$color-theme-red:               $color-framework-red;  // rgb(210, 70, 60);
 $color-theme-red-light:         rgb(221, 93, 84);
+$color-theme-red-darker:        rgb(196, 66, 57);
+$color-theme-red-darkest:       rgb(145, 49, 42);
+$color-theme-yellow:            rgb(252, 194, 0);
+$color-theme-yellow-light:      rgb(252, 240, 200);
 $color-theme-green:             rgb(37, 174, 144);
 $color-theme-green-darker:      rgb(26, 122, 101);
 $color-theme-blue:              rgb(46, 100, 158);
+$color-theme-blue-light:        rgb(228, 239, 255);
 $color-theme-blue-bright:       rgb(60, 134, 210);
+$color-theme-blue-darker:       rgb(31, 68, 107);
+$color-theme-purple:            rgb(114, 25, 133);
 
-$base-color: $color-neutral-90;
+/* DERIVATIVE COLORS */
 
-$color-theme-base:              rgb(210, 70, 60);   // #D2463C red
-$color-theme-base-dark:         rgb(196, 66, 57);   // #C44239 red
-$color-theme-base-darker:       rgb(158, 53, 46);   // #9E352E red
-$color-theme-base-darkest:      rgb(145, 49, 42);   // #91312A red
+$base-color: $color-framework-gray-light;
 
-$color-theme-accent:            rgb(37, 174, 144);  // #25AE90 green
-
-$color-theme-support:           rgb(228, 239, 255); // #E4EFFF blue
-$color-theme-support-dark:      rgb(163, 184, 214); // #A3B8D6 blue
-$color-theme-support-darker:    rgb(55, 120, 213);  // #3778D5 blue
-$color-theme-support-darkest:   rgb(22, 69, 136);   // #164588 blue
+$color-standard-border: $color-framework-gray-border;
+$color-standard-border-dark: $color-neutral-75;
+$color-standard-text: $color-framework-black;
 
 // message colors
-$color-status:                  rgb(204, 255, 204); // #CCFFCC green
-$color-warning:                 rgb(255, 255, 204); // #FFFFCC yellow
-$color-error:                   rgb(255, 204, 204); // #FFCCCC red
+$color-status-success:  $color-theme-green;
+$color-status-info:     $color-theme-blue-bright;
+$color-status-warning:  $color-theme-yellow;
+$color-status-error:    $color-theme-red;
 
 // highlight colors
-$color-selected: $color-theme-support;
+$color-selected: $color-framework-blue-light;
+$color-selected-border: rgb(184, 200, 213); // rgb(162, 185, 214);
 
 // action colors
-$color-action-link: $color-theme-support-darkest;
+$color-action-link: $color-theme-blue-darker;
 
-$color-action-foreground: $color-neutral-20;
+// focus colors
+$color-button-border: $color-theme-blue-darker;
+$color-button-boxshadow: $color-theme-blue-darker;
+
+$color-action-foreground: $color-framework-black;
 $color-action-background: $color-neutral-95;
 $color-action-background-hover: $color-neutral-90;
 $color-action-background-active: $color-neutral-75;
 $color-action-outline: $color-neutral-75;
 $color-action-outline-hover: $color-neutral-70;
 $color-action-outline-active: $color-neutral-75;
+$color-action-outline-focus: rgb(55, 120, 213);
 
 $color-action-primary-foreground: $color-neutral-white;
-$color-action-primary-background: $color-theme-base;
-$color-action-primary-background-hover: $color-theme-base-dark;
-$color-action-primary-background-active: $color-theme-base-darkest;
-$color-action-primary-outline: $color-theme-base-darker;
-$color-action-primary-outline-hover: $color-theme-base-darkest;
-$color-action-primary-outline-active: $color-theme-base-darkest;
+$color-action-primary-background: $color-theme-red;
+$color-action-primary-background-hover: $color-theme-red-darker;
+$color-action-primary-background-active: $color-theme-red-darkest;
+$color-action-primary-outline: $color-theme-red-darker;
+$color-action-primary-outline-hover: $color-theme-red-darkest;
+$color-action-primary-outline-active: $color-theme-red-darkest;
 
-
+$color-action-toggle-foreground: $color-neutral-white;
+$color-action-toggle-background: $color-theme-green;
+$color-action-toggle-background-hover: darken($color-theme-green, 5%);
+$color-action-toggle-background-active: $color-theme-blue;
+$color-action-toggle-outline: darken($color-theme-green, 5%);
+$color-action-toggle-outline-hover: darken($color-theme-green, 10%);
+$color-action-toggle-outline-active: $color-theme-blue-darker;
 
 /* OLD COLORS */
 
@@ -91,6 +115,20 @@ $color-highlighted-background: rgb(112, 210, 219);
 $color-highlighted-background-light: rgb(189, 249, 255);
 $color-highlighted-foreground: $color-neutral-white;
 $color-highlighted-outline: $color-neutral-dark;
+
+$color-theme-base:              $color-theme-red;
+$color-theme-base-dark:         $color-theme-red-darker;
+$color-theme-base-darker:       $color-theme-red-darker;
+$color-theme-base-darkest:      $color-theme-red-darkest;
+$color-theme-accent:            $color-theme-green;
+$color-theme-support:           $color-theme-blue-light;
+$color-theme-support-dark:      rgb(163, 184, 214); // #A3B8D6 blue
+$color-theme-support-darker:    $color-theme-blue-bright;
+$color-theme-support-darkest:   $color-theme-blue-darker;
+
+$color-status:                  rgb(204, 255, 204); // #CCFFCC green
+$color-warning:                 rgb(255, 255, 204); // #FFFFCC yellow
+$color-error:                   rgb(255, 204, 204); // #FFCCCC red
 
 // $color-action-primary-background: rgb(255, 156, 51);
 // $color-action-primary-background-hover: adjust-lightness($color-action-primary-background, 4);

@@ -4,9 +4,9 @@
  */
 
 .#{$vprefix}masthead {
-    background-color: $color-neutral-20;
+    background-color: $color-neutral-white;
+    border-bottom: 1px solid $color-standard-border;
     border-top: 5px solid $color-theme-base;
-    color: $color-neutral-white;
     font-size: px-to-rem(14);
     left: 0px;
     line-height: 1.0;
@@ -28,31 +28,21 @@
     }
 
     .#{$prefix}btn-link-medium {
-
-      .#{$prefix}btn-inner {
-        color: $color-neutral-75;
-        font-size: 14px;
-        line-height: 16px;
-      }
-
-      .#{$prefix}btn-glyph {
-        color: $color-neutral-75;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      .#{$prefix}btn-arrow-right,
-      .#{$prefix}btn-split-right {
-        &::after {
-          color: $color-neutral-75
+        .#{$prefix}btn-inner {
+            font-size: 14px;
+            line-height: 16px;
         }
-      }
+
+        .#{$prefix}btn-glyph {
+            -webkit-font-smoothing: antialiased;
+        }
     }
 }
 
 .#{$vprefix}secondary-nav {
-  .#{$vprefix}action {
-    margin-right: 21px;
-  }
+    .#{$vprefix}action {
+        margin-right: 21px;
+    }
 }
 
 /** 
@@ -61,139 +51,133 @@
  */
 
 .#{$vprefix}viewport-nav {
-  background-color: $color-neutral-white;
-  padding-right: 30px;
+    background-color: $color-neutral-white;
+    padding-right: 30px;
 
-  .#{$vprefix}primary-menu-trigger {
-    border-right: 1px solid border-for($color-neutral-95);
-    display: block;
-    overflow: hidden;
-    @include box-shadow(1px 0px $color-neutral-white);
-    @include icon-font($glyph-menu, 32px);
-    @include single-transition(background-color, 0.4s);
-
-    &::after {
-      left: 14px;
-      top: 4px;
-    }
-    &.expanded {
-      background-color: $color-neutral-20;
-      
-      &::after {
-        color: $color-neutral-75;
-      }
-    }
-  }
-
-  .#{$vprefix}breadcrumb {
-    .#{$vprefix}icon {
-      border-right: 1px solid border-for($color-neutral-95);
-      color: $color;
-      display: inline-block;
-      margin-right: 10px;
-      padding: 14px 20px 0px 40px;
-      @include icon-font($glyph-dashboard, 20px);
-      height: 40px;
-      vertical-align: top;
-      width: auto;
-
-      &::after {
-        left: 10px;
-        top: 8px;
-      }
-    }
-    .#{$vprefix}icon-nav-customers::after {
-      content: $glyph-customers;
-    }
-    .#{$vprefix}icon-nav-catalog::after {
-      content: $glyph-catalog;
-    }
-    .#{$vprefix}icon-nav-orders::after {
-      content: $glyph-orders;
-      top: 10px;
-    }
-    .#{$vprefix}icon-nav-marketing::after {
-      content: $glyph-marketing;
-    }
-    .#{$vprefix}icon-nav-sites::after {
-      content: $glyph-sitebuilder;
-    }
-    .#{$vprefix}icon-nav-publishing::after {
-      content: $glyph-publishing;
-    }
-    .#{$vprefix}icon-nav-locations::after {
-      content: $glyph-locations;
-      top: 10px;
-    }
-
-    ul {
-      display: inline-block;
-      height: 40px;
-      margin-left: 10px;
-      vertical-align: top;
-
-      li {
-        display: inline-block;
-        padding: 0px 10px;
-        position: relative;
-        vertical-align: top;
-
-        a {
-          color: $color;
-          display: inline-block;
-          font-size: px-to-rem(14);
-          height: 40px;
-          line-height: 1.0;
-          padding: 16px 2px 0px;
-        }
-
-		a:focus{
-			color:$color-button-border;
-			text-decoration:underline;
-		}
-
-        &.#{$vprefix}breadcrumb-item-selected {
-          a {
-            border-bottom: 2px solid $color-theme-base;
-            color: $color-theme-base;
-          }
-        }
+    .#{$vprefix}primary-menu-trigger {
+        border-right: 1px solid $color-standard-border;
+        display: block;
+        overflow: hidden;
+        @include box-shadow(1px 0px $color-neutral-white);
+        @include icon-font($glyph-menu, 20px);
+        @include single-transition(background-color, 0.4s);
 
         &::after {
-          background-color: $color-neutral-20;
-          content: "";
-          display: block;
-          height: 14px;
-          position: absolute;
-          right: 0px;
-          top: 15px;
-          width: 1px;
+            left: 20px;
+            top: 10px;
         }
+        &.expanded {
+            background-color: $color-neutral-20;
 
-        &:nth-last-of-type(1) {
-          &::after {
-            content: none;
-          }
-        }
-      }
-    }
-
-
-	.taco-breadcrumb-menubutton{	
-		padding-right:20px !important;
-        background-image: none;
-        @include icon-font($glyph-arrowdown, 16px, $color-action-foreground);
-        height: auto;
-        width: auto;
-    
-        &::after {     
-			left:auto;
-			top: 15px;
-            right: 0px;
+            &::after {
+                color: $color-neutral-70;
+            }
         }
     }
 
+    .#{$vprefix}breadcrumb {
+        .#{$vprefix}icon {
+            border-right: 1px solid $color-standard-border;
+            color: $color;
+            display: inline-block;
+            margin-right: 10px;
+            padding: 14px 20px 0px 40px;
+            @include icon-font($glyph-dashboard, 20px);
+            height: 40px;
+            vertical-align: top;
+            width: auto;
 
+            &::after {
+            left: 10px;
+            top: 10px;
+            }
+        }
+        .#{$vprefix}icon-nav-customers::after {
+            content: $glyph-customers;
+        }
+        .#{$vprefix}icon-nav-catalog::after {
+            content: $glyph-catalog;
+        }
+        .#{$vprefix}icon-nav-orders::after {
+            content: $glyph-orders;
+        }
+        .#{$vprefix}icon-nav-marketing::after {
+            content: $glyph-marketing;
+        }
+        .#{$vprefix}icon-nav-sites::after {
+            content: $glyph-sitebuilder;
+        }
+        .#{$vprefix}icon-nav-publishing::after {
+            content: $glyph-publishing;
+        }
+        .#{$vprefix}icon-nav-locations::after {
+            content: $glyph-locations;
+        }
 
-  }
+        ul {
+            display: inline-block;
+            height: 40px;
+            margin-left: 10px;
+            vertical-align: top;
+
+            li {
+                display: inline-block;
+                padding: 0px 10px;
+                position: relative;
+                vertical-align: top;
+
+                a {
+                    color: $color;
+                    display: inline-block;
+                    font-size: px-to-rem(14);
+                    height: 40px;
+                    line-height: 1.0;
+                    padding: 16px 2px 0px;
+
+                    &:focus {
+                        color: $color-button-border;
+                        text-decoration:underline;
+                    }
+                }
+
+                &.#{$vprefix}breadcrumb-item-selected {
+                    a {
+                        border-bottom: 2px solid $color-theme-base;
+                        color: $color-theme-base;
+                    }
+                }
+
+                &::after {
+                    background-color: $color-neutral-20;
+                    content: "";
+                    display: block;
+                    height: 14px;
+                    position: absolute;
+                    right: 0px;
+                    top: 15px;
+                    width: 1px;
+                }
+
+                &:nth-last-of-type(1) {
+                    &::after {
+                        content: none;
+                    }
+                }
+            }
+        }
+
+        .taco-breadcrumb-menubutton {
+            padding-right:20px !important;
+            background-image: none;
+            @include icon-font($glyph-arrowdown, 16px, $color-action-foreground);
+            height: auto;
+            width: auto;
+
+            &::after {
+                left:auto;
+                top: 15px;
+                right: 0px;
+            }
+        }
+    }
 }

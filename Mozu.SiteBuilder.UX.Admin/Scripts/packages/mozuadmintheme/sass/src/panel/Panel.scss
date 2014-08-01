@@ -1,24 +1,28 @@
+.#{$prefix}panel-default-framed {
+    @include border-radius(0px);
+}
+
 /* SUBFORM PANEL UI DEFINITIONS */
 
 @include extjs-panel-ui(
     $ui: 'subform',
 
-    $ui-border-color: $color-neutral-75,
+    $ui-border-color: $color-standard-border,
     $ui-border-radius: 1px,
     $ui-border-width: 1px,
     $ui-padding: 0px 19px 19px,
 
-    $ui-header-color: $color-neutral-20,
+    $ui-header-color: $color-standard-text,
     $ui-header-font-family: $font-family,
     $ui-header-font-size: 24px,
     $ui-header-font-weight: normal,
     $ui-header-line-height: 24px,
-    $ui-header-border-color: $color-neutral-75,
+    $ui-header-border-color: $color-standard-border,
     $ui-header-border-width: 0px,
     $ui-header-border-style: solid,
     $ui-header-background-color: $color-neutral-white,
     $ui-header-background-gradient: null,
-    $ui-header-inner-border-color: $color-neutral-75,
+    $ui-header-inner-border-color: $color-standard-border,
     $ui-header-inner-border-width: 0px,
     $ui-header-text-padding: 0px,
     $ui-header-text-transform: none,
@@ -27,14 +31,14 @@
     $ui-header-icon-height: 16px,
     $ui-header-icon-spacing: 16px,
     $ui-header-icon-background-position: 0px 0px,
-    $ui-header-glyph-color: $color-neutral-20,
+    $ui-header-glyph-color: $color-standard-text,
     $ui-header-glyph-opacity: 1,
 
     $ui-tool-spacing: 16px,
     $ui-tool-background-image: $panel-tool-background-image,
 
     $ui-body-color: $color-neutral-20,
-    $ui-body-border-color: $color-neutral-75,
+    $ui-body-border-color: $color-standard-border,
     $ui-body-border-width: 1px 0px 0px,
     $ui-body-border-style: solid,
     $ui-body-background-color: $color-neutral-white,
@@ -48,7 +52,7 @@
 
     // See the docs above
     $ui-include-border-management-rules: false,
-    $ui-wrap-border-color: $color-neutral-75,
+    $ui-wrap-border-color: $color-standard-border,
     $ui-wrap-border-width: 0px
 );
 
@@ -74,22 +78,22 @@ $color-neutral-98: rgb(249, 249, 249);
 @include extjs-panel-ui(
     $ui: 'subform-subform',
 
-    $ui-border-color: $color-neutral-75,
+    $ui-border-color: $color-standard-border,
     $ui-border-radius: 0px,
     $ui-border-width: 1px,
     $ui-padding: 0px 19px 19px,
 
-    $ui-header-color: $color-neutral-20,
+    $ui-header-color: $color-standard-text,
     $ui-header-font-family: $font-family,
     $ui-header-font-size: 16px,
     $ui-header-font-weight: bold,
     $ui-header-line-height: 24px,
-    $ui-header-border-color: $color-neutral-75,
+    $ui-header-border-color: $color-standard-border,
     $ui-header-border-width: 0px,
     $ui-header-border-style: solid,
     $ui-header-background-color: $color-neutral-98,
     $ui-header-background-gradient: null,
-    $ui-header-inner-border-color: $color-neutral-75,
+    $ui-header-inner-border-color: $color-standard-border,
     $ui-header-inner-border-width: 0px,
     $ui-header-text-padding: 0px,
     $ui-header-text-transform: uppercase,
@@ -98,13 +102,13 @@ $color-neutral-98: rgb(249, 249, 249);
     $ui-header-icon-height: 16px,
     $ui-header-icon-spacing: 16px,
     $ui-header-icon-background-position: 0px 0px,
-    $ui-header-glyph-color: $color-neutral-20,
+    $ui-header-glyph-color: $color-standard-text,
     $ui-header-glyph-opacity: 1,
 
     $ui-tool-spacing: 16px,
     $ui-tool-background-image: $panel-tool-background-image,
 
-    $ui-body-color: $color-neutral-20,
+    $ui-body-color: $color-standard-text,
     $ui-body-border-color: $color-neutral-98,
     $ui-body-border-width: 1px 0px,
     $ui-body-border-style: solid,
@@ -119,7 +123,7 @@ $color-neutral-98: rgb(249, 249, 249);
 
     // See the docs above
     $ui-include-border-management-rules: false,
-    $ui-wrap-border-color: $color-neutral-75,
+    $ui-wrap-border-color: $color-standard-border,
     $ui-wrap-border-width: 0px
 );
 
@@ -137,22 +141,22 @@ $color-neutral-98: rgb(249, 249, 249);
 @include extjs-panel-ui(
     $ui: 'page',
 
-    $ui-border-color: $color-neutral-75,
+    $ui-border-color: $color-standard-border,
     $ui-border-radius: 0px,
     $ui-border-width: 0px,
     $ui-padding: 0px,
 
-    $ui-header-color: $color-neutral-20,
+    $ui-header-color: $color-standard-text,
     $ui-header-font-family: $font-family,
     $ui-header-font-size: 24px,
     $ui-header-font-weight: normal,
     $ui-header-line-height: 24px,
-    $ui-header-border-color: $color-neutral-75,
+    $ui-header-border-color: $color-standard-border,
     $ui-header-border-width: 0px,
     $ui-header-border-style: solid,
     $ui-header-background-color: transparentize($color-neutral-white, 1),
     $ui-header-background-gradient: null,
-    $ui-header-inner-border-color: $color-neutral-75,
+    $ui-header-inner-border-color: $color-standard-border,
     $ui-header-inner-border-width: 0px,
     $ui-header-text-padding: 0px,
     $ui-header-text-transform: none,
@@ -161,14 +165,14 @@ $color-neutral-98: rgb(249, 249, 249);
     $ui-header-icon-height: 16px,
     $ui-header-icon-spacing: 16px,
     $ui-header-icon-background-position: 0px 0px,
-    $ui-header-glyph-color: $color-neutral-20,
+    $ui-header-glyph-color: $color-standard-text,
     $ui-header-glyph-opacity: 1,
 
     $ui-tool-spacing: 16px,
     $ui-tool-background-image: $panel-tool-background-image,
 
-    $ui-body-color: $color-neutral-20,
-    $ui-body-border-color: $color-neutral-75,
+    $ui-body-color: $color-standard-text,
+    $ui-body-border-color: $color-standard-border,
     $ui-body-border-width: 1px 0px 0px,
     $ui-body-border-style: solid,
     $ui-body-background-color: transparentize($color-neutral-white, 1),
@@ -182,7 +186,7 @@ $color-neutral-98: rgb(249, 249, 249);
 
     // See the docs above
     $ui-include-border-management-rules: false,
-    $ui-wrap-border-color: $color-neutral-75,
+    $ui-wrap-border-color: $color-standard-border,
     $ui-wrap-border-width: 0px
 );
 
@@ -202,22 +206,22 @@ $color-neutral-98: rgb(249, 249, 249);
 @include extjs-panel-ui(
     $ui: 'subform-section',
 
-    $ui-border-color: $color-neutral-75,
+    $ui-border-color: $color-standard-border,
     $ui-border-radius: 0px,
     $ui-border-width: 0px,
     $ui-padding: 0px 0px 0px,
 
-    $ui-header-color: $color-neutral-black,
+    $ui-header-color: $color-standard-text,
     $ui-header-font-family: $font-family,
     $ui-header-font-size: 16px,
     $ui-header-font-weight: bold,
     $ui-header-line-height: 24px,
-    $ui-header-border-color: $color-neutral-75,
+    $ui-header-border-color: $color-standard-border,
     $ui-header-border-width: 0px,
     $ui-header-border-style: solid,
     $ui-header-background-color: $color-neutral-white,
     $ui-header-background-gradient: null,
-    $ui-header-inner-border-color: $color-neutral-75,
+    $ui-header-inner-border-color: $color-standard-border,
     $ui-header-inner-border-width: 0px,
     $ui-header-text-padding: 0px,
     $ui-header-text-transform: capitalize,
@@ -226,14 +230,14 @@ $color-neutral-98: rgb(249, 249, 249);
     $ui-header-icon-height: 16px,
     $ui-header-icon-spacing: 16px,
     $ui-header-icon-background-position: 0px 0px,
-    $ui-header-glyph-color: $color-neutral-20,
+    $ui-header-glyph-color: $color-standard-text,
     $ui-header-glyph-opacity: 1,
 
     $ui-tool-spacing: 16px,
     $ui-tool-background-image: $panel-tool-background-image,
 
-    $ui-body-color: $color-neutral-20,    
-    $ui-body-border-color: $color-neutral-75,
+    $ui-body-color: $color-standard-text,
+    $ui-body-border-color: $color-standard-border,
     $ui-body-border-width: 1px 0px 0px,    
     $ui-body-border-style: solid,
     $ui-body-background-color: $color-neutral-white,
@@ -247,7 +251,7 @@ $color-neutral-98: rgb(249, 249, 249);
 
     // See the docs above
     $ui-include-border-management-rules: false,
-    $ui-wrap-border-color: $color-neutral-75,
+    $ui-wrap-border-color: $color-standard-border,
     $ui-wrap-border-width: 0px
 );
 
@@ -261,22 +265,22 @@ $color-neutral-98: rgb(249, 249, 249);
 @include extjs-panel-ui(
     $ui: 'subform-section-child',
 
-    $ui-border-color: $color-neutral-75,
+    $ui-border-color: $color-standard-border,
     $ui-border-radius: 0px,
     $ui-border-width: 1px,
     $ui-padding: 0px 0px 0px,
 
-    $ui-header-color: $color-neutral-black,
+    $ui-header-color: $color-standard-text,
     $ui-header-font-family: $font-family,
     $ui-header-font-size: 16px,
     $ui-header-font-weight: bold,
     $ui-header-line-height: 24px,
-    $ui-header-border-color: $color-neutral-75,
+    $ui-header-border-color: $color-standard-border,
     $ui-header-border-width: 0px,
     $ui-header-border-style: solid,
     $ui-header-background-color: $color-neutral-transparent,
     $ui-header-background-gradient: null,
-    $ui-header-inner-border-color: $color-neutral-75,
+    $ui-header-inner-border-color: $color-standard-border,
     $ui-header-inner-border-width: 0px,
     $ui-header-text-padding: 0px,
     $ui-header-text-transform: capitalize,
@@ -285,14 +289,14 @@ $color-neutral-98: rgb(249, 249, 249);
     $ui-header-icon-height: 16px,
     $ui-header-icon-spacing: 0px,
     $ui-header-icon-background-position: 0px 0px,
-    $ui-header-glyph-color: $color-neutral-20,
+    $ui-header-glyph-color: $color-standard-text,
     $ui-header-glyph-opacity: 1,
 
     $ui-tool-spacing: 0px,
     $ui-tool-background-image: $panel-tool-background-image,
 
-    $ui-body-color: $color-neutral-20,
-    $ui-body-border-color: $color-neutral-75,
+    $ui-body-color: $color-standard-text,
+    $ui-body-border-color: $color-standard-border,
     $ui-body-border-width: 1px 0px 0px,
     $ui-body-border-style: solid,
     $ui-body-background-color: $color-neutral-transparent,
@@ -306,7 +310,7 @@ $color-neutral-98: rgb(249, 249, 249);
 
     // See the docs above
     $ui-include-border-management-rules: false,
-    $ui-wrap-border-color: $color-neutral-75,
+    $ui-wrap-border-color: $color-standard-border,
     $ui-wrap-border-width: 0px
 );
 

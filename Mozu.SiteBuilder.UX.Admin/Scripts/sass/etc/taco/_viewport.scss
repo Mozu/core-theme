@@ -21,7 +21,7 @@
   /* BODY */
 
   .#{$vprefix}content-view {
-    border-top: 1px solid border-for($color-neutral-95);
+    border-top: 1px solid $color-standard-border;
   }
 
   /* SCROLLBARS */

@@ -1,3 +1,9 @@
+.#{$prefix}column-header {
+    .#{$prefix}mask {
+        opacity: 0;
+    }
+}
+
 .#{$prefix}column-header-over {
     .#{$prefix}column-header-trigger {
         display: none;

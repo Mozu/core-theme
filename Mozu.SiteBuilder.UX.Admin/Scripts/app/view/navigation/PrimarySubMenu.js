@@ -17,8 +17,8 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
 
         this.tpl = [
             '<tpl for=".">',
-                '<li class="taco-submenu-item">',
-                    '<a href="{address}" class="taco-submenu-item-link" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}">{label}</a>',
+                '<li class="taco-submenu-item" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}">',
+                    '<a href="{address}" class="taco-submenu-item-link">{label}</a>',
                 '</li>',
             '</tpl>'
         ];
