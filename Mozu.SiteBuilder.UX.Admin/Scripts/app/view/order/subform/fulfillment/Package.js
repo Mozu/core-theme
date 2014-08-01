@@ -58,12 +58,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
                 width: 50,
                 ui: 'action',
                 scale: 'medium',
-                margin: '0 0 0 0',
+                margin: '0 10 0 0',
                 hidden: !this.isCollapsible,
                 handler: this.handleCollapse,
                 scope: this
             }, {
                 xtype: 'component',
+                margin: 0,
                 html: this.title,
                 flex: 1,
                 style: {
@@ -113,12 +114,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
 
         if (this.isCollapsible) {
             this.closedContainer.add([{
-                margin: '0 0 0 0',
+                margin: '0 10 0 0',
                 text: '+',
                 width: 50,
                 handler: this.handleExpand
             }, {
                 xtype: 'component',
+                margin: 0,
                 html: this.title,
                 cls: 'collapsed-title'
             }]);
