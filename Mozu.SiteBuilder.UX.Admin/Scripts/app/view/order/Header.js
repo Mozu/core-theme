@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.Header', {
 
     navigation: false,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents([
             /**
@@ -53,21 +53,21 @@ Ext.define('Taco.view.order.Header', {
         this.loadCustomer();
     },
 
-    onRecordChange: function () {        
+    onRecordChange: function () {
         this.updateHeader();
     },
 
-    loadCustomer: function() {
+    loadCustomer: function () {
         var me = this;
 
         this.record.loadCustomer({
-            callback: function() {
+            callback: function () {
                 me.loadItems();
             }
         });
     },
 
-    loadItems: function() {
+    loadItems: function () {
         this.customerCmp = Ext.widget({
             xtype: 'component',
             itemId: 'customerCmp',
@@ -115,7 +115,7 @@ Ext.define('Taco.view.order.Header', {
             itemId: 'statusCmp',
             cls: 'pane pane-status',
             flex: 33,
-            tpl: ['<table class="taco-order-header-status">',
+            tpl: ['<table class="order-header-status">',
 
                 '<tr>', '<td colspan="2"><div class="order-status"><span class="label">Order Status:</span><span data-handle="orderStatus">{orderStatus}</span></div></td>', '</tr>',
 
@@ -123,25 +123,77 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="orderSummary.totalItemCount &gt; 0">',
 
-                '<tr>', '<td><div class="taco-justify">', '<span class="label">Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Items:</span>', '<span>{orderSummary.totalItemCount}</span>', '</div></td>', '</tr>',
-
-                '<tr>', '<td><div class="taco-justify">', '<span class="label">Collected:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Shipped:</span>', '<span>{orderSummary.fulfilledItemCount}</span>', '</div></td>', '</tr>',
-
-                '<tr>', '<td><div class="taco-justify">', '<span class="label">Balance:</span>', '<span>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Remaining:</span>', '<span>{orderSummary.unfulfilledItemCount}</span>', '</div></td>', '</tr>',
+                '<tr>',
+                    '<td>',
+                        '<table class="header-summary">',
+                            '<tr>',
+                                '<td>Order Total:</td>',
+                                '<td data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</td>',
+                            '</tr><tr>',
+                                '<td>Collected:</td>',
+                                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</td>',
+                            '</tr><tr>',
+                                '<td>Balance:</td>',
+                                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</td>',
+                            '</tr>',
+                        '</table>',
+                    '</td>',
+                    '<td>',
+                        '<table class="header-summary">',
+                            '<tr>',
+                                '<td>Items:</td>',
+                                '<td>{orderSummary.totalItemCount}</td>',
+                            '</tr><tr>',
+                                '<td>Fulfilled:</td>',
+                                '<td>{orderSummary.fulfilledItemCount}</td>',
+                            '</tr><tr>',
+                                '<td>Remaining:</td>',
+                                '<td>{orderSummary.unfulfilledItemCount}</td>',
+                            '</tr>',
+                        '</table>',
+                    '</td>',
+                '</tr>',
 
                 '<tplelse>',
 
-                '<tr>', '<td><div class="taco-justify">', '<span class="label">Order Total:</span>', '<span data-handle="orderSummaryOrderTotal">N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Items:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
-
-                '<tr>', '<td><div class="taco-justify">', '<span class="label">Collected:</span>', '<span>N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Shipped:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
-
-                '<tr>', '<td><div class="taco-justify">', '<span class="label">Balance:</span>', '<span>N/A</span>', '</div></td>', '<td><div class="taco-justify">', '<span class="label">Remaining:</span>', '<span>N/A</span>', '</div></td>', '</tr>',
+                '<tr>',
+                    '<td>',
+                        '<table class="header-summary">',
+                            '<tr>',
+                                '<td>Order Total:</td>',
+                                '<td data-handle="orderSummaryOrderTotal">N/A</td>',
+                            '</tr><tr>',
+                                '<td>Collected:</td>',
+                                '<td>N/A</td>',
+                            '</tr><tr>',
+                                '<td>Balance:</td>',
+                                '<td>N/A</td>',
+                            '</tr>',
+                        '</table>',
+                    '</td>',
+                    '<td>',
+                        '<table class="header-summary">',
+                            '<tr>',
+                                '<td>Items:</td>',
+                                '<td>N/A</td>',
+                            '</tr><tr>',
+                                '<td>Fulfilled:</td>',
+                                '<td>N/A</td>',
+                            '</tr><tr>',
+                                '<td>Remaining:</td>',
+                                '<td>N/A</td>',
+                            '</tr>',
+                        '</table>',
+                    '</td>',
+                '</tr>',
 
                 '</tpl>',
 
                 '</table>'
             ],
-            data: Ext.apply(this.record.getData(), { orderRecord: this.record })
+            data: Ext.apply(this.record.getData(), {
+                orderRecord: this.record
+            })
         });
 
         this.addressesCmp = Ext.widget({
@@ -207,28 +259,29 @@ Ext.define('Taco.view.order.Header', {
             flex: 40,
             hidden: this.record.getCustomer() == null,
             items: [{
-                xtype: 'component',
-                cls: 'order-addresses',
-                autoEl: {
-                    tag: 'div',
-                    html: '<span class="label">Order Addresses</span>'
-                }
+                    xtype: 'component',
+                    cls: 'order-addresses',
+                    autoEl: {
+                        tag: 'div',
+                        html: '<span class="label">Order Addresses</span>'
+                    }
             }, {
-                xtype: 'button',
-                ui: 'link',
-                text: '(Change)',
-                handler: this.changeAddress,
-                scope: this
-            }, this.addressesCmp]
+                    xtype: 'button',
+                    ui: 'link',
+                    text: '(Change)',
+                    handler: this.changeAddress,
+                    scope: this
+            },
+                this.addressesCmp]
         });
 
         this.customerSelector = Ext.widget({
             xtype: 'taco-customerfield',
             itemId: 'customerSelector',
-            width: '100%',
+            width: 300,
             emptyText: 'Customer Search',
             listeners: {
-                select: function(combo, records, eOpts) {
+                select: function (combo, records, eOpts) {
                     if (records[0]) this.changeCustomer(records[0]);
                 },
                 scope: this
@@ -274,12 +327,14 @@ Ext.define('Taco.view.order.Header', {
         ]);
     },
 
-    updateHeader: function() {
+    updateHeader: function () {
         Ext.suspendLayouts();
 
         this.customerCmp.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
         this.detailCmp.update(this.record.getData());
-        this.statusCmp.update(Ext.apply(this.record.getData(), { orderRecord: this.record }));
+        this.statusCmp.update(Ext.apply(this.record.getData(), {
+            orderRecord: this.record
+        }));
         this.addressesCmp.update(this.record.getData());
 
         this.addressesContainer[this.record.getCustomer() ? 'show' : 'hide']();
@@ -288,13 +343,13 @@ Ext.define('Taco.view.order.Header', {
         Ext.resumeLayouts(true);
     },
 
-    createCustomer: function() {
+    createCustomer: function () {
         var me = this;
         Ext.create('Taco.view.customers.modal.CreateCustomer', {
             order: this.record,
             listeners: {
                 scope: me,
-                aftersaveclose: function (view, record) {                    
+                aftersaveclose: function (view, record) {
                     me.fireEvent('addresschanged', me, me.record);
                     me.updateHeader();
                 }
@@ -302,14 +357,14 @@ Ext.define('Taco.view.order.Header', {
         });
     },
 
-    changeAddress: function() {
+    changeAddress: function () {
         var me = this;
         Ext.create('Taco.view.customers.modal.Contacts', {
             record: this.record.getCustomer(),
             order: this.record,
             listeners: {
                 scope: me,
-                aftersaveclose: function (view, record) {                    
+                aftersaveclose: function (view, record) {
                     me.fireEvent('addresschanged', me, me.record);
                     me.updateHeader();
                 }
@@ -317,26 +372,26 @@ Ext.define('Taco.view.order.Header', {
         });
     },
 
-    changeCustomer: function(customerRecord) {
-        
+    changeCustomer: function (customerRecord) {
+
         this.record.setCustomer({
             jsonData: {
                 orderId: this.record.getId(),
                 customerAccountId: customerRecord.getId()
             },
-            callback: function(options, success, response) {
+            callback: function (options, success, response) {
                 if (!success) {
                     Taco.app.fireEvent('setmessage', 'Failed to set Assign Customer Account to this Order');
                     console.error(options, response);
                     return;
                 }
-                
+
                 this.record.set(Ext.decode(response.responseText).items);
 
                 this.record.commit();
 
                 this.record.loadCustomer({
-                    callback: function() {
+                    callback: function () {
                         this.fireEvent('customerchanged', this, this.record.getCustomer());
                         this.updateHeader();
                     },
