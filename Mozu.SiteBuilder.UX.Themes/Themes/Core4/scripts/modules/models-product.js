@@ -108,8 +108,8 @@
         },
         isConfigured: function() {
             var attributeDetail = this.get('attributeDetail');
-
-            return attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo ? this.isChecked() : this.isValidValue();
+            if (!attributeDetail) return true; // if attributeDetail is missing, this is a preconfigured product
+            return attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo ? this.isChecked() : this.isValidValue();
         },
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
