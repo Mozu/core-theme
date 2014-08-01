@@ -457,6 +457,7 @@
     <Compile Include="Admin\MockServices\InMemoryAttributeWebApiClientTests.cs" />
     <Compile Include="ClientRepositories\RestServiceClientTests.cs" />
     <Compile Include="ClientRepositories\UserRepositoryTests.cs" />
+    <Compile Include="Admin\Api\BirstTokenGeneratorTest.cs" />
     <Compile Include="Hypr\IncludeContext.cs" />
     <Compile Include="MappingTestFixture.cs" />
     <Compile Include="Mvc\CMS\CmsServiceWrapperTests.cs" />
