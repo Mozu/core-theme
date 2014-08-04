@@ -5,14 +5,12 @@
   }
 
   .#{$vprefix}form-nav {
-    background-color: $color-neutral-95;
-    border: 1px solid border-for($color-neutral-95);
+    background-color: $color-framework-gray-lighter;
+    border: 1px solid $color-standard-border;
+    outline: 0px none;
     padding: 19px 39px;
     position: fixed;
     width: 180px;
-    outline-style:none;
-    outline-width:0px;
-
 
     li {
       border-left: 3px solid transparent;
