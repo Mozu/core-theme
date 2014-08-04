@@ -1,11 +1,12 @@
 /**
-* Business Intelligence controller.
+* @class Taco.controller.BusinessIntelligence
 */
 Ext.define('Taco.controller.BusinessIntelligence', {
     extend: 'Taco.core.Controller',
-    requires: [
+    views: [
         'Taco.view.businessIntelligence.Index'
     ],
-    theme: function () {
+    index: function () {
+        this.createContentView('Taco.view.businessIntelligence.Index');
     }
 });
