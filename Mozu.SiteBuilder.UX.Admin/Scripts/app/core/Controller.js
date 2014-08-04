@@ -262,6 +262,7 @@ Ext.define('Taco.core.Controller', {
      */
     createContentView: function (view, cfg) {
         var me = this,
+            cfg=cfg|| {},
             container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView,
             loadmaskTask = cfg.loadmaskTask,
             viewClass;
