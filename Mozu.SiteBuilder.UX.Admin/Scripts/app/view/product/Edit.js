@@ -145,8 +145,6 @@
         
         this.callParent(arguments);
 
-        this.publishButton = this.down('button#publish');
-
         //if (me.publishButton) {
             // if the form becomes invalid disable the publish button
             me.mon(me.form, 'validityChange', function (view, valid) {
@@ -175,7 +173,10 @@
 
         
 
-        this.on({
+            this.on({
+                render: function() {
+                    this.publishButton = this.down('button#publish');
+                },
             aftersave: function () {
                 if (this.doPublishAfterSave) {
                     this.doPublish();
