@@ -7,7 +7,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
     extend: 'Taco.core.ux.browser.SearchList',
 
     requires: [
-        'Taco.store.Countries',
+ 
         'Taco.view.settings.shipping.widget.RateEditor',
         'Taco.model.CustomShippingRate'
     ],

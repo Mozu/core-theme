@@ -53,6 +53,10 @@
             m.record = m.editor.record;
             m.newName = t.randomStringSuffix("banannas-", m.record.get('productName'));
 
+            t.waitForComponentQuery( '[name=price]',m.editor, next);
+        },
+        function (next, res) {
+
             t.setFormValues(m.editor.form, {
                 productName: m.newName,
                 price: 56

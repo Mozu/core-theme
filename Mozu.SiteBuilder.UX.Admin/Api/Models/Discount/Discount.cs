@@ -102,6 +102,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> ShippingMethods { get; set; }
 
 
+        public List<string> ShippingZones { get; set; }
+
+
    
         public Decimal? MinimumOrderAmount { get; set; }
 

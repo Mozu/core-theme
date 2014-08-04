@@ -18,7 +18,7 @@ Ext.define('Taco.model.Product', {
         'Taco.store.ProductTypes'
      
     ],
-    requiredStores: ['Taco.store.ProductTypes'],
+   // requiredStores: ['Taco.store.ProductTypes'],
     statics: {
         publishBulk: function (cfg) {
             this.doPublish(Ext.apply({}, {
@@ -47,12 +47,13 @@ Ext.define('Taco.model.Product', {
         },
 
         doPublish: function (cfg) {
-            var me = this,
-                options = Ext.apply({}, {
+            var options = Ext.apply({}, {
                     method: 'POST',
-                    success: function (response) {
+                    success: function () {
                         Taco.core.data.StoreManager.markChanged('Taco.model.Product');
-                        if (cfg.success) cfg.success.apply(cfg.scope || this, arguments);
+                        if (cfg.success) {
+                            cfg.success.apply(cfg.scope || this, arguments);
+                        }
                     }
                 }, cfg);
             Ext.Ajax.request(options);
@@ -479,9 +480,15 @@ Ext.define('Taco.model.Product', {
                 url: '/admin/app/productruntime/read?productCode=' + this.getId(),
                 success: function (response) {
                     var res = Ext.JSON.decode(response.responseText) || {};
-                    if (cfg.callback) cfg.callback.apply(cfg.scope || me, [res.items, response]);
-                    if (cfg.success && res.success) cfg.success.apply(cfg.scope || me, [res.items, response]);
-                    if (!res.success && cfg.failure) cfg.failure.apply(cfg.scope || me, [res.items, response]);
+                    if (cfg.callback) {
+                        cfg.callback.apply(cfg.scope || me, [res.items, response]);
+                    }
+                    if (cfg.success && res.success) {
+                        cfg.success.apply(cfg.scope || me, [res.items, response]);
+                    }
+                    if (!res.success && cfg.failure) {
+                        cfg.failure.apply(cfg.scope || me, [res.items, response]);
+                    }
                 }
             }, cfg);
         Ext.Ajax.request(options);
@@ -495,7 +502,7 @@ Ext.define('Taco.model.Product', {
     },
     getMasterCatalog: function () {
         var mc = this.get('masterCatalogId');
-        if (mc == null) {
+        if ( mc == null ) {
             return Taco.app.context.getMasterCatalog();
         }
         return Taco.app.context.findMasterCatalog(mc);
@@ -510,9 +517,15 @@ Ext.define('Taco.model.Product', {
                     me.set('publishedState', 'Live');
                     Taco.core.data.StoreManager.markChanged('Taco.model.Product');
                     var res = Ext.JSON.decode(response.responseText) || {};
-                    if (cfg.callback) cfg.callback.apply(cfg.scope || me, [res.items, response]);
-                    if (cfg.success && res.success) cfg.success.apply(cfg.scope || me, [res.items, response]);
-                    if (!res.success && cfg.failure) cfg.failure.apply(cfg.scope || me, [res.items, response]);
+                    if (cfg.callback) {
+                        cfg.callback.apply(cfg.scope || me, [res.items, response]);
+                    }
+                    if (cfg.success && res.success) {
+                        cfg.success.apply(cfg.scope || me, [res.items, response]);
+                    }
+                    if (!res.success && cfg.failure) {
+                        cfg.failure.apply(cfg.scope || me, [res.items, response]);
+                    }
                 }
             }, cfg);
         Ext.Ajax.request(options);
@@ -530,9 +543,15 @@ Ext.define('Taco.model.Product', {
                     Taco.core.data.StoreManager.markChanged('Taco.model.Product');
                     var res = Ext.JSON.decode(response.responseText) || {};
 
-                    if (cfg.callback) cfg.callback.apply(cfg.scope || me, [res.items, response]);
-                    if (cfg.success && res.success) cfg.success.apply(cfg.scope || me, [res.items, response]);
-                    if (!res.success && cfg.failure) cfg.failure.apply(cfg.scope || me, [res.items, response]);
+                    if (cfg.callback) {
+                        cfg.callback.apply(cfg.scope || me, [res.items, response]);
+                    }
+                    if (cfg.success && res.success) {
+                        cfg.success.apply(cfg.scope || me, [res.items, response]);
+                    }
+                    if (!res.success && cfg.failure) {
+                        cfg.failure.apply(cfg.scope || me, [res.items, response]);
+                    }
                 }
             }, cfg);
         Ext.Ajax.request(options);
@@ -645,7 +664,7 @@ Ext.define('Taco.model.Product', {
         var me = this,
             params,
             proxy;
-        autoLoad = !(autoLoad === false);
+        autoLoad = (autoLoad !== false);
 
         if (me.productVariationStore) {
             return me.productVariationStore;
@@ -668,7 +687,7 @@ Ext.define('Taco.model.Product', {
                 params.options = Ext.JSON.encode(params.options);
                 this.load({
                     params: params,
-                    callback: function (records, operation, success) {
+                    callback: function (records) {
                         Ext.Array.each(records, function (newRecord) {
                             newRecord.set('isActive', true);
                         });

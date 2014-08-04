@@ -4,6 +4,7 @@ using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
 using DC = Mozu.ProductAdmin.Contracts;
+using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -78,9 +79,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ExcludedProducts, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ExcludedProducts != null)
                     ? (x.Target.ExcludedProducts).Select(_ => _.ProductCode).ToList()
                     : (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
-                .ForMember(x => x.ShippingMethods, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingMethods != null)
-                    ? (x.Target.ShippingMethods).Select(_ => _.Code).ToList()
-                    : (Enumerable.Empty<DC.TargetedShippingMethod>()).Select(_ => _.Code).ToList()))
+
+                .ForMember(x => x.ShippingMethods, opt => opt.ResolveUsing( x => (x.Target != null && x.Target.ShippingMethods != null)
+                    ? ((x.Target.ShippingMethods).Select(_ => _.Code).ToList())
+                    : new List<string>()))
+
+               .ForMember(x => x.ShippingZones , opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingZones  != null)
+                    ? ((x.Target.ShippingZones).Select(_ => _.Zone ).ToList())
+                    : new List<string>()))
+                
+               //.ForMember(x => x.ShippingZones , opt => opt.ResolveUsing( x =>   (x.Target != null && x.Target.ShippingZones  != null)
+               //     ? x.Target.ShippingZones.Select(_ => __.z).ToList()
+               //     : new List<string>()))
+
+
                 .ForMember(x => x.MinimumOrderAmount, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.MinimumOrderAmount : null))
                 .ForMember(x => x.MaxRedemptionCount, opt => opt.ResolveUsing(x => (x.Conditions != null)
@@ -153,7 +165,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            ExcludedCategories = (x.ExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
                                                                            Products = (x.Products ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
-                                                                           ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod {Code = _}).ToList(),
+                                                                           ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod { Code = _ }).ToList(),
+                                                                          ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),
                                                                            IncludeAllProducts = x.IncludeAllProducts,
                                                                        }))
                 .AfterMap((s, d) =>

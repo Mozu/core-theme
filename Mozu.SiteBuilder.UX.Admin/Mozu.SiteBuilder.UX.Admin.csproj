@@ -225,7 +225,7 @@
     </Reference>
     <Reference Include="Mozu.Core, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.10.0.1\lib\net45\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.10.0.4\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -237,7 +237,7 @@
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.10.0.1\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.10.0.3\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -293,11 +293,11 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.10.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.10.0.4\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.10.0.1\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.10.0.2\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -803,6 +803,7 @@
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\overrides\ZIndexManager.js" />
+    <Content Include="Scripts\app\platter\fields\SimpleFields.js" />
     <Content Include="Scripts\app\shared\view\field\ArrayField.js" />
     <Content Include="Scripts\app\shared\view\field\GridField.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
@@ -2384,7 +2385,9 @@
     <Folder Include="Api\Models\Cms\" />
     <Folder Include="Models\" />
     <Folder Include="Modules\" />
+    <Folder Include="Scripts\app\exported\" />
     <Folder Include="Scripts\app\model\Context\" />
+    <Folder Include="Scripts\app\platter\containers\" />
     <Folder Include="Scripts\app\view\address\" />
     <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />

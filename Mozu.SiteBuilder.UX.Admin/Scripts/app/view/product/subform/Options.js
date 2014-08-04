@@ -52,8 +52,11 @@ Ext.define('Taco.view.product.subform.Options', {
         this.callParent(arguments);
 
         this.list = this.down('#list');
+        this.loadByProductTypeId();
 
-        this.productTypeStore.whenLoaded(this.loadByProductTypeId, this);
+        this.on('afterrender', function () {
+            this.productTypeStore.whenLoaded(this.loadByProductTypeId, this);
+        }, this, { single: true, delay: 15 });
     },
 
     buildOptionsHtml: function () {

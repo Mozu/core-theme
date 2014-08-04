@@ -4,14 +4,26 @@
     },
 
     constructor: function (config) {
-        Ext.apply(this, config || {});
+        config= Ext.apply(this, config || {});
         this.tasks = new Ext.util.MixedCollection();
 
         this.mixins.observable.constructor.call(this, config);
-
+        if (Ext.isFunction(this.finalCallback)) {
+            this.finalCallback = {
+                fn: this.finalCallback,
+                scope: this.scope
+            };
+        }
         this.addEvents(
             'complete'
         );
+
+        if (config.tasks) {
+            this.add(config.tasks);
+        }
+        if (config.autoExecute) {
+            this.execute();
+        }
         this.errors = [];
     },
 
@@ -133,7 +145,7 @@
                         console.log('syncstore - success');
                         tasks.callback();
                     },
-                    failure: function (batch, options) {
+                    failure: function (batch) {
                         var msg = batch.operations[0].error;
                         if (msg.remoteException) {
                             tasks.errors.push(msg.remoteException.getError());
@@ -149,6 +161,38 @@
                         tasks.callback(true);
                     }
                 });
+            };
+        } else if (task.storeToLoad) {
+
+            if (this.tasks.findBy(function (item) {
+                return task.storeToLoad == item.storeToLoad;
+            })) {
+                return;
+            }
+            if (!task.storeToLoad.isLoading() && task.storeToLoad.hasLoaded()) {
+                return;
+            }
+
+            task.fn = function (tasks) {
+               
+                if (!task.storeToLoad.isLoading()) {
+                    if (task.storeToLoad.hasLoaded()) {
+                        tasks.callback();
+                        return;
+                    } else {
+                        task.storeToLoad.load({
+                            callback: tasks.callback,
+                            scope: tasks,
+
+                        });
+                        return;
+                    }
+                }
+                
+
+                task.storeToLoad.whenLoaded(tasks.callback, tasks);
+
+               
             };
         }
 

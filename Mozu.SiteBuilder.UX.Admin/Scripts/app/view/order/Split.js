@@ -67,7 +67,7 @@ Ext.define('Taco.view.order.Split', {
                 },
                 itemclick: {
                     scope: this,
-                    fn: function (grid, record, item, index, e) {
+                    fn: function (grid, record) {
                     
                         this.onSelectRecord(record);
                     }
@@ -90,7 +90,7 @@ Ext.define('Taco.view.order.Split', {
     },
 
     createActionHandler: function () {
-        var me = this;
+       
         var ctx = Taco.app.context.getCurrentContext();
         var record;
 
@@ -167,22 +167,38 @@ Ext.define('Taco.view.order.Split', {
     },
 
     onRecordChange: function (record) {
-        Ext.suspendLayouts();
 
-        this.getEast().removeAll(true);
-
+        var me = this,
+            args = arguments;
         if (record) {
-            this.getEast().add(Ext.create('Taco.view.order.Edit', {
-                record: record
-            }));
+            Taco.view.order.Edit.factory({ record: record }, function (cmp) {
+                Ext.suspendLayouts();
+
+                me.getEast().removeAll(true);
+
+                me.getEast().add(cmp);
+                
+                me.superclass.onRecordChange(args);
+
+                me.showAndHideSplitActions();
+                me.updateSplitTitle();
+
+                Ext.resumeLayouts(true);
+            });
+        } else {
+
+
+            Ext.suspendLayouts();
+
+            this.getEast().removeAll(true);
+
+            this.callParent(arguments);
+
+            this.showAndHideSplitActions();
+            this.updateSplitTitle();
+
+            Ext.resumeLayouts(true);
         }
-
-        this.callParent(arguments);
-
-        this.showAndHideSplitActions();
-        this.updateSplitTitle();
-
-        Ext.resumeLayouts(true);
     },
 
     onSelectRecord: function (record) {
@@ -210,11 +226,19 @@ Ext.define('Taco.view.order.Split', {
             var id = cmp.getItemId ? cmp.getItemId() : null;
 
             if (record) {
-                if (id === 'createActionButton') cmp.hide();
-                if (Ext.Array.contains(editorActions, id)) cmp.show();
+                if (id === 'createActionButton') {
+                    cmp.hide();
+                }
+                if (Ext.Array.contains(editorActions, id)) {
+                    cmp.show();
+                }
             } else {
-                if (id === 'createActionButton') cmp.show();
-                if (Ext.Array.contains(editorActions, id)) cmp.hide();
+                if (id === 'createActionButton') {
+                    cmp.show();
+                }
+                if (Ext.Array.contains(editorActions, id)) {
+                    cmp.hide();
+                }
             }
         });
     },
@@ -260,7 +284,7 @@ Ext.define('Taco.view.order.Split', {
 
     updateSplitTitle: function () {
         var record = this.getRecord();
-        var isEdit = this.editor && this.editor.isEdit && this.editor.isEdit();
+       
         var activeTitle = '<a href="/admin/orders" class="taco-content-header-title-root">' + (this.getWestTitle() || 'Records') + '</a>';
 
         if (record) {

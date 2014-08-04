@@ -16,62 +16,62 @@ Ext.define('Taco.core.Controller', {
     contextPlaceholders: {},
 
     ensureRequiredStores: function (options) {
-        var me = this,
-            model = Taco.model[this.modelName],
-            requiredStoresLoading = false;
-        options.loadingStores = options.loadingStores || [];
+        //var me = this,
+        //    model = Taco.model[this.modelName],
+        //    requiredStoresLoading = false;
+        //options.loadingStores = options.loadingStores || [];
 
 
-        if (!Ext.isNumber(options.loadMaskTask)) {
-            options.loadMaskTask = Ext.defer(
-                function () {
-                    Taco.app.setLoading();
-                }, this, 200);
-        }
+        //if (!Ext.isNumber(options.loadMaskTask)) {
+        //    options.loadMaskTask = Ext.defer(
+        //        function () {
+        //            Taco.app.setLoading();
+        //        }, this, 200);
+        //}
 
-        if (model) {
-            Ext.each(model.prototype.requiredStores, function (storeCfg) {
+        //if (model) {
+        //    Ext.each(model.prototype.requiredStores, function (storeCfg) {
 
-                var store = Taco.core.data.StoreManager.getOrCreate(storeCfg);
-                if (store.storeManagerConfig && store.storeManagerConfig.createOnly && !store.proxy.isCacheProxy) {
-                    Ext.global.console.warn('cant use store ' + store.$className + ' ad requiredStore');
+        //        var store = Taco.core.data.StoreManager.getOrCreate(storeCfg);
+        //        if (store.storeManagerConfig && store.storeManagerConfig.createOnly && !store.proxy.isCacheProxy) {
+        //            Ext.global.console.warn('cant use store ' + store.$className + ' ad requiredStore');
 
-                } else if (!store.hasCompletedLoading()) {
+        //        } else if (!store.hasCompletedLoading()) {
 
-                    if (!store.isLoading()) {
-                        store.load();
-                    }
-                    if (!store.hasCompletedLoading()) {
-
-
-                        requiredStoresLoading = true;
-
-                        if (Ext.Array.indexOf(options.loadingStores, storeCfg) === -1) {
-
-                            options.loadingStores.push(storeCfg);
+        //            if (!store.isLoading()) {
+        //                store.load();
+        //            }
+        //            if (!store.hasCompletedLoading()) {
 
 
-                            store.on({
-                                load: {
-                                    fn: function () {
-                                        me.ensureRequiredStores(options);
-                                    },
-                                    single: true
-                                }
-                            });
+        //                requiredStoresLoading = true;
 
-                        }
-                    }
-                }
-            });
+        //                if (Ext.Array.indexOf(options.loadingStores, storeCfg) === -1) {
 
-        }
+        //                    options.loadingStores.push(storeCfg);
 
 
-        if (Ext.isNumber(options.loadMaskTask )) {
-            window.clearTimeout(options.loadMaskTask)
-            Taco.app.setLoading(false);
-        }
+        //                    store.on({
+        //                        load: {
+        //                            fn: function () {
+        //                                me.ensureRequiredStores(options);
+        //                            },
+        //                            single: true
+        //                        }
+        //                    });
+
+        //                }
+        //            }
+        //        }
+        //    });
+
+        //}
+
+
+        //if (Ext.isNumber(options.loadMaskTask )) {
+        //    window.clearTimeout(options.loadMaskTask);
+        //    Taco.app.setLoading(false);
+        //}
 
         
         if (Ext.isFunction(options)) {
@@ -142,7 +142,7 @@ Ext.define('Taco.core.Controller', {
 
         return this.doEdit(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
     },
-    doEdit: function (id, additionalParams, appState, viewName, model) {
+    doEdit: function (id, additionalParams, appState, viewName) {
         this.confirmContext(viewName, this.doEditInternal, this,arguments);
     },
     doEditInternal: function (id, additionalParams, appState, viewName, model) {
@@ -200,7 +200,7 @@ Ext.define('Taco.core.Controller', {
         return this.doCreate(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
 
     },
-    doCreate: function (id, additionalParams, appState, viewName, model) {
+    doCreate: function (id, additionalParams, appState, viewName) {
         this.confirmContext(viewName, this.doCreateInternal, this,arguments);
             
     },
@@ -233,7 +233,7 @@ Ext.define('Taco.core.Controller', {
      * @param  {[type]} params [description]
      * @return {[type]}        [description]
      */
-    list: function (params) {
+    list: function () {
         // TODO
     },
 
@@ -249,6 +249,11 @@ Ext.define('Taco.core.Controller', {
         });
     },
 
+
+
+
+
+
     /**
      * Create a contentView and replace all existing content views in Taco.app.contentView with this one.
      * @param  {Taco.core.ux.content.Container} view A Taco.core.ux.content.Container to display.
@@ -256,8 +261,30 @@ Ext.define('Taco.core.Controller', {
      * @return {Taco.core.ux.content.Container}      The view created or passed.
      */
     createContentView: function (view, cfg) {
-        var container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView;
-        Ext.suspendLayouts();
+        var me = this,
+            container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView,
+            loadmaskTask = cfg.loadmaskTask,
+            viewClass;
+
+        if (!view.$className) {
+
+            viewClass = Ext.ClassManager.get(view);
+            if (viewClass.factory) {
+                loadmaskTask = Ext.defer(
+                    function () {
+                    Taco.app.setLoading();
+                },  200);
+
+                viewClass.factory(cfg, function (view) {
+                    cfg.loadmaskTask = loadmaskTask;
+                    me.createContentView(view, cfg);
+                });
+                return;
+            }
+        }
+
+
+        
 
         //removing initial view  to aviod events firing from the create of the view from messin with the 
 
@@ -271,10 +298,21 @@ Ext.define('Taco.core.Controller', {
                 return works;
             }, this);
         }
+        
+        Ext.suspendLayouts();
+      
         container.removeAll(true);
         container.add(view);
+       
+        //console.time('resumeLayouts');
         Ext.resumeLayouts(true);
-        return view;
+       
+        //console.timeEnd('resumeLayouts');
+
+        if (Ext.isNumeric(loadmaskTask )) {
+            window.clearTimeout(loadmaskTask);
+            Taco.app.setLoading(false);
+        }
 
     },
 

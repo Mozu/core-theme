@@ -21,13 +21,24 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.store.ProductTypes',
         'Taco.core.ux.form.CurrencyField'
     ],
-
+    statics: {
+        sizes: {},
+        getBufferedWidth: function (buffer, defaultValue) {
+            if (this.sizes.lastWidth) {
+                return this.sizes.lastWidth - (buffer||60);
+            }
+            return defaultValue;
+        }
+    },
     title: 'General',
     margin: '0 0 20 0',
     initComponent: function () {
+
+
         var me = this,
             readOnly,
             requiredContent,
+            classDef = this.statics(),
             visable,
             isMapEnabled = (this.product.get("map") != null),
             isDiscountRestricted = this.product.get("discountsRestricted"),
@@ -37,6 +48,11 @@ Ext.define('Taco.view.product.subform.General', {
             productTypeId = this.product.get('productTypeId'),
             productTypeRecord = null,
             invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
+
+        me.on('resize', function (cmp, width, height) {
+            classDef.sizes.lastWidth = width;
+            classDef.sizes.lastHeight = height;
+        });
 
         me.record = this.product;
         me.currencyCode = me.productInCatalogInfo ? me.productInCatalogInfo.getCatalog().currencyCode : me.product.getCurrencyCode();
@@ -506,7 +522,7 @@ Ext.define('Taco.view.product.subform.General', {
                 xtype: 'productoverride',
                 overrideFieldName: 'isContentOverridden',
                 hideOverride: this.isSingleSite,
-                width: '100%',
+                width: classDef.getBufferedWidth(null,'100%'),
                 items: [
                     {
                         fieldLabel: 'Name',
@@ -515,59 +531,89 @@ Ext.define('Taco.view.product.subform.General', {
                         name: 'productName',
 
                         emptyText: 'Some product description',
-                        width: '100%',
+                        
                         required: true,
                         listeners: {
                             change: function(cmp, newValue) {
                                 cmp.productForm = cmp.productForm || cmp.up('productform');
                                 cmp.productForm.fireEvent('productnamechange', this.productInCatalogInfo || this.product, newValue);
                             },
+                            
                             scope: this
                         }
-                    }, {
+                    },
+                    {
                         xtype: 'htmleditor',
                         enableFont: false,
                         fieldLabel: 'Short Description',
                         name: 'productShortDescription',
                         emptyText: 'Words',
+                        minWidth: 600,
+                      //  width:300,
+                        width: classDef.getBufferedWidth(null,'100%'),
+                        height: 300,
+
                         listeners: {
-                            editmodechange: htmlEditorEditModeChangeHandler
+                            editmodechange: htmlEditorEditModeChangeHandler,
+
+
                         },
-                        width: '100%'
+
+
                     }, {
                         xtype: 'htmleditor',
                         enableFont: false,
                         fieldLabel: 'Full Description',
                         name: 'productFullDescription',
                         emptyText: 'Words, words, and more words.  Also, with lists.',
+                        width: classDef.getBufferedWidth(null, '100%'),
+                        height: 300,
+
                         listeners: {
-                            
                             editmodechange: htmlEditorEditModeChangeHandler,
-                            change: function(cmp, newValue) {
+                            change: function (cmp, newValue) {
                                 cmp.productForm = cmp.productForm || cmp.up('productform');
                                 cmp.productForm.fireEvent('productfulldescriptionchange', me.productInCatalogInfo || me.product, newValue);
                             }
                         },
-                        width: '100%'
-                    },
-                    {
-                        fieldLabel: 'Product Image',
-                        name: 'productImages',
-                        xtype: 'taco.imagefield',
-                        width: '100%'
+
                     }
+                  
                 ]
-            }, {
+            },
+           
+        ];
+
+        
+        this.items = Taco.core.util.Common.filterNulls(this.items);
+
+        //this.items = [];
+
+        this.callParent(arguments);
+
+        this.on('afterrender', function () {
+
+            
+            this.imagesConfig = {
+                fieldLabel: 'Product Image',
+                name: 'productImages',
+                xtype: 'taco.imagefield',
+                width: classDef.getBufferedWidth(),
+            };
+
+            this.priceOverRideConfig = {
                 xtype: 'productoverride',
-                width: '100%',
+                width: classDef.getBufferedWidth(),
+               
                 overrideFieldName: 'isPriceOverridden',
                 hideOverride: this.isSingleSite,
                 margin: '10 0 0',
                 items: [
                     {
-                        xtype: 'panel',
+                        xtype: 'container',
                         ui: 'subform-subform',
                         width: '100%',
+
                         margin: '10 0 0',
                         items: [
                             {
@@ -620,7 +666,7 @@ Ext.define('Taco.view.product.subform.General', {
                         ]
                     },
                     {
-                        xtype: 'panel',
+                        xtype: 'container',
                         ui: 'subform-subform',
                         width: '100%',
                         margin: '10 0 0',
@@ -642,7 +688,7 @@ Ext.define('Taco.view.product.subform.General', {
                         ]
                     },
                     {
-                        xtype: 'panel',
+                        xtype: 'container',
                         ui: 'subform-subform',
                         width: '100%',
                         margin: '10 0 0',
@@ -665,7 +711,7 @@ Ext.define('Taco.view.product.subform.General', {
                         ]
                     },
                     {
-                        xtype: 'panel',
+                        xtype: 'container',
                         ui: 'subform-subform',
                         width: '100%',
                         margin: '10 0 0',
@@ -700,34 +746,36 @@ Ext.define('Taco.view.product.subform.General', {
                         ]
                     }
                 ]
+            };
+            this.delayLoadItems = [
+                this.imagesConfig,
+                this.priceOverRideConfig
+            ];
+
+            //suspendEvents?
+            this.add(this.delayLoadItems);
+            // if we already have a product type selected; we need to filter the productUsage combo
+            // we will not have to tdo this if there is no productUsage field (siteForm in a multi site configuration)
+            if (this.productUsageField) {
+                if (productTypeId && productTypeRecord) {
+                    me.filterProductUsageField(productTypeRecord.get("productUsages"));
+                }
             }
-        ];
 
-        this.items = Taco.core.util.Common.filterNulls(this.items);
-
-
-        this.callParent(arguments);
-
-        // if we already have a product type selected; we need to filter the productUsage combo
-        // we will not have to tdo this if there is no productUsage field (siteForm in a multi site configuration)
-        if (this.productUsageField) {
-            if (productTypeId && productTypeRecord) {
-                me.filterProductUsageField(productTypeRecord.get("productUsages"));
-            }
-        }
-        
-        // listend for changes to the productUsage and bundleItem changes on the main form;
-        me.on('afterrender', function () {
             var productForm = me.up("productform");
-            if (productForm) {
-                me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
-                me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
-            }
+                if (productForm) {
+                    me.mon(productForm, 'productusagechange', me.updatePriceUI, me);
+                    me.mon(productForm, 'bundleItemChange', me.updatePriceUI, me);
+                }
 
-        }, me);
+           
 
 
-        this.down('#productName')
+        }, this, {single:true, delay:1});
+
+       
+
+
     },
 
 
@@ -787,8 +835,9 @@ Ext.define('Taco.view.product.subform.General', {
     },
 
     loadRecord: function (record) {
+
         var me = this;
-        me.updatePriceUI(me, record.get("productUsage"));
+      //  me.updatePriceUI(me, record.get("productUsage"));
 
         me.callParent(arguments);
     },

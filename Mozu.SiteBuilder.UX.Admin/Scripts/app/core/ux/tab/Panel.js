@@ -12,7 +12,10 @@ Ext.define('Taco.core.ux.tab.Panel', {
     alias: 'widget.taco.tabpanel',
 
     componentCls: Taco.baseCSSPrefix + 'form-tab-panel',
-    layout: { type: 'card' },
+    layout: {
+        type: 'card',
+        deferredRender:'true'
+    },
 
     activeItemCls: Taco.baseCSSPrefix + 'form-card-active',
     activeTabCls: Taco.baseCSSPrefix + 'form-tab-active',

@@ -3,11 +3,10 @@
  */
 Ext.define('Taco.model.GeneralSettings', {
     extend: 'Taco.core.data.Model',
-    requiredStores: [
-        'Taco.store.TimeZones',
-        'Taco.store.ThemeListing',
-        'Taco.store.Channels'
-    ],
+    //requiredStores: [
+    //    'Taco.store.TimeZones',
+    //    'Taco.store.Channels'
+    //],
     behaviors: {
         read: 186,
         create: 183,

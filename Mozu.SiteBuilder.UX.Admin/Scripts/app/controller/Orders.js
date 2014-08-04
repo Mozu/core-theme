@@ -18,10 +18,10 @@ Ext.define('Taco.controller.Orders', {
 
     //todo:  changing to s until orders support siteId  in resource
     createContentView: function (viewName, cfg) {
-        var isEdit = viewName == this.editorView,
-            split;
+        var split;
 
-        Ext.suspendLayouts();
+
+        Ext.suspendLayouts(); 
 
         //removing initial view  to aviod events firing from the create of the view from messin with the 
         split = Taco.app.contentView.down('order-split');
@@ -76,7 +76,7 @@ Ext.define('Taco.controller.Orders', {
         record = Ext.create('Taco.model.Order');
 
         record.save({
-            callback: function (records, operation, success) {
+            callback: function () {
 
                 //changing the path to be edit instead of create so that the user can refresh the page and get back to it if they accidently navigate away;
                 Taco.core.StateManager.attemptNavigate('s-' + record.data.siteId + '/orders/edit/' + record.data.id);

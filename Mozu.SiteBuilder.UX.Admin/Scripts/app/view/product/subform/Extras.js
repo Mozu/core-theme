@@ -42,15 +42,17 @@ Ext.define('Taco.view.product.subform.Extras', {
 
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
-        this.items = [];
 
         this.callParent(arguments);
 
-        if (this.productTypeStore.loading) {
-            this.productTypeStore.on('load', this.loadByProductTypeId, this, { single: true });
-        } else {
-            this.loadByProductTypeId();
-        }
+
+        this.on('afterrender', function () {
+            if (this.productTypeStore.loading) {
+                this.productTypeStore.on('load', this.loadByProductTypeId, this, { single: true });
+            } else {
+                this.loadByProductTypeId();
+            }
+        }, this, { single: true, delay: 10 });
     },
 
     loadByProductTypeId: function (id) {
@@ -111,8 +113,8 @@ Ext.define('Taco.view.product.subform.Extras', {
                 itemId: 'extraAdder',
                 displayField: 'attributeName',
                 emptyText: 'Add Extra',
-             
-                maxWidth:200,
+
+                maxWidth: 200,
                 queryMode: 'local',
                 listeners: {
                     beforequery: function (qp) {
@@ -214,7 +216,7 @@ Ext.define('Taco.view.product.subform.Extras', {
 
         isMultiSelect = Ext.widget({
             xtype: 'checkbox',
-            hidden: ptAttribute.get('inputType') !='List',
+            hidden: ptAttribute.get('inputType') != 'List',
             boxLabel: 'Allow Multi Select',
             value: pExtra ? pExtra.get('isMultiSelect') : false,
             checked: pExtra ? pExtra.get('isMultiSelect') : false,
@@ -244,17 +246,16 @@ Ext.define('Taco.view.product.subform.Extras', {
                 xtype: 'container',
                 cls: 'extra-header',
                 layout: {
-                    type:'hbox',
-                    align:'stretch'
+                    type: 'hbox',
+                    align: 'stretch'
                 },
                 items: [
                     {
                         xtype: 'component',
                         cls: 'extra-attribute',
                         html: ptAttribute.get('attributeName'),
-                        flex:1
+                        flex: 1
                     },
-               
                     {
                         xtype: 'tool',
                         type: 'delete',
@@ -275,9 +276,9 @@ Ext.define('Taco.view.product.subform.Extras', {
                 items: [checkbox, isMultiSelect]
             }
         ];
-        
 
-        return editor =  Ext.widget({
+
+        return editor = Ext.widget({
             xtype: 'container',
             cls: 'taco-attribute-form',
             items: items

@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.model.Discount', {
     extend: 'Taco.core.data.Model',
-    requiredStores: ['Taco.store.ShippingMethods'],
+  //  requiredStores: ['Taco.store.ShippingMethods', 'Taco.store.ShippingZones'],
     behaviors: {
         read: 24,
         create: 25,
@@ -82,6 +82,12 @@ Ext.define('Taco.model.Discount', {
             type: 'auto',
             defaultValue: []
         },
+         {
+             name: 'shippingZones',
+             type: 'auto',
+             defaultValue: []
+         },
+        
         {
             name: 'minimumOrderAmount',
             type: 'float',
@@ -164,7 +170,7 @@ Ext.define('Taco.model.Discount', {
     getProductStore: function () {
         var me = this;
 
-        if (me.productStore == null) {
+        if (!me.productStore ) {
             me.productStore = Taco.core.data.StoreManager.getOrCreate(
                 {
                     type: 'Taco.store.Products',
@@ -183,7 +189,7 @@ Ext.define('Taco.model.Discount', {
 
     getCategoryStore: function () {
         var me = this;
-        if (me.categoryStore == null) {
+        if (!me.categoryStore ) {
             me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
                 {
                     type: 'Taco.store.Categories',
@@ -204,7 +210,7 @@ Ext.define('Taco.model.Discount', {
 
     getCustomerSegmentStore: function() {
         var me = this;
-        if (me.customerSegmentStore == null) {
+        if (!me.customerSegmentStore ) {
             me.customerSegmentStore = Taco.core.data.StoreManager.getOrCreate(
                 {
                     type: 'Taco.store.CustomerSegments',
