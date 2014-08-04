@@ -47,6 +47,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string PaymentType { get; set; }
 
         /// <summary>
+        /// Billing Contact for this payment.
+        /// </summary>
+        public Contact BillingContact { get; set; }
+
+        /// <summary>
         /// Store credit code used to create this payment, if it's a storecredit payment
         /// </summary>
         public string StoreCreditCode { get; set; }
