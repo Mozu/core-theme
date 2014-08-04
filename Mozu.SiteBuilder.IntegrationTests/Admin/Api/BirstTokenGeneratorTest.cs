@@ -22,8 +22,15 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         public async Task It_Should_Return_Token_When_Calling_Birst_Token_Generator(string scenario, int tenantId)
         {
             //arrange
+            var settings = Substitute.For<ISettings>();
+            settings.AppSettings(TOKEN_KEY).Returns("http://aus02ndbrst01.dev.volusion.com/TokenGenerator.aspx");
+            settings.AppSettings(SSO_KEY).Returns("http://aus02ndbrst01.dev.volusion.com/SSO.aspx");
+            settings.AppSettings(USER_KEY).Returns("mozu_tenant_reporting@volusion.com");
+            settings.AppSettings(SPACE_ID_KEY).Returns("a6c9552c-46d6-45fa-84c7-dfc9489c0997");
+            settings.AppSettings(SSO_PASSWORD_KEY).Returns("fUERArw28wlRR34Frr7x0jGk0sEJcRe3");
+
             var apiContext = SubstituteApiContext(tenantId);
-            var sut = new BirstTokenGenerator(apiContext, new MozuSettings());
+            var sut = new BirstTokenGenerator(apiContext, settings);
 
             //act
             var actual = await sut.GenerateDashboardUri();
