@@ -43,6 +43,8 @@
  * @requires Taco.controller.GeneralSettings
  * @requires Taco.controller.Localization
  
+ * @requires Taco.controller.BusinessIntelligence
+ 
  * @requires Taco.controller.Orders
  * @requires Taco.controller.PhoneOrders
  

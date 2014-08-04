@@ -57,6 +57,7 @@ Ext.application({
         'LocationInventory',
         'SiteSelection',
         'Redirects',
-        'SiteRoutes'
+        'SiteRoutes',
+        'BusinessIntelligence'
     ],
 });

@@ -1,7 +1,11 @@
+/**
+* @class Taco.view.businessIntelligence.Index
+*/
 Ext.define('Taco.view.businessIntelligence.Index', {
     extend: 'Ext.panel.Panel',
     requires: [
-        'Ext.ux.IFrame'
+        'Ext.ux.IFrame',
+        'Ext.panel.Panel'
     ],
     //mixins: {
     //    navHeader: 'Taco.core.ux.mixins.NavHeader'
