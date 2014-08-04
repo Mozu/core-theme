@@ -210,8 +210,7 @@
       <HintPath>..\packages\Mozu.Content.Contracts.1.10.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.10.0.1\lib\net45\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.10.0.4\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -221,9 +220,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Api.Client.1.10.0.1\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Contracts">
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.10.0.1\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.Core.Api.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.10.0.3\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -279,11 +278,11 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.10.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.10.0.4\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.10.0.1\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.10.0.2\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -355,6 +354,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

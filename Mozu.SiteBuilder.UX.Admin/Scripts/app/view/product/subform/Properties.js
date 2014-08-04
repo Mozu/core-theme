@@ -7,7 +7,7 @@
 Ext.define('Taco.view.product.subform.Properties', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productpropertiesform',
-    requires:[
+    requires: [
         'Taco.core.ux.form.field.Product'
     ],
 
@@ -21,100 +21,114 @@ Ext.define('Taco.view.product.subform.Properties', {
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
-                return [{
-                    xtype: 'datefield',
-                    name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('attributeName'),
-                    allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                    value: (values && values.length) ? values[0] : null
-                }];
+                return [
+                    {
+                        xtype: 'datefield',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('attributeName'),
+                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        value: (values && values.length) ? values[0] : null
+                    }
+                ];
             },
             'TextArea': function (ptAttribute, values) {
-                return [{
-                    xtype: 'textareafield',
-                    name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('attributeName'),
-                    allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                    value:(values && values.length) ? values[0] : null,
-                    width: 600,
-                    rows: 12,
-                    resizable: true,
-                    resizeHandles: 's'
-                }];
+                return [
+                    {
+                        xtype: 'textareafield',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('attributeName'),
+                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        value: (values && values.length) ? values[0] : null,
+                        width: 600,
+                        rows: 12,
+                        resizable: true,
+                        resizeHandles: 's'
+                    }
+                ];
             },
             'YesNo': function (ptAttribute, values) {
-                return [{
-                    xtype: 'checkboxfield',
-                    name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('attributeName'),
-                    allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                    checked:(values && values.length) ? values[0] : null
-                }];
+                return [
+                    {
+                        xtype: 'checkboxfield',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('attributeName'),
+                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        checked: (values && values.length) ? values[0] : null
+                    }
+                ];
             },
             'List': function (ptAttribute, values) {
-                return [{
-                    xtype: ptAttribute.get('allowMulti') ? 'taco.field.multiselect' : 'combobox',
-                    name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('attributeName'),
-                    displayField: 'value',
-                    valueField: 'id',
-                    allowBlank: ptAttribute.get('isRequired') === true ? false: true,
-                    value: (values && values.length) ? values[0] : null,
-                    width: 400,
-                    store: Ext.create('Ext.data.Store', {
-                        fields: [
-                            {name: 'id', type: 'string'},
-                            {name: 'value', type: 'string'}
-                        ],
-                        data: ptAttribute.get('selectedValues')
-                    })
-                }];
+                return [
+                    {
+                        xtype: ptAttribute.get('allowMulti') ? 'taco.field.multiselect' : 'combobox',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('attributeName'),
+                        displayField: 'value',
+                        valueField: 'id',
+                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        value: (values && values.length) ? values[0] : null,
+                        width: 400,
+                        store: Ext.create('Ext.data.Store', {
+                            fields: [
+                                { name: 'id', type: 'string' },
+                                { name: 'value', type: 'string' }
+                            ],
+                            data: ptAttribute.get('selectedValues')
+                        })
+                    }
+                ];
             },
             'TextBox': function (ptAttribute, values) {
-                return [{
-                    xtype: 'textfield',
-                    name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('attributeName'),
-                    allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                    value: (values && values.length) ? values[0] : null,
-                    width: 400
-                }];
+                return [
+                    {
+                        xtype: 'textfield',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('attributeName'),
+                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        value: (values && values.length) ? values[0] : null,
+                        width: 400
+                    }
+                ];
             },
             'productPicker': function (ptAttribute, values) {
-                return [{
-                    xtype: 'taco.field.product',
-                    name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('attributeName'),
-                    allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                    width: 400,
-                    value: values
-                }];
+                return [
+                    {
+                        xtype: 'taco.field.product',
+                        name: this.getFieldName(ptAttribute),
+                        fieldLabel: ptAttribute.get('attributeName'),
+                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                        width: 400,
+                        value: values
+                    }
+                ];
             }
         }
     },
-    
+
     initComponent: function () {
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
         this.items = [this.getEmptyComponent()];
 
         this.callParent(arguments);
-        
-        if (this.productTypeStore.loading) {
-            this.productTypeStore.on('load', this.loadByProductTypeId, this, { single: true });
-        } else {
-            this.loadByProductTypeId();
-        }
+
+        this.on('afterrender', function () {
+            if (this.productTypeStore.loading) {
+                this.productTypeStore.on('load', this.loadByProductTypeId, this, { single: true });
+            } else {
+                this.loadByProductTypeId();
+            }
+        }, this, { single: true, delay: 40 });
     },
 
-    beforeSave:function() {
+    beforeSave: function () {
         if (this.productType == null) {
             return;
         }
 
         var form = this.getForm(),
             properties = this.product.getProperties();
-        
+
         this.productTypeProperties.each(function (record) {
             var fieldName = this.getFieldName(record),
                 values = null,
@@ -143,7 +157,7 @@ Ext.define('Taco.view.product.subform.Properties', {
             properties,
             items = [];
 
-        if (!id || !Ext.isNumeric( id )) {
+        if (!id || !Ext.isNumeric(id)) {
             id = this.product.get('productTypeId');
         }
         if (!id) {
@@ -176,16 +190,18 @@ Ext.define('Taco.view.product.subform.Properties', {
     },
 
     buildEditor: function (ptAttribute) {
-        var editor = ptAttribute.getAttributeMetaDataValue('uicontrol') ||  ptAttribute.get('inputType'),
+        var editor = ptAttribute.getAttributeMetaDataValue('uicontrol') || ptAttribute.get('inputType'),
             attributeFQN = ptAttribute.get('attributeFQN'),
             prop = this.product.getProperties().getById(attributeFQN),
             values = prop ? prop.get('values') : null;
 
         if (typeof this.statics().editors[editor] !== 'function') {
-            return [{
-                xtype: 'component',
-                html: 'Error: could not find editor type: ' + editor
-            }];
+            return [
+                {
+                    xtype: 'component',
+                    html: 'Error: could not find editor type: ' + editor
+                }
+            ];
         }
 
         return Ext.widget({

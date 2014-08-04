@@ -5,6 +5,28 @@
         'Ext.button.Button'
     ],
     
+    statics: {
+        sizes: {},
+        factory: function (cfg, callback, scope) {
+            cfg = Ext.apply(cfg,
+            {
+                productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes')
+            });
+
+            Ext.create('Taco.core.ux.form.Tasks', {
+                finalCallback: function () {
+                    callback.call(scope || this, Ext.create('Taco.view.product.Edit', cfg));
+                },
+                tasks: [
+                    {
+                        storeToLoad: cfg.productTypeStore
+                    }
+                ],
+                autoExecute: true,
+            });
+        }
+    },
+
     alias: "widget.taco-product-editor",
     
     formCls: 'Taco.view.product.Form',
@@ -111,6 +133,7 @@
         
         this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options });
 
+        
         this.callParent(arguments);
     },
 
@@ -165,7 +188,9 @@
     checkProductPublishing: function () {
         var ctx = Taco.app.context.currentCtx;
 
-        if (ctx.masterCatalog) ctx = ctx.masterCatalog;
+        if (ctx.masterCatalog) {
+            ctx = ctx.masterCatalog;
+        }
 
         return ctx.productPublishingMode == 'Pending';
     },

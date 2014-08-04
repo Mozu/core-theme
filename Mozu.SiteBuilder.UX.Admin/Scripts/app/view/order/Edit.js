@@ -6,9 +6,41 @@
 Ext.define('Taco.view.order.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
-        'Taco.view.order.Form'
+        'Taco.view.order.Form',
+        'Taco.core.ux.form.Tasks'
     ],
+    statics: {
+        factory: function (cfg, callback, scope) {
+            cfg = Ext.apply(cfg,
+            {
+                shippingMethodsStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods'),
+                channelsStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
+                attributesStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes')
+            });
+
+            var tasks = Ext.create('Taco.core.ux.form.Tasks', {
+                finalCallback: function () {
+                    callback.call(scope || this, Ext.create('Taco.view.order.Edit', cfg));
+                }
+            });
+            tasks.add([
+                {
+                    storeToLoad: cfg.shippingMethodsStore
+                }, {
+                    storeToLoad: cfg.channelsStore
+                }, {
+                    storeToLoad: cfg.attributesStore
+                }
+            ]);
+
+            tasks.execute();
+        }
+    },
     formCls: 'Taco.view.order.Form',
+
+    
+
+
 
     initComponent: function () {
         this.saveHidden

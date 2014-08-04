@@ -1548,16 +1548,18 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
         me.callParent(arguments);
     },
 
-    /**
-     * Initiate auto-sizing for height based on {@link #grow}, if applicable.
-     */
+    //increasing timeout on autoResize... causeing perf issues with large forms
     autoSize: function() {
         var me = this,
         height;
 
         if (me.grow && me.rendered) {
             me.autoSizing = true;
-            me.updateLayout();
+            Ext.defer(function () {
+                if (!me.isDestroyed) {
+                    me.updateLayout();
+                }
+            }, 10);
         }
 
         return me;

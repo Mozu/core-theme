@@ -5,9 +5,9 @@
 Ext.define('Taco.store.Channels', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.Channel',
-    remoteFilter: true,
-    remoteSort: true,
-    pageSize: 25,
+    remoteFilter: false,
+    remoteSort: false,
+    pageSize: 1000,
     storeManagerConfig: {
         clearFilters: true,
         clearSort: true,

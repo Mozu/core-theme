@@ -302,7 +302,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 return RazorView("TestHarnes");
             }
             var tacoAssetServer = _httpContext.Request.Cookies.Get("taco-asset-location") != null ? _httpContext.Request.Cookies.Get("taco-asset-location").Value : null;
-            if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] == "true" & string.IsNullOrEmpty(tacoAssetServer))
+            if (string.Equals(System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] ,"true",StringComparison.OrdinalIgnoreCase) & string.IsNullOrEmpty(tacoAssetServer))
             {
                 return RazorView("Index_Compiled");
             }

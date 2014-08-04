@@ -13,6 +13,33 @@ Ext.define('Taco.view.generalSettings.Index', {
         requiresContextOfType: ['s']
     },
     
+
+    statics: {
+        factory: function (cfg, callback, scope) {
+            cfg = Ext.apply(cfg,
+            {
+                timeZonesStores: Taco.core.data.StoreManager.getOrCreate('Taco.store.TimeZones'),
+                channelsStores: Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels')
+            });
+            
+            Ext.create('Taco.core.ux.form.Tasks', {
+                finalCallback: function () {
+                    callback.call(scope || this, Ext.create('Taco.view.generalSettings.Index', cfg));
+                },
+                tasks: [
+                    {
+                        storeToLoad: cfg.timeZonesStores
+                    },
+                     {
+                         storeToLoad: cfg.channelsStores
+                     }
+                ],
+                autoExecute: true,
+            });
+        }
+    },
+
+
     initComponent: function () {
 
         //if (Ext.Array.contains(Taco.user.behaviors, 137)) {

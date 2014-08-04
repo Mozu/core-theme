@@ -2,6 +2,6 @@
 
 {% block body-tag-classes %} mz-contentindex {% endblock body-tag-classes %}
 {% block body-content %}
-{% include_content "modules/content/document-list" with list=model.listFQN and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+{% include_documents "modules/content/document-list" with listFQN=model.listFQN and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 {{ block.super }}
 {% endblock body-content %}

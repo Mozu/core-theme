@@ -15,7 +15,7 @@ Ext.define('Taco.core.data.StoreManager', {
         me.mixins.observable.constructor.call(me, config);
         me.callParent(arguments);
         me.on('afterproxyrequest', me.afterProxyRequest, me);
-       
+
     },
 
     getOrCreate: function (config, contextSuffix) {
@@ -54,18 +54,41 @@ Ext.define('Taco.core.data.StoreManager', {
         }
         if (config.contextLevel && !contextSuffix) {
 
-            if (config.contextLevel == 'sc' || config.contextLevel == 'mc') {
-                ctxLvl = '-sc=' + Taco.app.context.getSiteId() + ';' + Taco.app.context.getMasterCatalogId();
-            } else if (config.contextLevel == 'c') {
-                ctxLvl = '-c=' + (Taco.app.context.getCatalogId() || '*')+Taco.app.context.getMasterCatalogId();
-            } else if (config.contextLevel == 's') {
-                ctxLvl = '-s=' + Taco.app.context.getSiteId();
-            }
-            if (store.runtimeContext != ctxLvl) {
-                return this.getOrCreate(config, ctxLvl);
-            }
 
+            if (!Ext.isArray(config.contextLevel)) {
+                config.contextLevel = config.contextLevel.split(',');
+            }
+            ctxLvl = '';
+            Ext.each(config.contextLevel, function (ctxType) {
+                switch (ctxType) {
+                case 'sc':
+                case 'mc':
+                {
+                    ctxLvl += '-mc=' + Taco.app.context.getMasterCatalogId();
+                    break;
+                }
+                case 'c':
+                {
+                    ctxLvl += '-c=' + Taco.app.context.getCatalogId();
+                    break;
+                }
+                case 's':
+                {
+                    ctxLvl += '-s=' + Taco.app.context.getSiteId();
+                    break;
+                }
+                case 't':
+                {
+                    ctxLvl += '-s=' + Taco.app.context.getTenantId();
+                    break;
+                }
+                }
 
+                if (store.runtimeContext != ctxLvl) {
+                    return this.getOrCreate(config, ctxLvl);
+                }
+
+            },this);
         }
 
         if (config.clearFilters) {
@@ -129,11 +152,11 @@ Ext.define('Taco.core.data.StoreManager', {
             }, me);
         }
     },
-    onAjaxRequestComplete:function (conn, response, options, eOpts) {
+    onAjaxRequestComplete: function (conn, response, options) {
         if (!options || !options.method || !options.url) {
             return;
         }
-     
+
     },
     afterProxyRequest: function (request, success, model) {
         var me = this,
@@ -141,7 +164,7 @@ Ext.define('Taco.core.data.StoreManager', {
 
 
         // helper method for accepting string or array values for invalidateCachedStores configurations;
-        function updateInvalidStores(val) {
+        function updateInvalidStores (val) {
             // check to see if changes to this store should invalidate related stores;
             if (val) {
                 if (Ext.isString(val)) {
@@ -151,12 +174,12 @@ Ext.define('Taco.core.data.StoreManager', {
                 }
             }
         }
-        
+
         // need to check the request.records for any records(model) that will invalidate stores; 
         // This is the use casew where you are persisting a model seperate from a store;
         var record = request.records[0];
         if (record && record.invalidateCachedStores) {
-            updateInvalidStores(record.invalidateCachedStores)
+            updateInvalidStores(record.invalidateCachedStores);
         }
 
         this.stores.each(function (store) {
@@ -193,9 +216,9 @@ Ext.define('Taco.core.data.StoreManager', {
         } else {
             Ext.raise("bad");
         }
-        
+
         this.stores.each(function (store) {
-            if ( fn(store)) {
+            if (fn(store)) {
                 store.hasUpdates = isChanged;
             }
         });

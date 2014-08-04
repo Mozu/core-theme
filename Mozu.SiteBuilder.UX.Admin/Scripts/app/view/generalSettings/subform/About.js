@@ -15,8 +15,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         'Ext.form.field.Checkbox',
         'Ext.form.field.Text',
         'Taco.store.TimeZones',
-        'Taco.model.ThemeListing',
-        'Taco.store.ThemeListing',
+   
         'Taco.store.Channels'
     ],
     title: 'General',
@@ -96,21 +95,12 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             displayField: 'name',
             valueField: 'code',
             allowBlank: false,
-            margin:"0 4 0 0",
+            margin: "0 4 0 0",
+            triggerAction: 'all',
             store: Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Channels',
-                autoLoad: true,
-                remoteFilter:false,
-                listeners: {
-                    load: {
-                        fn: function () {
-                            //me.channelCombo.setValue(me.record.get("channelId"));
-                            me.channelCombo.clearInvalid();
-                        },
-                        single: true,
-                        scope: me
-                    }
-                }
+                autoLoad: true
+                
             })
         });
         

@@ -12,9 +12,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     title: 'Target Criteria',
 
     initComponent: function () {
-        var me = this,
-            catStore,
+        var catStore,
             productStore,
+            zoneStore,
             shippingStore;
 
         this.includeAllProductsInput = Ext.widget({
@@ -243,7 +243,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             minValue: 0,
             labelAlign: 'top',
             fieldLabel: 'Maximum Quantity Per Redemption'
-        })
+        });
 
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
@@ -269,17 +269,17 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
         
-        shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');        
-       
+        shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');
+
+        zoneStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingZones');
+
 
         this.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingMethods',
            // width: 520,
             margin: 0,
             store: shippingStore,
-            getStore: function () {
-                return shippingStore;
-            },
+            
             queryMode: 'local',
             width: 600,
             hidden: this.record.get('target') !== 'Shipping' && false,
@@ -298,6 +298,31 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
+
+        this.shippingZoneList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'shippingZones',
+            // width: 520,
+            margin: 0,
+            store: zoneStore,
+           
+            queryMode: 'local',
+            width: 600,
+            hidden: this.record.get('target') !== 'Shipping' && false,
+            triggerOnClick: true,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            value: this.record.get('shippingZones'),
+            //displayField: 'Value',
+            displayField: 'code',
+            fieldLabel: 'Select Shipping Zones',
+            valueField: 'code',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
+        });
+
         this.items = [{
                 xtype: 'component',
                 html: 'Choose which products or categories are eligible to receive the discount if the conditions are met',
@@ -309,7 +334,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     this.productCategoryContainer
                 ]
             },
-            this.shippingList
+            this.shippingList,
+            this.shippingZoneList
         ];
 
         this.callParent(arguments);
@@ -321,8 +347,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
      * @private
      */
     launchCategoryModal: function (list) {
-        var listStore = list.getStore(),
-            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+        var treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
@@ -341,8 +366,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
      * @private
      */
     launchProductModal: function (list) {
-        var listStore = list.getStore(),
-            gridStore = Taco.core.data.StoreManager.getOrCreate({
+        var gridStore = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Products',
                 clearFilters: true,
                 clearSort: true,
@@ -387,8 +411,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     setShippingListVisibility: function (appliesToShipping) {
         this.shippingList.setVisible(appliesToShipping);
+        this.shippingZoneList.setVisible(appliesToShipping);
         if (!appliesToShipping) {
             this.shippingList.setValue('');
+            this.shippingZoneList.setValue('');
         }
     },
 

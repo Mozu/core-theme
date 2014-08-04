@@ -262,7 +262,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                              where i.ProductCode == productCode
                              where i.FulfillmentMethod == fulfillmentMethod
                              select i.FulfillmentLocationCode
-                            ).First();
+                            ).FirstOrDefault();
                         //return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
                     });
 

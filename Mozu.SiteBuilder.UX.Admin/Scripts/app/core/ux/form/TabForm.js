@@ -33,7 +33,10 @@ Ext.define('Taco.core.ux.form.TabForm', {
 
         this.formContainer = Ext.widget({
             xtype: 'container',
-            layout:"card",
+            layout: {
+                type: 'card',
+                deferredRender: true
+            },
             cls: 'taco-form-tabform-nav-container',
             items: originalItems,
             listeners: {
