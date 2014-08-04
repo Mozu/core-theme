@@ -292,10 +292,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             displayField: 'name',
             fieldLabel: 'Select Shipping Methods',
             valueField: 'code',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
+            
         });
 
 
@@ -317,10 +314,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             displayField: 'code',
             fieldLabel: 'Select Shipping Zones',
             valueField: 'code',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
+            
         });
 
         this.items = [{

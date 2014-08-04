@@ -21,7 +21,7 @@ Ext.define('Taco.controller.Orders', {
         var split;
 
 
-        Ext.suspendLayouts(); 
+        //Ext.suspendLayouts(); 
 
         //removing initial view  to aviod events firing from the create of the view from messin with the 
         split = Taco.app.contentView.down('order-split');
