@@ -481,39 +481,24 @@ Ext.define('Taco.store.Navigation', {
             }]
         }*/, {
                 "id": "reports",
-                "label": "Business Intelligence",
+                "label": "Reports",
                 "address": "reports",
                 "icon": "nav-dashboard",
                 "behaviorIds": [188],
-                "items": [
-                    {
-                        "id": "reports",
-                        "label": "Reports",
-                        "address": "reports"
-                    },
-                    {
-                        "id": "bizIntel",
-                        "label": "Dashboard",
-                        "address": "businessIntelligence"
-                    }
+                "items": [ ]
+                //    {
+                //        "id": "reports",
+                //        "label": "Reports",
+                //        "address": "reports"
+                //    }
+                //,
+                //{
+                //    "id": "bizIntel",
+                //    "label": "Dashboard",
+                //    "address": "businessIntelligence"
+                //}
+                //]
 
-
-/*
-                {
-                    "id": "salesreport",
-                    "label": "Sales",
-                    "address": "tbd/sales"
-                }, {
-                    "id": "customerreport",
-                    "label": "Customer",
-                    "address": "tbd/customer"
-                }, {
-                    "id": "productsreport",
-                    "label": "Products",
-                    "address": "reptbd/product"
-                }
-            */
-                ]
             }
         ],
         reader: {
