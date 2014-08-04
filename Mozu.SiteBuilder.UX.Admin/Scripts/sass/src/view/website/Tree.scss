@@ -4,7 +4,7 @@
     }
 
     .#{$prefix}grid-cell {
-        background-color: rgb(238, 238, 238);
+        background-color: $color-framework-gray-lighter;
     }
 
     .#{$prefix}grid-cell-treecolumn {
@@ -31,7 +31,7 @@
 
     .#{$prefix}grid-row-alt {
         .#{$prefix}grid-td {
-            background-color: rgb(238, 238, 238);
+            background-color: $color-framework-gray-light;
         }
     }
     .#{$prefix}grid-row-selected {
