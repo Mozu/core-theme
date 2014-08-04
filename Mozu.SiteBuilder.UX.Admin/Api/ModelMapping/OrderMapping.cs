@@ -615,6 +615,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Interactions, op => op.ResolveUsing(dc => (dc.Interactions != null) 
                     ? dc.Interactions.OrderByDescending(t => t.AuditInfo.CreateDate) : null))
                 .ForMember(x => x.PaymentType, op => op.ResolveUsing(dc => dc.PaymentType))
+                .ForMember(x => x.BillingContact, op => op.ResolveUsing(dc => dc.BillingInfo != null ? dc.BillingInfo.BillingContact : null))
                 .ForMember(x => x.CardType, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.Card != null 
                     && dc.PaymentType == PaymentsDC.PaymentTypeConst.CREDIT_CARD 
                         ? dc.BillingInfo.Card.PaymentOrCardType : null))
