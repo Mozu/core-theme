@@ -5,13 +5,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.Core;
 using Mozu.Core.Exceptions;
+using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-    public class BirstTokenGenerator
+    public interface IBirstTokenGenerator
     {
-        private const string TOKEN_URI_KEY = "BirstTokenGeneratorUrl";
+        Task<string> GenerateDashboardUri();
+    }
+
+    public class BirstTokenGenerator : IBirstTokenGenerator
+    {
+        private const string TOKEN_URL_KEY = "BirstTokenGeneratorUrl";
+        private const string SSO_URL_KEY = "BirstSsoUrl";
         private const string USER_KEY = "BirstUserName";
         private const string PASSWORD_KEY = "BirstSsoPassword";
         private const string SPACE_KEY = "BirstSpaceId";
@@ -25,27 +32,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _apiContext = apiContext;
         }
 
-        public async Task<string> GenerateToken()
+        public async Task<string> GenerateDashboardUri()
         {
-            var tokenGenUri = GetBirstTokenGeneratorUri(_apiContext.TenantId);
+            var token = await GenerateToken();
+
+            return string.Format(
+                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dashboard&birst.page=Page&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
+                    _settings.AppSettings(SSO_URL_KEY),
+                    token
+                );
+        }
+        
+        private async Task<string> GenerateToken()
+        {
+            var tokenGenUri = FormatBirstTokenGeneratorUri(_apiContext.TenantId);
             var httpClient = new HttpClient(new HttpClientHandler());
-            HttpResponseMessage responseMsg = await httpClient.PostAsync(tokenGenUri, new HttpMessageContent(new HttpResponseMessage()));
-            if (responseMsg.IsSuccessStatusCode)
+            try
             {
-                return await responseMsg.Content.ReadAsStringAsync();
+                HttpResponseMessage responseMsg = await httpClient.PostAsync(tokenGenUri, new HttpMessageContent(new HttpResponseMessage()));
+                if (responseMsg.IsSuccessStatusCode)
+                {
+                    return await responseMsg.Content.ReadAsStringAsync();
+                }
             }
-            throw new VaeUnexpectedErrorException(string.Format("Unexpected error with status code:{0}", responseMsg.StatusCode));
+            catch (Exception err)
+            {
+                LoggingService.LoggerFor<BirstTokenGenerator>().Error(err.Message, err);
+            }
+            throw new VaeUnexpectedErrorException("Unexpected error with status code");
         }
 
-        private string GetBirstTokenGeneratorUri(int tenantId)
+        private string FormatBirstTokenGeneratorUri(int tenantId)
         {
             return string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=tenantId%3D{4}",
-                _settings.AppSettings(TOKEN_URI_KEY),
+                _settings.AppSettings(TOKEN_URL_KEY),
                 _settings.AppSettings(USER_KEY),
                 _settings.AppSettings(PASSWORD_KEY),
                 _settings.AppSettings(SPACE_KEY),
                 tenantId
-                );
+            );
         }
     }
 }

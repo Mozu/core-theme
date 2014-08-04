@@ -18,39 +18,38 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private const string SPACE_ID_KEY = "BirstSpaceId";
         private const string SSO_PASSWORD_KEY = "BirstSsoPassword";
 
-        //commenting out till BirstTokenGeneratorUrl is added to configs
-        //[TestCase("happy path case", 9581)]
-        //public async Task It_Should_Return_Token_When_Calling_Birst_Token_Generator(string scenario, int tenantId)
-        //{
-        //    //arrange
-        //    var apiContext = SubstituteApiContext(tenantId);
-        //    var sut = new BirstTokenGenerator(apiContext, new MozuSettings());
+        [TestCase("happy path case", 9581)]
+        public async Task It_Should_Return_Token_When_Calling_Birst_Token_Generator(string scenario, int tenantId)
+        {
+            //arrange
+            var apiContext = SubstituteApiContext(tenantId);
+            var sut = new BirstTokenGenerator(apiContext, new MozuSettings());
 
-        //    //act
-        //    var actual = await sut.GenerateToken();
+            //act
+            var actual = await sut.GenerateDashboardUri();
 
-        //    //assert
-        //    Assert.That(actual, Is.Not.Null, scenario);
-        //}
+            //assert
+            Assert.That(actual, Is.Not.Null, scenario);
+        }
 
-        //[TestCase("bad URL exception test", 10)]
-        //public void It_Should_Throw_Unexpected_Exception_When_Given_An_Invalid_Url(string scenario, int tenantId)
-        //{
-        //    //arrange
-        //    var settings = Substitute.For<ISettings>();
-        //    settings.AppSettings(TOKEN_KEY).Returns("http://thisIsAnInvalidUrlForTestingOnly.mozu.com/");
-        //    settings.AppSettings(SSO_KEY).Returns("3234234");
-        //    settings.AppSettings(USER_KEY).Returns("testy");
-        //    settings.AppSettings(SPACE_ID_KEY).Returns("3234234");
-        //    settings.AppSettings(SSO_PASSWORD_KEY).Returns("3234234");
-        //    var apiContext = SubstituteApiContext(tenantId);
-        //    var sut = new BirstTokenGenerator(apiContext, settings);
+        [TestCase("bad URL exception test", 10)]
+        public void It_Should_Throw_Unexpected_Exception_When_Given_An_Invalid_Url(string scenario, int tenantId)
+        {
+            //arrange
+            var settings = Substitute.For<ISettings>();
+            settings.AppSettings(TOKEN_KEY).Returns("http://thisIsAnInvalidUrlForTestingOnly.mozu.com/");
+            settings.AppSettings(SSO_KEY).Returns("3234234");
+            settings.AppSettings(USER_KEY).Returns("testy");
+            settings.AppSettings(SPACE_ID_KEY).Returns("3234234");
+            settings.AppSettings(SSO_PASSWORD_KEY).Returns("3234234");
+            var apiContext = SubstituteApiContext(tenantId);
+            var sut = new BirstTokenGenerator(apiContext, settings);
 
-        //    //act
-        //    Assert.Throws<VaeUnexpectedErrorException>(
-        //           async () => await sut.GenerateToken(), scenario);
+            //act
+            Assert.Throws<VaeUnexpectedErrorException>(
+                   async () => await sut.GenerateDashboardUri(), scenario);
 
-        //}
+        }
 
         private IApiContext SubstituteApiContext(int tenantId)
         {
