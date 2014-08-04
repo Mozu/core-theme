@@ -688,6 +688,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
+    <Content Include="Scripts\app\controller\BusinessIntelligence.js" />
     <Content Include="Scripts\app\controller\SiteRoutes.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
     <Content Include="Scripts\app\controller\Tests.js" />
@@ -858,6 +859,7 @@
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\store\StoreCredits.js" />
     <Content Include="Scripts\app\store\Wishlists.js" />
+    <Content Include="Scripts\app\view\businessIntelligence\Index.js" />
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />

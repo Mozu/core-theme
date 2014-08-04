@@ -17,11 +17,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IReportWebApiClient _reportWebApiClient;
         private readonly IReportDefinitionWebApiClient _reportDefinitionWebApiClient;
+        private readonly IBirstTokenGenerator _birstTokenGenerator;
 
-        public ReportController(IReportWebApiClient reportWebApiClient, IReportDefinitionWebApiClient reportDefinitionWebApiClient)
+        public ReportController(IReportWebApiClient reportWebApiClient, IReportDefinitionWebApiClient reportDefinitionWebApiClient, IBirstTokenGenerator birstTokenGenerator)
         {
             _reportWebApiClient = reportWebApiClient;
             _reportDefinitionWebApiClient = reportDefinitionWebApiClient;
+            _birstTokenGenerator = birstTokenGenerator;
         }
 
         IEnumerable<Dictionary<string, object>> extractReportRows(Reporting.Contracts.ReportPagedCollection resp)
@@ -38,6 +40,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> List()
         {
             var resp = (await _reportWebApiClient.GetReports()).ReadAsSync();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
+        }
+
+        [HttpGetRoute(UriTemplate = "dashboard")]
+        public async Task<HttpResponseMessage> Dashboard()
+        {
+            var resp = (await _birstTokenGenerator.GenerateDashboardUri());
 
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }

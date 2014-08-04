@@ -481,11 +481,23 @@ Ext.define('Taco.store.Navigation', {
             }]
         }*/, {
                 "id": "reports",
-                "label": "Reports",
+                "label": "Business Intelligence",
                 "address": "reports",
                 "icon": "nav-dashboard",
                 "behaviorIds": [188],
                 "items": [
+                    {
+                        "id": "reports",
+                        "label": "Reports",
+                        "address": "reports"
+                    },
+                    {
+                        "id": "bizIntel",
+                        "label": "Dashboard",
+                        "address": "businessIntelligence"
+                    }
+
+
 /*
                 {
                     "id": "salesreport",
