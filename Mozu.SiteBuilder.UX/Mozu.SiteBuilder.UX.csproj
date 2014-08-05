@@ -271,9 +271,8 @@
     <Reference Include="Mozu.Location.Contracts">
       <HintPath>..\packages\Mozu.Location.Contracts.1.11.0-dev002\lib\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.MZDB.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.10.0.2\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
+    <Reference Include="Mozu.MZDB.Contracts">
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.11.0.1\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
