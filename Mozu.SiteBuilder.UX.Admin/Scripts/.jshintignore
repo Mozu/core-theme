@@ -1,0 +1,11 @@
+*.js
+.sencha/**
+build/**
+chorizo/**
+ext/**
+node_modules/**
+packages/**
+resources/**
+sass/**
+stylesheets/**
+ux/**
