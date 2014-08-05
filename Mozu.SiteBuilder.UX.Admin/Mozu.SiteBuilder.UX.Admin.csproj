@@ -1479,6 +1479,7 @@
     <Content Include="Scripts\resources\fonts\mozicons-2014.eot" />
     <Content Include="Scripts\resources\fonts\mozicons-2014.ttf" />
     <Content Include="Scripts\resources\fonts\mozicons-2014.woff" />
+    <Content Include=".jshintignore" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
