@@ -286,9 +286,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.8.0.1\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.PricingRuntime.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.10.0.1\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.PricingRuntime.Contracts">
+      <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.11.0-dev005\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
