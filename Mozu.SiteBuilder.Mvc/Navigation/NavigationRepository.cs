@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -45,14 +46,47 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 .ContinueWith(docResultIntermediate =>
                 {
                     var serviceClientResponse = docResultIntermediate.Result;
+
+                    if (serviceClientResponse.HasException ||  !serviceClientResponse.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        UserScopeType scopeType;
+                        var ns = new NavigationSet();
+                        if (serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound &&
+                            _siteBuilderApiContext.UserClaims != null && Enum.TryParse(_siteBuilderApiContext.UserClaims.ScopeType, out scopeType) && scopeType == UserScopeType.Tenant)
+                        {
+
+
+                            var doc = CreateNavigationDocument(ns);
+                            var res = new TestResponse<DC.Document>(doc);
+                            return res.Task;
+                        }
+                        else
+                        {
+                            var doc = new DC.Document();
+                            doc.Set("data", JContainer.FromObject(ns));
+                            var res = new TestResponse<DC.Document>(doc);
+                            return res.Task;
+                        }
+                    }
                     // if the document doesn't exist, create it first.
                     if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                     {
                         var ns = new NavigationSet();
-                        ns.Add(new SimpleRuntimeNavigationNode { Id = "page^^hi" });
-                        var doc = CreateNavigationDocument(ns);
-                        var res = new TestResponse<DC.Document>(doc);
-                        return res.Task;
+                        UserScopeType scopeType;
+                        if ( _siteBuilderApiContext.UserClaims != null && Enum.TryParse(_siteBuilderApiContext.UserClaims.ScopeType , out scopeType ) && scopeType == UserScopeType.Tenant)
+                        {
+
+                            var doc = CreateNavigationDocument(ns);
+                            var res = new TestResponse<DC.Document>(doc);
+                            return res.Task;
+                        }
+                        else
+                        {
+                            var doc = new DC.Document();
+                            doc.Set("data", JContainer.FromObject(ns));
+                            var res = new TestResponse<DC.Document>(doc);
+                            return res.Task;
+                        }
                     }
 
                     // otherwise, pass through the result.
