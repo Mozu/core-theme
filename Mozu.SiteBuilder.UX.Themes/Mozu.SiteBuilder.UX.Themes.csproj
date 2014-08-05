@@ -413,15 +413,14 @@
     <Content Include="Themes\Core4\compiled\scripts\pages\myaccount.js" />
     <Content Include="Themes\Core4\compiled\scripts\pages\product.js" />
     <Content Include="Themes\Core4\compiled\scripts\pages\search.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\backbone.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-affix.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-popover.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap-scrollspy.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\jquery.colorbox-min.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap\js\affix.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap\js\popover.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap\js\scrollspy.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\jquery.tools.dateinput.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\modernizr-respond.min.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\typeahead.bundle.js" />
-    <Content Include="Themes\Core4\compiled\scripts\vendor\underscore.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\jquery\jquery.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\modernizr.min.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\typeahead.js\typeahead.bundle.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\deal-of-the-day.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\compiled\scripts\widgets\instock-request.js" />
@@ -485,12 +484,16 @@
     <Content Include="Themes\Core4\scripts\modules\views-productlists.js" />
     <Content Include="Themes\Core4\scripts\pages\location.js" />
     <Content Include="Themes\Core4\scripts\pages\search.js" />
-    <Content Include="Themes\Core4\scripts\vendor\bootstrap-affix.js" />
-    <Content Include="Themes\Core4\scripts\vendor\bootstrap-popover.js" />
-    <Content Include="Themes\Core4\scripts\vendor\bootstrap-scrollspy.js" />
+    <Content Include="Themes\Core4\scripts\vendor\backbone\backbone.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap\js\affix.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap\js\popover.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap\js\scrollspy.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
-    <Content Include="Themes\Core4\scripts\vendor\jquery.colorbox-min.js" />
-    <Content Include="Themes\Core4\scripts\vendor\typeahead.bundle.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery.cookie\jquery.cookie.js" />
+    <Content Include="Themes\Core4\scripts\vendor\jquery\jquery.js" />
+    <Content Include="Themes\Core4\scripts\vendor\typeahead.js\typeahead.bundle.js" />
+    <Content Include="Themes\Core4\scripts\vendor\underscore\underscore.js" />
     <Content Include="Themes\Core4\scripts\widgets\deal-of-the-day.js" />
     <Content Include="Themes\Core4\scripts\widgets\image.js" />
     <Content Include="Themes\Core4\scripts\widgets\instock-request.js" />
@@ -560,11 +563,8 @@
     <Content Include="Themes\Core4\scripts\pages\error.js" />
     <Content Include="Themes\Core4\scripts\pages\myaccount.js" />
     <Content Include="Themes\Core4\scripts\pages\product.js" />
-    <Content Include="Themes\Core4\scripts\vendor\backbone.js" />
-    <Content Include="Themes\Core4\scripts\vendor\jquery-cookie.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.tools.dateinput.js" />
-    <Content Include="Themes\Core4\scripts\vendor\modernizr-respond.min.js" />
-    <Content Include="Themes\Core4\scripts\vendor\underscore.js" />
+    <Content Include="Themes\Core4\scripts\vendor\modernizr.min.js" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\utility-nav.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\cart-monitor.less" />
     <Content Include="Themes\Core4\stylesheets\modules\page-header\search-box.less" />
@@ -1031,6 +1031,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\stylesheets\modules\common\sort-by.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\bower.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

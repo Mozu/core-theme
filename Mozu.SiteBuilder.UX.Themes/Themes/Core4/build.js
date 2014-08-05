@@ -3,7 +3,9 @@
         jquery: "empty:",
         sdk: "empty:",
         hyprlive: "empty:",
-        hyprlivecontext: "empty:"
+        hyprlivecontext: "empty:",
+        underscore: "vendor/underscore/underscore",
+        backbone: "vendor/backbone/backbone"
     },
     dir: "compiled/scripts/",
     locale: "en-us",

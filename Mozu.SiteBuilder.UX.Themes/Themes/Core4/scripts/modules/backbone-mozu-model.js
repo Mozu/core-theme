@@ -1,8 +1,8 @@
 ﻿define([
     "modules/jquery-mozu",
-    "shim!vendor/underscore>_",
+    "underscore",
     "modules/api",
-    "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone",
+    "backbone",
     "modules/models-messages",
     "modules/backbone-mozu-validation"], function ($, _, api, Backbone, MessageModels) {
 
@@ -130,8 +130,9 @@
             /** @private */
             setRelation: function(attr, val, options) {
                 var relation = this.attributes[attr],
-                    id = this.idAttribute || "id",
-                    modelToSet, modelsToAdd = [], modelsToRemove = [];
+                    id = this.idAttribute || "id";
+                
+                if (!("parse" in options)) options.parse = true;
 
                 //if (options.unset && relation) delete relation.parent;
 
@@ -147,45 +148,8 @@
                         // within the collection.
                         if (val instanceof Collection || val instanceof Array) {
                             val = val.models || val;
-                            modelsToAdd = _.clone(val);
 
-                            if (options && options.useExistingInstances) {
-
-                                relation.each(function(model, i) {
-
-                                    // If the model does not have an "id" skip logic to detect if it already
-                                    // exists and simply add it to the collection
-                                    if (typeof model.id == 'undefined') return;
-
-                                    // If the incoming model also exists within the existing collection,
-                                    // call set on that model. If it doesn't exist in the incoming array,
-                                    // then add it to a list that will be removed.
-                                    var rModel = _.find(val, function(_model) {
-                                        return _model[id] === model.id;
-                                    });
-
-                                    var sRModel = rModel.toJSON ? rModel.toJSON() : rModel;
-
-                                    if (rModel) {
-                                        model.set(options && options.parse ? model.parse(sRModel) : sRModel, options);
-
-                                        // Remove the model from the incoming list because all remaining models
-                                        // will be added to the relation
-                                        modelsToAdd = _.without(modelsToAdd, rModel);
-                                    } else {
-                                        modelsToRemove.push(model);
-                                    }
-
-                                });
-
-                                _.each(modelsToRemove, function(model) {
-                                    relation.remove(model);
-                                });
-
-                                relation.add(modelsToAdd, _.extend(options, { merge: true }));
-                            } else {
-                                relation.reset(modelsToAdd, options);
-                            }
+                            relation.reset(_.clone(val), options);
 
                         } else {
 
@@ -207,7 +171,6 @@
                     }
 
                     if (relation && relation instanceof Model) {
-                        if (options.useExistingInstances && val instanceof this.relations[attr]) return val;
                         if (options.unset) {
                             relation.clear(options);
                         } else {

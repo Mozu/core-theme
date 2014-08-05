@@ -1,4 +1,4 @@
-﻿define(['shim!vendor/underscore>_', "modules/backbone-mozu", "hyprlive", "modules/models-product", "modules/mixin-paging"], function (_, Backbone, Hypr, ProductModels, PagingMixin) {
+﻿define(['underscore', "modules/backbone-mozu", "hyprlive", "modules/models-product", "modules/mixin-paging"], function (_, Backbone, Hypr, ProductModels, PagingMixin) {
 
     var OrderItem = Backbone.MozuModel.extend({
         relations: {

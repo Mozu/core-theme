@@ -1,6 +1,6 @@
 ﻿define([
     "modules/jquery-mozu",
-    "shim!vendor/underscore>_",
+    "underscore",
     "hyprlive",
     "modules/backbone-mozu",
     "modules/api",

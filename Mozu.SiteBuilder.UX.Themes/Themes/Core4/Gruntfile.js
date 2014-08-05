@@ -1,7 +1,20 @@
 ﻿module.exports = function (grunt) {
 
     grunt.initConfig({
-       
+        
+        bower: {
+            install: {
+                options: {
+                    targetDir: './scripts/vendor',
+                    layout: 'byComponent',
+                    cleanBowerDir: true,
+                    bowerOptions: {
+                        production: true,
+                        forceLatest: true
+                    }
+                }
+            }
+        },
         jshint: {
             default: [
                 'theme.json',
@@ -12,18 +25,6 @@
             ],
             options: {
                 ignores: ['scripts/vendor/**/*.js'],
-                //asi: true,
-                //boss: true,
-                //undef: true,
-                //laxcomma: true,
-                //unused: false,
-                //expr: true,
-                //eqnull: true,
-                //browser: true,
-                //devel: true,
-                //nonstandard: true,
-                //loopfunc: true,
-                //"-W099": true,
                 globals: {
                     console: true,
                     window: true,
@@ -84,11 +85,14 @@
         }
     });
 
-    [ 'grunt-contrib-jshint', 'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
+    ['grunt-bower-task',
+     'grunt-contrib-jshint',
+     'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
+
     grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', [ 'jshint', 'tfscheckout', 'zubat']);
+    grunt.registerTask('default', [ 'jshint', 'tfscheckout', 'bower', 'zubat']);
     grunt.registerTask('notfs', [ 'jshint', 'zubat']);
-    grunt.registerTask('release', [ 'jshint', 'tfscheckout', 'zubat', 'setver']);
-    grunt.registerTask('releasenotfs', [ 'jshint', 'tfscheckout', 'zubat', 'setver']);
+    grunt.registerTask('release', ['jshint', 'tfscheckout', 'bower', 'zubat', 'setver']);
+    grunt.registerTask('releasenotfs', ['jshint', 'tfscheckout', 'bower', 'zubat', 'setver']);
    
 }; 

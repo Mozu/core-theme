@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -278,6 +279,23 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
         }
 
+        private ThemeFileSystemInfo CreateThemeFileSystemInfo(FileSystemInfo x, string themePath, string themeId)
+        {
+            var relPath = x.FullName.Substring(themePath.Length).Trim(new char[] { '\\' }).ToLowerInvariant();
+            var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
+            return new ThemeFileSystemInfo()
+            {
+                Name = x.Name,
+                ThemeId = themeId,
+                FullPath = x.FullName,
+                TimsStamp = x.LastWriteTimeUtc,
+                RootPath = themePath,
+                VirtualPathNoExt = relPathNoExt,
+                VirtualPath = relPath,
+                IsFile = !x.Attributes.HasFlag(FileAttributes.Directory)
+            };
+        }
+
         /// <summary>
         /// Gather info on all files contained within the theme and save them for later access.
         /// </summary>
@@ -287,22 +305,21 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (!dirinfo.Exists)
                 return null;
 
-            return new ThemeFileSystemInfoCollection(dirinfo.GetFileSystemInfos("*.*", SearchOption.AllDirectories).Select(x =>
+
+
+
+            var themeFiles = dirinfo.GetFiles().Select(x => CreateThemeFileSystemInfo(x, themePath, themeId)).ToList();
+
+            var deepThemeFiles = dirinfo.GetDirectories().SelectMany(d =>
             {
-                var relPath = x.FullName.Substring(themePath.Length).Trim(new char[] {'\\'}).ToLowerInvariant();
-                var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
-                return new ThemeFileSystemInfo()
-                       {
-                           Name = x.Name,
-                           ThemeId = themeId,
-                           FullPath = x.FullName,
-                           TimsStamp = x.LastWriteTimeUtc,
-                           RootPath = themePath,
-                           VirtualPathNoExt = relPathNoExt,
-                           VirtualPath = relPath,
-                           IsFile = !x.Attributes.HasFlag(FileAttributes.Directory)
-                       };
-            }));
+                if (d.Name == "node_modules")
+                {
+                    return Enumerable.Empty<ThemeFileSystemInfo>();
+                }
+                return d.GetFileSystemInfos("*.*", SearchOption.AllDirectories).Select(x => CreateThemeFileSystemInfo(x, themePath, themeId));
+            }).ToList();
+
+            return new ThemeFileSystemInfoCollection(themeFiles.Concat(deepThemeFiles).ToList());
         }
 
         private string DevThemePath

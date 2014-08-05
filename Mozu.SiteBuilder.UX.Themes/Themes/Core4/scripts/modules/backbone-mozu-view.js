@@ -1,8 +1,8 @@
 ﻿define([
     "modules/jquery-mozu",
-    "shim!vendor/underscore>_",
+    "underscore",
     "hyprlive",
-    "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone",
+    "backbone",
     "modules/views-messages"
 ], function ($, _, Hypr, Backbone, messageViewFactory) {
 
@@ -36,12 +36,12 @@
 
         constructor: function (conf) {
             Backbone.View.apply(this, arguments);
-            this.template = Hypr.getTemplate(this.options.templateName || this.templateName);
+            this.template = Hypr.getTemplate(conf.templateName || this.templateName);
             this.listenTo(this.model, "sync", this.render);
             this.listenTo(this.model, "loadingchange", this.handleLoadingChange);
-            if (this.model.handlesMessages && this.options.messagesEl) {
+            if (this.model.handlesMessages && conf.messagesEl) {
                 this.messageView = messageViewFactory({
-                    el: this.options.messagesEl,
+                    el: conf.messagesEl,
                     model: this.model.messages
                 });
             }

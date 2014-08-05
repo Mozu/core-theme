@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+﻿define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -82,17 +82,18 @@
                 selectedValue = _.findWhere(raw.values, { isSelected: true });
                 if (selectedValue) raw.value = selectedValue.value;
             }
-            if (raw.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined) {
-                storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
-                if (storedShopperValue || storedShopperValue === 0)
-                    this.set({
-                        shopperEnteredValue: storedShopperValue,
-                        value: storedShopperValue
-                    });
-            }
-            if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
-                raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
-                raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
+            if (raw.attributeDetail) {
+                if (raw.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined) {
+                    storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
+                    if (storedShopperValue || storedShopperValue === 0) {
+                        raw.shopperEnteredValue = storedShopperValue;
+                        raw.value = storedShopperValue;
+                    }
+                }
+                if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
+                    raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
+                    raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
+                }
             }
             return raw;
         },
@@ -104,7 +105,7 @@
         },
         isValidValue: function() {
             var value = this.get('value') || this.get('shopperEnteredValue');
-            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value));
+            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value.toString()));
         },
         isConfigured: function() {
             var attributeDetail = this.get('attributeDetail');

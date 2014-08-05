@@ -1,7 +1,7 @@
 ﻿/**
  * Can be used on any Backbone.MozuModel that has had the paging mixin in mixins-paging added to it.
  */
-define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'], function($, _, Backbone) {
+define(['modules/jquery-mozu','underscore','modules/backbone-mozu'], function($, _, Backbone) {
 
     var pagingHelpers = ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage', 'sorts', 'currentSort'];
 
