@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,11 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Razor;
+using AutoMapper;
 using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
-using Mozu.Content.Contracts;
-using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -25,43 +22,37 @@ using Mozu.Core.Settings;
 using Mozu.MZDB.Contracts;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api;
-using Mozu.SiteBuilder.UX.Admin.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
 using DCproduct = Mozu.ProductAdmin.Contracts;
+using IProvisioningWebApiClient = Mozu.Content.Contracts.Clients.IProvisioningWebApiClient;
+using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
- 
 //    [Mozu.SiteBuilder.Mvc.ActionFilters.AddCorrelationHeaderFilter]
-   
 
-    public class HomeController : AdminApiControllerBase 
+
+    public class HomeController : AdminApiControllerBase
     {
-        private readonly ILogger _logger;
-        private readonly IEntityListsWebApiClient _entityListsWebApiClient;
-        
-
-        private readonly IAuthenticationHelper _authenticationHelper;
-        
-        private readonly ITenantsWebApiClient _tenantsWebApi;
-        
-        private readonly IApiContext _apiContext;
-        private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
-        private readonly ISettings _settings;
-        private readonly HttpContextBase _httpContext;
         private readonly IMultiScopeAdminUserWebApiClient _adminUserWebApiClient;
+        private readonly IApiContext _apiContext;
+        private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly IEntityListsWebApiClient _entityListsWebApiClient;
+        private readonly HttpContextBase _httpContext;
+        private readonly ILogger _logger;
 
-        private IMasterCatalogWebApiClient _masterCatalogClient;
+        private readonly IMasterCatalogWebApiClient _masterCatalogClient;
+        private readonly ISettings _settings;
+        private readonly ITenantsWebApiClient _tenantsWebApi;
+        private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
 
-        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, Mozu.AdminUser.Contracts.Clients.IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, Mozu.Core.Logging.ILogger logger, Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient)
+        public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient)
         {
-            
             _logger = logger;
             _entityListsWebApiClient = entityListsWebApiClient.CloneWithoutUserClaims().CloneWithApiContext(x =>
             {
@@ -69,50 +60,42 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 x.CatalogId = null;
                 x.MasterCatalogId = null;
             });
-            
+
 
             _usersRepo = usersRepo.CloneWithoutUserClaims();
             _authenticationHelper = authHelper;
             //_sbc = sbc;
             _apiContext = apiContext;
-            _tenantsWebApi = tenantsWebApi.CloneWithoutUserClaims();//  .CloneWithApiContext(x => x.UserClaims = LightweightUserClaims.CreateForSystemUser(UserScopeType.SystemAdmin));
-            
+            _tenantsWebApi = tenantsWebApi.CloneWithoutUserClaims(); //  .CloneWithApiContext(x => x.UserClaims = LightweightUserClaims.CreateForSystemUser(UserScopeType.SystemAdmin));
+
             _settings = settings;
             _httpContext = httpContext;
             _adminUserWebApiClient = adminUserWebApiClient.CloneWithoutUserClaims();
-            
+
             _masterCatalogClient = masterCatalogClient.CloneWithoutUserClaims();
         }
 
-        
+
         // GET: /Home/
-        [HttpGet()]
-        public async Task<HttpResponseMessage > Index()
+        [HttpGet]
+        public async Task<HttpResponseMessage> Index()
         {
             try
             {
-                var res = await GetIndex();
-                return this.Request.CreateResponse(HttpStatusCode.OK, res);
+                ActionResult res = await GetIndex();
+                return Request.CreateResponse(HttpStatusCode.OK, res);
             }
             catch (Exception ex)
             {
-                if (System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] == "true")
+                if (ConfigurationManager.AppSettings["use_compiled_taco"] == "true")
                 {
                     throw;
                 }
                 _logger.Error("error loading admin", ex);
-                var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
-                redir.Headers.Location = new System.Uri("/admin/auth/launchpad", UriKind.Relative);
+                HttpResponseMessage redir = Request.CreateResponse(HttpStatusCode.Redirect);
+                redir.Headers.Location = new Uri("/admin/auth/launchpad", UriKind.Relative);
                 return redir;
             }
-        }
-
-        public class TestContext
-        {
-            public TaContext TenantContext { get; set; }
-            public Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User User { get; set; }
-            public List<UserRole> Roles { get; set; }
-            public AdminUserCollection Users { get; set; }
         }
 
         //[HttpGet()]
@@ -124,7 +107,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         //    this.ViewData["taContext"] = tc.TenantContext ;
         //    this.ViewData["user"] = tc.User ;
         //    this.ViewData["siteRoles"] = tc.Roles ;
-
 
 
         //    this.ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
@@ -151,54 +133,53 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         //    return RazorView("index");
         //}
-        void AppendLocaleInfo()
+        private void AppendLocaleInfo()
         {
-       //     symbol = CultureInfo
-       //.GetCultures(CultureTypes.AllCultures)
-       //.Where(c => !c.IsNeutralCulture)
-       //.Select(culture =>
-       //{
-       //    try
-       //    {
-       //        return new RegionInfo(culture.LCID);
-       //    }
-       //    catch
-       //    {
-       //        return null;
-       //    }
-       //})
-       //.Where(ri => ri != null && ri.ISOCurrencySymbol == ISOCurrencySymbol)
-       //.Select(ri => ri.CurrencySymbol)
-       //.FirstOrDefault();
+            //     symbol = CultureInfo
+            //.GetCultures(CultureTypes.AllCultures)
+            //.Where(c => !c.IsNeutralCulture)
+            //.Select(culture =>
+            //{
+            //    try
+            //    {
+            //        return new RegionInfo(culture.LCID);
+            //    }
+            //    catch
+            //    {
+            //        return null;
+            //    }
+            //})
+            //.Where(ri => ri != null && ri.ISOCurrencySymbol == ISOCurrencySymbol)
+            //.Select(ri => ri.CurrencySymbol)
+            //.FirstOrDefault();
         }
-       
-        async Task<ActionResult> GetIndex()
+
+        private async Task<ActionResult> GetIndex()
         {
+            Task<ServiceClientResponse<Core.Api.Contracts.User>> userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
+            Task<List<UserRole>> rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
+            Task<ServiceClientResponse<Tenant.Contracts.Tenant>> tenantTask = _tenantsWebApi.GetTenantInternal(_apiContext.TenantId, false);
+            Task<ServiceClientResponse<EntityCollection>> adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu.extensiblity", 6000);
 
-            var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
-            var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
-            var tenantTask = _tenantsWebApi.GetTenantInternal(  _apiContext.TenantId , false );
-            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "subNavLinks@mozu.extensiblity", pageSize: 6000);
-            
-            var siteUsersTask = _usersRepo.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, pageSize: 200, startIndex: 0);
-            
+            Task<ServiceClientResponse<AdminUserCollection>> siteUsersTask = _usersRepo.GetUsers(UserScopeType.Tenant.ToString(), _apiContext.TenantId, pageSize: 200, startIndex: 0);
+
             // TODO: the masterCatalog service is not ready. We mock it.
-            Task<ServiceClientResponse<DCproduct.MasterCatalogCollection >> masterCatalogsTask;
-             masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs( );
+            Task<ServiceClientResponse<DCproduct.MasterCatalogCollection>> masterCatalogsTask;
+            masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs();
 
-             await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask , adminSubNavExtensibiltyTask);
+            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
-            
 
-            var userDC = userDcTask.Result.ReadAsSync();
-            var roles = rolesTask.Result;
-            var tenant = tenantTask.Result.ReadAsSync();
+
+            Core.Api.Contracts.User userDC = userDcTask.Result.ReadAsSync();
+            List<UserRole> roles = rolesTask.Result;
+            Tenant.Contracts.Tenant tenant = tenantTask.Result.ReadAsSync();
 
             ProvisionCMSMAYBE(tenant);
 
 
-            var siteUsers = siteUsersTask.Result.ReadAsSync();
+            AdminUserCollection siteUsers = siteUsersTask.Result.ReadAsSync();
             DCproduct.MasterCatalogCollection masterCatalogs = null;
             try
             {
@@ -206,50 +187,58 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
             catch
             {
-                masterCatalogs = new DCproduct.MasterCatalogCollection() {Items = new List<DCproduct.MasterCatalog>()};
+                masterCatalogs = new DCproduct.MasterCatalogCollection {Items = new List<DCproduct.MasterCatalog>()};
             }
             if (adminSubNavExtensibiltyTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                await _entityListsWebApiClient.CreateEntityList(new EntityList()
+                await _entityListsWebApiClient.CreateEntityList(new EntityList
                                                                 {
                                                                     NameSpace = "mozu.extensiblity",
                                                                     ContextLevel = "Tenant",
                                                                     IsVisibleInStorefront = false,
                                                                     UseSystemAssignedId = true,
-                                                                    Name = "subNavLinks"
+                                                                    Name = "subNavLinks",
+                                                                    Usages = new List<string> { "entityManager" },
+                                                                    Views = new List<ListView>
+                                                                            {
+                                                                                new ListView
+                                                                                {
+                                                                                    Usages = new List<string> {"entityManager"},
+                                                                                    Name = "Default",
+                                                                                    Fields = new List<ListViewField>
+                                                                                             {
+                                                                                                 
+                                                                                                 new ListViewField
+                                                                                                 {
+                                                                                                     Name = "parentId",
+                                                                                                     Target = "parentId"
+                                                                                                 },
+                                                                                                 new ListViewField
+                                                                                                 {
+                                                                                                     Name = "path",
+                                                                                                     Target = "path"
+                                                                                                 }
+                                                                                             }
+                                                                                }
+                                                                            }
                                                                 });
-                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities(entityListFullName: "subNavLinks@mozu.extensiblity", pageSize: 6000);
+                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu.extensiblity", 6000);
                 await adminSubNavExtensibiltyTask;
-
             }
-           
-
-            var user = new Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User()
-            {
-                BehaviorIds = _apiContext.UserClaims.BehaviorIds,
-                EmailAddress = userDC.EmailAddress,
-                FirstName = userDC.FirstName,
-                LastName = userDC.LastName,
-                Id = _apiContext.UserClaims.UserId
-            };
-
-           
-            
-
-            
-            
 
 
+            var user = new User
+                       {
+                           BehaviorIds = _apiContext.UserClaims.BehaviorIds,
+                           EmailAddress = userDC.EmailAddress,
+                           FirstName = userDC.FirstName,
+                           LastName = userDC.LastName,
+                           Id = _apiContext.UserClaims.UserId
+                       };
 
-     
 
-        
-            
-           
-
-
-            var taContext = AutoMapper.Mapper.Map<TaContext>(tenant);
-            AutoMapper.Mapper.Map(masterCatalogs, taContext);
+            var taContext = Mapper.Map<TaContext>(tenant);
+            Mapper.Map(masterCatalogs, taContext);
 
             var emtpy = new Currency();
             taContext.Currencies = taContext.MasterCatalogs
@@ -261,30 +250,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                     CurrencyCode cc;
                     return Enum.TryParse(x, out cc) ? CurrencyRepository.Get(cc) : emtpy;
                 })
-                .Where(x => x.Symbol!= null ).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
-
-           
-            
-           
-
-            
+                .Where(x => x.Symbol != null).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
 
 
-            this.ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
-            this.ViewData["taContext"] = taContext;
-            this.ViewData["user"] = user;
-            this.ViewData["siteRoles"] = roles;
+            ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
+            ViewData["taContext"] = taContext;
+            ViewData["user"] = user;
+            ViewData["siteRoles"] = roles;
 
-            
-            
-            this.ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
-            this.ViewData["useGoogleAnalytics"] = System.Configuration.ConfigurationManager.AppSettings["useGoogleAnalytics"];
-            this.ViewData["googleAnalyticsAccount"] = System.Configuration.ConfigurationManager.AppSettings["googleAnalyticsAccount"];
-            this.ViewData["siteUsers"] = siteUsers.Items;
+
+            ViewData["extlocalefile"] = GetExtLocaleFile(Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName);
+            ViewData["useGoogleAnalytics"] = ConfigurationManager.AppSettings["useGoogleAnalytics"];
+            ViewData["googleAnalyticsAccount"] = ConfigurationManager.AppSettings["googleAnalyticsAccount"];
+            ViewData["siteUsers"] = siteUsers.Items;
 
             try
             {
-                this.ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
+                ViewData["adminSubNavExtensibilty"] = adminSubNavExtensibiltyTask.Result.ReadAsSync().Items;
             }
             catch (Exception err)
             {
@@ -292,42 +274,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
 
             // IE8 compatibility (http://hsivonen.fi/doctype/)
-            this.Response.AddHeader("X-UA-Compatible", "IE=Edge");
+            Response.AddHeader("X-UA-Compatible", "IE=Edge");
 
-            this.ViewData["extlib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "ext-all-dev.js" : "ext-all.js");
-            this.ViewData["applib"] = (string)((_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "app-dev.js" : "app.js");
+            ViewData["extlib"] = (_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "ext-all-dev.js" : "ext-all.js";
+            ViewData["applib"] = (_httpContext.Request.Cookies.Get("debugExt") != null && _httpContext.Request.Cookies.Get("debugExt").Value == "true") ? "app-dev.js" : "app.js";
 
-            if (this.HttpContext.Request["testHarnessMode"] == "true")
+            if (HttpContext.Request["testHarnessMode"] == "true")
             {
                 return RazorView("TestHarnes");
             }
-            var tacoAssetServer = _httpContext.Request.Cookies.Get("taco-asset-location") != null ? _httpContext.Request.Cookies.Get("taco-asset-location").Value : null;
-            if (string.Equals(System.Configuration.ConfigurationManager.AppSettings["use_compiled_taco"] ,"true",StringComparison.OrdinalIgnoreCase) & string.IsNullOrEmpty(tacoAssetServer))
+            string tacoAssetServer = _httpContext.Request.Cookies.Get("taco-asset-location") != null ? _httpContext.Request.Cookies.Get("taco-asset-location").Value : null;
+            if (string.Equals(ConfigurationManager.AppSettings["use_compiled_taco"], "true", StringComparison.OrdinalIgnoreCase) & string.IsNullOrEmpty(tacoAssetServer))
             {
                 return RazorView("Index_Compiled");
             }
 
             return RazorView("index");
-            
         }
 
         private void ProvisionCMSMAYBE(Tenant.Contracts.Tenant tenant)
         {
-            if (this.Request.RequestUri.ToString().Contains("provisioncms"))
+            if (Request.RequestUri.ToString().Contains("provisioncms"))
             {
-                var cmsProv = this.Request.Resolve<Mozu.Content.Contracts.Clients.IProvisioningWebApiClient>().CloneWithoutUserClaims();
-                var tenantCmsReq = new CreateTenantRequest()
+                IProvisioningWebApiClient cmsProv = Request.Resolve<IProvisioningWebApiClient>().CloneWithoutUserClaims();
+                var tenantCmsReq = new CreateTenantRequest
                                    {
                                        TenantId = tenant.Id,
                                        MasterCatalogs = tenant.MasterCatalogs == null ? null :
-                                           tenant.MasterCatalogs.Select(mc => new CreateMasterCatalogRequest()
+                                           tenant.MasterCatalogs.Select(mc => new CreateMasterCatalogRequest
                                                                               {
                                                                                   MasterCatalogId = mc.Id,
                                                                                   TenantId = mc.TenantId,
                                                                                   DefaultCurrencyCode = mc.DefaultCurrencyCode,
                                                                                   DefaultLocaleCode = mc.DefaultLocaleCode,
                                                                                   Sites = tenant.Sites == null ? null : tenant.Sites.Where(x => mc.Catalogs != null && mc.Catalogs.Any(c => c.Id == x.CatalogId))
-                                                                                      .Select(site => new CreateSiteRequest()
+                                                                                      .Select(site => new CreateSiteRequest
                                                                                                       {
                                                                                                           SiteId = site.Id,
                                                                                                           MasterCatalogId = site.MasterCatalogId,
@@ -337,7 +318,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                                                                                                           LocaleCode = site.DefaultLocaleCode,
                                                                                                           CountryCode = site.CountryCode,
                                                                                                           CatalogRequest = mc.Catalogs.Where(x => x.Id == site.CatalogId)
-                                                                                                              .Select(cat => new CreateCatalogRequest()
+                                                                                                              .Select(cat => new CreateCatalogRequest
                                                                                                                              {
                                                                                                                                  CatalogId = cat.Id,
                                                                                                                                  DefaultCurrencyCode = cat.DefaultCurrencyCode,
@@ -355,12 +336,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         public Task<List<UserRole>> GetUserSitesRoles(string userId)
         {
-            return _usersRepo.GetUserRoles(userId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)
-                .ContinueWith(t => {
+            return _usersRepo.GetUserRoles(userId, UserScopeType.Tenant.ToString(), _apiContext.TenantId)
+                .ContinueWith(t =>
+                {
                     if (t.Result.ResponseMessage.IsSuccessStatusCode)
                         return t.Result.ReadAsSync().Items;
-                    else
-                        return new List<Core.Api.Contracts.UserRole>();
+                    return new List<UserRole>();
                 });
         }
 
@@ -369,13 +350,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             const string filename = "ext-lang-{0}.js";
 
-            switch(language.ToLower())
+            switch (language.ToLower())
             {
                 case "de":
                     return string.Format(filename, "de");
                 default:
                     return string.Format(filename, "en");
             }
+        }
+
+        public class TestContext
+        {
+            public TaContext TenantContext { get; set; }
+            public User User { get; set; }
+            public List<UserRole> Roles { get; set; }
+            public AdminUserCollection Users { get; set; }
         }
     }
 }
