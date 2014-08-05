@@ -328,9 +328,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.Shipping.Contracts.1.1.0.3\lib\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Tenant.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.10.0.1\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Tenant.Contracts">
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.11.0.1\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Mozu.Hypr.NDjango.1.10.0.1\lib\NDjango.Core40.dll</HintPath>
