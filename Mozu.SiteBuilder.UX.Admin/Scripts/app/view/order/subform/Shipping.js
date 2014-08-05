@@ -5,8 +5,7 @@
 // todos extend base class for the subform
 Ext.define('Taco.view.order.subform.Shipping', {
     extend: 'Taco.view.order.subform.Subform',
-    requires: [
-        'Taco.view.order.subform.ShippingSimple',
+    requires: [        
         'Taco.view.order.widget.Package',
         'Taco.view.order.widget.UnpackagedItems',
         'Taco.store.PackagingTypes'

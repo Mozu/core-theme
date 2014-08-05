@@ -16,6 +16,9 @@ Ext.define('Taco.shared.view.modal.Address', {
     width: 700,
     title: 'Edit Address',
 
+    // need this layout in order for scrollbar showing up to cause the form to resize. criminy...
+    layout:"anchor",
+
     addressHasNames: true,
     showCompanyName: true,
     showEmail: true,
@@ -66,7 +69,7 @@ Ext.define('Taco.shared.view.modal.Address', {
             this.record = Ext.create('Taco.model.Contact', this.record);
         }
                 
-        this.form = Ext.widget(Ext.apply({
+        this.form = Ext.widget(Ext.apply({            
             xtype: 'taco-addressform',
             header:false,
             record: this.record,

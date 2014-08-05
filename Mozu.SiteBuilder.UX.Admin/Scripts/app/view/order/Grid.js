@@ -141,7 +141,8 @@ Ext.define('Taco.view.order.Grid', {
                         return 'billingContact.firstName';
                     },
                     renderer: function (value, metaData, record) {
-                        return Ext.util.Format.htmlEncode(value.firstName);
+                        return (value.firstName) ? Ext.util.Format.htmlEncode(value.firstName) : "N/A";
+                        
                     }
                 }, {
                     stateId: 'lastName',
@@ -155,7 +156,7 @@ Ext.define('Taco.view.order.Grid', {
                         return 'billingContact.lastName';
                     },
                     renderer: function (value, metaData, record) {
-                        return Ext.util.Format.htmlEncode(value.lastName);
+                        return (value.firstName) ? Ext.util.Format.htmlEncode(value.lastName) : "N/A";
                     }
                 }, {
                     stateId: 'orderTotal',

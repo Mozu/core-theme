@@ -46,6 +46,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     applyRecord: function (record) {        
         this.masterTable.update(record.getData());
         this.updateShippingMethodButton(record);
+        this.updateShippingMethodLabel();
         return record
     },
     
@@ -212,18 +213,16 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     }
                 })
             })
-
+            
+            
             items.push({
                 xtype: 'label',
-                //style: "padding-top: 13px;",
-                cls:"x-form-item-label",
-                forId: 'myFieldId',
-                text: 'Shipping Method'
-            })
+                itemId: "shippingMethodLabel",
+                cls: "x-form-item-label",
+                html: this.getShippingLabelText()
+            });
 
-            items.push(shippingMethodButton)
-
-            //items.push(this.shippingMethodField)
+            items.push(shippingMethodButton)            
         } else {
             // need to add a filler to get the panel to layout. weird.
             items.push({
@@ -243,6 +242,19 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
     },
     
+    getShippingLabelText : function (){         
+        return shippingMethodLabelTxt = (Ext.Object.isEmpty(this.record.data.fulfillmentContact)) ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>" : "Shipping Method";
+    },
+
+    // update the shipping method label based on the presence of a shipping Address Contact
+    updateShippingMethodLabel : function () {
+        var label = this.down("#shippingMethodLabel");
+        if (label) {
+            label.update(this.getShippingLabelText());
+        }
+
+    },
+
     /**
      *   The first section of XTemplate that precedes the order adjustment row;
      */

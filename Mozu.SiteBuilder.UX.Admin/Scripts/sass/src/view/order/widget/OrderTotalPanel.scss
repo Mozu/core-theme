@@ -183,14 +183,16 @@
     }
 
 
-    .taco-order-discount-error{
+    .taco-order-discount-error {
         color:$color-theme-red;
         padding-top:5px;
         .taco-couponCode{padding-right:10px;font-weight:bold}
         .taco-reason{}
     }
 
-
+	.taco-order-shipping-error{
+		color:$color-theme-red;
+	}
 }
 
 
