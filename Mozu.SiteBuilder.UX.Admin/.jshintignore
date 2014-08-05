@@ -8,4 +8,10 @@ Scripts/resources/**
 Scripts/sass/**
 Scripts/stylesheets/**
 Scripts/ux/**
+
+Tests/*
+Tests/mocha/**
+Tests/specs/**
+
+
 **/node_modules/**
