@@ -7,8 +7,7 @@ Ext.define('Taco.shared.view.form.Address', {
 	extend: 'Taco.core.ux.form.Form',
 	alias: 'widget.taco-addressform',
 
-	requires: [
-        //'Taco.store.StateComboBox',
+	requires: [        
         'Taco.store.StatesStatic',
 		'Taco.model.Contact',
 		'Taco.core.ux.form.SelectField',
@@ -38,164 +37,214 @@ Ext.define('Taco.shared.view.form.Address', {
         
 		this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor-fields';
 
+		this.layout = {
+		    type: "anchor"
+		}
 		
         // default the country code if one is not provided;
-		var countryCode = this.record.get("countryCodecountryCode");
+		var countryCode = this.record.get("countryCode");
 		if (!countryCode && this.useDefaultCountryCode) {
 		    this.record.set("countryCode", this.defaultCountryCode);
 		}
+
 	    
+		var nameFieldContainer = {
+		    xtype: "fieldcontainer",		    
+		    layout: "hbox",
+            anchor:"0",
+		    items: []
+		}
 
 
         if (me.showCompanyName) {
-            fields.push({
+            nameFieldContainer.items.push({
                 xtype: 'textfield',
                 name: 'companyOrOrganization',
                 fieldLabel: 'Company Name',
-                margin: '0 15 5 0',
-                style: { 'display': 'inline-table' }
+                flex:1,
+                margin: '0 15 0 0'
             })
         }
 
         if (me.showEmail) {
-            fields.push({
+            nameFieldContainer.items.push({
                 xtype: 'textfield',
+                flex: 1,
                 allowBlank: !this.emailRequired,
                 name: 'email',
                 fieldLabel: 'Email',
-                margin: '0 15 5 0',
-                style: { 'display': 'inline-table' }
+                margin: '0 15 0 0'
             });
         }
+        
 
-		fields.push({
+        var addressType = {
             xtype: 'combobox',
-            // width: 315,
             name: 'addressType',
             fieldLabel: 'Address Type',
-            margin: '0 100 5 0',
-            style: { 'display': 'inline-table' },
+            forceSelection:true,
             store: ['Residential', 'Commercial']
-        }, {
+        }
+
+        if (me.showEmail || me.showCompanyName) {
+            addressType.flex = 1;
+        } else {
+            addressType.width = "33%";
+        }
+
+        nameFieldContainer.items.push(addressType)
+
+        fields.push(nameFieldContainer);
+
+        
+
+        fields.push({
             xtype: 'textfield',
-            width: 480,
             name: 'address1',
+            anchor:'0',
             fieldLabel: 'Address 1',
-            margin: '0 100 5 0',
-            allowBlank: false,
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            // width: 315,
-            name: 'address2',
-            fieldLabel: 'Address 2',
-            margin: '0 15 5 0',
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            // width: 315,
-            name: 'address3',
-            fieldLabel: 'Address 3',
-            margin: '0 15 5 0',
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            // width: 315,
-            name: 'address4',
-            fieldLabel: 'Address 4',
-            margin: '0 100 5 0',
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            name: 'cityOrTown',
-            fieldLabel: 'City',
-            margin: '0 15 5 0',
-            allowBlank: false,
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            width: 68,
-            name: 'stateOrProvince',
-            fieldStyle: 'text-transform:uppercase',
-            fieldLabel: 'State',
-            minLength:2,
-            margin: '0 14 5 0',
-            allowBlank: false,
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'textfield',
-            width: 68,
-            name: 'postalOrZipCode',
-            fieldLabel: 'ZIP',
-            margin: '0 14 5 0',
-            allowBlank: false,
-            style: { 'display': 'inline-table' }
-        }, {
-            xtype: 'combobox',
-            name: 'countryCode',
-            margin: '0 100 5 0',
-            style: { 'display': 'inline-table' },
-            fieldLabel: 'Country',
-            allowBlank: false,
-            queryMode: 'local',
-            displayField: 'name',
-            valueField: 'code',            
-            store: { type: 'Taco.store.Countries' },
-            emptyText: "Country",
-            selectOnFocus: true
-	    });
+            allowBlank: false
+        });
+                
+        fields.push({
+            xtype: "fieldcontainer",
+            layout:"hbox",
+            items:[
+                {
+                    xtype: 'textfield',
+                    flex:1,
+                    name: 'address2',
+                    fieldLabel: 'Address 2',
+                    margin: '0 15 0 0'
+                }, {
+                    xtype: 'textfield',
+                    flex: 1,
+                    name: 'address3',
+                    fieldLabel: 'Address 3',
+                    margin: '0 15 0 0'
+                }, {
+                    xtype: 'textfield',
+                    flex: 1,
+                    name: 'address4',
+                    fieldLabel: 'Address 4'
+                }
+            ]
+        })
+
+
+        fields.push({
+            xtype: "fieldcontainer",
+            layout:"hbox",
+            items: [
+                {
+                    xtype: 'textfield',
+                    name: 'cityOrTown',
+                    fieldLabel: 'City',
+                    flex: 1,
+                    margin: '0 15 0 0',
+                    allowBlank: false
+                },
+                {
+                    xtype: "fieldcontainer",
+                    layout: "hbox",
+                    flex: 1,
+                    margin: '0 15 0 0',
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            name: 'stateOrProvince',
+                            fieldStyle: 'text-transform:uppercase',
+                            flex:1,
+                            fieldLabel: 'State',
+                            minLength: 2,
+                            margin: '0 15 0 0',
+                            allowBlank: false
+                        }, {
+                            xtype: 'textfield',
+                            flex: 1,
+                            name: 'postalOrZipCode',
+                            fieldLabel: 'ZIP',                            
+                            allowBlank: false
+                        }
+                    ]
+                },
+
+                {
+                    xtype: 'combobox',
+                    name: 'countryCode',
+                    flex: 1,
+                    fieldLabel: 'Country',
+                    allowBlank: false,
+                    queryMode: 'local',
+                    displayField: 'name',
+                    valueField: 'code',
+                    forceSelection: true,
+                    store: { type: 'Taco.store.Countries' },
+                    emptyText: "Country",
+                    selectOnFocus: true
+                }
+            ]
+        })
+
 
         if (this.showPhoneNumbers) {
             fields.push({
+                xtype: "fieldcontainer",
+                layout: "hbox",
+                items: [{
                     xtype: 'phonefield',
                     name: 'homePhone',
+                    flex:1,
                     fieldLabel: 'Home Phone',
-                    margin: '0 15 5 0',
-                    style: { 'display': 'inline-table' }
+                    margin: '0 15 0 0'
                 }, {
                     xtype: 'phonefield',
                     name: 'workPhone',
+                    flex: 1,
                     fieldLabel: 'Work Phone',
-                    margin: '0 15 5 0',
-                    style: { 'display': 'inline-table' }
+                    margin: '0 15 0 0'
                 }, {
                     xtype: 'phonefield',
                     name: 'mobilePhone',
+                    flex: 1,
                     fieldLabel: 'Mobile Phone',
-                    margin: '0 0 5 0',
-                    style: { 'display': 'inline-table' }
-                });
+                    margin: '0 0 0 0'
+                }]
+            });
         }
 		
 
 
         if (this.addressHasNames) {
             fields.unshift({
-                xtype: 'textfield',
-                // width: 206,
-                name: 'firstName',
-                fieldLabel: 'First Name',
-                margin: '0 15 5 0',
-                allowBlank: false,
-                labelStyle: 'padding-top: 5px',
-                style: { 'display': 'inline-table' }
-            }, {
-                xtype: 'textfield',
-                // width: 206,
-                name: 'middleName',
-                fieldLabel: 'Middle Name',
-                margin: '0 15 5 0',
-                labelStyle: 'padding-top: 5px',
-                style: { 'display': 'inline-table' }
-            }, {
-                xtype: 'textfield',
-                // width: 206,
-                name: 'lastName',
-                fieldLabel: 'Last Name',
-                allowBlank: false,
-                margin: '0 100 5 0',
-                labelStyle: 'padding-top: 5px',
-                style: { 'display': 'inline-table' }
+                xtype:"fieldcontainer",
+                layout:"hbox",
+                items:[
+                    {
+                        xtype: 'textfield',
+                        flex:1,
+                        name: 'firstName',
+                        fieldLabel: 'First Name',
+                        margin: '0 15 0 0',
+                        allowBlank: false,
+                        labelStyle: 'padding-top: 5px'
+                    }, {
+                        xtype: 'textfield',
+                        // width: 206,
+                        flex: 1,
+                        name: 'middleName',
+                        fieldLabel: 'Middle Name',
+                        margin: '0 15 0 0',
+                        labelStyle: 'padding-top: 5px'
+                    }, {
+                        xtype: 'textfield',
+                        flex:1,
+                        name: 'lastName',
+                        fieldLabel: 'Last Name',
+                        allowBlank: false,                        
+                        labelStyle: 'padding-top: 5px'
+                    }
+                ]           
             });
         }
 
@@ -223,10 +272,17 @@ Ext.define('Taco.shared.view.form.Address', {
                 }]
             });
         }
-
+        
         this.items = fields;
 
-		this.callParent(arguments);
+        this.callParent(arguments);
+        
+        // need to set the raw value of the country code field becuase the isValid checks rawValue instead of value.
+        var countryCodeField = this.getForm().findField("countryCode");
+        if (countryCodeField) {            
+            countryCodeField.setValue(this.record.get("countryCode"))
+        }
+            
 	},
 
 	beforeSave: function (){
@@ -235,6 +291,7 @@ Ext.define('Taco.shared.view.form.Address', {
 	        this.record.set('isPrimaryBilling', this.down('[name="isPrimaryBilling"]').getValue());
 	        this.record.set('isPrimaryShipping', this.down('[name="isPrimaryShipping"]').getValue());
 	    }
+
 	    // convert state to 2 digit value if the countryCode is US
 	    var countryCode = me.form.findField("countryCode").getValue();
         // only do the conversion if the country is the US

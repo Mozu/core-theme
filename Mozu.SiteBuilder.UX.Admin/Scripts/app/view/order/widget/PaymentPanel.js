@@ -308,15 +308,22 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     '</tpl>',
 
 
-                '<div class="billingInformation">',
-                    '<h4 class="paymentDetailsHeader">Bill To:</h4>',
-                    '<div class="fullName">{billingContact.firstName} {billingContact.lastName}</div>',
-                    '<div class="address">{billingContact.address1}</div>',
-                    '<div class="address">{billingContact.address2}</div>',
-                    '<div class="address">{billingContact.cityOrTown}, {billingContact.stateOrProvince}  {billingContact.postalOrZipCode}</div>',
-                    '<div class="address">{billingContact.countryCode}</div>',
-                    '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
-                '</div>'
+                    '<tpl if="paymentType != \'StoreCredit\'">',
+                        '<div class="billingInformation">',
+                            '<h4 class="paymentDetailsHeader">Bill To:</h4>',
+                            // bad data check;
+                            '<tpl if="!values.billingContact.firstName || !values.billingContact.lastName">',
+                                '<div class="fullName">N/A</div>',
+                            '<tpl else>',
+                                '<div class="fullName">{billingContact.firstName} {billingContact.lastName}</div>',
+                                '<div class="address">{billingContact.address1}</div>',
+                                '<div class="address">{billingContact.address2}</div>',
+                                '<div class="address">{billingContact.cityOrTown}, {billingContact.stateOrProvince}  {billingContact.postalOrZipCode}</div>',
+                                '<div class="address">{billingContact.countryCode}</div>',
+                                '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
+                            '</tpl>',
+                        '</div>',
+                    '</tpl>'
             ],
             data: data,
             listeners: {

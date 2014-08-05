@@ -5,13 +5,17 @@
 Ext.define('Taco.view.order.modal.AddPayment', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
+        'Taco.store.ConfiguredCreditCards',
         'Taco.core.ux.form.DateTime',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.shared.view.form.Address'
     ],
 
     scale: 'large',
     title: 'Add Payment',
     models: ['Taco.model.CheckoutSettings'],
+
+    layout:"anchor",
 
     // the default amount to set in the amount field;  If not provided when instantiating the editor, the amount will be auto extracted from the record;
     defaultPaymentAmount : null,
@@ -19,318 +23,252 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     initComponent: function () {
         var me = this,
             authorizationInfo = this.record.get('authorizationInfo'),
-            balance = authorizationInfo.captureAmount || 0;
+            balance = authorizationInfo.captureAmount || 0,
+            formItems = [];
 
-        //Ext.define('MyReader', {
-        //    extend: 'Ext.data.reader.Json',
-        //    alias: 'reader.cards-json',
-        //    read: function (object) {
-        //        var rep = this.callParent([object]);
-        //        Ext.Array.each(rep.records, function (rec, idx) {
-        //            rec.set('cardName', rec.raw);
-        //            rec.set('cardType', rec.raw);
-        //        });
-        //        return rep;
-        //    }
-        //});
+        // moved the payment form into a method so that it can be overwritten by a subclass (add manual payment)
+        formItems.push(this.getPaymentForm());
 
-        var store = Ext.create('Taco.store.ConfiguredCreditCards');
+        // checkbox to toggle between primary billing address 
+        formItems.push({
+            xtype: 'fieldcontainer',
+            layout: 'fit',
+            anchor: 0,
+            fieldLabel: 'Payment Address',
+            items: [{
+                xtype: 'checkboxfield',
+                boxLabel: 'Use primary billing address',
+                name: 'sameAsBilling',
+                checked: true,
+                itemId: "sameAsBillingCheckbox",
+                scope: this,
+                handler: this.toggleExtraInfo
+            }]
+        });
 
+        formItems.push({
+            xtype: 'component',
+            anchor: 0,
+            itemId: 'billingContactInfo',
+            tpl: [
+                '<tpl if="firstName || middleName ||lastName">',
+                    '<div>{firstName} {middleName} {lastName}</div>',
+                '</tpl>',
+                '<tpl if="address1">',
+                    '<div>{address1}</div>',
+                '</tpl>',
+                '<tpl if="address2">',
+                    '<div>{address2}</div>',
+                '</tpl>',
+                '<tpl if="address3">',
+                    '<div>{address3}</div>',
+                '</tpl>',
+                '<tpl if="address4">',
+                    '<div>{address4}</div>',
+                '</tpl>',
 
+                '<div>{cityOrTown} {postalOrZipCode} {stateOrProvince} {countryCode}</div>',
 
-        //    Ext.create('Ext.data.Store', {
-        //    autoLoad: false,
-        //    fields: ['cardType', 'cardName'],
-        //    proxy: {
-        //        type: 'ajax',
-        //        url: '/admin/app/checkoutsettings/read',
-        //        reader: {
-        //            type: 'cards-json',
-        //            root: 'items.gateway.supportedCards',
-        //        }
-        //    }
-        //});
+                '<tpl if="homePhone">',
+                    '<div>homePhone: {homePhone}</div>',
+                '</tpl>',
+
+                '<tpl if="workPhone">',
+                    '<div>Work Phone: {workPhone}</div>',
+                '</tpl>',
+
+                '<tpl if="mobilePhone ">',
+                    '<div>Mobile Phone: {mobilePhone}</div>',
+                '</tpl>',
+
+                '<tpl if="email">',
+                    '<div>{email}</div>',
+                '</tpl>'
+            ],
+            data: this.record.data.billingContact
+        })
+
+        this.billingContactRecord =Ext.create('Taco.model.Contact',this.record.data.billingContact);
         
-        
+        this.addressForm = Ext.create('Taco.shared.view.form.Address', {
+            record: this.billingContactRecord,
+            itemId: 'extraInfo',
+            header: false,
+            emailRequired: true,
+            addressHasNames: true,
+            showCompanyName: true,
+            showEmail: true,
+            showPhoneNumbers: true,
+            showDefaultOptions: false,
+            manageHeight: false
+        });
 
-        
+        formItems.push(this.addressForm);
+
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
-                type: 'vbox'
+                type: 'anchor'
             },
-            items: [{
-                xtype: 'container',
-                layout: {
-                    type: 'hbox'
-                },
-                defaults: {
-                    margin: '0 20 0 0',
-                    width: 180
-                },
-                items: [{
-                    xtype: 'textfield',
-                    name: 'nameOnCard',
-                    allowBlank: false,
-                    fieldLabel: 'Name on Card',
-                    width: 340
-                }, {
-                    xtype: 'currencyfield',
-                    currencyCode: this.record.getCurrencyCode(),
-                    name: 'amount',
-                    fieldLabel: 'Amount',
-                    allowBlank: false,
-                    value : this.getDefaultPaymentAmount()
-                }, {
-                    xtype: 'combobox',
-                    name: 'cardType',
-                    itemId: 'cardType',
-                    valueField: 'Key',
-                    displayField: 'Value',
-                    fieldLabel: 'Card Type',
-                    queryMode:'local',
-                    margin: '0 0 0 0',
-                    allowBlank: false,
-                    editable: false,
-                    forceSelection: true,
-                    store: store
-                }]
-            }, {
-                xtype: 'container',
-                layout: {
-                    type: 'hbox'
-                },
-                defaults: {
-                    margin: '0 20 0 0',
-                    width: 120
-                },
-                items: [{
-                    xtype: 'textfield',
-                    name: 'cardNumber',
-                    itemId: 'cardNumber',
-                    allowBlank: false,
-                    fieldLabel: 'Card Number',
-                    width: 340
-                }, {
-                    xtype: 'numberfield',
-                    name: 'expireMonth',
-                    hideTrigger: true,
-                    mouseWheelEnabled: false,
-                    allowBlank: false,
-                    fieldLabel: 'Exp Month',
-                    minValue: 1,
-                    maxValue: 12
-                }, {
-                    xtype: 'numberfield',
-                    name: 'expireYear',
-                    hideTrigger: true,
-                    allowBlank: false,
-                    validator: function (value) {                        
-                        if (value && value.length < 4) {
-                            return "Year must have 4 digits"
-                        }
-                        return true;
-                    },
-                    mouseWheelEnabled: false,
-                    fieldLabel: 'Exp Year'
-                }, {
-                    xtype: 'textfield',
-                    name: 'cvv',
-                    itemId: 'cvv',
-                    allowBlank: false,
-                    fieldLabel: 'CVV',
-                    margin: '0 0 0 0',
-                    width: 100
-                }]
-            }, {
-                xtype: 'fieldcontainer',
-                layout: 'fit',
-                fieldLabel: 'Payment Address',
-                items: [{
-                    xtype: 'checkboxfield',
-                    boxLabel: 'Use primary billing address',
-                    name: 'sameAsBilling',
-                    checked: true,
-                    scope: this,
-                    handler: this.toggleExtraInfo
-                }]
-            }, {
-                xtype: 'component',
-                itemId: 'billingContactInfo',                
-                tpl: [
-                    '<tpl if="firstName || middleName ||lastName">',
-                        '<div>{firstName} {middleName} {lastName}</div>',
-                    '</tpl>',
-                    '<tpl if="address1">',
-                        '<div>{address1}</div>',
-                    '</tpl>',
-                    '<tpl if="address2">',
-                        '<div>{address2}</div>',
-                    '</tpl>',
-                    '<tpl if="address3">',
-                        '<div>{address3}</div>',
-                    '</tpl>',
-                    '<tpl if="address4">',
-                        '<div>{address4}</div>',
-                    '</tpl>',
-                    
-                    '<div>{cityOrTown} {postalOrZipCode} {stateOrProvince} {countryCode}</div>',
+            items: formItems
 
-                    '<tpl if="homePhone">',
-                        '<div>homePhone: {homePhone}</div>',
-                    '</tpl>',
 
-                    '<tpl if="workPhone">',
-                        '<div>Work Phone: {workPhone}</div>',
-                    '</tpl>',
 
-                    '<tpl if="mobilePhone ">',
-                        '<div>Mobile Phone: {mobilePhone}</div>',
-                    '</tpl>',
+                
+                
+                
+                
+               
 
-                    '<tpl if="email">',
-                        '<div>{email}</div>',
-                    '</tpl>'
-                ],
-                data : this.record.data.billingContact
-            }, {
-                xtype: 'container',
-                itemId: 'extraInfo',
-                hidden: true,
-                layout: {
-                    type: 'vbox'
-                },
-                items: [{
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 25 0 0',
-                        width: 230
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        itemId: 'billingFirstName',
-                        name: 'firstName',
-                        fieldLabel: 'First Name'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'middleName',
-                        itemId: 'billingMiddleName',
-                        fieldLabel: 'Middle Name'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'lastName',
-                        itemId: 'billingLastName',
-                        fieldLabel: 'Last Name',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 360
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'address1',
-                        itemId: 'billingAddress1',
-                        fieldLabel: 'Address 1'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'address2',
-                        itemId: 'billingAddress2',
-                        fieldLabel: 'Address 2',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 360
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'address3',
-                        itemId: 'billingAddress3',
-                        fieldLabel: 'Address 3'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'address4',
-                        itemId: 'billingAddress4',
-                        fieldLabel: 'Address 4',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 170
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'cityOrTown',
-                        itemId: 'billingCityOrTown',
-                        fieldLabel: 'City'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'stateOrProvince',
-                        itemId: 'billingStateOrProvince',
-                        fieldLabel: 'State'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'postalOrZipCode',
-                        itemId: 'billingPostalOrZipCode',
-                        fieldLabel: 'ZIP Code'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'countryCode',
-                        itemId: 'billingCountryCode',
-                        fieldLabel: 'Country',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 170
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'email',
-                        itemId: 'billingEmail',
-                        fieldLabel: 'Email'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'homePhone',
-                        itemId: 'billingHomePhone',
-                        fieldLabel: 'Home Phone'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'workPhone',
-                        itemId: 'billingWorkPhone',
-                        fieldLabel: 'Work Phone'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'mobilePhone',
-                        itemId: 'billingMobilePhone',
-                        fieldLabel: 'Mobile Phone',
-                        margin: '0 0 0 0'
-                    }]
-                }]
-            }]
+
+
+
+                //{
+                //    xtype: 'container',
+                //    itemId: 'extraInfo',                                
+                //    layout: {
+                //        type: 'vbox'
+                //    },
+                //    items: [{
+                //        xtype: 'container',
+                //        layout: {
+                //            type: 'hbox'
+                //        },
+                //        defaults: {
+                //            margin: '0 25 0 0',
+                //            width: 230
+                //        },
+                //        items: [{
+                //            xtype: 'textfield',
+                //            allowBlank:false,
+                //            itemId: 'billingFirstName',
+                //            name: 'firstName',
+                //            fieldLabel: 'First Name'
+                //        }, {
+                //            xtype: 'textfield',
+                //            name: 'middleName',
+                //            itemId: 'billingMiddleName',
+                //            fieldLabel: 'Middle Name'
+                //        }, {
+                //            xtype: 'textfield',
+                //            name: 'lastName',
+                //            allowBlank: false,
+                //            itemId: 'billingLastName',
+                //            fieldLabel: 'Last Name',
+                //            margin: '0 0 0 0'
+                //        }]
+                //    }, {
+                //        xtype: 'container',
+                //        layout: {
+                //            type: 'hbox'
+                //        },
+                //        defaults: {
+                //            margin: '0 20 0 0',
+                //            width: 360
+                //        },
+                //        items: [{
+                //            xtype: 'textfield',
+                //            name: 'address1',
+                //            allowBlank: false,
+                //            itemId: 'billingAddress1',
+                //            fieldLabel: 'Address 1'
+                //        }, {
+                //            xtype: 'textfield',
+                //            name: 'address2',
+                //            itemId: 'billingAddress2',
+                //            fieldLabel: 'Address 2',
+                //            margin: '0 0 0 0'
+                //        }]
+                //    }, {
+                //        xtype: 'container',
+                //        layout: {
+                //            type: 'hbox'
+                //        },
+                //        defaults: {
+                //            margin: '0 20 0 0',
+                //            width: 360
+                //        },
+                //        items: [{
+                //            xtype: 'textfield',
+                //            name: 'address3',
+                //            itemId: 'billingAddress3',
+                //            fieldLabel: 'Address 3'
+                //        }, {
+                //            xtype: 'textfield',
+                //            name: 'address4',
+                //            itemId: 'billingAddress4',
+                //            fieldLabel: 'Address 4',
+                //            margin: '0 0 0 0'
+                //        }]
+                //    }, {
+                //        xtype: 'container',
+                //        layout: {
+                //            type: 'hbox'
+                //        },
+                //        defaults: {
+                //            margin: '0 20 0 0',
+                //            width: 170
+                //        },
+                //        items: [{
+                //            xtype: 'textfield',
+                //            allowBlank: false,
+                //            name: 'cityOrTown',
+                //            itemId: 'billingCityOrTown',
+                //            fieldLabel: 'City'
+                //        }, {
+                //            xtype: 'textfield',
+                //            allowBlank: false,
+                //            name: 'stateOrProvince',
+                //            itemId: 'billingStateOrProvince',
+                //            fieldLabel: 'State'
+                //        }, {
+                //            xtype: 'textfield',
+                //            allowBlank: false,
+                //            name: 'postalOrZipCode',
+                //            itemId: 'billingPostalOrZipCode',
+                //            fieldLabel: 'ZIP Code'
+                //        }, {
+                //            xtype: 'textfield',
+                //            allowBlank: false,
+                //            name: 'countryCode',
+                //            itemId: 'billingCountryCode',
+                //            fieldLabel: 'Country',
+                //            margin: '0 0 0 0'
+                //        }]
+                //    }, {
+                //        xtype: 'container',
+                //        layout: {
+                //            type: 'hbox'
+                //        },
+                //        defaults: {
+                //            margin: '0 20 0 0',
+                //            width: 170
+                //        },
+                //        items: [{
+                //            xtype: 'textfield',
+                //            allowBlank: false,
+                //            name: 'email',
+                //            itemId: 'billingEmail',
+                //            fieldLabel: 'Email'
+                //        }, {
+                //            xtype: 'textfield',
+                //            name: 'homePhone',
+                //            itemId: 'billingHomePhone',
+                //            fieldLabel: 'Home Phone'
+                //        }, {
+                //            xtype: 'textfield',
+                //            name: 'workPhone',
+                //            itemId: 'billingWorkPhone',
+                //            fieldLabel: 'Work Phone'
+                //        }, {
+                //            xtype: 'textfield',
+                //            name: 'mobilePhone',
+                //            itemId: 'billingMobilePhone',
+                //            fieldLabel: 'Mobile Phone',
+                //            margin: '0 0 0 0'
+                //        }]
+                //    }]
+                //}
+
         });
 
         this.items = [this.form];
@@ -339,10 +277,127 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         this.createPciProcessor();
 
-        this.copyBillingInfo();
+        this.mon(this, "boxready", function () {
+            if (!this.hasValidBillingContact()) {
+                // no valid billing contact, need to force the form to open;
+                this.toggleExtraInfo(null, false);
+                var sameAsBillingCheckbox = this.down("#sameAsBillingCheckbox");
+                sameAsBillingCheckbox.hide();
+            } else {
+                this.toggleExtraInfo(null, true);
+            }
+        }, this)
     },
 
-    
+    getPaymentForm: function () {
+
+        return {
+            xtype: 'container',
+            anchor: 0,
+            items: [{
+                xtype: 'container',
+                anchor: 0,
+                layout: {
+                    type: 'hbox'
+                },
+                defaults: {
+                    margin: '0 20 0 0'
+                },
+                items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'nameOnCard',
+                        allowBlank: false,
+                        fieldLabel: 'Name on Card',
+                        flex: 1
+                        //width: 340
+                    }, {
+                        xtype: 'currencyfield',
+                        width: 180,
+                        currencyCode: this.record.getCurrencyCode(),
+                        name: 'amount',
+                        fieldLabel: 'Amount',
+                        allowBlank: false,
+                        value: this.getDefaultPaymentAmount()
+                    }, {
+                        xtype: 'combobox',
+                        width: 180,
+                        name: 'cardType',
+                        itemId: 'cardType',
+                        valueField: 'Key',
+                        displayField: 'Value',
+                        fieldLabel: 'Card Type',
+                        queryMode: 'local',
+                        margin: '0 0 0 0',
+                        allowBlank: false,
+                        editable: false,
+                        forceSelection: true,
+                        store: Taco.core.data.StoreManager.getOrCreate({
+                            type: 'Taco.store.ConfiguredCreditCards'
+                        })
+                    }
+                ]
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox'
+                },
+                defaults: {
+                    margin: '0 20 0 0'
+                },
+                items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'cardNumber',
+                        itemId: 'cardNumber',
+                        allowBlank: false,
+                        fieldLabel: 'Card Number',
+                        flex: 1
+                    }, {
+                        xtype: 'numberfield',
+                        width: 120,
+                        name: 'expireMonth',
+                        hideTrigger: true,
+                        mouseWheelEnabled: false,
+                        allowBlank: false,
+                        fieldLabel: 'Exp Month',
+                        minValue: 1,
+                        maxValue: 12
+                    }, {
+                        xtype: 'numberfield',
+                        width: 120,
+                        name: 'expireYear',
+                        hideTrigger: true,
+                        allowBlank: false,
+                        validator: function (value) {
+                            if (value && value.length < 4) {
+                                return "Year must have 4 digits"
+                            }
+                            return true;
+                        },
+                        mouseWheelEnabled: false,
+                        fieldLabel: 'Exp Year'
+                    }, {
+                        xtype: 'textfield',
+                        width: 100,
+                        name: 'cvv',
+                        itemId: 'cvv',
+                        allowBlank: false,
+                        fieldLabel: 'CVV',
+                        margin: '0 0 0 0'
+                    }
+                ]
+            }
+
+        ]};
+    },
+
+
+    // need to use the billing address form to validate the billing contact data;
+    hasValidBillingContact: function () {        
+        var inValidField = this.addressForm.getForm().hasInvalidField();
+        return !inValidField
+    },
 
     /**
      * Create a PCIaaS form field.
@@ -370,6 +425,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         if (!PCI) {
             return me.mon(Taco.app, 'pciloaded', me.createPciProcessor, me);
         }
+        
         
 
         me.pciProcessor = PCI({
@@ -509,42 +565,13 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     },
 
     toggleExtraInfo: function (checkbox, isChecked) {
-        var extraInfo = this.down('#extraInfo');
-
+        var extraInfo = this.down('#extraInfo'),
+            billingContactInfo = this.down("#billingContactInfo");
         extraInfo[isChecked ? 'hide' : 'show']();
-
-        this.copyBillingInfo();
-    },
-
-    copyBillingInfo: function() {
-        var isChecked = this.getForm().findField('sameAsBilling').getValue(),
-            billingContact = this.record.get('billingContact'),
-            fields = [
-                'firstName',
-                'fiddleName',
-                'lastName',
-                'address1',
-                'address2',
-                'address3',
-                'address4',
-                'cityOrTown',
-                'stateOrProvince',
-                'postalOrZipCode',
-                'countryCode',
-                'email',
-                'homePhone',
-                'workPhone',
-                'mobilePhone'
-            ];
-
-        Ext.each(fields, function(fieldName) {
-            var field = this.getForm().findField(fieldName);
-
-            if (!field) return;
-
-            field.setValue(billingContact[fieldName]);
-        }, this);
-
+        billingContactInfo[isChecked ? 'show' : 'hide']();
+        
+        // reset the form when the visibility is toggled;
+        this.addressForm.getForm().setValues(this.billingContactRecord.getData());
     }
 },
 /* class definition-time function */
