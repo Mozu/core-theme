@@ -294,21 +294,27 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             if (me.saveButtonEnabled) {
                 
-                me.actions.push(Ext.apply({}, me.saveButtonCfg, {
+                
+                var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
                     xtype: 'button',
                     text: me.saveText,
                     margin: "0 0 0 10",
                     ui: 'action-primary',
                     scale: 'medium',
-                    hidden: me.saveHidden  || !me.saveButtonVisible || !me.allowCreate(),
+                    hidden: me.saveHidden || !me.saveButtonVisible || !me.allowCreate(),
                     itemId: 'saveActionButton',
                     allowDepress: false,
                     enableToggle: me.enableSaveActionToggle,
-                    formBind: true,                    
+                    formBind: true,
                     toggleHandler: me.saveActionHandler,
                     scope: me
-                    
-                }));
+
+                })
+
+                // need to cache a reference to the button since the button is moved outside of the class by the splitEditor
+                me.saveActionButton = Ext.widget(saveButtonCfg);
+
+                me.actions.push(me.saveActionButton);
             }
 
             if (me.createButtonEnabled) {                
@@ -358,11 +364,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },    
 
     resetSaveButton: function () {
-        var saveButton = this.down('button#saveActionButton');
-        if (saveButton) {
-            saveButton.toggle(false, true);
-            saveButton.removeCls('taco-button-processing');
-            saveButton.setText('Save');
+        var me = this;
+        if (me.saveActionButton) {
+            me.saveActionButton.toggle(false, true);
+            me.saveActionButton.removeCls('taco-button-processing');
+            me.saveActionButton.setText('Save');
         }
     },
 
@@ -370,8 +376,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
      * @cfg saveActionHandler
      * The function to execute when the primary action button is clicked.
      */
-    saveActionHandler: function () {        
-        this.save();
+    saveActionHandler: function (btn) {        
+        this.save(btn);
     },
 
     /**
@@ -381,16 +387,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
      * Listen to the "savesuccess" event to get the final data after the save process completes
      * Subclasses should NOT override this method with their own behavior. They should override the doSave()
      */
-    save: function () {
-        var me = this,
-            saveButton = this.down('button#saveActionButton');
-        
-        
-
-
+    save: function (btn) {
+        var me = this
 
         // prevent multiple saves;
-        if (saveButton && saveButton.pressed == false) {
+        if (me.saveActionButton && me.saveActionButton.pressed == false) {
             return;
         }
 
@@ -398,9 +399,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             me.onSave();
             me.fireEvent('save', me);
 
-            if (saveButton) {
-                saveButton.addCls('taco-button-processing');
-                saveButton.setText('Saving...');
+            if (me.saveActionButton) {
+                me.saveActionButton.addCls('taco-button-processing');
+                me.saveActionButton.setText('Saving...');
             }
             
             me.doSave();
