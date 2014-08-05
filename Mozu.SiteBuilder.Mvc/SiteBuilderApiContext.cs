@@ -413,6 +413,12 @@ namespace Mozu.SiteBuilder.Mvc
 
         public LightweightUserClaims AdminUserClaim { get; set; }
 
-       
+
+
+
+        public void SetDataMode(DataViewModeType dataViewMode)
+        {
+            this.DataViewMode = dataViewMode;
+        }
     }
 }

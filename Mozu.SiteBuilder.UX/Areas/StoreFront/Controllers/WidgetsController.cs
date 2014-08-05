@@ -22,6 +22,7 @@ using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -59,7 +60,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            
 
             this.SiteContext.IsEditMode = true;
-
+            this.SbApiContext.IsEditMode  = true;
+            this.SbApiContext.SetDataMode(DataViewModeType.Pending);
 
 
             var def = SiteContext.Theme.Widgets.First(x => x.Id == wrd.DefinitionId);
