@@ -303,9 +303,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.10.0.1\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.10.0.1\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+    <Reference Include="Mozu.SiteSettings.Order.Contracts">
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.11.0-dev002\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
