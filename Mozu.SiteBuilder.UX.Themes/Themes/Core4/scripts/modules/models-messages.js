@@ -1,4 +1,4 @@
-﻿define(["shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone", 'hyprlive'], function(Backbone, Hypr) {
+﻿define(["backbone", 'hyprlive'], function(Backbone, Hypr) {
 
     var isDebugMode = require.mozuData('pagecontext').isDebugMode,
     unexpectedErrorText = Hypr.getLabel('unexpectedError');

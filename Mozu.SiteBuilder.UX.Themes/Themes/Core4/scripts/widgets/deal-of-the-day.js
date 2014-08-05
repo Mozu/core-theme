@@ -1,5 +1,5 @@
 ﻿define(
-    ['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+    ['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, _, api, Backbone, ProductModels) {
         $(function () {
             $('[data-mz-deal-of-the-day]').each(function (index, deal) {

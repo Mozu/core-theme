@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/mixin-paging"], function($, _, Hypr, Backbone, ProductModels, PagingMixin) {
+﻿define(['modules/jquery-mozu', 'underscore', "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/mixin-paging"], function($, _, Hypr, Backbone, ProductModels, PagingMixin) {
 
     function sanitize(str) {
         return str ? str.replace(/[\s~'":]+/g, '-') : '';

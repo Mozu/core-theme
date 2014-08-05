@@ -1,5 +1,5 @@
 ﻿define(
-    ["modules/backbone-mozu", "shim!vendor/underscore>_", "hyprlivecontext"],
+    ["modules/backbone-mozu", "underscore", "hyprlivecontext"],
     function (Backbone, _, PagingMixin, context) {
         
         var locals = context.locals;

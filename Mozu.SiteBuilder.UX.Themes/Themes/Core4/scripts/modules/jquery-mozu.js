@@ -5,7 +5,7 @@
  *   **$.fn.noFlickerFadeIn** -- A version of $.fn.fadeIn that operates on visibility:invisible objects, so there's no document reflow.
  *   **$.fn.ScrollTo** -- A plugin to smoothly scroll any element into view.
  */
-define(["jquery", "vendor/jquery-scrollto", "vendor/jquery-cookie"], function ($) {
+define(["jquery", "vendor/jquery-scrollto", "vendor/jquery.cookie/jquery.cookie"], function ($) {
 
    
     $.fn.jsonData = function (dataAttr) {
