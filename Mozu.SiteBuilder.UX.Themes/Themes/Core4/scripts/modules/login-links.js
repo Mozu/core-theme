@@ -84,9 +84,9 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         }
     });
 
-    var LoginPopover = function () {
+    var LoginPopover = function() {
         DismissablePopover.apply(this, arguments);
-    }
+    };
     LoginPopover.prototype = new DismissablePopover();
     $.extend(LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
@@ -144,9 +144,9 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         }
     });
 
-    var SignupPopover = function () {
+    var SignupPopover = function() {
         DismissablePopover.apply(this, arguments);
-    }
+    };
     SignupPopover.prototype = new DismissablePopover();
     $.extend(SignupPopover.prototype, LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow'],

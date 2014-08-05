@@ -14,6 +14,13 @@
         "id": "paymentServiceCardId"
     };
 
+    var firstDigitMap = {
+        "3": "AMEX",
+        "4": "VISA",
+        "5": "MC",
+        "6": "DISCOVER"
+    };
+
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
         validation: {
@@ -50,6 +57,18 @@
                     self.set(v, val, { silent: true });
                 });
             });
+
+            if (this.detectCardType) {
+                this.on('change:cardNumberPartOrMask', _.debounce(function(self, newValue) {
+                    var firstDigit;
+                    if (newValue && newValue.toString) {
+                        firstDigit = newValue.toString().charAt(0);
+                    }
+                    if (firstDigit && firstDigit in firstDigitMap) {
+                        self.set({ paymentOrCardType: firstDigitMap[firstDigit] });
+                    }
+                }, 500));
+            }
         },
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,

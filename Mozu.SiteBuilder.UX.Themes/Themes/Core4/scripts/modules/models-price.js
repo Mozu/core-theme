@@ -18,7 +18,7 @@
             lower: ProductPrice,
             upper: ProductPrice
         }
-    })
+    });
 
     return {
         ProductPrice: ProductPrice,

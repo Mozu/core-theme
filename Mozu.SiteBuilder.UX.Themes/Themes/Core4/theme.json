@@ -270,7 +270,7 @@
         "defaultSort": "createDate asc",
         "enablePartialCaching": true,
         "fallbackFontFamily": "sans-serif",
-        "font": "Source Sans Pro",
+        "fonts": ["Source Sans Pro:regular,italic,bold,bolditalic"],
         "fontSize": "14px",
         "gutterWidth": "25px",
         "internal-themeAddons": [],
@@ -487,7 +487,8 @@
         }],
         "useAnimatedProductLists": false,
         "useDebugScripts": false,
-        "useSearchAutocomplete": true
+        "useSearchAutocomplete": true,
+        "allowCustomerInitiatedReturns": true
     },
     "widgets": [{
         "defaultConfig": {

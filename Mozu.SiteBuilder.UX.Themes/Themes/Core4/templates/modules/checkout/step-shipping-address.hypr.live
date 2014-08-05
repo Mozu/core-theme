@@ -31,10 +31,6 @@
         <span>Gift Card Email: {{ model.email }}</span>
       </div>
       {% endif %}
-
-      <div class="mz-formstep-next">
-        <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
-      </div>
       {% else %}
 
       <div class="mz-formstep-fields mz-l-formfieldgroup">
@@ -71,6 +67,8 @@
         </label>
         {% endif %}
       </div>
-      {% endif %}
-
+        {% endif %}
+    <div class="mz-formstep-next">
+        <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
+    </div>
     </div>    

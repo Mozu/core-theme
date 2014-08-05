@@ -270,6 +270,8 @@
             this.$el.addClass('is-loading');
             this.model.addCoupon().ensure(function() {
                 self.$el.removeClass('is-loading');
+                self.model.unset('couponCode');
+                self.render();
             });
         },
         handleEnterKey: function () {

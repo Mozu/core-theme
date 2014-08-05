@@ -21,13 +21,10 @@ define(['modules/jquery-mozu', "shim!vendor/underscore>_", 'hyprlive', 'modules/
                     el: $searchPageBody.find('[data-mz-pagenumbers]'),
                     model: facetingModel
                 }),
-                productList: (useAnimatedLists ? new ProductListViews.AnimatedList({
-                    el: $searchPageBody.find('[data-mz-productlist] .mz-productlist-list'),
-                    model: facetingModel
-                }) : new ProductListViews.List({
+                productList: new ProductListViews.List({
                     el: $searchPageBody.find('[data-mz-productlist]'),
                     model: facetingModel
-                }))
+                })
             };            if ($facetPanel.length > 0) {
                 facetingViews.facetPanel = new ProductListViews.FacetingPanel({
                     el: $facetPanel,                    model: facetingModel
@@ -44,7 +41,7 @@ define(['modules/jquery-mozu', "shim!vendor/underscore>_", 'hyprlive', 'modules/
 
         }
 
-        _.invoke(facetingViews, 'render');
+        //_.invoke(facetingViews, 'render');
 
         //$searchPageBody.noFlickerFadeIn();
 

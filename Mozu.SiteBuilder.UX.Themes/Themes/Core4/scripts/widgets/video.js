@@ -58,7 +58,7 @@ define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
                 }, 2200);
 
                 player.playVideo();
-            })
+            });
         };
 
         $(document).ready(function() {
@@ -66,7 +66,7 @@ define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
                 $('.mz-cms-video-placeholder').each(bind);
 
                 $(document).on('mozuwidgetdrop', function (e) {
-                    $(e.currentTarget).find('.mz-cms-video-placeholder').each(bind)
+                    $(e.currentTarget).find('.mz-cms-video-placeholder').each(bind);
                 });
             });
         });

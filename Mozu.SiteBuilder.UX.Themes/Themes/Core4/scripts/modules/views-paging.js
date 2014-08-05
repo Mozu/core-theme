@@ -3,7 +3,7 @@
  */
 define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'], function($, _, Backbone) {
 
-    var pagingHelpers = ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage'];
+    var pagingHelpers = ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage', 'sorts', 'currentSort'];
 
     var PagingBaseView = Backbone.MozuView.extend({
         initialize: function() {
@@ -20,6 +20,10 @@ define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'
             this.undelegateEvents();
             this.$el.html(this.template.render({ model: model }));
             this.delegateEvents();
+            this.$('select').each(function() {
+                var $this = $(this);
+                $this.val($this.find('option[selected]').val());
+            });
         }
     });
 
@@ -50,9 +54,34 @@ define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'
         }
     });
 
+    var scrollToTop = function() {
+        $('body').ScrollTo({ duration: 200 });
+    };
+
+    var TopScrollingPageNumbersView = PageNumbersView.extend({
+        previous: function() {
+            return PageNumbersView.prototype.previous.apply(this, arguments).then(scrollToTop);
+        },
+        next: function() {
+            return PageNumbersView.prototype.next.apply(this, arguments).then(scrollToTop);
+        },
+        page: function() {
+            return PageNumbersView.prototype.page.apply(this, arguments).then(scrollToTop);
+        },
+    });
+
+    var PageSortView = PagingBaseView.extend({
+        templateName: 'modules/common/page-sort',
+        updateSortBy: function(e) {
+            return this.model.sortBy($(e.currentTarget).val());
+        }
+    });
+
     return {
         PagingControls: PagingControlsView,
-        PageNumbers: PageNumbersView
+        PageNumbers: PageNumbersView,
+        TopScrollingPageNumbers: TopScrollingPageNumbersView,
+        PageSortView: PageSortView
     };
 
 });

@@ -55,6 +55,6 @@
         return {
             Document: Document,
             DocumentCollection: DocumentCollection
-        }
+        };
 
 });

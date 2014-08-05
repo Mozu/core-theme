@@ -115,7 +115,6 @@
                         addr.set(k, valAddr[k]);
                     }
                 }
-                this.next();
             },
             toJSON: function () {
                 if (this.requiresFulfillmentInfo() || this.requiresDigitalFulfillmentContact()) {
@@ -466,7 +465,7 @@
                 var previousAmount = digitalCredit.get('creditAmountApplied');
                 var previousEnabledState = digitalCredit.get('isEnabled');
 
-                if (creditAmountToApply == null) {
+                if (!creditAmountToApply) {
                     creditAmountToApply = self.getMaxCreditToApply(digitalCredit, self);
                 }
                 
@@ -844,7 +843,7 @@
                             _.defer(function() {
                                 self.isReady(allStepsComplete());
                             });
-                        })
+                        });
                     });
 
                     if (!self.get("requiresFulfillmentInfo")) {
@@ -890,7 +889,10 @@
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
                     me.set('couponCode', '');
                     var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
-                    if (!allDiscounts || !_.findWhere(allDiscounts, { couponCode: code })) {
+                    var lowerCode = code.toLowerCase();
+                    if (!allDiscounts || !_.find(allDiscounts, function(d) {
+                        return d.couponCode.toLowerCase() === lowerCode;
+                    })) {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
@@ -1019,7 +1021,12 @@
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
-                    process = [this.update];
+                    process = [function() {
+                        return order.update({
+                            ipAddress: order.get('ipAddress'),
+                            shopperNotes: order.get('shopperNotes').toJSON()
+                        });
+                    }];
 
                 if (this.isSubmitting) return;
 
@@ -1054,7 +1061,6 @@
             },
             update: function() {
                 var j = this.toJSON();
-               // delete j.billingInfo;
                 return this.apiModel.update(j);
             },
             isReady: function (val) {

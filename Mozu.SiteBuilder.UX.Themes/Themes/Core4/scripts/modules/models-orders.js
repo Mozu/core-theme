@@ -50,7 +50,7 @@
                     {
                         text: j.comments
                     }
-                ]
+                ];
             }
             delete j.reason;
             delete j.quantity;
