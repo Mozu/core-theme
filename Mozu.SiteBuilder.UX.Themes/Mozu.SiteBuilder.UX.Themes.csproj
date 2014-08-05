@@ -253,9 +253,8 @@
     <Reference Include="Mozu.Customer.Contracts">
       <HintPath>..\packages\Mozu.Customer.Contracts.1.11.0-dev004\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.InstalledApplications.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.10.0.1\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
+    <Reference Include="Mozu.InstalledApplications.Contracts">
+      <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.11.0-dev001\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Location.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
