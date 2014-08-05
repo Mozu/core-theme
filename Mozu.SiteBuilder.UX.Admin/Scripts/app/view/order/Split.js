@@ -226,10 +226,9 @@ Ext.define('Taco.view.order.Split', {
             var id = cmp.getItemId ? cmp.getItemId() : null;
 
             if (record) {
-                if (id === 'createActionButton') {
-                    cmp.hide();
-                }
-                if (Ext.Array.contains(editorActions, id)) {
+                if (record.getStatus === 'Pending' && (id === 'cancelActionButton' || id === 'saveActionButton')) {
+                    cmp.show();
+                } else if (id === 'next' || id === 'previous') {
                     cmp.show();
                 }
             } else {
