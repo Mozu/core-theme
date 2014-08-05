@@ -248,8 +248,7 @@
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.11.0.3\lib\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Messaging">
-      <HintPath>..\packages\Mozu.Core.Messaging.1.10.0.1\lib\net451\Mozu.Core.Messaging.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Mozu.Core.Messaging.1.11.0.2\lib\net451\Mozu.Core.Messaging.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Messaging.Contracts">
       <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.10.0.1\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
