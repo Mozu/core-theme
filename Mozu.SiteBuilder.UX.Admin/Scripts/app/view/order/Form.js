@@ -4,7 +4,7 @@
 Ext.define('Taco.view.order.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
     extend: 'Taco.core.ux.form.TabForm',
-    
+
     alias: 'widget.taco-orderform',
     requires: [
         'Taco.model.Order',
@@ -12,9 +12,8 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.Header',
         'Taco.view.order.subform.Customer',
         'Taco.view.order.subform.Detail',
-        'Taco.view.order.subform.Payment',        
-        'Taco.view.order.subform.InstorePickup',
-        'Taco.view.order.subform.Return',        
+        'Taco.view.order.subform.Payment',
+        'Taco.view.order.subform.Return',
         'Taco.view.order.subform.InternalNotes',
         'Taco.view.order.subform.Fulfillment'
     ],
@@ -48,7 +47,7 @@ Ext.define('Taco.view.order.Form', {
         me.mon(me.record, 'aftercommit', function () {
             me.onRecordChange();
         }, me);
-        
+
 
         /* 
            !!!this is redundant commit fires during reload!!!
@@ -60,7 +59,7 @@ Ext.define('Taco.view.order.Form', {
 
         */
 
-        
+
         this.customer = {};
         // todo: get the customer record right away if an id exists;
 
@@ -70,32 +69,31 @@ Ext.define('Taco.view.order.Form', {
         this.buildForm();
 
         this.callParent(arguments);
-        
+
         //this.shippingForm = this.down('taco-ordershippingsimple');
-        
+
         //this.paymentForm = this.down('taco-orderpayment');
 
         //this.orderDetail = this.down('taco-orderdetail');
 
-        
 
         this.loadNavItems();
     },
-    
-    onCustomerChange: function (view, customerRecord) {        
+
+    onCustomerChange: function (view, customerRecord) {
         //this.customerRecord = customerRecord;
         //this.record.set("customerId", customerRecord.get("id"));        
         //this.shippingForm.onCustomerChange();
         //this.shippingForm.onCustomerChange(this.customerRecord);
     },
 
-    onBeforeReload : function() {
+    onBeforeReload: function () {
         //save the scrollTop position so that the main form container will be able to restore the scroll position
         var scrollPanel = this.el.up(".taco-content-body").el.dom;
         this.record.scrollTopTarget = scrollPanel.scrollTop;
-        
+
     },
-    
+
     updateTitleData: function () {
         this.titleData = {
             number: this.record.get('orderNumber'),
@@ -104,31 +102,28 @@ Ext.define('Taco.view.order.Form', {
         };
     },
 
-    isHeaderDataComplete : function (){
-        var me  = this,
+    isHeaderDataComplete: function () {
+        var me = this,
             fulfillmentContact = me.record.get("fulfillmentContact"),
             billingContact = me.record.get("billingContact"),
             isValid = true;
-        
+
         // if we have a fulfillment contact and billing contact and its not an empty object
         if (!fulfillmentContact || Ext.Object.isEmpty(fulfillmentContact) || !billingContact || Ext.Object.isEmpty(billingContact)) {
             isValid = false;
         }
-        return isValid 
+        return isValid
     },
 
 
-
-
-    updatePanelVisibility : function (){
+    updatePanelVisibility: function () {
         var me = this,
             orderItems = this.record.get("items"),
             navUpdateRequired = false;
-        
 
 
         // need to cache what's selected 
-        
+
 
         // begin if statement from hell...
         // if a admin entered order that has not been submitted we need to do some visibility magic;
@@ -149,7 +144,7 @@ Ext.define('Taco.view.order.Form', {
                     }
                 }
             } else {
-                
+
                 //this.formContainer.hide()
                 navUpdateRequired = true;
 
@@ -175,7 +170,7 @@ Ext.define('Taco.view.order.Form', {
     onRecordChange: function () {
         var me = this,
             orderItems = this.record.get("items")
-        
+
         this.updatePanelVisibility();
 
         //if (me.isHeaderDataComplete() && (this.orderDetailPanel.isHidden() || this.paymentPanel.isHidden())) {
@@ -185,7 +180,7 @@ Ext.define('Taco.view.order.Form', {
         //    this.orderDetailPanel.show()
 
         //    // check if we have order items. Can't do payments until order has items. 
-            
+
         //    this.paymentPanel.show();
         //    // update the left nav
         //    this.loadNavItems();
@@ -196,9 +191,6 @@ Ext.define('Taco.view.order.Form', {
         //    // update the left nav
         //    this.loadNavItems();
         //}
-
-
-
 
 
         if (this.record.scrollTopTarget) {
@@ -216,10 +208,10 @@ Ext.define('Taco.view.order.Form', {
     buildForm: function () {
         var me = this;
         var items = [];
-        
+
         var subformCfg = {
             record: this.record,
-            orderForm: this                
+            orderForm: this
         };
 
         this.headerCmp = Ext.create('Taco.view.order.Header', Ext.apply({
@@ -237,9 +229,9 @@ Ext.define('Taco.view.order.Form', {
         }, subformCfg));
 
         this.mon(this.headerCmp, 'customerchanged', this.onCustomerChange, me);
-            
+
         items.push(this.headerCmp);
-                
+
         this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({
             //hidden: !this.isHeaderDataComplete(),
             //disabled: !this.isHeaderDataComplete(),
@@ -256,26 +248,27 @@ Ext.define('Taco.view.order.Form', {
                 scope: this
             }
 
-        },subformCfg)) 
-        
+        }, subformCfg))
 
-        if (me.isHeaderDataComplete()) {            
+
+        if (me.isHeaderDataComplete()) {
             items.push(this.orderDetailPanel);
         }
 
         this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({
             //hidden: !this.isHeaderDataComplete()
-        }, subformCfg))
+        }, subformCfg));
+
+        if (this.isEdit()) {
+            items.push(Ext.create('Taco.view.order.subform.Fulfillment', subformCfg));
+        }
 
         if (me.isHeaderDataComplete() && this.record.get("items").length) {
             items.push(this.paymentPanel);
         }
-      
+
         if (this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.subform.Shipping', subformCfg));
-            items.push(Ext.create('Taco.view.order.subform.InstorePickup', subformCfg));
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg));
-            items.push(Ext.create('Taco.view.order.subform.Fulfillment', subformCfg));
         }
 
         this.items = items;
@@ -288,12 +281,12 @@ Ext.define('Taco.view.order.Form', {
         return this._isEdit;
     },
 
-    isValid: function () {        
+    isValid: function () {
         var me = this,
             isValid = true,
-           errors = [];
+            errors = [];
 
-        
+
         var isShippable = this.record.isShippable();
         // Only validate when in create mode
         if (this.isEdit()) isValid = false;
@@ -316,13 +309,11 @@ Ext.define('Taco.view.order.Form', {
         //    isValid = false;
         //    errors.push("A shipping address must be created or selected before saving this order");
         //}
-
-
         else if (isShippable && !this.record.get("shippingMethodCode")) {
             isValid = false;
             errors.push("A shipping method must be selected before saving this order");
         }
-        
+
         if (errors.length) {
             Taco.app.fireEvent('setmessage', errors.join("<br/>"), 'error', me);
         }
@@ -334,26 +325,28 @@ Ext.define('Taco.view.order.Form', {
         return isValid;
     },
 
-    beforeSave: function () {        
-        var retVal = this.isValid();        
+    beforeSave: function () {
+        var retVal = this.isValid();
         return retVal
     },
 
-    addSaveTasks: function(tasks) {
+    addSaveTasks: function (tasks) {
         var me = this;
 
-        tasks.add({ 
+        tasks.add({
             key: 'submitorder',
-            fn: function(task) {
+            fn: function (task) {
                 Ext.Ajax.request({
                     url: '/admin/app/order/submit',
                     method: 'POST',
-                    jsonData: { orderId: me.record.getId() },
-                    success: function () {                        
-                        //alert("Your order was created! Yay! You should probably close this window now.");
-                        task.callback();                        
+                    jsonData: {
+                        orderId: me.record.getId()
                     },
-                    failure: function() {
+                    success: function () {
+                        //alert("Your order was created! Yay! You should probably close this window now.");
+                        task.callback();
+                    },
+                    failure: function () {
                         task.callback(true);
                     }
                 });
