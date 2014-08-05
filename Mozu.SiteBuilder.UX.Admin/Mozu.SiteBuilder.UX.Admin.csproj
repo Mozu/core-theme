@@ -1028,6 +1028,14 @@
     <Content Include="Scripts\resources\images\icons\icon-checkbox-selected-focus.png" />
     <Content Include="Scripts\resources\images\icons\icon-cloud.png" />
     <Content Include="Scripts\resources\images\icons\icon-dashboard.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-catalog.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-customers.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-locations.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-marketing.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-orders.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-publish.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-reporting.png" />
+    <Content Include="Scripts\resources\images\icons\icon-home-sitebuilder.png" />
     <Content Include="Scripts\resources\images\icons\icon-map.png" />
     <Content Include="Scripts\resources\images\icons\icon-people.png" />
     <Content Include="Scripts\resources\images\icons\icon-radio-focus.png" />
