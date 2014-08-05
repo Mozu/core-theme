@@ -178,7 +178,7 @@ Ext.define('Taco.view.order.Split', {
 
                 me.getEast().add(cmp);
                 
-                me.superclass.onRecordChange(args);
+                me.superclass.onRecordChange.apply(me,args);
 
                 me.showAndHideSplitActions();
                 me.updateSplitTitle();
