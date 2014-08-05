@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/mixin-paging"], function ($, _, Hypr, Backbone, ProductModels, PagingMixin) {
+﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/mixin-paging"], function($, _, Hypr, Backbone, ProductModels, PagingMixin) {
 
     function sanitize(str) {
         return str ? str.replace(/[\s~'":]+/g, '-') : '';
@@ -30,14 +30,14 @@
         //    }
         //    return raw;
         //},
-        isFaceted: function () {
+        isFaceted: function() {
             return !!this.get("values").findWhere({ "isApplied": true });
         },
-        empty: function () {
+        empty: function() {
             this.set("values", { isApplied: false });
             this.collection.parent.updateFacets({ resetIndex: true });
         },
-        getAppliedValues: function () {
+        getAppliedValues: function() {
             return _.invoke(this.get("values").where({ isApplied: true }), 'get', 'filterValue').join(',');
         }
 
@@ -67,7 +67,7 @@
         helpers: ['hasValueFacets'],
         hierarchyDepth: 2,
         hierarchyField: 'categoryId',
-        setQuery: function (query) {
+        setQuery: function(query) {
             this.query = query;
             if (!this.hierarchyValue && !this.baseRequestParams) {
                 this.baseRequestParams = {
@@ -77,7 +77,7 @@
             }
             this.lastRequest = this.buildFacetRequest();
         },
-        setHierarchy: function (hierarchyField, hierarchyValue) {
+        setHierarchy: function(hierarchyField, hierarchyValue) {
             this.hierarchyField = hierarchyField;
             this.hierarchyValue = hierarchyValue;
             this.baseRequestParams = (hierarchyValue !== null) && {
@@ -89,64 +89,72 @@
             if (this.query) this.baseRequestParams.query = this.query;
             this.lastRequest = this.buildFacetRequest();
         },
-        hasValueFacets: function () {
+        hasValueFacets: function() {
             return !!this.get('facets').findWhere({ facetType: 'Value' });
         },
-        clearAllFacets: function () {
+        clearAllFacets: function() {
             this.get("facets").invoke("empty");
         },
-        getFacetValueFilter: function () {
+        getFacetValueFilter: function() {
             return _.compact(this.get("facets").invoke("getAppliedValues")).join(',');
         },
-        setFacetValue: function (field, value, yes) {
+        setFacetValue: function(field, value, yes) {
             var thisFacetValues = this.get('facets').findWhere({ field: field }).get('values'),
                 // jQuery.data attempts to detect type, but the facet value might be a string anyway
-                newValue = thisFacetValues.findWhere({ value: value }) || thisFacetValues.findWhere({ value: value.toString() });
+                newValue = thisFacetValues.findWhere({ value: value }) || thisFacetValues.findWhere({
+                    value: value.toString()
+                });
             newValue.set("isApplied", yes);
             this.updateFacets({ resetIndex: true });
         },
-        buildFacetRequest: function () {
+        buildFacetRequest: function(filterValue) {
             var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                 pageSize = this.get("pageSize"),
                 startIndex = this.get("startIndex"),
-                filterValue = this.getFacetValueFilter();
+                sortBy = $.deparam().sortBy || this.currentSort();
+            filterValue = filterValue || this.getFacetValueFilter();
             conf.pageSize = pageSize;
             if (startIndex) conf.startIndex = startIndex;
             if (filterValue) conf.facetValueFilter = filterValue;
             if (this.query) conf.query = this.query;
+            if (sortBy) conf.sortBy = sortBy;
             return conf;
         },
-        updateFacets: _.debounce(function (options) {
+        updateFacets: _.debounce(function(options) {
             var me = this,
                 conf;
             options = options || {};
             if (options.resetIndex) this.set("startIndex", 0);
-            conf = this.buildFacetRequest();
+            conf = this.buildFacetRequest(options.facetValueFilter);
             if (options.force || !_.isEqual(conf, this.lastRequest)) {
                 this.lastRequest = conf;
                 this.isLoading(true);
                 // wipe current data set, since the server will give us our entire state
                 this.get('facets').reset(null, { silent: true });
                 this.get('items').reset(null, { silent: true });
-                this.apiModel.get(conf).then(function () {
-                    me.trigger("facetchange", me.getQueryString());
-                }).ensure(function () {
+                this.apiModel.get(conf).ensure(function() {
                     me.isLoading(false);
                 });
             }
         }, 300),
-        getQueryString: function () {
+        getQueryString: function() {
             var self = this, lrClone = _.clone(this.lastRequest);
-            _.each(lrClone, function (v, p) {
+            _.each(lrClone, function(v, p) {
                 if (self.baseRequestParams && (p in self.baseRequestParams)) delete lrClone[p];
             });
             if (parseInt(lrClone.pageSize, 10) === defaultPageSize) delete lrClone.pageSize;
             if (this.hierarchyField && this.hierarchyValue) lrClone[this.hierarchyField] = this.hierarchyValue;
             if (this.query) lrClone.query = this.query;
+            var startIndex = this.get('startIndex');
+            if (startIndex) lrClone.startIndex = startIndex;
             return _.isEmpty(lrClone) ? "" : "?" + $.param(lrClone);
         },
-        initialize: function () {
+        initialize: function() {
+            var me = this;
             this.lastRequest = this.buildFacetRequest();
+            this.on('sync', function() {
+                me.trigger('facetchange', me.getQueryString());
+            });
         }
     }, PagingMixin));
 

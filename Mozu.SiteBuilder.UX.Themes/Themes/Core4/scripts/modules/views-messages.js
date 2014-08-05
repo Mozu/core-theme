@@ -4,13 +4,13 @@
     // this avoids the circular reference problem by not asking for backbone-mozuview until we know it's been provided.
     var MozuMessagesView,
         offset = parseInt(Hypr.getThemeSetting('gutterWidth')) || 10;
-    return function (opts) {
+    return function(opts) {
         if (!MozuMessagesView) MozuMessagesView = Backbone.MozuView.extend({
             templateName: 'modules/common/message-bar',
-            initialize: function () {
-                this.model.on('reset', this.render, this)
+            initialize: function() {
+                this.model.on('reset', this.render, this);
             },
-            render: function () {
+            render: function() {
                 Backbone.MozuView.prototype.render.apply(this, arguments);
                 if (this.model.length > 0) {
                     this.$el.ScrollTo({
@@ -18,11 +18,11 @@
                         offsetTop: offset,
                         offsetLeft: offset * 1.5,
                         axis: 'y'
-                    })
+                    });
                 }
             }
         });
         return new MozuMessagesView(opts);
-    }
+    };
 
 });

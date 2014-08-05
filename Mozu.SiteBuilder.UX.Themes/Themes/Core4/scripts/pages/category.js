@@ -20,30 +20,45 @@ define(['modules/jquery-mozu', 'shim!vendor/underscore>_', 'hyprlive', 'modules/
                     el: $categoryPageBody.find('[data-mz-pagenumbers]'),
                     model: facetingModel
                 }),
-                productList: ( useAnimatedLists ? new ProductListViews.AnimatedList({
-                    el: $categoryPageBody.find('[data-mz-productlist] .mz-productlist-list'),
+                pageSort: new PagingViews.PageSortView({
+                    el: $categoryPageBody.find('[data-mz-pagesort]'),
                     model: facetingModel
-                }) : new ProductListViews.List({
+                }),
+                productList: new ProductListViews.List({
                     el: $categoryPageBody.find('[data-mz-productlist]'),
                     model: facetingModel
-                }) )
+                })
             };            if ($facetPanel.length > 0) {                facetingViews.facetPanel = new ProductListViews.FacetingPanel({
                     el: $facetPanel,                    model: facetingModel
                 });            }
             Backbone.history.start({ pushState: true, root: window.location.pathname });
             var router = new Backbone.Router();
 
-            facetingModel.on('facetchange', function (newQuery) {
-                router.navigate(newQuery, { replace: true });
-            });
+            var navigating = false;
+
+            facetingModel.on('facetchange', function(q) {
+                if (!navigating) {
+                    router.navigate(q);
+                }
+                navigating = false;
+            }, router);
 
             facetingModel.on('change:pageSize', facetingModel.updateFacets, facetingModel);
 
+            _.invoke(facetingViews, 'delegateEvents');
+
+            var defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
+            router.route('*all', "filter", function() {
+                var urlParams = $.extend({ pageSize: defaultPageSize }, $.deparam()),
+                    options = {},
+                    req = facetingModel.lastRequest;
+                if (!urlParams.startIndex) options.resetIndex = true;
+                facetingModel.set(_.pick(urlParams, 'pageSize', 'startIndex', 'facetValueFilter', 'sortBy'), { silent: true });
+                navigating = true;
+                facetingModel.updateFacets(options);
+            });
+
         }
-
-        _.invoke(facetingViews, 'render');
-
-        $categoryPageBody.noFlickerFadeIn();
 
         window.facetingViews = facetingViews;
 

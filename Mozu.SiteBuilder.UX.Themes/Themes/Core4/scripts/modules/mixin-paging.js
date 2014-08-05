@@ -2,47 +2,79 @@
  * A "mixin" object that can add sorting and paging functionality (page size,
  * start index, total count, nextPage, etc) to Backbone.MozuModels.
  */
-define(['jquery'], function($) {
+define(['jquery', 'hyprlive'], function($, Hypr) {
+
+    var sorts = [
+        {
+            "text": Hypr.getLabel('default'),
+            "value": ""
+        },
+        {
+            "text": Hypr.getLabel('sortByPriceAsc'),
+            "value": "price asc"
+        },
+        {
+            "text": Hypr.getLabel('sortByPriceDesc'),
+            "value": "price desc"
+        },
+        {
+            "text": Hypr.getLabel('sortByNameAsc'),
+            "value": "productName asc"
+        },
+        {
+            "text": Hypr.getLabel('sortByNameDesc'),
+            "value": "productName desc"
+        },
+        {
+            "text": Hypr.getLabel('sortByDateDesc'),
+            "value": "createDate desc"
+        },
+        {
+            "text": Hypr.getLabel('sortByDateAsc'),
+            "value": "createDate asc"
+        }
+    ],
+        defaultSort = Hypr.getThemeSetting('defaultSort');
     return {
 
         _isPaged: true,
 
-        previousPage: function () {
+        previousPage: function() {
             try {
                 return this.apiModel.prevPage(this.lastRequest);
             } catch (e) { }
         },
 
-        nextPage: function () {
+        nextPage: function() {
             try {
                 return this.apiModel.nextPage(this.lastRequest);
             } catch (e) { }
         },
 
-        setPage: function (num) {
+        setPage: function(num) {
             num = parseInt(num);
-            if (num != this.currentPage() && num <= parseInt(this.get('pageCount'))) return this.apiGet($.extend({}, this.lastRequest, {
+            if (num != this.currentPage() && num <= parseInt(this.get('pageCount'))) return this.apiGet($.extend(this.lastRequest, {
                 startIndex: (num - 1) * parseInt(this.get('pageSize'))
             }));
         },
 
         changePageSize: function() {
-            return this.apiGet($.extend({}, this.lastRequest, { pageSize: this.get('pageSize') }));
+            return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize') }));
         },
 
         firstIndex: function() {
             return this.get("startIndex") + 1;
         },
 
-        lastIndex: function () {
+        lastIndex: function() {
             return this.get("startIndex") + this.get("items").length;
         },
 
-        hasPreviousPage: function () {
+        hasPreviousPage: function() {
             return this.get("startIndex") > 0;
         },
 
-        hasNextPage: function () {
+        hasNextPage: function() {
             return this.lastIndex() < this.get("totalCount");
         },
 
@@ -50,7 +82,7 @@ define(['jquery'], function($) {
             return Math.ceil(this.firstIndex() / (this.get('pageSize') || 1));
         },
 
-        middlePageNumbers: function () {
+        middlePageNumbers: function() {
             var current = this.currentPage(),
                 ret = [],
                 pageCount = this.get('pageCount'),
@@ -58,6 +90,18 @@ define(['jquery'], function($) {
                 last = Math.min(i + 5, pageCount);
             while (i < last) ret.push(i++);
             return ret;
+        },
+
+        sorts: function() {
+            return sorts;
+        },
+
+        currentSort: function() {
+            return (this.lastRequest && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g, ' ')) || defaultSort;
+        },
+
+        sortBy: function(sortString) {
+            return this.apiGet($.extend(this.lastRequest, { sortBy: sortString }));
         }
     };
 });

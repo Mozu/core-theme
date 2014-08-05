@@ -61,6 +61,7 @@
                 }, this);
             }
             Backbone.Validation.bind(this);
+            Backbone.MozuView.trigger('create', this);
 
         },
             enqueueRender: function () {
@@ -186,7 +187,7 @@
                     }, 50);
                 });
             }
-            return Backbone.View.extend.call(this, conf, statics)
+            return Backbone.View.extend.call(this, conf, statics);
         }
     });
 });

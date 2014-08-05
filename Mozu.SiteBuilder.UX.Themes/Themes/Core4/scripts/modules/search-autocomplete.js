@@ -28,7 +28,7 @@
                     }
                 }
                 return thisGroup.suggestions;
-            }
+            };
         },
 
         makeTemplateFn = function(name) {
@@ -90,7 +90,7 @@
         {
             name: 'pages',
             displayKey: function(datum) {
-                return datum.suggestion.productCode
+                return datum.suggestion.productCode;
             },
             templates: {
                 suggestion: makeTemplateFn('modules/search/autocomplete-page-result')
