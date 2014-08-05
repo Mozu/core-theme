@@ -14,11 +14,12 @@
         pageSize: 800,
         remoteSort: false,
         remoteFilter: false,
-        sorters:['name'],
+        sorters: ['name'],
+        autoLoad: true,
+        contextLevel:'t',
         storeManagerConfig: {
             createOnly: true,
-            clearFilters: false,
-            clearSort: false,
             autoLoad: true
         }
+       
     });

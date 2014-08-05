@@ -26,6 +26,8 @@ Ext.define('Taco.view.category.Form', {
     },
 
     items: [
+    
+
         {
             name: 'name',
             fieldLabel: 'Category Name',
@@ -111,6 +113,8 @@ Ext.define('Taco.view.category.Form', {
     initComponent: function () {
         this.title = this.record.data.name;
         this.callParent(arguments);
+
+       
     },
     
     // called by Taco.core.ux.form.Form automatically when the form panel is initializing; can be used to transform the data in the record and populate the fields manually;

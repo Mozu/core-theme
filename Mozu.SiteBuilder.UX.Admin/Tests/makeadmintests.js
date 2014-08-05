@@ -34,7 +34,7 @@ var unitTestGroup = {
     }
 
 includedClasses.filter(function(clsFile) {
-    return clsFile.indexOf('../Scripts/app') === 0 && fs.existsSync(path.resolve(clsFile.replace('../Scripts/app', 'unit')));
+    return clsFile.indexOf('../Scripts/app') === 0 && fs.existsSync(path.resolve(clsFile.replace('../Scripts/app', 'unit').replace(/\.js$/, '.t.js')));
 }).forEach(function(clsFile) {
     var pathParts = clsFile.replace('../Scripts/app/', '').split('/'),
         pathPart,
@@ -43,7 +43,7 @@ includedClasses.filter(function(clsFile) {
         ctx = getSubGroup(ctx, pathPart);
     }
     ctx.items.push({
-        url: clsFile.replace('../Scripts/app', 'unit'),
+        url: clsFile.replace('../Scripts/app', 'unit').replace(/\.js$/, '.t.js'),
         title: path.basename(clsFile)
     });
 });

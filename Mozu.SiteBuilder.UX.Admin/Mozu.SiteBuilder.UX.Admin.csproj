@@ -2030,15 +2030,16 @@
     <Content Include="Tests\customunit\core\ux\form\model-binds.t.js" />
     <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\customunit\core\ux\tab\picker.t.js" />
+    <Content Include="Tests\unit\platter\fields\SimpleFields.t.js" />
     <Content Include="Tests\unit\view\customers\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
     <Content Include="Tests\unit\view\customers\subform\information.t.js" />
     <Content Include="Tests\customunit\view\order\header.t.js" />
-    <Content Include="Tests\unit\view\order\modal\AddGiftCard.js" />
-    <Content Include="Tests\unit\view\order\subform\Payment.js" />
-    <Content Include="Tests\unit\view\order\widget\GiftCardGrid.js" />
-    <Content Include="Tests\unit\view\order\widget\PaymentPanel.js" />
+    <Content Include="Tests\unit\view\order\modal\AddGiftCard.t.js" />
+    <Content Include="Tests\unit\view\order\subform\Payment.t.js" />
+    <Content Include="Tests\unit\view\order\widget\GiftCardGrid.t.js" />
+    <Content Include="Tests\unit\view\order\widget\PaymentPanel.t.js" />
     <Content Include="Views\Home\Index_Compiled.cshtml">
       <SubType>Code</SubType>
     </Content>
