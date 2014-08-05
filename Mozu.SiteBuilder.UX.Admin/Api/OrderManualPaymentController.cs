@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 InteractionDate = args.InteractionDate,
                 NewBillingInfo = new DCp.BillingInfo
                 {
+                    PaymentType = DCp.PaymentTypeConst.CREDIT_CARD,
                     Card = new DCp.PaymentCard
                     {
                         NameOnCard = args.BillingInfo.NameOnCard,
