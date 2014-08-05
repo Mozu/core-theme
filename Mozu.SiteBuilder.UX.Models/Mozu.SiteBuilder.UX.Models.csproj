@@ -223,9 +223,8 @@
     <Reference Include="Mozu.CommerceRuntime.Contracts">
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.11.0-dev003\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Content.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Content.Contracts.1.10.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Content.Contracts">
+      <HintPath>..\packages\Mozu.Content.Contracts.1.11.0-dev002\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
