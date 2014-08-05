@@ -17,8 +17,8 @@
         'Taco.core.ux.form.SlugField',
         'Taco.core.ux.form.field.PageTemplate',
         'Taco.core.ux.form.field.BaseImageField',
-        'Ext.form.field.Hidden'
-
+        'Ext.form.field.Hidden',
+        'Taco.platter.fields.SimpleFields'
     ],
     saveButtonEnabled: true,
     autoScroll :true,

@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Siesta
         private static List<string> badTests = new List<string> ()
 
         {
-            "order/widget/paymentpanel.js"
+            "order/widget/paymentpanel.t.js"
             ,
             "customers/modal/contacts.t.js"
         };

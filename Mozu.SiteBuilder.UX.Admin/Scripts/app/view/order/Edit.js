@@ -15,6 +15,7 @@ Ext.define('Taco.view.order.Edit', {
             {
                 shippingMethodsStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods'),
                 channelsStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
+                countriesStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.Countries'),
                 attributesStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes')
             });
 
@@ -30,6 +31,9 @@ Ext.define('Taco.view.order.Edit', {
                     storeToLoad: cfg.channelsStore
                 }, {
                     storeToLoad: cfg.attributesStore
+                },
+                {
+                    storeToLoad: cfg.countriesStore
                 }
             ]);
 

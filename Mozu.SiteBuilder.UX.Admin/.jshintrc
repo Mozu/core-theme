@@ -75,5 +75,5 @@
     "yui"           : false,    // Yahoo User Interface
 
     // Custom Globals
-    "globals"       : {"Ext":true,"Taco":true}       // additional predefined global variables
+    "globals"       : {"Ext":true,"Taco":true,"StartTest": true}       // additional predefined global variables
 }
