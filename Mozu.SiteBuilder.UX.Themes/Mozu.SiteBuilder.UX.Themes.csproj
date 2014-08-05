@@ -416,6 +416,7 @@
     <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap\js\affix.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap\js\popover.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap\js\scrollspy.js" />
+    <Content Include="Themes\Core4\compiled\scripts\vendor\bootstrap\js\tooltip.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core4\compiled\scripts\vendor\jquery\jquery.js" />
@@ -488,6 +489,7 @@
     <Content Include="Themes\Core4\scripts\vendor\bootstrap\js\affix.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap\js\popover.js" />
     <Content Include="Themes\Core4\scripts\vendor\bootstrap\js\scrollspy.js" />
+    <Content Include="Themes\Core4\scripts\vendor\bootstrap\js\tooltip.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core4\scripts\vendor\jquery.cookie\jquery.cookie.js" />
