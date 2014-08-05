@@ -287,9 +287,8 @@
     <Reference Include="Mozu.Reporting.Contracts">
       <HintPath>..\packages\Mozu.Reporting.Contracts.1.11.0-dev002\lib\Mozu.Reporting.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.10.0.1\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ShippingAdmin.Contracts">
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.11.0-dev003\lib\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
