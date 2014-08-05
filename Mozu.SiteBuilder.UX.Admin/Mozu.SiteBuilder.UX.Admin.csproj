@@ -281,9 +281,8 @@
     <Reference Include="Mozu.Provisioning.Contracts">
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.11.0-dev002\lib\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reference.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.10.0.1\lib\net45\Mozu.Reference.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Reference.Contracts">
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.11.0-dev002\lib\net45\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reporting.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
