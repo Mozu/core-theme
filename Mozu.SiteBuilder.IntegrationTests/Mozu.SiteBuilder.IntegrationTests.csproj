@@ -255,7 +255,7 @@
       <HintPath>..\packages\Mozu.Core.Api.Client.1.11.0.1\lib\net45\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts">
-      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.11.0.1\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Api.Contracts.1.11.0.2\lib\net45\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching">
       <HintPath>..\packages\Mozu.Core.Caching.1.11.0.1\lib\net45\Mozu.Core.Caching.dll</HintPath>
