@@ -1,0 +1,11 @@
+Scripts/*.js
+Scripts/.sencha/**
+Scripts/build/**
+Scripts/chorizo/**
+Scripts/ext/**
+Scripts/packages/**
+Scripts/resources/**
+Scripts/sass/**
+Scripts/stylesheets/**
+Scripts/ux/**
+**/node_modules/**

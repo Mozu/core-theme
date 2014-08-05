@@ -635,6 +635,8 @@
     <Content Include="BuiltinScripts\RequireJS\LICENSE" />
     <Content Include="BuiltinScripts\RequireJS\README.md" />
     <Content Include="App_Data\51Degrees.mobi-Premium-2014.02.28.dat" />
+    <Content Include=".jshintignore" />
+    <Content Include=".jshintrc" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
