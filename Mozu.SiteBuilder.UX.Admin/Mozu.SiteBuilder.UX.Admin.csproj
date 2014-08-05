@@ -1474,12 +1474,14 @@
     <Content Include="Scripts\sass\src\view\order\widget\ReturnableItemGrid.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Header.scss" />
     <Content Include="Scripts\sass\src\view\order\subform\Fulfillment.scss" />
-    <Content Include=".jshintrc" />
+    <Content Include="Tests\.jshintrc" />
     <Content Include=".tfignore" />
     <Content Include="Scripts\resources\fonts\mozicons-2014.eot" />
     <Content Include="Scripts\resources\fonts\mozicons-2014.ttf" />
     <Content Include="Scripts\resources\fonts\mozicons-2014.woff" />
-    <Content Include=".jshintignore" />
+    <Content Include="Tests\.jshintignore" />
+    <Content Include="Scripts\.jshintignore" />
+    <Content Include="Scripts\.jshintrc" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
