@@ -299,9 +299,8 @@
     <Reference Include="Mozu.ProductAdmin.Contracts">
       <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.11.0-dev003\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.10.0.2\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ProductRuntime.Contracts">
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.11.0-dev003\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts">
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.10.0.1\lib\Mozu.Provisioning.Contracts.dll</HintPath>
