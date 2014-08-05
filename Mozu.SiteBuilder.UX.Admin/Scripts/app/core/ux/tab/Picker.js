@@ -19,7 +19,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
     alignmentOffsets: [-1, -1],
 
     initComponent: function () {
-
+        var me = this;
         this.addEvents([
             /**
              * @event selectionchange
@@ -33,7 +33,15 @@ Ext.define('Taco.core.ux.tab.Picker', {
         this.checkboxGroup = Ext.widget({
             xtype: 'checkboxgroup',
             columns: 1,
-            vertical: true
+            vertical: true,
+            listeners: {
+                change: {
+                    scope: me,
+                    fn: function() {
+                        me.checkForChanges();
+                    }
+                }
+            }
         });
 
         this.items = [this.checkboxGroup];
@@ -60,7 +68,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
             var cb = Ext.widget({
                 xtype: 'checkbox',
                 value: recordId,
-                boxLabel: this.displayTpl.apply(record),
+                boxLabel: this.displayTpl.apply(record),  
                 data: record
             });
             cb.setValue(isChecked);
@@ -86,13 +94,15 @@ Ext.define('Taco.core.ux.tab.Picker', {
     },
 
     hide: function () {
-        var newValues = this.getCheckedRecords()
-            oldValues = this.currentItems,
-            noChange = true;
         this.getEl().removeCls('list-open');
         this.callParent(arguments);
-        
-        
+    },
+
+    checkForChanges: function () {
+        var newValues = this.getCheckedRecords(),
+            oldValues = this.currentItems,
+            noChange = true;
+
         if (newValues.length === oldValues.length) {
             Ext.each(newValues, function (newValue, index) {
                 if (newValue !== oldValues[index]) {
@@ -101,7 +111,7 @@ Ext.define('Taco.core.ux.tab.Picker', {
                 }
             });
         } else {
-            noChange = false
+            noChange = false;
         }
 
         if (noChange) {
