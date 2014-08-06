@@ -12,35 +12,18 @@
             }
         }),
 
-        DocumentCollection = Backbone.MozuModel.extend(_.extend({
-            validation: {
-                pageSize: { min: 1 },
-                pageCount: { min: 1 },
-                startIndex: { min: 0 }
-            },
-            dataTypes: {
-                pageSize: Backbone.MozuModel.DataTypes.Int,
-                pageCount: Backbone.MozuModel.DataTypes.Int,
-                startIndex: Backbone.MozuModel.DataTypes.Int,
-                totalCount: Backbone.MozuModel.DataTypes.Int,
-            },
+        DocumentCollection = Backbone.MozuPagedCollection.extend({
             relations: {
                 items: Backbone.Collection.extend({
                     model: Document
                 })
             },
-            getFilter: function() {
-                // unimplemented in default collection
-            },
-            getQuery: function() {
-                // unimplemented in default collection
-            },
             buildPagingRequest: function() {
                 var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                 pageSize = this.get("pageSize"),
                 startIndex = this.get("startIndex"),
-                filter = this.getFilter(),
-                query = this.getQuery();
+                filter = this.filter,
+                query = this.query;
                 conf.pageSize = pageSize;
                 if (startIndex) conf.startIndex = startIndex;
                 if (filter) conf.filter = filter;
@@ -50,7 +33,7 @@
             initialize: function() {
                 this.lastRequest = this.buildPagingRequest();
             }
-        }, PagingMixin));
+        });
 
         return {
             Document: Document,
