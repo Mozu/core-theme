@@ -51,4 +51,16 @@ Ext.define('Taco.platter.fields.Image', {
     alias: ['widget.mz-input-image'],
    
 });
+Ext.define('Taco.platter.fields.ImageSimple', {
+    extend: 'Taco.core.ux.form.field.BaseImageField',
+    alias: ['widget.mz-input-image-nostyle'],
+    allowStyles: false,
+});
+Ext.define('Taco.platter.fields.ImageUrl', {
+    extend: 'Taco.core.ux.form.field.BaseImageField',
+    alias: ['widget.mz-input-imageurl'],
+    allowStyles: false,
+    dataFormat: 'urlOnly',
+    allowAltText: false
+});
 

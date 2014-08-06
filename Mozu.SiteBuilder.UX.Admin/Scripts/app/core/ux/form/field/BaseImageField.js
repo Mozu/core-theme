@@ -33,49 +33,53 @@ linkUrl
 
 Ext.define('Taco.core.ux.form.field.BaseImageField', {
     extend: 'Ext.form.field.Base',
-   // alias: ['widget.taco-imagefield'],
+    // alias: ['widget.taco-imagefield'],
     requires: [
         'Taco.core.ux.form.ColorField'
     ],
-   // height: 300,
+    // height: 300,
     //  width: 800,
-      minHeight: 300,
+    minHeight: 300,
     inputType: 'hidden',
     mode: 'mozufilter',
     showGutter: true,
-     
-    initComponent: function () {
+    allowStyles: true,
+    dataFormat:'imageObject', //or urlOnly
+    allowAltText : true,
+    initComponent: function() {
         var me = this;
-        me.on('render', function () {
-            me.getEl().on('click', me.showImageEditor, me);
+        me.on('render', function() {
+            me.getImageContainerEl().on('click', me.showImageEditor, me);
+            me.getImageLabelEl().on('click', me.showImageEditor, me);
         });
-    
+
         //me.on('click', function (cmp) {
         //    console.log('click');
 
         //});
         this.callParent(arguments);
     },
-    showImageEditor: function () {
+    showImageEditor: function() {
         var me = this,
-            data= {},
+            data = {},
             mdl;
         data = me.convertForEditor(me.getValue());
-        mdl = Ext.create('Taco.core.ux.form.field.BaseImageField.ImageModal',
-        {
+        mdl = Ext.create('Taco.core.ux.form.field.BaseImageField.ImageModal', {
             autoShow: true,
             closeAction: 'destroy',
             widgetData: data,
+            allowStyles: this.allowStyles,
             title: 'Edit Image',
+            allowAltText: this.allowAltText,
             listeners: {
-                savesuccess: function (modal, imageData) {
+                savesuccess: function(modal, imageData) {
                     me.setValue(me.convertForStorage(imageData));
                 }
             }
         });
     },
 
-    convertForEditor: function (value) {
+    convertForEditor: function(value) {
         value = value || {};
         var ret;
         if (Ext.isString(value)) {
@@ -85,7 +89,6 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
         }
 
         ret = {
-           
             imageFileId: value.imageId,
             imageAltText: value.altText,
             imageWidth: value.width,
@@ -97,20 +100,22 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
             ret.imageSource = 'file';
         } else {
             ret.imageSource = 'externalUrl';
-            ret.imageExternalUrl= value.imageUrl;
+            ret.imageExternalUrl = value.imageUrl;
         }
-       
+        if (value.width) {
+            ret.imageSize = 'specificSize';
+        }
 
+        
         return ret;
     },
 
-    convertForStorage: function (value) {
+    convertForStorage: function(value) {
         var ret,
             siteId = Taco.app.context.getContextAtLevel('s').id,
             tenantId = Taco.app.context.getTenantId();
         value = value || {};
         ret = {
-            
             imageId: value.imageFileId,
             imageListId: value.imageFileId ? 'files@mozu' : undefined,
             altText: value.imageAltText,
@@ -119,82 +124,112 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
             linkUrl: value.linkExternalUrl
         };
         if (value.imageSource === 'externalUrl') {
+            if (!value.imageExternalUrl) {
+                return null;
+            }
             ret.imageUrl = value.imageExternalUrl;
         }
         if (value.imageSource === 'file') {
-
+            if (!value.imageFileId) {
+                return null;
+            }
             ret.imageUrl = '//' + Taco.cdnPrefix + '/' + tenantId + '-' + siteId + '/cms/files/' + value.imageFileId;
             //2083-2116/cms/7332/files/b1bf3cab-1d7c-42f8-901a-bff60b56d778?size=60
         }
-        return ret; 
+
+        if (this.dataFormat == 'urlOnly') {
+            return ret.imageUrl;
+        }
+        return ret;
     },
 
 
-    getEditorId:function () {
+    getEditorId: function() {
         return this.getInputId() + '-editor';
     },
 
-    getEditorEl:function () {
+    getEditorEl: function() {
         var me = this;
         me.editorEl = me.editorEl || me.el.getById(me.getEditorId());
         return me.editorEl;
     },
-    getValue: function () {
+    getValue: function() {
         return this.value;
     },
-  //  fieldSubTpl:[],
-    setValue: function (value) {
+    //  fieldSubTpl:[],
+    setValue: function(value) {
         var me = this,
             data,
             ret = me.mixins.field.setValue.call(me, value);
 
-        if (me.getInputEl()) {
+        if (me.getImageEl()) {
             data = me.getSubTplData();
-            me.getInputEl().dom.setAttribute('src', data.imageUrl);
+            me.getImageEl().dom.setAttribute('src', data.imageUrl);
         }
-    
+
         return ret;
 
     },
-    setValueInternal: function (value) {
+    setValueInternal: function(value) {
         var me = this,
             data,
             ret;
-        
-        ret= me.mixins.field.setValue.call(me, value);
-        if (me.getInputEl()) {
+
+        ret = me.mixins.field.setValue.call(me, value);
+        if (me.getImageEl()) {
             data = me.getSubTplData();
-            me.getInputEl().dom.setAttribute('src', data.imageSrc);
+            me.getImageEl().dom.setAttribute('src', data.imageUrl);
         }
         return ret;
     },
-    getInputEl: function () {
+    getInputEl: function() {
         if (!this.getEl()) {
             return null;
         }
         this.inputEl = this.inputEl || this.getEl().getById(this.getInputId());
         return this.inputEl;
     },
-  
-
-    fieldSubTpl: ['<div id="img-cnt-{id]"> <img src="{imageUrl}" id="{id}" style="cursor:pointer;max-height:200px;max-width:200px;" ></div>'],
-    getSubTplData: function () {
-        var templateData = this.callParent(arguments),
-            value = this.getValue();
-
-        templateData.imageUrl = value && value.imageUrl ? value.imageUrl : '/admin/scripts/resources/images/noimage.png';
-        return templateData;
+    getImageEl: function() {
+        if (!this.getEl()) {
+            return null;
+        }
+        this.imageEl = this.imageEl || this.getEl().getById(this.getInputId() + '-img');
+        return this.imageEl;
+    },
+    getImageContainerEl: function () {
+        if (!this.getEl()) {
+            return null;
+        }
+        this.imageCntEl = this.imageCntEl || this.getEl().getById(this.getInputId() + '-cnt');
+        return this.imageCntEl;
+    },
+    getImageLabelEl: function() {
+        if (!this.getEl()) {
+            return null;
+        }
+        this.imageLblEl = this.imageLblEl || this.getEl().getById(this.getInputId() + '-label');
+        return this.imageLblEl;
     },
 
 
-   
+    fieldSubTpl: ['<div style="cursor:pointer;border:2px solid #dddfdf;height:200px;width:200px" id="{id}-cnt"> <img id="{id}-img" src="{imageUrl}" alt="click to edit"  style="max-height:195px;max-width:195px;" ></div><div id="{id}-label" style="cursor:pointer;margin-left: 60px;">click to edit</div>'],
+    getSubTplData: function() {
+        var templateData = this.callParent(arguments),
+            value = this.getValue();
+
+        if (Ext.isString(value) && value) {
+            templateData.imageUrl = value || '/admin/scripts/resources/images/noimage.png';
+        } else {
+            templateData.imageUrl = value && value.imageUrl ? value.imageUrl : '/admin/scripts/resources/images/noimage.png';
+        }
+        
+        return templateData;
+    },
 
 
 });
 
 
-
-    
 /**
  * @class Taco.view.website.widgetEditors.Image
  * @author Jimmy Sanford
@@ -221,9 +256,10 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
     layout: {
         type: 'fit'
     },
-
-    initComponent: function () {
-        
+    allowStyles:true,
+    //allowBlankAltText: false,
+    initComponent: function() {
+        var me = this;
         this.imageStore = Ext.create('Ext.data.Store', {
             fields: ['id', 'url'],
             data: []
@@ -238,6 +274,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
+            hidden: !this.allowStyles,
             text: 'Content',
             toggleGroup: 'imageWidgetTabs',
             allowDepress: false,
@@ -247,13 +284,14 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
             style: {
                 borderRadius: '2px 0px 0px 2px'
             },
-            handler: function () {
+            handler: function() {
                 this.getForm().getLayout().setActiveItem(0);
             }
         }, {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
+            hidden: !this.allowStyles,
             text: 'Style',
             toggleGroup: 'imageWidgetTabs',
             allowDepress: false,
@@ -262,7 +300,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
             style: {
                 borderRadius: '0px 2px 2px 0px'
             },
-            handler: function () {
+            handler: function() {
                 this.getForm().getLayout().setActiveItem(1);
             }
         }];
@@ -299,7 +337,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                         listeners: {
                             change: {
                                 scope: this,
-                                fn: function (field, newValue) {
+                                fn: function(field, newValue) {
                                     this.handleImageSourceChange(newValue);
                                 }
                             }
@@ -313,7 +351,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                         margin: '0 0 0 15',
                         enableToggle: true,
                         scope: this,
-                        toggleHandler: function (button, state) {
+                        toggleHandler: function(button, state) {
                             this.toggleAssociator(state, button, this.imageStore);
                         }
                     }, {
@@ -381,245 +419,274 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                     // }, {
                     xtype: 'textarea',
                     name: 'imageAltText',
-                    fieldLabel: 'Alt Text'
+                    hidden : !this.allowAltText,
+                    fieldLabel: 'Alt Text',
+                    //validator :function (value) {
+                    //    me.getForm().findField('imageFileId').setValue(value);
+                   
+                    //}
                 }]
             }, {
                 xtype: 'formform',
                 title: 'Style',
                 header: false,
                 items: [{
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    items: [{
-                        xtype: 'combobox',
-                        name: 'borderWidth',
-                        fieldLabel: 'Border Width',
-                        editable: false,
-                        forceSelection: true,
-                        width: 170,
-                        value: '1px',
-                        store: ['1px', '2px', '3px']
-                    }, {
-                        xtype: 'combobox',
-                        name: 'borderStyle',
-                        fieldLabel: 'Border Style',
-                        margin: '0 0 0 15',
-                        editable: false,
-                        forceSelection: true,
-                        width: 170,
-                        value: 'Solid',
-                        store: ['Solid', 'Dashed', 'Dotted', 'None']
-                    }, {
-                        xtype: 'colorfield',
-                        name: 'borderColor',
-                        fieldLabel: 'Border Color',
-                        margin: '0 0 0 15',
-                        width: 170
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    items: [{
-                        xtype: 'combobox',
-                        name: 'imageSize',
-                        fieldLabel: 'Image Size',
-                        width: 260,
-                        editable: false,
-                        forceSelection: true,
-                        value: 'stretch',
-                        store: [
-                            ['stretch', 'Stretch'],
-                            ['specificSize', 'Specify']
-                        ],
-                        listeners: {
-                            change: {
-                                scope: this,
-                                fn: function (field, newValue) {
-                                    this.handleImageSizeChange(newValue);
-                                }
-                            }
-                        }
-                    }, {
-                        xtype: 'textfield',
-                        name: 'imageWidth',
-                        fieldLabel: 'Width',
-                        margin: '0 0 0 15',
-                        width: 125,
-                        hidden: true
-                    }, {
-                        xtype: 'textfield',
-                        name: 'imageHeight',
-                        fieldLabel: 'Height',
-                        margin: '0 0 0 15',
-                        width: 125,
-                        hidden: true
-                    }]
-                }, {
-                    xtype: 'radiogroup',
-                    fieldLabel: 'Choose one of the following:',
-                    columns: 2,
-                    vertical: true,
-                    items: [{
-                        name: 'imageClickAction',
-                        inputValue: 'lightbox',
-                        boxLabel: 'Open larger image in a lightbox'
-                    }, {
-                        name: 'imageClickAction',
-                        inputValue: 'url',
-                        boxLabel: 'Navigate to a click-through URL'
-                    }, {
-                        name: 'imageClickAction',
-                        inputValue: '',
-                        boxLabel: 'Do nothing'
-                    }],
-                    listeners: {
-                        change: {
-                            scope: this,
-                            fn: function (fieldgroup, newValue) {
-                                this.handleImageClickActionChange(newValue);
-                            }
-                        }
-                    }
-                }, {
-                    xtype: 'container',
-                    itemId: 'linkFields',
-                    padding: '2 0 0',
-                    hidden: true,
-                    layout: {
-                        type: 'hbox'
-                    },
-                    items: [{
-                        xtype: 'combobox',
-                        name: 'linkSource',
-                        width: 170,
-                        editable: false,
-                        forceSelection: true,
-                        value: 'externalUrl',
-                        store: [
-                            ['externalUrl', 'External URL'],
-                            ['internalUrl', 'Internal URL'],
-                            ['file', 'File']
-                        ],
-                        listeners: {
-                            change: {
-                                scope: this,
-                                fn: function (field, newValue) {
-                                    this.handleLinkSourceChange(newValue);
-                                }
-                            }
-                        }
-                    }, {
-                        xtype: 'button',
-                        itemId: 'linkAssociatorButton',
-                        ui: 'action',
-                        scale: 'medium',
-                        text: 'Select Existing',
-                        margin: '0 0 0 15',
-                        hidden: true,
-                        enableToggle: true,
-                        scope: this,
-                        toggleHandler: function (button, state) {
-                            this.toggleAssociator(state, button, this.linkStore);
-                        }
-                    }, {
-                        xtype: 'tacofilefield',
-                        itemId: 'linkUploadButton',
-                        text: 'Upload',
-                        margin: '0 0 0 15',
-                        hidden: true,
-                        buttonConfig: {
-                            ui: 'action',
-                            scale: 'medium'
-                        }
-                    }, {
-                        xtype: 'textfield',
-                        name: 'linkExternalUrl',
-                        emptyText: 'http://',
-                        margin: '0 0 0 15',
-                        flex: 1,
-                        hidden: false
-                    }, {
-                        xtype: 'textfield',
-                        name: 'linkInternalUrl',
-                        margin: '0 0 0 15',
-                        flex: 1,
-                        hidden: true
-                    }, {
-                        xtype: 'textfield',
-                        name: 'linkFileId',
-                        margin: '0 0 0 15',
-                        flex: 1,
-                        hidden: true
-                    }]
-                }, {
-                    xtype: 'container',
-                    itemId: 'linkSelectors',
-                    padding: '10 0 0',
-                    height: 170,
-                    layout: {
-                        type: 'card'
-                    },
-                    items: [{
-                        // Card 0: External URL
+                        xtype: 'container',
                         layout: {
-                            type: 'fit'
+                            type: 'hbox'
                         },
                         items: [{
-                            xtype: 'component',
-                            height: 160
+                            xtype: 'combobox',
+                            name: 'borderWidth',
+                            fieldLabel: 'Border Width',
+                            editable: false,
+                            forceSelection: true,
+                            width: 170,
+                            value: '1px',
+                            store: ['1px', '2px', '3px']
+                        }, {
+                            xtype: 'combobox',
+                            name: 'borderStyle',
+                            fieldLabel: 'Border Style',
+                            margin: '0 0 0 15',
+                            editable: false,
+                            forceSelection: true,
+                            width: 170,
+                            value: 'Solid',
+                            store: ['Solid', 'Dashed', 'Dotted', 'None']
+                        }, {
+                            xtype: 'colorfield',
+                            name: 'borderColor',
+                            fieldLabel: 'Border Color',
+                            margin: '0 0 0 15',
+                            width: 170
                         }]
                     }, {
-                        // Card 1: Internal URL
+                        xtype: 'container',
                         layout: {
-                            type: 'fit'
+                            type: 'hbox'
                         },
                         items: [{
-                            xtype: 'treepanel',
-                            componentCls: 'taco-website-tree',
-                            hideHeaders: true,
-                            rootVisible: false,
-                            useArrows: true,
-                            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes'),
-                            columns: [{
-                                xtype: 'treecolumn',
-                                flex: 1,
-                                dataIndex: 'name',
-                                renderer: function (value) {
-                                    return '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
-                                }
-                            }],
+                            xtype: 'combobox',
+                            name: 'imageSize',
+                            fieldLabel: 'Image Size',
+                            width: 260,
+                            editable: false,
+                            forceSelection: true,
+                            value: 'stretch',
+                            store: [
+                                ['stretch', 'Stretch'],
+                                ['specificSize', 'Specify']
+                            ],
                             listeners: {
-                                selectionchange: {
+                                change: {
                                     scope: this,
-                                    fn: function (selModel, records) {
-                                        var field = this.getForm().getForm().findField('linkInternalUrl'),
-                                            urls;
-
-                                        urls = Ext.Array.map(records, function (record) {
-                                            return record.get('url');
-                                        }, this).join(', ');
-
-                                        field.setValue(urls);
+                                    fn: function(field, newValue) {
+                                        this.handleImageSizeChange(newValue);
                                     }
                                 }
                             }
+                        }, {
+                            xtype: 'textfield',
+                            name: 'imageWidth',
+                            fieldLabel: 'Width',
+                            margin: '0 0 0 15',
+                            width: 125,
+                            hidden: true
+                        }, {
+                            xtype: 'textfield',
+                            name: 'imageHeight',
+                            fieldLabel: 'Height',
+                            margin: '0 0 0 15',
+                            width: 125,
+                            hidden: true
                         }]
+                    },
+
+
+
+                    {
+                        xtype: 'radiogroup',
+                        fieldLabel: 'Choose one of the following:',
+                        columns: 2,
+                        hidden: true,
+                        vertical: true,
+                        items: [{
+                            name: 'imageClickAction',
+                            inputValue: 'lightbox',
+                            boxLabel: 'Open larger image in a lightbox'
+                        }, {
+                            name: 'imageClickAction',
+                            inputValue: 'url',
+                            boxLabel: 'Navigate to a click-through URL'
+                        }, {
+                            name: 'imageClickAction',
+                            inputValue: '',
+                            boxLabel: 'Do nothing'
+                        }],
+                        listeners: {
+                            change: {
+                                scope: this,
+                                fn: function(fieldgroup, newValue) {
+                                    this.handleImageClickActionChange(newValue);
+                                }
+                            }
+                        }
                     }, {
-                        // Card 2: File
+                        xtype: 'container',
+                        itemId: 'linkFields',
+                        hidden: true,
+                        padding: '2 0 0',
+                        hidden: true,
                         layout: {
-                            type: 'fit'
+                            type: 'hbox'
                         },
                         items: [{
-                            xtype: 'taco-singleimagefield',
-                            height: 160,
-                            store: this.linkStore
+                            xtype: 'combobox',
+                            name: 'linkSource',
+                            width: 170,
+                            editable: false,
+                            forceSelection: true,
+                            value: 'externalUrl',
+                            store: [
+                                ['externalUrl', 'External URL'],
+                                ['internalUrl', 'Internal URL'],
+                                ['file', 'File']
+                            ],
+                            listeners: {
+                                change: {
+                                    scope: this,
+                                    fn: function(field, newValue) {
+                                        this.handleLinkSourceChange(newValue);
+                                    }
+                                }
+                            }
+                        }, {
+                            xtype: 'button',
+                            itemId: 'linkAssociatorButton',
+                            ui: 'action',
+                            scale: 'medium',
+                            text: 'Select Existing',
+                            margin: '0 0 0 15',
+                            hidden: true,
+                            enableToggle: true,
+                            scope: this,
+                            toggleHandler: function(button, state) {
+                                this.toggleAssociator(state, button, this.linkStore);
+                            }
+                        }, {
+                            xtype: 'tacofilefield',
+                            itemId: 'linkUploadButton',
+                            text: 'Upload',
+                            margin: '0 0 0 15',
+                            hidden: true,
+                            buttonConfig: {
+                                ui: 'action',
+                                scale: 'medium'
+                            }
+                        }, {
+                            xtype: 'textfield',
+                            name: 'linkExternalUrl',
+                            emptyText: 'http://',
+                            margin: '0 0 0 15',
+                            flex: 1,
+                            hidden: false
+                        }, {
+                            xtype: 'textfield',
+                            name: 'linkInternalUrl',
+                            margin: '0 0 0 15',
+                            flex: 1,
+                            hidden: true
+                        }, {
+                            xtype: 'textfield',
+                            name: 'linkFileId',
+                            margin: '0 0 0 15',
+                            flex: 1,
+                            hidden: true
                         }]
-                    }]
-                }]
+                    },
+
+
+
+                     {
+                         xtype: 'container',
+                         itemId: 'linkSelectors',
+                         padding: '10 0 0',
+                         height: 170,
+                         hidden:true,
+                         layout: {
+                             type: 'card'
+                         },
+                         items: [
+                             {
+                                 // Card 0: External URL
+                                 layout: {
+                                     type: 'fit'
+                                 },
+                                 items: [
+                                     {
+                                         xtype: 'component',
+                                         height: 160
+                                     }
+                                 ]
+                             }, {
+                                 // Card 1: Internal URL
+                                 layout: {
+                                     type: 'fit'
+                                 },
+                                 items: [
+                                     {
+                                         xtype: 'treepanel',
+                                         componentCls: 'taco-website-tree',
+                                         hideHeaders: true,
+                                         rootVisible: false,
+                                         useArrows: true,
+                                         store: Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes'),
+                                         columns: [
+                                             {
+                                                 xtype: 'treecolumn',
+                                                 flex: 1,
+                                                 dataIndex: 'name',
+                                                 renderer: function (value) {
+                                                     return '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
+                                                 }
+                                             }
+                                         ],
+                                         listeners: {
+                                             selectionchange: {
+                                                 scope: this,
+                                                 fn: function (selModel, records) {
+                                                     var field = this.getForm().getForm().findField('linkInternalUrl'),
+                                                         urls;
+
+                                                     urls = Ext.Array.map(records, function (record) {
+                                                         return record.get('url');
+                                                     }, this).join(', ');
+
+                                                     field.setValue(urls);
+                                                 }
+                                             }
+                                         }
+                                     }
+                                 ]
+                             }, {
+                                 // Card 2: File
+                                 layout: {
+                                     type: 'fit'
+                                 },
+                                 items: [
+                                     {
+                                         xtype: 'taco-singleimagefield',
+                                         height: 160,
+                                         store: this.linkStore
+                                     }
+                                 ]
+                             }
+                         ]
+                     }
+
+
+                ]
             }]
         });
 
@@ -628,7 +695,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         this.mon(this.imageStore, {
             datachanged: {
                 scope: this,
-                fn: function (store) {
+                fn: function(store) {
                     var record = store.first(),
                         value = record ? record.getId() : null;
 
@@ -640,7 +707,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         this.mon(this.linkStore, {
             datachanged: {
                 scope: this,
-                fn: function (store) {
+                fn: function(store) {
                     var record = store.first(),
                         value = record ? record.getId() : null;
 
@@ -648,10 +715,12 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                 }
             }
         });
-        this.handleImageSourceChange(this.getForm().findField('imageSource').getValue());
+        this.setValues();
+        // this.handleImageSourceChange(this.getForm().findField('imageSource').getValue());
+        //  this.handleImageSizeChange(this.getForm().findField('imageSize').getValue());
     },
 
-    handleImageClickActionChange: function (newValue) {
+    handleImageClickActionChange: function(newValue) {
         var isUrl = newValue.imageClickAction === 'url';
 
         console.log(isUrl ? 'url' : 'not url');
@@ -659,22 +728,23 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         this.down('#linkSelectors').setVisible(isUrl);
     },
 
-    handleImageSizeChange: function (newValue) {
+    handleImageSizeChange: function(newValue) {
         this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
         this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
     },
 
-    handleImageSourceChange: function (newValue) {
+    handleImageSourceChange: function(newValue) {
         var isFile = newValue === 'file',
             cardIndex = isFile ? 0 : 1;
 
         this.down('#imageAssociatorButton').setVisible(isFile);
         this.down('#imageUploadButton').setVisible(isFile);
         this.down('[name=imageExternalUrl]').setVisible(newValue === 'externalUrl');
+        
         this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
     },
 
-    handleLinkSourceChange: function (newValue) {
+    handleLinkSourceChange: function(newValue) {
         var isFile = newValue === 'file',
             cardIndex = isFile ? 2 : 0;
 
@@ -689,11 +759,11 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
     },
 
-    handleUploadFile: function (files) {
+    handleUploadFile: function(files) {
         this.down('#imageField').onUploadFile(files);
     },
 
-    toggleAssociator: function (state, button, store) {
+    toggleAssociator: function(state, button, store) {
         if (state) {
             if (!this.associator) {
                 this.associator = Ext.create('Taco.view.fileManager.Associator', {});
@@ -705,10 +775,10 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                 destroyable: true,
                 savesuccess: {
                     scope: this,
-                    fn: function (dialog, records) {
+                    fn: function(dialog, records) {
                         var urls;
 
-                        urls = Ext.Array.each(records, function (record, index) {
+                        urls = Ext.Array.each(records, function(record, index) {
                             if (index === 0) {
                                 store.removeAll();
                                 store.add(record);
@@ -718,7 +788,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                 },
                 close: {
                     scope: this,
-                    fn: function () {
+                    fn: function() {
                         button.toggle(false);
 
                         Ext.destroy(this.associatorListeners);
@@ -730,7 +800,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         }
     },
 
-    setValues: function () {
+    setValues: function() {
         var data;
 
         this.callParent(arguments);
@@ -752,10 +822,10 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
 
     /**
      * Cleanup.
-     * 
+     *
      * @private
      */
-    beforeDestroy: function () {
+    beforeDestroy: function() {
         Ext.destroy(this.associator, this.imageStore, this.linkStore);
     }
 });
