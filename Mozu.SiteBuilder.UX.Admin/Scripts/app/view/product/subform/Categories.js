@@ -10,9 +10,9 @@ Ext.define('Taco.view.product.subform.Categories', {
         'Taco.core.ux.form.field.MultiSelect'
     ],
     alias: 'widget.productcategoriessubform',
-    
+
     title: 'Categories',
-    
+
     flex: 1,
     layout: {
         type: 'fit'
@@ -28,13 +28,15 @@ Ext.define('Taco.view.product.subform.Categories', {
 
 
         listStore = this.record.getUnfilteredCategoryStore();
-        
+
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
             store: listStore,
             flex: 1,
-            getStore: function () { return listStore; },
+            getStore: function () {
+                return listStore;
+            },
             displayField: 'name',
             valueField: 'id',
             value: this.record.get('categoryIds'),
@@ -44,12 +46,14 @@ Ext.define('Taco.view.product.subform.Categories', {
 
         this.listStore = listStore;
         list.parentThing = this;
-       
+
         this.items = [list];
 
         this.callParent(arguments);
 
-        this.mon(listStore, 'load', function () { list.resetOriginalValue(); }, this);
+        this.mon(listStore, 'load', function () {
+            list.resetOriginalValue();
+        }, this);
     },
 
     /**
@@ -59,7 +63,8 @@ Ext.define('Taco.view.product.subform.Categories', {
     onListItemClick: function (view, record, item, index, e) {
         var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
             list = view.ownerCt,
-            value = [], store;
+            value = [],
+            store;
 
         if (closeBtn) {
             store = view.getStore();
@@ -72,7 +77,6 @@ Ext.define('Taco.view.product.subform.Categories', {
 
 
             list.setValue(value);
-            console.log(value, list.getValue());
 
             return false;
         }
@@ -93,7 +97,7 @@ Ext.define('Taco.view.product.subform.Categories', {
                 value.push(record.getId());
             }
         });
-       
+
         list.setValue(value);
         var bing = list.getValue();
     }

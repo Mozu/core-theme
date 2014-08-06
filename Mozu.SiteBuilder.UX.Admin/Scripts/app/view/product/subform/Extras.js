@@ -48,11 +48,16 @@ Ext.define('Taco.view.product.subform.Extras', {
 
         this.on('afterrender', function () {
             if (this.productTypeStore.loading) {
-                this.productTypeStore.on('load', this.loadByProductTypeId, this, { single: true });
+                this.productTypeStore.on('load', this.loadByProductTypeId, this, {
+                    single: true
+                });
             } else {
                 this.loadByProductTypeId();
             }
-        }, this, { single: true, delay: 10 });
+        }, this, {
+            single: true,
+            delay: 10
+        });
     },
 
     loadByProductTypeId: function (id) {
@@ -154,7 +159,6 @@ Ext.define('Taco.view.product.subform.Extras', {
 
             if (Ext.isEmpty(pExtra)) return;
 
-            console.log(pExtra);
             pExtra.set('isRequired', extra.checkbox.getValue());
 
             if (extra.list) {

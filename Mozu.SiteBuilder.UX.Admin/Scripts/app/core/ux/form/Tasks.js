@@ -4,7 +4,7 @@
     },
 
     constructor: function (config) {
-        config= Ext.apply(this, config || {});
+        config = Ext.apply(this, config || {});
         this.tasks = new Ext.util.MixedCollection();
 
         this.mixins.observable.constructor.call(this, config);
@@ -32,7 +32,7 @@
         if (task.key) {
             Ext.log.warn({
                 msg: 'You cannot do key!',
-                option: task,   // whatever was passed into the method
+                option: task, // whatever was passed into the method
                 'error code': 100 // other arbitrary info
             });
         }
@@ -40,7 +40,7 @@
         if (task.dependencies) {
             Ext.log.warn({
                 msg: 'You cannot do dependencies!',
-                option: task,   // whatever was passed into the method
+                option: task, // whatever was passed into the method
                 'error code': 200 // other arbitrary info
             });
         }
@@ -64,7 +64,6 @@
             if (this.tasks.findBy(function (item) {
                 return task.updateForm == item.updateForm;
             })) {
-                // console.log('redundant updateRecord');
                 return;
             }
             task.fn = function (tasks) {
@@ -74,14 +73,13 @@
                     task.updateForm.getForm().updateRecord(task.updateRecord);
                 }
 
-                
+
                 tasks.callback();
             };
         } else if (task.saveRecord) {
             if (this.tasks.findBy(function (item) {
                 return task.saveRecord == item.saveRecord;
             })) {
-                // console.log('redundant saveRecord');
                 return;
             }
             if (!task.dependencyFilter) {
@@ -91,7 +89,6 @@
             }
             task.fn = function (tasks) {
                 if (!task.saveRecord.dirty) {
-                    console.log('saveRecord - not dirty');
                     tasks.callback();
                     return;
                 }
@@ -106,11 +103,9 @@
                         if (msg) {
                             Taco.app.fireEvent('setmessage', msg, 'error');
                         }
-                        console.log('saveRecord - failure');
                         tasks.callback(true);
                     },
                     success: function () {
-                        console.log('saveRecord - sucess');
                         tasks.callback();
                     }
                 });
@@ -130,19 +125,16 @@
             if (this.tasks.findBy(function (item) {
                 return task.store == item.store;
             })) {
-                console.log('redundant store');
                 return;
             }
 
             task.fn = function (tasks) {
                 if (!task.store.getNewRecords().length && !task.store.getUpdatedRecords().length && !task.store.getRemovedRecords().length) {
                     tasks.callback();
-                    console.log('syncstore - no changes');
                     return;
                 }
                 task.store.sync({
                     success: function () {
-                        console.log('syncstore - success');
                         tasks.callback();
                     },
                     failure: function (batch) {
@@ -150,14 +142,13 @@
                         if (msg.remoteException) {
                             tasks.errors.push(msg.remoteException.getError());
                             msg = msg.remoteException.getMessage();
-                            
+
                         }
                         if (msg) {
                             Taco.app.fireEvent('setmessage', msg, 'error');
                         } else {
                             Taco.app.fireEvent('setmessage', 'store sync failed', 'error');
                         }
-                        console.log('syncstore - failure');
                         tasks.callback(true);
                     }
                 });
@@ -174,7 +165,7 @@
             }
 
             task.fn = function (tasks) {
-               
+
                 if (!task.storeToLoad.isLoading()) {
                     if (task.storeToLoad.hasLoaded()) {
                         tasks.callback();
@@ -188,11 +179,11 @@
                         return;
                     }
                 }
-                
+
 
                 task.storeToLoad.whenLoaded(tasks.callback, tasks);
 
-               
+
             };
         }
 
@@ -206,7 +197,7 @@
             this.tasks.add(task.id, task);
         }
     },
-  
+
     sort: function () {
         this.tasks.sortBy(function (a, b) {
             return a.priority - b.priority;
@@ -214,18 +205,15 @@
     },
 
     execute: function () {
-        console.log('tasks - execute');
         this.completeCount = 0;
         this.totalCount = this.tasks.getCount();
-
-        //this.validateDependencies();
 
         this.sort();
 
         this.tasks.each(function (task) {
             task.status = 0;
         });
-        Ext.defer(this.runTasks,1, this);
+        Ext.defer(this.runTasks, 1, this);
     },
 
     runTasks: function () {
@@ -259,11 +247,11 @@
 
     workableItemsFilter: function (task) {
 
-        
+
         var available = task.status === 0;
 
         if (available && task.dependencyFilter) {
-            available =  this.tasks.filterBy(task.dependencyFilter, this).filterBy(function (dependency) {
+            available = this.tasks.filterBy(task.dependencyFilter, this).filterBy(function (dependency) {
                 return dependency.status !== 3;
             }).getCount() === 0;
         }
@@ -299,7 +287,6 @@
     },
 
     doFinalCallback: function () {
-        console.log('final callback');
 
         this.fireEvent('complete', this);
         this.tasks.clear();

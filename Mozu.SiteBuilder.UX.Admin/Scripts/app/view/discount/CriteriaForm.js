@@ -186,7 +186,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     style: {
                         verticalAlign: 'bottom'
                     },
-                    handler: function () { this.launchProductModal(this.productList); },
+                    handler: function () {
+                        this.launchProductModal(this.productList);
+                    },
                     scope: this
                 }
             ]
@@ -229,7 +231,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     style: {
                         verticalAlign: 'bottom'
                     },
-                    handler: function () { this.launchProductModal(this.productExcludeList); },
+                    handler: function () {
+                        this.launchProductModal(this.productExcludeList);
+                    },
                     scope: this
                 }
             ]
@@ -268,7 +272,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             ]
         });
 
-        
+
         shippingStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');
 
         zoneStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingZones');
@@ -276,10 +280,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.shippingList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingMethods',
-           // width: 520,
+            // width: 520,
             margin: 0,
             store: shippingStore,
-            
+
             queryMode: 'local',
             width: 600,
             hidden: this.record.get('target') !== 'Shipping' && false,
@@ -292,7 +296,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             displayField: 'name',
             fieldLabel: 'Select Shipping Methods',
             valueField: 'code',
-            
+
         });
 
 
@@ -301,7 +305,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             // width: 520,
             margin: 0,
             store: zoneStore,
-           
+
             queryMode: 'local',
             width: 600,
             hidden: this.record.get('target') !== 'Shipping' && false,
@@ -314,7 +318,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             displayField: 'code',
             fieldLabel: 'Select Shipping Zones',
             valueField: 'code',
-            
+
         });
 
         this.items = [{
@@ -335,7 +339,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.callParent(arguments);
 
     },
-    
+
     /**
      * Opens a modal with a TreePanel.
      * @private
@@ -361,11 +365,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
      */
     launchProductModal: function (list) {
         var gridStore = Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Products',
-                clearFilters: true,
-                clearSort: true,
-                autoLoad: true
-            });
+            type: 'Taco.store.Products',
+            clearFilters: true,
+            clearSort: true,
+            autoLoad: true
+        });
 
         this.modal = Ext.create('Taco.view.product.Modal', {
             store: gridStore
@@ -398,7 +402,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             value = Ext.Array.remove(list.getValue(), record.getId());
             store.remove(record);
             list.setValue(value);
-            console.log(value, list.getValue());
             return false;
         }
     },
@@ -413,7 +416,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     },
 
     //todo: gm split prodCat containter into include and exclude. On includeAll checked, then only show exclude.
-    setProductCategoryContainerVisibility: function(isLineItem) {
+    setProductCategoryContainerVisibility: function (isLineItem) {
         this.productCategoryContainer.setVisible(isLineItem);
         if (!isLineItem) {
             this.includeAllProductsInput.setValue(false);

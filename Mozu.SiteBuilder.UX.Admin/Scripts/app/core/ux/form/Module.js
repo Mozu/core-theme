@@ -10,7 +10,9 @@ Ext.define('Taco.core.ux.form.Module', {
     componentCls: Taco.baseCSSPrefix + 'form-module',
     autoEl: 'section',
     width: 722,
-    style: { position: 'relative' },
+    style: {
+        position: 'relative'
+    },
 
     closed: false,
     form: {},
@@ -61,7 +63,7 @@ Ext.define('Taco.core.ux.form.Module', {
         this.main = Ext.create('Ext.Container', {
             items: me.form,
             hideMode: 'offsets',
-            hidden: this.useModuleFrame ?  this.closed : false,
+            hidden: this.useModuleFrame ? this.closed : false,
             cls: Taco.baseCSSPrefix + 'form-module-main'
         });
 
@@ -72,7 +74,7 @@ Ext.define('Taco.core.ux.form.Module', {
         });
 
         this.footer = Ext.create('Ext.Container', {
-            hidden: this.useModuleFrame ?  this.closed : true,
+            hidden: this.useModuleFrame ? this.closed : true,
             items: this.footer,
             hideMode: 'offsets',
             cls: Taco.baseCSSPrefix + 'form-module-footer',
@@ -90,14 +92,12 @@ Ext.define('Taco.core.ux.form.Module', {
 
     expandCollapse: function () {
         if (this.closed) {
-            console.log(this.main.getHeight());
             this.main.show();
             this.footer.show();
             this.summary.hide();
             this.moduleToggle.getEl().setHTML('Hide');
             this.closed = false;
         } else {
-            console.log(this.main.getHeight());
             this.main.hide();
             this.footer.hide();
             this.summary.show();

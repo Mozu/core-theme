@@ -73,7 +73,7 @@ Ext.define('Taco.core.Controller', {
         //    Taco.app.setLoading(false);
         //}
 
-        
+
         if (Ext.isFunction(options)) {
             options.apply(this);
         } else {
@@ -113,7 +113,6 @@ Ext.define('Taco.core.Controller', {
 
     getIndexView: function () {
         if (!this.indexView) {
-            //console.log(this.id);
             this.indexView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.getControllerName())) + '.Index';
         }
         return this.indexView;
@@ -121,7 +120,6 @@ Ext.define('Taco.core.Controller', {
 
     getEditorView: function () {
         if (!this.editorView) {
-            //console.log(this.id);
             this.editorView = 'Taco.view.' + Ext.String.uncapitalize(Ext.util.Inflector.singularize(this.getControllerName())) + '.Edit';
         }
         return this.editorView;
@@ -143,7 +141,7 @@ Ext.define('Taco.core.Controller', {
         return this.doEdit(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
     },
     doEdit: function (id, additionalParams, appState, viewName) {
-        this.confirmContext(viewName, this.doEditInternal, this,arguments);
+        this.confirmContext(viewName, this.doEditInternal, this, arguments);
     },
     doEditInternal: function (id, additionalParams, appState, viewName, model) {
         var record = appState ? appState.record : null,
@@ -152,7 +150,6 @@ Ext.define('Taco.core.Controller', {
             options = options || {};
             options.container = appState.container;
         }
-
 
 
         if (record) {
@@ -201,17 +198,16 @@ Ext.define('Taco.core.Controller', {
 
     },
     doCreate: function (id, additionalParams, appState, viewName) {
-        this.confirmContext(viewName, this.doCreateInternal, this,arguments);
-            
+        this.confirmContext(viewName, this.doCreateInternal, this, arguments);
+
     },
     doCreateInternal: function (id, additionalParams, appState, viewName, model) {
         var record = appState ? appState.record : Ext.create(model);
 
         this.ensureRequiredStores(function () {
             this.createContentView(viewName, Ext.apply({
-                    record: record
-                }, additionalParams || {})
-            );
+                record: record
+            }, additionalParams || {}));
         });
     },
 
@@ -250,10 +246,6 @@ Ext.define('Taco.core.Controller', {
     },
 
 
-
-
-
-
     /**
      * Create a contentView and replace all existing content views in Taco.app.contentView with this one.
      * @param  {Taco.core.ux.content.Container} view A Taco.core.ux.content.Container to display.
@@ -262,7 +254,7 @@ Ext.define('Taco.core.Controller', {
      */
     createContentView: function (view, cfg) {
         var me = this,
-            cfg=cfg|| {},
+            cfg = cfg || {},
             container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView,
             loadmaskTask = cfg.loadmaskTask,
             viewClass;
@@ -273,8 +265,8 @@ Ext.define('Taco.core.Controller', {
             if (viewClass.factory) {
                 loadmaskTask = Ext.defer(
                     function () {
-                    Taco.app.setLoading();
-                },  200);
+                        Taco.app.setLoading();
+                    }, 200);
 
                 viewClass.factory(cfg, function (view) {
                     cfg.loadmaskTask = loadmaskTask;
@@ -284,8 +276,6 @@ Ext.define('Taco.core.Controller', {
             }
         }
 
-
-        
 
         //removing initial view  to aviod events firing from the create of the view from messin with the 
 
@@ -299,18 +289,18 @@ Ext.define('Taco.core.Controller', {
                 return works;
             }, this);
         }
-        
+
         Ext.suspendLayouts();
-      
+
         container.removeAll(true);
         container.add(view);
-       
+
         //console.time('resumeLayouts');
         Ext.resumeLayouts(true);
-       
+
         //console.timeEnd('resumeLayouts');
 
-        if (Ext.isNumeric(loadmaskTask )) {
+        if (Ext.isNumeric(loadmaskTask)) {
             window.clearTimeout(loadmaskTask);
             Taco.app.setLoading(false);
         }
@@ -334,7 +324,7 @@ Ext.define('Taco.core.Controller', {
                 newContext = context.sites[0];
             }
 
-            Taco.app.context.setCurrentContext(newContext,undefined,true);
+            Taco.app.context.setCurrentContext(newContext, undefined, true);
             return true;
         }
         return false;
@@ -347,10 +337,10 @@ Ext.define('Taco.core.Controller', {
         args = args && !Ext.isArray(args) ? Array.prototype.slice.call(args, 0) : args;
         viewClass = Ext.isString(viewClass) ? Ext.ClassManager.get(viewClass) : viewClass;
         requiresContextOfType = (viewClass.prototype.contextConfig || {}).requiresContextOfType;
-      
+
         if (this.worksInContext(viewClass.prototype, context)) {
-            return callback.apply(scope||this, args);
-           
+            return callback.apply(scope || this, args);
+
         }
 
         if (!Ext.isArray(requiresContextOfType)) {

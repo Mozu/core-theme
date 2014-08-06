@@ -10,7 +10,7 @@ Ext.define('Taco.core.context.TaContext', {
     contextType: 't',
     name: 'All',
     masterCatalogs: null,
-    
+
     currentCtx: null,
     constructor: function (config) {
         var me = this;
@@ -18,7 +18,7 @@ Ext.define('Taco.core.context.TaContext', {
         if (me.masterCatalogs) {
             masterCatalogs = Ext.Array.clone(me.masterCatalogs);
         }
-        
+
         me.masterCatalogs = masterCatalogs;
         config = Ext.apply({}, config);
         Ext.apply(me, config);
@@ -32,7 +32,7 @@ Ext.define('Taco.core.context.TaContext', {
             var corId,
                 logzuUrl,
                 url;
-            
+
             //occurs on abort of xhr
             if (!resp || !resp.getResponseHeader) {
                 return;
@@ -40,11 +40,11 @@ Ext.define('Taco.core.context.TaContext', {
             corId = resp.getResponseHeader('x-vol-correlation');
             // TODO pull in this environment's logzu url...
             logzuUrl = 'http://zukeeper.mozu-qa.com/mozu.logzu/';
-            
+
             if (corId != undefined) {
                 url = logzuUrl + '#trace/' + corId;
             }
-            console.log('AJAX Exception', 'View in Logzu', url);
+            console.error('AJAX Exception', 'View in Logzu', url);
         }, this);
 
     },
@@ -55,13 +55,15 @@ Ext.define('Taco.core.context.TaContext', {
     formatCurrencyFromCode: function (code, value) {
         var cur = this.currencies[code.toLowerCase()];
         if (!cur) {
-            Ext.warn({ level: 'warn' }, 'missing currency code[' + code + ']');
+            Ext.warn({
+                level: 'warn'
+            }, 'missing currency code[' + code + ']');
             return Ext.util.Format.currency(value, '$', 2);
         }
         return Ext.util.Format.currency(value, cur.symbol, cur.significantDecimalDigits);
-       
+
     },
-    isMultiSite:function() {
+    isMultiSite: function () {
         var ret = false;
         Ext.each(this.masterCatalogs, function (sc) {
             if (sc.sites.length > 1) {
@@ -70,14 +72,16 @@ Ext.define('Taco.core.context.TaContext', {
         });
         return ret;
     },
-    isMultiMasterCatalog:function() {
+    isMultiMasterCatalog: function () {
         return this.masterCatalogs.length > 1;
     },
-    isSingleSite:function() {
+    isSingleSite: function () {
         return this.masterCatalogs.length == 1 && this.masterCatalogs[0].sites.length == 1;
     },
-    toCookieString:function() {
-        var ret = '', sc = this.getMasterCatalog(), site = this.getSite();
+    toCookieString: function () {
+        var ret = '',
+            sc = this.getMasterCatalog(),
+            site = this.getSite();
         ret = 'tenant=' + this.id;
         if (sc) {
             ret += '&mastercatalog=' + sc.id;
@@ -87,7 +91,7 @@ Ext.define('Taco.core.context.TaContext', {
         }
         return ret;
     },
-    onBeforeAjaxRequest:function(conn, options, eOpts) {
+    onBeforeAjaxRequest: function (conn, options, eOpts) {
 
         var headers = options.headers = options.headers || {},
             volHeaders = {
@@ -96,7 +100,7 @@ Ext.define('Taco.core.context.TaContext', {
                 'x-vol-catalog': this.getCatalogId(),
                 'x-vol-site': this.getSiteId(),
                 'x-vol-locale': this.getCurrent().localeCode,
-                'x-vol-currency':this.getCurrent().currencyCode
+                'x-vol-currency': this.getCurrent().currencyCode
             };
         Ext.Object.each(volHeaders, function (key, value) {
             if (value) {
@@ -108,7 +112,8 @@ Ext.define('Taco.core.context.TaContext', {
         }
     },
     onNavigate: function (state) {
-        var ulrToken = state.metaData.ctx, recordId = this.getStore().find('urlToken', ulrToken),
+        var ulrToken = state.metaData.ctx,
+            recordId = this.getStore().find('urlToken', ulrToken),
             record = this.getStore().getAt(recordId);
 
         this.setCurrentContext(record.raw, false);
@@ -122,14 +127,13 @@ Ext.define('Taco.core.context.TaContext', {
         if (Ext.isString(cfg)) {
             //do stuff. // *** Great work, Thom
         }
-        
+
         if (this.currentCtx != cfg) {
             if (!me.fireEvent('beforecontextchange', cfg)) {
                 return false;
             }
 
 
-            
             if (Taco.core.AppState.contextRE.test(smState.uri)) {
                 newUrl = smState.uri.replace(Taco.core.AppState.contextRE, cfg.urlToken);
             } else {
@@ -138,7 +142,7 @@ Ext.define('Taco.core.context.TaContext', {
             if (navigate !== false) {
                 Taco.core.StateManager.attemptNavigate(newUrl, undefined, replaceHistory);
             } else {
-                Taco.core.StateManager.addState(newUrl , undefined, replaceHistory);
+                Taco.core.StateManager.addState(newUrl, undefined, replaceHistory);
             }
 
             me.currentCtx = cfg;
@@ -150,14 +154,13 @@ Ext.define('Taco.core.context.TaContext', {
     },
     setCookie: function () {
         return;
-        
+
         //remving cookie setting... relaying on gosite.
         //var name = 'SBCONTEXT', value = this.toCookieString(), expires = new Date(2050, 1, 1), path = '/', domain =  null, secure = false;
-       
+
         //document.cookie = name + "=" + value + ((expires === null) ? "" : ("; expires=" + expires.toGMTString())) + ((path === null) ? "" : ("; path=" + path)) + ((domain === null) ? "" : ("; domain=" + domain)) + ((secure === true) ? "; secure" : "");
         //document.cookie = name + "2=" + value +((expires === null) ? "" : ("; expires=" + expires.toGMTString())) + ((path === null) ? "" : ("; path=" + path)) + ((domain === null) ? "" : ("; domain=" + domain)) + ((secure === true) ? "; secure" : "");
 
-        
 
     },
     getCurrent: function () {
@@ -168,7 +171,7 @@ Ext.define('Taco.core.context.TaContext', {
             return null;
         }
         return this.getCurrentContext().getCatalogId();
-        
+
     },
     getCurrentContext: function () {
         return this.currentCtx;
@@ -180,7 +183,7 @@ Ext.define('Taco.core.context.TaContext', {
 
     getSiteId: function () {
         if (this == this.getCurrentContext()) {
-           
+
             return null;
         }
         return this.getCurrentContext().getSiteId();
@@ -201,27 +204,27 @@ Ext.define('Taco.core.context.TaContext', {
         }
         if (level == 'c') {
             switch (cur.contextType) {
-                case 't':
-                    return this.masterCatalogs[0].catalogs[0];
-                case 'm':
-                    return this.catalogs[0];
-                case 's':
-                    return this.catalog;
+            case 't':
+                return this.masterCatalogs[0].catalogs[0];
+            case 'm':
+                return this.catalogs[0];
+            case 's':
+                return this.catalog;
             }
         }
         if (level == 'm') {
             switch (cur.contextType) {
-                case 't':
-                    return this.masterCatalogs[0];
-                case 'c':
-                    return this.masterCatalog;
-                case 's':
-                    return this.masterCatalog;
+            case 't':
+                return this.masterCatalogs[0];
+            case 'c':
+                return this.masterCatalog;
+            case 's':
+                return this.masterCatalog;
             }
         }
         return this;
     },
-   
+
     getMasterCatalogId: function () {
         if (this == this.getCurrentContext()) {
             return null;
@@ -229,7 +232,7 @@ Ext.define('Taco.core.context.TaContext', {
         return this.getCurrentContext().getMasterCatalogId();
     },
 
-    getStore: function(copy) {
+    getStore: function (copy) {
         var me = this,
             store = me.store,
             data = [];
@@ -239,7 +242,7 @@ Ext.define('Taco.core.context.TaContext', {
         }
         data.push(me);
 
-        Ext.each(me.masterCatalogs, function(sc) {
+        Ext.each(me.masterCatalogs, function (sc) {
             data.push(sc);
 
             Ext.each(sc.catalogs, function (catalog) {
@@ -252,55 +255,57 @@ Ext.define('Taco.core.context.TaContext', {
 
         store = Ext.create('Ext.data.Store', {
             model: 'Taco.core.context.StoreItem',
-            data:data
+            data: data
         });
-        
+
         if (copy !== true) {
             me.store = store;
         }
         return store;
     },
-    
+
 
     init: function (data) {
         var me = this;
-        me.urlToken = me.contextType +'-'+ data.id;
+        me.urlToken = me.contextType + '-' + data.id;
         me.currentCtx = me;
         me.currencyLookup = {};
-        
-        Ext.each(data.masterCatalogs, function(sc,idx) {
+
+        Ext.each(data.masterCatalogs, function (sc, idx) {
             me.masterCatalogs[idx] = Ext.create('Taco.core.context.MasterCatalog', sc);
 
         });
-        
+
         if (this.isSingleSite()) {
             me.currentCtx = this.masterCatalogs[0].sites[0];
-        }else if (!this.isMultiMasterCatalog()) {
+        } else if (!this.isMultiMasterCatalog()) {
             me.currentCtx = this.masterCatalogs[0];
         }
         this.setCookie();
     },
 
     setCurrentSite: function (id) {
-        var me = this, newSite = me.findSite(id);
+        var me = this,
+            newSite = me.findSite(id);
 
         return me.setCurrentContext(newSite);
     },
 
     setCurrentMasterCatalog: function (id) {
-        var me = this, newCol = this.findMasterCatalog(id);
+        var me = this,
+            newCol = this.findMasterCatalog(id);
         return me.setCurrentContext(newCol);
-       
+
     },
 
-    getCatalog:function () {
+    getCatalog: function () {
         var cc = this.getCurrentContext();
         if (cc == this) {
             return null;
         }
         return cc.getCatalog();
     },
-    getSite:function () {
+    getSite: function () {
         var cc = this.getCurrentContext();
         if (cc == this) {
             return null;
@@ -308,7 +313,7 @@ Ext.define('Taco.core.context.TaContext', {
         return cc.getSite();
     },
     getMasterCatalog: function () {
-        
+
         var cc = this.getCurrentContext();
         if (cc == this) {
             return null;
@@ -316,7 +321,7 @@ Ext.define('Taco.core.context.TaContext', {
         return cc.getMasterCatalog();
     },
 
-    
+
     findMasterCatalog: function (id) {
         var me = this,
             foundCol;
@@ -340,10 +345,10 @@ Ext.define('Taco.core.context.TaContext', {
         });
         return foundSite;
     },
-    
-    findSitesByCatalog:function (id) {
+
+    findSitesByCatalog: function (id) {
         var me = this,
-           foundSites=[];
+            foundSites = [];
         Ext.each(me.masterCatalogs, function (sc) {
             Ext.each(sc.sites, function (site) {
                 if (id === site.getCatalogId()) {
@@ -353,7 +358,7 @@ Ext.define('Taco.core.context.TaContext', {
         });
         return foundSites;
     },
-    
+
     findCatalog: function (id) {
         var me = this,
             foundCatalog;
@@ -403,15 +408,8 @@ Ext.define('Taco.core.context.TaContext', {
             jsonData: {
                 context: {},
                 publishingEnabled: this.publishingEnabled
-            },
-            failure: function () {
-                console.log(arguments);
-            },
-            success: function (response) {
-                console.log(arguments);
             }
         });
-        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
     }
 
 });

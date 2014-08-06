@@ -16,7 +16,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         order: null,
         record: null
     },
-    
+
     initComponent: function () {
         var order = this.getOrder();
         var record = this.getRecord();
@@ -44,7 +44,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             menu: {
                 items: [{
                     text: 'Remove',
-                    handler: function () { console.log('remove this item'); }
+                    handler: function () {
+                        console.log('remove this item');
+                    }
                 }]
             }
         });
@@ -79,14 +81,15 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         'border-bottom': '1px solid rgb(191, 191, 191)'
                     },
                     items: [{
-                        xtype: 'component',
-                        html: ('Return #' + record.get('returnNumber')),
-                        style: {
-                            fontWeight: 'bold'
-                        }
+                            xtype: 'component',
+                            html: ('Return #' + record.get('returnNumber')),
+                            style: {
+                                fontWeight: 'bold'
+                            }
                     }, {
-                        xtype: 'tbfill'
-                    }, this.returnActions]
+                            xtype: 'tbfill'
+                    },
+                        this.returnActions]
                 },
                 this.status,
                 this.itemsGrid, {
@@ -97,8 +100,12 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         align: 'top',
                         pack: 'end'
                     },
-                    items: [this.rmaDeadline, { xtype: 'tbfill' }, this.moveButton]
-                }, this.paymentsGrid
+                    items: [this.rmaDeadline, {
+                            xtype: 'tbfill'
+                        },
+                        this.moveButton]
+                },
+                this.paymentsGrid
             ],
             tools: [this.summary]
         });
@@ -252,7 +259,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             listeners: {
                 beforeedit: {
                     scope: this,
-                    fn: function () { return !this.isAtEndState(); }
+                    fn: function () {
+                        return !this.isAtEndState();
+                    }
                 },
                 edit: {
                     scope: this,
@@ -269,7 +278,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     initPaymentsGrid: function () {
-        console.log(this.paymentsStore.getRange());
         return Ext.create('Ext.grid.Panel', {
             title: 'Refunds',
             cls: 'return-item-grid',
@@ -279,7 +287,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             viewConfig: {
                 emptyText: '<div class="empty-grid-message">No refunds to display</div>',
                 trackOver: false,
-                disableSelection:true,
+                disableSelection: true,
                 deferEmptyText: false
             },
             columns: [{
@@ -404,7 +412,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         });
     },
 
-    isAtEndState:function () {
+    isAtEndState: function () {
         return Ext.isEmpty(this.getRecord().get('availableActions'));
     },
 
@@ -449,7 +457,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.onItemEditTask.delay(500);
     },
 
-    setEditablity:function () {
+    setEditablity: function () {
         var isEndState = this.isAtEndState();
 
         this.rmaDeadline.setDisabled(isEndState);
@@ -465,9 +473,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.returnActions.items.each(function (button) {
             var enabled = false;
             var name = button.getItemId();
-            
+
             if (!name) return;
-            
+
             button.setVisible(Ext.Array.contains(this.getRecord().get('availableActions'), name));
         }, this);
     },
@@ -478,7 +486,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         //     recieveBut,
         //     returnActionButtons = new Ext.util.MixedCollection(),
         //     addButton = function (name, text) {
-                
+
         //         returnActionButtons.add(
         //             name,
         //             Ext.create('Ext.button.Button', {
@@ -510,17 +518,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         // addButton('Refund');
         // addButton('Ship');
         // addButton('Restock');
-        
 
-
-        
 
         // me.mon(me.record,'aftercommit', function () {
         //     me.initReturnActions();
         //     me.status.update(me.record.data);
         //     me.setEditablity();
         // });
-        
+
         // me.addPaymentButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
         //     text: 'Add Refund',
         //     listeners: {
@@ -666,7 +671,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         //         },
         //         {
         //             text: 'Amount Credited',
-                  
+
         //             renderer: function (value) {
         //                 return me.order.formatCurrency(value);
         //             },
@@ -681,7 +686,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         // });
 
 
-        
         // me.status = Ext.create('Ext.Component', {
         //     // cls: "orderform-payment-paymentDetails",
         //     tpl: [
@@ -694,7 +698,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         //                     '<span class="seperator">|</span>',
         //                     ' <a class="action" rmaAction="returnOrder">View Return Order</a>',
         //                 '</tpl>',
-                
+
         //             '</span>',
         //         '</div>'
         //     ],
@@ -710,13 +714,13 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         //             scope: this 
         //         }
         //     },
-            
+
         //     data: me.record.data
         // });
-        
+
         // me.totalLossAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
         //     name: 'totalLossAmount',
-            
+
         //     currencyCode: Taco.app.context.getCurrent().currencyCode,
         //     forcePrecision:true,
         //     unitAtEnd:false,
@@ -729,7 +733,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         //         change: me.onItemEdit,
         //         scope:me
         //     }
-            
+
         // });
 
 
@@ -745,7 +749,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         //         scope: me
         //     }
         // });
-        
+
         // me.dockedItems = [
         //     {
         //         xtype: 'container',

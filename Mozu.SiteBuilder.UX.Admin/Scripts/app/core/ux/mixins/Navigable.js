@@ -28,14 +28,9 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
     constructor: function (cfg) {
         var view,
             container;
-        /*
-        Ext.util.Observable.capture(this, function () {          
-            console.log(arguments);
-        });
-        */
 
         this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title',"hidden"]
+            fields: ['title', "hidden"]
         });
 
         view = Ext.widget({
@@ -78,8 +73,8 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
 
         this.leftNav = this.nav = this.down('#navFormNav');
 
-        this.mon(this,{
-            boxready: function () {                
+        this.mon(this, {
+            boxready: function () {
                 this.initLeftNav(arguments)
             },
             add: this.loadNavItems,
@@ -109,7 +104,7 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
     },
 
     initLeftNav: function () {
-        
+
         if (!this.enableScrollSpy) return;
 
         // need to realign the left nav to account for the top navHeader height change after layout;
@@ -117,14 +112,14 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
 
         //this.getWrapper().on({
         this.mon(this.getWrapper(), {
-            afterlayout: function (){                
+            afterlayout: function () {
                 this.getWrapper().body.el.dom.scrollTop = this._scrollTop || 0;
-                this.rebuildMap();   
+                this.rebuildMap();
             },
             scope: this
         });
 
-        this.mon(this.getWrapper().body.el, {        
+        this.mon(this.getWrapper().body.el, {
             scroll: this.checkTop,
             scope: this
         });
@@ -173,12 +168,12 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
 
 
         if (!this.nav.rendered) return;
-        
+
         active = this.nav.getEl().down('.active');
         li = this.nav.getEl().query('li')[max];
 
         // don't need to make a change if the active one is already selected;
-        if (active && active.dom == li) {            
+        if (active && active.dom == li) {
             return;
         }
 
@@ -186,7 +181,6 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
             active.removeCls('active');
         }
 
-        
 
         if (!li) return;
 
@@ -198,9 +192,7 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
             targetY;
 
         if (record.raw.getEl) {
-            targetY = view.store.indexOf(record)
-                        ? record.raw.getEl().dom.offsetTop + this.sectionOffset
-                        : 0;
+            targetY = view.store.indexOf(record) ? record.raw.getEl().dom.offsetTop + this.sectionOffset : 0;
             wrapper.scrollTo('top', targetY - this.topOffset, true);
         }
     },
@@ -209,10 +201,10 @@ Ext.define('Taco.core.ux.mixins.Navigable', {
         var recordsToAdd = [];
 
         // need to cull hidden panels from the store so that the dataview doesn't mismatch the record to the item clicked;  It currently uses index position and the hidden records are causing the mismatch;
-        this.items.each(function(item) {
+        this.items.each(function (item) {
             if (!item.showHideNavWatch) {
-                
-                item.mon(item,{
+
+                item.mon(item, {
                     show: this.loadNavItems,
                     hide: this.loadNavItems,
                     scope: this

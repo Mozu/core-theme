@@ -1,7 +1,7 @@
 ﻿/**
  * @class Taco.view.navigation.PrimaryMenu
  * @author Jimmy Sanford
- * 
+ *
  */
 Ext.define('Taco.view.navigation.GlobalSearchBox', {
     extend: 'Ext.form.ComboBox',
@@ -12,13 +12,13 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
     hideLabel: true,
     hideTrigger: true,
     matchFieldWidth: false,
-    minChars:3,
+    minChars: 3,
     //anchor: '100%',
 
     listConfig: {
         loadingText: 'Searching...',
         emptyText: 'No matching items found.',
-        width:400,
+        width: 400,
         // Custom rendering template for each item
         //removing count because of service optimization it doesnt return.
         getInnerTpl: function () {
@@ -34,7 +34,6 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
     initComponent: function () {
         var me = this;
 
-      
 
         //me.mon(me.productStore, 'load', me.innerStoreLoad, me);
         //me.mon(me.ordersStore, 'load', me.innerStoreLoad, me);
@@ -46,12 +45,25 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
         me.store = Ext.create('Ext.data.Store', {
             pageSize: 10,
             fields: [
-                { name: 'itemId' },
-                { name: 'name' },
-                { name: 'type' },
-                { name: 'ctx' },
-                { name: 'count', type: 'int' },
-                { name: 'controller' },
+                {
+                    name: 'itemId'
+                },
+                {
+                    name: 'name'
+                },
+                {
+                    name: 'type'
+                },
+                {
+                    name: 'ctx'
+                },
+                {
+                    name: 'count',
+                    type: 'int'
+                },
+                {
+                    name: 'controller'
+                },
                 {
                     name: 'sourceRecord',
                     type: 'any'
@@ -75,8 +87,8 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                                 property: 'all',
                                 value: config.params.query
                             })],
-                        params : {
-                            searchType:'global'
+                        params: {
+                            searchType: 'global'
                         },
                         callback: me.innerStoreLoad,
                         scope: me
@@ -110,7 +122,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                     }),
                     tmpStore.load(options);
                 } else {
-                   
+
                     Ext.each(ctx.masterCatalogs, function (sc) {
                         var optCopy = Ext.apply({
                             headers: {
@@ -126,7 +138,6 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                         tmpStore.load(optCopy);
 
                     });
-                   
 
 
                 }
@@ -134,27 +145,27 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
         });
 
 
-            this.callParent(arguments);
+        this.callParent(arguments);
 
         //me.picker.alignTo(me.inputEl, me.pickerAlign, me.pickerOffset);
     },
-    innerStoreLoad: function ( records, operation, successful) {
+    innerStoreLoad: function (records, operation, successful) {
 
         var me = this,
             recsToRem = [],
             header = {},
             raw = [],
             append = !me.store.loading,
-            siteGroupName='',
+            siteGroupName = '',
             siteGroup;
         if (operation && operation.headers && operation.headers['x-vol-site-group']) {
 
             siteGroup = operation.headers['x-vol-site-group'];
             siteGroupName = Taco.app.context.findMasterCatalog(siteGroup).name;
         }
-        
+
         me.store.loading = false;
-        
+
 
         if (records) {
 
@@ -169,7 +180,10 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                     ctx: siteGroup ? 'c-' + siteGroup : Taco.app.context.getCurrent().urlToken
                 };
                 if (header) {
-                    Ext.apply(header, { isHeader: true, sourceRecord: null }, data);
+                    Ext.apply(header, {
+                        isHeader: true,
+                        sourceRecord: null
+                    }, data);
                 }
                 switch (record.modelName) {
                 case 'Taco.model.Product':
@@ -186,13 +200,13 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
                     data.name = Taco.app.context.findSite(record.data.siteId).name;
                     data.itemId = record.data.orderNumber;
                     if (header) {
-                        header.name = 'ORDERS ' ;
+                        header.name = 'ORDERS ';
                         header.controller = data.controller;
                     }
                     break;
                 case 'Taco.model.CustomerAccount':
                     data.controller = 'customers';
-                    data.name = record.data.firstName + ' ' + record.data.lastName ;
+                    data.name = record.data.firstName + ' ' + record.data.lastName;
                     data.itemId = record.data.id;
                     if (header) {
                         header.name = 'CUSTOMERS';
@@ -219,13 +233,16 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
     },
     onBeforeselect: function (combo, record, index, eOpts) {
         var sourceRecord = record.data.sourceRecord;
-        console.log(arguments);
         if (sourceRecord) {
             // Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller + '/edit/' + sourceRecord.getId(), { complexMetaData: { record: sourceRecord } });
-            Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller + '/edit/' + sourceRecord.getId() );
-            
+            Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller + '/edit/' + sourceRecord.getId());
+
         } else {
-            Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller, { options: { query: combo.getValue() }});
+            Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller, {
+                options: {
+                    query: combo.getValue()
+                }
+            });
         }
     }
 });

@@ -9,83 +9,78 @@
     // config: {
     //     productPublishingMode: 'Live'
     // },
-    
+
     constructor: function (config) {
         var me = this;
         var sites = [],
             catalogs = [];
-       
+
         if (me.sites) {
             sites = Ext.Array.clone(me.sites);
         }
-        
+
         if (me.catalogs) {
             catalogs = Ext.Array.clone(me.catalogs);
         }
 
         me.sites = sites;
         me.catalogs = catalogs;
-        
+
         config = Ext.apply({}, config);
         Ext.apply(me, config);
-        
 
 
         me.callParent([config]);
-        
 
-        me.urlToken = me.contextType +'-'+ me.id;
-        
+
+        me.urlToken = me.contextType + '-' + me.id;
+
         Ext.each(me.catalogs, function (catalog, idx) {
             catalog.masterCatalog = me;
             me.catalogs[idx] = Ext.create('Taco.core.context.Catalog', catalog);
         });
-        
+
         Ext.each(me.sites, function (site, idx) {
             site.masterCatalog = me;
             me.sites[idx] = Ext.create('Taco.core.context.Site', site);
-            me.sites[idx].catalog = Ext.Array.findBy(me.catalogs, function (cat) { return site.catalogId == cat.id; });
+            me.sites[idx].catalog = Ext.Array.findBy(me.catalogs, function (cat) {
+                return site.catalogId == cat.id;
+            });
             if (me.sites[idx].catalog) {
                 me.sites[idx].catalog.sites.push(me.sites[idx]);
             }
 
         });
-        
-        
+
+
     },
     formatCurrency: function (value) {
         return Taco.app.context.formatCurrencyFromCode(this.currencyCode, value);
     },
-    
+
 
     getMasterCatalog: function () {
         return this;
     },
 
-    getSite:function () {
+    getSite: function () {
         return null;
     },
-    
+
     isContentPublishingEnabled: function () {
         return this.contentPublishingEnabled;
     },
     updateContentPublishingMode: function (value) {
         this.publishingEnabled = value == 'Pending';
-        
+
         Ext.Ajax.request({
             url: '/admin/app/cmspublishing/enablePublishing',
             method: 'POST',
-            jsonData : {
+            jsonData: {
                 context: {
                     masterCatalogId: this.id,
                 },
                 publishingEnabled: this.publishingEnabled
-            },
-            failure : function () {
-                console.log(arguments);
-            },
-            success: function (response) {
-                console.log(arguments);
             }
         });
         console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
@@ -96,7 +91,7 @@
         //}
         return null;
 
-    }, 
+    },
 
     findSite: function (id) {
         var site;
@@ -110,7 +105,7 @@
 
         return site;
     },
-    
+
     findCatalog: function (id) {
         var catalog;
 
@@ -124,15 +119,15 @@
         return catalog;
     },
 
-    getMasterCatalogId: function () { 
+    getMasterCatalogId: function () {
 
         return this.id;
     },
     getCatalogId: function () {
-        
+
         return null;
     },
-    getCatalog:function () {
+    getCatalog: function () {
         return null;
     },
 
@@ -172,8 +167,6 @@
                 productPublishingMode: mode
             },
             success: function () {
-                console.log('SUCCESS UPDATE PROD PUB ->', this.id, mode);
-                //this.setProductPublishingMode(mode);
                 this.productPublishingMode = mode;
             },
             scope: this

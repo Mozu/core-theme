@@ -27,7 +27,6 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         enableToolbar: true,
 
 
-
         enableMoveMenu: true,
 
         enableShippingMethodMenu: true,
@@ -62,13 +61,13 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         listeners: {
             beforeedit: {
-                fn: function(plugin, edit) {
+                fn: function (plugin, edit) {
                     // disable editing when the grid is not editMode:true
                     return this.editMode;
                 }
             },
             selectionchange: {
-                fn: function(view, selected, eOpts) {
+                fn: function (view, selected, eOpts) {
                     var me = this;
 
                     //todo: fix the taco.split button to allow it to be enabled and disabled;
@@ -91,7 +90,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         }
     },
 
-    initComponent: function(eOpts) {
+    initComponent: function (eOpts) {
         var me = this,
             data = [];
 
@@ -139,13 +138,13 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 //   enableTextSelection: true
                 listeners: {
                     itemmouseenter: {
-                        fn: function(view, record, item, index, e, eOpts) {
+                        fn: function (view, record, item, index, e, eOpts) {
 
                         },
                         scope: me
                     },
                     highlightitem: {
-                        fn: function(view, record, item, index, e, eOpts) {
+                        fn: function (view, record, item, index, e, eOpts) {
 
                         },
                         scope: me
@@ -153,7 +152,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 },
 
                 // provides selective row class addition based on record.
-                getRowClass: function(record) {
+                getRowClass: function (record) {
                     if (!record) return '';
                     return '';
                 }
@@ -166,17 +165,16 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
 
         if (this.editMode) {
             if (this.preselectAll) {
-                this.on('viewready', function(grid) {
+                this.on('viewready', function (grid) {
                     this.getSelectionModel().selectAll(true);
                 });
             }
         }
 
 
-
         // make sure the value that the user enters is appropriate;
         // if the user clears the value or enters text or a number greater then what's available then reset it to the maximum;
-        this.on('edit', function(editor, e) {
+        this.on('edit', function (editor, e) {
             if (e.field == "quantity") {
                 // make sure the quantity does not exceed the maximum available;
                 var maxAllowed = e.record.raw.quantity;
@@ -193,7 +191,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
     },
 
     // dynamically build the menu options based on the current state of the order shipment data entities
-    getMenuActions: function(config) {
+    getMenuActions: function (config) {
         var me = this,
             menu = [];
 
@@ -202,7 +200,6 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         // if the package already has a shipmentId that means the user has clicked the viewShippingLabel buttona and the package can no longer be modified. It can only be deleted;
 
         var isDisabled = (this.packageData && this.packageData.shipmentId);
-
 
 
         // always need to have new package
@@ -247,7 +244,6 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         }
 
 
-
         //todo: need some paging solution for adding support to have many packages
         /*
         if (packageLength > packageMenuPagingSize) {
@@ -264,11 +260,10 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
         */
 
 
-
         return menu;
     },
 
-    getToolBarConfig: function() {
+    getToolBarConfig: function () {
         var me = this,
             tb = {
                 plain: true,
@@ -276,7 +271,6 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 enableOverflow: true,
                 items: ['->']
             };
-
 
 
         if (me.getEnableMoveMenu() && me.isUnShippedItems) {
@@ -304,7 +298,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 moveTargetId: lastPackageId,
 
                 disabled: (!this.preselectAll),
-                handler: function(button, e) {
+                handler: function (button, e) {
                     // only do the click to move if its in the unshipped items. for regular packages its a menu button instead of split button
                     if (me.isUnShippedItems) {
                         me.moveSelectedItems(null, button, e);
@@ -313,7 +307,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                 scope: me,
                 listeners: {
                     menushow: {
-                        fn: function(button, menu, eOpts) {
+                        fn: function (button, menu, eOpts) {
                             menu.removeAll();
                             menu.add(me.getMenuActions());
                         },
@@ -341,7 +335,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
     },
 
     // initializes the selection model. Enables the checkbox by config
-    initSelectionModel: function() {
+    initSelectionModel: function () {
         var me = this;
         if (me.enableCheckBoxSelection) {
             me.selModel = Ext.create('Ext.selection.CheckboxModel', {
@@ -356,7 +350,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
     },
 
     // returns the column configuration for this grid
-    getColumnConfig: function() {
+    getColumnConfig: function () {
         var me = this,
             columns = [];
 
@@ -441,7 +435,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
                     }]
                 }),
                 menuItems: [],
-                onMenuShow: function(menu, eventData) {
+                onMenuShow: function (menu, eventData) {
                     var extraMenu = eventData.grid.getMenuActions();
                     menu.removeAll();
                     menu.add(extraMenu);
@@ -473,7 +467,7 @@ Ext.define('Taco.view.order.widget.ShippingItemGrid', {
     },
 
     // returns an array of field configs for the store of this grid
-    getFields: function() {
+    getFields: function () {
         return [
 
 
@@ -568,8 +562,7 @@ weight: 2
     },
 
 
-
-    executeMoveItems: function(config) {
+    executeMoveItems: function (config) {
         var me = this,
             isCreate = false,
             callConfig;
@@ -593,7 +586,7 @@ weight: 2
                 destinationPackageId: destinationPackageId
             },
 
-            success: function(response) {
+            success: function (response) {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
@@ -604,7 +597,7 @@ weight: 2
                 // reload the record
                 this.record.reload();
             },
-            failure: function(response) {
+            failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.message) ? json.message : "Error moving items";
                 Taco.app.fireEvent('setmessage', msg, 'error');
@@ -622,10 +615,10 @@ weight: 2
         }
     },
     // extract the json package data from the current grid selection and return it 
-    getSelectedDataItems: function() {
+    getSelectedDataItems: function () {
         var items = [];
         var selection = this.getSelectionModel().getSelection();
-        Ext.Array.forEach(selection, function(element, index, array) {
+        Ext.Array.forEach(selection, function (element, index, array) {
             items.push(element.getData());
         });
 
@@ -633,7 +626,7 @@ weight: 2
     },
 
     // process the grid selections and call the exectueMove
-    moveSelectedItems: function(menu, item, e, eOpts) {
+    moveSelectedItems: function (menu, item, e, eOpts) {
         var me = this;
 
         if (item) {
@@ -650,7 +643,7 @@ weight: 2
         }
     },
 
-    changeShippingMethod: function(menu, item, e, eOpts) {
+    changeShippingMethod: function (menu, item, e, eOpts) {
 
         if (item) {
 
@@ -663,7 +656,7 @@ weight: 2
 
             config = {
                 jsonData: [data],
-                success: function(response) {
+                success: function (response) {
                     // success handling here
                     Taco.app.viewPort.setLoading(false);
                     var json = Ext.decode(response.responseText, true);
@@ -674,7 +667,7 @@ weight: 2
                     // reload the record
                     this.record.reload();
                 },
-                failure: function(response) {
+                failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
                         msg = (json && json.message) ? json.message : "Error changing shipping method";
                     Taco.app.fireEvent('setmessage', msg, 'error');
@@ -689,12 +682,11 @@ weight: 2
             this.record.changeShippingMethod(config);
 
 
-
         }
     },
 
     // move the currently selected items and move them to the unshipped items 
-    removeSelectedItems: function() {
+    removeSelectedItems: function () {
         var me = this,
             items = me.getSelectedDataItems(),
             sourcePackageId = (me.packageData) ? me.packageData.id : null;
@@ -708,7 +700,7 @@ weight: 2
     },
 
     // mark package as a shipped package
-    markAsShipped: function() {
+    markAsShipped: function () {
         var me = this,
             callConfig;
 
@@ -721,7 +713,7 @@ weight: 2
                 packageIds: [sourcePackageId]
             },
 
-            success: function(response) {
+            success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
@@ -732,7 +724,7 @@ weight: 2
                 // reload the record
                 this.record.reload();
             },
-            failure: function(response) {
+            failure: function (response) {
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.message) ? json.message : "Error marking as shipped";
                 Taco.app.fireEvent('setmessage', msg, 'error');
@@ -746,7 +738,7 @@ weight: 2
 
     },
 
-    viewShippingLabel: function(button, e) {
+    viewShippingLabel: function (button, e) {
 
 
         // view shipping label. open in new tab. this initiates a work flow that makes the package uneditable.
@@ -778,7 +770,7 @@ weight: 2
                     defaultWeight: data.weight,
                     defaultPackagingType: data.packagingType
                 },
-                success: function(response) {
+                success: function (response) {
                     me.setLoading(false);
 
                     var json = Ext.decode(response.responseText, true);
@@ -790,7 +782,7 @@ weight: 2
                     newWindow.location = labelUrl;
                     me.record.reload();
                 },
-                failure: function(response) {
+                failure: function (response) {
                     var json = Ext.decode(response.responseText, true),
                         msg = (json && json.message) ? json.message : "Error moving items";
                     Taco.app.fireEvent('setmessage', msg, 'error');
@@ -804,7 +796,7 @@ weight: 2
         }
     },
 
-    viewPackingSlip: function(button, e) {
+    viewPackingSlip: function (button, e) {
         var grid = button.up("gridpanel"),
             data = {
                 shippingMethodName: grid.packageData.shippingMethodName,
@@ -818,7 +810,6 @@ weight: 2
             },
             win = window.open(),
             tpl;
-
 
 
         tpl = new Ext.XTemplate(
@@ -892,7 +883,6 @@ weight: 2
             '</div>'
         );
 
-        console.log(data, this.data);
         Ext.fly(win.document.body).setHTML(tpl.apply(data));
     }
 
