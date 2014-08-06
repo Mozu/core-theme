@@ -274,6 +274,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { action = "index", controller = "content", list = "files@mozu", site = -1 }
                 );
 
+         
+
 
             routes.MapHttpRoute(
                 "Misc_content_2",
@@ -286,6 +288,17 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "cms/files/{documentId}",
                 new { action = "index", controller = "content", list = "files@mozu", tenant = -1, mastercat = -1, site = -1 }
                 );
+
+
+            routes.MapHttpRoute(
+                "Misc_content_4",
+                "{tenant}-{site}/cms/files/{documentId}",
+                new { action = "index", controller = "content", list = "files@mozu", tenant = -1, mastercat = -1, site = -1 }
+                );
+
+
+
+            //http://txwks3164.corp.volusion.com/2083-2116/cms/7332/files/b1bf3cab-1d7c-42f8-901a-bff60b56d778?size=60
 
            
 

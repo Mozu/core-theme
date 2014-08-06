@@ -2,10 +2,12 @@
     title: 'PoKEmon!!!!!!!',
     items: [
         
-        {
-            "fieldLabel": "imageUrl",
-            "name": "imageUrl"
-        },
+       
+          {
+              "fieldLabel": "image",
+              "xtype": "mz-input-image",
+              "name": "image"
+          },
         {
             "fieldLabel": "category",
             "xtype": "selectfield",

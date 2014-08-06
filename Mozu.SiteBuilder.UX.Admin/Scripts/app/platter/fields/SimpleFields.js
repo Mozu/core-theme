@@ -4,7 +4,11 @@
 Ext.define('Taco.platter.fields.SimpleFields', {
     singleton: true,
     requires: [
-        'Ext.form.field.Text'
+        'Ext.form.field.Text',
+        'Taco.core.ux.form.field.BaseImageField',
+        'Ext.form.field.Checkbox',
+        'Ext.form.field.Number',
+        'Ext.form.field.ComboBox',
     ],
     constructor: function () {
 
@@ -43,10 +47,8 @@ Ext.define('Taco.platter.fields.Number', {
 
 
 Ext.define('Taco.platter.fields.Image', {
-    extend: 'Ext.form.field.Number',
+    extend: 'Taco.core.ux.form.field.BaseImageField',
     alias: ['widget.mz-input-image'],
-    hideTrigger: true,
-    mouseWheelEnabled: false
-
+   
 });
 

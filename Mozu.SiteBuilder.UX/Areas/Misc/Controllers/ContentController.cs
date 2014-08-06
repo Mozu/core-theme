@@ -138,15 +138,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return ImageCodecInfo.GetImageEncoders().FirstOrDefault(t => t.MimeType == mimeType);
         }
 
-        string GetDirectoryString (ApiContext ctx, string collection)
+        string GetDirectoryString (ApiContext ctx, string list)
         {
-            return  System.IO.Path.GetTempPath() + "\\" + ctx.TenantId + "-" + ctx.MasterCatalogId.Value + "-" + ctx.SiteId.GetValueOrDefault(0) + "\\" + collection;
+            return  System.IO.Path.GetTempPath() + "\\" + ctx.TenantId + "-" + ctx.MasterCatalogId.Value + "-" + ctx.SiteId.GetValueOrDefault(0) + "\\" + list;
         }
         //todo: change as task
-        Tuple<string, Stream> GetFromFSCache(ApiContext ctx, string collection, string documentId)
+        Tuple<string, Stream> GetFromFSCache(ApiContext ctx, string list, string documentId)
         {
             byte[] header = new byte[100];
-            var dir = GetDirectoryString(ctx, collection);
+            var dir = GetDirectoryString(ctx, list);
             var file  = dir + "\\"+ documentId ;
             if ( System.IO.File.Exists ( file ))
             {
@@ -158,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             return null;
         }
-        private Tuple<string, Stream> AddToFSCache(ApiContext ctx, string collection, string documentId, System.Net.Http.HttpContent content)
+        private Tuple<string, Stream> AddToFSCache(ApiContext ctx, string list, string documentId, System.Net.Http.HttpContent content)
         {
             var ct = content.Headers.ContentType.MediaType;
 
@@ -169,7 +169,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             sw.Flush ();
 
 
-            var dir = GetDirectoryString(ctx, collection);
+            var dir = GetDirectoryString(ctx, list);
             var file  = dir + "\\"+ documentId ;
             System.IO.Directory.CreateDirectory(dir);
             using (var fs = System.IO.File.Create(file))
@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
 
-            return GetFromFSCache(ctx, collection, documentId);
+            return GetFromFSCache(ctx, list, documentId);
             
         }
 
@@ -200,7 +200,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "images" )]
         [System.Web.Http.HttpGet]
-        public ActionResult Index(int tenant, int mastercat, int site, string collection, string documentId, int size = 0, int max = 0)
+        public ActionResult Index(int tenant, int mastercat, int site, string list, string documentId, int size = 0, int max = 0)
         {
            var context = new ApiContext()
                                      {
@@ -236,17 +236,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Tuple<string, Stream> tpl = null;
                 try
                 {
-                    tpl = GetFromFSCache(context,collection, documentId);
+                    tpl = GetFromFSCache(context,list, documentId);
                     if (tpl == null)
                     {
-                        var mutexName = (context.TenantId + ";" + context.MasterCatalogId.Value + ";"  + collection + ";" + documentId).ToLowerInvariant();
+                        var mutexName = (context.TenantId + ";" + context.MasterCatalogId.Value + ";"  + list + ";" + documentId).ToLowerInvariant();
 
                         mutex = new Semaphore(1,1,mutexName);
                         if (!mutex.WaitOne(10000))
                         {
                             mutex = null;
                         }
-                        tpl = GetFromFSCache(context, collection, documentId);
+                        tpl = GetFromFSCache(context, list, documentId);
                         if (tpl == null)
                         {
                           
@@ -260,7 +260,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                     c.MasterCatalogId = context.MasterCatalogId;
                                     c.TenantId = context.TenantId;
                                     c.UserClaims = null;
-                                }).GetDocumentContent(collection, documentId).Result;
+                                }).GetDocumentContent(list, documentId).Result;
                             }
                             else
                             {
@@ -270,20 +270,20 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                     c.MasterCatalogId = context.MasterCatalogId;
                                     c.TenantId = context.TenantId;
                                     c.UserClaims = null;
-                                }).GetTreeDocumentContent(collection, documentId).Result;
+                                }).GetTreeDocumentContent(list, documentId).Result;
                             }
                          
 
                           
                             if (docContextRes.ResponseMessage.IsSuccessStatusCode)
                             {
-                                tpl = AddToFSCache(context, collection, documentId, docContextRes.ResponseMessage.Content);
+                                tpl = AddToFSCache(context, list, documentId, docContextRes.ResponseMessage.Content);
                             }
                             else
                             {
                                 return Redirect("http://www.petsonline.com.my/includes/tng/styles/img_not_found.gif");
                             }
-                           // var content = _docRepo.GetDocumentContent(collection, documentId).Result.ResponseMessage.Content;
+                           // var content = _docRepo.GetDocumentContent(list, documentId).Result.ResponseMessage.Content;
                             
                         }
 
@@ -393,10 +393,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
           [System.Web.Http.HttpGet]
-        public ActionResult Download(string collection, string documentId)
+        public ActionResult Download(string list, string documentId)
         {
-            var doc = _docRepo.GetDocument(documentListName: collection, documentId: documentId).Result.ReadAsSync();
-            var content = _docRepo.GetDocumentContent(collection, documentId).Result.ResponseMessage.Content;
+            var doc = _docRepo.GetDocument(documentListName: list, documentId: documentId).Result.ReadAsSync();
+            var content = _docRepo.GetDocumentContent(list, documentId).Result.ResponseMessage.Content;
             var stream = content.ReadAsStreamAsync().Result;
 
             return new MyFileStreamResult(stream, GetContentType( doc.Name) , doc.Name);

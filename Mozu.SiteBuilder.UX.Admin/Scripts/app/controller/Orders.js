@@ -46,6 +46,61 @@ Ext.define('Taco.controller.Orders', {
 
     },
 
+
+    //copy and paste override to disable the load mask turn offing
+    doEditInternal: function (id, additionalParams, appState, viewName, model) {
+        var record = appState ? appState.record : null,
+            options = appState ? appState.options : null;
+        if (appState && appState.container) {
+            options = options || {};
+            options.container = appState.container;
+        }
+
+
+
+        if (record) {
+            Taco.app.setLoading();
+            record.reload({
+                success: function () {
+                   // Taco.app.setLoading(false);
+
+                    this.ensureRequiredStores(function () {
+                        this.createContentView(viewName, {
+                            record: record,
+                            options: options
+                        });
+                    });
+                },
+                failure: function () {
+                    Taco.app.setLoading(false);
+                },
+                scope: this
+            });
+
+
+        } else {
+            Taco.app.setLoading();
+            model.load(id, {
+                success: function (record) {
+                    //Taco.app.setLoading(false);
+
+                    this.ensureRequiredStores(function () {
+                        this.createContentView(viewName, {
+                            record: record,
+                            options: options
+                        });
+                    });
+                },
+                failure: function () {
+                    Taco.app.setLoading(false);
+                },
+                scope: this
+            });
+        }
+    },
+
+
+
     orderlist: function (cfg) {
 
         var ctx = Taco.app.context.getCurrentContext();
