@@ -172,6 +172,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         orderAdjustmentValue = Ext.util.Format.number(orderAdjustmentValue, ",0.00");
 
         this.orderAdjustmentFieldInput = Ext.widget({
+            currencyCode: this.record.getCurrencyCode(),
             xtype: "currencyfield",
             spinUpEnabled: false,
             spinDownEnabled: false,
