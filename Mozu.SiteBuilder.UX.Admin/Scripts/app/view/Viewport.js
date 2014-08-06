@@ -48,12 +48,14 @@ Ext.define('Taco.view.Viewport', {
             ignoreInputFields: true,
             processEvent: function (evt) {
                 //console.log("processing keypress");
+                //console.log("keycode=" + evt.getKey());
                 if (me.waitingForNavKey) {
                     
                     var path = me.getNavModeBinding(evt)                    
                     if (path) {
                         Taco.core.StateManager.attemptNavigate(path);
-                        this.waitingForNavKey = false;
+                        me.clearNavMode()
+                        //this.waitingForNavKey = false;
 
                         return evt;
                     } else {
@@ -65,12 +67,30 @@ Ext.define('Taco.view.Viewport', {
                     return evt;
                 }
             },
-            binding: [{
+            binding: [
+
+                /*
+                {
                 // question mark key
                 key: 191,
                 ctrl: false,
                 shift: true,
                 fn: me.showContextHelp,
+                // prevents the event from bubbling past the modal;
+                //defaultEventAction: 'stopEvent',
+                scope: me
+                },
+                */
+
+
+            {
+                // forward slash to trigger app search
+                key: 191,
+                ctrl: false,
+                shift: false,                
+                fn: function () {
+                    
+                },
                 // prevents the event from bubbling past the modal;
                 //defaultEventAction: 'stopEvent',
                 scope: me
@@ -118,17 +138,21 @@ Ext.define('Taco.view.Viewport', {
         return binding;
     },
 
-    // enables a temporary mode in which additional keypresses will be processed as navigation shortcuts;
+    // enables a temporary mode in which additional keypresses will be processed as navigation shortcuts;    
     setNavMode: function () {    
         var me = this;
-        this.waitingForNavKey = true;
-        Ext.defer(this.clearNavMode, 2000, me);
+        me.waitingForNavKey = true;
+        if (!me.navModeTask) {
+            me.navModeTask = new Ext.util.DelayedTask(me.clearNavMode,this);
+        }
+        me.navModeTask.delay(2000)
     },
 
     // disables the temporary mode in which additional keypresses will be processed as navigation shortcuts;
     clearNavMode: function (){        
-        var me = this;
-        this.waitingForNavKey = false;
+        var me = this;        
+        this.waitingForNavKey = false;        
+        me.navModeTask.cancel();
     },
 
     showContextHelp: function () {
