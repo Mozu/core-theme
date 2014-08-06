@@ -5,13 +5,13 @@ using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Magnum.Extensions;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Newtonsoft.Json.Linq;
 using DC = Mozu.Content.Contracts;
-using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -25,14 +25,16 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
         private ICmsServiceWrapper _cmsService;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
+        private ILogger _log;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderApiContext siteBuilderApiContext)
+        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderApiContext siteBuilderApiContext, ILogger log)
         {
             _cmsService = cmsService;
             _siteBuilderApiContext = siteBuilderApiContext;
+            _log = log;
 
             // TaskExtensions;
         }
@@ -46,77 +48,61 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 .ContinueWith(docResultIntermediate =>
                 {
                     var serviceClientResponse = docResultIntermediate.Result;
-
-                    if (serviceClientResponse.HasException ||  !serviceClientResponse.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        UserScopeType scopeType;
-                        var ns = new NavigationSet();
-                        if (serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound &&
-                            _siteBuilderApiContext.UserClaims != null && Enum.TryParse(_siteBuilderApiContext.UserClaims.ScopeType, out scopeType) && scopeType == UserScopeType.Tenant)
-                        {
-
-
-                            var doc = CreateNavigationDocument(ns);
-                            var res = new TestResponse<DC.Document>(doc);
-                            return res.Task;
-                        }
-                        else
-                        {
-                            var doc = new DC.Document();
-                            doc.Set("data", JContainer.FromObject(ns));
-                            var res = new TestResponse<DC.Document>(doc);
-                            return res.Task;
-                        }
-                    }
-                    // if the document doesn't exist, create it first.
-                    if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && serviceClientResponse.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                    // if the document doesn't exist, create an empty object and return it.
+                    if (serviceClientResponse != null && serviceClientResponse.ResponseMessage != null && !serviceClientResponse.ResponseMessage.IsSuccessStatusCode)
                     {
                         var ns = new NavigationSet();
-                        UserScopeType scopeType;
-                        if ( _siteBuilderApiContext.UserClaims != null && Enum.TryParse(_siteBuilderApiContext.UserClaims.ScopeType , out scopeType ) && scopeType == UserScopeType.Tenant)
-                        {
-
-                            var doc = CreateNavigationDocument(ns);
-                            var res = new TestResponse<DC.Document>(doc);
-                            return res.Task;
-                        }
-                        else
-                        {
-                            var doc = new DC.Document();
-                            doc.Set("data", JContainer.FromObject(ns));
-                            var res = new TestResponse<DC.Document>(doc);
-                            return res.Task;
-                        }
+                        // ns.Add(new SimpleRuntimeNavigationNode { Id = "page^^hi" });
+                        var doc = CreateNavigationDocument(ns);
+                        var res = new TestResponse<DC.Document>(doc);
+                        return res.Task;
                     }
 
                     // otherwise, pass through the result.
                     return docResultIntermediate;
                 })
                 .Unwrap()
-                .ContinueWith(docResult =>
+                .ContinueWith<IList<INavigationNode>>(docResult =>
                 {
                     var res = docResult.Result;
                     string etag = res.ETag();
                     var doc = res.ReadAsSync();
+
+                    // first try to retrieve it as a JObject
+                    // if that fails, try to retrieve it as a string
                     try
                     {
-                        
-                        var job = doc.Get<JContainer>("data").ToObject<NavigationSet>()??new NavigationSet();
-                        return job;
+                        var docAsJObject = doc.Get<JObject>("data");
+
+                        try
+                        {
+                            return docAsJObject.ToObject<NavigationSet>() ?? new NavigationSet();
+                        }
+                        catch
+                        {
+                            _log.Warn("Failed to transform JObject to NavigationSet. Recovering with a blank navset..");
+                            return new NavigationSet();
+                        }
                     }
-                    catch 
+                    catch
                     {
                         var jsonString = doc.Get<string>("data");
+                        NavigationSet navset;
                         if (!string.IsNullOrEmpty(jsonString))
                         {
-                            var navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
-                            navset.ETag = etag;
+                            try {
+                                navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
+                                ((NavigationSet)navset).ETag = etag;
+                            }
+                            catch (Newtonsoft.Json.JsonSerializationException) {
+                                _log.Warn("Failed to deserialize NavigationSet. Recovering with a blank navset..");
+                                navset = new NavigationSet();
+                            }
                             return navset;
                         }
                         else
                         {
-                            IList<INavigationNode> navset = new NavigationSet();
-                            return navset;
+                            return new NavigationSet();
                         }
                     }
                 });
@@ -175,5 +161,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     }
                 });
         }
+
     }
 }
