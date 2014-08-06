@@ -708,6 +708,7 @@
     <Content Include="Scripts\app\core\ux\form\entities\EntityEditorForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\BaseImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\code.js" />
+    <Content Include="Scripts\app\core\ux\form\field\QuickFilter.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
     <Content Include="Scripts\app\core\ux\form\field\Category.js" />

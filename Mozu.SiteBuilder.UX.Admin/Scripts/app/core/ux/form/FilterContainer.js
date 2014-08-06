@@ -12,6 +12,9 @@
 Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
+    requires: [
+        'Taco.core.ux.form.field.QuickFilter'
+    ],
 
     /**
      * @private
@@ -81,37 +84,39 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             );
         }
 
-        this.items.push(
-            {
-                xtype: 'textfield',
-                itemId: 'textFilter',
-                margin: '0 0 20 0',
-                msgTarget: 'qtip',
-                flex: 1,
-                emptyText: this.emptySearchText,
-                width: 400,
-                listeners: {
-                    specialkey: {
-                        scope: this,
-                        fn: this.handleFieldSubmit
-                    }
-                }
-            }
-        );
+        this.items.push({
+            xtype: 'taco-quickfilter',
+            itemId: 'textFilter',
+            margin: '0 0 20 0',
+            msgTarget: 'qtip',
+            flex: 1,
+            width: 400,
+            emptyText: this.emptySearchText,
+            handler: this.handleFieldSubmit,
+            scope: this
+            // listeners: {
+            //     specialkey: {
+            //         scope: this,
+            //         fn: this.handleFieldSubmit
+            //     }
+            // }
+        });
+
+        this.callParent(arguments);
+
+        form = this.getAdvancedForm();
 
         if (this.quickFilterData && this.enableQuickFilters) {
-   
-            this.items.push(
-            {
+            form.insert(0, {
                 xtype: 'combo',
-                margin: '0 0 0 20',
                 itemId: 'quickFilter',
+                fieldLabel: 'Quick Filter',
                 queryMode: 'local',
                 typeAhead: false,
                 isSelectField: true,
                 emptyText: 'Quick Filter',
                 store: this.quickFilterData,
-              //  value: this.getQuickFilterFromStore(),
+                // value: this.getQuickFilterFromStore(),
                 listeners: {
                     change: this.onQuickFilterChange,
                     beforeselect:this.onBeforeSelect,
@@ -120,9 +125,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             });
         }
 
-        this.callParent(arguments);
-
-        form = this.getAdvancedForm();
         form.getForm().getFields().each(function (field) {
             field.on({
                 specialkey: {
@@ -350,13 +352,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @param  {Event} e The specialkey event.
      */
     handleFieldSubmit: function (field, e) {
-        if (e.getKey() === e.ENTER) {
-            if (this.modal) {
-                this.modal.close();
-            }
-
-            this.syncAndFilter(this.parseTextFilterValue(field));
+        if (this.modal) {
+            this.modal.close();
         }
+
+        this.syncAndFilter(this.parseTextFilterValue(field));
     },
 
     /**
