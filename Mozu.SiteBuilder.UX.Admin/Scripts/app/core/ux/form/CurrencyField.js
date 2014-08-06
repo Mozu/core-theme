@@ -76,6 +76,11 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
         if (isNaN(value)) {
             errors.push(format(me.nanText, value));
         }
+        
+        if (value == "" && !this.allowBlank) {
+            errors.push(me.blankText);
+            return errors
+        }
 
         num = me.parseValue(value);
 
