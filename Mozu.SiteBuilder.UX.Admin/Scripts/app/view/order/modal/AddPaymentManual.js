@@ -110,6 +110,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                                 currencyCode: this.record.getCurrencyCode(),
                                 name: 'amount',
                                 fieldLabel: 'Amount',
+                                selectOnFocus:true,
                                 validateOnChange: true,
                                 allowBlank: false,
                                 minValue:0.01,
