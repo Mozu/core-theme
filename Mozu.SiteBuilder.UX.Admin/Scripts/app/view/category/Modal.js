@@ -44,7 +44,7 @@ Ext.define('Taco.view.category.Modal', {
                 keys = path.split(separator);
                 last = keys.pop();
                 if (keys.length > 1) {
-                    me.expandPath(keys.join(separator), field, separator, function(success, node){
+                    me.expandPath(keys.join(separator), field, separator, function (success, node) {
                         var lastNode = node;
                         if (success && node) {
                             node = node.findChild(field, last);
@@ -88,12 +88,11 @@ Ext.define('Taco.view.category.Modal', {
             var path = record.get('path');
 
             path = '/0/' + path + (path ? '/' : '') + record.getId();
-            console.log(path);
             tree.selectPath(path);
         }, this);
     },
-    
-    doSave: function (){
+
+    doSave: function () {
         var selection = this.selModel.getSelection();
         this.saveSuccess(selection);
     }

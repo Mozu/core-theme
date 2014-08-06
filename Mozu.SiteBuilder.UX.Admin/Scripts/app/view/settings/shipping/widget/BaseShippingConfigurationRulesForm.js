@@ -1,6 +1,6 @@
 ﻿Ext.define('Taco.view.settings.shipping.widget.BaseShippingConfigurationRulesForm', {
     extend: 'Taco.core.ux.EditContainer',
-   // alias: 'widget.shippinginclusionruleform',
+    // alias: 'widget.shippinginclusionruleform',
     requires: [
         'Taco.store.ShippingInclusionRules',
         'Taco.core.ux.DragHandleColumn'
@@ -15,7 +15,7 @@
 
     initComponent: function () {
         var me = this,
-             gridCfg;
+            gridCfg;
         me.tools = [
             {
                 xtype: "button",
@@ -28,7 +28,7 @@
         ];
         gridCfg = {
             xtype: 'grid',
-         
+
             viewConfig: {
                 plugins: {
                     ptype: 'gridviewdragdrop',
@@ -56,14 +56,13 @@
                             store.getAt(resquence[i] || i).set('sequence', i + seedIndex);
                         }
                         store.sync();
-                        console.log(arguments);
                     },
                     scope: me
                 },
 
             },
             store: this.getStore(),
-            dockedItems:[this.createGridPager()],
+            dockedItems: [this.createGridPager()],
             columns: [
                 {
                     width: 16,
@@ -134,7 +133,7 @@
                     allowNavigation: false,
                     text: 'Actions',
                     width: 100,
-                    menuDisabled:true,
+                    menuDisabled: true,
                     menuItems: [
                         {
                             text: 'Delete',
@@ -184,7 +183,9 @@
         return this.gridPager;
     },
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-        var metaData = { id: record.getId() },
+        var metaData = {
+                id: record.getId()
+            },
             header = view.getHeaderAtIndex(cellIndex);
         if (!header) {
             return;
@@ -199,7 +200,7 @@
 
     },
     launchEditor: function (record, options) {
-        Ext.defer(function() {
+        Ext.defer(function () {
             Taco.core.StateManager.attemptNavigate(this.editRoute + '/' + record.getId());
         }, 1, this);
     },

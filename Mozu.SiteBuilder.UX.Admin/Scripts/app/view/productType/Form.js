@@ -47,7 +47,7 @@ Ext.define('Taco.view.productType.Form', {
             fieldLabel: "Supported Usage Types",
             // note this layout is required for radiogroups to have the proper height;
             layout: "column",
-            margin:"0 0 20 0",
+            margin: "0 0 20 0",
             items: [
                 {
                     xtype: "checkboxgroup",
@@ -61,10 +61,10 @@ Ext.define('Taco.view.productType.Form', {
                             fn: function (group, newValue, oldValue, eOpts) {
                                 me.onUsageTypeChange(newValue);
                             },
-                            scope:me
+                            scope: me
                         }
                     },
-                    allowBlank:false,
+                    allowBlank: false,
                     defaults: {
                         //name: "productUsages"
                     },
@@ -147,7 +147,7 @@ Ext.define('Taco.view.productType.Form', {
                                 itemId: 'digitalCreditItemId',
                                 boxLabel: "This Product Type is a Digital Gift Card",
                                 inputValue: "DigitalCredit",
-                                handler: function(el, isChecked) {
+                                handler: function (el, isChecked) {
                                     if (isChecked) {
                                         if (me.productBundleUsageType.getValue()) {
                                             me.productBundleUsageType.setValue(false);
@@ -163,10 +163,10 @@ Ext.define('Taco.view.productType.Form', {
                ]
             }
         ];
-            
-       
+
+
         me.callParent(arguments);
-        
+
         me.replaceMonitor();
     },
 
@@ -189,7 +189,7 @@ Ext.define('Taco.view.productType.Form', {
         var panel = this.items.get(attributeType).items.get('attributes'),
             tpl = this.attributeItemTpl,
             additions = [];
-        
+
         store.each(function (attribute) {
             additions.push({
                 xtype: 'container',
@@ -211,8 +211,7 @@ Ext.define('Taco.view.productType.Form', {
                         tpl: tpl
                     }, {
                         xtype: 'secondarybutton',
-                        text: 'Delete',
-                        click: function () { console.log('delete clicked', attribute); }
+                        text: 'Delete'
                     }, {
                         xtype: 'secondarybutton',
                         text: 'Edit',
@@ -237,7 +236,9 @@ Ext.define('Taco.view.productType.Form', {
                                 '{inputType}',
                             '</tpl>',
                             {
-                                isList: function (inputType) { return inputType === 'List'; }
+                                isList: function (inputType) {
+                                    return inputType === 'List';
+                                }
                             }
                         ]
                     }]
@@ -250,12 +251,12 @@ Ext.define('Taco.view.productType.Form', {
 
     getAttributeStoreFromType: function (type) {
         switch (type) {
-            case 'options':
-                return this.record.getOptions();
-            case 'extras':
-                return this.record.getExtras();
-            case 'properties':
-                return this.record.getProperties();
+        case 'options':
+            return this.record.getOptions();
+        case 'extras':
+            return this.record.getExtras();
+        case 'properties':
+            return this.record.getProperties();
         }
     },
 
@@ -270,13 +271,7 @@ Ext.define('Taco.view.productType.Form', {
                 '</tpl>'
             ],
             store: this.attributeStore,
-            itemSelector: 'div.attribute-wrap',
-            listeners: {
-                select: function (item, record) {
-                    console.log('selected', record);
-                },
-                scope: this
-            }
+            itemSelector: 'div.attribute-wrap'
         });
     },
 
@@ -296,19 +291,13 @@ Ext.define('Taco.view.productType.Form', {
             maxSelections: 1,
             listConfig: {
                 selModel: {
-                    allowDeselect: false,
-                    listeners: {
-                        selectionchange: function () {
-                            //console.log('changed')
-                        }
-                    }
+                    allowDeselect: false
                 }
             }
         });
     },
 
-    onEditClick: function (button) {
-    },
+    onEditClick: function (button) {},
 
     addAttribute: function (button) {
         var cardPanel = button.up('[attributeType]'),
@@ -318,17 +307,17 @@ Ext.define('Taco.view.productType.Form', {
             attributeSelector;
 
         editor.removeAll();
-        
+
         attributeSelector = this.getAttributeSelector(function (record) {
             return productTypeAttributeStore.indexOf(record) < 0;
         });
-    
+
         editor.add(attributeSelector);
         cardPanel.getLayout().setActiveItem(1);
     },
 
     editAttribute: function (button) {
-        
+
 
         var attributeItem = button.up('[attribute]'),
             attribute = attributeItem.attribute,
@@ -353,7 +342,6 @@ Ext.define('Taco.view.productType.Form', {
             model: 'Taco.model.ProductTypeAttribute',
             data: [attribute]
         });
-
 
 
         attributeField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
@@ -414,7 +402,9 @@ Ext.define('Taco.view.productType.Form', {
                 margin: '0 40',
                 listConfig: {
                     cls: Ext.baseCSSPrefix + 'boundlist-with-hidden-selections',
-                    selModel: { mode: 'SIMPLE' }
+                    selModel: {
+                        mode: 'SIMPLE'
+                    }
                 }
             });
 
@@ -427,7 +417,9 @@ Ext.define('Taco.view.productType.Form', {
                 width: 240,
                 margin: '0 40',
                 listConfig: {
-                    selModel: { mode: 'MULTI' },
+                    selModel: {
+                        mode: 'MULTI'
+                    },
                     itemTpl: [
                         '<span class="x-boundlist-item-drag">Drag </span>',
                         '<span class="x-boundlist-item-content">{field1}</span>',
@@ -450,7 +442,7 @@ Ext.define('Taco.view.productType.Form', {
                     } else {
                         this.show().bindStore(Ext.Array.pluck(attribute.get('allValues'), 'id'));
                     }
-                    
+
                 },
                 selectionsitemclick: function (view, record, item, index, e) {
                     var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
@@ -488,65 +480,61 @@ Ext.define('Taco.view.productType.Form', {
                 xtype: 'button',
                 text: 'Done',
                 width: 64,
-                height: 24,
-                listeners: {
-                    click: function () { console.log(this); },
-                    scope: this
-                }
+                height: 24
             }]
         });
 
         fields.push(actionsGroup);
         panel.items.first().add(fields);
-        
+
         return panel;
     },
 
     onDrop: function (plugin, ct, cmp, startIdx, idx) {
-        console.log(cmp.getId(), startIdx, idx);
+
     },
-    
+
     onUsageTypeChange: function (data) {
         var usageData = data.productUsagesField,
             showExtras = false,
             showOptions = false;
-        
+
         // make sure the data is an array. will be string if one checkbox is selected;
         if (Ext.isString(usageData)) {
             usageData = [usageData];
         }
 
         // based on which of the checkboxes are selected will need to alter the rolled up visibility of the extras, options, and properties
-        Ext.Array.each(usageData, function(item) {
-            switch (item){
-                case "Standard":
-                    showExtras = true;
-                    break;
-                case "Configurable":
-                    showOptions = showExtras = true;
-                    break;
-                case "Bundle":
-                    showExtras = true;
-                    break;
-                case "Component":
-                    break;
+        Ext.Array.each(usageData, function (item) {
+            switch (item) {
+            case "Standard":
+                showExtras = true;
+                break;
+            case "Configurable":
+                showOptions = showExtras = true;
+                break;
+            case "Bundle":
+                showExtras = true;
+                break;
+            case "Component":
+                break;
             }
         });
-        
+
         // set the visiblity of the various section;
         // note that properties is always visible;
         this.down("#extrasAttributeGroup").setVisible(showExtras);
         this.down("#optionsAttributeGroup").setVisible(showOptions);
     },
-    
+
     loadRecord: function () {
         var me = this,
             form = me.getForm(),
             productUsagesGroup = form.findField("productUsagesGroup"),
             goodsTypeGroup = form.findField('goodsTypeGroup');
-        
+
         this.callParent(arguments);
-        
+
         productUsagesGroup.setValue({
             productUsagesField: this.record.get("productUsages")
         });
@@ -568,7 +556,7 @@ Ext.define('Taco.view.productType.Form', {
         if (Ext.isString(productUsagesGroupData)) {
             productUsagesGroupData = [productUsagesGroupData];
         }
-   
+
         this.record.set("productUsages", productUsagesGroupData);
 
         var goodsTypeData = form.findField("goodsTypeGroup").getValue().goodsTypeField;

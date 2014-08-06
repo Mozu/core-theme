@@ -1,5 +1,4 @@
-﻿
-/**
+﻿/**
  * @class  Taco.view.product.variant.Grid
  * @author Travis Johnson
  * @description The grid panelt to edit and enable variants
@@ -16,23 +15,27 @@ Ext.define('Taco.view.product.variant.Grid', {
         var optionColumns = [],
             staticColumns,
             tplColumnHeader,
-            me=this,
+            me = this,
             goodsType = this.productType.get('goodsType'),
             isPhysical = (goodsType === 'Physical'),
             isDigitalCredit = (goodsType === 'DigitalCredit'),
-            fulfillmentData = (isPhysical) ? [{ "id": "DirectShip", "name": "Direct Ship" }, { "id": "InStorePickup", "name": "In Store Pickup" }]
-            : [{ "id": "Digital", "name": "Email" }];
+            fulfillmentData = (isPhysical) ? [{
+                "id": "DirectShip",
+                "name": "Direct Ship"
+            }, {
+                "id": "InStorePickup",
+                "name": "In Store Pickup"
+            }] : [{
+                "id": "Digital",
+                "name": "Email"
+            }];
 
-      
 
         var fulfillmentTypeData = Ext.create('Ext.data.Store', {
             fields: ['id', 'name'],
             data: fulfillmentData
         });
 
-       
-
-        
 
         var fulfillmentEditor = {
             xtype: "combobox",
@@ -41,135 +44,135 @@ Ext.define('Taco.view.product.variant.Grid', {
             displayField: 'name',
             valueField: 'id',
             autoSelect: true,
-            forceSelection:true,
+            forceSelection: true,
             store: fulfillmentTypeData,
             multiSelect: true
         };
 
         staticColumns = [{
-            text: 'Product Code',
-            dataIndex: 'productCode',
-            editor: {
-                xtype: 'textfield'
-            }
+                text: 'Product Code',
+                dataIndex: 'productCode',
+                editor: {
+                    xtype: 'textfield'
+                }
         }, {
-            text: 'Extra Price',
-            dataIndex: 'deltaPrice',
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                allowBlank: !isDigitalCredit,
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
+                text: 'Extra Price',
+                dataIndex: 'deltaPrice',
+                editor: {
+                    xtype: 'currencyfield',
+                    currencyCode: this.product.getCurrencyCode(),
+                    allowBlank: !isDigitalCredit,
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
         }, {
-            text: 'Extra Cost',
-            dataIndex: 'deltaCost',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
+                text: 'Extra Cost',
+                dataIndex: 'deltaCost',
+                hideable: true,
+                hidden: true,
+                editor: {
+                    xtype: 'currencyfield',
+                    currencyCode: this.product.getCurrencyCode(),
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
         }, {
-            text: 'MSRP',
-            dataIndex: 'deltaMsrp',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
+                text: 'MSRP',
+                dataIndex: 'deltaMsrp',
+                hideable: true,
+                hidden: true,
+                editor: {
+                    xtype: 'currencyfield',
+                    currencyCode: this.product.getCurrencyCode(),
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
         }, {
-            text: 'Gift Card/Credit Value',
-            dataIndex: 'creditValue',
-            hideable: isDigitalCredit,
-            hidden: !isDigitalCredit,
-            required: !isDigitalCredit,
-            width: 185,
-            editor: {
-                xtype: 'currencyfield',
-                currencyCode: this.product.getCurrencyCode(),
-                allowBlank: !isDigitalCredit,
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
+                text: 'Gift Card/Credit Value',
+                dataIndex: 'creditValue',
+                hideable: isDigitalCredit,
+                hidden: !isDigitalCredit,
+                required: !isDigitalCredit,
+                width: 185,
+                editor: {
+                    xtype: 'currencyfield',
+                    currencyCode: this.product.getCurrencyCode(),
+                    allowBlank: !isDigitalCredit,
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
         }, {
-            text: 'Extra Weight',
-            dataIndex: 'deltaWeight',
-            hidden: isDigitalCredit,
-            editor: {
-                xtype: 'numberfield',
-                decimalPrecision: 2,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
-            }
+                text: 'Extra Weight',
+                dataIndex: 'deltaWeight',
+                hidden: isDigitalCredit,
+                editor: {
+                    xtype: 'numberfield',
+                    decimalPrecision: 2,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false
+                }
         },
 
-        {
-            text: 'Fulfillment Types',
-            dataIndex: 'fulfillmentTypesSupported',
-            hideable: true,
-            hidden: true,
-            width: 185,
-            editor: fulfillmentEditor
-            
+            {
+                text: 'Fulfillment Types',
+                dataIndex: 'fulfillmentTypesSupported',
+                hideable: true,
+                hidden: true,
+                width: 185,
+                editor: fulfillmentEditor
+
         },
 
-        {
-            text: 'Mfg Part #',
-            dataIndex: 'mfgPartNumber',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'textfield',
-                maxLength: 30,
-                enforceMaxLength: true
-            }
+            {
+                text: 'Mfg Part #',
+                dataIndex: 'mfgPartNumber',
+                hideable: true,
+                hidden: true,
+                editor: {
+                    xtype: 'textfield',
+                    maxLength: 30,
+                    enforceMaxLength: true
+                }
         }, {
-            text: 'UPC',
-            dataIndex: 'upc',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'textfield',
-                maxLength: 128,
-                enforceMaxLength: true
-            }
+                text: 'UPC',
+                dataIndex: 'upc',
+                hideable: true,
+                hidden: true,
+                editor: {
+                    xtype: 'textfield',
+                    maxLength: 128,
+                    enforceMaxLength: true
+                }
         }, {
-            text: 'Dist Part #',
-            dataIndex: 'distPartNumber',
-            hideable: true,
-            hidden: true,
-            editor: {
-                xtype: 'textfield',
-                maxLength: 30,
-                enforceMaxLength: true
-            }
+                text: 'Dist Part #',
+                dataIndex: 'distPartNumber',
+                hideable: true,
+                hidden: true,
+                editor: {
+                    xtype: 'textfield',
+                    maxLength: 30,
+                    enforceMaxLength: true
+                }
         }, {
-            text: 'Enabled',
-            dataIndex: 'isActive',
-            align: 'center',
-            renderer: function (value) {
-                return value ? '<div class="check"></div>' : '';
-                
-            },
-            editor: {
-                xtype: 'checkbox'
-            }
+                text: 'Enabled',
+                dataIndex: 'isActive',
+                align: 'center',
+                renderer: function (value) {
+                    return value ? '<div class="check"></div>' : '';
+
+                },
+                editor: {
+                    xtype: 'checkbox'
+                }
         }];
 
         this.product.getOptions().each(function (option, index) {
@@ -177,8 +180,8 @@ Ext.define('Taco.view.product.variant.Grid', {
                 attributeText = attribute.get('attributeName'),
                 attributeValues = attribute.get('selectedValues'),
                 attributeId = attribute.getId();
-                
-            
+
+
             optionColumns.push({
                 flex: 1,
                 text: attributeText,
@@ -186,7 +189,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 sortable: false,
                 renderer: function (values) {
 
-                    
+
                     var value = Ext.Array.findBy(values, function (v) {
                         return v.attributeFQN == attributeId
                     });
@@ -202,11 +205,11 @@ Ext.define('Taco.view.product.variant.Grid', {
                 }
             });
         }, this);
-        
+
         this.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             clicksToEdit: 1,
-            autoCancel:false,
+            autoCancel: false,
             errorSummary: false,
             listeners: {
                 edit: this.onRowEdit,
@@ -217,12 +220,9 @@ Ext.define('Taco.view.product.variant.Grid', {
 
         this.columns = optionColumns.concat(staticColumns);
 
-        console.log(this.columns)
-
         this.store = this.product.getVariations();
 
         this.plugins = [this.rowEditor];
-
 
 
         if (isDigitalCredit) {
@@ -247,20 +247,18 @@ Ext.define('Taco.view.product.variant.Grid', {
     },
 
     onRowEdit: function (editor, e) {
-      
+
     },
 
     onRowCancelEdit: function (e) {
-        
+
     },
-    
+
     findAttribute: function (record) {
         return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
     },
-    
-    addSaveTasks: function (tasks, updateRecord, saveRecord) {
 
-        
+    addSaveTasks: function (tasks, updateRecord, saveRecord) {
 
 
         this.callParent(arguments);

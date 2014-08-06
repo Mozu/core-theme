@@ -1,35 +1,35 @@
 ﻿Ext.define('Taco.core.context.Site', {
     //extend: 'Ext.util.Observable',
     id: -1,
-    name:'',
+    name: '',
     stagingHost: '',
     defaultHost: '',
     urlToken: null,
     contextType: 's',
-    
+
     masterCatalog: null,
-    
+
     constructor: function (config) {
         var me = this;
         config = Ext.apply({}, config);
-       
+
         Ext.apply(me, config);
         me.callParent([config]);
-        me.urlToken = me.contextType +'-'+ me.id;
+        me.urlToken = me.contextType + '-' + me.id;
     },
-    
-    getSiteId: function () {    
+
+    getSiteId: function () {
         return this.id;
     },
-    
-    getCatalogId:function () {
+
+    getCatalogId: function () {
         return this.catalogId;
     },
-    
-    getCatalog:function () {
+
+    getCatalog: function () {
         return this.catalog;
     },
-    
+
     getMasterCatalogId: function () {
         return this.masterCatalogId;
     },
@@ -39,15 +39,15 @@
     getSite: function () {
         return this;
     },
-    
+
     getMasterCatalogId: function () {
         return this.masterCatalog.getMasterCatalogId();
     },
-    
-    getMasterCatalog: function() {
+
+    getMasterCatalog: function () {
         return this.masterCatalog;
     },
-   
+
     formatCurrency: function (value) {
         return Taco.app.context.formatCurrencyFromCode(this.currencyCode, value);
     },
@@ -56,7 +56,7 @@
     },
     updateContentPublishingMode: function (value) {
         this.publishingEnabled = value == 'Pending';
-        
+
         Ext.Ajax.request({
             url: '/admin/app/cmspublishing/enablePublishing',
             method: 'POST',
@@ -67,15 +67,8 @@
                     masterCatalogId: this.getMasterCatalogId()
                 },
                 publishingEnabled: this.publishingEnabled
-            },
-            failure : function () {
-                console.log(arguments);
-            },
-            success: function (response) {
-                console.log(arguments);
             }
         });
-        console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);
     }
 
 });

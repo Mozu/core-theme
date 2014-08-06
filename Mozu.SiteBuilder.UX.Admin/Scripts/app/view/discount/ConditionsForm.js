@@ -1,6 +1,4 @@
-﻿
-
-/**
+﻿/**
  * @class  Taco.view.discount.ConditionsForm
  * @author Travis Johnson
  * @description Discount Conditions Editor
@@ -28,7 +26,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
-            currencyCode:Taco.app.context.getCurrent().currencyCode,
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
             emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
@@ -258,7 +256,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     style: {
                         verticalAlign: 'bottom'
                     },
-                    handler: function () { this.launchProductModal(this.productList); },
+                    handler: function () {
+                        this.launchProductModal(this.productList);
+                    },
                     scope: this
                 }
             ]
@@ -306,7 +306,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     style: {
                         verticalAlign: 'bottom'
                     },
-                    handler: function () { this.launchSegmentModal(this.segmentsList); },
+                    handler: function () {
+                        this.launchSegmentModal(this.segmentsList);
+                    },
                     scope: this
                 }
             ]
@@ -538,7 +540,6 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             value = Ext.Array.remove(list.getValue(), record.getId());
             store.remove(record);
             list.setValue(value);
-            console.log(value, list.getValue());
             return false;
         }
     },

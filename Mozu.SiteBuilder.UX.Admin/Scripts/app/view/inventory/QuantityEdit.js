@@ -68,7 +68,6 @@ Ext.define('Taco.view.inventory.QuantityEdit', {
         var preview = this.down('#preview');
 
         this.record = record;
-        console.log(record.getData());
         preview.update(record.getData());
 
         return this;
@@ -98,9 +97,9 @@ Ext.define('Taco.view.inventory.QuantityEdit', {
             });
 
         }
-        
+
         record.set('stockOnHand', value);
-        
+
         form.reset();
         this.hide();
     }

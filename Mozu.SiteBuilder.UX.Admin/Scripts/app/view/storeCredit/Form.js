@@ -12,18 +12,18 @@ Ext.define('Taco.view.storeCredit.Form', {
     layout: 'fit',
     initComponent: function () {
         this.buildFormComponents();
-        
+
         if (!this.isCreate) {
             this.title = 'Edit Store Credit: ' + this.record.data.code;
         }
-        
+
 
         this.callParent(arguments);
     },
 
     buildFormComponents: function () {
         var me = this;
-        
+
 
         me.codeField = Ext.widget({
             xtype: 'textfield',
@@ -56,27 +56,27 @@ Ext.define('Taco.view.storeCredit.Form', {
 
         me.amount = Ext.widget({
             xtype: 'currencyfield',
-        
+
             name: 'currentBalance',
             fieldLabel: 'Amount',
             allowBlank: false
         });
 
-       
+
         me.customerName = Ext.widget({
             xtype: 'taco-customerfield',
             fieldLabel: 'Customer',
             allowBlank: true,
 
-            name: 'customerId',       
-           
+            name: 'customerId',
+
             listeners: {
                 change: function (field, value) {
                     var model = field.findRecordByValue(value || -1);
                     if (model) {
                         this.customerEmail.setValue(model.get('emailAddress'));
                     }
-                    
+
 
                 },
                 scope: this
@@ -86,7 +86,7 @@ Ext.define('Taco.view.storeCredit.Form', {
         me.emailCustomer = Ext.widget({
             xtype: 'checkboxfield',
             name: 'email',
-          //  value: this.record.get('customer').,
+            //  value: this.record.get('customer').,
             fieldLabel: 'Email store credit information to customer'
         });
 
@@ -123,15 +123,10 @@ Ext.define('Taco.view.storeCredit.Form', {
             me.expirationDate,
             me.orginalAmount,
             me.amount,
-            me.customerName,
-            /*email switch not implement ed
-            me.customerEmail,
-           
-            me.emailCustomer,
-            me.transHistory*/
+            me.customerName
         ];
     },
     beforeSave: function () {
-        console.log(this.record);
+
     }
 });

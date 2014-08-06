@@ -54,11 +54,12 @@
 Ext.ns('Taco');
 Taco.baseCSSPrefix = 'taco-';
 
-Ext.Ajax.defaultHeaders = { Accept: '*/*' };
+Ext.Ajax.defaultHeaders = {
+    Accept: '*/*'
+};
 
 window.console = window.console || {
-    log: function () {
-    }
+    log: function () {}
 };
 
 
@@ -144,8 +145,8 @@ Ext.define('Taco.Application', {
         //'Tbd',
         //'Themes',
         //'Themesettings',
-        
-       
+
+
         //'GeneralSettings',
         //'Tests',
         //'Orders',
@@ -167,7 +168,6 @@ Ext.define('Taco.Application', {
     context: null,
     constructor: function (config) {
 
-        
 
         Ext.override(Ext.Component, {
             beforeRender: function () {
@@ -214,7 +214,6 @@ Ext.define('Taco.Application', {
             printHiearchy: function (index, tab) {
                 if (!tab) tab = '\t';
                 if (!index) index = 0;
-                console.log(tab + '\t' + index + '. ', this.alias, this.$className, this.layout, this.cls);
                 if (this.items) {
                     this.items.each(function (item, index) {
                         item.printHiearchy(index, tab + '\t');
@@ -230,7 +229,7 @@ Ext.define('Taco.Application', {
                 me.timeout = 90000;
                 this.callParent([config]);
                 me.on('exception', function () {
-                    console.log('ajaxproxy-exception', arguments);
+                    console.error('ajaxproxy-exception', arguments);
                 }, me);
 
             },
@@ -239,14 +238,16 @@ Ext.define('Taco.Application', {
                     status: response.status,
                     responseText: response.responseText,
                     statusText: response.statusText,
-                    remoteException: Ext.create('Taco.core.data.RemoteException', { response: response })
+                    remoteException: Ext.create('Taco.core.data.RemoteException', {
+                        response: response
+                    })
                 });
             },
-            afterRequest: function (request, success) {                
+            afterRequest: function (request, success) {
                 var me = this;
                 this.callParent(arguments);
                 if (success && request && request.action !== 'read' && this.model && this.model.$className) {
-                    Taco.core.data.StoreManager.fireEvent('afterproxyrequest', request, success, this.model);                
+                    Taco.core.data.StoreManager.fireEvent('afterproxyrequest', request, success, this.model);
                 }
 
             },
@@ -279,13 +280,15 @@ Ext.define('Taco.Application', {
             }
         });
 
-        Ext.override(Ext.toolbar.Paging, {            
+        Ext.override(Ext.toolbar.Paging, {
             doRefresh: function () {
                 var me = this,
                     current = me.store.currentPage;
 
                 if (me.fireEvent('beforechange', me, current) !== false) {
-                    me.store.loadPage(current, { refresh: true });
+                    me.store.loadPage(current, {
+                        refresh: true
+                    });
                 }
             }
         });
@@ -406,7 +409,7 @@ Ext.define('Taco.Application', {
 
                 return this.callParent(arguments);
             }
-        });        
+        });
 
 
         Ext.util.Observable.prototype.removeOwnedListener =
@@ -417,14 +420,11 @@ Ext.define('Taco.Application', {
                     Ext.each(listners, function (listnerCfg) {
 
                         if (listnerCfg.scope === owner) {
-                            if (eventName === "beforefill") {
-                                console.log(eventName);
-                            }
                             me.un(eventName, listnerCfg.fn, owner);
                         }
                     });
                 });
-            };
+        };
         this.callParent([config]);
     },
 
@@ -448,18 +448,20 @@ Ext.define('Taco.Application', {
 
     },
 
-    
+
     launch: function () {
 
         window.Taco.app = this;
-        
-        Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({ prefix: 'mozu-' }));
+
+        Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({
+            prefix: 'mozu-'
+        }));
         var me = this,
             qs = Ext.Object.fromQueryString(window.location.search),
             probeFn,
             callbackFn,
             cnt;
-       
+
         if (qs.onBeforeLaunch) {
             callbackFn = function () {
                 me.doTheNeedful();
@@ -475,18 +477,13 @@ Ext.define('Taco.Application', {
                     } else {
                         setTimeout(probeFn, 100);
                     }
-                    
+
                 }
             }
             probeFn();
         } else {
             Ext.onReady(this.doTheNeedful, this);
         }
-        
-
-        
-
-        // console.log('launched');
     },
     initViewPort: function () {
         var me = this;

@@ -75,7 +75,6 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
         editor.cancelEdit();
 
         this.getStore().add(context.record);
-        console.log(context.record, this.getStore().last());
 
         this.getView().refresh();
 

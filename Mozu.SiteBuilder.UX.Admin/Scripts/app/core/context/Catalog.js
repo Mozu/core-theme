@@ -12,7 +12,7 @@
     constructor: function (config) {
         var me = this;
         config = Ext.apply({}, config);
-        me.sites = [];       
+        me.sites = [];
         Ext.apply(me, config);
         me.callParent([config]);
         me.urlToken = me.contextType + '-' + me.id;
@@ -26,14 +26,14 @@
         return this.id;
     },
 
-    getCatalog:function () {
+    getCatalog: function () {
         return this;
     },
     getSite: function () {
         return null;
     },
-    
-    getSites:function () {
+
+    getSites: function () {
         return this.sites;
     },
 
@@ -62,17 +62,11 @@
             url: '/admin/app/cmspublishing/enablePublishing',
             method: 'POST',
             jsonData: {
-                context:{
+                context: {
                     catalogId: this.id,
                 },
                 publishingEnabled: this.publishingEnabled
-               
-            },
-            failure: function () {
-                console.log(arguments);
-            },
-            success: function (response) {
-                console.log(arguments);
+
             }
         });
         console.log('updateContentPublishingMode for Site ID', this.id, ' -> ', value);

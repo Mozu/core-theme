@@ -1,14 +1,13 @@
 /**
-* @class Taco.model.ProductInCatalogInfo
-* @author James Zetlen
-* This model indicates a Product membership in a Site, and contains any overrides to the Product defaults.
-*/
+ * @class Taco.model.ProductInCatalogInfo
+ * @author James Zetlen
+ * This model indicates a Product membership in a Site, and contains any overrides to the Product defaults.
+ */
 
 Ext.define('Taco.model.ProductInCatalogInfo', {
     extend: 'Taco.core.data.Model',
-   
-    fields:
-    [
+
+    fields: [
         {
             "name": "productName",
             "type": "string",
@@ -22,7 +21,7 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         {
             "name": "isActive",
             "type": "boolean",
-            "defaultValue":true,
+            "defaultValue": true,
             "useNull": true
         },
         {
@@ -121,20 +120,20 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
 
             }
         },
-    {
-        name: "sites",
-        "type": "auto",
-        persist: false,
-        convert: function (value, record) {
-            if (record.site == null) {
-                var catalogId = record.get('catalogId');
-                
-                record.sites = Taco.app.context.findSitesByCatalog(catalogId);
-            }
-            return record.sites;
+        {
+            name: "sites",
+            "type": "auto",
+            persist: false,
+            convert: function (value, record) {
+                if (record.site == null) {
+                    var catalogId = record.get('catalogId');
 
-        }
-       
+                    record.sites = Taco.app.context.findSitesByCatalog(catalogId);
+                }
+                return record.sites;
+
+            }
+
     },
         {
             "name": "categoryIds",
@@ -162,34 +161,33 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         }
 
     ],
-    
+
     idProperty: "catalogId",
     getCategoryStore: function () {
         var me = this;
         if (me.categoryStore == null) {
-            me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
-                {
-                    type: 'Taco.store.Categories',
-                    createOnly: true,
-                    id: 'Taco.store.Categories' + this.id,
-                    autoLoad: true,
-                    catalogId: catalogId,
-                    filters: function(record) {
-                        return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
-                    }
-                });
-            
-        
-            me.categoryStore.filter([
-            {
-                filterFn: function (record) {
+            me.categoryStore = Taco.core.data.StoreManager.getOrCreate({
+                type: 'Taco.store.Categories',
+                createOnly: true,
+                id: 'Taco.store.Categories' + this.id,
+                autoLoad: true,
+                catalogId: catalogId,
+                filters: function (record) {
                     return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
                 }
+            });
+
+
+            me.categoryStore.filter([
+                {
+                    filterFn: function (record) {
+                        return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
+                    }
             }]);
 
         }
         return me.categoryStore;
-    
+
     },
 
     getCatalog: function () {
@@ -200,7 +198,8 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
     },
 
     getUnfilteredCategoryStore: function () {
-        var me = this, catalogId = this.getId();
+        var me = this,
+            catalogId = this.getId();
         if (me.categoryStoreUnfiltered == null) {
             me.categoryStoreUnfiltered = Ext.create('Taco.store.Categories');
             me.categoryStoreUnfiltered.load({
@@ -210,29 +209,11 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         return me.categoryStoreUnfiltered;
 
     },
-    
-    set: function (fieldName, newValue) {
-        if (fieldName == 'categoryIds') {
-            console.log(newValue);
-        }
-        this.callParent([fieldName, newValue]);
-    },
-        //,
-    //associations: [
-    //    {
-    //        "type": "belongsTo",
-    //        "model": "Taco.model.Product",
-    //        "getterName": "getProduct",
-    //        "setterName": "setProduct",
-    //        "foreignKey": "productCode"
-    //    }
-    //],
 
     validations: [
 
-     
+
     ]
 
-    
-   
+
 });

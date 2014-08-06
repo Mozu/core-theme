@@ -1,12 +1,12 @@
 /**
-*  @class Taco.core.StateManager
-*  The StateManager is responsible for handling URL history management, deep linking, and global application state. It stores AppState objects in a stack and uses them to call Controllers to construct application states.
-*  It also fires navigation events.
-*  @extends Ext.util.Observable
-*  @requires Taco.core.AppState
-*  @singleton
-*  @author james_zetlen
-*/
+ *  @class Taco.core.StateManager
+ *  The StateManager is responsible for handling URL history management, deep linking, and global application state. It stores AppState objects in a stack and uses them to call Controllers to construct application states.
+ *  It also fires navigation events.
+ *  @extends Ext.util.Observable
+ *  @requires Taco.core.AppState
+ *  @singleton
+ *  @author james_zetlen
+ */
 
 //this synchronous ajax call is currently the best way we have to load a non-Ext dependency into an Ext class. TODO: extend the Ext class manager so it can handle this a little better.
 
@@ -26,24 +26,24 @@ Ext.define('Taco.core.StateManager', {
         me.callParent(arguments);
         me.addEvents(
             /**
-        * @event
-        * @preventable
-        * Fires before the application state changes, whether by StateManager constructing a new State via {@link Taco.core.StateManager#attemptNavigate}, or by the {@link #navigate} event firing and being intercepted by a listening {@link Taco.core.util.Navigable} object.
-        * Returning `false` to a handler will cancel the state change. *If you return false to this handler, you should cache the {@link Taco.core.AppState} the handler received, and then notify the user of the attempt to change state, perhaps via an "Are you sure?" dialog.
-        * @param {Taco.core.AppState} state The state that is about to become active.
-        */
+             * @event
+             * @preventable
+             * Fires before the application state changes, whether by StateManager constructing a new State via {@link Taco.core.StateManager#attemptNavigate}, or by the {@link #navigate} event firing and being intercepted by a listening {@link Taco.core.util.Navigable} object.
+             * Returning `false` to a handler will cancel the state change. *If you return false to this handler, you should cache the {@link Taco.core.AppState} the handler received, and then notify the user of the attempt to change state, perhaps via an "Are you sure?" dialog.
+             * @param {Taco.core.AppState} state The state that is about to become active.
+             */
             'beforenavigate',
             /**
-        * @event
-        * Fires when a navigation is occurring. Handlers can intercept the navigate event and handle it if they know how. If a handler has successfully handled a navigation event, it should return `false`, to prevent the controller from attempting to handle the event.
-        * @param {Taco.core.AppState} state The state that is becoming active.
-        */
+             * @event
+             * Fires when a navigation is occurring. Handlers can intercept the navigate event and handle it if they know how. If a handler has successfully handled a navigation event, it should return `false`, to prevent the controller from attempting to handle the event.
+             * @param {Taco.core.AppState} state The state that is becoming active.
+             */
             'navigate',
             /**
-        * @event
-        * Fires when the application state has changed. This event is not cancelable; it indicates that a state change has already taken place.
-        * @param {Taco.core.AppState} state The state that is now active.
-        */
+             * @event
+             * Fires when the application state has changed. This event is not cancelable; it indicates that a state change has already taken place.
+             * @param {Taco.core.AppState} state The state that is now active.
+             */
             'statechange'
         );
 
@@ -52,18 +52,19 @@ Ext.define('Taco.core.StateManager', {
     // public methods up here
 
     /**
-    * Load the state signified by this URI. Parses a URI, create a state from it, calls the appropriate controller, and fires the {@link #navigate} event.
-    * This method always creates a *blank* state, that is, a state without metadata. This method should only be used to start a new workflow, e.g. on app load or on nav select.
-    * @param {String} uriOrState URI to navigate to. Must be in the form `/controller[/action][/arguments/to/action][?query]`.
-    * @param {Object} metadata If the first argument was a URI, this argument can be the metadata used to store an {@link Taco.core.AppState}.
-    * @param {Object} useReplace
-    * @return {Taco.core.AppState} The new AppState object that has been pushed.
-    */
+     * Load the state signified by this URI. Parses a URI, create a state from it, calls the appropriate controller, and fires the {@link #navigate} event.
+     * This method always creates a *blank* state, that is, a state without metadata. This method should only be used to start a new workflow, e.g. on app load or on nav select.
+     * @param {String} uriOrState URI to navigate to. Must be in the form `/controller[/action][/arguments/to/action][?query]`.
+     * @param {Object} metadata If the first argument was a URI, this argument can be the metadata used to store an {@link Taco.core.AppState}.
+     * @param {Object} useReplace
+     * @return {Taco.core.AppState} The new AppState object that has been pushed.
+     */
     attemptNavigate: function (uriOrState, metadata, useReplace) {
-        //console.log("attemptNavigate", this, uriOrState);
         var me = this,
             newState = uriOrState.isAppState ? uriOrState : this.createState(uriOrState, metadata),
-            retryFn = function () { me.attemptNavigate(newState); },
+            retryFn = function () {
+                me.attemptNavigate(newState);
+            },
             newMetadata,
             controller;
         if (this.fireEvent('beforenavigate', newState, retryFn) !== false) {
@@ -74,7 +75,7 @@ Ext.define('Taco.core.StateManager', {
                 newMetadata = newState.getMetaData(true);
                 this.initController(newMetadata);
                 this.dispatchController(newMetadata);
-               
+
 
             }
             this.fireEvent('statechange', newState);
@@ -109,13 +110,13 @@ Ext.define('Taco.core.StateManager', {
     },
 
     /**
-    * Adds the provided state to the history and makes it the active state. If provided a {@link Taco.core.AppState} object, will pass it through. If provided a URI and metadata hash, will create an AppState with that and pass it through.
-    * This method does not fire the `beforenavigate` event, because it is meant to be used as part of a workflow. A class should only call addState if the class is constructing and displaying the new state itself. The method cannot be canceled; it will push the new state into history, so it can be reconstructed later.
-    * @param {Taco.core.AppState/String} uriOrState Can be a string URI or an already-created {@link Taco.core.AppState}.
-    * @param {Object} metadata If the first argument was a URI, this argument can be the metadata used to store an {@link Taco.core.AppState}.
-    * @param {Boolean} useReplace **For internal use only**. Used in the initial setup so that the initial navigation event doesn't create a duplicate entry.
-    * @return {Taco.core.AppState} The state provided or created.
-    */
+     * Adds the provided state to the history and makes it the active state. If provided a {@link Taco.core.AppState} object, will pass it through. If provided a URI and metadata hash, will create an AppState with that and pass it through.
+     * This method does not fire the `beforenavigate` event, because it is meant to be used as part of a workflow. A class should only call addState if the class is constructing and displaying the new state itself. The method cannot be canceled; it will push the new state into history, so it can be reconstructed later.
+     * @param {Taco.core.AppState/String} uriOrState Can be a string URI or an already-created {@link Taco.core.AppState}.
+     * @param {Object} metadata If the first argument was a URI, this argument can be the metadata used to store an {@link Taco.core.AppState}.
+     * @param {Boolean} useReplace **For internal use only**. Used in the initial setup so that the initial navigation event doesn't create a duplicate entry.
+     * @return {Taco.core.AppState} The state provided or created.
+     */
     addState: function (uriOrState, metadata, useReplace) {
 
         // get current state
@@ -145,8 +146,8 @@ Ext.define('Taco.core.StateManager', {
     // private methods under here
 
     /**
-    * Initializes the manager: processes the initial state and binds a listener to history changes.
-    */
+     * Initializes the manager: processes the initial state and binds a listener to history changes.
+     */
     initialize: function () {
         var me = this;
         // initialize
@@ -160,15 +161,17 @@ Ext.define('Taco.core.StateManager', {
     },
 
     /**
-    * @ignore
-    */
+     * @ignore
+     */
     onStateChange: function () {
         var me = this,
             currentState = me.getCurrentState(),
             browserState = window.History.getState(),
             newState,
             newIndex,
-            retryFn = function () { me.attemptNavigate(newState); },
+            retryFn = function () {
+                me.attemptNavigate(newState);
+            },
             stateId = browserState.data ? browserState.data._stateid : null,
             isExisting = false;
 
@@ -246,21 +249,21 @@ Ext.define('Taco.core.StateManager', {
 
 
     /**
-    * @private
-    * Returns the currently active state.
-    * @return {Taco.core.AppState} The currently active state.
-    */
+     * @private
+     * Returns the currently active state.
+     * @return {Taco.core.AppState} The currently active state.
+     */
     getCurrentState: function () {
         // the active state is the *last* element in the array, unless the back button has been pressed, in which case the stateindex is decremented.
         return this.statestack[this.stateindex];
     },
 
     /**
-    * @private
-    * Dispatches a controller, which creates a new ContentView.
-    * @param {Object} params An object containing at least a controller and action property, corresponding to a real controller and action.
-    * This will attempt to call the controller and action, with the arguments list as parameters.
-    */
+     * @private
+     * Dispatches a controller, which creates a new ContentView.
+     * @param {Object} params An object containing at least a controller and action property, corresponding to a real controller and action.
+     * This will attempt to call the controller and action, with the arguments list as parameters.
+     */
     dispatchController: function (params) {
         var controller, idx, ret;
         try {
@@ -276,7 +279,9 @@ Ext.define('Taco.core.StateManager', {
             //Taco.app.fireEvent('error', 'Error 404: No page or panel found.');
         }
 
-        if (!controller) { return Taco.app.getController("Errors").Http404(); }
+        if (!controller) {
+            return Taco.app.getController("Errors").Http404();
+        }
 
         if (controller.performAction) {
             ret = controller.performAction(params.action, params.args, [params]);
@@ -304,11 +309,11 @@ Ext.define('Taco.core.StateManager', {
     },
 
     /**
-    * @private
-    * Creates a new {@link Taco.core.State} object and returns it (does not add state)
-    * @param {String/Object}uri The uri associated with the state **or** a normalized HTML5 History state with data, title, and url parameters
-    * @param {Object} metadata A **simple** JSON object, using only primitive key values, to serve as state metadata.
-    */
+     * @private
+     * Creates a new {@link Taco.core.State} object and returns it (does not add state)
+     * @param {String/Object}uri The uri associated with the state **or** a normalized HTML5 History state with data, title, and url parameters
+     * @param {Object} metadata A **simple** JSON object, using only primitive key values, to serve as state metadata.
+     */
     createState: function (uri, metaData) {
         if (typeof uri !== "string" && uri.url) {
             metaData = uri.data;
@@ -321,8 +326,8 @@ Ext.define('Taco.core.StateManager', {
     },
 
     /**
-    * @private
-    */
+     * @private
+     */
     truncateAndPush: function (appState) {
         this.statestack.length = ++this.stateindex; // truncate at current index
         this.statestack.push(appState); // now that length is incremented by one, index points at last entry

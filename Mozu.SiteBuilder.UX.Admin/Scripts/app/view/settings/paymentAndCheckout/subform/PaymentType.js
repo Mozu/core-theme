@@ -22,17 +22,17 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
         };
         this.gateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.GatewayDefinitions');
         this.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');
-        
+
         this.gateWayDefinitionsCombo = Ext.create('Ext.form.ComboBox', {
             fieldLabel: 'Select a payment gateway',
             store: this.gateWayDefinitionsStore,
             queryMode: 'local',
             width: 400,
-            forceSelection:true,
+            forceSelection: true,
             name: 'gatewayDefinitionId',
             value: this.record.get('gateway')['gatewayDefinitionId'],
             displayField: 'name',
-            triggerOnClick:true,
+            triggerOnClick: true,
             valueField: 'id'
         });
         this.gateWayContainer = Ext.widget({
@@ -61,17 +61,16 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
 
             ]
         });
-        
+
         this.items = [this.paymentTypes];
 
         this.callParent(arguments);
 
-        this.gateWayDefinitionsCombo.on(
-            {
-                change: this.onPaymentTypesChange,
-                scope: this
-            });
-        
+        this.gateWayDefinitionsCombo.on({
+            change: this.onPaymentTypesChange,
+            scope: this
+        });
+
         if (this.record.get('gateway')['gatewayDefinitionId']) {
             this.on('boxready', this.onPaymentTypesChange, this);
         }
@@ -80,7 +79,6 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
     initExternalGateway: function () {
         //runs this if it is loaded
         if (!this.externalGateWayDefinitionsStore.isLoading()) {
-            console.log(this.externalGateWayDefinitionsStore.isLoading());
             this.buildExternalGateway();
         }
         //runs this if it hasn't loaded
@@ -89,7 +87,6 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
     },
     buildExternalGateway: function () {
         var me = this.externalGateWayDefinitionsStore;
-        console.log(this.externalGateWayDefinitionsStore);
         me.each(function (externalPayment) {
             var panel = Ext.create('Taco.view.settings.paymentAndCheckout.ExternalGateway', {
                 record: this.record,
@@ -111,7 +108,7 @@ Ext.define('Taco.view.settings.paymentAndCheckout.subform.PaymentType', {
             return;
         }
         var gateWayDef = this.gateWayDefinitionsCombo.findRecordByValue(this.gateWayDefinitionsCombo.getValue());
-        
+
         if (!gateWayDef) {
             return;
         }

@@ -23,12 +23,12 @@
             type: 'Taco.store.Attributes',
             remoteFilter: false,
             clearFilters: true,
-            clearSort:true,
+            clearSort: true,
             id: 'attributes',
-            autoLoad:true
+            autoLoad: true
         });
 
-        
+
         this.createFilter = function (attributeRecord) {
             return !me.ptAttributeStore.containsById(attributeRecord);
         };
@@ -50,8 +50,13 @@
         this.removeAll();
         this.addButtons();
         this.addAttributes([
-            {property: this.filterProperty, value: true},
-            {filterFn: this.createFilter}
+            {
+                property: this.filterProperty,
+                value: true
+            },
+            {
+                filterFn: this.createFilter
+            }
         ]);
     },
 
@@ -59,7 +64,9 @@
         this.removeAll();
         this.addButtons();
         this.addAttributes([
-            {filterFn: this.editFilter}
+            {
+                filterFn: this.editFilter
+            }
         ], ptAttribute);
     },
 
@@ -99,13 +106,13 @@
         this.record.set('attributeName', this.selectedAttribute.get('name'));
         this.record.set('inputType', this.selectedAttribute.get('inputType'));
 
-        switch(this.selectedAttribute.get('inputType')) {
-            
-            case 'List':
-                this.record.set('selectedValues', Ext.Array.pluck(this.selectionStore.data.items, 'raw'));
-                break;
+        switch (this.selectedAttribute.get('inputType')) {
+
+        case 'List':
+            this.record.set('selectedValues', Ext.Array.pluck(this.selectionStore.data.items, 'raw'));
+            break;
         }
-        
+
         this.record.set('attributeFQN', this.selectedAttribute.getId());
         this.record.phantom = true;
         this.fireEvent('save', this, this.record);
@@ -136,8 +143,7 @@
                     mode: 'SINGLE',
                     listeners: {
                         selectionchange: function (selectionModel, records) {
-                            if (!Ext.isArray(records)
-                                || records.length !== 1) {
+                            if (!Ext.isArray(records) || records.length !== 1) {
                                 return;
                             }
                             this.addEditor(records[0]);
@@ -152,7 +158,7 @@
         }));
     },
 
-    addEditor: function (attribute) { 
+    addEditor: function (attribute) {
         var ptAttribute = this.ptAttributeStore.containsById(attribute);
 
         Ext.each(this.query('[removeOnAttributeChange]'), function (cmp) {
@@ -173,8 +179,14 @@
     addListEditor: function (attribute) {
         var valuesField, selectionsField, valuesStore,
             fields = [
-                {name: 'id', type: 'string'},
-                {name: 'value', type: 'string'}
+                {
+                    name: 'id',
+                    type: 'string'
+                },
+                {
+                    name: 'value',
+                    type: 'string'
+                }
             ];
 
         valuesStore = Ext.create('Ext.data.Store', {
@@ -208,7 +220,6 @@
                     listeners: {
                         selectionchange: function (selectionModel, selected) {
                             Ext.each(selected, function (record) {
-                                console.log(record, this.selectionStore, this.selectionStore.find('id', record.get('id')));
                                 if (this.selectionStore.find('id', record.get('id'), 0, false, false, true) > -1) {
                                     return;
                                 }
@@ -233,21 +244,21 @@
             minWidth: this.containerWidth,
             displayField: 'value',
             valueField: 'id',
-           
+
             listConfig: {
-               
+
                 itemTpl: [
                     '<span class="x-boundlist-item-drag">Drag </span>',
                     '<span class="x-boundlist-item-content">{value}</span>',
                     '<span class="x-boundlist-item-close"> </span>'
                 ],
-               
+
                 listeners: {
                     itemclick: function (boundlist, record, item, index, e) {
-                        if(!Ext.fly(e.target).hasCls('x-boundlist-item-close')) {
+                        if (!Ext.fly(e.target).hasCls('x-boundlist-item-close')) {
                             return;
                         }
-                        
+
                         this.selectionStore.remove(record);
                         valuesField.deselect(record.get('id'));
                     },
