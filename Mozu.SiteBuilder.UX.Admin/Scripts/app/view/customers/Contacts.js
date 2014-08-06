@@ -10,7 +10,7 @@ Ext.define('Taco.view.customers.Contacts', {
 
     order: null,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addressContainer = Ext.widget({
             xtype: 'container'
@@ -23,7 +23,7 @@ Ext.define('Taco.view.customers.Contacts', {
         this.callParent(arguments);
     },
 
-    buildAddresses: function() {
+    buildAddresses: function () {
         var fulfillmentContact = this.order ? this.order.get('fulfillmentContact') : {},
             fulfillmentContactJson = Ext.encode(fulfillmentContact),
             billingContact = this.order ? this.order.get('billingContact') : {},
@@ -35,7 +35,7 @@ Ext.define('Taco.view.customers.Contacts', {
 
         this.addressContainer.removeAll();
 
-        Ext.each(this.contacts, function(contact) {
+        Ext.each(this.contacts, function (contact) {
             var billingChecked = contact.isOrderBilling || billingContactJson === Ext.encode(contact),
                 shippingChecked = contact.isOrderFullfilment || fulfillmentContactJson === Ext.encode(contact);
 
@@ -70,7 +70,7 @@ Ext.define('Taco.view.customers.Contacts', {
                         padding: '0 0 0 5',
                         text: 'Edit',
                         itemId: 'editButton',
-                        handler: function() {
+                        handler: function () {
                             this.editContact(contact);
                         },
                         scope: this
@@ -81,7 +81,7 @@ Ext.define('Taco.view.customers.Contacts', {
                         text: 'Delete',
                         itemId: 'deleteButton',
                         hidden: contact.isFromOrder,
-                        handler: function() {
+                        handler: function () {
                             this.deleteContact(contact);
                         },
                         scope: this
@@ -137,17 +137,17 @@ Ext.define('Taco.view.customers.Contacts', {
         if (!oneShippingChecked) this.addressContainer.down('[name="customerShipToAddress"]').setValue(true);
     },
 
-    getSelection: function() {
+    getSelection: function () {
         var ret = {};
 
-        Ext.each(this.query('[name="customerShipToAddress"]'), function(radio) {
+        Ext.each(this.query('[name="customerShipToAddress"]'), function (radio) {
             if (radio.getValue()) {
                 ret.customerShipToAddress = radio.inputValue;
                 return false;
             }
         });
 
-        Ext.each(this.query('[name="customerBillToAddress"]'), function(radio) {
+        Ext.each(this.query('[name="customerBillToAddress"]'), function (radio) {
             if (radio.getValue()) {
                 ret.customerBillToAddress = radio.inputValue;
                 return false;
@@ -157,7 +157,7 @@ Ext.define('Taco.view.customers.Contacts', {
         return ret;
     },
 
-    loadContacts: function() {
+    loadContacts: function () {
         var billingContact,
             fulfillmentContact,
             foundBilling,
@@ -171,7 +171,7 @@ Ext.define('Taco.view.customers.Contacts', {
             fulfillmentContact = Ext.clone(this.order.get('fulfillmentContact'));
 
             if (billingContact && billingContact.address1) {
-                foundBilling = Ext.Array.findBy(this.record.get('contacts'), function(contact) {
+                foundBilling = Ext.Array.findBy(this.record.get('contacts'), function (contact) {
                     return this.contactsMatch(contact, billingContact);
                 }, this);
 
@@ -183,7 +183,7 @@ Ext.define('Taco.view.customers.Contacts', {
             }
 
             if (fulfillmentContact && fulfillmentContact.address1) {
-                foundFulfillment = Ext.Array.findBy(this.record.get('contacts'), function(contact) {
+                foundFulfillment = Ext.Array.findBy(this.record.get('contacts'), function (contact) {
                     return this.contactsMatch(contact, fulfillmentContact);
                 }, this);
 
@@ -199,18 +199,18 @@ Ext.define('Taco.view.customers.Contacts', {
         Ext.Array.push(this.contacts, this.record.get('contacts'));
     },
 
-    createNewContact: function() {
+    createNewContact: function () {
         this.editContact({
             isNewContact: true
         });
     },
 
-    editContact: function(contact) {
+    editContact: function (contact) {
         Ext.create('Taco.shared.view.modal.Address', {
             record: Ext.create('Taco.model.Contact', contact),
             showDefaultOptions: true,
             listeners: {
-                savesuccess: function(form, newContact) {
+                savesuccess: function (form, newContact) {
                     var contacts = Ext.Array.clone(this.record.get('contacts')),
                         index = Ext.Array.indexOf(contacts, contact);
 
@@ -233,7 +233,7 @@ Ext.define('Taco.view.customers.Contacts', {
         });
     },
 
-    contactsMatch: function(c1, c2) {
+    contactsMatch: function (c1, c2) {
         var parameters = [
                 'firstName',
                 'lastName',
@@ -254,17 +254,17 @@ Ext.define('Taco.view.customers.Contacts', {
             ],
             ret = true;
 
-            Ext.each(parameters, function(param) {
-                if (c1[param] !== c2[param]) {
-                    ret = false;
-                    return false;
-                }
-            });
+        Ext.each(parameters, function (param) {
+            if (c1[param] !== c2[param]) {
+                ret = false;
+                return false;
+            }
+        });
 
         return ret;
     },
 
-    deleteContact: function(contact) {
+    deleteContact: function (contact) {
         var me = this,
             tpl = new Ext.XTemplate(
                 'Are you sure you want to Delete this contact?',
@@ -292,7 +292,7 @@ Ext.define('Taco.view.customers.Contacts', {
             msg: tpl.apply(contact),
             buttons: Ext.Msg.OKCANCEL,
 
-            fn: function(buttonId) {
+            fn: function (buttonId) {
                 var contacts;
 
                 if (buttonId !== 'ok') return;
