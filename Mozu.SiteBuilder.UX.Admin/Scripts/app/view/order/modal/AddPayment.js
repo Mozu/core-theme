@@ -155,6 +155,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         name: 'amount',
                         fieldLabel: 'Amount',
                         validateOnChange: false,
+                        selectOnFocus: true,
                         allowBlank: false,
                         minValue:0.01,
                         value: this.getDefaultPaymentAmount()
@@ -399,7 +400,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             retVal = this.defaultPaymentAmount;
         }
 
-        retVal = (retVal < 0) ? 0 : retVal;
+        retVal = (retVal < 0) ? "" : retVal;
         return retVal;
     },
 
