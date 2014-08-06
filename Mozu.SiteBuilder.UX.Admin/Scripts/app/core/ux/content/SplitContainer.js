@@ -192,8 +192,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             header: false,
             collapsible: true,
             animCollapse: false,
-            flex: 1,
-            minWidth: 933,
+            flex: 933,
             lbar: {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
@@ -225,7 +224,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             header: false,
             collapsible: true,
             animCollapse: false,
-            flex: 1,
+            flex: 303,
             rbar: {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
