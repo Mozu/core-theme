@@ -299,6 +299,7 @@ Ext.define('Taco.view.order.Header', {
                     xtype: 'button',
                     ui: 'action-primary',
                     scale: 'medium',
+                    itemId:"createNewCustomerButton",
                     text: 'Create New Customer',
                     handler: this.createCustomer,
                     scope: this
@@ -349,6 +350,10 @@ Ext.define('Taco.view.order.Header', {
             order: this.record,
             listeners: {
                 scope: me,
+                aftercancelclose: function () {
+                    var createNewCustomerButton = this.down("#createNewCustomerButton");
+                    createNewCustomerButton.focus();
+                },
                 aftersaveclose: function (view, record) {
                     me.fireEvent('addresschanged', me, me.record);
                     me.updateHeader();
@@ -357,13 +362,19 @@ Ext.define('Taco.view.order.Header', {
         });
     },
 
-    changeAddress: function () {
+    changeAddress: function (focusAfterCloseCmp) {
         var me = this;
+
         Ext.create('Taco.view.customers.modal.Contacts', {
             record: this.record.getCustomer(),
             order: this.record,
             listeners: {
                 scope: me,
+                afterclose: function (view, e) {
+                    if (focusAfterCloseCmp) {
+                        focusAfterCloseCmp.focus();
+                    }
+                },
                 aftersaveclose: function (view, record) {
                     me.fireEvent('addresschanged', me, me.record);
                     me.updateHeader();

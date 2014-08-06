@@ -91,7 +91,19 @@ Ext.define('Taco.view.order.subform.Payment', {
             return Ext.create('Ext.Action', {
                 text: text,
                 handler: function() {
-                    Ext.create(cls, { record: me.record, storeCreditsStore: me.storeCreditsStore }).show();
+                    Ext.create(cls, {
+                        record: me.record, storeCreditsStore: me.storeCreditsStore, listeners: {
+                            afterclose: {
+                                scope: me,
+                                fn: function () {                                    
+                                    if (this.addPaymentButton) {
+                                        this.addPaymentButton.focus();
+                                    }
+
+                                }
+                            }
+                        }
+                    }).show();
                 }
             });
         }

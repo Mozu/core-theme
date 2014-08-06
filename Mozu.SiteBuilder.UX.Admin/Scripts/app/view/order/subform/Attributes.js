@@ -51,7 +51,9 @@ Ext.define('Taco.view.order.subform.Attributes', {
         this.callParent(arguments);
     },
 
-    openAttributesDialog: function () {
+    openAttributesDialog: function (focusAfterCloseCmp) {
+        var me = this;
+
         if (this.attributesDialog) {
             this.attributesDialog.show();
         } else {
@@ -67,6 +69,11 @@ Ext.define('Taco.view.order.subform.Attributes', {
                 },
                 items: [this.orderForm.orderAttr],
                 listeners: {
+                    afterclose: function (view, e) {
+                        if (focusAfterCloseCmp) {
+                            focusAfterCloseCmp.focus();
+                        }
+                    },
                     savesuccess: {
                         scope: this,
                         fn: function () {
