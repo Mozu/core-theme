@@ -91,6 +91,12 @@
     }
 }
 
+.#{$prefix}form-search-trigger {
+    &::after {
+        content: $glyph-search;
+    }
+}
+
 .#{$prefix}form-date-trigger {
     &::after {
         content: $glyph-calendar;
