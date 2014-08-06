@@ -13,7 +13,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         align: 'stretch'
     },
 
-    initComponent: function() {
+    initComponent: function () {
 
         var me = this,
             data = this.record ? this.record.getData() : {
@@ -42,7 +42,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     itemId: 'taxExemptCheckbox',
                     boxLabel: 'Tax Exempt',
                     listeners: {
-                        change: function(field, newValue, oldValue, eOpts) {
+                        change: function (field, newValue, oldValue, eOpts) {
                             this.taxExemptIdField.setVisible(newValue);
                         },
                         scope: this
@@ -63,16 +63,19 @@ Ext.define('Taco.view.customers.subform.Information', {
                     xtype: 'textfield',
                     cls: 'no-field-padding',
                     name: 'firstName',
-                    fieldLabel: 'First Name'
+                    fieldLabel: 'First Name',
+                    allowBlank: false
                 }, {
                     xtype: 'textfield',
                     name: 'lastName',
-                    fieldLabel: 'Last Name'
+                    fieldLabel: 'Last Name',
+                    allowBlank: false
                 }, {
                     xtype: 'textfield',
                     padding: '0 0 16 0',
                     name: 'emailAddress',
-                    fieldLabel: 'Email'
+                    fieldLabel: 'Email',
+                    allowBlank: false
                 }, {
                     xtype: 'checkboxfield',
                     name: 'isAnonymous',
@@ -127,7 +130,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     fieldLabel: 'Customer Segments',
                     itemId: 'customerSegments',
                     store: this.segmentStore,
-                    getStore: function() {
+                    getStore: function () {
                         return me.segmentStore;
                     },
                     name: 'segmentIds',
@@ -141,7 +144,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 }, {
                     xtype: 'secondarybutton',
                     text: 'Add',
-                    click: function() {
+                    click: function () {
                         this.launchSegmentModal();
                     },
                     scope: this
@@ -151,7 +154,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 scale: 'medium',
                 ui: 'link',
                 text: 'View Wishlist',
-                handler: function() {
+                handler: function () {
                     Ext.create('Taco.shared.view.modal.Wishlist', {
                         record: this.record
                     });
@@ -162,7 +165,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 scale: 'medium',
                 ui: 'link',
                 text: 'View Gift Cards & Store Credits',
-                handler: function() {
+                handler: function () {
                     Ext.create('Taco.shared.view.modal.StoreCredit', {
                         record: this.record
                     });
@@ -174,7 +177,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         this.callParent(arguments);
     },
 
-    launchSegmentModal: function() {
+    launchSegmentModal: function () {
         var list = this.down('#customerSegments'),
             listStore = list.getStore(),
             gridStore = Taco.core.data.StoreManager.getOrCreate({
@@ -187,7 +190,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         this.modal = Ext.create('Taco.view.customers.segments.Modal', {
             store: gridStore,
             listeners: {
-                savesuccess: function(modal, values) {
+                savesuccess: function (modal, values) {
                     list.addValue(values);
                 },
                 scope: this
