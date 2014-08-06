@@ -58,17 +58,17 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// </summary>
     [NDjango.ParserNodes.Description("tbd")]
     [NDjango.Interfaces.Name("include_products")]
-    public class IncludeProductsTag:SimpleTagBaseAsync
+    public class IncludeProductsTag : SimpleTagBaseAsync
     {
 
 
-    
-       protected override async Task<SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, NDjango.Interfaces.IContext context)
+
+        protected override async Task<SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, NDjango.Interfaces.IContext context)
         {
             var result = new SimpleTagBaseAsync.ProcessTagResult(context);
             var cache = context.Resolve<IStorefrontCache>();
 
-            var template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
+            var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault<bool>("includeFacets", false);
             var pageWithUrl = arguments.GetValueOrDefault<bool>("pageWithUrl", false);
             var sortWithUrl = arguments.GetValueOrDefault<bool>("sortWithUrl", false);
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 if (productCodes is string)
                 {
-                    productCodes = ((string) productCodes).Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                    productCodes = ((string)productCodes).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 }
 
                 var productCodesFilters = (productCodes ?? Enumerable.Empty<object>()).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
@@ -156,42 +156,44 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 facetValueFilter = request.QueryString["facetValueFilter"];
             }
 
-           string sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
-            
+            string sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
 
-           if (sortWithUrl && !string.IsNullOrEmpty(request["sortBy"]))
-           {
-               sortBy = request["sortBy"];
-           }
+
+            if (sortWithUrl && !string.IsNullOrEmpty(request["sortBy"]))
+            {
+                sortBy = request["sortBy"];
+            }
 
             ProductSearchResult pc;
             //searchWebApiClient = searchWebApiClient.CloneWithConfigOptions(x => x.HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead);
-           var filter = searchQuery.ToString();
+            var filter = searchQuery.ToString();
 
-           var cacheKey = new StringBuilder().Append(qurey).Append(filter).Append(facetHierValue).Append(facetTemplate).Append(facetHierDepth).Append(facetValueFilter).Append(startIndex).Append(sortBy).Append(pageSize).ToString();
+            var cacheKey = new StringBuilder().Append(qurey).Append(filter).Append(facetHierValue).Append(facetTemplate).Append(facetHierDepth).Append(facetValueFilter).Append(startIndex).Append(sortBy).Append(pageSize).ToString();
 
-           pc = cache.Get<ProductSearchResult>(cacheKey);
-           if (pc == null)
-           {
-               var res = await searchWebApiClient.Search(query: qurey, filter: filter, facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
+            pc = cache.Get<ProductSearchResult>(cacheKey);
+            if (pc == null)
+            {
+                var res = await searchWebApiClient.Search(query: qurey, filter: filter, facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
 
-               using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync())
-               {
-                   using (var sr = new StreamReader(stream))
-                   {
-                       var rdr = new JsonTextReader(sr);
-                       var ser = JsonSerializer.CreateDefault();
-                       pc = ser.Deserialize<ProductSearchResult>(rdr);
-                   }
-               }
-               cache.Set(cacheKey,pc);
-           }
-           
+                using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync())
+                {
+                    using (var rdr = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, System.Text.Encoding.UTF8))
+                    {
+
+                        var ser = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
+                        //var ser = JsonSerializer.CreateDefault();
+
+                        pc = ser.Deserialize<ProductSearchResult>(rdr);
+                    }
+                }
+                cache.Set(cacheKey, pc);
+            }
+
             //    var pcDC = await  res.ReadAsAsync();
             //     var pc = Mapper.Map<ProductSearchResult>(pcDC);
             result.Template = template;
 
-           
+
             result.Context = context.add(new Tuple<string, object>("model", pc));
             ;
             return result;
@@ -205,7 +207,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         //{
 
         //    IEnumerable<object> _productCodes = productCodes == null ? null : productCodes.Cast<object>();
-                
+
         //        categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
         //    if (useUrlParams.GetValueOrDefault(false))
         //    {
@@ -283,6 +285,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
 
-        
+
     }
 }

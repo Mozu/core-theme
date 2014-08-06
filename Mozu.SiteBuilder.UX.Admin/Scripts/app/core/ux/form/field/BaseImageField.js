@@ -94,9 +94,9 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
         };
 
         if (value.imageId) {
-            ret.imageSource = "file";
+            ret.imageSource = 'file';
         } else {
-            ret.imageSource = "externalUrl";
+            ret.imageSource = 'externalUrl';
             ret.imageExternalUrl= value.imageUrl;
         }
        
@@ -118,15 +118,15 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
             height: value.imageHeight,
             linkUrl: value.linkExternalUrl
         };
-        if (value.imageSource == "externalUrl") {
+        if (value.imageSource === 'externalUrl') {
             ret.imageUrl = value.imageExternalUrl;
         }
-        if (value.imageSource == "file") {
+        if (value.imageSource === 'file') {
 
             ret.imageUrl = '//' + Taco.cdnPrefix + '/' + tenantId + '-' + siteId + '/cms/files/' + value.imageFileId;
             //2083-2116/cms/7332/files/b1bf3cab-1d7c-42f8-901a-bff60b56d778?size=60
         }
-        return ret;
+        return ret; 
     },
 
 
@@ -172,14 +172,14 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
         if (!this.getEl()) {
             return null;
         }
-        return this.inputEl = this.inputEl || this.getEl().getById(this.getInputId());
+        this.inputEl = this.inputEl || this.getEl().getById(this.getInputId());
+        return this.inputEl;
     },
   
 
     fieldSubTpl: ['<div id="img-cnt-{id]"> <img src="{imageUrl}" id="{id}" style="cursor:pointer;max-height:200px;max-width:200px;" ></div>'],
     getSubTplData: function () {
-        var me = this,
-            templateData = this.callParent(arguments),
+        var templateData = this.callParent(arguments),
             value = this.getValue();
 
         templateData.imageUrl = value && value.imageUrl ? value.imageUrl : '/admin/scripts/resources/images/noimage.png';
@@ -223,8 +223,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
     },
 
     initComponent: function () {
-        var me = this;
-
+        
         this.imageStore = Ext.create('Ext.data.Store', {
             fields: ['id', 'url'],
             data: []
@@ -300,7 +299,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                         listeners: {
                             change: {
                                 scope: this,
-                                fn: function (field, newValue, oldValue) {
+                                fn: function (field, newValue) {
                                     this.handleImageSourceChange(newValue);
                                 }
                             }
@@ -439,7 +438,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                         listeners: {
                             change: {
                                 scope: this,
-                                fn: function (field, newValue, oldValue) {
+                                fn: function (field, newValue) {
                                     this.handleImageSizeChange(newValue);
                                 }
                             }
@@ -480,7 +479,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                     listeners: {
                         change: {
                             scope: this,
-                            fn: function (fieldgroup, newValue, oldValue) {
+                            fn: function (fieldgroup, newValue) {
                                 this.handleImageClickActionChange(newValue);
                             }
                         }
@@ -508,7 +507,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                         listeners: {
                             change: {
                                 scope: this,
-                                fn: function (field, newValue, oldValue) {
+                                fn: function (field, newValue) {
                                     this.handleLinkSourceChange(newValue);
                                 }
                             }
@@ -589,7 +588,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                                 xtype: 'treecolumn',
                                 flex: 1,
                                 dataIndex: 'name',
-                                renderer: function (value, metaData, record) {
+                                renderer: function (value) {
                                     return '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
                                 }
                             }],
@@ -719,7 +718,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                 },
                 close: {
                     scope: this,
-                    fn: function (dialog) {
+                    fn: function () {
                         button.toggle(false);
 
                         Ext.destroy(this.associatorListeners);

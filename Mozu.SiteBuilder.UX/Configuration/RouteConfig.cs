@@ -42,6 +42,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
+               "Misc_content_3",
+               "cms/files/{documentId}",
+               new { action = "index", controller = "content", list = "files@mozu" }
+               );
+
+
+            routes.MapHttpRoute(
                "cms_page",
                "cms/{list}/{name}",
                new { controller = "cmspages", action = "Page" });
@@ -271,7 +278,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             routes.MapHttpRoute(
                 "Misc_content",
                 "files/{tenant}/{mastercat}/{documentId}",
-                new { action = "index", controller = "content", list = "files@mozu", site = -1 }
+                new { action = "index", controller = "content", list = "files@mozu"  }
                 );
 
          
@@ -280,20 +287,16 @@ namespace Mozu.SiteBuilder.UX.Configuration
             routes.MapHttpRoute(
                 "Misc_content_2",
                 "cms/{site}/files/{documentId}",
-                new { action = "index", controller = "content", list = "files@mozu", tenant = -1, mastercat = -1 }
+                new { action = "index", controller = "content", list = "files@mozu" }
                 );
 
-            routes.MapHttpRoute(
-                "Misc_content_3",
-                "cms/files/{documentId}",
-                new { action = "index", controller = "content", list = "files@mozu", tenant = -1, mastercat = -1, site = -1 }
-                );
+           
 
 
             routes.MapHttpRoute(
                 "Misc_content_4",
                 "{tenant}-{site}/cms/files/{documentId}",
-                new { action = "index", controller = "content", list = "files@mozu", tenant = -1, mastercat = -1, site = -1 }
+                new { action = "index", controller = "content", list = "files@mozu" }
                 );
 
 
