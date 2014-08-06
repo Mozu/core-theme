@@ -70,9 +70,6 @@ Ext.define('Taco.core.ux.form.CurrencyField', {
 
         value = Ext.isDefined(value) ? value : this.processRawValue(this.getRawValue());
 
-        if (value.length < 1) { // if it's blank and textfield didn't flag it then it's valid
-            return errors;
-        }
 
         value = String(value).replace(this.decimalSeparator, '.').replace(this.unitString, '').replace(me.sepperatorRegexp, '');
 

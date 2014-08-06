@@ -2,232 +2,129 @@
  * @class Taco.view.order.modal.AddPaymentManual
  */
 
-Ext.define('Taco.view.order.modal.AddPaymentManual', {
-    extend: 'Taco.core.ux.window.Modal',
+Ext.define('Taco.view.order.modal.AddPaymentManual', {    
+    extend: 'Taco.view.order.modal.AddPayment',
     requires: [
         'Taco.core.ux.form.DateTime',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Ext.form.field.Number',
+        'Ext.form.field.Text',
+        'Ext.form.field.ComboBox',
+        'Ext.form.fieldContainer'
     ],
-
-    autoShow: true,
-    scale: 'large',
     title: 'Add Manual Payment',
-
     initComponent: function () {
-        
-        this.form = Ext.create('Taco.core.ux.form.Form', {
-            layout: {
-                type: 'vbox'
-            },
+        //Note: this classes' items are added in the base class;
+        this.callParent(arguments);
+    },
+    // remove base class methods that don't apply
+    createPciProcessor : Ext.emptyFn,
+    createPciFormField: Ext.emptyFn,
+    getPCIaaS: Ext.emptyFn,
+    getPciFieldsAdapter: Ext.emptyFn,
+
+    // override of base class;
+    getPaymentForm: function () {
+
+        return {
+            xtype: 'container',
+            anchor: 0,
             items: [{
                 xtype: 'container',
-                layout: {
-                    type: 'hbox'
-                },
+                anchor: 0,
+                layout: 'hbox',
                 defaults: {
-                    margin: '0 25 0 0',
-                    width: 230
+                    margin: '0 20 0 0'
                 },
-                items: [{
-                    xtype: 'textfield',
-                    name: 'gatewayTransactionId',
-                    fieldLabel: 'Gateway Transaction Id'
-                }, {
-                    xtype: 'numberfield',
-                    name: 'gatewayInteractionId',
-                    hideTrigger: true,
-                    mouseWheelEnabled: false,
-                    fieldLabel: 'Gateway Interaction Id'
-                }, {
-                    xtype: 'combobox',
-                    name: 'actionName',
-                    fieldLabel: 'Interaction Type',
-                    allowBlank: false,
-                    forceSelection: true,
-                    store: [['AuthorizePayment', 'Authorize Only'], ['AuthAndCapture', 'Authorize and Capture']],
-                    value: 'AuthorizePayment',
-                    margin: '0 0 0 0'
-                }]
+                items: [
+                   {
+                       xtype: 'textfield',
+                       name: 'gatewayTransactionId',
+                       flex:1,
+                       fieldLabel: 'Gateway Transaction Id'
+                   }, {
+                       xtype: 'numberfield',
+                       name: 'gatewayInteractionId',
+                       hideTrigger: true,
+                       flex: 1,
+                       mouseWheelEnabled: false,
+                       fieldLabel: 'Gateway Interaction Id'
+                   }, {
+                       xtype: 'combobox',
+                       name: 'actionName',
+                       fieldLabel: 'Interaction Type',
+                       allowBlank: false,
+                       flex: 1,
+                       forceSelection: true,
+                       store: [['AuthorizePayment', 'Authorize Only'], ['AuthAndCapture', 'Authorize and Capture']],
+                       value: 'AuthorizePayment',
+                       margin: '0 0 0 0'
+                   }
+                ]
             }, {
                 xtype: 'container',
-                layout: {
-                    type: 'hbox'
-                },
+                layout: 'hbox',
                 defaults: {
-                    margin: '0 25 0 0',
-                    width: 230
-                },
-                items: [{
-                    xtype: 'datetime',
-                    name: 'interactionDate',
-                    fieldLabel: 'Transaction Date'
-                }, {
-                    xtype: 'combobox',
-                    name: 'cardType',
-                    fieldLabel: 'Card Type',
-                    allowBlank: false,
-                    forceSelection: true,
-                    store: [['Visa', 'Visa'], ['Mastercard', 'Mastercard']],
-                    value: 'Visa'
-                }, {
-                    xtype: 'textfield',
-                    name: 'cardLastFour',
-                    fieldLabel: 'Last 4 Digits',
-                    emptyText: '1111',
                     margin: '0 20 0 0',
-                    width: 105
-                }, {
-                    xtype: 'currencyfield',
-                    currencyCode: this.record.getCurrencyCode(),
-                    name: 'amount',
-                    fieldLabel: 'Amount',
-                    emptyText: '0',
-                    margin: '0 0 0 0',
-                    width: 105
-                }]
-            }, {
-                xtype: 'fieldcontainer',
-                layout: 'fit',
-                fieldLabel: 'Payment Address',
-                items: [{
-                    xtype: 'checkboxfield',
-                    boxLabel: 'Use billing address',
-                    name: 'sameAsBilling',
-                    checked: true,
-                    scope: this,
-                    handler: this.toggleExtraInfo
-                }]
-            }, {
-                xtype: 'container',
-                itemId: 'extraInfo',
-                hidden: true,
-                layout: {
-                    type: 'vbox'
+                    flex: 1
                 },
-                items: [{
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 25 0 0',
-                        width: 230
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'firstName',
-                        fieldLabel: 'First Name'
+                items: [
+                    {
+                        xtype: 'datetime',
+                        name: 'interactionDate',
+                        fieldLabel: 'Transaction Date'
+                    },  {
+                        xtype: 'combobox',
+                        name: 'cardType',
+                        itemId: 'cardType',
+                        valueField: 'Key',
+                        displayField: 'Value',
+                        fieldLabel: 'Card Type',
+                        queryMode: 'local',
+                        allowBlank: false,
+                        editable: false,
+                        forceSelection: true,
+                        store: Taco.core.data.StoreManager.getOrCreate({
+                            type: 'Taco.store.ConfiguredCreditCards'
+                        })
                     }, {
-                        xtype: 'textfield',
-                        name: 'middleName',
-                        fieldLabel: 'Middle Name'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'lastName',
-                        fieldLabel: 'Last Name',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 360
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'address1',
-                        fieldLabel: 'Address 1'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'address2',
-                        fieldLabel: 'Address 2',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 360
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'address3',
-                        fieldLabel: 'Address 3'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'address4',
-                        fieldLabel: 'Address 4',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 170
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'cityOrTown',
-                        fieldLabel: 'City'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'stateOrProvince',
-                        fieldLabel: 'State'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'postalOrZipCode',
-                        fieldLabel: 'ZIP Code'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'countryCode',
-                        fieldLabel: 'Country',
-                        margin: '0 0 0 0'
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    defaults: {
-                        margin: '0 20 0 0',
-                        width: 170
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'email',
-                        fieldLabel: 'Email'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'homePhone',
-                        fieldLabel: 'Home Phone'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'workPhone',
-                        fieldLabel: 'Work Phone'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'mobilePhone',
-                        fieldLabel: 'Mobile Phone',
-                        margin: '0 0 0 0'
-                    }]
-                }]
-            }]
-        });
+                        xtype: 'fieldcontainer',
+                        layout: 'hbox',
+                        margin: '0 0 0 0',
+                        defaults: {
+                            margin: '0 20 0 0',
+                            flex: 1
+                        },
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                name: 'cardLastFour',
+                                fieldLabel: 'Last 4 Digits',
+                                minLength: 4,
+                                maxLength: 4,
+                                enforceMaxLength: true,
+                                validateOnChange:false,
+                                emptyText: '1111'
+                            }, {
+                                xtype: 'currencyfield',
+                                currencyCode: this.record.getCurrencyCode(),
+                                name: 'amount',
+                                fieldLabel: 'Amount',
+                                validateOnChange: true,
+                                allowBlank: false,
+                                minValue:0.01,
+                                value: this.getDefaultPaymentAmount(),
+                                margin: '0 0 0 0'
+                            }
+                        ]
+                    }
+                ]
+            }
 
-        this.items = [this.form];
-
-        this.callParent(arguments);
-
+            ]
+        };
     },
+
 
     doSave: function () {
         var me = this,
@@ -269,11 +166,6 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                 me.saveSuccess(data);
             }
         });
-    },
-
-    toggleExtraInfo: function (checkbox, isChecked) {
-        var extraInfo = this.down('#extraInfo');
-
-        extraInfo[isChecked ? 'hide' : 'show']();
     }
+
 });
