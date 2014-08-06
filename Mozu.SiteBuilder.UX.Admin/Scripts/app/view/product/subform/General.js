@@ -520,6 +520,7 @@ Ext.define('Taco.view.product.subform.General', {
                 ]
             }, {
                 xtype: 'productoverride',
+                itemId: 'contentOverride',
                 overrideFieldName: 'isContentOverridden',
                 hideOverride: this.isSingleSite,
                 width: classDef.getBufferedWidth(null,'100%'),
@@ -747,13 +748,14 @@ Ext.define('Taco.view.product.subform.General', {
                     }
                 ]
             };
-            this.delayLoadItems = [
-                this.imagesConfig,
-                this.priceOverRideConfig
-            ];
+           
+
+
+
 
             //suspendEvents?
-            this.add(this.delayLoadItems);
+            this.down('#contentOverride').add(this.imagesConfig);
+            this.add(this.priceOverRideConfig);
             // if we already have a product type selected; we need to filter the productUsage combo
             // we will not have to tdo this if there is no productUsage field (siteForm in a multi site configuration)
             if (this.productUsageField) {
