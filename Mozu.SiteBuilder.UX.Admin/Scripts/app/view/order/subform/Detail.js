@@ -178,11 +178,12 @@ Ext.define('Taco.view.order.subform.Detail', {
         
     
     
-    editOrder: function () {
+    editOrder: function (focusAfterCloseCmp) {
         var me = this,
             isDraft = me.orderForm.isEdit(),
-            win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
+            win;
 
+        win = Ext.create('Taco.view.order.modal.EditOrderDetail', {
             // if we want to edit a draft only, pass recordId.
             // otherwise, pass the record.
             isDraftMode: isDraft, 
@@ -190,6 +191,11 @@ Ext.define('Taco.view.order.subform.Detail', {
             recordId: isDraft ? me.record.getId() : null,
 
             listeners: {
+                afterclose: function (view, e){
+                    if (focusAfterCloseCmp) {
+                        focusAfterCloseCmp.focus();
+                    }
+                },
                 close: function (view, e) {
                     
                     if (isDraft && view.getHasDraft()) {
@@ -329,40 +335,41 @@ Ext.define('Taco.view.order.subform.Detail', {
     
 
     // sets up the action menu for the gear icon trigger;  Will be called every time the record loads since actions may become disabled and enabled after each change;
-    getMenuActions: function () {
-        var me = this,
-            availableActions = me.record.get("availableActions"),
-            canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
-            canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = !canAccept,
-            menu;
-        
-        menu = [{
-            text: 'Accept Order',
-            handler: function () {
-                this.detailGrid.acceptOrder();
-            },
-            scope: me,
-            hidden: !canAccept
-        }, {
-            text: 'Edit Details',
-            handler: function () {
-                this.editOrder();
-            },
-            scope: me,
-            disabled: !canEdit
-        }, {
-            text: 'Cancel Order',
-            handler: function() {
-                this.detailGrid.cancelOrder();
-            },
-            scope: me,
-            disabled: !canCancel
-        }];
 
-        return menu;
+    //getMenuActions: function () {
+    //    var me = this,
+    //        availableActions = me.record.get("availableActions"),
+    //        canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
+    //        canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
+    //        canEdit = !canAccept,
+    //        menu;
         
-    },
+    //    menu = [{
+    //        text: 'Accept Order',
+    //        handler: function () {
+    //            this.detailGrid.acceptOrder();
+    //        },
+    //        scope: me,
+    //        hidden: !canAccept
+    //    }, {
+    //        text: 'Edit Details',
+    //        handler: function () {
+    //            this.editOrder();
+    //        },
+    //        scope: me,
+    //        disabled: !canEdit
+    //    }, {
+    //        text: 'Cancel Order',
+    //        handler: function() {
+    //            this.detailGrid.cancelOrder();
+    //        },
+    //        scope: me,
+    //        disabled: !canCancel
+    //    }];
+
+    //    return menu;
+        
+    //},
 
     
     // removed temporarily. due to designer snerst
@@ -373,6 +380,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
             canEdit = true,
             buttons;
+        
 
         buttons = [
             {
@@ -400,9 +408,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 xtype: "button",
                 ui: "action",
                 scale: "medium",
-                handler: function () {
-                    this.editOrder();
-                },
+                handler: this.editOrder,
                 scope: me,
                 disabled: !canEdit
             }
