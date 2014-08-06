@@ -13,7 +13,7 @@ Ext.define('Taco.controller.Orders', {
     ],
     editorView: 'Taco.view.order.Edit',
     indexView: 'Taco.view.order.Split',
-   // views: ['order.Index'],
+    // views: ['order.Index'],
 
 
     //todo:  changing to s until orders support siteId  in resource
@@ -25,24 +25,24 @@ Ext.define('Taco.controller.Orders', {
 
         //removing initial view  to aviod events firing from the create of the view from messin with the 
         split = Taco.app.contentView.down('order-split');
-       
+
         if (!split) {
             Taco.app.contentView.removeAll(true);
             split = Ext.create(this.indexView);
             Taco.app.contentView.add(split);
         }
-      
+
         Ext.resumeLayouts(true);
         if (cfg && cfg.record) {
             split.setRecord(cfg.record);
         } else {
             split.setRecord(null);
         }
-       
-       // Ext.resumeLayouts(true);
+
+        // Ext.resumeLayouts(true);
 
         return split;
-       
+
 
     },
 
@@ -104,17 +104,17 @@ Ext.define('Taco.controller.Orders', {
     orderlist: function (cfg) {
 
         var ctx = Taco.app.context.getCurrentContext();
-        if (cfg.record && (ctx.contextType != 's' || (cfg.record.data.siteId && ctx.id != cfg.record.data.siteId))) {
+        if (cfg.record && (ctx.contextType !== 's' || (cfg.record.data.siteId && ctx.id !== cfg.record.data.siteId))) {
             Taco.app.context.setCurrentContext(Taco.app.context.findSite(cfg.record.data.siteId), false);
         }
 
-        this.superclass.createContentView("Taco.view.order.Grid", {
+        this.superclass.createContentView('Taco.view.order.Grid', {
             record: null,
             options: null
         });
 
     },
-   
+
 
     create: function () {
         var ctx = Taco.app.context.getCurrentContext(),
@@ -147,5 +147,3 @@ Ext.define('Taco.controller.Orders', {
         });
     }
 });
-
-

@@ -9,3 +9,4 @@ resources/**
 sass/**
 stylesheets/**
 ux/**
+app/controller/Testing.js

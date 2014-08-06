@@ -10,36 +10,36 @@ Ext.define('Taco.controller.Analytics', {
     /**
      * The Google Analytics tracker object.
      */
-    gaq: undefined,    
+    gaq: undefined,
 
     /**
      * Create the Google Analytics PageTracker object.
      * @param {String=} ua Google Analytics account number to use. Defaults to `window.googleAnalyticsAccountId`.
      * @return {Object} The GA tracker, which is also assigned to the #gaq property.
      */
-    createTracker: function(ua) {
-    	var me = this;
-    	var gaUA = ua || Taco.googleAnalyticsAccountId;
-    	if (!gaUA) {
-    	    this.trackingEnabled = false;
-    	    return false;
-    	}
+    createTracker: function (ua) {
+        var me = this;
+        var gaUA = ua || Taco.googleAnalyticsAccountId;
+        if (!gaUA) {
+            this.trackingEnabled = false;
+            return false;
+        }
 
-    	var _gaq = window._gaq = this.gaq = [];
-    	_gaq.push(['_setAccount', gaUA]);
-    	_gaq.push(['_setDomainName', 'mozu.com']);
-    	_gaq.push(['_setAllowLinker', true]);
+        var _gaq = window._gaq = this.gaq = [];
+        _gaq.push(['_setAccount', gaUA]);
+        _gaq.push(['_setDomainName', 'mozu.com']);
+        _gaq.push(['_setAllowLinker', true]);
 
-    	Ext.Loader.loadScript({
-    		url: ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js',
-    		onLoad: function() {
-    			me.gaq = window._gaq;	
-    		}
-    	});
+        Ext.Loader.loadScript({
+            url: ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js',
+            onLoad: function () {
+                me.gaq = window._gaq;
+            }
+        });
 
-    	this.trackingEnabled = true;
+        this.trackingEnabled = true;
 
-    	return _gaq;
+        return _gaq;
     },
 
     /**
@@ -52,15 +52,15 @@ Ext.define('Taco.controller.Analytics', {
      *     //using .callGA
      *     Taco.Analytics.callGA('_trackPageview')
      * 	                 .callGA('_trackEvent','Products','Edit','Callaway Driver');
-     * 	   
-     * 
-     * @return {Taco.controller.Analytics} 
+     *
+     *
+     * @return {Taco.controller.Analytics}
      */
     callGA: function () {
         if (!this.trackingEnabled) return;
-    	var args = Ext.isArray(arguments[0]) ? arguments[0] : Array.prototype.slice.call(arguments);
-    	this.gaq.push(args);
-    	return this;
+        var args = Ext.isArray(arguments[0]) ? arguments[0] : Array.prototype.slice.call(arguments);
+        this.gaq.push(args);
+        return this;
     },
 
     onLaunch: function () {
@@ -71,9 +71,9 @@ Ext.define('Taco.controller.Analytics', {
         Taco.core.StateManager.on({
             beforenavigate: function () {
                 var oldState = Taco.core.StateManager.getCurrentState();
-                if (oldState && oldState.uri) me.callGA('_setReferrerOverride',"/admin/"+oldState.uri);
+                if (oldState && oldState.uri) me.callGA('_setReferrerOverride', '/admin/' + oldState.uri);
             },
-            statechange: function (newState) {
+            statechange: function () {
                 me.callGA('_trackPageview');
             }
         });

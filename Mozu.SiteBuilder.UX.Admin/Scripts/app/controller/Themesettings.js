@@ -13,19 +13,20 @@ Ext.define('Taco.controller.Themesettings', {
         return this.edit(params);
     },
     edit: function (id, additionalParams, appState) {
-        var me=this, theme = appState ? appState.record : null;
-     
-        
+        var me = this,
+            theme = appState ? appState.record : null;
+
+
         Ext.Ajax.request({
             url: '/admin/app/themesetting/ui/read/' + id,
-            method: "GET",
+            method: 'GET',
             success: function (response) {
 
                 var fieldContainerCfg = Ext.JSON.decode(response.responseText);
-               
+
                 Ext.Ajax.request({
                     url: '/admin/app/themesetting/instance/read/' + id,
-                    method: "GET",
+                    method: 'GET',
                     success: function (r) {
                         var values = Ext.JSON.decode(r.responseText);
 
@@ -39,39 +40,37 @@ Ext.define('Taco.controller.Themesettings', {
                         });
                     },
                     failure: function (r) {
-                        console.log("Error retrieving theme settings configuration.", r);
+                        console.log('Error retrieving theme settings configuration.', r);
                     }
                 });
             },
             failure: function (response) {
-                console.log("Error retrieving theme settings configuration.", response);
+                console.log('Error retrieving theme settings configuration.', response);
             }
         });
     },
     addons: function (id, additionalParams, appState) {
-        var me = this, theme = appState ? appState.record : null;
+        var me = this,
+            theme = appState ? appState.record : null;
 
         Taco.app.setLoading();
         Ext.Ajax.request({
             url: '/admin/app/themes/addons/list/' + id,
-            method: "GET",
+            method: 'GET',
             success: function (response) {
                 Taco.app.setLoading(false);
                 var res = Ext.JSON.decode(response.responseText);
-                
+
                 me.createContentView('Taco.view.themesettings.Addons', {
                     themeId: id,
                     theme: theme,
                     addons: res.items
                 });
 
-
-                var data = Ext.JSON.decode(response.responseText);
-
             },
             failure: function (response) {
                 Taco.app.setLoading(false);
-                console.log("Error retrieving theme settings configuration.", response);
+                console.log('Error retrieving theme settings configuration.', response);
             }
         });
     }
