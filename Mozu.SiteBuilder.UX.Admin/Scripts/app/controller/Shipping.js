@@ -1,10 +1,11 @@
-﻿
-
-Ext.define('Taco.controller.Shipping', {
+﻿Ext.define('Taco.controller.Shipping', {
     extend: 'Taco.core.Controller',
     requires: [
     ],
-    models: ['Taco.model.SiteShippingSettings', 'Taco.model.TargetRule'],
+    models: [
+        'Taco.model.SiteShippingSettings',
+        'Taco.model.TargetRule'
+    ],
     views: [
         'Taco.view.settings.shipping.Zones',
         'Taco.view.settings.shipping.Edit',
@@ -27,7 +28,7 @@ Ext.define('Taco.controller.Shipping', {
         if (!this.requiresSiteContext()) {
 
             Taco.model.SiteShippingSettings.load(123, {
-                success: function (record, o) {
+                success: function (record) {
                     Taco.app.setLoading(false);
                     this.createContentView('Taco.view.settings.shipping.Edit', {
                         record: record
@@ -48,13 +49,15 @@ Ext.define('Taco.controller.Shipping', {
         this.confirmContext('Taco.view.settings.shipping.Zones', function () {
             this.createContentView('Taco.view.settings.shipping.Zones');
         });
-        
+
     },
     zonesedit: function (id, additionalParams, appState) {
         this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
     zonescreate: function (id, additionalParams, appState) {
-        var appStateData = { domain: 'Shipping.DestinationAddress' };
+        var appStateData = {
+            domain: 'Shipping.DestinationAddress'
+        };
         if (additionalParams && additionalParams.duplicateSource) {
             appStateData.description = additionalParams.duplicateSource.description;
             appStateData.expression = additionalParams.duplicateSource.expression;
@@ -71,13 +74,15 @@ Ext.define('Taco.controller.Shipping', {
         this.confirmContext('Taco.view.settings.shipping.Zones', function () {
             this.createContentView('Taco.view.settings.shipping.ProductRules');
         });
-       
+
     },
     productRulesEdit: function (id, additionalParams, appState) {
         this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
     productRulesCreate: function (id, additionalParams, appState) {
-        var appStateData = { domain: 'Product' };
+        var appStateData = {
+            domain: 'Product'
+        };
         if (additionalParams && additionalParams.duplicateSource) {
             appStateData.description = additionalParams.duplicateSource.description;
             appStateData.expression = additionalParams.duplicateSource.expression;
@@ -89,12 +94,12 @@ Ext.define('Taco.controller.Shipping', {
         this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.TargetRuleEdit', Taco.model.TargetRule);
     },
 
-    index: function (id, additionalParams, appState) {
+    index: function () {
 
         this.confirmContext('Taco.view.settings.shipping.Zones', function () {
             this.createContentView('Taco.view.settings.shipping.MethodsAndFees');
         });
-     
+
     },
 
     shippingMethodCreate: function (id, additionalParams, appState) {

@@ -1,6 +1,4 @@
-﻿
-
-Ext.define('Taco.controller.Settings', {
+﻿Ext.define('Taco.controller.Settings', {
     extend: 'Taco.core.Controller',
     requires: [
         'Taco.view.settings.paymentAndCheckout.Edit',
@@ -17,7 +15,7 @@ Ext.define('Taco.controller.Settings', {
         if (!this.requiresSiteContext()) {
 
             Taco.model.CheckoutSettings.load(123, {
-                success: function (record, o) {
+                success: function (record) {
                     Taco.app.setLoading(false);
                     this.createContentView('Taco.view.settings.paymentAndCheckout.Edit', {
                         record: record
@@ -41,11 +39,11 @@ Ext.define('Taco.controller.Settings', {
 
     shipping: function () {
         Taco.app.setLoading();
-        
+
         if (!this.requiresSiteContext()) {
 
             Taco.model.SiteShippingSettings.load(123, {
-                success: function (record, o) {
+                success: function (record) {
                     Taco.app.setLoading(false);
                     this.createContentView('Taco.view.settings.shipping.Edit', {
                         record: record

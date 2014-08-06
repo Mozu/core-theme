@@ -5,21 +5,23 @@
 
 Ext.define('Taco.controller.GeneralSettings', {
     extend: 'Taco.core.Controller',
-    alias:['Taco.controller.Generalsettings'],
+    alias: ['Taco.controller.Generalsettings'],
     requires: ['Taco.view.generalSettings.Index'],
     views: ['generalSettings.Index'],
     models: ['Taco.model.GeneralSettings'],
     stores: ['Taco.store.GeneralSettings'],
     listView: null,
     modelName: 'GeneralSettings',
-    index: function (params) {
+    index: function () {
         var me = this;
         Taco.app.setLoading();
         if (!this.requiresSiteContext()) {
             Taco.model.GeneralSettings.load('', {
-                success: function (record, o) {
+                success: function (record) {
                     Taco.app.setLoading(false);
-                    me.createContentView('Taco.view.generalSettings.Index', { record: record });
+                    me.createContentView('Taco.view.generalSettings.Index', {
+                        record: record
+                    });
                 },
                 failure: function () {
                     Taco.app.setLoading(false);
@@ -28,5 +30,3 @@ Ext.define('Taco.controller.GeneralSettings', {
         }
     }
 });
-
-
