@@ -32,6 +32,7 @@
                                  baseCSSPrefix = "taco-",
                                  testHarnessMode = Context.Request["testHarnessMode"] == "true",
                                  adminRelPath = @Url.Content("~"),
+                                 cdnPrefix = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost"),
                                  User = new
                                             {
                                                 id = user.Id, behaviors, taContext,

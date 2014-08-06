@@ -171,6 +171,7 @@ Ext.define('Taco.view.order.Split', {
         var me = this,
             args = arguments;
         if (record) {
+            Taco.app.setLoading();
             Taco.view.order.Edit.factory({ record: record }, function (cmp) {
                 Ext.suspendLayouts();
 
@@ -184,6 +185,7 @@ Ext.define('Taco.view.order.Split', {
                 me.updateSplitTitle();
 
                 Ext.resumeLayouts(true);
+                Taco.app.setLoading(false);
             });
         } else {
 

@@ -11,9 +11,11 @@
 
 	 <table>
 		<tr>
+			{%if model.properties.image.imageUrl %}
 			<td>
-				<img src="{{model.properties.imageUrl}}">
+				<img src="{{model.properties.image.imageUrl}}" style="max-height:200px;">
 			</td>
+			{%endif%}
 			<td>
 					 <div>{{model.properties.description|safe}}<div>
 			<td>
