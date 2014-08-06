@@ -26,10 +26,7 @@ Ext.define('Taco.core.ux.form.field.QuickFilter', {
      */
     handler: Ext.emptyFn,
 
-    hideTrigger: true,
-
     triggerCls: 'x-form-search-trigger',
-    trigger2Cls: 'x-form-clear-trigger',
 
     initComponent: function () {
         this.callParent(arguments);
@@ -51,12 +48,12 @@ Ext.define('Taco.core.ux.form.field.QuickFilter', {
      */
     handleSpecialkey: function (field, e) {
         if (e.getKey() === e.ENTER) {
-            this.onTriggerClick(e);
+            this.handler.apply(this.scope || this, arguments);
         }
     },
 
     /**
-     * Shows or hides the triggers when the field's value changes.
+     * Changes the trigger's CSS class when the field's value changes.
      *
      * @private
      * @param  {String} nextValue The new value.
@@ -65,24 +62,17 @@ Ext.define('Taco.core.ux.form.field.QuickFilter', {
     onChange: function (nextValue, previousValue) {
         this.callParent(arguments);
 
-        this.setHideTrigger(Ext.isEmpty(nextValue));
+        if (Ext.isEmpty(nextValue) !== Ext.isEmpty(previousValue)) {
+            this.triggerEl.first().toggleCls('x-form-search-trigger').toggleCls('x-form-clear-trigger');
+        }
     },
 
     /**
-     * Calls the provided handler in the provided scope.
-     * 
-     * @param  {Ext.EventObject} e The click or specialkey event.
-     */
-    onTriggerClick: function (e) {
-        this.handler.call(this.scope || this, this, e);
-    },
-
-    /**
-     * Empties the field's value, then calls the first trigger's handler.
+     * Empties the field's value, then calls the provided handler in the provided scope.
      * 
      * @param  {Ext.EventObject} e The click event.
      */
-    onTrigger2Click: function (e) {
-        this.setValue(null).onTriggerClick(e);
+    onTriggerClick: function (e) {
+        this.setValue(null).handler.call(this.scope || this, this, e);
     }
 });
