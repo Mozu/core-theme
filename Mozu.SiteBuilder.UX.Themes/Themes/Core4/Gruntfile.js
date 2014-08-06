@@ -40,8 +40,11 @@
             }
         },
         tfscheckout: {
-            main: {
+            compiled: {
                 dir: 'compiled'
+            },
+            vendor: {
+                dir: 'scripts/vendor'
             }
         },
         zubat: {

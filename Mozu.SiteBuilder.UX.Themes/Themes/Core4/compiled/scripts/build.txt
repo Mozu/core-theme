@@ -11,6 +11,7 @@ vendor/jquery.cookie/jquery.cookie.js
 modules/jquery-mozu.js
 modules/models-messages.js
 modules/backbone-mozu-model.js
+modules/backbone-mozu-pagedcollection.js
 modules/views-messages.js
 modules/backbone-mozu-view.js
 modules/backbone-mozu.js
@@ -19,7 +20,6 @@ modules/contextify.js
 shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery
 shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery
 modules/login-links.js
-modules/mixin-paging.js
 modules/models-address.js
 modules/models-price.js
 modules/models-product.js
@@ -42,6 +42,7 @@ pages/cart.js
 
 pages/category.js
 ----------------
+modules/views-collections.js
 pages/category.js
 
 pages/checkout.js
