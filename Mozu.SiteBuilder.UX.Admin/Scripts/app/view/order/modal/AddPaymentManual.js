@@ -10,7 +10,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
         'Ext.form.field.Number',
         'Ext.form.field.Text',
         'Ext.form.field.ComboBox',
-        'Ext.form.fieldContainer'
+        'Ext.form.FieldContainer'
     ],
     title: 'Add Manual Payment',
     initComponent: function () {
