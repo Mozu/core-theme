@@ -16,13 +16,26 @@ linkExternalUrl
 linkInternalUrl
 linkFileId
 
+
+converting to 
+
+imageUrl
+imageFileId
+imageListId
+altText
+height
+width
+linkUrl
+
+
+
 */
 
 Ext.define('Taco.core.ux.form.field.BaseImageField', {
     extend: 'Ext.form.field.Base',
    // alias: ['widget.taco-imagefield'],
     requires: [
-
+        'Taco.core.ux.form.ColorField'
     ],
    // height: 300,
     //  width: 800,
@@ -37,37 +50,86 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
             me.getEl().on('click', me.showImageEditor, me);
         });
     
-        me.on('click', function (cmp) {
-            console.log('click');
+        //me.on('click', function (cmp) {
+        //    console.log('click');
 
-        });
+        //});
         this.callParent(arguments);
     },
     showImageEditor: function () {
         var me = this,
             data= {},
             mdl;
-        data= Ext.applyIf(data, {
-            "height": 400,
-            "heightResizable": true,
-            "imageHeight": 400,
-            "imageSource": "file",
-            "linkSource": "externalUrl",
-            imageExternalUrl: data.value || this.getValue() || '/admin/Scripts/resources/images/image-drop.png'
-        });
+        data = me.convertForEditor(me.getValue());
         mdl = Ext.create('Taco.core.ux.form.field.BaseImageField.ImageModal',
         {
             autoShow: true,
             closeAction: 'destroy',
             widgetData: data,
-            title: 'xxx',
+            title: 'Edit Image',
             listeners: {
                 savesuccess: function (modal, imageData) {
-                    me.setValue(imageData.imageExternalUrl);
+                    me.setValue(me.convertForStorage(imageData));
                 }
             }
         });
     },
+
+    convertForEditor: function (value) {
+        value = value || {};
+        var ret;
+        if (Ext.isString(value)) {
+            value = {
+                imageUrl: value
+            };
+        }
+
+        ret = {
+           
+            imageFileId: value.imageId,
+            imageAltText: value.altText,
+            imageWidth: value.width,
+            imageHeight: value.height,
+            linkExternalUrl: value.linkUrl
+        };
+
+        if (value.imageId) {
+            ret.imageSource = "file";
+        } else {
+            ret.imageSource = "externalUrl";
+            ret.imageExternalUrl= value.imageUrl;
+        }
+       
+
+        return ret;
+    },
+
+    convertForStorage: function (value) {
+        var ret,
+            siteId = Taco.app.context.getContextAtLevel('s').id,
+            tenantId = Taco.app.context.getTenantId();
+        value = value || {};
+        ret = {
+            
+            imageId: value.imageFileId,
+            imageListId: value.imageFileId ? 'files@mozu' : undefined,
+            altText: value.imageAltText,
+            width: value.imageWidth,
+            height: value.imageHeight,
+            linkUrl: value.linkExternalUrl
+        };
+        if (value.imageSource == "externalUrl") {
+            ret.imageUrl = value.imageExternalUrl;
+        }
+        if (value.imageSource == "file") {
+
+            ret.imageUrl = '//' + Taco.cdnPrefix + '/' + tenantId + '-' + siteId + '/cms/files/' + value.imageFileId;
+            //2083-2116/cms/7332/files/b1bf3cab-1d7c-42f8-901a-bff60b56d778?size=60
+        }
+        return ret;
+    },
+
+
     getEditorId:function () {
         return this.getInputId() + '-editor';
     },
@@ -88,7 +150,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
 
         if (me.getInputEl()) {
             data = me.getSubTplData();
-            me.getInputEl().dom.setAttribute('src', data.imageSrc);
+            me.getInputEl().dom.setAttribute('src', data.imageUrl);
         }
     
         return ret;
@@ -114,13 +176,14 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
     },
   
 
-    fieldSubTpl: ['<div id="img-cnt-{id]"> <img src="{imageSrc}" id="{id}" style="icon:pointer;max-height:200px;max-width:200px;" ></div>'],
+    fieldSubTpl: ['<div id="img-cnt-{id]"> <img src="{imageUrl}" id="{id}" style="cursor:pointer;max-height:200px;max-width:200px;" ></div>'],
     getSubTplData: function () {
         var me = this,
-            data = this.callParent(arguments);
+            templateData = this.callParent(arguments),
+            value = this.getValue();
 
-        data.imageSrc = data.value|| this.getValue() ||  '/admin/scripts/resources/images/noimage.png';
-        return data;
+        templateData.imageUrl = value && value.imageUrl ? value.imageUrl : '/admin/scripts/resources/images/noimage.png';
+        return templateData;
     },
 
 
@@ -370,7 +433,8 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                         forceSelection: true,
                         value: 'stretch',
                         store: [
-                            ['stretch', 'Stretch']
+                            ['stretch', 'Stretch'],
+                            ['specificSize', 'Specify']
                         ],
                         listeners: {
                             change: {
@@ -585,6 +649,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                 }
             }
         });
+        this.handleImageSourceChange(this.getForm().findField('imageSource').getValue());
     },
 
     handleImageClickActionChange: function (newValue) {
@@ -614,7 +679,9 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         var isFile = newValue === 'file',
             cardIndex = isFile ? 2 : 0;
 
-        if (newValue === 'internalUrl') cardIndex = 1;
+        if (newValue === 'internalUrl') {
+            cardIndex = 1;
+        }
 
         this.down('#linkAssociatorButton').setVisible(isFile);
         this.down('#linkUploadButton').setVisible(isFile);
@@ -624,7 +691,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
     },
 
     handleUploadFile: function (files) {
-        this.down('#imageField').onUploadFile(files)
+        this.down('#imageField').onUploadFile(files);
     },
 
     toggleAssociator: function (state, button, store) {

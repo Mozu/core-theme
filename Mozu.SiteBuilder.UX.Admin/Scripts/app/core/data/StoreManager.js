@@ -69,26 +69,29 @@ Ext.define('Taco.core.data.StoreManager', {
                 }
                 case 'c':
                 {
-                    ctxLvl += '-c=' + Taco.app.context.getCatalogId();
+                    ctxLvl += '-c=' + Taco.app.context.getMasterCatalogId()+'-'+ Taco.app.context.getCatalogId();
                     break;
                 }
                 case 's':
                 {
-                    ctxLvl += '-s=' + Taco.app.context.getSiteId();
+                    ctxLvl += '-s=' + Taco.app.context.getMasterCatalogId() + '-' + Taco.app.context.getCatalogId()+'-'+ Taco.app.context.getSiteId();
                     break;
                 }
                 case 't':
                 {
-                    ctxLvl += '-s=' + Taco.app.context.getTenantId();
+                    ctxLvl += '-t=' + Taco.app.context.getTenantId();
                     break;
                 }
                 }
 
-                if (store.runtimeContext != ctxLvl) {
-                    return this.getOrCreate(config, ctxLvl);
-                }
+                
 
-            },this);
+            }, this);
+
+            if (store.runtimeContext != ctxLvl) {
+                return this.getOrCreate(config, ctxLvl);
+            }
+
         }
 
         if (config.clearFilters) {
