@@ -1,10 +1,8 @@
-﻿define(['modules/jquery-mozu', 'underscore', "hyprlive", "modules/backbone-mozu", "modules/models-product", "modules/mixin-paging"], function($, _, Hypr, Backbone, ProductModels, PagingMixin) {
+﻿define(['modules/jquery-mozu', 'underscore', "hyprlive", "modules/backbone-mozu", "modules/models-product"], function($, _, Hypr, Backbone, ProductModels) {
 
     function sanitize(str) {
         return str ? str.replace(/[\s~'":]+/g, '-') : '';
     }
-
-    var defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
 
     var FacetValue = Backbone.MozuModel.extend({
         idAttribute: 'value'
@@ -43,7 +41,7 @@
 
     }),
 
-    FacetedProductCollection = Backbone.MozuModel.extend(_.extend({
+    FacetedProductCollection = Backbone.MozuPagedCollection.extend({
         mozuType: 'search',
         validation: {
             pageSize: { min: 1 },
@@ -67,6 +65,18 @@
         helpers: ['hasValueFacets'],
         hierarchyDepth: 2,
         hierarchyField: 'categoryId',
+        getQueryString: function() {
+            var qs = Backbone.MozuPagedCollection.prototype.getQueryString.apply(this, arguments) || "",
+                extra = this.hierarchyValue && window.encodeURIComponent(this.hierarchyField) + "=" + window.encodeURIComponent(this.hierarchyValue);
+
+            return qs? qs + "&" + extra : "?" + extra;
+        },
+        buildRequest: function(filterValue) {
+            var conf = Backbone.MozuPagedCollection.prototype.buildRequest.apply(this, arguments);
+            filterValue = filterValue || this.getFacetValueFilter();
+            if (filterValue) conf.facetValueFilter = filterValue;
+            return conf;
+        },
         setQuery: function(query) {
             this.query = query;
             if (!this.hierarchyValue && !this.baseRequestParams) {
@@ -75,7 +85,7 @@
                     facetHierDepth: this.hierarchyField + ":" + this.hierarchyDepth
                 };
             }
-            this.lastRequest = this.buildFacetRequest();
+            this.lastRequest = this.buildRequest();
         },
         setHierarchy: function(hierarchyField, hierarchyValue) {
             this.hierarchyField = hierarchyField;
@@ -87,7 +97,7 @@
                 facetHierDepth: hierarchyField + ':' + this.hierarchyDepth
             };
             if (this.query) this.baseRequestParams.query = this.query;
-            this.lastRequest = this.buildFacetRequest();
+            this.lastRequest = this.buildRequest();
         },
         hasValueFacets: function() {
             return !!this.get('facets').findWhere({ facetType: 'Value' });
@@ -107,25 +117,12 @@
             newValue.set("isApplied", yes);
             this.updateFacets({ resetIndex: true });
         },
-        buildFacetRequest: function(filterValue) {
-            var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
-                pageSize = this.get("pageSize"),
-                startIndex = this.get("startIndex"),
-                sortBy = $.deparam().sortBy || this.currentSort();
-            filterValue = filterValue || this.getFacetValueFilter();
-            conf.pageSize = pageSize;
-            if (startIndex) conf.startIndex = startIndex;
-            if (filterValue) conf.facetValueFilter = filterValue;
-            if (this.query) conf.query = this.query;
-            if (sortBy) conf.sortBy = sortBy;
-            return conf;
-        },
-        updateFacets: _.debounce(function(options) {
+        updateFacets: function(options) {
             var me = this,
                 conf;
             options = options || {};
             if (options.resetIndex) this.set("startIndex", 0);
-            conf = this.buildFacetRequest(options.facetValueFilter);
+            conf = this.buildRequest(options.facetValueFilter);
             if (options.force || !_.isEqual(conf, this.lastRequest)) {
                 this.lastRequest = conf;
                 this.isLoading(true);
@@ -136,27 +133,16 @@
                     me.isLoading(false);
                 });
             }
-        }, 300),
-        getQueryString: function() {
-            var self = this, lrClone = _.clone(this.lastRequest);
-            _.each(lrClone, function(v, p) {
-                if (self.baseRequestParams && (p in self.baseRequestParams)) delete lrClone[p];
-            });
-            if (parseInt(lrClone.pageSize, 10) === defaultPageSize) delete lrClone.pageSize;
-            if (this.hierarchyField && this.hierarchyValue) lrClone[this.hierarchyField] = this.hierarchyValue;
-            if (this.query) lrClone.query = this.query;
-            var startIndex = this.get('startIndex');
-            if (startIndex) lrClone.startIndex = startIndex;
-            return _.isEmpty(lrClone) ? "" : "?" + $.param(lrClone);
         },
         initialize: function() {
             var me = this;
-            this.lastRequest = this.buildFacetRequest();
+            Backbone.MozuPagedCollection.prototype.initialize.apply(this, arguments);
+            this.updateFacets = _.debounce(this.updateFacets, 300);
             this.on('sync', function() {
                 me.trigger('facetchange', me.getQueryString());
             });
         }
-    }, PagingMixin));
+    });
 
     return {
         Facet: Facet,

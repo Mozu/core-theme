@@ -24,7 +24,6 @@
                 'modules/contextify',
                 'modules/jquery-mozu',
                 'modules/login-links',
-                'modules/mixin-paging',
                 'modules/models-address',
                 'modules/models-customer',
                 'modules/models-faceting',

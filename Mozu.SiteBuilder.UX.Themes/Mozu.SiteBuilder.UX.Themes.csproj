@@ -445,6 +445,7 @@
     <Content Include="Themes\Core4\resources\images\button-loading.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\Core4\scripts\modules\backbone-mozu-pagedcollection.js" />
     <Content Include="Themes\Core4\scripts\modules\contextify.js" />
     <Content Include="Themes\Core4\scripts\modules\models-documents.js" />
     <Content Include="Themes\Core4\scripts\modules\models-orders.js" />
@@ -453,6 +454,7 @@
     <Content Include="Themes\Core4\scripts\modules\models-paymentmethods.js" />
     <Content Include="Themes\Core4\scripts\modules\scroll-nav.js" />
     <Content Include="Themes\Core4\scripts\modules\search-autocomplete.js" />
+    <Content Include="Themes\Core4\scripts\modules\views-collections.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-messages.js" />
     <Content Include="Themes\Core4\scripts\modules\views-productlists.js" />

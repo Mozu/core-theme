@@ -31,7 +31,7 @@
         <div data-mz-pagingcontrols class="mz-pagingcontrols">
             {% include "modules/common/paging-controls" %}
         </div>
-        <div data-mz-pagesort="" class="mz-sortby">
+        <div data-mz-pagesort class="mz-sortby">
             {% include "modules/common/page-sort" %}
         </div>
     </div>
