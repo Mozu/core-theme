@@ -48,25 +48,8 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                             if (validCredit.get('currentBalance') <= 0) errorText = "has no remaining funds.";
                             if (validCredit.get('customerId')) errorText = "has already been claimed.";
                             if (errorText) return codeField.markInvalid(["Credit code " + code + " " + errorText]);
-
-                            // claim
-                            validCredit.set('customerId', me.order.get('customerId'));
-                            validCredit.save({
-                                success: function() {
-                                    me.store.reload({
-                                        success: Ext.defer(function() {
-                                            codeField.reset();
-                                            me.getGiftCardGrid().startEditAtCode(code);
-                                        }, 500)
-                                    });
-                                },
-                                failure: function(r, op) {
-                                    var msg = "Please try another card.", 
-                                        e =  op.getError();
-                                    if (e && e.remoteException) msg = e.remoteException.getMessage();
-                                    codeField.markInvalid(['There was an unknown error applying this gift card: ' + msg]);
-                                }
-                            });
+                            
+                            me.store.add(validCredit);
                         }
                     });
                 }
