@@ -23,10 +23,16 @@ Ext.define('Taco.controller.PendingChanges', {
     },
 
     cms: function () {
-        this.createContentView('Taco.view.pendingChange.Cms');
+        
+        this.confirmContext('Taco.view.pendingChange.Cms', function () {
+            this.createContentView('Taco.view.pendingChange.Cms');
+        }, this);
     },
 
-    product: function() {
-        this.createContentView('Taco.view.pendingChange.Product');
+    product: function () {
+        this.confirmContext('Taco.view.pendingChange.Product', function () {
+            this.createContentView('Taco.view.pendingChange.Product');
+        }, this);
+
     }
 });
