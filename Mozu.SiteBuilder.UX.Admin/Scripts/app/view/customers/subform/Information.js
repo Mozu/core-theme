@@ -81,6 +81,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     name: 'isAnonymous',
                     boxLabel: 'Create shopper account',
                     itemId: 'createAccountCheckbox',
+                    checked: !this.record,
                     hidden: this.record
                 }, {
                     xtype: 'checkboxfield',
