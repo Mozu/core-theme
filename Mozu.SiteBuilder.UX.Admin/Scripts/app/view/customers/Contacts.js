@@ -15,11 +15,29 @@ Ext.define('Taco.view.customers.Contacts', {
             xtype: 'container'
         });
 
+        this.loadContacts();
+
+        this.sortContacts();
+
         this.buildAddresses();
 
         this.items = [this.addressContainer];
 
         this.callParent(arguments);
+    },
+
+    sortContacts: function () {
+        var fnValue = function (a) {
+            if (a.isFromOrder) return 0;
+            if (a.isPrimaryBilling) return 1;
+            if (a.isPrimaryShipping) return 2;
+            return 3;
+        };
+
+        Ext.Array.sort(this.contacts, function (a, b) {
+            return fnValue(a) - fnValue(b);
+        });
+
     },
 
     buildAddresses: function () {
@@ -29,8 +47,6 @@ Ext.define('Taco.view.customers.Contacts', {
             billingContactJson = Ext.encode(billingContact),
             oneBillingChecked = false,
             oneShippingChecked = false;
-
-        this.loadContacts();
 
         this.addressContainer.removeAll();
 
@@ -94,6 +110,10 @@ Ext.define('Taco.view.customers.Contacts', {
                     margin: '8 0 0 0',
                     tpl: [
                         '<div data-handle="contact-{id}" data-contact-type="<tpl if="isFromOrder">order<tplelse>customer</tpl>">',
+
+                        '<tpl if="isPrimaryBilling"><div class="label-light">Default Billing</div></tpl>',
+
+                        '<tpl if="isPrimaryShipping"><div class="label-light">Default Shipping</div></tpl>',
 
                         '<div class="name">{firstName}<tpl if="middleName"> {middleName}</tpl> {lastName}</div>',
 
@@ -221,7 +241,22 @@ Ext.define('Taco.view.customers.Contacts', {
             listeners: {
                 savesuccess: function (form, newContact) {
                     var contacts = Ext.Array.clone(this.record.get('contacts')),
-                        index = Ext.Array.indexOf(contacts, contact);
+                        index = -1;
+
+                    Ext.each(contacts, function (c, i) {
+                        if (Ext.encode(c) === Ext.encode(contact)) {
+                            index = i;
+                            return false;
+                        }
+                    });
+
+                    if (newContact.get('isPrimaryBilling')) {
+                        this.clearContactDefaults(contacts, 'isPrimaryBilling');
+                    }
+
+                    if (newContact.get('isPrimaryShipping')) {
+                        this.clearContactDefaults(contacts, 'isPrimaryShipping');
+                    }
 
                     if (contact.isNewContact) {
                         this.record.set('contacts', Ext.Array.insert(contacts, 0, [newContact.getData()]));
@@ -235,10 +270,20 @@ Ext.define('Taco.view.customers.Contacts', {
                         this.record.set('contacts', Ext.Array.insert(contacts, 0, [newContact.getData()]));
                     }
 
+                    this.loadContacts();
+
+                    this.sortContacts();
+
                     this.buildAddresses();
                 },
                 scope: this
             }
+        });
+    },
+
+    clearContactDefaults: function (contacts, field) {
+        Ext.each(contacts, function (contact) {
+            if (contact[field]) contact[field] = false;
         });
     },
 

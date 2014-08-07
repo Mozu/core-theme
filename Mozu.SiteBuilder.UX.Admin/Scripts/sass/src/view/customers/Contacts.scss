@@ -8,7 +8,7 @@
     .address {
         background-color: transparent;
         font-size: 14px;
-        line-height: 1.28;
+        line-height: 18px;
 
         @include transition(background-color 0.3s);
 
@@ -27,6 +27,13 @@
         font-weight: bold;
     }
 
+    .label-light {
+        color: $color-neutral-60;
+        font-size: 12px;
+        font-weight: normal;
+        text-transform: uppercase;
+    }
+
     .name {
         font-weight: bold;
     }
@@ -36,7 +43,9 @@
 
         tr td:first-child {
             color: $color-neutral-60;
+            font-size: 12px;
             padding-right: 8px;
+            text-transform: uppercase;
         }
 
     }

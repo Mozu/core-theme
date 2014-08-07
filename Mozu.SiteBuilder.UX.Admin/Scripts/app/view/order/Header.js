@@ -200,7 +200,7 @@ Ext.define('Taco.view.order.Header', {
             xtype: 'component',
             itemId: 'addressesCmp',
             tpl: [
-                '<table><tr><td><span class="label-light">Billing Address</span></td><td><span class="label-light">Shipping Address</span></td></tr>',
+                '<table class="order-addresses-table"><tr><td><span class="label-light">Billing Address</span></td><td><span class="label-light">Shipping Address</span></td></tr>',
 
 
                 '<tr><td>',
@@ -299,7 +299,7 @@ Ext.define('Taco.view.order.Header', {
                     xtype: 'button',
                     ui: 'action-primary',
                     scale: 'medium',
-                    itemId:"createNewCustomerButton",
+                    itemId: "createNewCustomerButton",
                     text: 'Create New Customer',
                     handler: this.createCustomer,
                     scope: this
