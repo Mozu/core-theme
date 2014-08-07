@@ -1085,8 +1085,9 @@
     <Exec Command="attrib -r &quot;$(ProjectDir)ThemeTemplates\*.zip&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="DevCenterThemeTemplatizer.exe core4 &quot;$(ProjectDir)Themes\Core4&quot; &quot;$(ProjectDir)ThemeTemplates&quot;" WorkingDirectory="$(ProjectDir)tools" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+      <Exec Command="npm install grunt" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install -g" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != &#xD;&#xA;    'true'">
+    <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
