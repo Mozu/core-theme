@@ -4,7 +4,9 @@
     },
 
     constructor: function (config) {
+
         config = Ext.apply(this, config || {});
+        var tasks = config.tasks;
         this.tasks = new Ext.util.MixedCollection();
 
         this.mixins.observable.constructor.call(this, config);
@@ -18,8 +20,8 @@
             'complete'
         );
 
-        if (config.tasks) {
-            this.add(config.tasks);
+        if (tasks) {
+            this.add(tasks);
         }
         if (config.autoExecute) {
             this.execute();

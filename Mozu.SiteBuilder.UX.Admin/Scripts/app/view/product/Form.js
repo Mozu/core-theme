@@ -205,7 +205,7 @@ Ext.define('Taco.view.product.Form', {
                     });
 
                     field.preventMark = true;
-                    isValid = field.isValid() || (globalForm && globalForm.isHidden());
+                    isValid = field.isValid() || (globalForm && ( !globalForm.rendered || globalForm.isHidden()));
                     field.preventMark = preventMark;
 
                     return !isValid;
