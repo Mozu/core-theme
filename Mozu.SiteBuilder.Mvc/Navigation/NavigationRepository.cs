@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     // if that fails, try to retrieve it as a string
                     try
                     {
-                        var docAsJObject = doc.Get<JObject>("data");
+                        var docAsJObject = doc.Get<JContainer>("data");
 
                         try
                         {
@@ -86,24 +86,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     }
                     catch
                     {
-                        var jsonString = doc.Get<string>("data");
-                        NavigationSet navset;
-                        if (!string.IsNullOrEmpty(jsonString))
-                        {
-                            try {
-                                navset = Newtonsoft.Json.JsonConvert.DeserializeObject<NavigationSet>(jsonString);
-                                ((NavigationSet)navset).ETag = etag;
-                            }
-                            catch (Newtonsoft.Json.JsonSerializationException) {
-                                _log.Warn("Failed to deserialize NavigationSet. Recovering with a blank navset..");
-                                navset = new NavigationSet();
-                            }
-                            return navset;
-                        }
-                        else
-                        {
-                            return new NavigationSet();
-                        }
+                        return new NavigationSet();
+                        
                     }
                 });
         }
