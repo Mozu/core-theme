@@ -710,7 +710,6 @@
     <Content Include="Scripts\app\core\ux\form\field\QuickFilter.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
-    <Content Include="Scripts\app\core\ux\form\field\Category.js" />
     <Content Include="Scripts\app\core\ux\form\field\plugins\InputMask.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
