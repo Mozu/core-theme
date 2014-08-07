@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ =>
             {
                 _.AttributeCode = string.IsNullOrEmpty(_.AttributeCode) ? _.AttributeFQN.Split('~')[1] : _.AttributeCode;
-                return _customerAttributeDefinitionWebApiClient.UpdateAttribute(_.AttributeFQN, _);
+                return _customerAttributeDefinitionWebApiClient.UpdateAttribute(System.Web.HttpUtility.UrlEncode(_.AttributeFQN), _);
             }
             ).ToList();
             await Task.WhenAll(tasks);
@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<AttributeModel>>> DeleteAttribute(List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute(_.AttributeFQN)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute(System.Web.HttpUtility.UrlEncode(_.AttributeFQN))).ToList();
             await Task.WhenAll(tasks);
              
             tasks.ForEach(x =>
