@@ -5,6 +5,7 @@
   "version": "2.0.0",
   "devDependencies": {
     "grunt": "~0.4",
+    "grunt-bower-task": "~0.4",
     "grunt-contrib-jshint": "~0.8",
     "grunt-contrib-watch": "~0.6",
     "grunt-jsonlint": "*",
