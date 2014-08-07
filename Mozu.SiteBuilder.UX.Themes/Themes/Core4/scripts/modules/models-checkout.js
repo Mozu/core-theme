@@ -108,7 +108,7 @@
             },
             choose: function (e) {
                 var idx = parseInt($(e.currentTarget).val());
-                if (idx != -1) {
+                if (idx !== -1) {
                     var addr = this.get('address');
                     var valAddr = addr.get('candidateValidatedAddresses')[idx];
                     for (var k in valAddr) {
@@ -190,8 +190,7 @@
                                     }
                                 addr.set('candidateValidatedAddresses', resp.data.addressCandidates);
                                 promptValidatedAddress();
-                            }
-                            else {
+                            } else {
                                 completeStep();
                             }
                         }, function (e) {
@@ -711,8 +710,8 @@
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
             },
             selectPaymentType: function (me, newPaymentType) {
-                me.get('check').selected = newPaymentType == "Check";
-                me.get('card').selected = newPaymentType == "CreditCard";
+                me.get('check').selected = newPaymentType === "Check";
+                me.get('card').selected = newPaymentType === "CreditCard";
             },
             calculateStepStatus: function () {
                 var fulfillmentComplete = this.parent.get('fulfillmentInfo').stepStatus() === "complete",
@@ -865,7 +864,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 'addDigitalCreditToCustomerAccount');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addBillingContact', 'addShippingContact', 'addCustomerContact');
 
 
 
@@ -970,7 +969,37 @@
                     throw error;
                 });
             },
-            saveCustomerCard: function (cust) {
+            addBillingContact: function () {
+                return this.addCustomerContact('billingInfo', 'billingContact');
+            },
+            addShippingContact: function () {
+                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact');
+            },
+            addCustomerContact: function (info, contactType) {
+                var customer = this.get('customer'),
+                    contactInfo = this.get(info),
+                    contact = contactInfo.get(contactType).toJSON(),
+
+                    saveContact = function () {
+                        if (contact.id === -1 || contact.id === 1) delete contact.id;
+                        return customer.apiModel.addContact(contact).then(function (contactResult) {
+                            contact.id = contactResult.data.id;
+                            return contactResult;
+                        });
+                    };
+
+                var contactId = contact.contactId;
+                if (contactId) contact.id = contactId;
+
+                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === "new") {
+                    return saveContact();
+                } else {
+                    var deferred = api.defer();
+                    deferred.resolve();
+                    return deferred.promise;
+                }
+            },
+            saveCustomerCard: function () {
                 var order = this,
                     customer = this.get('customer'), //new CustomerModels.EditableCustomer(this.get('customer').toJSON()),
                     billingInfo = this.get('billingInfo'),
@@ -1041,7 +1070,7 @@
                 this.isLoading(true);
 
                 if (this.get("createAccount") && !this.customerCreated) {
-                    process.push(this.addNewCustomer);
+                    process.push(this.addNewCustomer); 
                 }
 
                 var card = billingInfo.get('card');
@@ -1051,6 +1080,13 @@
 
                 if ((this.get('createAccount') || require.mozuData('user').isAuthenticated) && billingInfo.getDigitalCreditsToAddToCustomerAccount().length > 0) {
                     process.push(this.addDigitalCreditToCustomerAccount);
+                }
+
+                if (this.get('createAccount') || require.mozuData('user').isAuthenticated) {
+                    process.push(this.addShippingContact);
+                    if (!billingInfo.get('isSameBillingShippingAddress')) {
+                        process.push(this.addBillingContact);
+                    }
                 }
                
                 process.push(this.apiCheckout);
