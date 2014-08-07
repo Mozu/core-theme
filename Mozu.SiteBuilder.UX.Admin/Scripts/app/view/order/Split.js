@@ -222,14 +222,18 @@ Ext.define('Taco.view.order.Split', {
     showAndHideSplitActions: function (toolbar) {
         var record = this.getRecord();
         var editorActions = ['cancelActionButton', 'saveActionButton', 'next', 'previous'];
-
+        console.log('show and hide', record);
         toolbar = toolbar || this.header.down('toolbar');
         toolbar.items.each(function (cmp) {
             var id = cmp.getItemId ? cmp.getItemId() : null;
 
             if (record) {
-                if (record.getStatus === 'Pending' && (id === 'cancelActionButton' || id === 'saveActionButton')) {
-                    cmp.show();
+                if (record.get('orderStatus') === 'Pending') {
+                    if (id === 'cancelActionButton' || id === 'saveActionButton') {
+                        cmp.show();
+                    } else if (id === 'createActionButton') {
+                        cmp.hide();
+                    }
                 } else if (id === 'next' || id === 'previous') {
                     cmp.show();
                 }
