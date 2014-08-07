@@ -197,29 +197,29 @@ Ext.define('Taco.core.context.TaContext', {
         if (level == 's') {
             switch (cur.contextType) {
             case 't':
-                return this.masterCatalogs[0].sites[0];
+                return cur.masterCatalogs[0].sites[0];
             default:
-                return this.sites[0];
+                return cur.sites[0];
             }
         }
         if (level == 'c') {
             switch (cur.contextType) {
             case 't':
-                return this.masterCatalogs[0].catalogs[0];
+                return cur.masterCatalogs[0].catalogs[0];
             case 'm':
-                return this.catalogs[0];
+                return cur.catalogs[0];
             case 's':
-                return this.catalog;
+                return cur.catalog;
             }
         }
         if (level == 'm') {
             switch (cur.contextType) {
             case 't':
-                return this.masterCatalogs[0];
+                return cur.masterCatalogs[0];
             case 'c':
-                return this.masterCatalog;
+                return cur.masterCatalog;
             case 's':
-                return this.masterCatalog;
+                return cur.masterCatalog;
             }
         }
         return this;
