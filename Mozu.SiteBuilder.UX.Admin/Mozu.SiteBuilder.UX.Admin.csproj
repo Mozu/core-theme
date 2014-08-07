@@ -1458,6 +1458,7 @@
     <Content Include="Api\cms\tenant-documentlists.json" />
     <Content Include="Api\cms\entityeditors.json" />
     <Content Include="Scripts\sass\src\view\order\Header.scss" />
+    <Content Include="Scripts\sass\src\view\customers\Contacts.scss" />
     <Content Include="Scripts\sass\src\core\ux\PanelHeaderStat.scss" />
     <Content Include="Scripts\sass\src\view\order\widget\ReturnableItemGrid.scss" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\src\panel\Header.scss" />

@@ -16,7 +16,26 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
     closeAction: 'destroy',
 
-    initComponent: function() {
+    actions: [{
+        xtype: 'button',
+        ui: 'action-primary',
+        scale: 'medium',
+        itemId: 'addNewContact',
+        text: 'Add New Address',
+        handler: function () {
+            this.down('#customerContacts').createNewContact();
+        }
+    }, {
+        xtype: 'tbfill'
+    }, {
+        xtype: 'button',
+        itemId: 'secondaryAction'
+    }, {
+        xtype: 'button',
+        itemId: 'primaryAction'
+    }],
+
+    initComponent: function () {
 
         this.form = Ext.create('Ext.form.Panel', {
             itemId: 'contactForm',
@@ -27,14 +46,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     order: this.order,
                     width: '100%'
                 }), {
-                    xtype: 'button',
-                    ui: 'action-primary',
-                    scale: 'medium',
-                    itemId: 'addNewContact',
-                    text: 'Add New Address',
-                    handler: function() {
-                        this.down('#customerContacts').createNewContact();
-                    },
+
                     scope: this
                 }
             ]
@@ -46,13 +58,13 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
         this.on({
             cancel: this.doCancel,
-            savesuccess: function() {
+            savesuccess: function () {
                 if (typeof this.callback === 'function') this.callback()
             },
-            activate: function() {
+            activate: function () {
                 if (!this.isNewCustomer || this.notFirstActivate) return;
                 this.notFirstActivate = true;
-                Ext.defer(function() {
+                Ext.defer(function () {
                     this.down('#customerContacts').createNewContact()
                 }, 1, this);
             },
@@ -60,18 +72,18 @@ Ext.define('Taco.view.customers.modal.Contacts', {
         });
     },
 
-    doCancel: function() {
+    doCancel: function () {
         this.record.reject();
         this.order.reject();
         if (typeof this.callback === 'function') this.callback();
     },
 
-    doSave: function() {
+    doSave: function () {
         var me = this,
             count = 0,
             shipping = this.down('[name="customerShipToAddress"]{getValue()}'),
-            billing = this.down('[name="customerBillToAddress"]{getValue()}'), 
-            fnComplete = function() {
+            billing = this.down('[name="customerBillToAddress"]{getValue()}'),
+            fnComplete = function () {
                 if (++count < 2) return;
                 me.saveSuccess(me.record);
             };
@@ -81,11 +93,11 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
         if (this.record.dirty) {
             this.record.save({
-                success: function() {
+                success: function () {
                     me.record.commit();
                     fnComplete();
                 },
-                failure: function() {
+                failure: function () {
                     Taco.app.fireEvent('setmessage', 'Error saving customer', 'error');
                 }
             });
@@ -95,13 +107,13 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
         if (this.order && this.order.dirty) {
             this.order.updateContactInfo({
-                success: function(response) {
+                success: function (response) {
                     var json = Ext.decode(response.responseText).items[0];
                     me.order.set(json);
                     me.order.commit();
                     fnComplete();
                 },
-                failure: function() {
+                failure: function () {
                     Taco.app.fireEvent('setmessage', 'Error saving order', 'error');
                 }
             });

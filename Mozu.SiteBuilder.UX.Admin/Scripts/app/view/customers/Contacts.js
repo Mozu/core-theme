@@ -4,9 +4,8 @@ Ext.define('Taco.view.customers.Contacts', {
         'Taco.shared.view.modal.Address'
     ],
     border: 1,
-    padding: 5,
-    margin: 20,
-    width: 520,
+
+    cls: 'taco-customer-contacts',
 
     order: null,
 
@@ -45,14 +44,16 @@ Ext.define('Taco.view.customers.Contacts', {
             this.addressContainer.add({
 
                 xtype: 'container',
-                width: 250,
+                width: 280,
                 contact: contact,
                 isFromOrder: contact.isFromOrder || false,
                 style: {
                     display: 'inline-block',
                     verticalAlign: 'top'
                 },
-                padding: 10,
+                cls: 'address',
+                border: 1,
+                margin: '0 10 20 0',
                 items: [{
                     xtype: 'container',
                     layout: {
@@ -62,12 +63,13 @@ Ext.define('Taco.view.customers.Contacts', {
                     items: [{
                         xtype: 'component',
                         flex: 1,
-                        html: contact.isFromOrder ? 'Order Contact' : 'Customer Contact',
-                        hidden: !this.order
+                        cls: 'label',
+                        html: contact.isFromOrder ? 'Order Contact' : 'Customer Contact'
                     }, {
                         xtype: 'button',
                         ui: 'link',
-                        padding: '0 0 0 5',
+                        scale: 'medium',
+                        padding: '0 0 0 0',
                         text: 'Edit',
                         itemId: 'editButton',
                         handler: function () {
@@ -78,6 +80,7 @@ Ext.define('Taco.view.customers.Contacts', {
                         xtype: 'button',
                         padding: '0 0 0 5',
                         ui: 'link',
+                        scale: 'medium',
                         text: 'Delete',
                         itemId: 'deleteButton',
                         hidden: contact.isFromOrder,
@@ -88,26 +91,31 @@ Ext.define('Taco.view.customers.Contacts', {
                     }]
                 }, {
                     xtype: 'component',
+                    margin: '8 0 0 0',
                     tpl: [
-                        '<div data-handle="contact-{id}" data-contact-type="', '<tpl if="isFromOrder">order<tplelse>customer</tpl>', '">',
+                        '<div data-handle="contact-{id}" data-contact-type="<tpl if="isFromOrder">order<tplelse>customer</tpl>">',
 
-                        '{firstName}<tpl if="middleName"> {middleName}</tpl> {lastName}<br>',
+                        '<div class="name">{firstName}<tpl if="middleName"> {middleName}</tpl> {lastName}</div>',
 
-                        '<span data-handle="contact-address1">{address1}</span><br>',
+                        '<div data-handle="contact-address1">{address1}</div>',
 
-                        '<tpl if="address2">{address2}<br></tpl>',
+                        '<tpl if="address2"><div>{address2}</div></tpl>',
 
-                        '<tpl if="address3">{address3}<br></tpl>',
+                        '<tpl if="address3"><div>{address3}</div></tpl>',
 
-                        '<tpl if="address4">{address4}<br></tpl>',
+                        '<tpl if="address4"><div>{address4}</div></tpl>',
 
-                        '{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}<br>',
+                        '<div>{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}</div>',
 
-                        '<tpl if="homePhone">{homePhone}<br></tpl>',
+                        '<table class="phone-numbers">',
 
-                        '<tpl if="mobilePhone">{mobilePhone}<br></tpl>',
+                            '<tpl if="homePhone"><tr><td>Home:</td><td>{homePhone}</td></tr></tpl>',
 
-                        '<tpl if="workPhone">{workPhone}<br></tpl>',
+                            '<tpl if="mobilePhone"><tr><td>Mobile:</td><td>{mobilePhone}</td></tr></tpl>',
+
+                            '<tpl if="workPhone"><tr><td>Work:</td><td>{workPhone}</td></tr></tpl>',
+
+                        '</table>',
 
                         '</div>'
                     ],
@@ -118,6 +126,7 @@ Ext.define('Taco.view.customers.Contacts', {
                     inputValue: contact,
                     boxLabel: 'Ship to this address',
                     checked: shippingChecked,
+                    margin: '8 0 0 0',
                     hidden: !this.order
                 }, {
                     xtype: 'radiofield',
