@@ -1,8 +1,37 @@
 StartTest(function (t) {
     var m = {};
-
+   // Ext.getDoc().first().removeCls('x-viewport')
 
     t.setOnlyMocks();
+    t.simManager().register([
+        {
+            url: '/admin/app/Product/list',
+            jsonFile: '/admin/tests/mocks/Mystic1/products1.json'
+        },
+        {
+            url: '/admin/app/ProductType/read',
+            jsonFile: '/admin/tests/mocks/Mystic1/ProductTypes1.json'
+        },
+        {
+            url: '/admin/app/category/read',
+            jsonFile: '/admin/tests/mocks/Mystic1/Categories1.json'
+        },
+        {
+            url: '/admin/app/Product/edit',
+            stype: 'json',
+            getData: function () {
+                return [
+                    {
+                        productName: m.newName
+                    }
+                ];
+            },
+            doPost: function () {
+                return this.doGet.apply(this, arguments);
+            }
+        }
+    ]);
+
 
 
     t.chain(
@@ -13,11 +42,13 @@ StartTest(function (t) {
         function (next) {
             m.form = Ext.create('Ext.form.Panel', {
                 title: 'Contact Info',
-                width: 500,
-                height:10000,
+                width: 950,
+                height:740,
                 bodyPadding: 10,
+                margin:10,
                 renderTo: Ext.getBody(),
                 overflowY: 'scroll',
+                overflowX: 'scroll',
                 layout: {
                     type: 'vbox',
                     align:'stretch'
@@ -55,6 +86,27 @@ StartTest(function (t) {
                  xtype: 'mz-input-imageurl',
                  name: 'imageurl',
                  fieldLabel: 'mz-input-imageurl',
+             });
+
+             m.form.add({
+                 xtype: 'mz-input-product',
+                 name: 'product',
+                 fieldLabel: 'mz-input-product',
+             });
+
+             m.form.add({
+                 xtype: 'mz-input-productmulti',
+                 name: 'productmulti',
+                 fieldLabel: 'mz-input-productmulti',
+             });
+
+
+
+
+             m.form.add({
+                 xtype:'box',
+                 html:'<div style="height:100px;"></div>'
+                 
              });
 
 
