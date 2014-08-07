@@ -43,10 +43,11 @@ Ext.define('Taco.view.customers.Segments.Index', {
                     // defaults to textfield if no xtype is supplied
                     emptyText: "Code",
                     msgTarget: "qtip",
+                   
                     // optional enhancement to rowEditor. Makes the field only editable during a create;
                     editableOnCreateOnly: true,
                     selectOnFocus: true,
-                    allowBlank: false
+                    allowOnlyWhitespace: false
                 },
                 width: 200
                 
@@ -59,7 +60,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
                     emptyText: "Name",
                     msgTarget: "qtip",
                     selectOnFocus: true,
-                    allowBlank: false
+                    allowOnlyWhitespace: false
                 },
                 width: 200
             }, {
@@ -71,7 +72,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
                     emptyText: "Name",
                     msgTarget: "qtip",
                     selectOnFocus: true,
-                    allowBlank: false
+                    allowBlank: true
                 }
             }, {
                 xtype: 'taco.menucolumn',
