@@ -50,6 +50,10 @@
         }
     }
 
+    table.order-addresses-table tr td {
+        vertical-align: top;
+    }
+
     .pane {
         border-right: 1px solid $color-standard-border;
         margin: 10px 0px;

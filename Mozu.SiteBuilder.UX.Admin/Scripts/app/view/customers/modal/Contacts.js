@@ -18,7 +18,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
     actions: [{
         xtype: 'button',
-        ui: 'action-primary',
+        ui: 'action',
         scale: 'medium',
         itemId: 'addNewContact',
         text: 'Add New Address',
