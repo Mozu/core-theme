@@ -710,7 +710,6 @@
     <Content Include="Scripts\app\core\ux\form\field\QuickFilter.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
-    <Content Include="Scripts\app\core\ux\form\field\Category.js" />
     <Content Include="Scripts\app\core\ux\form\field\plugins\InputMask.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
@@ -798,6 +797,7 @@
     <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\shared\view\field\CountryField.js" />
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
+    <Content Include="Scripts\app\shared\view\field\Category.js" />
     <Content Include="Scripts\app\shared\view\field\Product.js" />
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
@@ -870,6 +870,7 @@
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\AddGiftCard.js" />
+    <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\Split.js" />
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\DeclineCheck.js" />
