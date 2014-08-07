@@ -68,20 +68,18 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         this.items = [];
         if (!this.disableAdvancedSearch) {
-            this.items.push(
-                {
-                    xtype: 'button',
-                    itemId: 'advancedFilter',
-                    ui: 'action',
-                    scale: 'medium',
-                    glyph: 'XE010@mozicons',
-                    width: 57,
-                    margin: '0 10 20 0',
-                    enableToggle: true,
-                    scope: this,
-                    toggleHandler: this.handleButtonToggle
-                }
-            );
+            this.items.push({
+                xtype: 'button',
+                itemId: 'advancedFilter',
+                ui: 'action',
+                scale: 'medium',
+                glyph: 'XE600@mozicons',
+                width: 57,
+                margin: '0 10 20 0',
+                enableToggle: true,
+                scope: this,
+                toggleHandler: this.handleButtonToggle
+            });
         }
 
         this.items.push({
@@ -94,12 +92,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             emptyText: this.emptySearchText,
             handler: this.handleFieldSubmit,
             scope: this
-            // listeners: {
-            //     specialkey: {
-            //         scope: this,
-            //         fn: this.handleFieldSubmit
-            //     }
-            // }
         });
 
         this.callParent(arguments);
