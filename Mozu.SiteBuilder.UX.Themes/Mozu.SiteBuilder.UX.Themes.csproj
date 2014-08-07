@@ -1026,6 +1026,9 @@
   <ItemGroup>
     <Content Include="Themes\Core4\bower.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core4\npm-shrinkwrap.json" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -1085,8 +1088,7 @@
     <Exec Command="attrib -r &quot;$(ProjectDir)ThemeTemplates\*.zip&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="DevCenterThemeTemplatizer.exe core4 &quot;$(ProjectDir)Themes\Core4&quot; &quot;$(ProjectDir)ThemeTemplates&quot;" WorkingDirectory="$(ProjectDir)tools" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-      <Exec Command="npm install grunt" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="npm install -g" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
