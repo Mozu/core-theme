@@ -101,7 +101,11 @@ Ext.define('Taco.model.Attribute', {
     supportsDisplayGroup: function () {
         return false;
     },
-    
+
+    allowProductDataType: function () {
+        return true;
+    },
+
     convert: function (v, r) {
         if (r.data.dataType == 'DateTime') {
             return r.convertDate(v);

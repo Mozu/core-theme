@@ -15,6 +15,9 @@ Ext.define('Taco.model.CustomerAttribute', {
     supportsDisplayGroup: function () {
         return true;
     },
+    allowProductDataType: function () {
+        return false;
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {

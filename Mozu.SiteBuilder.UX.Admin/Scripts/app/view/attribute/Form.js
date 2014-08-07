@@ -61,13 +61,13 @@ Ext.define('Taco.view.attribute.Form', {
                 ],
                 listeners: {
                     render: function (view) {
-                        var inputType = this.up('taco-attributeform').form.findField('inputType');
-                        if (inputType.getValue() != 'List') {
-                            this.store.removeAt(2);
-                            //this.store.filterBy(function (rec) {
-                            //    return rec.raw[0] != 'ProductCode';
-                            //});
-                            //this.bindStore(this.store);
+                        var form = this.up('taco-attributeform').form,
+                            inputType =  form.findField('inputType'),
+                            dataType = form.findField('dataType');
+
+
+                        if (inputType.getValue() != 'List' || dataType.allowProductDataType === false) {
+                            this.store.removeAt(this.store.findExact('field1', 'ProductCode'));
                         }
                     },
                     change: function (field, newValue, oldValue) {
@@ -105,7 +105,7 @@ Ext.define('Taco.view.attribute.Form', {
                     dataType = statics.fieldCfg.dataType;
 
                 dataType.readOnly = this.isEdit();
-
+                dataType.allowProductDataType = this.record.allowProductDataType();
 
                 grid = {
                     xtype: 'grid',
@@ -244,7 +244,7 @@ Ext.define('Taco.view.attribute.Form', {
                         xtype: 'checkboxgroup',
                         fieldLabel: 'Attribute Type',
                         hidden: !me.record.supportsAttributeType(),
-allowBlank:false,
+                        allowBlank: !me.record.supportsAttributeType(),
                         vertical: true,
                         columns: 1,
                         items: [
