@@ -59,7 +59,7 @@
             function(next) {
                 t.it("should create with a store and an order", function(t) {
                     m.modal = Ext.create('Taco.view.order.modal.AddGiftCard', {
-                        store: m.store,
+                        storeCreditsStore: m.store,
                         record: m.record,
                         listeners: {
                             activate: function() {
@@ -74,8 +74,8 @@
             },
 
             function(next) {
-                t.it("should have a getApplyingCreditData method that returns a collection of credits with positive amounts to apply", function(t) {
-                    m.modal.store.findRecord('code', 'crm114').set('amtToApply', 100);
+                t.it("should have a getApplyingCreditData method that returns a collection of credits with positive amounts to apply", function (t) {
+                    m.store.findRecord('code', 'crm114').set('amtToApply', 100);
                     var payload = m.modal.getApplyingCreditData();
                     t.is(payload.orderId, m.record.getId(), "order ID present");
                     t.is(payload.customerId, m.record.get('customerId'), "customer ID present");

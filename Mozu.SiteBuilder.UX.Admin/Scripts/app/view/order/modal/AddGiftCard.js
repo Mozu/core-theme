@@ -27,7 +27,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
     
     getApplyingCreditData: function() {
         return {
-            payments: Ext.Array.map(this.store.queryBy(function(record) { return record.get('amtToApply') > 0; }).getRange(), function(record) {
+            payments: Ext.Array.map(this.form.store.queryBy(function(record) { return record.get('amtToApply') > 0; }).getRange(), function(record) {
                 return record.getData();
             }),
             orderId: this.record.getId(),
