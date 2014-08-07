@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.ServiceModel.Web;
+using System.Linq;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using ACTIONS = Mozu.CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst;
 using CCR = Mozu.Customer.Contracts.Credit;
+using CR = Mozu.CommerceRuntime.Contracts.Orders;
 using DCcore = Mozu.Core.Api.Contracts;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
-using CR = Mozu.CommerceRuntime.Contracts.Orders;
-using ACTIONS = Mozu.CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -23,17 +22,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string Code { get; set; }
             public decimal AmtToApply { get; set; }
             public decimal CurrentBalance { get; set; }
-            public bool RemainderToAccount { get; set; }
+            public bool? RemainderToAccount { get; set; }
         }
 
         public class GiftCardPaymentCollection
         {
-            public int CustomerId { get; set; }
             public string OrderId { get; set; }
+            public int? CustomerId { get; set; }
             public List<GiftCardPayment> Payments { get; set; }
         }
 
-        public async Task<DCcore.Client.ServiceClientResponse<CR.Order>> AddGiftCard(string orderId, Customer.Contracts.CustomerAccount customer, GiftCardPayment payment)
+        [HttpPostRoute(UriTemplate = "payment/addgiftcards")]
+        public async Task<Response<Order>> AddGiftCards(GiftCardPaymentCollection args)
+        {
+            // apply all of the gift cards to the order.
+            var results = await Task.WhenAll( args.Payments.Select(p => AddGiftCard(args.OrderId, p.Code, p.AmtToApply)).ToList() );
+            
+            // force a read of all the results, which will throw an exception when appropriate.
+            results.ToList().ForEach(r => r.ReadAsSync());
+
+            // for any cards where we had selected "remainder to account", tie the card to the customer account.
+            if (args.CustomerId.HasValue)
+            {
+                var customerTasks =
+                    (from p in args.Payments
+                     where p.RemainderToAccount.GetValueOrDefault(false)
+                     where p.CurrentBalance > p.AmtToApply
+                     select AssociateCardWithCustomer(args.CustomerId.Value, p.Code)
+                    ).ToList();
+                var cResults = await Task.WhenAll(customerTasks);
+
+                // use the old force a read trick again.
+                cResults.ToList().ForEach(r => r.ReadAsSync());
+            }
+
+            var order = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+
+            return Single2(order.Map<Order>());
+
+        }
+
+        private Task<DCcore.Client.ServiceClientResponse<CR.Order>> AddGiftCard(string orderId, string code, decimal amountToApply)
         {
             var action = new DCp.PaymentAction
             {
@@ -41,56 +70,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 NewBillingInfo = new DCp.BillingInfo
                 {
                     PaymentType = DCp.PaymentTypeConst.STORE_CREDIT,
-                    BillingContact = new DCcore.Contact
-                    {
-                        FirstName = customer.FirstName,
-                        LastNameOrSurname = customer.LastName,
-                        Email = customer.EmailAddress
-                    },
-                    StoreCreditCode = payment.Code
+                    //BillingContact = new DCcore.Contact
+                    //{
+                    //    FirstName = customer.FirstName,
+                    //    LastNameOrSurname = customer.LastName,
+                    //    Email = customer.EmailAddress
+                    //},
+                    StoreCreditCode = code
                 },
-                Amount = payment.AmtToApply
+                Amount = amountToApply
             };
 
 
-            return (await _orderWebApiClient.CreatePaymentAction(orderId, action));
+            return _orderWebApiClient.CreatePaymentAction(orderId, action);
 
         }
 
-        public async Task<DCcore.Client.ServiceClientResponse<CCR.Credit>> AssociateCardWithCustomer(Customer.Contracts.CustomerAccount customer, string code)
+        private Task<DCcore.Client.ServiceClientResponse<CCR.Credit>> AssociateCardWithCustomer(int customerId, string code)
         {
-            var credit = new CCR.Credit
-            {
-                Code = code,
-                CustomerId = customer.Id
-            };
-            return (await _creditWebApiClient.UpdateCredit(credit, code));
+            // retrieve the credit
+            return _creditWebApiClient.GetCredit(code)
+            .ContinueWith<Task<DCcore.Client.ServiceClientResponse<CCR.Credit>>>(t => {
+                var cred = t.Result.ReadAsSync();
+
+                // guard against the badness
+                if (cred.CustomerId != null) {
+                    if (cred.CustomerId == customerId) {
+                        return Task.FromResult(t.Result);
+                    }
+                    else {
+                        throw new Exception("Attempt to attach an owned Gift Card to another customer.");
+                    }
+                }
+
+                // update the credit
+                cred.CustomerId = customerId;
+                return _creditWebApiClient.UpdateCredit(cred, code);
+            }).Unwrap();
         }
-
-        [HttpPostRoute(UriTemplate = "payment/addgiftcards")]
-        public async Task<Response<Order>> AddGiftCards(GiftCardPaymentCollection cardPayments)
-        {
-            var customer = (await _customerAccountWebApiClient.GetAccount(cardPayments.CustomerId) ).ReadAsSync();
-
-            var tasks = cardPayments.Payments.Select(payment => AddGiftCard(cardPayments.OrderId, customer, payment)).ToList();
-
-            var customerTasks = cardPayments.Payments.Where(payment => payment.RemainderToAccount && payment.CurrentBalance - payment.AmtToApply > 0).Select(payment => AssociateCardWithCustomer(customer, payment.Code)).ToList();
-
-            //await Task.WhenAll(tasks);
-
-            //await Task.WhenAll(customerTasks);
-
-            await Task.WhenAll(tasks.Cast<Task>().Concat(customerTasks.Cast<Task>()));
-
-            tasks.Where(x => x.Result.HasException).ToList().ForEach(x => { throw x.Result.ReadException(); });
-
-            customerTasks.Where(x => x.Result.HasException).ToList().ForEach(x => { throw x.Result.ReadException(); });
-
-            var order = (await _orderWebApiClient.GetOrder(cardPayments.OrderId)).ReadAsSync();
-
-            return Single2(order.Map<Order>());
-
-        }
-
     }
 }
