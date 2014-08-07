@@ -74,7 +74,7 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                 if (!json || !json.success) {
                     return;
                 }
-                
+                me.order.reload();
                 me.saveSuccess(json);
             },
             failure: function (response) {
