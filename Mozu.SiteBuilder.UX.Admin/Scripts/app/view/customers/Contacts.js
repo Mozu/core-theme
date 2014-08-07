@@ -230,7 +230,12 @@ Ext.define('Taco.view.customers.Contacts', {
 
     createNewContact: function () {
         this.editContact({
-            isNewContact: true
+            isNewContact: true,
+            isPrimaryShipping: this.contacts.length === 0,
+            isPrimaryBilling: this.contacts.length === 0,
+            firstName: this.record.get('firstName'),
+            lastName: this.record.get('lastName'),
+            email: this.record.get('emailAddress')
         });
     },
 
