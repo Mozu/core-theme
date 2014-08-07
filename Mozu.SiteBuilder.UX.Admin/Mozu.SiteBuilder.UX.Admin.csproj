@@ -710,6 +710,7 @@
     <Content Include="Scripts\app\core\ux\form\field\QuickFilter.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
+    <Content Include="Scripts\app\core\ux\form\field\Category.js" />
     <Content Include="Scripts\app\core\ux\form\field\plugins\InputMask.js" />
     <Content Include="Scripts\app\core\ux\form\field\SingleImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\EditableDisplayField.js" />
@@ -797,7 +798,6 @@
     <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\shared\view\field\CountryField.js" />
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
-    <Content Include="Scripts\app\shared\view\field\Category.js" />
     <Content Include="Scripts\app\shared\view\field\Product.js" />
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
@@ -870,7 +870,6 @@
     <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\AddGiftCard.js" />
-    <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\Split.js" />
     <Content Include="Scripts\app\view\order\modal\ApplyStoreCredit.js" />
     <Content Include="Scripts\app\view\order\modal\DeclineCheck.js" />
@@ -1010,7 +1009,6 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading.gif" />
-    <Content Include="Scripts\resources\fonts\mozicons-2014.svg" />
     <Content Include="Scripts\resources\images\icons\icon-barcode.png" />
     <Content Include="Scripts\resources\images\icons\icon-cart.png" />
     <Content Include="Scripts\resources\images\icons\icon-checkbox-focus.png" />
@@ -1466,9 +1464,6 @@
     <Content Include="Scripts\sass\src\view\order\subform\Fulfillment.scss" />
     <Content Include="Tests\.jshintrc" />
     <Content Include=".tfignore" />
-    <Content Include="Scripts\resources\fonts\mozicons-2014.eot" />
-    <Content Include="Scripts\resources\fonts\mozicons-2014.ttf" />
-    <Content Include="Scripts\resources\fonts\mozicons-2014.woff" />
     <Content Include="Tests\.jshintignore" />
     <Content Include="Scripts\.jshintignore" />
     <Content Include="Scripts\.jshintrc" />
