@@ -9,7 +9,8 @@ Ext.define('Taco.platter.fields.SimpleFields', {
         'Ext.form.field.Checkbox',
         'Ext.form.field.Number',
         'Ext.form.field.ComboBox',
-        'Taco.shared.view.field.Product'
+        'Taco.shared.view.field.Product',
+        'Taco.shared.view.field.Category'
     ],
     constructor: function () {
 
@@ -67,12 +68,26 @@ Ext.define('Taco.platter.fields.ImageUrl', {
 
 Ext.define('Taco.platter.fields.Product', {
     extend: 'Taco.shared.view.field.Product',
+    emptyText: 'Select Product',
     alias: ['widget.mz-input-product'],
     multiSelect: false
 });
 
 Ext.define('Taco.platter.fields.MultiProduct', {
     extend: 'Taco.shared.view.field.Product',
+    emptyText: 'Select Products',
     alias: ['widget.mz-input-productmulti']
 
 });
+
+Ext.define('Taco.platter.fields.Category', {
+    extend: 'Taco.shared.view.field.Category',
+    alias: ['widget.mz-input-category']
+});
+
+Ext.define('Taco.platter.fields.MultiCategory', {
+    extend: 'Taco.shared.view.field.Category',
+    multiSelect: true,
+    alias: ['widget.mz-input-categorymulti']
+});
+

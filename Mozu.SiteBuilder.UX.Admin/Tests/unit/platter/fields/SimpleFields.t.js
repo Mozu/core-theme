@@ -101,14 +101,23 @@ StartTest(function (t) {
              });
 
 
+             m.form.add({
+                 xtype: 'mz-input-category',
+                 name: 'category',
+                 fieldLabel: 'mz-input-category',
+             });
 
+             m.form.add({
+                 xtype: 'mz-input-categorymulti',
+                 name: 'category',
+                 fieldLabel: 'mz-input-categorymulti',
+             });
 
              m.form.add({
                  xtype:'box',
                  html:'<div style="height:100px;"></div>'
                  
              });
-
 
             next();
 
