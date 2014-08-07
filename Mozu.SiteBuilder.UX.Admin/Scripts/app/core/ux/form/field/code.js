@@ -38,10 +38,16 @@ Ext.define('Taco.core.ux.form.field.Code', {
             
             me.editor = ace.edit(editEl.dom);
             me.editor.setValue(me.getValue() || null);
-            window.code = me;
-            window.editor = me.editor;
+         //   window.code = me;
+        //    window.editor = me.editor;
+            if (me.readOnly) {
+                me.editor.setReadOnly(true);
+            }
             me.editor.setTheme("ace/theme/textmate");
+            
             me.editor.getSession().setMode("ace/mode/" + me.mode);
+
+            
             me.editor.setHighlightActiveLine(false);
             
             me.editor.getSession().setUseWrapMode(true);

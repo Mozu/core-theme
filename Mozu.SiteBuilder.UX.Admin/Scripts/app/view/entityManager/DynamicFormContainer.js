@@ -24,18 +24,34 @@
     autoScroll :true,
     createButtonEnabled: false,
     showNameEditor:true,
-   // layout:'vbox',
-   // layout: 'default',
+   layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
+    // layout: 'default',
+    supportsSaving:true,
     enableNavHeader: false,
 
   //  padding: '20px',
     initComponent: function () {
+        me=this,
         this.data = Ext.clone(this.record.get('fields'));
-        this.dynamicForm = eval(this.editor.get('code'));
-
-        if (!this.dynamicForm) {
-            throw 'doh!';
+        if (this.editor) {
+            try {
+                this.dynamicForm = eval(this.editor.get('code'));
+            } catch (e) {
+                console.log(e);
+            }
         }
+        if (!this.dynamicForm) {
+            this.dynamicForm = Ext.create('Taco.view.entityManager.DynamicFormContainer.DefaultEditor');
+            this.supportsSaving = false;
+
+
+        }
+
+
+       
 
         this.dynamicForm.data = this.data;
         this.dynamicForm.ui = 'subform';
@@ -161,7 +177,7 @@
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 }
             },
-            callback: function (r, o, s) {
+            callback: function (r) {
                 me.saveSuccess(r);
             }
 
@@ -170,3 +186,35 @@
     }
 
 });
+
+Ext.define('Taco.view.entityManager.DynamicFormContainer.DefaultEditor', {
+    extend: 'Taco.core.ux.form.entities.EntityEditorForm',
+    //layout: {
+    //    type: 'hbox',
+    //    align: 'stretch'
+
+    //},
+    flex: 1,
+    height:'100%',
+    items: [
+        {
+            xtype: 'taco-codefield',
+            mode: 'JSON',
+            itemId: 'readonlyJSON',
+            readOnly: true,
+            flex:1
+        }
+    ],
+
+
+    setData: function (data) {
+        this.down('#readonlyJSON').setValue(data?JSON.stringify(data, undefined, 2):'');
+        this.data = data;
+    },
+
+   
+    getData: function () {
+        return Ext.applyIf({}, this.data);
+    }
+});
+

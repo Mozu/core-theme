@@ -51,14 +51,15 @@ Ext.define('Taco.view.entityManager.Index', {
                 menu: {
                     plain: true,
                     shadow: false,
-                    listeners: {
-                        beforeshow: function (cmp) {
-                            cmp.down('#publishActionButton').disable(!(me.listmetaData.enablePublishing && me.getCurrentEntityRecord().data.publishState == 'staging'));
-                        },
-                    },
+                    //listeners: {
+                    //    beforeshow: function (cmp) {
+                    //        if ( me.listmetaData.enablePublishing && me.getCurrentEntityRecord().data.publishState == 'staging'))
+                    //        cmp.down('#previewStagingActionButton').disable(!(me.listmetaData.enablePublishing && me.getCurrentEntityRecord().data.publishState == 'staging'));
+                    //    },
+                    //},
                     items: [
                         {
-                            text: 'Preview in Site',
+                            text: 'Preview in Live Site',
                             itemId: 'previewActionButton',
                             
                             handler: function () {
@@ -69,7 +70,20 @@ Ext.define('Taco.view.entityManager.Index', {
                                 url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
                                 window.open('/_gosite/' + siteId + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
                             }
-                        }
+                        },
+                         {
+                             text: 'Preview in Staging Site',
+                             itemId: 'previewStagingActionButton',
+
+                             handler: function () {
+                                 //scope is set to index on all action buttons by container.
+                                 var record = me.getCurrentEntityRecord(),
+                                     siteId = Taco.app.context.getContextAtLevel('s').id;
+
+                                 url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
+                                 window.open('/_gosite/' + siteId + '?environment=staging&redir=' + encodeURIComponent(url), 'taco-preview');
+                             }
+                         }
                     ]
                 }
             },
@@ -170,8 +184,10 @@ Ext.define('Taco.view.entityManager.Index', {
         this.createActionButton = this.createActionButton || header.down('#createActionButton');
         this.publishActionButton = this.publishActionButton || header.down('#publishActionButton');
         this.moreActionButton = this.moreActionButton || header.down('#moreActionButton');
-        this.saveActionButton.setVisible(me.form);
-        this.cancelActionButton.setVisible(me.form);
+        this.saveActionButton.setVisible(me.form && me.form.supportsSaving);
+    
+       
+        this.cancelActionButton.setVisible(false);//me.form);
         this.createActionButton.setVisible(me.grid);
         if (record && listMetaData.supportsPublishing) {
             this.publishActionButton.setVisible(true);
