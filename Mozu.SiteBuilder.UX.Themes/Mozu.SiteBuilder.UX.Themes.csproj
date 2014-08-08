@@ -823,6 +823,7 @@
     <Folder Include="SampleThemes\helloWorld\Modules\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Scripts\Pages\" />
+    <Folder Include="Themes\Core4\templates\modules\entities\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -958,9 +959,6 @@
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-digital-fulfillment.hypr.live">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core4\templates\modules\entities\people.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\templates\modules\checkout\checkout-digital-credit.hypr.live">

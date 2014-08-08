@@ -3,11 +3,5 @@
 {% block body-tag-classes %} mz-homepage {% endblock body-tag-classes %}
 
 {% block body-content %}
-<h1>what</h1>
-
-{% include_entities "modules/entities/people"  with collection="phipps.people" as_paramater %}
-
-
-
     {% dropzone "home" scope="template" %}
 {% endblock body-content %}
