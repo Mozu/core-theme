@@ -70,42 +70,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new VaeUnexpectedErrorException("Could not apply coupon to order. Please try again");
             }
 
-            var invalidCoupons = dcOrder.InvalidCoupons.Where(x => args.Coupons.Contains(x.CouponCode)).DistinctBy(x => x.CouponCode);
-
-            var invalidCount = invalidCoupons.Count();
-            if (invalidCount == 0)
-            {
-                return (dcOrder != null)
-                ? Single2(dcOrder.Map<Order>())
-                : Message3<Order>(false, "No coupons were applied.");
-            }
-
-            var errMsg = BuildInvalidCouponMessage(invalidCount, invalidCoupons);
-            throw new VaeValidationConflictException(errMsg);
-
+            return dcOrder != null ? Single2(dcOrder.Map<Order>()) : Message3<Order>(false, "No coupons were applied.");
         }
 
-        private static string BuildInvalidCouponMessage(int invalidCount, IEnumerable<InvalidCoupon> invalidCoupons)
-        {
-            string errMsg;
-            if (invalidCount == 1)
-            {
-                var singleCoupon = invalidCoupons.First();
-                errMsg = string.Format("Invalid coupon: {0} - {1}", singleCoupon.CouponCode, singleCoupon.Reason);
-            }
-            else
-            {
-                var sb = new StringBuilder();
-                sb.Append("Invalid coupons: ");
-                foreach (var invCoupon in invalidCoupons)
-                {
-                    sb.Append(invCoupon.CouponCode);
-                    sb.Append(" - ").Append(invCoupon.Reason).Append(";");
-                }
-                errMsg = sb.ToString();
-            }
-            return errMsg;
-        }
+//        private static string BuildInvalidCouponMessage(int invalidCount, IEnumerable<InvalidCoupon> invalidCoupons)
+//        {
+//            string errMsg;
+//            if (invalidCount == 1)
+//            {
+//                var singleCoupon = invalidCoupons.First();
+//                errMsg = string.Format("Invalid coupon: {0} - {1}", singleCoupon.CouponCode, singleCoupon.Reason);
+//            }
+//            else
+//            {
+//                var sb = new StringBuilder();
+//                sb.Append("Invalid coupons: ");
+//                foreach (var invCoupon in invalidCoupons)
+//                {
+//                    sb.Append(invCoupon.CouponCode);
+//                    sb.Append(" - ").Append(invCoupon.Reason).Append(";");
+//                }
+//                errMsg = sb.ToString();
+//            }
+//            return errMsg;
+//        }
 
         [HttpPostRoute(UriTemplate = "removecoupon")]
         public async Task<Response<Order>> RemoveCoupon(AddRemoveCouponArgs args, [FromUri]bool draft = false)
