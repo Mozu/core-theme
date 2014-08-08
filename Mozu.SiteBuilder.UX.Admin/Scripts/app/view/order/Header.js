@@ -50,6 +50,18 @@ Ext.define('Taco.view.order.Header', {
 
         this.callParent(arguments);
 
+        this.on({
+            afterrender: function () {
+                var billingContact = this.record.get('billingContact'),
+                    fulfillmentContact = this.record.get('fulfillmentContact');
+
+                if (this.record.getCustomer() && !(billingContact && billingContact.address1 && fulfillmentContact && fulfillmentContact.address1)) {
+                    this.changeAddress();
+                }
+            },
+            scope: this
+        });
+
         this.loadCustomer();
     },
 
@@ -257,7 +269,7 @@ Ext.define('Taco.view.order.Header', {
             itemId: 'addressesContainer',
             cls: 'pane pane-addresses',
             flex: 40,
-            hidden: this.record.getCustomer() == null,
+            hidden: !this.record.getCustomer(),
             items: [{
                     xtype: 'component',
                     cls: 'order-addresses',
@@ -293,7 +305,7 @@ Ext.define('Taco.view.order.Header', {
             itemId: 'customerSelectionContainer',
             cls: 'pane pane-customer',
             flex: 40,
-            hidden: this.record.getCustomer() !== null,
+            hidden: !!this.record.getCustomer(),
             items: [
                 this.customerSelector, {
                     xtype: 'button',
