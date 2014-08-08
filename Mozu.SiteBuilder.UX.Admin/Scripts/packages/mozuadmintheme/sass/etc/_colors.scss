@@ -37,10 +37,10 @@ $color-framework-gray-border:   rgb(221, 223, 223);
 $color-framework-gray:          rgb(187, 190, 191);
 $color-framework-gray-dark:     rgb(114, 119, 121);
 
-$color-theme-red:               $color-framework-red;  // rgb(210, 70, 60);
-$color-theme-red-light:         rgb(221, 93, 84);
-$color-theme-red-darker:        rgb(196, 66, 57);
-$color-theme-red-darkest:       rgb(145, 49, 42);
+$color-theme-red:               $color-framework-red;  // old: rgb(210, 70, 60);
+$color-theme-red-light:         darken($color-framework-red, 5%); // rgb(221, 93, 84);
+$color-theme-red-darker:        darken($color-framework-red, 10%); // old: rgb(196, 66, 57);
+$color-theme-red-darkest:       darken($color-framework-red, 15%); // old: rgb(145, 49, 42);
 $color-theme-yellow:            rgb(252, 194, 0);
 $color-theme-yellow-light:      rgb(252, 240, 200);
 $color-theme-green:             rgb(37, 174, 144);
@@ -78,12 +78,12 @@ $color-button-border: $color-theme-blue-darker;
 $color-button-boxshadow: $color-theme-blue-darker;
 
 $color-action-foreground: $color-framework-black;
-$color-action-background: $color-neutral-95;
-$color-action-background-hover: $color-neutral-90;
-$color-action-background-active: $color-neutral-75;
-$color-action-outline: $color-neutral-75;
-$color-action-outline-hover: $color-neutral-70;
-$color-action-outline-active: $color-neutral-75;
+$color-action-background: $color-framework-gray-light;
+$color-action-background-hover: darken($color-framework-gray, 5%);
+$color-action-background-active: $color-framework-gray;
+$color-action-outline: $color-framework-gray;
+$color-action-outline-hover: darken($color-framework-gray, 5%);
+$color-action-outline-active: $color-framework-gray;
 $color-action-outline-focus: rgb(55, 120, 213);
 
 $color-action-primary-foreground: $color-neutral-white;
