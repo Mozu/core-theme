@@ -792,6 +792,7 @@
     <Content Include="Scripts\app\overrides\window\Window.js" />
     <Content Include="Scripts\app\overrides\ZIndexManager.js" />
     <Content Include="Scripts\app\platter\fields\SimpleFields.js" />
+    <Content Include="Scripts\app\platter\forms\SimpleForms.js" />
     <Content Include="Scripts\app\shared\view\field\ArrayField.js" />
     <Content Include="Scripts\app\shared\view\field\GridField.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />

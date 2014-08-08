@@ -1,5 +1,6 @@
-﻿Ext.create('Taco.core.ux.form.entities.EntityEditorForm', {
-    title: 'blrg',
+﻿Ext.widget({
+    xtype:'mz-form-entity',
+    title: 'snippet',
     items: [
         
          {

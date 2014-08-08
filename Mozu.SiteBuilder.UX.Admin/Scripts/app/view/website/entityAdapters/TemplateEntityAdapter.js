@@ -47,7 +47,10 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
                 documentTypeFQN: templReq.documentTypeFQN,
                 name: templReq.path,
                 entityType:'cms',
-                listFQN: templReq.listFQN
+                listFQN: templReq.listFQN,
+                properties: {
+                    page_type_definition: templReq.path
+                }
             });
             me.set(cmsDoc);
         }
