@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Creates a new payment and performs the "AuthAndCapture" action.
         /// </summary>
-		[HttpPostRoute(UriTemplate = "payment/manual/create")]
+        [HttpPostRoute(UriTemplate = "payment/manual/create")]
         public async Task<Response<Order>> CreatePaymentManual(CreatePaymentManualArgs args)
         {
             var action = new DCp.PaymentAction
@@ -129,6 +129,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2( order.Map<Order>() );
         }
+
+        
+
+        public class DeclinePaymentArgs
+        {
+            public string OrderId { get; set; }
+            public string PaymentId { get; set; }
+            public string DeclineCode { get; set; }
+            public string Comments { get; set; }
+            public int? GatewayInteractionId { get; set; }
+            public DateTime? InteractionDate { get; set; }
+
+        }
+
+        [HttpPostRoute(UriTemplate = "payment/manual/decline")]
+        public async Task<Response<Order>> DeclinePaymentManual(DeclinePaymentArgs args)
+        {
+
+            // TODO: the contract doesn't support "decline code" or "comments" and it should soon!
+            var action = new DCp.PaymentAction
+            {
+                ActionName = "DeclinePayment",
+                CurrencyCode = "USD",
+                InteractionDate = args.InteractionDate,
+                ManualGatewayInteraction = new DCp.PaymentGatewayInteraction { GatewayInteractionId = args.GatewayInteractionId }
+            };
+
+            var order = (await _orderWebApiClient.PerformPaymentAction(args.OrderId, args.PaymentId, action)).ReadAsSync();
+
+            return Single2(order.Map<Order>());
+        }
+
 
         public class RollbackTransactionArgs
         {

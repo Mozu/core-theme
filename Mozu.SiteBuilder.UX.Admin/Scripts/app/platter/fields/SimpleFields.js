@@ -91,3 +91,17 @@ Ext.define('Taco.platter.fields.MultiCategory', {
     alias: ['widget.mz-input-categorymulti']
 });
 
+Ext.define('Taco.platter.fields.Discount', {
+    extend: 'Taco.shared.view.field.Discount',
+    alias: ['widget.mz-input-discount'],
+    emptyText: 'Select Discount',
+    multiSelect: false
+});
+
+Ext.define('Taco.platter.fields.MultiDiscount', {
+    extend: 'Taco.shared.view.field.Discount',
+    alias: ['widget.mz-input-discountmulti'],
+    emptyText: 'Select Discounts',
+    multiSelect: true
+});
+

@@ -17,6 +17,10 @@ StartTest(function (t) {
             jsonFile: '/admin/tests/mocks/Mystic1/Categories1.json'
         },
         {
+            url: '/admin/app/discount/list',
+            jsonFile: '/admin/tests/mocks/Mystic1/Discounts1.json'
+        },
+        {
             url: '/admin/app/Product/edit',
             stype: 'json',
             getData: function () {
@@ -111,6 +115,18 @@ StartTest(function (t) {
                  xtype: 'mz-input-categorymulti',
                  name: 'category',
                  fieldLabel: 'mz-input-categorymulti',
+             });
+
+             m.form.add({
+                 xtype: 'mz-input-discount',
+                 name: 'discount',
+                 fieldLabel: 'mz-input-discount',
+             });
+
+             m.form.add({
+                 xtype: 'mz-input-discountmulti',
+                 name: 'discount',
+                 fieldLabel: 'mz-input-discountmulti',
              });
 
              m.form.add({
