@@ -292,16 +292,16 @@ Ext.define('Taco.view.order.Form', {
 
         if (!this.record.get("customerId")) {
             isValid = false;
-            errors.push("A customer must be created or selected before saving this order");
+            errors.push("A customer must be created or selected before submitting this order");
         } else if (Ext.Object.isEmpty(this.record.get("fulfillmentContact"))) {
             isValid = false;
-            errors.push("Shipping Address must be added before saving this order.");
+            errors.push("Shipping Address must be added before submitting this order.");
         } else if (Ext.Object.isEmpty(this.record.get("billingContact"))) {
             isValid = false;
-            errors.push("Billing Address must be added before saving this order.");
+            errors.push("Billing Address must be added before submitting this order.");
         } else if (!this.record.itemsStore.count()) {
             isValid = false;
-            errors.push("Products must be added before saving this order. Click the \"Edit Details\" button to add products.");
+            errors.push("Products must be added before submitting this order. Click the \"Edit Details\" button to add products.");
         }
 
         //else if (!this.record.data.fulfillmentContact || !this.record.data.fulfillmentContact.email) {
@@ -310,7 +310,7 @@ Ext.define('Taco.view.order.Form', {
         //}
         else if (isShippable && !this.record.get("shippingMethodCode")) {
             isValid = false;
-            errors.push("A shipping method must be selected before saving this order");
+            errors.push("A shipping method must be selected before submitting this order");
         }
         
         if (errors.length) {
