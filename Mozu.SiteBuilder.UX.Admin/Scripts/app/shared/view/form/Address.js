@@ -4,56 +4,56 @@
  * additional fields, by putting them in extraFields.
  */
 Ext.define('Taco.shared.view.form.Address', {
-	extend: 'Taco.core.ux.form.Form',
-	alias: 'widget.taco-addressform',
+    extend: 'Taco.core.ux.form.Form',
+    alias: 'widget.taco-addressform',
 
-	requires: [        
+    requires: [
         'Taco.store.StatesStatic',
-		'Taco.model.Contact',
-		'Taco.core.ux.form.SelectField',
+  'Taco.model.Contact',
+  'Taco.core.ux.form.SelectField',
         'Taco.core.ux.form.PhoneNumberField'
-	],
+ ],
 
-	title: 'Edit Address',
+    title: 'Edit Address',
 
-	addressHasNames: true,
-	
-	showCompanyName: true,
-	showEmail: true,
-	showPhoneNumbers: true,
+    addressHasNames: true,
+
+    showCompanyName: true,
+    showEmail: true,
+    showPhoneNumbers: true,
     showDefaultOptions: false,
 
     emailRequired: false,
 
     // wether to default the country code field to the default country code
-	useDefaultCountryCode: true,
+    useDefaultCountryCode: true,
 
     // the default country code to use;
-	defaultCountryCode: "US",
+    defaultCountryCode: "US",
 
-	initComponent: function () {
-	    var me = this,
-	        fields = [];
-        
-		this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor-fields';
+    initComponent: function () {
+        var me = this,
+            fields = [];
 
-		this.layout = {
-		    type: "anchor"
-		}
-		
+        this.cls += ' ' + Taco.baseCSSPrefix + 'address-editor-fields';
+
+        this.layout = {
+            type: "anchor"
+        }
+
         // default the country code if one is not provided;
-		var countryCode = this.record.get("countryCode");
-		if (!countryCode && this.useDefaultCountryCode) {
-		    this.record.set("countryCode", this.defaultCountryCode);
-		}
+        var countryCode = this.record.get("countryCode");
+        if (!countryCode && this.useDefaultCountryCode) {
+            this.record.set("countryCode", this.defaultCountryCode);
+        }
 
-	    
-		var nameFieldContainer = {
-		    xtype: "fieldcontainer",		    
-		    layout: "hbox",
-            anchor:"0",
-		    items: []
-		}
+
+        var nameFieldContainer = {
+            xtype: "fieldcontainer",
+            layout: "hbox",
+            anchor: "0",
+            items: []
+        }
 
 
         if (me.showCompanyName) {
@@ -61,7 +61,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 xtype: 'textfield',
                 name: 'companyOrOrganization',
                 fieldLabel: 'Company Name',
-                flex:1,
+                flex: 1,
                 margin: '0 15 0 0'
             })
         }
@@ -76,13 +76,13 @@ Ext.define('Taco.shared.view.form.Address', {
                 margin: '0 15 0 0'
             });
         }
-        
+
 
         var addressType = {
             xtype: 'combobox',
             name: 'addressType',
             fieldLabel: 'Address Type',
-            forceSelection:true,
+            forceSelection: true,
             store: ['Residential', 'Commercial']
         }
 
@@ -96,23 +96,22 @@ Ext.define('Taco.shared.view.form.Address', {
 
         fields.push(nameFieldContainer);
 
-        
 
         fields.push({
             xtype: 'textfield',
             name: 'address1',
-            anchor:'0',
+            anchor: '0',
             fieldLabel: 'Address 1',
             allowBlank: false
         });
-                
+
         fields.push({
             xtype: "fieldcontainer",
-            layout:"hbox",
-            items:[
+            layout: "hbox",
+            items: [
                 {
                     xtype: 'textfield',
-                    flex:1,
+                    flex: 1,
                     name: 'address2',
                     fieldLabel: 'Address 2',
                     margin: '0 15 0 0'
@@ -134,7 +133,7 @@ Ext.define('Taco.shared.view.form.Address', {
 
         fields.push({
             xtype: "fieldcontainer",
-            layout:"hbox",
+            layout: "hbox",
             items: [
                 {
                     xtype: 'textfield',
@@ -154,7 +153,7 @@ Ext.define('Taco.shared.view.form.Address', {
                             xtype: 'textfield',
                             name: 'stateOrProvince',
                             fieldStyle: 'text-transform:uppercase',
-                            flex:1,
+                            flex: 1,
                             fieldLabel: 'State',
                             minLength: 2,
                             margin: '0 15 0 0',
@@ -163,7 +162,7 @@ Ext.define('Taco.shared.view.form.Address', {
                             xtype: 'textfield',
                             flex: 1,
                             name: 'postalOrZipCode',
-                            fieldLabel: 'ZIP',                            
+                            fieldLabel: 'ZIP',
                             allowBlank: false
                         }
                     ]
@@ -179,7 +178,9 @@ Ext.define('Taco.shared.view.form.Address', {
                     displayField: 'name',
                     valueField: 'code',
                     forceSelection: true,
-                    store: { type: 'Taco.store.Countries' },
+                    store: {
+                        type: 'Taco.store.Countries'
+                    },
                     emptyText: "Country",
                     selectOnFocus: true
                 }
@@ -194,7 +195,7 @@ Ext.define('Taco.shared.view.form.Address', {
                 items: [{
                     xtype: 'phonefield',
                     name: 'homePhone',
-                    flex:1,
+                    flex: 1,
                     fieldLabel: 'Home Phone',
                     margin: '0 15 0 0'
                 }, {
@@ -212,17 +213,16 @@ Ext.define('Taco.shared.view.form.Address', {
                 }]
             });
         }
-		
 
 
         if (this.addressHasNames) {
             fields.unshift({
-                xtype:"fieldcontainer",
-                layout:"hbox",
-                items:[
+                xtype: "fieldcontainer",
+                layout: "hbox",
+                items: [
                     {
                         xtype: 'textfield',
-                        flex:1,
+                        flex: 1,
                         name: 'firstName',
                         fieldLabel: 'First Name',
                         margin: '0 15 0 0',
@@ -238,13 +238,13 @@ Ext.define('Taco.shared.view.form.Address', {
                         labelStyle: 'padding-top: 5px'
                     }, {
                         xtype: 'textfield',
-                        flex:1,
+                        flex: 1,
                         name: 'lastName',
                         fieldLabel: 'Last Name',
-                        allowBlank: false,                        
+                        allowBlank: false,
                         labelStyle: 'padding-top: 5px'
                     }
-                ]           
+                ]
             });
         }
 
@@ -272,47 +272,47 @@ Ext.define('Taco.shared.view.form.Address', {
                 }]
             });
         }
-        
+
         this.items = fields;
 
         this.callParent(arguments);
-        
+
         // need to set the raw value of the country code field becuase the isValid checks rawValue instead of value.
         var countryCodeField = this.getForm().findField("countryCode");
-        if (countryCodeField) {            
+        if (countryCodeField) {
             countryCodeField.setValue(this.record.get("countryCode"))
         }
-            
-	},
 
-	beforeSave: function (){
-	    var me = this;
-	    if (this.showDefaultOptions) {
-	        this.record.set('isPrimaryBilling', this.down('[name="isPrimaryBilling"]').getValue());
-	        this.record.set('isPrimaryShipping', this.down('[name="isPrimaryShipping"]').getValue());
-	    }
+    },
 
-	    // convert state to 2 digit value if the countryCode is US
-	    var countryCode = me.form.findField("countryCode").getValue();
+    beforeSave: function () {
+        var me = this;
+        if (this.showDefaultOptions) {
+            this.record.set('isPrimaryBilling', this.down('[name="isPrimaryBilling"]').getValue());
+            this.record.set('isPrimaryShipping', this.down('[name="isPrimaryShipping"]').getValue());
+        }
+
+        // convert state to 2 digit value if the countryCode is US
+        var countryCode = me.form.findField("countryCode").getValue();
         // only do the conversion if the country is the US
-	    if (countryCode == "US") {
-	        var stateField = me.form.findField("stateOrProvince"),
-	            stateCode = stateField.getValue();
+        if (countryCode == "US") {
+            var stateField = me.form.findField("stateOrProvince"),
+                stateCode = stateField.getValue();
 
             // only convert if the value isn't a 2 character code;
-	        if (stateField.getValue().length != 2){	            
-	            var stateStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.StatesStatic');
-	            var stateRecord = stateStore.findRecord("value", stateField.getValue(), 0, true, false, false);
-	            if (stateRecord) {
-	                stateCode = stateRecord.get("code");
-	                // overwrite the user entered value with a usps code version;
-	                stateField.setValue(stateCode);
-	            }
-	        }	        
-	    }
-        
+            if (stateField.getValue().length != 2) {
+                var stateStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.StatesStatic');
+                var stateRecord = stateStore.findRecord("value", stateField.getValue(), 0, true, false, false);
+                if (stateRecord) {
+                    stateCode = stateRecord.get("code");
+                    // overwrite the user entered value with a usps code version;
+                    stateField.setValue(stateCode);
+                }
+            }
+        }
+
         return true
-	},
+    },
 
     addSaveTasks: function (tasks) {
         tasks.add({
