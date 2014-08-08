@@ -12,7 +12,8 @@ Ext.define('Taco.view.customers.Contacts', {
     initComponent: function () {
 
         this.addressContainer = Ext.widget({
-            xtype: 'container'
+            xtype: 'container',
+            items: []
         });
 
         this.loadContacts();
@@ -159,7 +160,13 @@ Ext.define('Taco.view.customers.Contacts', {
             });
         }, this);
 
-        if (!this.contacts.length) return;
+        if (!this.contacts.length) {
+            this.addressContainer.add({
+                xtype: 'component',
+                html: '<div class="no-address>There are no Contacts for this user.<br><br>Add an address below.</div>'
+            });
+            return;
+        }
 
         if (!oneBillingChecked) this.addressContainer.down('[name="customerBillToAddress"]').setValue(true);
 
