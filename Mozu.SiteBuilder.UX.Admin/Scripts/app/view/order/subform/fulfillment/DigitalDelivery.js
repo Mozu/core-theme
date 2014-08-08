@@ -67,7 +67,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalDelivery', {
                             '<td>{itemsDigitallyFulfilled}</td></tr>',
                         '</tr><tr>',
                             '<td>Digital Items:</td>',
-                            '<td>{totalPickupItems}<td>',
+                            '<td>{totalDigitalItems}<td>',
                         '</tr>',
                     '</table>'
                 ]
