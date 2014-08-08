@@ -794,6 +794,9 @@
     <Content Include="Scripts\app\platter\fields\SimpleFields.js" />
     <Content Include="Scripts\app\platter\forms\SimpleForms.js" />
     <Content Include="Scripts\app\shared\view\field\ArrayField.js" />
+    <Content Include="Scripts\app\shared\view\field\NavNode.js" />
+    <Content Include="Scripts\app\shared\view\field\Discount.js" />
+    <Content Include="Scripts\app\shared\view\field\Category.js" />
     <Content Include="Scripts\app\shared\view\field\GridField.js" />
     <Content Include="Scripts\app\shared\view\field\Address.js" />
     <Content Include="Scripts\app\shared\view\field\CountryField.js" />
@@ -820,6 +823,7 @@
     <Content Include="Scripts\app\store\LocalizedProductExtras.js" />
     <Content Include="Scripts\app\store\LocalizedProductProperties.js" />
     <Content Include="Scripts\app\store\LocalizedAttributeValues.js" />
+    <Content Include="Scripts\app\store\NavigationFlattened.js" />
     <Content Include="Scripts\app\store\OrderHandlingFeeRules.js" />
     <Content Include="Scripts\app\store\ProductHandlingFeeRules.js" />
     <Content Include="Scripts\app\store\Entities.js" />
@@ -862,6 +866,7 @@
     <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
+    <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
     <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
     <Content Include="Scripts\app\view\entityManager\Index.js" />
     <Content Include="Scripts\app\view\entityManager\Grid.js" />
@@ -2115,6 +2120,7 @@
     <Content Include="Tests\Web.config" />
     <Content Include="Tests\Automation\CIRunner.bat" />
     <Content Include="Tests\Mocks\Mystic1\Orders2Payments.json" />
+    <Content Include="Tests\Mocks\Mystic1\Discounts1.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />

@@ -2,7 +2,7 @@
  * @class Taco.model.Order
  */
 Ext.define('Taco.model.Order', {
-        requires: [
+    requires: [
         'Taco.model.OrderItem',
         'Taco.model.Return',
         'Taco.model.ShippingMethod',
@@ -11,312 +11,312 @@ Ext.define('Taco.model.Order', {
         "Ext.data.association.HasOne"
     ],
 
-        statics: {
-            constants: {
-                packageStatuses: {
-                    FULFILLED: "Fulfilled",
-                    NOT_FULFILLED: "NotFulfilled",
-                    PARTIALLY_FULFILLED: "PartiallyFulfilled"
+    statics: {
+        constants: {
+            packageStatuses: {
+                FULFILLED: "Fulfilled",
+                NOT_FULFILLED: "NotFulfilled",
+                PARTIALLY_FULFILLED: "PartiallyFulfilled"
+            }
+        }
+    },
+
+    extend: 'Taco.core.data.Model',
+    /**********************************************************    
+     *
+     *
+     *
+     ***************************************************************/
+    behaviors: {
+        read: 73,
+        create: 74,
+        update: 75,
+        destroy: 76,
+        fulfill: 77,
+        cancel: 78,
+        applypayment: 79
+    },
+
+    //requiredStores: [
+
+    //    'Taco.store.ShippingMethods',
+    //    'Taco.store.Channels',
+    //    'Taco.store.Attributes'
+    //],
+    fields: [{
+            "name": "id",
+            "type": "string",
+            "useNull": true
+        },
+
+        {
+            "name": "isDraft",
+            "type": "boolean",
+            "defaultValue": false
+        }, {
+            "name": "hasDraft",
+            "type": "boolean",
+            "defaultValue": false
+        },
+
+        {
+            name: 'tenantId',
+            type: 'int'
+        },
+
+        {
+            name: 'orderType',
+            type: 'string'
+        },
+
+        {
+            name: 'channelCode',
+            type: 'string'
+        },
+
+        {
+            name: 'channelName',
+            type: 'string',
+            persist: false,
+                convert: function (val, record) {
+                var channelCode = record.get("channelCode"),
+                    store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
+                    channelRecord = store.getById(channelCode),
+                    name = "";
+
+                if (channelRecord) {
+                    name = channelRecord.get("name");
                 }
+                return name;
+            }
+        }, {
+            name: 'siteId',
+            type: 'int',
+            "useNull": true
+        }, {
+            name: "siteName",
+            type: "string",
+                convert: function (value, record) {
+                var siteId = record.get('siteId'),
+                    site,
+                    siteName = '';
+
+                if (siteId) {
+                    site = Taco.app.context.findSite(siteId);
+                    if (site) siteName = site.name;
+                }
+                return siteName;
             }
         },
 
-        extend: 'Taco.core.data.Model',
-        /**********************************************************    
-         *
-         *
-         *
-         ***************************************************************/
-        behaviors: {
-            read: 73,
-            create: 74,
-            update: 75,
-            destroy: 76,
-            fulfill: 77,
-            cancel: 78,
-            applypayment: 79
+        {
+            "name": "authorizationInfo",
+            "type": "auto"
+        }, {
+            "name": "orderSummary",
+            "type": "auto"
+        }, {
+            "name": "orderNumber",
+            "type": "int",
+            "useNull": true
+        }, {
+            "name": "orderType",
+            "type": "auto"
+        }, {
+            "name": "createDate",
+            "type": "date",
+            "useNull": true,
+            dateFormat: 'c'
+        }, {
+            "name": "updateDate",
+            "type": "date",
+            "useNull": true,
+            dateFormat: 'c'
+        }, {
+            "name": "customerId",
+            "type": "int",
+            "useNull": true
+        }, {
+            "name": "billingContact",
+            "type": "auto",
+            "defaultValue": {}
+        }, {
+            "name": "fulfillmentContact",
+            "type": "auto",
+            "defaultValue": {}
+        }, {
+            "name": "ipAddress",
+            "type": "string",
+            "useNull": true
+        }, {
+            name: 'attributes',
+            type: 'auto',
+            defaultValue: []
+        }, {
+            "name": "items",
+            "type": "auto",
+            "useNull": true
+        }, {
+            "name": "orderDiscounts",
+            "type": "auto",
+            "default": []
+        }, {
+            "name": "activeDiscountDescription",
+            "type": "string",
+            "useNull": true
         },
 
-        //requiredStores: [
-
-        //    'Taco.store.ShippingMethods',
-        //    'Taco.store.Channels',
-        //    'Taco.store.Attributes'
-        //],
-        fields: [{
-                "name": "id",
-                "type": "string",
-                "useNull": true
-        },
-
-            {
-                "name": "isDraft",
-                "type": "boolean",
-                "defaultValue": false
+        {
+            "name": "activeShippingDiscount",
+            "type": "float",
+            "useNull": true
         }, {
-                "name": "hasDraft",
-                "type": "boolean",
-                "defaultValue": false
-        },
-
-            {
-                name: 'tenantId',
-                type: 'int'
-        },
-
-            {
-                name: 'orderType',
-                type: 'string'
-        },
-
-            {
-                name: 'channelCode',
-                type: 'string'
-        },
-
-            {
-                name: 'channelName',
-                type: 'string',
-                persist: false,
-                convert: function (val, record) {
-                    var channelCode = record.get("channelCode"),
-                        store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
-                        channelRecord = store.getById(channelCode),
-                        name = "";
-
-                    if (channelRecord) {
-                        name = channelRecord.get("name");
-                    }
-                    return name;
-                }
+            "name": "shippingDiscounts",
+            "type": "auto",
+            "default": []
         }, {
-                name: 'siteId',
-                type: 'int',
-                "useNull": true
+            "name": "shippingSubtotal",
+            "type": "float",
+            "useNull": true
         }, {
-                name: "siteName",
-                type: "string",
-                convert: function (value, record) {
-                    var siteId = record.get('siteId'),
-                        site,
-                        siteName = '';
-
-                    if (siteId) {
-                        site = Taco.app.context.findSite(siteId);
-                        if (site) siteName = site.name;
-                    }
-                    return siteName;
-                }
-        },
-
-            {
-                "name": "authorizationInfo",
-                "type": "auto"
-        }, {
-                "name": "orderSummary",
-                "type": "auto"
-        }, {
-                "name": "orderNumber",
-                "type": "int",
-                "useNull": true
-        }, {
-                "name": "orderType",
-                "type": "auto"
-        }, {
-                "name": "createDate",
-                "type": "date",
-                "useNull": true,
-                dateFormat: 'c'
-        }, {
-                "name": "updateDate",
-                "type": "date",
-                "useNull": true,
-                dateFormat: 'c'
-        }, {
-                "name": "customerId",
-                "type": "int",
-                "useNull": true
-        }, {
-                "name": "billingContact",
-                "type": "auto",
-                "defaultValue": {}
-        }, {
-                "name": "fulfillmentContact",
-                "type": "auto",
-                "defaultValue": {}
-        }, {
-                "name": "ipAddress",
-                "type": "string",
-                "useNull": true
-        }, {
-                name: 'attributes',
-                type: 'auto',
-                defaultValue: []
-        }, {
-                "name": "items",
-                "type": "auto",
-                "useNull": true
-        }, {
-                "name": "orderDiscounts",
-                "type": "auto",
-                "default": []
-        }, {
-                "name": "activeDiscountDescription",
-                "type": "string",
-                "useNull": true
-        },
-
-            {
-                "name": "activeShippingDiscount",
-                "type": "float",
-                "useNull": true
-        }, {
-                "name": "shippingDiscounts",
-                "type": "auto",
-                "default": []
-        }, {
-                "name": "shippingSubtotal",
-                "type": "float",
-                "useNull": true
-        }, {
-                "name": "shippingTotal",
-                "type": "float",
-                "useNull": true
+            "name": "shippingTotal",
+            "type": "float",
+            "useNull": true
         },
         /* sum cost of all products (no discounts applied) */
-            {
-                "name": "subtotal",
-                "type": "float",
-                "useNull": true
+        {
+            "name": "subtotal",
+            "type": "float",
+            "useNull": true
         },
         /* sum cost of all products with line-item discounts applied */
-            {
-                "name": "discountedSubtotal",
-                "type": "float"
+        {
+            "name": "discountedSubtotal",
+            "type": "float"
         },
         /* sum of all discounts */
-            {
-                "name": "discountTotal",
-                "type": "float",
-                "useNull": true
+        {
+            "name": "discountTotal",
+            "type": "float",
+            "useNull": true
         },
         /* subtotal of order with discounts applied */
-            {
-                "name": "discountedTotal",
-                "type": "float",
-                "useNull": true
+        {
+            "name": "discountedTotal",
+            "type": "float",
+            "useNull": true
         }, {
-                "name": "taxTotal",
-                "type": "float",
-                "useNull": true
+            "name": "taxTotal",
+            "type": "float",
+            "useNull": true
         }, {
-                "name": "feeTotal",
-                "type": "float",
-                "useNull": true
+            "name": "feeTotal",
+            "type": "float",
+            "useNull": true
         }, {
-                "name": "handlingTotal",
-                "type": "float",
-                "useNull": true
+            "name": "handlingTotal",
+            "type": "float",
+            "useNull": true
         },
 
 
 
-            {
-                "name": "orderAdjustment",
-                "type": "object",
-                "defaultValue": {
-                    "amount": 0,
-                    "description": "",
-                    "internalComment": ""
-                }
+        {
+            "name": "orderAdjustment",
+            "type": "object",
+            "defaultValue": {
+                "amount": 0,
+                "description": "",
+                "internalComment": ""
+            }
         },
 
         // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
-            {
-                "name": "orderAdjustmentIsNegative",
-                "type": "boolean",
-                "persist": false,
+        {
+            "name": "orderAdjustmentIsNegative",
+            "type": "boolean",
+            "persist": false,
                 "convert": function (value, record) {
-                    // if set explicitly use the value
-                    if (Ext.isBoolean(value)) {
-                        return value;
-                    }
-
-                    // get the value from the field;
-                    var adj = record.get("orderAdjustment");
-                    if (adj && adj.amount && adj.amount > 0) {
-                        return false;
-                    }
-                    return true;
+                // if set explicitly use the value
+                if (Ext.isBoolean(value)) {
+                    return value;
                 }
+
+                // get the value from the field;
+                var adj = record.get("orderAdjustment");
+                if (adj && adj.amount && adj.amount > 0) {
+                    return false;
+                }
+                return true;
+            }
         },
 
-            {
-                "name": "shippingAdjustment",
-                "type": "object",
-                "defaultValue": {
-                    "amount": 0,
-                    "description": "",
-                    "internalComment": ""
-                }
+        {
+            "name": "shippingAdjustment",
+            "type": "object",
+            "defaultValue": {
+                "amount": 0,
+                "description": "",
+                "internalComment": ""
+            }
         },
 
         // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
-            {
-                "name": "shippingAdjustmentIsNegative",
-                "type": "boolean",
-                "persist": false,
+        {
+            "name": "shippingAdjustmentIsNegative",
+            "type": "boolean",
+            "persist": false,
                 "convert": function (value, record) {
-                    // if set explicitly use the value
-                    if (Ext.isBoolean(value)) {
-                        return value;
-                    }
-                    var adj = record.get("shippingAdjustment");
-                    if (adj && adj.amount && adj.amount > 0) {
-                        return false;
-                    }
-                    return true;
+                // if set explicitly use the value
+                if (Ext.isBoolean(value)) {
+                    return value;
                 }
+                var adj = record.get("shippingAdjustment");
+                if (adj && adj.amount && adj.amount > 0) {
+                    return false;
+                }
+                return true;
+            }
         },
 
 
 
         // deprecated?
-            {
-                "name": "adjustmentDescription",
-                "type": "string",
-                "useNull": true
+        {
+            "name": "adjustmentDescription",
+            "type": "string",
+            "useNull": true
         },
 
         // deprecated?
-            {
-                "name": "adjustmentTotal",
-                "type": "float",
-                "useNull": true
+        {
+            "name": "adjustmentTotal",
+            "type": "float",
+            "useNull": true
         },
 
-            {
-                "name": "total",
-                "type": "float",
-                "useNull": true
+        {
+            "name": "total",
+            "type": "float",
+            "useNull": true
         }, {
-                "name": "returnStatus",
-                "type": "string",
-                "useNull": true,
-                defaultValue: null
+            "name": "returnStatus",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
         }, {
-                "name": "customerNote",
-                "type": "string",
-                "useNull": true
+            "name": "customerNote",
+            "type": "string",
+            "useNull": true
         }, {
-                "name": "internalNotes",
-                "type": "auto",
-                "defaultValue": [],
-                "useNull": true
+            "name": "internalNotes",
+            "type": "auto",
+            "defaultValue": [],
+            "useNull": true
         }, {
-                "name": "itemsOrdered",
-                "type": "int",
-                "useNull": false
+            "name": "itemsOrdered",
+            "type": "int",
+            "useNull": false
         }, {
                 name: 'totalDigitalItems',
                 type: 'int',
@@ -338,307 +338,307 @@ Ext.define('Taco.model.Order', {
 
 
         // the total number of items that will be fulfilled via direct ship
-            {
-                "name": "totalDirectShipItems",
-                "type": "int",
-                "useNull": false,
+        {
+            "name": "totalDirectShipItems",
+            "type": "int",
+            "useNull": false,
                 convert: function (v, record) {
-                    var itemsNotShipped = record.get("itemsNotShipped") || 0;
-                    var itemsShipped = record.get("itemsShipped") || 0;
-                    return itemsNotShipped + itemsShipped;
-                }
+                var itemsNotShipped = record.get("itemsNotShipped") || 0;
+                var itemsShipped = record.get("itemsShipped") || 0;
+                return itemsNotShipped + itemsShipped;
+            }
         },
             {
-                "name": "itemsNotShipped",
-                "type": "int",
-                "useNull": false
+            "name": "itemsNotShipped",
+            "type": "int",
+            "useNull": false
         },
             {
-                "name": "itemsShipped",
-                "type": "int",
-                "useNull": false
+            "name": "itemsShipped",
+            "type": "int",
+            "useNull": false
         },
         // workflow 
-            {
-                "name": "orderStatus",
-                "type": "string",
-                "useNull": true
+        {
+            "name": "orderStatus",
+            "type": "string",
+            "useNull": true
         },
             {
-                "name": "fulfillmentStatus",
-                "type": "string",
-                "useNull": true
+            "name": "fulfillmentStatus",
+            "type": "string",
+            "useNull": true
         },
             {
-                "name": "paymentStatus",
-                "type": "string",
-                "defaultValue": "Card Authorized",
-                "useNull": true
+            "name": "paymentStatus",
+            "type": "string",
+            "defaultValue": "Card Authorized",
+            "useNull": true
         },
             {
-                "name": "availableActions",
-                "type": "auto",
-                "default": []
+            "name": "availableActions",
+            "type": "auto",
+            "default": []
         },
             {
-                "name": "lastValidationDate",
-                "type": "date",
-                "useNull": true,
-                dateFormat: 'c'
+            "name": "lastValidationDate",
+            "type": "date",
+            "useNull": true,
+            dateFormat: 'c'
         },
             {
-                "name": "expirationDate",
-                "type": "date",
-                "useNull": true,
-                dateFormat: 'c'
-        },
-
-            {
-                "name": "payments",
-                "type": "auto",
-                "useNull": true,
-                "defaultValue": []
-        },
-            {
-                "name": "unpackagedItems",
-                "type": "array",
-                "defaultValue": []
+            "name": "expirationDate",
+            "type": "date",
+            "useNull": true,
+            dateFormat: 'c'
         },
 
+        {
+            "name": "payments",
+            "type": "auto",
+            "useNull": true,
+            "defaultValue": []
+        },
             {
-                "name": "packages",
-                "type": "array",
+            "name": "unpackagedItems",
+            "type": "array",
+            "defaultValue": []
+        },
+
+        {
+            "name": "packages",
+            "type": "array",
                 convert: function (v, record) {
-                    if (!Ext.isArray(v)) {
-                        v = [];
-                    }
+                if (!Ext.isArray(v)) {
+                    v = [];
+                }
                     Ext.Array.forEach(v, function (pkg) {
-                        if (pkg.changeMessages) {
+                    if (pkg.changeMessages) {
                             Ext.Array.forEach(pkg.changeMessages, function (chgMsg) {
                                 var user = Ext.Array.findBy(Taco.siteUsersRaw, function (sur) {
-                                    return sur.id === chgMsg.userId;
-                                });
-                                if (user) {
-                                    chgMsg.userName = user.firstName + ' ' + user.lastName;
-                                }
+                                return sur.id === chgMsg.userId;
                             });
-                        }
-                    });
-                    return v;
-                }
+                            if (user) {
+                                chgMsg.userName = user.firstName + ' ' + user.lastName;
+                            }
+                        });
+                    }
+                });
+                return v;
+            }
         },
 
-            {
-                "name": "digitalPackages",
-                "type": "array",
-                "defaultValue": []
+        {
+            "name": "digitalPackages",
+            "type": "array",
+            "defaultValue": []
         },
 
-            {
-                "name": "undeliveredDigitalItems",
-                "type": "array",
-                "defaultValue": []
+        {
+            "name": "undeliveredDigitalItems",
+            "type": "array",
+            "defaultValue": []
         },
 
 
         // array of items that are pending in the pickup Instore pickup section and have not been added to a pickup yet;
-            {
-                "name": "unpickedupItems",
-                "type": "array",
-                "defaultValue": []
+        {
+            "name": "unpickedupItems",
+            "type": "array",
+            "defaultValue": []
         },
 
         // like a package but for people that can't wait a few days for direct ship. 
-            {
-                "name": "pickups",
-                "type": "array",
+        {
+            "name": "pickups",
+            "type": "array",
                 convert: function (v, record) {
-                    if (!Ext.isArray(v)) {
-                        v = [];
-                    }
+                if (!Ext.isArray(v)) {
+                    v = [];
+                }
                     Ext.Array.forEach(v, function (pik) {
-                        if (pik.changeMessages) {
+                    if (pik.changeMessages) {
                             Ext.Array.forEach(pik.changeMessages, function (chgMsg) {
                                 var user = Ext.Array.findBy(Taco.siteUsersRaw, function (sur) {
-                                    return sur.id === chgMsg.userId;
-                                });
-                                if (user) {
-                                    chgMsg.userName = user.firstName + ' ' + user.lastName;
-                                }
+                                return sur.id === chgMsg.userId;
                             });
-                        }
-                    });
-                    return v;
-                }
+                            if (user) {
+                                chgMsg.userName = user.firstName + ' ' + user.lastName;
+                            }
+                        });
+                    }
+                });
+                return v;
+            }
 
         },
 
         // helper field. ui iterates on unshipped packages in multiple places
-            {
-                "name": "unShippedPackages",
-                "type": "array",
-                persist: false,
+        {
+            "name": "unShippedPackages",
+            "type": "array",
+            persist: false,
                 convert: function (v, record) {
-                    var packages = record.get("packages");
-                    var retVal = [];
+                var packages = record.get("packages");
+                var retVal = [];
 
-                    for (var i = 0; i < packages.length; i++) {
-                        if (packages[i].status == "NotFulfilled") {
-                            retVal.push(packages[i]);
-                        }
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "NotFulfilled") {
+                        retVal.push(packages[i]);
                     }
-                    return retVal;
                 }
+                return retVal;
+            }
         },
         // helper field. ui iterates on shipped packages in multiple places
-            {
-                "name": "shippedPackages",
-                "type": "array",
-                persist: false,
+        {
+            "name": "shippedPackages",
+            "type": "array",
+            persist: false,
                 convert: function (v, record) {
-                    var packages = record.get("packages");
-                    var retVal = [];
-                    for (var i = 0; i < packages.length; i++) {
-                        if (packages[i].status == "Fulfilled") {
-                            retVal.push(packages[i]);
-                        }
+                var packages = record.get("packages");
+                var retVal = [];
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "Fulfilled") {
+                        retVal.push(packages[i]);
                     }
-                    return retVal;
                 }
+                return retVal;
+            }
         },
 
 
         // NEW FIELD
 
         // the total number of items that will be fulfilled via in store pickup
-            {
-                "name": "totalPickupItems",
-                "type": "int",
-                "useNull": false,
+        {
+            "name": "totalPickupItems",
+            "type": "int",
+            "useNull": false,
                 convert: function (v, record) {
-                    var itemsNotPickedup = record.get("itemsNotPickedup") || 0;
-                    var itemsPickedup = record.get("itemsPickedup") || 0;
-                    return itemsNotPickedup + itemsPickedup;
-                }
+                var itemsNotPickedup = record.get("itemsNotPickedup") || 0;
+                var itemsPickedup = record.get("itemsPickedup") || 0;
+                return itemsNotPickedup + itemsPickedup;
+            }
         },
 
         // NEW FIELD
-            {
-                "name": "itemsNotPickedup",
-                defaultValue: 0,
-                "type": "int",
-                "useNull": false
+        {
+            "name": "itemsNotPickedup",
+            defaultValue: 0,
+            "type": "int",
+            "useNull": false
         },
 
         // NEW FIELD
-            {
-                "name": "itemsPickedup",
-                defaultValue: 0,
-                "type": "int",
-                "useNull": false
+        {
+            "name": "itemsPickedup",
+            defaultValue: 0,
+            "type": "int",
+            "useNull": false
         },
 
         // NEW FIELD
-            {
-                "name": "instorePackages",
-                "type": "array",
-                persist: false,
+        {
+            "name": "instorePackages",
+            "type": "array",
+            persist: false,
                 convert: function (v, record) {
 
 
-                    var packages = record.get("pickups");
-                    var retVal = [];
+                var packages = record.get("pickups");
+                var retVal = [];
 
-                    if (!packages) return retVal;
+                if (!packages) return retVal;
 
-                    for (var i = 0; i < packages.length; i++) {
-                        if (packages[i].status == "Fulfilled") {
-                            retVal.push(packages[i]);
-                        }
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "Fulfilled") {
+                        retVal.push(packages[i]);
                     }
-                    return retVal;
                 }
+                return retVal;
+            }
         },
 
         // helper field. ui iterates on unshipped packages in multiple places
-            {
-                "name": "pendingPickups",
-                "type": "array",
-                persist: false,
+        {
+            "name": "pendingPickups",
+            "type": "array",
+            persist: false,
                 convert: function (v, record) {
-                    var packages = record.get("pickups");
-                    var retVal = [];
+                var packages = record.get("pickups");
+                var retVal = [];
 
-                    if (!packages) return retVal;
+                if (!packages) return retVal;
 
-                    for (var i = 0; i < packages.length; i++) {
-                        if (packages[i].status == "NotFulfilled") {
-                            retVal.push(packages[i]);
-                        }
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "NotFulfilled") {
+                        retVal.push(packages[i]);
                     }
-                    return retVal;
                 }
+                return retVal;
+            }
         },
 
 
         // helper field. ui iterates on shipped packages in multiple places
-            {
-                "name": "pickedupPackages",
-                "type": "array",
-                persist: false,
+        {
+            "name": "pickedupPackages",
+            "type": "array",
+            persist: false,
                 convert: function (v, record) {
-                    var packages = record.get("pickups");
-                    var retVal = [];
+                var packages = record.get("pickups");
+                var retVal = [];
 
-                    if (!packages) return retVal;
+                if (!packages) return retVal;
 
-                    for (var i = 0; i < packages.length; i++) {
-                        if (packages[i].status == "Fulfilled") {
-                            retVal.push(packages[i]);
-                        }
+                for (var i = 0; i < packages.length; i++) {
+                    if (packages[i].status == "Fulfilled") {
+                        retVal.push(packages[i]);
                     }
-                    return retVal;
                 }
+                return retVal;
+            }
         },
 
-            {
-                "name": "shippingMethodName",
-                "type": "string",
-                persist: false
+        {
+            "name": "shippingMethodName",
+            "type": "string",
+            persist: false
         },
             {
-                "name": "shippingMethodCode",
-                "type": "string",
-                persist: false
+            "name": "shippingMethodCode",
+            "type": "string",
+            persist: false
         },
             {
-                "name": "customer",
-                "type": "auto",
-                persist: false
+            "name": "customer",
+            "type": "auto",
+            persist: false
         },
             {
-                "name": "validationResults",
-                "type": "any",
-                persist: false
+            "name": "validationResults",
+            "type": "any",
+            persist: false
         },
             {
-                "name": "fraudScore",
-                "type": "int",
-                persist: false,
-                "useNull": true
+            "name": "fraudScore",
+            "type": "int",
+            persist: false,
+            "useNull": true
         },
             {
-                "name": "couponCodes",
-                "type": "auto",
-                "persist": false,
-                "defaultValue": [],
-                "useNull": true
+            "name": "couponCodes",
+            "type": "auto",
+            "persist": false,
+            "defaultValue": [],
+            "useNull": true
         },
             {
-                "name": "invalidCoupons",
-                "type": "auto",
-                "persist": false,
-                "defaultValue": [
+            "name": "invalidCoupons",
+            "type": "auto",
+            "persist": false,
+            "defaultValue": [
                 /*
                 {
                     "couponCode": "88DD9CD9",
@@ -654,26 +654,26 @@ Ext.define('Taco.model.Order', {
                 */
 
             ],
-                "useNull": true
+            "useNull": true
         }
     ],
 
-        // helper method that walks the order items and any bundled items to determine if this order has any items that require shipping.
-        // if order contains pickup items or downloadable items only this will return false
+    // helper method that walks the order items and any bundled items to determine if this order has any items that require shipping.
+    // if order contains pickup items or downloadable items only this will return false
         isShippable: function () {
-            // if we have unshipped packages or unpackaged items we are a shippable order;
-            return this.get("unpackagedItems").length || this.get("unShippedPackages").length;
-        },
+        // if we have unshipped packages or unpackaged items we are a shippable order;
+        return this.get("unpackagedItems").length || this.get("unShippedPackages").length;
+    },
 
 
         reload: function (config) {
-            var me = this,
-                modifiedNames = [],
-                loadConfig;
+        var me = this,
+            modifiedNames = [],
+            loadConfig;
 
-            config = config || {};
+        config = config || {};
 
-            loadConfig = Ext.applyIf({
+        loadConfig = Ext.applyIf({
                     bypassCache: true,
                     success: function (record) {
 
@@ -703,204 +703,204 @@ Ext.define('Taco.model.Order', {
             );
 
 
-            //tbd: remove this
+        //tbd: remove this
 
 
-            this.self.load(me.getId(), loadConfig);
-        },
+        this.self.load(me.getId(), loadConfig);
+    },
         formatCurrency: function (value) {
-            return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
-        },
+        return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
+    },
         getCurrencyCode: function () {
-            return Taco.app.context.findSite(this.get('siteId')).currencyCode;
-        },
+        return Taco.app.context.findSite(this.get('siteId')).currencyCode;
+    },
         getAttributes: function () {
-            return this.getOrCreateHasManyStore({
-                model: 'Taco.model.ExtensibleAttributeValue',
-                associationKey: 'attributes',
-                foreignProperty: 'account'
-            });
-        },
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.ExtensibleAttributeValue',
+            associationKey: 'attributes',
+            foreignProperty: 'account'
+        });
+    },
 
         loadCustomer: function (cfg) {
-            var me = this,
-                cust = this.get('customer');
-            if (cust && cust.id == this.get('customerId')) {
-                me.customer = new Taco.model.CustomerAccount(cust);
+        var me = this,
+            cust = this.get('customer');
+        if (cust && cust.id == this.get('customerId')) {
+            me.customer = new Taco.model.CustomerAccount(cust);
                 Ext.defer(function () {
-                    if (cfg.callback) cfg.callback.call(cfg.scope || me, me.customer, null, true);
-                    if (cfg.success) cfg.success.call(cfg.scope || me, me.customer);
-                }, 1);
+                if (cfg.callback) cfg.callback.call(cfg.scope || me, me.customer, null, true);
+                if (cfg.success) cfg.success.call(cfg.scope || me, me.customer);
+            }, 1);
 
-                return;
-            }
-            Taco.model.CustomerAccount.load(this.get('customerId'), {
+            return;
+        }
+        Taco.model.CustomerAccount.load(this.get('customerId'), {
                 success: function (record, op) {
-                    me.customer = record;
-                    if (cfg.success) cfg.success.call(cfg.scope || this, record, op);
-                },
+                me.customer = record;
+                if (cfg.success) cfg.success.call(cfg.scope || this, record, op);
+            },
                 failure: function (record, op) {
-                    if (cfg.failure) cfg.failure.call(cfg.scope || this, record, op);
-                },
+                if (cfg.failure) cfg.failure.call(cfg.scope || this, record, op);
+            },
                 callback: function (record, op, suc) {
-                    if (cfg.callback) cfg.callback.call(cfg.scope || this, record, op, suc);
-                }
-            });
-        },
+                if (cfg.callback) cfg.callback.call(cfg.scope || this, record, op, suc);
+            }
+        });
+    },
 
         getCustomer: function () {
-            if (this.customer) {
-                return this.customer;
-            }
-            var me = this,
-                cust = this.get('customer');
-            if (cust && cust.id == this.get('customerId')) {
-                me.customer = new Taco.model.CustomerAccount(cust);
-            }
+        if (this.customer) {
+            return this.customer;
+        }
+        var me = this,
+            cust = this.get('customer');
+        if (cust && cust.id == this.get('customerId')) {
+            me.customer = new Taco.model.CustomerAccount(cust);
+        }
 
-            return this.customer || null;
-        },
+        return this.customer || null;
+    },
 
-        associations: [
+    associations: [
         // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
         // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
         // by treating this sub entity data as json and arrays, it avoids extjs auto creating of stores for each associated sub entity;
         // for shipping and its related views, the data is passed to the view which sets up its own stores as needed;
 
-            {
-                type: 'hasMany',
-                model: 'Taco.model.OrderItem',
-                name: "items",
-                reader: 'json'
+        {
+            type: 'hasMany',
+            model: 'Taco.model.OrderItem',
+            name: "items",
+            reader: 'json'
         }, {
-                type: 'hasOne',
-                model: 'Taco.model.Contact',
-                name: 'billingContact',
-                reader: 'json'
+            type: 'hasOne',
+            model: 'Taco.model.Contact',
+            name: 'billingContact',
+            reader: 'json'
         }, {
-                type: 'hasOne',
-                model: 'Taco.model.Contact',
-                name: 'fulfillmentContact',
-                reader: 'json'
+            type: 'hasOne',
+            model: 'Taco.model.Contact',
+            name: 'fulfillmentContact',
+            reader: 'json'
         }, {
-                type: 'hasMany',
-                model: 'Taco.model.OrderPayment',
-                name: 'payments',
-                reader: 'json'
+            type: 'hasMany',
+            model: 'Taco.model.OrderPayment',
+            name: 'payments',
+            reader: 'json'
         }, {
-                type: 'hasMany',
-                model: 'Taco.model.Return',
-                primaryKey: 'id',
-                foreignKey: 'originalOrderId',
-                autoLoad: false,
-                storeConfig: {
-                    remoteFilter: true
-                },
-                name: 'getReturnsStore'
+            type: 'hasMany',
+            model: 'Taco.model.Return',
+            primaryKey: 'id',
+            foreignKey: 'originalOrderId',
+            autoLoad: false,
+            storeConfig: {
+                remoteFilter: true
+            },
+            name: 'getReturnsStore'
         },
 
-            {
-                type: 'hasOne',
-                model: 'Taco.model.OrderShippingDiscount',
-                name: 'activeShippingDiscount',
-                reader: "json"
+        {
+            type: 'hasOne',
+            model: 'Taco.model.OrderShippingDiscount',
+            name: 'activeShippingDiscount',
+            reader: "json"
         }, {
-                type: 'hasMany',
-                model: 'Taco.model.OrderShippingDiscount',
-                name: 'shippingDiscounts',
-                reader: "json"
+            type: 'hasMany',
+            model: 'Taco.model.OrderShippingDiscount',
+            name: 'shippingDiscounts',
+            reader: "json"
         }
     ],
 
-        proxy: {
-            type: 'ajaxproxy',
-            api: {
-                // read: '/admin/Scripts/app/mocks/orders.json',
-                read: '/admin/app/order/list',
-                create: '/admin/app/order/create',
-                update: '/admin/app/order/edit',
-                destroy: '/admin/app/order/delete'
-            },
-            reader: {
-                type: 'json',
-                getResponseData: function (response) {
-                    // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
-                    var data = Ext.decode(response.responseText);
-                    if (data.items && data.items[0]) {
-                        data.items[0].packages = data.items[0].packages || [];
-                        data.items[0].unpackagedItems = data.items[0].unpackagedItems || undefined;
-                    }
-                    return this.readRecords(data);
-                },
-                root: 'items',
-                successProperty: 'success',
-                messageProperty: "message"
-            },
-            writer: {
-                allowSingle: false,
-                type: 'json'
-            }
+    proxy: {
+        type: 'ajaxproxy',
+        api: {
+            // read: '/admin/Scripts/app/mocks/orders.json',
+            read: '/admin/app/order/list',
+            create: '/admin/app/order/create',
+            update: '/admin/app/order/edit',
+            destroy: '/admin/app/order/delete'
         },
+        reader: {
+            type: 'json',
+                getResponseData: function (response) {
+                // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
+                var data = Ext.decode(response.responseText);
+                if (data.items && data.items[0]) {
+                    data.items[0].packages = data.items[0].packages || [];
+                    data.items[0].unpackagedItems = data.items[0].unpackagedItems || undefined;
+                }
+                return this.readRecords(data);
+            },
+            root: 'items',
+            successProperty: 'success',
+            messageProperty: "message"
+        },
+        writer: {
+            allowSingle: false,
+            type: 'json'
+        }
+    },
 
         getShippingMethods: function () {
-            if (!this.shippingMethods) {
-                this.shippingMethods = Ext.create('Ext.data.Store', {
-                    model: 'Taco.model.ShippingMethod',
-                    proxy: {
-                        type: 'ajax',
-                        url: '/admin/app/order/shipping/runtimemethods?orderId=' + this.getId(),
-                        reader: {
-                            type: 'json',
-                            root: 'items',
-                            successProperty: 'success'
-                        }
+        if (!this.shippingMethods) {
+            this.shippingMethods = Ext.create('Ext.data.Store', {
+                model: 'Taco.model.ShippingMethod',
+                proxy: {
+                    type: 'ajax',
+                    url: '/admin/app/order/shipping/runtimemethods?orderId=' + this.getId(),
+                    reader: {
+                        type: 'json',
+                        root: 'items',
+                        successProperty: 'success'
                     }
-                });
-            }
-            return this.shippingMethods;
-        },
+                }
+            });
+        }
+        return this.shippingMethods;
+    },
 
         capturePayment: function (config) {
-            Ext.applyIf(config, {
-                url: '/admin/app/order/payment/capture',
-                method: "POST"
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/capture',
+            method: "POST"
+        });
 
 
-            config.errorMsg = config.errorMsg || "Error capturing payment";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error capturing payment";
+        this.addErrorHandling(config);
 
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         authorize: function (config) {
-            Ext.applyIf(config, {
-                url: '/admin/app/order/payment/authorize',
-                method: 'POST'
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/authorize',
+            method: 'POST'
+        });
 
-            // add in boilerplate error handling code;
-            config.errorMsg = config.errorMsg || "Error authorizing";
-            this.addErrorHandling(config);
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error authorizing";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         authAndCapture: function (config) {
-            Ext.applyIf(config, {
-                url: '/admin/app/order/payment/authAndCapture',
-                method: 'POST'
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/authAndCapture',
+            method: 'POST'
+        });
 
-            // add in boilerplate error handling code;
-            config.errorMsg = config.errorMsg || "Error completing authorize and capture payment";
-            this.addErrorHandling(config);
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error completing authorize and capture payment";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to add a new authorized payment transaction for an order     
      * @param {Object} config  A configuration object     
      * config object:
@@ -928,45 +928,45 @@ Ext.define('Taco.model.Order', {
      *
      */
         addPayment: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/payment/create',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/create',
+            method: "POST"
+        });
 
-            // add in boilerplate error handling code;
-            config.errorMsg = config.errorMsg || "Error adding payment";
-            this.addErrorHandling(config);
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error adding payment";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         setBillingInfo: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/setbillinginfo',
-                method: 'POST'
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/setbillinginfo',
+            method: 'POST'
+        });
 
-            // add in boilerplate error handling code;
-            config.errorMsg = config.errorMsg || "Error setting billing information;";
-            this.addErrorHandling(config);
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error setting billing information;";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         updateContactInfo: function (config) {
-            Ext.apply(config, {
-                jsonData: this.getData(),
-                url: '/admin/app/order/updatecontactinfo',
-                method: 'POST'
-            });
+        Ext.apply(config, {
+            jsonData: this.getData(),
+            url: '/admin/app/order/updatecontactinfo',
+            method: 'POST'
+        });
 
-            config.errorMsg = config.errorMsg || "Error updating order contacts";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error updating order contacts";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to void an authorized payment transaction for an order     
      * @param {Object} config  A configuration object     
      * config object:
@@ -993,19 +993,19 @@ Ext.define('Taco.model.Order', {
      *
      */
         voidTransaction: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/payment/void',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/void',
+            method: "POST"
+        });
 
-            // add in boilerplate error handling code;
-            config.errorMsg = config.errorMsg || "Error voiding transaction;";
-            this.addErrorHandling(config);
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || "Error voiding transaction;";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to set the order as paid in full. This will happen when order is paid by check     
      * @param {Object} config  A configuration object     
      * config object:
@@ -1031,41 +1031,55 @@ Ext.define('Taco.model.Order', {
      *
      */
         requestCheck: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/payment/requestcheck',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/requestcheck',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error requesting check";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error requesting check";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
-         * ensures that a date property is formatted correctly if it exists
-         */
+    /**
+     * ensures that a date property is formatted correctly if it exists
+     */
         ensureDate: function (config, propertyName) {
-            var d;
+        var d;
 
-            if (config && config[propertyName]) {
-                try {
-                    d = new Date(config[propertyName]);
-                    config[propertyName] = Ext.Date.format(d, 'c');
-                } catch (e) {
-                    delete config[propertyName];
-                }
+        if (config && config[propertyName]) {
+            try {
+                d = new Date(config[propertyName]);
+                config[propertyName] = Ext.Date.format(d, 'c');
+            } catch (e) {
+                delete config[propertyName];
             }
-        },
+        }
+    },
 
         capturePaymentManual: function (config) {
+        var me = this;
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/capture',
+            method: "POST"
+        });
+
+        config.errorMsg = config.errorMsg || "Error capturing manual payment";
+        me.addErrorHandling(config);
+
+        me.ensureDate(config, 'interactionDate');
+        Ext.Ajax.request(config);
+    },
+
+        declinePaymentManual: function(config) {
             var me = this;
             Ext.apply(config, {
-                url: '/admin/app/order/payment/manual/capture',
+                url: '/admin/app/order/payment/manual/decline',
                 method: "POST"
             });
 
-            config.errorMsg = config.errorMsg || "Error capturing manual payment";
+            config.errorMsg = config.errorMsg || "Error manually declining payment";
             me.addErrorHandling(config);
 
             me.ensureDate(config, 'interactionDate');
@@ -1073,60 +1087,60 @@ Ext.define('Taco.model.Order', {
         },
 
         voidPaymentManual: function (config) {
-            var me = this;
-            Ext.apply(config, {
-                url: '/admin/app/order/payment/manual/void',
-                method: "POST"
-            });
+        var me = this;
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/void',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error voiding manual payment";
-            me.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error voiding manual payment";
+        me.addErrorHandling(config);
 
-            me.ensureDate(config, 'interactionDate');
-            Ext.Ajax.request(config);
-        },
+        me.ensureDate(config, 'interactionDate');
+        Ext.Ajax.request(config);
+    },
 
         creditPaymentManual: function (config) {
-            var me = this;
-            Ext.apply(config, {
-                url: '/admin/app/order/payment/manual/credit',
-                method: "POST"
-            });
+        var me = this;
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/credit',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error crediting manual payment";
-            me.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error crediting manual payment";
+        me.addErrorHandling(config);
 
-            me.ensureDate(config, 'interactionDate');
-            Ext.Ajax.request(config);
-        },
+        me.ensureDate(config, 'interactionDate');
+        Ext.Ajax.request(config);
+    },
 
         rollbackTransaction: function (config) {
-            var me = this;
-            Ext.apply(config, {
-                url: '/admin/app/order/payment/manual/rollback',
-                method: "POST"
-            });
+        var me = this;
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/rollback',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error rolling back transaction;";
-            me.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error rolling back transaction;";
+        me.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         addManualPayment: function (config) {
-            var me = this;
-            Ext.apply(config, {
-                url: '/admin/app/order/payment/manual/create',
-                method: "POST"
-            });
+        var me = this;
+        Ext.apply(config, {
+            url: '/admin/app/order/payment/manual/create',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error adding manual payment";
-            me.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error adding manual payment";
+        me.addErrorHandling(config);
 
-            me.ensureDate(config, 'interactionDate');
-            Ext.Ajax.request(config);
-        },
-        /**
+        me.ensureDate(config, 'interactionDate');
+        Ext.Ajax.request(config);
+    },
+    /**
      * service call to add a credit on the order     
      * @param {Object} config  A configuration object     
      * config object:
@@ -1154,82 +1168,82 @@ Ext.define('Taco.model.Order', {
 
         */
         issueCredit: function (config) {
-            Ext.applyIf(config, {
-                url: '/admin/app/order/payment/credit',
-                method: "POST"
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/credit',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error issuing credit";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error issuing credit";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         applyCheck: function (config) {
 
-            Ext.applyIf(config, {
-                url: '/admin/app/order/payment/applycheck',
-                method: "POST"
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/applycheck',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error applying check";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error applying check";
+        this.addErrorHandling(config);
 
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         declineCheck: function (config) {
 
-            Ext.applyIf(config, {
-                url: '/admin/app/order/payment/declinecheck',
-                method: "POST"
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/declinecheck',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error declining check";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error declining check";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        addGiftCards: function (config) {
+    addGiftCards: function (config) {
 
-            Ext.applyIf(config, {
-                url: '/admin/app/order/payment/addgiftcards',
-                method: 'POST'
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/addgiftcards',
+            method: 'POST'
+        });
 
-            config.errorMsg = config.errorMsg || "Error adding gift cards";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error adding gift cards";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
-
-
-        /*
-         ****************************************************
-         *   End order payment service interaction methods
-         ****************************************************
-         */
+        Ext.Ajax.request(config);
+    },
 
 
-        /*
-         ****************************************************
-         *   Begin order shipping service interaction methods
-         ****************************************************
-         */
+    /*
+     ****************************************************
+     *   End order payment service interaction methods
+     ****************************************************
+     */
+
+
+    /*
+     ****************************************************
+     *   Begin order shipping service interaction methods
+     ****************************************************
+     */
 
         createPackage: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/package/create',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/create',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /**
      * service call to create a package
      * @param {Object} config  A configuration object     
      * config object:
@@ -1256,16 +1270,16 @@ Ext.define('Taco.model.Order', {
      *
      */
         deletePackage: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/package/delete',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/delete',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /**
      * service call to move items into a package
      * @param {Object} config  A configuration object     
      * config object:
@@ -1296,15 +1310,15 @@ Ext.define('Taco.model.Order', {
      *
      */
         movePackageItems: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/package/moveitems',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/moveitems',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to mark a package as shipped
      * @param {Object} config  A configuration object     
      * config object:
@@ -1331,43 +1345,43 @@ Ext.define('Taco.model.Order', {
      *
      */
         markPackagesShipped: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/package/markshipped',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/markshipped',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
 
         prepareShipment: function (config) {
-            Ext.applyIf(config, {
-                url: '/admin/app/order/shipping/package/prepareshipment',
-                method: 'POST'
-            });
+        Ext.applyIf(config, {
+            url: '/admin/app/order/shipping/package/prepareshipment',
+            method: 'POST'
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
 
         resendDigitalPackage: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/fulfillment/digitalpackage/resend',
-                method: 'POST'
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/fulfillment/digitalpackage/resend',
+            method: 'POST'
+        });
 
-            Ext.Ajax.request(config);
-        },
-
-
-        /*
-         ***************************
-         *  BEGIN PICKUP END POINT
-         *****************************
-         */
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /*
+     ***************************
+     *  BEGIN PICKUP END POINT
+     *****************************
+     */
+
+
+    /**
      * service call to create a pickup
      * @param {Object} config  A configuration object     
      * config object:
@@ -1399,48 +1413,48 @@ Ext.define('Taco.model.Order', {
      *
      */
         createPickup: function (config) {
-            var me = this;
+        var me = this;
 
-            config.errorMsg = "Error creating pickup";
-            me.addErrorHandling(config);
+        config.errorMsg = "Error creating pickup";
+        me.addErrorHandling(config);
 
-            Ext.apply(config, {
-                url: '/admin/app/order/fulfillment/pickup/create',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/fulfillment/pickup/create',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         deletePickup: function (config) {
-            var me = this;
-            config.errorMsg = "Error deleting pickup";
+        var me = this;
+        config.errorMsg = "Error deleting pickup";
 
-            me.addErrorHandling(config);
+        me.addErrorHandling(config);
 
-            Ext.apply(config, {
-                url: '/admin/app/order/fulfillment/pickup/delete',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/fulfillment/pickup/delete',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         movePickupItems: function (config) {
-            var me = this;
-            config.errorMsg = "Error moving pickup items";
+        var me = this;
+        config.errorMsg = "Error moving pickup items";
 
-            me.addErrorHandling(config);
+        me.addErrorHandling(config);
 
-            Ext.apply(config, {
-                url: '/admin/app/order/fulfillment/pickup/moveitems',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/fulfillment/pickup/moveitems',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to mark a package as shipped
      * @param {Object} config  A configuration object     
      * config object:
@@ -1467,21 +1481,21 @@ Ext.define('Taco.model.Order', {
      *
      */
         markPickupFulfilled: function (config) {
-            var me = this;
-            //config.errorMsg = "Error marking pickup fulfilled";
+        var me = this;
+        //config.errorMsg = "Error marking pickup fulfilled";
 
-            //me.addErrorHandling(config);
+        //me.addErrorHandling(config);
 
-            Ext.apply(config, {
-                url: '/admin/app/order/fulfillment/pickup/markfulfilled',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/fulfillment/pickup/markfulfilled',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /**
      * service call to mark a package as ready
      * @param {Object} config  A configuration object     
      * config object:
@@ -1508,28 +1522,28 @@ Ext.define('Taco.model.Order', {
      *
      */
         markPickupReady: function (config) {
-            var me = this;
-            config.errorMsg = "Error marking pickup ready";
+        var me = this;
+        config.errorMsg = "Error marking pickup ready";
 
-            me.addErrorHandling(config);
+        me.addErrorHandling(config);
 
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/pickup/markready',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/pickup/markready',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
-
-
-        /*
-         ***************************
-         * END PICKUP END POINT
-         *****************************
-         */
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /*
+     ***************************
+     * END PICKUP END POINT
+     *****************************
+     */
+
+
+    /**
      * service call to change the shipping method
      * @param {Object} config  A configuration object     
      * config object:
@@ -1555,16 +1569,16 @@ Ext.define('Taco.model.Order', {
      *
      */
         changeShippingMethod: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/package/edit',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/edit',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /**
     * service call to change the packagomg type
     * @param {Object} config  A configuration object     
     * config object:
@@ -1590,15 +1604,15 @@ Ext.define('Taco.model.Order', {
     *
     */
         changePackagingType: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/package/edit',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/edit',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to change the tracking number
      * @param {Object} config  A configuration object     
      * config object:
@@ -1624,26 +1638,26 @@ Ext.define('Taco.model.Order', {
      *
      */
         changeTrackingNumber: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/shipping/package/edit',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/package/edit',
+            method: "POST"
+        });
 
-            config.errorMsg = config.errorMsg || "Error changing tracking number";
-            this.addErrorHandling(config);
+        config.errorMsg = config.errorMsg || "Error changing tracking number";
+        this.addErrorHandling(config);
 
-            Ext.Ajax.request(config);
-        },
-
-
-        /*
-         ****************************************************
-         *   Begin order detail service interaction methods
-         ****************************************************
-         */
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /*
+     ****************************************************
+     *   Begin order detail service interaction methods
+     ****************************************************
+     */
+
+
+    /**
      * service call to remove an order item
      * @param {Object} config  A configuration object     
      * config object:
@@ -1670,20 +1684,20 @@ Ext.define('Taco.model.Order', {
      *
      */
         removeOrderItem: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/items/remove',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/items/remove',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to edit an order item. specificallly edit of quantity
      * @param {Object} config  A configuration object     
      * config object:
@@ -1715,20 +1729,20 @@ Ext.define('Taco.model.Order', {
      *
      */
         editOrderItemQuantity: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/items/editquantity',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/items/editquantity',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to edit the fulfillmentmethod and fulfillmentlocationcode of an order item.
      * @param {Object} config  A configuration object     
      * config object:
@@ -1760,20 +1774,20 @@ Ext.define('Taco.model.Order', {
      *
      */
         editOrderItemFulfillment: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/items/editfulfillment',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/items/editfulfillment',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to edit an order item. specificallly edit of quantity
      * @param {Object} config  A configuration object     
      * config object:
@@ -1805,20 +1819,20 @@ Ext.define('Taco.model.Order', {
      *
      */
         editOrderItemPrice: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/items/editprice',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/items/editprice',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to edit an order item. specificallly edit of fulfillmentMethod
      * @param {Object} config  A configuration object     
      * config object:
@@ -1850,25 +1864,25 @@ Ext.define('Taco.model.Order', {
      *
      */
         editOrderItemFulfillmentMethod: function (config) {
-            var me = this;
+        var me = this;
 
-            config.errorMsg = config.errorMsg || "Error changing fulfillment method";
+        config.errorMsg = config.errorMsg || "Error changing fulfillment method";
 
-            me.addErrorHandling(config);
+        me.addErrorHandling(config);
 
-            Ext.apply(config, {
-                url: '/admin/app/order/items/editfulfillmentmethod',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/items/editfulfillmentmethod',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to add order items
      * @param {Object} config  A configuration object     
      * config object:
@@ -1904,42 +1918,42 @@ Ext.define('Taco.model.Order', {
      *
      */
         addOrderItem: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/items/add',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/items/add',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
-        //    addOrderItem: function (orderItems, config) {
-        //        var me = this,
-        //            isDraft = me.get('isDraft'), 
-        //            baseUrl = '/admin/app/order/items/add',
-        //            url = isDraft ? baseUrl + "?draft=true" : baseUrl,
-        //            data = {
-        //                orderId: me.getId(),
-        //                orderItems: orderItems
-        //            };
-        //
-        //        if (!config)
-        //            config = {};
-        //
-        //        Ext.Ajax.request({
-        //            url: url,
-        //            method: 'POST',
-        //            jsonData: data,
-        //            success: Ext.Function.pass(me.onAjaxSuccess, config.success),
-        //            failure: Ext.Function.pass(me.onAjaxFailure, config.failure),
-        //            scope: me
-        //        });
-        //    },
+        Ext.Ajax.request(config);
+    },
+    //    addOrderItem: function (orderItems, config) {
+    //        var me = this,
+    //            isDraft = me.get('isDraft'), 
+    //            baseUrl = '/admin/app/order/items/add',
+    //            url = isDraft ? baseUrl + "?draft=true" : baseUrl,
+    //            data = {
+    //                orderId: me.getId(),
+    //                orderItems: orderItems
+    //            };
+    //
+    //        if (!config)
+    //            config = {};
+    //
+    //        Ext.Ajax.request({
+    //            url: url,
+    //            method: 'POST',
+    //            jsonData: data,
+    //            success: Ext.Function.pass(me.onAjaxSuccess, config.success),
+    //            failure: Ext.Function.pass(me.onAjaxFailure, config.failure),
+    //            scope: me
+    //        });
+    //    },
 
-        /**
+    /**
      * service call to add coupon to the order
      * @param {Object} config  A configuration object     
      * config object:
@@ -1966,20 +1980,20 @@ Ext.define('Taco.model.Order', {
      *
      */
         addOrderCoupon: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/addcoupon',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/addcoupon',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to suppress an order discount. This will cause the service to look for other discounts to fall back to. If another discount exists, it will come back as active and the suppressed discount will be inactive;
      * @param {Object} config  A configuration object     
      * config object:
@@ -2007,20 +2021,20 @@ Ext.define('Taco.model.Order', {
      *
      */
         suppressDiscount: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/suppressdiscount',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/suppressdiscount',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to activate a previously suppressed order discount;
      * @param {Object} config  A configuration object     
      * config object:
@@ -2048,20 +2062,20 @@ Ext.define('Taco.model.Order', {
      *
      */
         activateDiscount: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/activatediscount',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/activatediscount',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
+    /**
      * service call to update an order adjustment. A $ amount to reduce the total of the order
      * @param {Object} config  A configuration object     
      * config object:
@@ -2100,21 +2114,21 @@ Ext.define('Taco.model.Order', {
      *
      */
         updateOrderAdjustment: function (config) {
-            var me = this;
+        var me = this;
 
-            Ext.apply(config, {
-                url: '/admin/app/order/adjustment',
-                params: {
-                    'draft': me.get('isDraft')
-                },
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/adjustment',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
 
-        /**
+    /**
      * service call to update the customer note.
      * @param {Object} config  A configuration object     
      * config object:
@@ -2128,88 +2142,88 @@ Ext.define('Taco.model.Order', {
      *
      */
         setCustomerNote: function (config) {
-            Ext.applyIf(config, {
-                url: '/admin/app/order/setcustomernote',
-                method: "POST"
-            });
-            config.errorMsg = config.errorMsg || "Error saving customer note";
-            this.addErrorHandling(config);
-            Ext.Ajax.request(config);
-        },
+        Ext.applyIf(config, {
+            url: '/admin/app/order/setcustomernote',
+            method: "POST"
+        });
+        config.errorMsg = config.errorMsg || "Error saving customer note";
+        this.addErrorHandling(config);
+        Ext.Ajax.request(config);
+    },
 
 
         setCustomer: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/setcustomer',
-                method: 'POST'
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/setcustomer',
+            method: 'POST'
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         saveDraftOrder: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/commitdraft',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/commitdraft',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         removeDraftOrder: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/deletedraft',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/deletedraft',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
-        /**
-         * service call to accept an order.
-         * you need to accept an order that is in 'PendingReview' state.
-         */
+    /**
+     * service call to accept an order.
+     * you need to accept an order that is in 'PendingReview' state.
+     */
         acceptOrder: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/accept',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/accept',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         cancelOrder: function (config) {
-            Ext.apply(config, {
-                url: '/admin/app/order/cancel',
-                method: "POST"
-            });
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel',
+            method: "POST"
+        });
 
-            Ext.Ajax.request(config);
-        },
+        Ext.Ajax.request(config);
+    },
 
         saveAttributes: function (config) {
 
-            Ext.applyIf(config, {
-                url: '/admin/app/order/attributes/update',
-                method: "POST",
-                jsonData: {
-                    orderId: this.getId(),
-                    attributes: this.get('attributes')
-                }
-            });
-            Ext.Ajax.request(config);
-        },
+        Ext.applyIf(config, {
+            url: '/admin/app/order/attributes/update',
+            method: "POST",
+            jsonData: {
+                orderId: this.getId(),
+                attributes: this.get('attributes')
+            }
+        });
+        Ext.Ajax.request(config);
+    },
 
         getInternalNotes: function () {
-            return this.getOrCreateHasManyStore({
-                model: 'Taco.model.InternalNote',
-                associationKey: 'internalNotes',
-                foreignProperty: 'orderId'
-            });
-        }
+        return this.getOrCreateHasManyStore({
+            model: 'Taco.model.InternalNote',
+            associationKey: 'internalNotes',
+            foreignProperty: 'orderId'
+        });
+    }
     },
     function () {
 
-        // console.log(arguments, "orderz", Taco.model.Order);
+    // console.log(arguments, "orderz", Taco.model.Order);
 
-    });
+});

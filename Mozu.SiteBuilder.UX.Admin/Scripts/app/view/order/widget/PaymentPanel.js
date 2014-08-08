@@ -12,6 +12,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         'Taco.view.order.modal.AuthorizePayment',
         'Taco.view.order.modal.AuthAndCapture',
         'Taco.view.order.modal.ManualCapturePayment',
+        'Taco.view.order.modal.ManualDeclinePayment',
         'Taco.view.order.modal.ManualVoidPayment',
         'Taco.view.order.modal.ManualCreditPayment',
         'Taco.view.order.modal.DeclineCheck',
@@ -61,7 +62,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             },
             {
                 text: 'Decline Payment',
-                itemId: 'DeclinePayment'
+                itemId: 'ManualDeclinePayment',
+                //TODO: when service supports the data from the manual decline modal, comment out the below line
+                handler: me.manualDeclinePayment
             },
             {
                 text: 'Credit Payment',
@@ -112,10 +115,6 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             {
                 text: 'Void Payment (Manual)',
                 itemId: 'ManualVoidPayment'
-            },
-            {
-                text: 'Decline Payment (Manual)',
-                itemId: 'ManualDeclinePayment'
             }
         ], function(actionConf) {
             actionConf.hidden = actionConf.hidden || !Ext.Array.contains(availableActions, actionConf.itemId);
@@ -407,6 +406,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         return modal;
     },
 
+
+
     // removes the authorized transaction (first item in the payments collection). Will call service, reload the record, and update the ui;
     voidTransaction: function() {
         var me = this,
@@ -446,6 +447,48 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 me.setLoading(true);
                 // call the model method to persist the change
                 me.order.voidTransaction(config);
+            }
+        });
+    },
+
+    manualDeclinePayment: function() {
+        var me = this,
+            config = {
+                jsonData: {
+                    orderId: me.order.getId(),
+                    paymentId: me.record.getId()
+                },
+                success: function(response) {
+                    // success handling here
+                    me.setLoading(false);
+
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        // service didn't return data properly
+                        return;
+                    }
+                    me.order.reload();
+                },
+                failure: function(response) {
+                    me.setLoading(false);
+                    // error handling here
+                },
+                scope: this
+            };
+
+        this.actionModal = Ext.MessageBox.show({
+            title: 'Manually Decline Payment',
+            rightJustifyButtons: true,
+            reverseOrder: true,
+            msg: 'Are you certain you want to manually record this payment as declined?',
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function(val) {
+                if (val !== 'yes') return;
+
+                me.setLoading(true);
+                // call the model method to persist the change
+                me.order.declinePaymentManual(config);
             }
         });
     }
