@@ -73,8 +73,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 }, {
                     xtype: 'button',
                     ui: 'link',
+                    scale: 'medium',
                     html: 'Shipping Method:',
-                    cls: 'label',
+                    cls: 'label label-link',
                     hidden: !!this.packageData.shipmentId,
                     listeners: {
                         menushow: function (button, menu) {
@@ -116,7 +117,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     xtype: 'button',
                     ui: 'link',
                     html: 'Packaging Type:',
-                    cls: 'label',
+                    scale: 'medium',
+                    cls: 'label label-link',
                     hidden: !!this.packageData.shipmentId,
                     listeners: {
                         menushow: function (button, menu) {
@@ -149,6 +151,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 }, {
                     xtype: 'button',
                     ui: 'link',
+                    scale: 'medium',
+                    cls: 'button-link',
                     text: this.packageData.trackingNumber || '(Add)',
                     handler: this.handleAddTrackingNumber,
                     hidden: !!this.packageData.shipmentId,
