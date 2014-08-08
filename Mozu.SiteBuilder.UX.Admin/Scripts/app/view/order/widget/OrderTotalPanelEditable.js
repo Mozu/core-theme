@@ -474,20 +474,20 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             }
         });
 
+        
         this.couponError = Ext.widget({
-            xtype: "component",
-            data: this.record.get("invalidCoupons"),
-            hidden: !this.record.get("invalidCoupons").length,
+            xtype: "component",            
+            hidden: true,
             cls: "taco-order-discount-error",
-            tpl: [
-                '<tpl for=".">',
-                    '{% if (xindex > 1) break; %}',
-                    '<div><span class="taco-couponCode">Coupon: {couponCode}</span><span class="taco-reason">{reason}</span></div>',
-                '</tpl>'
-            ]
+            tpl: this.couponErrorTpl
         })
+        
     },
 
+
+    couponErrorTpl : new Ext.XTemplate(
+        '<div>Coupon "{couponCode}" did not apply. <br/>{reason}</div>'
+    ),
 
     // accepts an array of order coupons configuration data objects and calls the service to persist it.
     addOrderCoupon: function (coupons) {
@@ -506,6 +506,17 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     Taco.app.fireEvent('setmessage', "Error adding coupon.", 'error');
                     return;
                 }
+
+                var invalidCoupons = json.items.invalidCoupons;
+                if (invalidCoupons.length) {
+                    var couponError = invalidCoupons[0]
+                    this.couponError.update(couponError);
+                    this.couponError.show();
+                    this.deferCouponErrorhide = true;
+                } else {
+                    this.couponError.hide();
+                }
+
                 this.fireEvent('saveSuccess', json);
             },
             failure: function (response) {
@@ -555,6 +566,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             this["subTpl_3"].overwrite(subTpl_3_el, data);
             // update the ext components 
             this.updateShippingMethodButton(record);
+            // need to hide the coupon error unless the hide was deferred. This happens because the record updates after the application of the error.
+            if (!this.deferCouponErrorhide) {
+                this.couponError.hide();
+            } else {
+                // reset this deferral
+                this.deferCouponErrorhide = false;
+            }
         }
 
         return record
