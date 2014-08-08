@@ -18,7 +18,8 @@
         'Taco.core.ux.form.field.PageTemplate',
         'Taco.core.ux.form.field.BaseImageField',
         'Ext.form.field.Hidden',
-        'Taco.platter.fields.SimpleFields'
+        'Taco.platter.fields.SimpleFields',
+        'Taco.platter.forms.SimpleForms'
     ],
     saveButtonEnabled: true,
     autoScroll :true,
@@ -34,13 +35,17 @@
 
   //  padding: '20px',
     initComponent: function () {
-        me=this,
+        var me=this,
+            code = this.editor.get('code');
+
         this.data = Ext.clone(this.record.get('fields'));
         if (this.editor) {
+
             try {
-                this.dynamicForm = eval(this.editor.get('code'));
+                this.dynamicForm = eval(code);
+                
             } catch (e) {
-                console.log(e);
+                console.log(e, code);
             }
         }
         if (!this.dynamicForm) {

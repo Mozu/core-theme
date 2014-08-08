@@ -2,7 +2,7 @@
  * @class Taco.core.ux.form.ColorField
  */
 
-Ext.define('Taco.core.ux.form.entities.ProductEditorForm', {
+Ext.define('Taco.core.ux.form.entities.TemplateEditorForm', {
     extend: 'Taco.core.ux.form.entities.EntityEditorForm',
     layout: {
         type: 'vbox',

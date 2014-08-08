@@ -21,11 +21,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             FileStream = fileStream;
         }
 
+     
+
         // Properties
         public Stream FileStream { get; private set; }
 
         protected override void WriteFile(HttpResponseBase response)
         {
+           
+            
             Stream outputStream = response.OutputStream;
             using (FileStream)
             {

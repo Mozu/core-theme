@@ -4,7 +4,7 @@
 
 Ext.define('Taco.core.ux.form.entities.EntityEditorForm', {
     extend: 'Ext.form.Panel',
-   
+
 
 
 

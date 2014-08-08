@@ -32,23 +32,50 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             set { _fileDownloadName = value; }
         }
 
+        public string Etag { get; set; }
+        public DateTimeOffset? LastModifiedDate { get; set; }
+
+
+
         public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
 
             HttpResponseBase response = requestMessage.HttpContext().Response;
             response.ContentType = ContentType;
+            if (!string.IsNullOrEmpty(Etag))
+            {
+                response.AddHeader("ETag", Etag);
+            }
+            if (LastModifiedDate.HasValue)
+            {
+                response.AddHeader("Last-Modified", LastModifiedDate.Value.ToUniversalTime().ToString("r"));
+            }
             if (!string.IsNullOrEmpty(FileDownloadName))
             {
                 string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
                 response.AddHeader("Content-Disposition", headerValue);
             }
+            
+
+          
+
             WriteFile(response);
         }
 
         public  Task ExecuteResultAsync(HttpRequestMessage requestMessage)
         {
             HttpResponseBase response = requestMessage.HttpContext().Response;
+
             response.ContentType = ContentType;
+
+            if (!string.IsNullOrEmpty(Etag))
+            {
+                response.AddHeader("ETag", Etag);
+            }
+            if (LastModifiedDate.HasValue)
+            {
+                response.AddHeader("Last-Modified", LastModifiedDate.Value.ToUniversalTime().ToString("r"));
+            }
             if (!string.IsNullOrEmpty(FileDownloadName))
             {
                 string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);

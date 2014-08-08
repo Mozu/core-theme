@@ -1,4 +1,5 @@
-﻿Ext.create('Taco.core.ux.form.EntityEditorForm', {
+﻿Ext.widget({
+    xtype: 'mz-form-entity',
     title: 'Order Email',
     items: [
         {

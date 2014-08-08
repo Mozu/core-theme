@@ -1,4 +1,5 @@
-﻿Ext.create('Taco.core.ux.form.entities.WebPageEditorForm', {
+﻿Ext.widget({
+    xtype:'mz-form-webpage',
     title: 'About us',
     items: [
         {
