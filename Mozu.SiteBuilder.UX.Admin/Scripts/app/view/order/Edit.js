@@ -45,7 +45,7 @@ Ext.define('Taco.view.order.Edit', {
     formCls: 'Taco.view.order.Form',
 
     saveText: "Submit Order",
-
+    saveInProgressText: "Submiting Order...",
 
 
     initComponent: function () {
