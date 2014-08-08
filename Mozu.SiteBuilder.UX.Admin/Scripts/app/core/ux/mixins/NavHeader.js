@@ -117,6 +117,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         cancelButtonVisible: true,
         cancelText: "Cancel",
         saveText: "Save",
+        saveInProgressText: "Saving...",
         title:null
     },
 
@@ -368,7 +369,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         if (me.saveActionButton) {
             me.saveActionButton.toggle(false, true);
             me.saveActionButton.removeCls('taco-button-processing');
-            me.saveActionButton.setText('Save');
+            me.saveActionButton.setText(this.saveText);
         }
     },
 
@@ -401,8 +402,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
             if (me.saveActionButton) {
                 me.saveActionButton.addCls('taco-button-processing');
-                me.saveActionButton.setText('Saving...');
-            }
+                me.saveActionButton.setText(this.saveInProgressText);
+            };
             
             me.doSave();
         }
