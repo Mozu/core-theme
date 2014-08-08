@@ -171,7 +171,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // fill out OrderSummary and AuthorizationInfo object
 
                     decimal totalAmount, amountCollected, balance;
-                    int totalItemCount, fulfilledItemCount, unfulfilledItemCount;
+                    int totalItemCount, shippedItemCount, pickedupItemCount, digitallyFulfilledItemCount, fulfilledItemCount, unfulfilledItemCount;
 
                     totalAmount = dc.Total.GetValueOrDefault(0);
                     amountCollected = dc.TotalCollected;
@@ -184,7 +184,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                          select actualQuantity
                         ).Sum();
 
-                    fulfilledItemCount = order.Packages != null ? order.Packages.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
+                    shippedItemCount = order.Packages != null ? order.Packages.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
+                    pickedupItemCount = order.Pickups != null ? order.Pickups.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
+                    digitallyFulfilledItemCount = order.DigitalPackages != null ? order.DigitalPackages.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
+                    fulfilledItemCount = shippedItemCount + pickedupItemCount + digitallyFulfilledItemCount;
 
                     unfulfilledItemCount = Math.Max(0, totalItemCount - fulfilledItemCount);
 
@@ -388,7 +391,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.ItemsNotDigitallyFulfilled = order.UndeliveredDigitalItems.Sum(i => i.Quantity);
                     order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
                     order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 ? 0 : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
-                    order.ItemsDigitallyFulfilled = order.DigitalPackages != null || order.DigitalPackages.Count == 0 ? 0 : order.DigitalPackages.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsDigitallyFulfilled = order.DigitalPackages == null || order.DigitalPackages.Count == 0 ? 0 : order.DigitalPackages.SelectMany(p => p.Items).Sum(i => i.Quantity);
                     
 
                     //List<BundledProduct> bundledProducts = order.Items.SelectMany(x => x.BundledProducts).ToList();
