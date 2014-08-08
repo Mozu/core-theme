@@ -18,6 +18,23 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
     rowBodyTrCls: "x-grid-row-adjustment x-grid-row x-grid-rowbody-tr",
     rowBodyDivCls: "x-grid-cell-inner adjustment-cell-inner",
     rowBodyTdCls: "adjustment-cell x-grid-cell x-grid-td x-unselectable ",
+
+    init: function (grid){
+        var me = this,
+            view = me.view;
+
+        me.callParent(arguments);
+
+        // need to put this back in since the rowBody feature doesn't call onMouseDown when there is a rowwrap fetaure;
+        if (view.findFeature('rowwrap')) {
+            grid.mon(view, {
+                element: 'el',
+                mousedown: me.onMouseDown,
+                scope: me
+            });
+        }
+    },
+
     onMouseDown: function (e) {
         var me = this;       
                         
