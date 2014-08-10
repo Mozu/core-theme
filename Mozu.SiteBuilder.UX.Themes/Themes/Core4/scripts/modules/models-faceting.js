@@ -1,9 +1,5 @@
 ﻿define(['modules/jquery-mozu', 'underscore', "hyprlive", "modules/backbone-mozu", "modules/models-product"], function($, _, Hypr, Backbone, ProductModels) {
 
-    function sanitize(str) {
-        return str ? str.replace(/[\s~'":]+/g, '-') : '';
-    }
-
     var FacetValue = Backbone.MozuModel.extend({
         idAttribute: 'value'
     }),
@@ -43,17 +39,6 @@
 
     FacetedProductCollection = Backbone.MozuPagedCollection.extend({
         mozuType: 'search',
-        validation: {
-            pageSize: { min: 1 },
-            pageCount: { min: 1 },
-            startIndex: { min: 0 }
-        },
-        dataTypes: {
-            pageSize: Backbone.MozuModel.DataTypes.Int,
-            pageCount: Backbone.MozuModel.DataTypes.Int,
-            startIndex: Backbone.MozuModel.DataTypes.Int,
-            totalCount: Backbone.MozuModel.DataTypes.Int,
-        },
         relations: {
             facets: Backbone.Collection.extend({
                 model: Facet
