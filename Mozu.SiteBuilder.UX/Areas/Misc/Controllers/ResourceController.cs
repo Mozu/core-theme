@@ -476,6 +476,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             public HttpResponseMessage CreateModule(HttpRequestMessage req, string pathinfo, string shimRequire, string shimExport)
             {
                 string contents = GetScriptFileContents(pathinfo);
+                if (contents == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.NotFound)
+                    {
+                        RequestMessage = req,
+                        Content = new StringContent("File " + pathinfo + " not found.")
+                    };
+                }
                 Tuple<string, string> deps = GetAMDDeps(shimRequire);
                 string module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo);
                 return new HttpResponseMessage(HttpStatusCode.OK)
