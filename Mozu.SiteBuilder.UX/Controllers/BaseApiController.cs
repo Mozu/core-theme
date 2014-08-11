@@ -25,6 +25,7 @@ using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 namespace Mozu.SiteBuilder.UX.Controllers
 {
     [RefreshStoreFrontUserAuthTicketFilter]
+    [RequiresSiteContextRedirectFilter]
     public class BaseApiController : ApiControllerBase
     {
 
