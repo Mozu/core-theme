@@ -1,0 +1,25 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% if pageContext.metaTitle %}{{ pageContext.metaTitle }}{% else %}{{ labels.localStores }}  - {% parent %}{% endif %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-locations {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+    {% require_script "pages/location" %}
+    
+    {% preload_json model "product" %}
+
+    <div class="mz-l-container">
+        <h1 class="mz-pagetitle">{{ labels.localStores }}</h1>
+        <div class="mz-l-stack">
+            <p class="mz-locationsearch-pleasewait">
+                {{ labels.locationWait|safe }}
+             </p> 
+            <div class="mz-l-stack-section mz-locationlist fades-in" id="location-list">
+                {% include "modules/location/locations" with model=model.locations %}
+            </div>
+        </div>
+    </div>
+
+{% endblock body-content %}

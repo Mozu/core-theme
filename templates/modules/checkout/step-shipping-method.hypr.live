@@ -1,0 +1,33 @@
+    <h3 class="mz-formstep-header">
+        {{ labels.shippingMethod }}
+         {% if model.requiresFulfillmentInfo %}
+        <button class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
+        {% endif %}
+    </h3>
+    <div class="mz-formstep-body">
+        <div class="mz-formstep-summary">
+            {% if model.requiresFulfillmentInfo %}
+            <strong>{{ model.shippingMethodName }}</strong> ({{ model.price|currency }})
+            {% else %}
+            {{ labels.noFulfillmentInfoRequired }}
+            {% endif %}
+        </div>
+        <div class="mz-formstep-fields mz-l-formfieldgroup">
+            {% if model.availableShippingMethods %}
+                {% for method in model.availableShippingMethods %}
+                    <div>
+                        <label>
+                            <input type="radio" name="shippingMethod" value="{{ method.shippingMethodCode }}" data-mz-value="shippingMethodCode" data-mz-shipping-method {% if model.shippingMethodCode == method.shippingMethodCode %} checked="checked" {% endif %}>
+                            {{ method.shippingMethodName }} {{ method.price|currency }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <span class="mz-validationmessage" data-mz-validationmessage-for="shippingMethodCode"></span>
+            {% else %}
+                <p>{{ labels.noShippingMethods }}</p>
+            {% endif %}
+            <div class="mz-formstep-next">
+                <button type="button" class="mz-button" data-mz-action="next">{{ labels.next }}</button>
+            </div>
+        </div>
+    </div>

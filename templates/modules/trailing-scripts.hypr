@@ -1,0 +1,25 @@
+﻿{% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}
+
+<script src="{{siteContext.cdnPrefix}}/js/require-{% if debugMode %}debug{% else %}min{% endif %}.js"></script>
+<script type="text/javascript">
+    require.config({
+      cdnPrefix: "{{ siteContext.cdnPrefix }}",
+      cacheKey: "{{ siteContext.hashString }}",
+      urlArgs: "theme={{siteContext.themeId}}&cacheKey={{ siteContext.hashString }}",
+      baseUrl: "{{ siteContext.cdnPrefix }}{% if not debugMode %}/compiled{% endif %}/scripts",
+      paths: {
+        jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{% if not debugMode %}.min{% endif %}"
+      }
+  });
+  {% if debugMode %}
+  require([{% all_scripts %}]);
+  {% else %}
+  require(['jquery'], function() { require(['modules/common'], function() { require([{% all_scripts %}]); }); });
+  {% endif %}
+</script>
+
+{% if siteContext.generalSettings.isGoogleAnalyticsEnabled %}
+  {% include "modules/analytics/google-analytics-tracking-code" %}
+{% endif %}
+
+{%endwith%}

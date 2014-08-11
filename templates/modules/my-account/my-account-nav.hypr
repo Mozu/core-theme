@@ -1,0 +1,42 @@
+﻿<nav class="mz-scrollnav" id="account-nav" data-mz-scrollnav="{{ navtarget }}">
+    <ul class="mz-scrollnav-list nav">
+        <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#settings">
+                {{ labels.accountSettings }}
+            </a>
+        </li>
+        {% if themeSettings.allowWishlist %}
+        <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#wishlist">
+                {{ labels.accountMyWishlist }}
+            </a>
+        </li>
+        {% endif %}
+        <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#orderhistory">
+                {{ labels.orderHistory }}
+            </a>
+        </li>
+        <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#returnhistory">
+                {{ labels.returns }}
+            </a>
+        </li>
+        <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#paymentmethods">
+                {{ labels.paymentMethods }}
+            </a>
+        </li>
+        <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#addressbook">
+                {{ labels.addressBook }}
+            </a>
+        </li>
+        <li class="mz-scrollnav-item">
+            <a class="mz-scrollnav-link" href="#storecredit">
+                {{ labels.storeCredit }}
+            </a>
+        </li>
+    </ul>
+</nav>
+{% require_script "modules/scroll-nav" %}

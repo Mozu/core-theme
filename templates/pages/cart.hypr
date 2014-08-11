@@ -1,0 +1,24 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %} {{ labels.cart }} - {% parent %} {% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-cart {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/cart" %}
+
+{% preload_json model "cart" %}
+
+<div class="mz-l-container">
+	<h1 class="mz-pagetitle">{{ labels.cart }}</h1>
+	<form method="post" action="{{ siteContext.secureHost }}/checkout" id="cartform">
+		<input type="hidden" name="id" value="{{model.Id}}" />
+        {% include "modules/common/message-bar" with model=model.messages %}
+        <table class="mz-table mz-table-cart" id="cart">
+            {% include "modules/cart/cart-table" %}
+        </table>
+	</form>
+</div>
+
+{% endblock body-content %}

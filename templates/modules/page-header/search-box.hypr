@@ -1,0 +1,16 @@
+﻿<form id="searchbox" class="mz-searchbox" action="/search">
+	<input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-field"  value="{{pageContext.search.query}}" name="query" />
+	<button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
+	<select class="mz-searchbox-categories" name="facetValueFilter" 
+            data-mz-contextify='[value="categoryId:{{ pageContext.categoryId }}"]'
+            data-mz-contextify-attr='selected'
+            data-mz-contextify-val='selected'>
+		<option value="">{{ labels.all }}</option>
+        {% partial_cache %}
+        {% for cat in navigation.rootCategories %}
+        <option value="categoryId:{{cat.originalId}}">{{cat.Name}}</option>
+		{% endfor %}
+        {% endpartial_cache %}
+	</select>
+    {% require_script "modules/contextify" %}
+</form>

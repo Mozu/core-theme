@@ -1,0 +1,55 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+
+	<dl class="mz-orderheader">
+	<!--
+		<dt>{{ labels.orderNo }}</dt>
+		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
+		-->
+
+		<dt>Return #</dt>
+		<dd>{{ model.returnNumber }}</dd>
+
+		<dt>{{ labels.orderDate }}:</dt>
+		<dd>{{ model.auditInfo.createDate }}</dd>
+
+		<dt>Return Request Date:</dt>
+		<dd>{{ model.rmaDeadline }}</dd>
+	</dl>
+	<br />
+
+	<p>
+	{% if user and user.firstName %}
+		{{ labels.emailOpening|string_format(user.firstName)|safe }}
+	{% else %}
+		{{ labels.emailOpeningAlternative|safe }}
+	{% endif %}
+	</p>
+
+	{{ labels.returnRejectedBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
+
+	<table class="mz-ordersummary">
+        <thead>
+            <tr>
+                <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
+                <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
+            </tr>
+		</thead>
+		<tbody class="mz-ordersummary-lineitems">
+		{% for item in model.items %}
+			{% for reason in item.reasons %}
+			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
+				<td>{{ reason.quantity }}</td>
+				<td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
+			</tr>
+			{% endfor %}
+		{% endfor %}
+		</tbody>
+    </table>
+
+	{{ labels.returnRejectedBlob2|safe }}
+
+	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}

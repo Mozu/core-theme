@@ -1,0 +1,17 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+
+	{% if user and user.firstName %}
+		{{ labels.emailOpening|string_format(user.firstName)|safe }}
+	{% else %}
+		{{ labels.emailOpeningAlternative|safe }}
+	{% endif %}
+
+  <h1>Welcome to {{siteContext.generalSettings.websiteName}}</h1>
+
+  Your customer account has been created and you can log in anytime at <a href="http://{{domainName}}/">http://{{domainName}}/</a> as {{model.UserEmailAddress}}.
+
+  {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}

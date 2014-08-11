@@ -1,0 +1,158 @@
+﻿html {
+    height: 100%;
+}
+
+body {
+    margin: 0 auto;
+    height: 100%;
+    background-color: @bodyBackgroundColor;
+	font-family: @fontFamily;
+    font-size: @fontSize;
+	color: @textColor;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: @textColor;
+}
+a {
+    color: @linkColor;
+    &:visited {
+        color: @linkVisitedColor;
+    }
+    &:hover {
+        color: @linkHoverColor;
+    }
+}
+
+p {
+    margin: @gutter/2 0;
+}
+
+// preventing FOUT since web fonts are loading asynchronously    
+html.js.fontface body {
+    visibility: hidden;
+}
+
+html.js.fontface.wf-active body {
+    visibility: visible;
+}
+
+/* Inputs -------------------*/
+
+// Form controls
+// -------------------------
+
+// Shared size and type resets
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.mz-uneditable-input {
+  display: inline-block;
+  padding: 4px 6px;
+  margin-bottom: 9px;
+  font-family: @fontFamily;
+}
+
+// Reset appearance properties for textual inputs and textarea
+// Reset height since textareas have rows
+textarea {
+  height: auto;
+}
+// Everything else
+button,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.mz-uneditable-input {
+  border: 1px solid @inputBorder;
+
+  // Focus state
+  &:focus {
+    outline: 0;
+    outline: thin dotted \9; /* IE6-9 */
+  }
+}
+
+// Position radios and checkboxes better
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 4px 0 0;
+  *margin-top: 0; /* IE7 */
+  margin-top: 1px \9; /* IE8-9 */
+  line-height: normal;
+  cursor: pointer;
+}
+
+// Reset width of input images, buttons, radios, checkboxes
+input[type="file"],
+input[type="image"],
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="radio"],
+input[type="checkbox"] {
+  width: auto; // Override of generic input selector
+  font-family: @fontFamily;
+}
+
+// Set the height of select and file controls to match text inputs
+select,
+input[type="file"] {
+  height: 30px; /* In IE7, the height of the select element cannot be changed by height, only font-size */
+  *margin-top: 4px; /* For IE7, add top margin to align select with labels */
+}
+
+// Make select elements obey height by applying a border
+select {
+  width: 220px; // default input width + 10px of padding that doesn't get applied
+  border: 1px solid @inputBorder;
+}
+
+// Make multiple select elements height not fixed
+select[multiple],
+select[size] {
+  height: auto;
+}
+
+button {
+    font-family: @fontFamily;
+}
+
+// TODO: JBZ: file these
+
+.mz-page-headernote {
+    margin-left: 133px;
+	font-weight: normal;
+}
+
+.mz-auxiliary-text {
+	font-size: 12px;
+}
+
+.mz-strikethrough {
+	text-decoration: line-through;
+}

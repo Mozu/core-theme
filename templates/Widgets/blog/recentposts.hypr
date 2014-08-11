@@ -1,0 +1,6 @@
+﻿<div {% data_attributes Model%} >
+
+  <h2 class="widget-title">Recent Posts</h2>
+  {% html_action "postlist" "blogs" with viewname="recentposts" count=Model.widget_configuration.postCount|default:3 config=Model.widget_configuration as_parameter %}
+  
+</div>

@@ -1,0 +1,12 @@
+<div class="mz-instock-request">
+    {% if subscribed %}
+    <p>{{ labels.notifyWidgetSuccess }}</p>
+    {% else %}
+    <div>{{ labels.notifyWidgetHeader }}</div>
+    <div>
+        {{ labels.email }}: <input type="text" data-mz-role="email" value="{{ user.email }}" class="mz-instock-request-email" />
+        <button data-mz-action="widgetNotifyUserAction">{{ labels.notifyWidgetButton }}</button>
+        <span class="mz-validationmessage" data-mz-validationmessage-for="email"></span>
+    </div>
+    {% endif %}
+</div>

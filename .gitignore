@@ -1,0 +1,15 @@
+# Mac Crap
+.DS*
+
+# Zip files
+*.zip
+
+# Merge originals
+*.orig
+
+# Node-specific
+node_modules/
+
+/npm-debug.log
+
+/compiled/
