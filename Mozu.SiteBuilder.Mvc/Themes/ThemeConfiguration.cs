@@ -59,6 +59,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
             [DataMember(Name = "defaultLanguage")]
             public string DefaultLanguage { get; set; }
+
+            [DataMember(Name = "allowProduction")]
+            public bool? AllowProduction  { get; set; }
         }
     }
 }

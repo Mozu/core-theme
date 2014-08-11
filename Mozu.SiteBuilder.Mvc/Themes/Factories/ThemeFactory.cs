@@ -25,6 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 Name = tmd.Configuration.About.Name,
                 Author = tmd.Configuration.About.Author,
                 IsDesktop = tmd.Configuration.About.IsDesktop,
+                AllowProduction = tmd.Configuration.About.AllowProduction,
                 IsMobile = tmd.Configuration.About.IsMobile,
                 IsTablet = tmd.Configuration.About.IsTablet,
                 DefaultLanguage = tmd.Configuration.About.DefaultLanguage ?? "en-US",

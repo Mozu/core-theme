@@ -132,6 +132,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public DateTime TimeStamp { get; set; }
 
         public string DefaultLanguage { get; set; }
+
+        public bool? AllowProduction { get; set; }
     }
 
     public class ThemeFileSystemInfo
