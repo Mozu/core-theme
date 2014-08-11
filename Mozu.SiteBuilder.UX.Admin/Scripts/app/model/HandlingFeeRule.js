@@ -21,10 +21,40 @@ Ext.define('Taco.model.HandlingFeeRule', {
         }, {
             "name": "productTargetRuleCodes",
             "type": "auto"
-        },{
+        }, {
             "name": "serviceTypes",
-            "type": "auto"
-        },{
+            "type": "auto",
+            convert: function (v, rec) {
+                var ret = [];
+                if (v && v.length) {
+
+                    Ext.Array.each(v, function (item) {
+                        if (item.code) {
+                            ret.push(item.code);
+                        } else {
+                            ret.push(item);
+                        }
+
+                    });
+                }
+                return ret;
+            },
+            serialize: function (v, rec) {
+                var ret = [];
+                if (v && v.length) {
+
+                    Ext.Array.each(v, function (item) {
+                        if (item.code) {
+                            ret.push(item);
+                        } else {
+                            ret.push({ code: item });
+                        }
+
+                    });
+                }
+                return ret;
+            }
+        }, {
             "name": "auditInfo",
             "type": "auto"
         }, {
