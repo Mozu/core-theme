@@ -102,7 +102,7 @@
               //  name: 'name',
                 width: '100%',
                 value:this.record.get('name'),
-                fieldLabel: 'Entity Name'
+                fieldLabel: 'Name'
             });
         }
 
