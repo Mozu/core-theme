@@ -51,18 +51,20 @@ Ext.define('Taco.view.order.Header', {
         this.callParent(arguments);
 
         this.on({
-            afterrender: function () {
-                var billingContact = this.record.get('billingContact'),
-                    fulfillmentContact = this.record.get('fulfillmentContact');
-
-                if (this.record.getCustomer() && !(billingContact && billingContact.address1 && fulfillmentContact && fulfillmentContact.address1)) {
-                    this.changeAddress();
-                }
-            },
+            afterrender: this.checkAddresses,
             scope: this
         });
 
         this.loadCustomer();
+    },
+
+    checkAddresses: function () {
+        var billingContact = this.record.get('billingContact'),
+            fulfillmentContact = this.record.get('fulfillmentContact');
+
+        if (this.record.getCustomer() && !(billingContact && billingContact.address1 && fulfillmentContact && fulfillmentContact.address1)) {
+            this.changeAddress();
+        }
     },
 
     onRecordChange: function () {
@@ -354,6 +356,8 @@ Ext.define('Taco.view.order.Header', {
         this.customerSelectionContainer[this.record.getCustomer() ? 'hide' : 'show']();
 
         Ext.resumeLayouts(true);
+
+        this.checkAddresses();
     },
 
     createCustomer: function () {
