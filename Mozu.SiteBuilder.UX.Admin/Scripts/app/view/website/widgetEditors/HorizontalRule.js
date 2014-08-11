@@ -109,11 +109,11 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
             };
 
         if (previewEl) {
-            newStyles['border-top-width'] = formValues['hrBorderWidth'];
-            newStyles['border-color']     = formValues['hrBorderColor'];
-            newStyles['border-style']     = formValues['hrBorderStyle'];
-            newStyles['margin-top']       = formValues['hrMarginTop'];
-            newStyles['margin-bottom']    = formValues['hrMarginBottom'];
+            newStyles['border-top-width'] = formValues.hrBorderWidth;
+            newStyles['border-color']     = formValues.hrBorderColor;
+            newStyles['border-style']     = formValues.hrBorderStyle;
+            newStyles['margin-top']       = formValues.hrMarginTop;
+            newStyles['margin-bottom']    = formValues.hrMarginBottom;
 
             previewEl.applyStyles(newStyles);
         }

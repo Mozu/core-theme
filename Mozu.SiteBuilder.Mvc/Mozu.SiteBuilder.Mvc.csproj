@@ -431,6 +431,7 @@
     <Compile Include="ActionFilters\ErrorFormattingActionFilterAttribute.cs" />
     <Compile Include="ActionFilters\HotOnlyAuthActionFilter.cs" />
     <Compile Include="ActionFilters\NoWarmAuthActionFilter.cs" />
+    <Compile Include="ActionFilters\RequiresSiteContextRedirectFilterAttribute.cs" />
     <Compile Include="ActionFilters\RefreshUserAuthTicketFilter.cs" />
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
     <Compile Include="ActionFilters\SslOnlyActionFilter.cs" />
