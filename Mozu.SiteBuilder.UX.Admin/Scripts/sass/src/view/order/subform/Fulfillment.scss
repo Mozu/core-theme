@@ -4,9 +4,20 @@
         margin-right: 3px;
     }
 
-    .label-link {
-        color: $color-standard-link;
-        font-size: 14px;
+    a.label-link {
+        
+        padding: 0;
+
+        .#{$prefix}btn-inner {
+            color: $color-standard-link;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .#{$prefix}btn-arrow::after {
+            color: $color-standard-link;
+            font-size: 14px;
+        }
     }
 
     .collapsed {

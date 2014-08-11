@@ -76,10 +76,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Package', {
         this.statusContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-package-details',
-            margin: '10 0 0 0',
-            padding: '0 0 10 0',
+            margin: '10 0 10 0',
             items: [{
                     xtype: 'component',
+                    padding: '0 0 10 0',
                     html: '<span class="label">Status:</span>' + this.packageData.status
                 },
                 this.details
