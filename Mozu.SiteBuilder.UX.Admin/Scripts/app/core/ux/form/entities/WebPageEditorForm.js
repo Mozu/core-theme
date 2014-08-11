@@ -26,11 +26,11 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
                 {
                     xtype: 'textfield',
                     name: 'meta_title',
-                    fieldLabel: 'Page Title'
+                    fieldLabel: 'Meta Title'
                 }, {
                     xtype: 'textarea',
                     name: 'meta_description',
-                    fieldLabel: 'Page Description'
+                    fieldLabel: 'Meta Description'
                 }
             ]
         },
