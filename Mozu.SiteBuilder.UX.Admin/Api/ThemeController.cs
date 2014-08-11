@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Provisioning;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 using System.ServiceModel;
@@ -46,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
       
 
-        public ThemeController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ICmsServiceWrapper cmsServiceWrapper, IThemeSettingsRepository themeSettingsRepository, ILogger logger )
+        public ThemeController(ITenantsWebApiClient tenantClient, IGeneralSettingWrapper generalSettingsWebApiClient, IThemeRepository themeRepository, ICmsServiceWrapper cmsServiceWrapper, IThemeSettingsRepository themeSettingsRepository, ILogger logger , ISettings settings )
         {
             _tenantClient = tenantClient;
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
@@ -54,6 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _cmsServiceWrapper = cmsServiceWrapper;
             _themeSettingsRepository = themeSettingsRepository;
             _logger = logger;
+            _settings = settings;
         }
 
 
@@ -79,6 +81,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public bool? IsSelectedMobile { get; set; }
 
             public bool? IsSelectedTablet { get; set; }
+
+            public bool? AllowProduction { get; set; }
 
         [JsonIgnore]
             public Thumbnail Thumbnail { get; set; }
@@ -107,6 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 Name = theme.Name;
                 Author = theme.Author;
+                AllowProduction = theme.AllowProduction;
                 Thumbnail = theme.Thumbnail;
                 IsDesktop = theme.IsDesktop;
                 IsMobile = theme.IsMobile;
@@ -135,6 +140,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return otherTheme != null && this.Id == otherTheme.Id;
             }
+
+         
         }
 
 
@@ -251,13 +258,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 .Union(Directory.GetDirectories(localThemeDir)
                 .Select(x => Path.GetFileName(x)));
 
+            bool allowNonProductionThemes = false;
+
+            if (!bool.TryParse(_settings.AppSettings("allowNonProductionThemes"), out allowNonProductionThemes) && !allowNonProductionThemes)
+            {
+                allowNonProductionThemes = false;
+            }
 
             var themes = localThemes
                 .Select(x =>
                 {
                     try
                     {
-                        return _themeRepository.GetTheme(new ThemeSelection(){Id=x});
+                        var ret= _themeRepository.GetTheme(new ThemeSelection(){Id=x});
+                        if (ret != null && !ret.AllowProduction.GetValueOrDefault(true) && !allowNonProductionThemes)
+                        {
+                            ret = null;
+                        }
+                        return ret;
                     }
                     catch (Exception ex)
                     {
@@ -411,5 +429,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICmsServiceWrapper _cmsServiceWrapper;
         private readonly IThemeSettingsRepository _themeSettingsRepository;
         private readonly ILogger _logger;
+        private readonly ISettings _settings;
     }
 }

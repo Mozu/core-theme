@@ -1,4 +1,5 @@
-﻿Ext.create('Taco.core.ux.form.entities.WebPageEditorForm', {
+﻿Ext.widget({
+    xtype: 'mz-form-webpage',
     title: 'PoKEmon!!!!!!!',
     items: [
         
@@ -10,7 +11,7 @@
           },
         {
             "fieldLabel": "category",
-            "xtype": "selectfield",
+            "xtype": "mz-input-dropdown",
             "name": "category",
             "store": [
                 "Avianoid",

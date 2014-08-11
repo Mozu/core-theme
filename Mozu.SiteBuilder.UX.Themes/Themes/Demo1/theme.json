@@ -6,7 +6,8 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core4"
+        "name": "Demo1",
+        "allowProduction": false
     },
     "editors": [{
         "id": "pokemon@gcta",
