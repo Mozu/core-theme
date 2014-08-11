@@ -15,7 +15,7 @@
                 </select>
             {% else %}
                 {% if option.attributeDetail.inputType == "YesNo" %}
-                    <input class="mz-productoptions-option" type="checkbox" {% if option.isChecked %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />
+                    <input class="mz-productoptions-option" type="checkbox" {% if option.shopperEnteredValue %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />
                 {% endif %}
                 {% if option.attributeDetail.inputType == "TextBox" %}
                     {% if option.attributeDetail.dataType == "Number" %}

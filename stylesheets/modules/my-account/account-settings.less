@@ -40,4 +40,37 @@
         font-size: @fontSizeLarger;
         height: @fontSizeLarger + 4;
     }
+    mz-accountsettings-password {
+        > div {
+            width: 100%;
+            float: left;
+            margin-bottom: @gutter;
+
+            label, input {
+                display: inline-block;
+                margin-bottom: @gutter;
+                vertical-align: middle;
+                width: 140px;
+            }
+        }
+
+        .mz-password-actions {
+            margin-bottom: @gutter * 2;
+        }
+    }
+
+    .mz-accountsettings-email, .mz-accountsettings-phone {
+        padding-top: 0;
+    }
+
+    .mz-accountsettings-firstname,
+    .mz-accountsettings-lastname {
+        width: 200px;
+        font-size: @fontSize + .5;
+    }
+
+    .mz-accountsettings-acceptsmarketing {
+        clear: both;
+        label { vertical-align: middle; }
+    }
 }

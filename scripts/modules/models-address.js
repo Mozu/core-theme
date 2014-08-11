@@ -1,15 +1,14 @@
 ﻿define(
     ["modules/backbone-mozu", 'hyprlive'],
-    function (Backbone, Hypr) {
+    function(Backbone, Hypr) {
 
 
-        var requiresZipCode = {
+        var countriesRequiringStateAndZip = {
             US: true,
             CA: true,
             JP: true,
             TW: true
         },
-            requiresStateProv = requiresZipCode,
             defaultStateProv = "n/a";
 
         var PhoneNumbers = Backbone.MozuModel.extend({
@@ -44,33 +43,34 @@
                     msg: Hypr.getLabel("countryMissing")
                 },
                 stateOrProvince: {
-                    fn: function(value) {
-                        if (requiresStateProv[this.attributes.countryCode] && (!value || value === defaultStateProv)) return Hypr.getLabel('stateProvMissing');
-                    }
+                    fn: "requiresStateAndZip",
+                    msg: Hypr.getLabel("stateProvMissing")
                 },
                 postalOrZipCode: {
-                    fn: function (value) {
-                        if (requiresZipCode[this.attributes.countryCode] && !value) return Hypr.getLabel("postalCodeMissing")
-                    }
+                    fn: "requiresStateAndZip",
+                    msg: Hypr.getLabel("postalCodeMissing")
                 }
+            },
+            requiresStateAndZip: function(value, attr) {
+                if ((this.get('countryCode') in countriesRequiringStateAndZip) && !value) return this.validation[attr.split('.').pop()].msg;
             },
             defaults: {
                 candidateValidatedAddresses: null,
                 countryCode: Hypr.getThemeSetting('preselectCountryCode') || '',
                 addressType: 'Residential'
             },
-            toJSON: function (options) {
+            toJSON: function(options) {
                 // workaround for SA
                 var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
                 if ((!options || !options.helpers) && !j.stateOrProvince) {
-                    j.stateOrProvince = "n/a";
+                    j.stateOrProvince = defaultStateProv;
                 }
-                if (options && options.helpers && j.stateOrProvince === "n/a") {
+                if (options && options.helpers && j.stateOrProvince === defaultStateProv) {
                     delete j.stateOrProvince;
                 }
                 return j;
             },
-            is: function (another) {
+            is: function(another) {
                 var s1 = '', s2 = '';
                 for (var k in another) {
                     if (k === 'isValidated')

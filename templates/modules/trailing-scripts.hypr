@@ -8,7 +8,9 @@
       urlArgs: "theme={{siteContext.themeId}}&cacheKey={{ siteContext.hashString }}",
       baseUrl: "{{ siteContext.cdnPrefix }}{% if not debugMode %}/compiled{% endif %}/scripts",
       paths: {
-        jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery{% if not debugMode %}.min{% endif %}"
+        jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery{% if not debugMode %}.min{% endif %}",
+		underscore: "vendor/underscore/underscore",
+		backbone: "vendor/backbone/backbone"
       }
   });
   {% if debugMode %}

@@ -2,7 +2,7 @@
  * Adds builtin validation features to BackboneJS Models, customized to connect
  * to display internationalized Mozu text labels.
  */
-define(["shim!vendor/underscore>_", "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone", 'hyprlive'], function (_, Backbone, Hypr) {
+define(["underscore", "backbone", 'hyprlive'], function (_, Backbone, Hypr) {
 
     // Adapted from Backbone.Validation v0.8.1
     //

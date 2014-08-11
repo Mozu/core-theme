@@ -31,6 +31,7 @@
                     <div class="mz-l-formfieldgroup-cell"></div>
                     <div class="mz-l-formfieldgroup-cell">
                         <button class="mz-button mz-button-large">{{ labels.logIn }}</button>
+						<a href="javascript:;" class="right mz-forgot" data-mz-action="launchforgotpassword">{{ labels.forgotPasswordLink }}</a>
                     </div>
                 </div>
             </div>

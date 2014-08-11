@@ -42,7 +42,7 @@
             <tr class="mz-ordersummary-subtotal">
               <td align="right" colspan="4">
                 <span class="mz-ordersummary-totalname">{{ labels.subtotal }}:</span>
-                <span class="mz-ordersummary-totalvalue">{{ model.discountedTotal|currency }}</span>
+                <span class="mz-ordersummary-totalvalue">{{ model.discountedSubTotal|currency }}</span>
               </td>
             </tr>
             {% if model.taxTotal %}
@@ -56,7 +56,7 @@
             <tr class="mz-ordersummary-shippingtotal">
               <td align="right" colspan="4">
                 <span class="mz-ordersummary-totalname">{{ labels.shippingHandling }}:</span>
-                <span class="mz-ordersummary-totalvalue">{{ model.shippingTotal|currency }}</span>
+                <span class="mz-ordersummary-totalvalue">{{ model.shippingSubTotal|currency }}</span>
               </td>
             </tr>
             {% for shippingDiscount in model.shippingDiscounts %}
@@ -70,8 +70,8 @@
             {% if model.handlingAmount %}
             <tr class="mz-ordersummary-additionalhandling">
                 <td align="right" colspan="4">
-                    <span class="mz-ordersummary-totalname">{{ labels.additionalHandling }}</span>
-                    <span class="mz-ordersummary-totalvalue">{{ model.handlingAmount|currency }}</span>
+                  <span class="mz-ordersummary-totalname">{{ labels.additionalHandling }}{% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ({{ model.handlingAmount|currency }})</span>{% endif %}</span>
+                  <span class="mz-ordersummary-totalvalue">{{ model.handlingTotal|currency }}</span>
                 </td>
             </tr>
             {% endif %}

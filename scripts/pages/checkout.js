@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "shim!vendor/underscore>_", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -25,7 +25,7 @@
             me.listenTo(me.model,'stepstatuschange', me.render, me);
             me.$el.on('keypress', 'input', function (e) {
                 if (e.which === 13) {
-                    me.handleEnterKey();
+                    me.handleEnterKey(e);
                     return false;
                 }
             });
@@ -48,9 +48,19 @@
 
     var OrderSummaryView = Backbone.MozuView.extend({
         templateName: 'modules/checkout/checkout-order-summary',
+
+        initialize: function () {
+            this.listenTo(this.model.get('billingInfo'), 'orderPayment', this.onOrderCreditChanged, this);
+        },
+
         editCart: function () {
             window.location = "/cart";
         },
+        
+        onOrderCreditChanged: function (order, scope) {
+            this.render();
+        },
+
         // override loading button changing at inappropriate times
         handleLoadingChange: function () { }
     });
@@ -69,7 +79,8 @@
             'address.postalOrZipCode',
             'address.addressType',
             'phoneNumbers.home',
-            'contactId'
+            'contactId',
+            'email'
         ],
         renderOnChange: [
             'address.countryCode',
@@ -118,15 +129,27 @@
             'billingContact.phoneNumbers.home',
             'billingContact.email',
             'creditAmountToApply',
-            'selectedCredit'
+            'digitalCreditCode'
         ],
         renderOnChange: [
-            'selectedCredit',
             'savedPaymentMethodId',
             'billingContact.address.countryCode',
             'paymentType',
-            'isSameBillingShippingAddress',
+            'isSameBillingShippingAddress'
         ],
+        additionalEvents: {
+            "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
+            "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
+        },
+        initialize: function () {
+            this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
+            this.listenTo(this.model, 'orderPayment', function (order, scope) {
+                    this.render();
+                }, this);
+            this.codeEntered = !!this.model.get('digitalCreditCode');
+        },
+
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
         },
@@ -151,6 +174,70 @@
                 self.render();
             });
         },
+        getDigitalCredit: function (e) {
+            var self = this;
+            this.$el.addClass('is-loading');
+            this.model.getDigitalCredit().ensure(function () {
+                self.$el.removeClass('is-loading');
+            });
+        },
+        stripNonNumericAndParseFloat: function (val) {
+            if (!val) return 0;
+            var result = parseFloat(val.replace(/[^\d\.]/g, ''));
+            return isNaN(result) ? 0 : result;
+        },
+        applyDigitalCredit: function(e) {
+            var val = $(e.currentTarget).prop('value'),
+                creditCode = $(e.currentTarget).attr('data-mz-credit-code-target');  //target
+            if (!creditCode) {
+                console.log('checkout.applyDigitalCredit could not find target.');
+                return;
+            }
+            var amtToApply = this.stripNonNumericAndParseFloat(val);
+            
+            this.model.applyDigitalCredit(creditCode, amtToApply, true);
+            this.render();
+        },
+        onEnterDigitalCreditCode: function(model, code) {
+            if (code && !this.codeEntered) {
+                this.codeEntered = true;
+                this.$el.find('button').prop('disabled', false);
+            }
+            if (!code && this.codeEntered) {
+                this.codeEntered = false;
+                this.$el.find('button').prop('disabled', true);
+            }
+        },
+        enableDigitalCredit: function(e) {
+            var creditCode = $(e.currentTarget).attr('data-mz-credit-code-source'),
+                isEnabled = $(e.currentTarget).prop('checked') === true,
+                targetCreditAmtEl = this.$el.find("input[data-mz-credit-code-target='" + creditCode + "']"),
+                me = this;
+
+            if (isEnabled) {
+                targetCreditAmtEl.prop('disabled', false);
+                me.model.applyDigitalCredit(creditCode, null, true);
+            } else {
+                targetCreditAmtEl.prop('disabled', true);
+                me.model.applyDigitalCredit(creditCode, 0, false);
+                me.render();
+            }
+        },
+        addRemainderToCustomer: function (e) {
+            var creditCode = $(e.currentTarget).attr('data-mz-credit-code-to-tie-to-customer'),
+                isEnabled = $(e.currentTarget).prop('checked') === true;
+            this.model.addRemainingCreditToCustomerAccount(creditCode, isEnabled);
+        },
+        handleEnterKey: function (e) {
+            var source = $(e.currentTarget).attr('data-mz-value');
+            if (!source) return;
+            switch (source) {
+                case "creditAmountApplied":
+                    return this.applyDigitalCredit(e);
+                case "digitalCreditCode":
+                    return this.getDigitalCredit(e);
+            }
+        }
     });
 
     var CouponView = Backbone.MozuView.extend({
@@ -183,6 +270,8 @@
             this.$el.addClass('is-loading');
             this.model.addCoupon().ensure(function() {
                 self.$el.removeClass('is-loading');
+                self.model.unset('couponCode');
+                self.render();
             });
         },
         handleEnterKey: function () {

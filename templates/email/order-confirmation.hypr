@@ -27,13 +27,13 @@
            <tr>
 
                 <td>
-                    <b>Billing Information</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
+                    <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
                         {% if model.billingInfo.paymentType == "CreditCard" %}
-                            <b>Payment Method</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}
+                            <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}
                         {% endif %}
 
                         {% if model.billingInfo.paymentType == "PaypalExpress" %}
-                            <b>Payment Method</b>: PayPal Express
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
                         {% endif %}
                 </td>
             </tr>

@@ -4,9 +4,21 @@
 </h3>
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
-        {% for payment in model.activePayments %}
-        {% if payment.billingInfo.paymentType == "Check" %}
-        <div class="mz-l-stack-section">
+      {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
+      <div class="mz-l-stack-section mz-checkout-payment">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h4>
+          {% for payment in model.activeStoreCredits %}
+          <div class="mz-l-stack-section">
+            <span>
+              <strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.storeCreditCode }}
+            </span>
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+      {% for payment in model.activePayments %}
+      {% if payment.billingInfo.paymentType == "Check" %}
+      <div class="mz-l-stack-section mz-checkout-payment">
             <h4 class="mz-l-stack-sectiontitle">{{ payment.billingInfo.paymentType }}</h4>
             <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.check.checkNumber }}</span>
             <dl class="mz-propertylist">
@@ -20,7 +32,7 @@
         </div>
         {% endif %}
         {% if payment.billingInfo.paymentType == "CreditCard" %}
-        <div class="mz-l-stack-section">
+        <div class="mz-l-stack-section mz-checkout-payment">
             <h4 class="mz-l-stack-sectiontitle">{{ payment.billingInfo.paymentType }}</h4>
             <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ model.card.cardNumberPartOrMask }}</span>
             <dl class="mz-propertylist">
@@ -34,18 +46,23 @@
         </div>
         {% endif %}
         {% if payment.billingInfo.paymentType == "PaypalExpress" %}
-        <div class="mz-l-stack-section">
+        <div class="mz-l-stack-section mz-checkout-payment">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paypalExpress }}</h4>
-            <span>{{ labels.paypalExpressSummary }}</span>
+            <span>
+                <strong>{{ model.nonStoreCreditTotal|currency }}</strong> &mdash; {{ labels.paypalExpressSummary }}
+            </span>
+            <dl class="mz-propertylist">
+                <dt>{{ labels.billingAddress }}</dt>
+                <dd>
+                    <div class="mz-addresssummary">
+                        {% include "modules/common/address-summary" with model=payment.billingInfo.billingContact %}
+                    </div>
+                </dd>
+            </dl>
         </div>
         {% endif %}
-        {% if payment.billingInfo.paymentType == "StoreCredit" %}
-        <div class="mz-l-stack-section">
-        <h4 class="mz-l-stack-sectiontitle">{{ labels.storeCredit }}</h4>
-        <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.storeCreditCode }}</span> 
-        </div>
-        {% endif %}
-        {% endfor %}
+      
+      {% endfor %} 
 
         {% if model.billingContact.email %}
         <div class="mz-l-stack-section">
@@ -56,12 +73,10 @@
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-        {% if model.availableStoreCredits || model.activeStoreCredits %}
-        {% include "modules/checkout/checkout-store-credit" %}
-        {% endif %}
-
-        {% if model.nonStoreCreditTotal > 0 %}
-        <div class="mz-l-stack-section">
+      {% include "modules/checkout/checkout-digital-credit" %}
+     
+      {% if model.nonStoreCreditTotal > 0 %}
+      <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
             <div class="mz-l-formfieldgroup">
                 {% if model.savedPaymentMethods %}

@@ -1,6 +1,6 @@
 ﻿define([
     "modules/jquery-mozu",
-    "shim!vendor/underscore>_",
+    "underscore",
     "hyprlive",
     "modules/backbone-mozu",
     "modules/api",
@@ -12,7 +12,7 @@
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus', 'requiresFulfillmentInfo'],
+            helpers: ['stepStatus', 'requiresFulfillmentInfo', 'requiresDigitalFulfillmentContact'],  //
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -53,6 +53,9 @@
             requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
             },
+            requiresDigitalFulfillmentContact: function () {
+                return this.getOrder().get('requiresDigitalFulfillmentContact');
+            },
             edit: function () {
                 this.stepStatus("incomplete");
             },
@@ -64,6 +67,12 @@
         FulfillmentContact = CheckoutStep.extend({
             relations: CustomerModels.Contact.prototype.relations,
             validation: CustomerModels.Contact.prototype.validation,
+            digitalOnlyValidation: {
+                "email": {
+                    pattern: 'email',
+                    msg: Hypr.getLabel('emailMissing')
+                } 
+            },
             dataTypes: {
                 contactId: Backbone.MozuModel.DataTypes.Int
             },
@@ -78,6 +87,7 @@
                     if (!newContactId || newContactId === "new") {
                         model.get('address').clear();
                         model.get('phoneNumbers').clear();
+                        model.unset('id');
                         model.unset('firstName');
                         model.unset('lastNameOrSurname');
                     } else {
@@ -86,7 +96,11 @@
                 });
             },
             calculateStepStatus: function () {
-                if (!this.requiresFulfillmentInfo()) return this.stepStatus("complete");
+                if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact()) {
+                    this.validation = this.digitalOnlyValidation;
+                }
+
+                if (!this.requiresFulfillmentInfo() && !this.requiresDigitalFulfillmentContact()) return this.stepStatus("complete");
                 return CheckoutStep.prototype.calculateStepStatus.apply(this);
             },
             getOrder: function () {
@@ -95,21 +109,42 @@
             },
             choose: function (e) {
                 var idx = parseInt($(e.currentTarget).val());
-                if (idx != -1) {
+                if (idx !== -1) {
                     var addr = this.get('address');
                     var valAddr = addr.get('candidateValidatedAddresses')[idx];
                     for (var k in valAddr) {
                         addr.set(k, valAddr[k]);
                     }
                 }
-                this.next();
             },
             toJSON: function () {
-                if (this.requiresFulfillmentInfo()) {
+                if (this.requiresFulfillmentInfo() || this.requiresDigitalFulfillmentContact()) {
                     return CheckoutStep.prototype.toJSON.apply(this, arguments);
                 }
             },
+            isDigitalValid: function() {
+                var email = this.get('email');
+                return (!email) ? false : true;
+            },
+            nextDigitalOnly: function () {
+                var order = this.getOrder(),
+                    me = this;
+                if (this.validate()) return false;
+                this.getOrder().apiModel.update({ fulfillmentInfo: me.toJSON() }).ensure(function () {
+                    me.provisional = false;
+                    me.isLoading(false);
+                    order.messages.reset();
+                    order.syncApiModel();
+
+                    me.calculateStepStatus();
+                    return order.get('billingInfo').calculateStepStatus();
+                });
+            },
             next: function () {
+                if (!this.requiresFulfillmentInfo() && this.requiresDigitalFulfillmentContact()) {
+                    return this.nextDigitalOnly();
+                }
+
                 if (this.validate()) return false;
                 var parent = this.parent,
                     order = this.getOrder(),
@@ -132,7 +167,7 @@
                         parent.isLoading(false);
                         me.calculateStepStatus();
                         parent.calculateStepStatus();
-                    });
+                    });                  
                 };
 
                 var promptValidatedAddress = function () {
@@ -156,8 +191,7 @@
                                     }
                                 addr.set('candidateValidatedAddresses', resp.data.addressCandidates);
                                 promptValidatedAddress();
-                            }
-                            else {
+                            } else {
                                 completeStep();
                             }
                         }, function (e) {
@@ -251,7 +285,8 @@
                 card: PaymentMethods.CreditCard,
                 check: PaymentMethods.Check
             },
-            helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply', 'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments'],
+            helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
+                'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'availableDigitalCredits', 'digitalCreditPaymentTotal', 'isAnonymousShopper'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
@@ -259,13 +294,16 @@
                 return this.getOrder().apiModel.getActivePayments();
             },
             nonStoreCreditTotal: function () {
-                var order = this.getOrder(),
+                var me = this,
+                    order = this.getOrder(),
                     total = order.get('total'),
+                    result,
                     activeCredits = this.activeStoreCredits();
                 if (!activeCredits) return total;
-                return total - _.reduce(activeCredits, function (sum, credit) {
+                result = total - _.reduce(activeCredits, function (sum, credit) {
                     return sum + credit.amountRequested;
                 }, 0);
+                return me.roundToPlaces(result, 2);
             },
             savedPaymentMethods: function () {
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
@@ -280,7 +318,9 @@
                     customer = order.get('customer'),
                     credits = customer && customer.get('credits'),
                     usedCredits = this.activeStoreCredits(),
-                    availableCredits = credits && _.compact(_.map(credits, function (credit) {
+                    availableCredits = credits && _.compact(_.map(credits.models, function (credit) {
+                        if (!(credit.creditType === 'StoreCredit' || credit.creditType === 'GiftCard'))
+                            return false;
                         credit = _.clone(credit);
                         if (usedCredits) _.each(usedCredits, function (uc) {
                             if (uc.billingInfo.storeCreditCode === credit.code) {
@@ -291,6 +331,7 @@
                     }));
                 return availableCredits && availableCredits.length > 0 && availableCredits;
             },
+
             applyingCredit: function () {
                 return this._applyingCredit;
             },
@@ -310,7 +351,7 @@
                         this.set('creditAmountToApply', this.maxCreditAmountToApply());
                     }
                 }
-            },
+            },            
             closeApplyCredit: function () {
                 delete this._applyingCredit;
                 this.unset('selectedCredit');
@@ -339,6 +380,276 @@
                     return o; // return order.get('customer').getCredits();
                 });
             },
+
+            // digital
+
+            onCreditAmountChanged: function(digCredit, amt) {
+                this.applyDigitalCredit(digCredit.get('code'), amt);
+            },
+
+            loadCustomerDigitalCredits: function () {
+                var self = this,
+                    order = this.getOrder(),
+                    customer = order.get('customer'),
+                    activeCredits = this.activeStoreCredits();
+
+                var customerCredits = customer.get('credits');
+                if (customerCredits && customerCredits.length > 0) {
+                    var currentDate = new Date(),
+                        unexpiredDate = new Date(2076, 6, 4);
+
+                    // todo: refactor so conversion & get can re-use - Greg Murray on 2014-07-01 
+                    var invalidCredits = customerCredits.filter(function(cred) {
+                        var credBalance = cred.get('currentBalance'),
+                            credExpDate = cred.get('expirationDate');
+                        var expDate = (credExpDate) ? new Date(credExpDate) : unexpiredDate;
+                        return (!credBalance || credBalance <= 0 || expDate < currentDate);
+                    });
+                    _.each(invalidCredits, function(inv) {
+                        customerCredits.remove(inv);
+                    });
+                }
+                self._cachedDigitalCredits = customerCredits;
+
+                if (activeCredits) {
+                    var userEnteredCredits = _.filter(activeCredits, function(activeCred) {
+                        var existingCustomerCredit = self._cachedDigitalCredits.findWhere({ code: activeCred.billingInfo.storeCreditCode });
+                        if (!existingCustomerCredit) {
+                            return true;
+                        }
+                        //apply pricing update.
+                        existingCustomerCredit.set('isEnabled', true);
+                        existingCustomerCredit.set('creditAmountApplied', activeCred.amountRequested);
+                        existingCustomerCredit.set('remainingBalance', existingCustomerCredit.calculateRemainingBalance());
+                        return false;
+                    });
+                    if (userEnteredCredits) {
+                        this.convertPaymentsToDigitalCredits(userEnteredCredits, customer);
+                    }
+                }
+
+            },
+
+            convertPaymentsToDigitalCredits: function(activeCredits, customer) {
+                var me = this;
+                _.each(activeCredits, function (activeCred) {
+                    var currentCred = activeCred;
+                    return me.retrieveDigitalCredit(customer, currentCred.billingInfo.storeCreditCode, me, currentCred.amountRequested).then(function(digCredit) {
+                        me.trigger('orderPayment', me.getOrder().data, me);
+                        return digCredit;
+                    });
+                });
+            },
+
+            availableDigitalCredits: function () {
+                if (! this._cachedDigitalCredits) { 
+                    this.loadCustomerDigitalCredits();
+                }
+                return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
+            },
+
+            applyDigitalCredit: function (creditCode, creditAmountToApply, isEnabled) {
+                var self = this,
+                    order = self.getOrder(),
+                    maxCreditAvailable = null;
+
+                this._oldPaymentType = this.get('paymentType');
+                var digitalCredit = this._cachedDigitalCredits.filter(function(cred) {
+                     return cred.get('code') === creditCode;
+                });
+
+                if (! digitalCredit || digitalCredit.length === 0) {
+                    return self.deferredError(Hypr.getLabel('digitalCodeAlreadyUsed', creditCode), self);
+                }
+                digitalCredit = digitalCredit[0];
+                var previousAmount = digitalCredit.get('creditAmountApplied');
+                var previousEnabledState = digitalCredit.get('isEnabled');
+
+                if (!creditAmountToApply) {
+                    creditAmountToApply = self.getMaxCreditToApply(digitalCredit, self);
+                }
+                
+                digitalCredit.set('creditAmountApplied', creditAmountToApply);
+                digitalCredit.set('remainingBalance',  digitalCredit.calculateRemainingBalance());
+                digitalCredit.set('isEnabled', isEnabled);
+
+                //need to round to prevent being over total by .01
+                if (creditAmountToApply > 0) {
+                    creditAmountToApply = self.roundToPlaces(creditAmountToApply, 2);
+                }
+
+                var activeCreditPayments = this.activeStoreCredits();
+                if (activeCreditPayments) {
+                    //check if payment applied with this code, remove
+                    var sameCreditPayment = _.find(activeCreditPayments, function (cred) {
+                        return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode === creditCode;
+                    });
+
+                    if (sameCreditPayment) {
+                        if (this.areNumbersEqual(sameCreditPayment.amountRequested, creditAmountToApply)) {
+                            var deferredSameCredit = api.defer();
+                            deferredSameCredit.reject();
+                            return deferredSameCredit.promise;
+                        }
+                        if (creditAmountToApply === 0) {
+                            return order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
+                                order.set(o.data);
+                                self.trigger('orderPayment', o.data, self);
+                                return o;
+                            });
+                        } else {
+                            maxCreditAvailable = self.getMaxCreditToApply(digitalCredit, self, sameCreditPayment.amountRequested);
+                            if (creditAmountToApply > maxCreditAvailable) {
+                                digitalCredit.set('creditAmountApplied', previousAmount);
+                                digitalCredit.set('isEnabled', previousEnabledState);
+                                digitalCredit.set('remainingBalance', digitalCredit.calculateRemainingBalance());
+                                return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+                            }
+                            return order.apiVoidPayment(sameCreditPayment.id).then(function (o) {
+                                order.set(o.data);
+                                
+                                return order.apiAddStoreCredit({
+                                    storeCreditCode: creditCode,
+                                    amount: creditAmountToApply
+                                }).then(function (o) {
+                                    order.set(o.data);
+                                    self.trigger('orderPayment', o.data, self);
+                                    return o;
+                                });
+                            });
+                        }
+                    }
+                }
+                if (creditAmountToApply === 0) {
+                    return this.getOrder();
+                }
+
+                maxCreditAvailable = self.getMaxCreditToApply(digitalCredit, self);
+                if (creditAmountToApply > maxCreditAvailable) {
+                    digitalCredit.set('creditAmountApplied', previousAmount);
+                    digitalCredit.set('remainingBalance', digitalCredit.calculateRemainingBalance());
+                    digitalCredit.set('isEnabled', previousEnabledState);
+                    return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+                }
+
+                return order.apiAddStoreCredit({
+                    storeCreditCode: creditCode,
+                    amount: creditAmountToApply
+                }).then(function (o) {
+                    order.set(o.data);
+                    self.trigger('orderPayment', o.data, self);
+                    return o;
+                });
+            },
+
+            deferredError: function deferredError(msg, scope) {
+                scope.trigger('error', {
+                    message: msg
+                });
+                var deferred = api.defer();
+                deferred.reject();
+
+                return deferred.promise;
+            },
+
+            areNumbersEqual: function(f1, f2) {
+                var epsilon = 0.01; 
+                return (Math.abs(f1 - f2)) < epsilon; 
+            },
+
+            retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
+                return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
+                    var creditModel = new PaymentMethods.DigitalCredit(credit.data);
+                    creditModel.set("isTiedToCustomer", false);
+
+                    // todo: add validation call (expired 0 balance.) - Greg Murray on 2014-07-01 
+                    if (!creditModel.get('currentBalance')) {
+                        creditModel.set('currentBalance', creditModel.get('initialBalance'));
+                    }
+                    var maxAmt = me.getMaxCreditToApply(creditModel, me, amountRequested);
+                    if (!!amountRequested && amountRequested < maxAmt) {
+                        maxAmt = amountRequested;
+                    }
+                    creditModel.set('creditAmountApplied', maxAmt);
+                    creditModel.set('remainingBalance', creditModel.calculateRemainingBalance());
+                    creditModel.set('isEnabled', true);
+
+                    me._cachedDigitalCredits.push(creditModel);
+                    me.applyDigitalCredit(creditCode, maxAmt, true);
+                    me.trigger('sync', creditModel);
+                    return creditModel;
+                });
+            },
+
+            getDigitalCredit: function () {
+                var me = this,
+                    order = me.getOrder(),
+                    customer = order.get('customer');
+                var creditCode = this.get('digitalCreditCode');
+
+                var existingDigitalCredit = this._cachedDigitalCredits.filter(function (cred) {
+                    return cred.get('code') === creditCode;
+                });
+                if (existingDigitalCredit && existingDigitalCredit.length > 0){
+                    me.trigger('error', {
+                        message: Hypr.getLabel('digitalCodeAlreadyUsed', creditCode)
+                    });
+                    // to maintain promise api
+                    var deferred = api.defer();
+                    deferred.reject();
+                    return deferred.promise;
+                }
+                me.isLoading(true);
+                return me.retrieveDigitalCredit(customer, creditCode, me).then(function() {
+                    return me;
+                });
+            },
+
+            getMaxCreditToApply: function(creditModel, scope, toBeVoidedPayment) {
+                var remainingTotal = scope.nonStoreCreditTotal();
+                if (!!toBeVoidedPayment) {
+                    remainingTotal += toBeVoidedPayment;
+                }
+                var maxAmt = remainingTotal < creditModel.get('currentBalance') ? remainingTotal : creditModel.get('currentBalance');
+                return scope.roundToPlaces(maxAmt, 2);
+            },
+
+            roundToPlaces: function(amt, numberOfDecimalPlaces) {
+                var transmogrifier = Math.pow(10, numberOfDecimalPlaces);
+                return Math.round(amt * transmogrifier) / transmogrifier;
+            },
+
+            digitalCreditPaymentTotal: function () {
+                var activeCreditPayments = this.activeStoreCredits();
+                if (!activeCreditPayments)
+                    return null;
+                return _.reduce(activeCreditPayments, function (sum, credit) {
+                    return sum + credit.amountRequested;
+                }, 0);
+            },
+
+            addRemainingCreditToCustomerAccount: function(creditCode, isEnabled) {
+                var self = this;
+
+                var digitalCredit = self._cachedDigitalCredits.findWhere({ code: creditCode });
+
+                if (!digitalCredit) {
+                    return self.deferredError(Hypr.getLabel('genericNotFound'), self);
+                }
+                digitalCredit.set('addRemainderToCustomer', isEnabled);
+                return digitalCredit;
+            },
+
+            getDigitalCreditsToAddToCustomerAccount: function() {
+                return this._cachedDigitalCredits.where({ isEnabled: true, addRemainderToCustomer: true, isTiedToCustomer: false });
+            },
+
+            isAnonymousShopper: function() {
+                var order = this.getOrder(),
+                    customer = order.get('customer');
+                return (!customer || !customer.id || customer.id <= 1);
+            },
+
             removeCredit: function (id) {
                 var order = this.getOrder(),
                     currentPayment = order.apiModel.getCurrentPayment();
@@ -395,11 +706,13 @@
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
 
+                this._cachedDigitalCredits = null;
+
                 _.bindAll(this, 'applyPayment', 'addStoreCredit');
             },
             selectPaymentType: function (me, newPaymentType) {
-                me.get('check').selected = newPaymentType == "Check";
-                me.get('card').selected = newPaymentType == "CreditCard";
+                me.get('check').selected = newPaymentType === "Check";
+                me.get('card').selected = newPaymentType === "CreditCard";
             },
             calculateStepStatus: function () {
                 var fulfillmentComplete = this.parent.get('fulfillmentInfo').stepStatus() === "complete",
@@ -530,7 +843,7 @@
                             _.defer(function() {
                                 self.isReady(allStepsComplete());
                             });
-                        })
+                        });
                     });
 
                     if (!self.get("requiresFulfillmentInfo")) {
@@ -552,7 +865,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'saveCustomerCardForNewCustomer', 'saveCustomerCardForCurrentCustomer', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact', 'addPrimaryBillingContact', 'addPrimaryShippingContact', 'addPrimaryShippingAndBillingContact');
 
 
 
@@ -576,7 +889,10 @@
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
                     me.set('couponCode', '');
                     var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
-                    if (!allDiscounts || !_.findWhere(allDiscounts, { couponCode: code })) {
+                    var lowerCode = code.toLowerCase();
+                    if (!allDiscounts || !_.find(allDiscounts, function(d) {
+                        return d.couponCode.toLowerCase() === lowerCode;
+                    })) {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
@@ -654,10 +970,54 @@
                     throw error;
                 });
             },
-            saveCustomerCard: function (cust) {
+            addPrimaryBillingContact: function() {
+                return this.addCustomerContact('billingInfo', 'billingContact', [{ name: 'Billing', isPrimary: true }]);
+            },
+            addBillingContact: function () {
+                return this.addCustomerContact('billingInfo', 'billingContact', [{ name: 'Billing', isPrimary: false }]);
+            },
+            addPrimaryShippingContact: function () {
+                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: true }]);
+            },
+            addShippingContact: function () {
+                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: false }]);
+            },
+            addPrimaryShippingAndBillingContact: function () {
+                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: true }, { name: 'Billing', isPrimary: true }]);
+            },
+            addShippingAndBillingContact: function () {
+                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: false }, { name: 'Billing', isPrimary: false }]);
+            },
+            addCustomerContact: function (infoName, contactName, contactTypes) {
+                var customer = this.get('customer'),
+                    contactInfo = this.get(infoName),
+                    contact = contactInfo.get(contactName).toJSON(),
+
+                    saveContact = function () {
+                        if (contact.id === -1 || contact.id === 1) delete contact.id;
+                        return customer.apiModel.addContact(contact).then(function (contactResult) {
+                            contact.id = contactResult.data.id;
+                            return contactResult;
+                        });
+                    };
+
+                var contactId = contact.contactId;
+                if (contactId) contact.id = contactId;
+
+                if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === "new") {
+                    contact.types = contactTypes;
+                    return saveContact();
+                } else {
+                    var deferred = api.defer();
+                    deferred.resolve();
+                    return deferred.promise;
+                }
+            },
+            saveCustomerCard: function (isPrimaryAddress) {
                 var order = this,
                     customer = this.get('customer'), //new CustomerModels.EditableCustomer(this.get('customer').toJSON()),
                     billingInfo = this.get('billingInfo'),
+                    isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
                     billingContact = billingInfo.get('billingContact').toJSON(),
                     card = billingInfo.get('card'),
                     doSaveCard = function () {
@@ -669,7 +1029,7 @@
                             return card;
                         });
                     },
-                    saveContactFirst = function () {
+                    saveBillingContactFirst = function () {
                         if (billingContact.id === -1 || billingContact.id === 1) delete billingContact.id;
                         return customer.apiModel.addContact(billingContact).then(function (contact) {
                             billingContact.id = contact.data.id;
@@ -681,20 +1041,47 @@
                 if (contactId) billingContact.id = contactId;
 
                 if (!billingContact.id || billingContact.id === -1 || billingContact.id === 1 || billingContact.id === "new") {
-                    return saveContactFirst().then(doSaveCard);
+                    billingContact.types = !isSameBillingShippingAddress ? [{ name: 'Billing', isPrimary: isPrimaryAddress }] : [{ name: 'Shipping', isPrimary: isPrimaryAddress }, { name: 'Billing', isPrimary: isPrimaryAddress }];
+                    return saveBillingContactFirst().then(doSaveCard);
                 } else {
                     return doSaveCard();
                 }
+            },
+            saveCustomerCardForNewCustomer: function () {
+                return this.saveCustomerCard(true);
+            },
+            saveCustomerCardForCurrentCustomer: function () {
+                return this.saveCustomerCard(false);
             },
             syncBillingAndCustomerEmail: function () {
                 var billingEmail = this.get('billingInfo').get('billingContact').get('email'),
                     customerEmail = this.get('emailAddress');
                 if (!customerEmail) this.set('emailAddress', billingEmail);
             },
+            addDigitalCreditToCustomerAccount: function () {
+                var billingInfo = this.get('billingInfo'),
+                    customer = this.get('customer');
+
+                var digitalCredits = billingInfo.getDigitalCreditsToAddToCustomerAccount();
+                if (!digitalCredits)
+                    return;
+                return _.each(digitalCredits, function (cred) {
+                    return customer.apiAddStoreCredit(cred.get('code'));
+                });
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
-                    process = [this.update];
+                    isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
+                    isSavingCreditCard = false,
+                    isSavingNewCustomer = (this.get("createAccount") && !this.customerCreated),
+                    isAuthenticated = require.mozuData('user').isAuthenticated,
+                    process = [function() {
+                        return order.update({
+                            ipAddress: order.get('ipAddress'),
+                            shopperNotes: order.get('shopperNotes').toJSON()
+                        });
+                    }];
 
                 if (this.isSubmitting) return;
 
@@ -708,24 +1095,52 @@
                 }
                 this.isLoading(true);
 
-                if (this.get("createAccount") && !this.customerCreated) {
-                    process.push(this.addNewCustomer);
-                } 
-
-                var card = billingInfo.get('card');
-                if (billingInfo.get('paymentType') === "CreditCard" && card.get('isCardInfoSaved') && (this.get('createAccount') || require.mozuData('user').isAuthenticated)) {
-                    process.push(this.saveCustomerCard);
+                if (isSavingNewCustomer) {
+                    process.push(this.addNewCustomer); 
                 }
 
+                var card = billingInfo.get('card');
+                if (billingInfo.get('paymentType') === "CreditCard" && card.get('isCardInfoSaved') && (this.get('createAccount') || isAuthenticated)) {
+                    isSavingCreditCard = true;
+                    if (isSavingNewCustomer) {
+                        process.push(this.saveCustomerCardForNewCustomer);
+                    } else {
+                        process.push(this.saveCustomerCardForCurrentCustomer);
+                    }
+                }
+
+                if ((this.get('createAccount') || isAuthenticated) && billingInfo.getDigitalCreditsToAddToCustomerAccount().length > 0) {
+                    process.push(this.addDigitalCreditToCustomerAccount);
+                }
+
+                //save contacts
+                if (isSavingNewCustomer) {
+                    if (!isSameBillingShippingAddress && !isSavingCreditCard) {
+                        process.push(this.addPrimaryShippingContact);
+                        process.push(this.addPrimaryBillingContact);
+                    } else if (isSameBillingShippingAddress && !isSavingCreditCard) {
+                        process.push(this.addPrimaryShippingAndBillingContact);
+                    } else if (!isSameBillingShippingAddress && isSavingCreditCard) {
+                        process.push(this.addPrimaryShippingContact);
+                    }
+                } else if (isAuthenticated) {
+                    if (!isSameBillingShippingAddress && !isSavingCreditCard) {
+                        process.push(this.addShippingContact);
+                        process.push(this.addBillingContact);
+                    } else if (isSameBillingShippingAddress && !isSavingCreditCard) {
+                        process.push(this.addShippingAndBillingContact);
+                    } else if (!isSameBillingShippingAddress && isSavingCreditCard) {
+                        process.push(this.addShippingContact);
+                    }
+                }
+               
                 process.push(this.apiCheckout);
-                
                 
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 
             },
             update: function() {
                 var j = this.toJSON();
-                delete j.billingInfo;
                 return this.apiModel.update(j);
             },
             isReady: function (val) {

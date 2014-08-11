@@ -1,5 +1,5 @@
 ﻿define(
-    ['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+    ['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, _, api, Backbone, ProductModels) {
         $(function () {
             $('[data-mz-deal-of-the-day]').each(function (index, deal) {
@@ -25,8 +25,17 @@
                 });
 
                 products.then(function (collection) {
-                    var productCollection = new ProductModels.ProductCollection(collection.data),
-                        dealView;
+                    var data = collection.data,
+                        productCollection, dealView;
+
+                    data.items = _.filter(data.items, function (item) {
+                        var discount = item.price.discount;
+
+                        return discount && discount.discount.discountId === config.discountId;
+                    });
+                    data.totalCount = data.items.length;
+
+                    productCollection = new ProductModels.ProductCollection(data);
 
                     if (productCollection.attributes.totalCount === 0) {
                         throw "Deal of the Day: there are no products to show for the selected discount.";

@@ -2,7 +2,7 @@
 
     <div class="mz-loc-dialog">
 
-        <h1>Store Information</h1>
+        <h1>{{ labels.storeInformation }}</h1>
 
         <div class="mz-loc-store-address">
             <div class="mz-loc-name">
@@ -17,7 +17,7 @@
             </div>
 
             {% if model.phone %}
-                <div>Phone: {{model.phone}}
+                <div>{{ labels.phone }}: {{model.phone}}
             {% endif %}
         </div>
 

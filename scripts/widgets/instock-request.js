@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'hyprlive', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+define(['modules/jquery-mozu', 'hyprlive', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, Hypr, _, api, Backbone, ProductModels, UserModels) {
         
         function getExistingNotifications() {

@@ -1,28 +1,28 @@
 ﻿{% block credit-card-form %}
-    <div class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-row mz-payment-credit-card-type-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-credit-card-type">{{ labels.cardType }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-			<select id="mz-payment-credit-card-type" data-mz-value="{{ cardcontext }}paymentOrCardType">
-				<option></option>
-				{% if siteContext.checkoutSettings.supportedCards.visa %}
-				<option value="VISA" {% if model.paymentOrCardType == "VISA" %}selected="selected"{% endif %}>Visa</option>
-				{% endif %}
-				{% if siteContext.checkoutSettings.supportedCards.mc %}
-				<option value="MC" {% if model.paymentOrCardType == "MC" %}selected="selected"{% endif %}>MasterCard</option>
-				{% endif %}
-				{% if siteContext.checkoutSettings.supportedCards.amex %}
-				<option value="AMEX" {% if model.paymentOrCardType == "AMEX" %}selected="selected"{% endif %}>American Express</option>
-				{% endif %}
-				{% if siteContext.checkoutSettings.supportedCards.discover %}
-				<option value="DISCOVER" {% if model.paymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>Discover</option>
-				{% endif %}
-			</select>
+     <select id="mz-payment-credit-card-type" data-mz-value="{{ cardcontext }}paymentOrCardType">
+        <option></option>
+        {% if siteContext.checkoutSettings.supportedCards.visa %}
+        <option value="VISA" {% if model.paymentOrCardType == "VISA" %}selected="selected"{% endif %}>{{ labels.ccVisa }}</option>
+        {% endif %}
+        {% if siteContext.checkoutSettings.supportedCards.mc %}
+        <option value="MC" {% if model.paymentOrCardType == "MC" %}selected="selected"{% endif %}>{{ labels.ccMastercard }}</option>
+        {% endif %}
+        {% if siteContext.checkoutSettings.supportedCards.amex %}
+        <option value="AMEX" {% if model.paymentOrCardType == "AMEX" %}selected="selected"{% endif %}>{{ labels.ccAmericanExpress }}</option>
+        {% endif %}
+        {% if siteContext.checkoutSettings.supportedCards.discover %}
+        <option value="DISCOVER" {% if model.paymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>{{ labels.ccDiscover }}</option>
+        {% endif %}
+    </select>
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}paymentOrCardType"</span>
         </div>
     </div>
-    <div class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-row mz-payment-credit-card-number-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-credit-card-number">{{ labels.cardNumber }}<span class="is-required"> *</span>:</label>
         </div>
@@ -31,7 +31,7 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cardNumberPartOrMask"></span>
         </div>
     </div>
-    <div class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-row mz-payment-credit-card-name-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-credit-card-name">{{ labels.nameOnCard }}<span class="is-required"> *</span>:</label>
         </div>
@@ -40,7 +40,7 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}nameOnCard"></span>
         </div>
     </div>
-    <div class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-row mz-payment-credit-card-expiration-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-expiration-month">{{ labels.expires }}<span class="is-required"> *</span>:</label>
         </div>
@@ -77,14 +77,14 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}expireYear"></span>
         </div>
     </div>
-    <div class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-row mz-payment-credit-card-securitycode-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-security-code">{{ labels.securityCode }}<span class="is-required"> *</span>:</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="{{ cardcontext }}cvv" value="{{ model.cvv }}">
+            <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="{{ cardcontext }}cvv" value="{{ model.cvv }}" autocomplete="off">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cvv"></span>
         </div>
     </div>
-    
+
 {% endblock credit-card-form %}

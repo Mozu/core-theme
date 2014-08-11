@@ -4,6 +4,8 @@
 
 {% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %}
 
+{% block site-nav %}{% endblock site-nav %}
+
 {% block body-content %}
 
 {% require_script "pages/checkout" %}
