@@ -222,7 +222,7 @@ Ext.define('Taco.view.website.Index', {
                                             iframeOffset.setWidth(0);
                                         }
                                     }, {
-                                        text: 'IPhone 5',
+                                        text: 'Phone (480px)',
                                         xtype: 'menucheckitem',
                                         group: 'resolutions',
                                         handler: function () {
@@ -230,29 +230,18 @@ Ext.define('Taco.view.website.Index', {
                                                 iframeOffset = me.down('#iframeOffset'),
                                                 iframeOffsetW = iframeOffset.getWidth();
 
-                                            iframeOffset.setWidth(iframeOffsetW + iframeW - 320);
-                                        }
-                                    }, {
-                                        text: '360',
-                                        xtype: 'menucheckitem',
-                                        group: 'resolutions',
-                                        handler: function () {
-                                            var iframeW = me.iframe.getWidth(),
-                                                iframeOffset = me.down('#iframeOffset'),
-                                                iframeOffsetW = iframeOffset.getWidth();
-
-                                            iframeOffset.setWidth(iframeOffsetW + iframeW - 360);
+                                            iframeOffset.setWidth(iframeOffsetW + iframeW - 480);
                                         }
                                     },
                                     {
-                                        text: 'Ipad',
+                                        text: 'Tablet (768px)',
                                         xtype: 'menucheckitem',
                                         group: 'resolutions',
                                         handler: function () {
                                             var iframeW = me.iframe.getWidth(),
                                                 iframeOffset = me.down('#iframeOffset'),
                                                 iframeOffsetW = iframeOffset.getWidth();
-                                            iframeOffset.setWidth(iframeOffsetW + iframeW - 1024);
+                                            iframeOffset.setWidth(iframeOffsetW + iframeW - 768);
                                         }
                                     }
                                 ]
