@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
@@ -51,6 +52,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private byte[] _hash;
         private string _hashString;
 
+        public bool SiteExists { get; set; }
+
         private Task _initTask;
         private Dictionary<string, string> _labels;
         private bool? _supportsInStorePickup;
@@ -62,6 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private string _themeOverrideId = null;
         public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ILocationSettingsWebApiClient locationSettingsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,  HttpRequestMessage requestMessage)
         {
+            SiteExists = true;
             _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
             _themeSettingsRepository = themeSettingsRepository;
             _themeRepository = themeRepository;
@@ -338,6 +342,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 Task<Task<SiteContext>> initTask = settingsServiceTasks.ContinueWith(task =>
                 {
                     MD5 md5 = new MD5CryptoServiceProvider();
+                    if (siteTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        this.SiteExists = false;
+                        return  Task<SiteContext>.FromResult(this);
+                    }
                     var sitesDc = siteTask.Result.ReadAsSync();
                     this.Domains = new SiteDomains(_currentHost, Mapper.Map<List<SiteDomain>>(sitesDc.Domains));
                 

@@ -10,6 +10,7 @@ using System.Web.Http.Filters;
 using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Core.Logging;
@@ -24,6 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
         public override bool AllowMultiple { get { return false; } }
 
+      
 
 
         Task<HttpResponseMessage> IActionFilter.ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
@@ -42,11 +44,22 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             }
             else
             {
-                return continuation();
+                return continuation().ContinueWith(x =>
+                {
+                    var sc = actionContext.Request.Resolve<SiteContext>();
+                    if (!sc.SiteExists)
+                    {
+                        HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Redirect);
+                        redir.Headers.Location = new Uri("/admin/auth/launchpad", UriKind.Relative);
+                        return redir;
+                    }
+                    return x.Result;
+                }
+                );
             }
 
         }
-
        
     }
+  
 }
