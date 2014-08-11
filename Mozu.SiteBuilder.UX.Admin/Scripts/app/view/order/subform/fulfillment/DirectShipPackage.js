@@ -98,6 +98,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 }, {
                     html: this.packageData.shippingMethodName
                 }, {
+                    margin: '8 0 0 0',
                     tpl: [
                         '<span class="label">Total Weight:</span><br>{weight}'
                     ],
