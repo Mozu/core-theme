@@ -222,7 +222,7 @@ Ext.define('Taco.view.order.Split', {
     showAndHideSplitActions: function (toolbar) {
         var record = this.getRecord();
         var editorActions = ['cancelActionButton', 'saveActionButton', 'next', 'previous'];
-        console.log('show and hide', record);
+
         toolbar = toolbar || this.header.down('toolbar');
         toolbar.items.each(function (cmp) {
             var id = cmp.getItemId ? cmp.getItemId() : null;
