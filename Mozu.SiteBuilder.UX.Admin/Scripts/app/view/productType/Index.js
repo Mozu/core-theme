@@ -95,7 +95,7 @@ Ext.define('Taco.view.productType.Index', {
 
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('producttype/edit/' + record.getId(), { complexMetaData: { record: record } });
+            Taco.core.StateManager.attemptNavigate('producttypes/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
         return;
     }
