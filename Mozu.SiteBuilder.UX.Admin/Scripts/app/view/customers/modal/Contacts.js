@@ -44,7 +44,8 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     record: this.record,
                     itemId: 'customerContacts',
                     order: this.order,
-                    width: '100%'
+                    width: '100%',
+                    autoAddContact: true
                 }), {
 
                     scope: this
