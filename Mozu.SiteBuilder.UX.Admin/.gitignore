@@ -32,3 +32,7 @@ Scripts/build/
 Scripts/.sencha/workspace/
 Scripts/bootstrap.css
 Scripts/sass/example/
+
+
+# UNIT TESTS
+Tests/AllUnitTests.js
