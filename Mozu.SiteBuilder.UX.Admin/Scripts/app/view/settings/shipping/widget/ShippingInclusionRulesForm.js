@@ -3,7 +3,7 @@
     alias: 'widget.shippinginclusionrulesform',
 
     title: 'Shipping Methods Configuration',
-
+    showAllMethodsWhenMethodsAreEmpty: true,
 
     createRoute: 'shipping/shippingMethodCreate',
     editRoute: 'shipping/shippingMethodEdit',

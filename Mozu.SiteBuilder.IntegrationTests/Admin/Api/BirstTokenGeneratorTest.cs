@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
         private const string SPACE_ID_KEY = "BirstSpaceId";
         private const string SSO_PASSWORD_KEY = "BirstSsoPassword";
 
-        [TestCase("happy path case", 9581)]
+        [Ignore, TestCase("happy path case", 9581)]
         public async Task It_Should_Return_Token_When_Calling_Birst_Token_Generator(string scenario, int tenantId)
         {
             //arrange
