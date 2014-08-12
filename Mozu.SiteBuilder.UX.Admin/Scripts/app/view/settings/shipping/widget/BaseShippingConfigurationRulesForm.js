@@ -6,6 +6,7 @@
         'Taco.core.ux.DragHandleColumn'
     ],
     title: '...',
+    showAllMethodsWhenMethodsAreEmpty: false,
 
     getStore: function () {
         console.log('xxx'); //Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingInclusionRules')
@@ -118,7 +119,7 @@
                             });
                             return ret.join(',');
                         } else {
-                            if (me.showFeeColumn) {
+                            if (me.showFeeColumn || me.showAllMethodsWhenMethodsAreEmpty) {
                                 return '[All methods]';
                             }
                             return '[No methods]';
