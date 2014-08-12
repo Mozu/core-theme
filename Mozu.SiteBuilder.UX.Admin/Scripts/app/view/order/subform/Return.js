@@ -113,57 +113,57 @@ Ext.define('Taco.view.order.subform.Return', {
 
         this.setHeaderTitle("Status: <strong>" + Taco.core.util.Common.camelToSpace(this.record.get('returnStatus')) + "</strong>");
 
-        this.getHeader().add([
-            {
-                xtype: 'panelheaderstat',
-                label: "Ordered",
-                value: Ext.Array.sum(Ext.Array.map(this.record.items().getRange(), function(item) {
-                    return Math.max(Ext.Array.sum(Ext.Array.pluck(item.get('bundledProducts') || [], 'quantity')), 1) * item.get('quantity');
-                })),
-            },
-            {
-                xtype: 'panelheaderstat',
-                label: "Fulfilled",
-                value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(Ext.Array.filter(this.record.get('packages'), function(pkg) { return pkg.status === Taco.model.Order.constants.packageStatuses.FULFILLED; }), function(pkg) {
-                    return Ext.Array.pluck(pkg.items, 'quantity');
-                })))
-            },
-            {
-                xtype: 'panelheaderstat',
-                label: "Replaced",
-                value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(this.getReturnsStore().getRange(), function(rtn) {
-                    var status = rtn.get('status'),
-                        statuses = Taco.model.Return.constants.statuses;
-                    return (status === statuses.CLOSED ||
-                        status === statuses.SHIPPED) ? Ext.pluck(rtn.get('items'), 'quantity') : [];
-                })))
-            },
-            {
-                xtype: 'panelheaderstat',
-                label: "Refunded",
-                value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(this.getReturnsStore().getRange(), function(rtn) {
-                    var status = rtn.get('status'),
-                        statuses = Taco.model.Return.constants.statuses;
-                    return (status === statuses.CLOSED ||
-                        status === statuses.REFUNDED) ? Ext.pluck(rtn.get('items'), 'quantity') : [];
-                })))
-            },
-            {
-                xtype: 'tbseparator'
-            },
-            {
-                xtype: 'panelheaderstat',
-                label: 'Order Total',
-                value: this.record.formatCurrency(this.record.get('total')),
-                width: 120
-            },
-            {
-                xtype: 'panelheaderstat',
-                label: 'Refund Total',
-                value: this.record.formatCurrency(this.getReturnsStore().sum('refundAmount') || 0)
-            }
+        // this.getHeader().add([
+        //     {
+        //         xtype: 'panelheaderstat',
+        //         label: "Ordered",
+        //         value: Ext.Array.sum(Ext.Array.map(this.record.items().getRange(), function(item) {
+        //             return Math.max(Ext.Array.sum(Ext.Array.pluck(item.get('bundledProducts') || [], 'quantity')), 1) * item.get('quantity');
+        //         })),
+        //     },
+        //     {
+        //         xtype: 'panelheaderstat',
+        //         label: "Fulfilled",
+        //         value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(Ext.Array.filter(this.record.get('packages'), function(pkg) { return pkg.status === Taco.model.Order.constants.packageStatuses.FULFILLED; }), function(pkg) {
+        //             return Ext.Array.pluck(pkg.items, 'quantity');
+        //         })))
+        //     },
+        //     {
+        //         xtype: 'panelheaderstat',
+        //         label: "Replaced",
+        //         value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(this.getReturnsStore().getRange(), function(rtn) {
+        //             var status = rtn.get('status'),
+        //                 statuses = Taco.model.Return.constants.statuses;
+        //             return (status === statuses.CLOSED ||
+        //                 status === statuses.SHIPPED) ? Ext.pluck(rtn.get('items'), 'quantity') : [];
+        //         })))
+        //     },
+        //     {
+        //         xtype: 'panelheaderstat',
+        //         label: "Refunded",
+        //         value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(this.getReturnsStore().getRange(), function(rtn) {
+        //             var status = rtn.get('status'),
+        //                 statuses = Taco.model.Return.constants.statuses;
+        //             return (status === statuses.CLOSED ||
+        //                 status === statuses.REFUNDED) ? Ext.pluck(rtn.get('items'), 'quantity') : [];
+        //         })))
+        //     },
+        //     {
+        //         xtype: 'tbseparator'
+        //     },
+        //     {
+        //         xtype: 'panelheaderstat',
+        //         label: 'Order Total',
+        //         value: this.record.formatCurrency(this.record.get('total')),
+        //         width: 120
+        //     },
+        //     {
+        //         xtype: 'panelheaderstat',
+        //         label: 'Refund Total',
+        //         value: this.record.formatCurrency(this.getReturnsStore().sum('refundAmount') || 0)
+        //     }
 
-        ])
+        // ])
     },
 
     initCreateButton: function () {

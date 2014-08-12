@@ -219,13 +219,17 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 menuDisabled: true,
                 width: 100
             }, {
-                dataIndex: 'priceSnapshot',
+                dataIndex: 'productLossAmount',
                 text: 'Loss',
                 draggable: false,
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100
+                width: 100,
+                renderer: function (value, meta, record) {
+                    console.log(record);
+                    return value;
+                }
             }, {
                 dataIndex: 'reason',
                 text: 'Reason',
@@ -249,7 +253,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 80
+                width: 80,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder:true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    minValue: 0
+                }
             }],
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
@@ -350,8 +361,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 itemId: 'Reject',
                 text: 'Reject'
             }, {
-                itemId: 'Received',
-                text: 'Received'
+                itemId: 'Await',
+                text: 'Await'
+            }, {
+                itemId: 'Receive',
+                text: 'Receive'
             }, {
                 itemId: 'Restock',
                 text: 'Restock'
