@@ -177,7 +177,17 @@ Ext.define('Taco.view.settings.shipping.Rules', {
                             fn: function (val) {
                                 if (val === 'yes') {
                                     me.store.remove([eventData.record]);
-                                    me.store.sync();
+                                    me.store.sync({
+                                        failure: function (batch) {
+                                            var msg = 'error occurred';
+                                            try {
+                                                msg = batch.exceptions[0].error.remoteException.getMessage();
+                                            } catch (e) {
+                                                
+                                            }
+                                            Taco.app.fireEvent('setmessage', msg, 'error');
+                                        }
+                                    });
                                 }
                             }
                         });
