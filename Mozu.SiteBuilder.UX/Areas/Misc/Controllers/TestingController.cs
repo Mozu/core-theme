@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -33,7 +34,7 @@ using Constants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
-    public class TestingController : BaseApiController
+    public class TestingController : ApiControllerBase
     {
         ISitesWebApiClient _wsRepo;
         ITenantsWebApiClient _tRepo;
