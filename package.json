@@ -1,8 +1,8 @@
 ﻿{
-  "name": "mozu-core5",
+  "name": "mozu-core-theme",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu.",
-  "version": "2.0.0",
+  "version": "5.0.0",
   "devDependencies": {
     "grunt": "~0.4",
     "grunt-bower-task": "~0.4",
