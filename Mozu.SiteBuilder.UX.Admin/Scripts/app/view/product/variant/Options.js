@@ -47,6 +47,8 @@ Ext.define('Taco.view.product.variant.Options', {
                 type: 'hbox',
                 defaultMargins: '0 10 0 0'
             },
+            overflowX: 'auto',
+      
             items: fields
         });
 
@@ -67,8 +69,11 @@ Ext.define('Taco.view.product.variant.Options', {
         this.form.getForm().getFields().each(function (field) {
             var record = options.getById(field.option.getId());
 
-            if (record && !field.getValue().length) options.remove(record);
-            else if (!field.getValue().length) return;
+            if (record && !field.getValue().length) {
+                options.remove(record);
+            } else if (!field.getValue().length) {
+                return;
+            }
 
             if (!record) {
                 record = options.add({

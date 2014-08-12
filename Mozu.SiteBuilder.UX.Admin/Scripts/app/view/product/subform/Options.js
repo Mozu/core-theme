@@ -101,9 +101,7 @@ Ext.define('Taco.view.product.subform.Options', {
     },
 
     loadByProductTypeId: function (value) {
-        var productTypeId = typeof value === 'number'
-            ? value
-            : this.product.get('productTypeId');
+        var productTypeId = typeof value === 'number' ? value : this.product.get('productTypeId');
         this.productType = this.productTypeStore.getById(productTypeId);
         this.rebuild();
     },
