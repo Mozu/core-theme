@@ -173,7 +173,7 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
                 autoLoad: true,
                 catalogId: catalogId,
                 filters: function (record) {
-                    return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
+                    return   Ext.Array.indexOf((me.get('categoryIds') || []),record.getId()) > -1;
                 }
             });
 
@@ -181,7 +181,7 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             me.categoryStore.filter([
                 {
                     filterFn: function (record) {
-                        return (me.get('categoryIds') || []).indexOf(record.getId()) > -1;
+                        return  Ext.Array.indexOf( (me.get('categoryIds') || []), record.getId()) > -1;
                     }
             }]);
 

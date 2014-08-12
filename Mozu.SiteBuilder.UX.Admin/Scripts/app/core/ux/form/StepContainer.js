@@ -105,7 +105,7 @@
             step.addCls('taco-active');
             step.show();
             
-            console.log('show hint', step, this.indexOf(step));
+          //  console.log('show hint', step, this.indexOf(step));
              
             if (parent) {
                 parent.showHint({

@@ -44,9 +44,9 @@ Ext.define('Taco.store.Navigation', {
                     if (item.locAtts) {
                         if (item.locAtts.length == 2 && !(isMultiLang || isMultiCurrency)) {
                             return false;
-                        } else if (item.locAtts.indexOf("multiLang") > -1 && !isMultiLang) {
+                        } else if (  Ext.Array.indexOf( item.locAtts,"multiLang") > -1 && !isMultiLang) {
                             return false;
-                        } else if (item.locAtts.indexOf("multCurrency") > -1 && !isMultiCurrency) {
+                        } else if (Ext.Array.indexOf( item.locAtts,"multCurrency") > -1 && !isMultiCurrency) {
                             return false;
                         }
                     }
