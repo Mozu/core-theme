@@ -1,12 +1,12 @@
 ﻿<div class="mz-checkout-payment">
-                <h4 class="mz-checkout-paymenttitle"><strong>{% if model.amountCollected > 0 %}{{ model.amountCollected|currency }}{% else %}{{ model.amountRequested|currency }}{% endif %}</strong> &mdash; {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }} {% endif %}{% if model.billingInfo.paymentType == "PaypalExpress" %} {{ labels.payPal }} {% endif %}{% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}{% if model.billingInfo.paymentType == "StoreCredit" %}{{ labels.storeCredit }}{% endif %}</h4>
+                <h4 class="mz-checkout-paymenttitle"><strong>{% if model.amountCollected > 0 %}{{ model.amountCollected|currency }}{% else %}{{ model.amountRequested|currency }}{% endif %}</strong> &mdash; {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }} {% endif %}{% if model.billingInfo.paymentType == "PaypalExpress" %} {{ labels.payPal }} {% endif %}{% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}{% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}</h4>
                 <dl class="mz-propertylist">
                     {% if model.billingInfo.billingContact.email %}
                     <dt>{{ labels.billingEmail }}</dt>
                     <dd>{{ model.billingInfo.billingContact.email }}</dd>
-                    {% endif %}
-                    {% if model.billingInfo.paymentType == "StoreCredit" %}
-                    <dt>{{ labels.storeCreditNumber }}</dt>
+                  {% endif %}
+                  {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}
+                  <dt>{{ labels.digitalCreditCode }}</dt>
                     <dd>{{ model.billingInfo.storeCreditCode }}</dd>
                     {% else %}
                     <dt>{{ labels.billingName }}</dt>

@@ -1,7 +1,7 @@
 ﻿/**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'modules/api', 'hyprlive', 'shim!vendor/underscore>_'], function ($, api, Hypr, _) {
+define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore'], function ($, api, Hypr, _) {
 
     var usePopovers = function () {
         return !Modernizr.mq('(max-width: 480px)');
@@ -84,9 +84,9 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         }
     });
 
-    var LoginPopover = function () {
+    var LoginPopover = function() {
         DismissablePopover.apply(this, arguments);
-    }
+    };
     LoginPopover.prototype = new DismissablePopover();
     $.extend(LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
@@ -144,9 +144,9 @@ define(['shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery', 'mod
         }
     });
 
-    var SignupPopover = function () {
+    var SignupPopover = function() {
         DismissablePopover.apply(this, arguments);
-    }
+    };
     SignupPopover.prototype = new DismissablePopover();
     $.extend(SignupPopover.prototype, LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow'],

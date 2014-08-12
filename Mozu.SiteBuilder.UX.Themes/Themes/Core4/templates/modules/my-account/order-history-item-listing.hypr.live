@@ -7,8 +7,7 @@
     {% if returning == model.id %}
     {% include "modules/common/item-return-form" %}
     {% else %}
-    <a class="mz-itemlisting-action" href="javascript:;" data-mz-track-package="{{ model.id }}">{{ labels.trackPackage }}</a>
-    {% if order.isEligibleForReturns %}
+    {% if order.isEligibleForReturns and themeSettings.allowCustomerInitiatedReturns %}
     <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="startReturnItem" data-mz-order-id="{{ order.id }}" data-mz-start-return="{{ model.id }}">{{ labels.returnOrReplace }}</a>
     {% endif %}
     {% endif %}

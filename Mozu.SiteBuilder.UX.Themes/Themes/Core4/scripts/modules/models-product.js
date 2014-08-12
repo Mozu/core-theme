@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+﻿define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -22,7 +22,7 @@
             var attributeDetail = me.get('attributeDetail');
             if (attributeDetail) {
                 if (attributeDetail.valueType === ProductOption.Constants.ValueTypes.Predefined) {
-                    this.legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v }).value();
+                    this.legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v; }).value();
                 }
                 if (attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo) {
                     me.on('change:value', function(model, newVal) {
@@ -82,17 +82,18 @@
                 selectedValue = _.findWhere(raw.values, { isSelected: true });
                 if (selectedValue) raw.value = selectedValue.value;
             }
-            if (raw.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined) {
-                storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
-                if (storedShopperValue || storedShopperValue === 0)
-                    this.set({
-                        shopperEnteredValue: storedShopperValue,
-                        value: storedShopperValue
-                    });
-            }
-            if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
-                raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
-                raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
+            if (raw.attributeDetail) {
+                if (raw.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined) {
+                    storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
+                    if (storedShopperValue || storedShopperValue === 0) {
+                        raw.shopperEnteredValue = storedShopperValue;
+                        raw.value = storedShopperValue;
+                    }
+                }
+                if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
+                    raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
+                    raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
+                }
             }
             return raw;
         },
@@ -104,7 +105,7 @@
         },
         isValidValue: function() {
             var value = this.get('value') || this.get('shopperEnteredValue');
-            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value));
+            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value.toString()));
         },
         isConfigured: function() {
             var attributeDetail = this.get('attributeDetail');
@@ -131,7 +132,7 @@
             InputTypes: {
                 List: "List",
                 YesNo: "YesNo",
-                "Date": "Date"
+                Date: "Date"
             }
         }
     }),
@@ -164,6 +165,43 @@
                 model: ProductOption
             })
         },
+        getBundledProductProperties: function(opts) {
+            var self = this,
+                loud = !opts || !opts.silent;
+            if (loud) {
+                this.isLoading(true);
+                this.trigger('request');
+            }
+
+            var bundledProducts = this.get('bundledProducts'),
+                numReqs = bundledProducts.length,
+                deferred = api.defer();
+            _.each(bundledProducts, function(bp) {
+                var op = api.get('product', bp.productCode);
+                op.ensure(function() {
+                    if (--numReqs === 0) {
+                        _.defer(function() {
+                            self.set('bundledProducts', bundledProducts);
+                            if (loud) {
+                                this.trigger('sync', bundledProducts);
+                                this.isLoading(false);
+                            }
+                            deferred.resolve(bundledProducts);
+                        });
+                    }
+                });
+                op.then(function(p) {
+                    _.each(p.prop('properties'), function(prop) {
+                        if (!prop.values || prop.values.length === 0 || prop.values[0].value === '' || prop.values[0].stringValue === '') {
+                            prop.isEmpty = true;
+                        }
+                    });
+                    _.extend(bp, p.data);
+                });
+            });
+
+            return deferred.promise;
+        },
         hasPriceRange: function() {
             return this._hasPriceRange;
         },
@@ -181,13 +219,11 @@
             this.on('sync', this.calculateHasPriceRange);
         },
         mainImage: function() {
-            var imgs = this.get('content').get("productImages"),
-                img = imgs && imgs[0];
-            return img || { imageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
+            var productImages = this.get('content.productImages');
+            return productImages && productImages[0];
         },
         notDoneConfiguring: function() {
-            var purchasableState = this.get('purchasableState');
-            return purchasableState.isPurchasable === false && purchasableState.messages && purchasableState.messages[0] && purchasableState.messages[0].message === "Not done configuring";
+            return this.get('productUsage') === Product.Constants.ProductUsage.Configurable && !this.get('variationProductCode');
         },
         getConfiguredOptions: function() {
             return _.invoke(this.get("options").filter(function(opt) {
@@ -198,7 +234,14 @@
             var me = this;
             this.whenReady(function() {
                 if (!me.validate()) {
-                    me.apiAddToCart(me.get("quantity")).then(function(item) {
+                    var fulfillMethod = me.get('fulfillmentMethod');
+                    if (! fulfillMethod) {
+                        fulfillMethod = (me.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
+                    }
+                    me.apiAddToCart({
+                        fulfillmentMethod: fulfillMethod,
+                        quantity: me.get("quantity")
+                        }).then(function (item) {
                         me.trigger('addedtocart', item);
                     });
                 }
@@ -222,6 +265,7 @@
             this.whenReady(function() {
                 return me.apiAddToCartForPickup({
                     fulfillmentLocationCode: locationCode,
+                    fulfillmentMethod: Product.Constants.FulfillmentMethods.PICKUP,
                     quantity: quantity || 1
                 }).then(function(item) {
                     me.trigger('addedtocart', item);
@@ -236,10 +280,16 @@
             var newConfiguration = this.getConfiguredOptions();
             if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
                 this.lastConfiguration = newConfiguration;
-                this.apiConfigure({ options: newConfiguration });
+                this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true });
             } else {
                 this.isLoading(false);
             }
+        },
+        parse: function(prodJSON) {
+            if (prodJSON && prodJSON.productCode && !prodJSON.variationProductCode) {
+                this.unset('variationProductCode');
+            }
+            return prodJSON;
         },
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
@@ -252,6 +302,17 @@
                 if (j.bundledProducts && j.bundledProducts.length === 0) delete j.bundledProducts;
             }
             return j;
+        }
+    }, {
+        Constants: {
+            FulfillmentMethods: {
+                SHIP: "Ship",
+                PICKUP: "Pickup",
+                DIGITAL: "Digital"
+            },
+            ProductUsage: {
+                Configurable: 'Configurable'
+            }
         }
     }),
 
@@ -270,4 +331,5 @@
     };
 
 });
+
 

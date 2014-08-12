@@ -1,14 +1,33 @@
 ﻿.mz-l-paginatedlist {
     overflow: auto;
     position: relative;
-    .mz-pagingcontrols, .mz-pagenumbers {
-        float: right;
+    .mz-sortby {
+        position: absolute;
+        left: 0;
+        bottom: 1em;
+    }
+    .mz-pagingcontrols {
+        position: absolute;
+        right: 0;
+        bottom: 1em;
         text-align: right;
-        clear: both;
-        margin: @gutter/2 0;
+    } 
+    .mz-pagenumbers {
+        position: absolute;
+        right: 0;
+        top: 0;
+        text-align: right;
     }
     .mz-l-tiles {
         clear: both;
+    }
+    .mz-l-paginatedlist-header {
+        .clearfix();
+        height: 9em;
+        position: relative;
+    }
+    .mz-l-paginatedlist-footer {
+        .clearfix();
     }
     .mz-l-paginatedlist-list {
         clear: both;

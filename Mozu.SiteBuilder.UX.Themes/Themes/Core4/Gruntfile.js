@@ -1,34 +1,30 @@
 ﻿module.exports = function (grunt) {
 
     grunt.initConfig({
-        jsonlint: {
-            default: {
-                src: [
-                    'theme.json',
-                    'theme-ui.json',
-                    'labels/**/*.json'
-                ]
+        
+        bower: {
+            install: {
+                options: {
+                    targetDir: './scripts/vendor',
+                    layout: 'byComponent',
+                    cleanBowerDir: true,
+                    bowerOptions: {
+                        production: true,
+                        forceLatest: true
+                    }
+                }
             }
         },
         jshint: {
             default: [
-              'Gruntfile.js',
-              'build.js',
-              'scripts/**/*.js'
+                'theme.json',
+                'theme-ui.json',
+                'labels/**/*.json',
+                'Gruntfile.js',
+                'scripts/**/*.js'
             ],
             options: {
                 ignores: ['scripts/vendor/**/*.js'],
-                asi: true,
-                boss: true,
-                undef: true,
-                laxcomma: true,
-                unused: false,
-                expr: true,
-                eqnull: true,
-                browser: true,
-                devel: true,
-                nonstandard: true,
-                loopfunc: true,
                 globals: {
                     console: true,
                     window: true,
@@ -44,8 +40,11 @@
             }
         },
         tfscheckout: {
-            main: {
+            compiled: {
                 dir: 'compiled'
+            },
+            vendor: {
+                dir: 'scripts/vendor'
             }
         },
         zubat: {
@@ -72,7 +71,7 @@
                     'theme-ui.json',
                     'labels/**/*.json'
                 ],
-                tasks: ['jsonlint'],
+                tasks: ['jshint'],
                 options: {
                     spawn: false
                 }
@@ -89,10 +88,14 @@
         }
     });
 
-    ['grunt-jsonlint', 'grunt-contrib-jshint', 'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
+    ['grunt-bower-task',
+     'grunt-contrib-jshint',
+     'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
+
     grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', ['jsonlint', 'jshint', 'tfscheckout', 'zubat']);
-    grunt.registerTask('notfs', ['jsonlint', 'jshint', 'zubat']);
-    grunt.registerTask('release', ['jsonlint', 'jshint', 'tfscheckout', 'zubat', 'setver']);
-    grunt.registerTask('releasenotfs', ['jsonlint', 'jshint', 'tfscheckout', 'zubat', 'setver']);
-};
+    grunt.registerTask('default', [ 'jshint', 'tfscheckout', 'bower', 'zubat']);
+    grunt.registerTask('notfs', [ 'jshint', 'zubat']);
+    grunt.registerTask('release', ['jshint', 'tfscheckout', 'bower', 'zubat', 'setver']);
+    grunt.registerTask('releasenotfs', ['jshint', 'tfscheckout', 'bower', 'zubat', 'setver']);
+   
+}; 

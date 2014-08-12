@@ -73,7 +73,7 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
         });
 
         $(document).ready(function() {
-            
+
             var $locationSearch = $('#location-list'),
                 product = ProductModels.Product.fromCurrent(),
                 productPresent = !!product.get('productCode'),
@@ -86,6 +86,6 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
 
             if (productPresent) view.setProduct(product);
             window.lv = view;
-        })
+        });
     }
 );

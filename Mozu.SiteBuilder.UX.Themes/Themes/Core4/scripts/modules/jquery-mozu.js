@@ -5,7 +5,7 @@
  *   **$.fn.noFlickerFadeIn** -- A version of $.fn.fadeIn that operates on visibility:invisible objects, so there's no document reflow.
  *   **$.fn.ScrollTo** -- A plugin to smoothly scroll any element into view.
  */
-define(["jquery", "vendor/jquery-scrollto", "vendor/jquery-cookie"], function ($) {
+define(["jquery", "vendor/jquery-scrollto", "vendor/jquery.cookie/jquery.cookie"], function ($) {
 
    
     $.fn.jsonData = function (dataAttr) {
@@ -23,6 +23,21 @@ define(["jquery", "vendor/jquery-scrollto", "vendor/jquery-cookie"], function ($
             this.animate({ opacity: 1 }, 300);
         }
     };
+
+    // get url query parameters
+    $.deparam = function(querystring) {
+        // remove any preceding url and split
+        querystring = querystring || window.location.search;
+        querystring = querystring.substring(querystring.indexOf('?') + 1).split('&');
+        var params = {}, pair, d = decodeURIComponent, i;
+        // march and parse
+        for (i = querystring.length; i > 0;) {
+            pair = querystring[--i].split('=');
+            params[d(pair[0])] = d(pair[1]);
+        }
+
+        return params;
+    };//--  fn  deparam
 
     return $.noConflict();
 

@@ -3,7 +3,7 @@
 {% block item-details %}
   {% parent %}
   <div class="mz-itemlisting-quantity">{{ labels.qty }}: {{ model.quantity }}</div>
-<div class="mz-itemlisting-price">{{ labels.price }}: {{ model.unitPrice.baseAmount|currency }}</div>
+<div class="mz-itemlisting-price">{{ labels.price }}: {{ model.product.price.price|currency }}</div>
 {% endblock %}
 {% block item-listing-actions %}
     <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="addItemToCart" data-mz-item-id="{{ model.id }}">{{ labels.addToCart }}</a>

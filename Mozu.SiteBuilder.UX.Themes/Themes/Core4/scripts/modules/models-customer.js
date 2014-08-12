@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'shim!vendor/underscore>_', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
 
 
     var pageContext = require.mozuData('pagecontext'),
@@ -23,21 +23,21 @@
                 isAlready = _.findWhere(types, newType);
             if (yes && !isAlready) {
                 types.push(newType);
-                this.set('types', types, { silent: true })
+                this.set('types', types, { silent: true });
             }
             if (!yes && isAlready) {
                 this.set('types', _.without(types, isAlready), { silent: true});
             }
         };
-        contactTypeListeners['change:isPrimary'+contactType+'Contact'] = function(model, yes) {
+        contactTypeListeners['change:isPrimary' + contactType + 'Contact'] = function(model, yes) {
             var types = this.get('types'),
                 typeConf = { name: contactType },
                 type = _.findWhere(types, typeConf);
             if (type) {
                 type.isPrimary = yes;
-                this.set('types', types, { silent: true })
+                this.set('types', types, { silent: true });
             }
-        }
+        };
     });
 
 
@@ -83,7 +83,7 @@
             if (!this.parent.validate("editingContact")) {
                 var id = this.get('id');
 
-                if (!this.get('email')) this.set({ email: this.parent.get('emailAddress') }, { silent: true })
+                if (!this.get('email')) this.set({ email: this.parent.get('emailAddress') }, { silent: true });
                 if (!id) return this.apiCreate();
                 return this.apiUpdate();
             }
@@ -105,7 +105,7 @@
         },
         initialize: function () {
             var self = this,
-                types = this.get('types')
+                types = this.get('types');
             if (types) this.setTypeHelpers(null, types);
             this.on(contactTypeListeners);
             this.on('change:types', this.setTypeHelpers, this);
@@ -154,6 +154,9 @@
             }),
             cards: Backbone.Collection.extend({
                 model: PaymentMethods.CreditCard
+            }),
+            credits: Backbone.Collection.extend({
+                model: PaymentMethods.DigitalCredit
             })
         },
         getPrimaryContactOfType: function (typeName) {
@@ -202,12 +205,12 @@
         validation: {
             password: {
                 fn: function(value) {
-                    if (this.validatePassword && !value) return Hypr.getLabel('passwordMissing')
+                    if (this.validatePassword && !value) return Hypr.getLabel('passwordMissing');
                 }
             },
             confirmPassword: {
                 fn: function(value) {
-                    if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch')
+                    if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
             },
         },
@@ -248,7 +251,8 @@
                 contacts = this.get('contacts').toJSON(),
                 editingCardModel = {
                     contacts: contacts,
-                    hasSavedContacts: this.hasSavedContacts()
+                    hasSavedContacts: this.hasSavedContacts(),
+                    isCvvOptional:true
                 };
             if (toEdit) {
                 _.extend(editingCardModel, toEdit.toJSON({ helpers: true }));

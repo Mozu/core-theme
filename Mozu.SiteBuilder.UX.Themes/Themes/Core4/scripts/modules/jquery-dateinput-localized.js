@@ -3,7 +3,7 @@
  * with Mozu text labels.
  */
 
-define(['shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery', 'shim!vendor/underscore>_', 'hyprlive'], function ($, _, Hypr) {
+define(['shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery', 'underscore', 'hyprlive'], function ($, _, Hypr) {
     var months = 'January,February,March,April,May,June,July,August,September,October,November,December'.split(','),
         days = 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday'.split(',');
 

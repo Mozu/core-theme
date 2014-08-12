@@ -3,7 +3,9 @@
         jquery: "empty:",
         sdk: "empty:",
         hyprlive: "empty:",
-        hyprlivecontext: "empty:"
+        hyprlivecontext: "empty:",
+        underscore: "vendor/underscore/underscore",
+        backbone: "vendor/backbone/backbone"
     },
     dir: "compiled/scripts/",
     locale: "en-us",
@@ -22,13 +24,13 @@
                 'modules/contextify',
                 'modules/jquery-mozu',
                 'modules/login-links',
-                'modules/mixin-paging',
                 'modules/models-address',
                 'modules/models-customer',
                 'modules/models-faceting',
                 'modules/models-messages',
                 'modules/models-product',
                 'modules/scroll-nav',
+                'modules/search-autocomplete',
                 'modules/views-messages',
                 'modules/views-paging',
                 'modules/views-productlists'
