@@ -1,18 +1,22 @@
-﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+﻿define(['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, _, api, Backbone, ProductModels) {
 
         var getRelatedProducts = function(pageType, codes, pageSize) {
-            var filter = _.map(codes, function (c) { return "ProductCode eq " + c }).join(' or ');
+            var filter = _.map(codes, function(c) { return "ProductCode eq " + c; }).join(' or ');
             var retval = '';
-            
-            switch(pageType) {
-                case 'product': retval =api.get("search", { filter: filter});
+
+            switch (pageType) {
+                case 'product': retval = api.get("search", { filter: filter });
                     break;
                 case 'cart': retval = api.get("search", { filter: filter, pageSize: pageSize });
                     break;
             }
-            
+
             return retval;
+        },
+
+        coerceBoolean = function(x) {
+            return !!x;
         };
 
         
@@ -56,7 +60,7 @@
                         for (var x = 0; x < currentProduct.properties.length; x++) {
                             if (currentProduct.properties[x].attributeFQN == attId) {
                                 var temp = _.pluck(currentProduct.properties[x].values, "value");
-                                productCodes = productCodes.concat($.grep(temp || [], function (x) { return !!x }));
+                                productCodes = productCodes.concat($.grep(temp || [], coerceBoolean));
                                 
                             }
                         }

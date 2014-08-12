@@ -1,18 +1,21 @@
-﻿define(["shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone", 'hyprlive'], function (Backbone, Hypr) {
+﻿define(["backbone", 'hyprlive'], function(Backbone, Hypr) {
 
-        var Message = Backbone.Model.extend({
-            toJSON: function () {
-                var j = Backbone.Model.prototype.toJSON.apply(this);
-                j.message = j.message || Hypr.getLabel('unexpectedError');
-                return j;
-            }
-        }),
-        MessagesCollection = Backbone.Collection.extend({
-            model: Message
-        });
-        return {
-            Message: Message,
-            MessagesCollection: MessagesCollection
+    var isDebugMode = require.mozuData('pagecontext').isDebugMode,
+    unexpectedErrorText = Hypr.getLabel('unexpectedError');
+
+    var Message = Backbone.Model.extend({
+        toJSON: function() {
+            var j = Backbone.Model.prototype.toJSON.apply(this);
+            if ((!isDebugMode && j.errorCode === "UNEXPECTED_ERROR") || !j.message) j.message = unexpectedErrorText;
+            return j;
         }
+    }),
+    MessagesCollection = Backbone.Collection.extend({
+        model: Message
+    });
+    return {
+        Message: Message,
+        MessagesCollection: MessagesCollection
+    };
 
-   });
+});

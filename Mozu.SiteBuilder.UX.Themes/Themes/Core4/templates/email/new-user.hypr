@@ -8,9 +8,9 @@
 		{{ labels.emailOpeningAlternative|safe }}
 	{% endif %}
 
-  <h1>Welcome to {{siteContext.generalSettings.websiteName}}</h1>
+  <h1>{{ labels.newUserEmailSalutation|string_format(siteContext.generalSettings.websiteName) }}</h1>
 
-  Your customer account has been created and you can log in anytime at <a href="http://{{domainName}}/">http://{{domainName}}/</a> as {{model.UserEmailAddress}}.
+  <p>{{ labels.newUserEmailNotification|string_format(domainName, model.UserEmailAddress)|safe }}</p>
 
   {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 

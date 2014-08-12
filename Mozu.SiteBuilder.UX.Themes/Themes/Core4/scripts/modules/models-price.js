@@ -1,4 +1,4 @@
-﻿define(["shim!vendor/underscore>_", "modules/backbone-mozu"], function (_, Backbone) {
+﻿define(["underscore", "modules/backbone-mozu"], function (_, Backbone) {
 
     var ProductPrice = Backbone.MozuModel.extend({
         dataTypes: {
@@ -18,7 +18,7 @@
             lower: ProductPrice,
             upper: ProductPrice
         }
-    })
+    });
 
     return {
         ProductPrice: ProductPrice,

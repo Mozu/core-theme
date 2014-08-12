@@ -44,8 +44,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="description" content="{{ PageContext.MetaDescription }}">
-		<meta name="keywords" content="{{ PageContext.MetaKeywords }}">
-		<meta name="correlationId" content="{{ pageContext.correlationId }}">
+        <meta name="keywords" content="{{ PageContext.MetaKeywords }}">
+        <meta name="correlationId" content="{{ pageContext.correlationId }}">
 
         {% endblock meta-tags %}
 
@@ -60,14 +60,14 @@
         {% endblock stylesheets %}
         
         {% block head-tag-scripts %}
-        <script src="{{siteContext.cdnPrefix}}/scripts/vendor/modernizr-respond.min.js"></script>
+        <script src="{{siteContext.cdnPrefix}}/scripts/vendor/modernizr.min.js"></script>
         {% include "modules/web-fonts-loader" %}
         {% endblock head-tag-scripts %}
-		{% cms_resources %}
-		
+        {% cms_resources %}
+        
 
-		{%header_content%}
-	
+        {%header_content%}
+    
 
 
     </head>
@@ -79,7 +79,7 @@
     <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
     {% endblock open-body-tag %}
 
-	   
+       
         <div id="page-wrapper" class="mz-l-pagewrapper">
     
             {% block page-header %}
@@ -100,10 +100,10 @@
                 
                 {% block body-content %}
                 {% dropzone "body" scope="page" %}
-				{% endblock body-content %}
+                {% endblock body-content %}
                 
                 {% dropzone "body-bottom" scope="template" %}
-
+                
             </div>
 
             {% block page-footer %}
@@ -117,6 +117,7 @@
         {% endblock trailing-scripts %}
 
         {% visitor_tracking_pixel %}
+
     </body>
     {% endblock body-tag %}
 

@@ -4,6 +4,8 @@
 
 {% block body-tag-classes %} mz-cart {% endblock body-tag-classes %}
 
+{% block site-nav %}{% endblock site-nav %}
+
 {% block body-content %}
 
 {% require_script "pages/cart" %}
@@ -12,8 +14,9 @@
 
 <div class="mz-l-container">
 	<h1 class="mz-pagetitle">{{ labels.cart }}</h1>
-	<form method="post" action="{{ siteContext.secureHost }}/checkout" id="cartform">
-		<input type="hidden" name="id" value="{{model.Id}}" />
+	<form method="post" action="{{ siteContext.secureHost }}/cart/checkout" id="cartform">
+		{% dropzone "cart-top" scope="template" %}
+		<input type="hidden" name="id" value="{{model.id}}" />
         {% include "modules/common/message-bar" with model=model.messages %}
         <table class="mz-table mz-table-cart" id="cart">
             {% include "modules/cart/cart-table" %}

@@ -57,7 +57,7 @@
 
   {% if not model.purchasableState.isPurchasable %}
   <p class="mz-productdetail-notpurchasable">
-    Not Purchasable:
+    {{ labels.notPurchasable }}:
     {% for message in model.purchasableState.messages %}
     <span>{{ message.message }}</span>
     {% endfor %}
@@ -107,22 +107,22 @@
 <div class="mz-productdetail-measurements mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">{{ labels.measurements }}</h4>
     <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-      <dt>Weight</dt>
+      <dt>{{ labels.weight }}</dt>
       <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">
         <span itemprop="value">{{ model.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWeight.unit }}</span></dd>
     </dl>
 	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-      <dt>Length</dt>
+      <dt>{{ labels.length }}</dt>
       <dd itemprop="length" itemscope itemtype="http://schema.org/QuantitativeValue">
         <span itemprop="value">{{ model.measurements.packageLength.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageLength.unit }}</span></dd>
     </dl>
 	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-      <dt>Width</dt>
+      <dt>{{ labels.width }}</dt>
       <dd itemprop="width" itemscope itemtype="http://schema.org/QuantitativeValue">
         <span itemprop="value">{{ model.measurements.packageWidth.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWidth.unit }}</span></dd>
     </dl>
 	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-      <dt>Height</dt>
+      <dt>{{ labels.height }}</dt>
       <dd itemprop="height" itemscope itemtype="http://schema.org/QuantitativeValue">
         <span itemprop="value">{{ model.measurements.packageHeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageHeight.unit }}</span></dd>
     </dl>
@@ -143,22 +143,22 @@
       <span> x {{ product.quantity }}</span>
     </div>
     <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-        <dt>Weight</dt>
+        <dt>{{ labels.weight }}</dt>
         <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">
           <span itemprop="value">{{ product.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageWeight.unit }}</span></dd>
       </dl>
     <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-        <dt>Length</dt>
+        <dt>{{ labels.length }}</dt>
         <dd itemprop="length" itemscope itemtype="http://schema.org/QuantitativeValue">
           <span itemprop="value">{{ product.measurements.packageLength.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageLength.unit }}</span></dd>
       </dl>
     <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-        <dt>Width</dt>
+        <dt>{{ labels.width }}</dt>
         <dd itemprop="width" itemscope itemtype="http://schema.org/QuantitativeValue">
           <span itemprop="value">{{ product.measurements.packageWidth.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageWidth.unit }}</span></dd>
       </dl>
     <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-        <dt>Height</dt>
+        <dt>{{ labels.height }}</dt>
         <dd itemprop="height" itemscope itemtype="http://schema.org/QuantitativeValue">
           <span itemprop="value">{{ product.measurements.packageHeight.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageHeight.unit }}</span></dd>
       </dl>

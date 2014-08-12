@@ -1,4 +1,4 @@
-﻿define(['jquery', 'shim!vendor/underscore>_', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+﻿define(['jquery', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
     // payment methods only validate if they are selected!
     var PaymentMethod = Backbone.MozuModel.extend({
         present: function (value, attr) {
@@ -12,6 +12,13 @@
         "cardNumberPart": "cardNumberPartOrMask",
         "cardType": "paymentOrCardType",
         "id": "paymentServiceCardId"
+    };
+
+    var firstDigitMap = {
+        "3": "AMEX",
+        "4": "VISA",
+        "5": "MC",
+        "6": "DISCOVER"
     };
 
     var CreditCard = PaymentMethod.extend({
@@ -50,6 +57,18 @@
                     self.set(v, val, { silent: true });
                 });
             });
+
+            if (this.detectCardType) {
+                this.on('change:cardNumberPartOrMask', _.debounce(function(self, newValue) {
+                    var firstDigit;
+                    if (newValue && newValue.toString) {
+                        firstDigit = newValue.toString().charAt(0);
+                    }
+                    if (firstDigit && firstDigit in firstDigitMap) {
+                        self.set({ paymentOrCardType: firstDigitMap[firstDigit] });
+                    }
+                }, 500));
+            }
         },
         dataTypes: {
             expireMonth: Backbone.MozuModel.DataTypes.Int,
@@ -105,8 +124,38 @@
         }
     });
 
+    var DigitalCredit = PaymentMethod.extend({
+
+        isEnabled: false,
+        creditAmountApplied: null,
+        remainingBalance: null,
+        isTiedToCustomer: true,
+        addRemainderToCustomer: false,
+
+        initialize: function() {
+            this.set({ isEnabled: this.isEnabled });
+            this.set({ creditAmountApplied: this.creditAmountApplied });
+            this.set({ remainingBalance: this.remainingBalance });
+            this.set({ isTiedToCustomer: this.isTiedToCustomer });
+            this.set({ addRemainderToCustomer: this.addRemainderToCustomer });
+        },
+
+        helpers: ['calculateRemainingBalance'],
+
+        calculateRemainingBalance: function () {
+            return (! this.get('creditAmountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('creditAmountApplied');
+        },
+
+        validate: function(attrs, options) {
+            if ( (attrs.creditAmountApplied) && (attrs.creditAmountApplied > attrs.currentBalance)) {
+                return "Exceeds card balance.";
+            }
+        }
+    });
+
     return {
         CreditCard: CreditCard,
-        Check: Check
+        Check: Check,
+        DigitalCredit: DigitalCredit
     };
 });
