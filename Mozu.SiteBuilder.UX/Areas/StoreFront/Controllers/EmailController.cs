@@ -143,26 +143,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
             HttpResponseMessage res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTempalte));
-            if (res.StatusCode == HttpStatusCode.NotFound)
-            {
-                
-                var reqDoc = new DC.Document
-                                 {
-                                     ListFQN = "emailTemplateContent@mozu",
-                                     DocumentTypeFQN = "emailTemplateContent@mozu",
-                                     Name = GetCmsPage(emailTempalte),
-                                     Properties= emailTempalte.Properties 
-                                 };
-                
-                
-                Task<ServiceClientResponse<DC.Document>> task = _docRepo.CreateDocument(reqDoc.ListFQN, reqDoc);
-                await task;
 
-                //_cmsService.Create ( )
-                //CreatePage("home page", "home", "home");
-                ResetContextInitilaztionTasks();
-                res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTempalte));
-            }
+            this.PageContext.CmsContext.Page.DocumentTypeFQN = "emailTemplateContent@mozu";
+
+            //if (res.StatusCode == HttpStatusCode.NotFound)
+            //{
+                
+            //    var reqDoc = new DC.Document
+            //                     {
+            //                         ListFQN = "emailTemplateContent@mozu",
+            //                         DocumentTypeFQN = "emailTemplateContent@mozu",
+            //                         Name = GetCmsPage(emailTempalte),
+            //                         Properties= emailTempalte.Properties 
+            //                     };
+                
+                
+            //    Task<ServiceClientResponse<DC.Document>> task = _docRepo.CreateDocument(reqDoc.ListFQN, reqDoc);
+            //    await task;
+
+            //    //_cmsService.Create ( )
+            //    //CreatePage("home page", "home", "home");
+            //    ResetContextInitilaztionTasks();
+            //    res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTempalte));
+            //}
 
             PageContext.PageType = "email";
             ViewResult vr = null;
