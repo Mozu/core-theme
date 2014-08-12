@@ -138,7 +138,7 @@
         if (!this.catalogs) return distinctLocales;
 
         Ext.each(this.catalogs, function (cat) {
-            if (distinctLocales.indexOf(cat.localeCode) == -1 && (!excludeDefaultLocale || defaultLocale !== cat.localeCode)) {
+            if ( Ext.Array.indexOf(distinctLocales , cat.localeCode) == -1 && (!excludeDefaultLocale || defaultLocale !== cat.localeCode)) {
                 distinctLocales.push(cat.localeCode);
             }
         });
@@ -151,7 +151,7 @@
         if (!this.catalogs) return distinctCurrencies;
 
         Ext.each(this.catalogs, function (cat) {
-            if (distinctCurrencies.indexOf(cat.currencyCode) == -1 && (!excludeDefaultCurrency || defaultCurrencyCode !== cat.currencyCode)) {
+            if ( Ext.Array.indexOf( distinctCurrencies,cat.currencyCode) == -1 && (!excludeDefaultCurrency || defaultCurrencyCode !== cat.currencyCode)) {
                 distinctCurrencies.push(cat.currencyCode);
             }
         });
