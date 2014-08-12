@@ -9,6 +9,11 @@
     "jquery-colorbox": "~1.5",
     "typeahead.js": "~0"
   },
+  "ignore": [
+    "/.*",
+    "tasks"
+  ],
+  "main": "*",
   "exportsOverride": {
     "bootstrap": {
       "js": [
