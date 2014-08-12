@@ -641,7 +641,7 @@ Ext.define('Taco.view.website.Index', {
             cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
         } else if ((pageContext.editMode || "").toLowerCase() == 'site') {
             //todo create sitetemplate
-            cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
+            cls = 'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter';
         }
 
         return Ext.create(cls, {
