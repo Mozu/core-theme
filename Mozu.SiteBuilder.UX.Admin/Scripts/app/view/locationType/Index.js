@@ -90,7 +90,7 @@ Ext.define('Taco.view.locationType.Index', {
                 // optional enhancement to rowEditor. Makes the field only editable during a create;
                 editableOnCreateOnly: true,
                 selectOnFocus: true,
-                allowBlank: false
+                allowOnlyWhitespace: false
             },
             
             width: 200
@@ -100,7 +100,7 @@ Ext.define('Taco.view.locationType.Index', {
                 emptyText: "Name",
                 msgTarget: "qtip",
                 selectOnFocus: true,
-                allowBlank: false
+                allowOnlyWhitespace: false
             },
             text: 'Name',
             flex:1

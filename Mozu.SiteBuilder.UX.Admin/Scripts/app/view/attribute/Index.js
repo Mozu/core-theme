@@ -70,7 +70,7 @@ Ext.define('Taco.view.attribute.Index', {
     
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('attribute/edit/' + record.getId(), { complexMetaData: { record: record } });
+            Taco.core.StateManager.attemptNavigate('attributes/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
         return;
     }
