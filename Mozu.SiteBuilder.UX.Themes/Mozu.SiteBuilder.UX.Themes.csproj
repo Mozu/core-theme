@@ -384,6 +384,12 @@
     <Content Include="Addons\Blue\addon.json" />
     <Content Include="Addons\Orange\addon.json" />
     <Content Include="Docs\Gruntfile.js" />
+    <Content Include="Themes\Core4\admin\editors\about-us.js" />
+    <Content Include="Themes\Core4\admin\editors\email-orderconfirmation.js" />
+    <Content Include="Themes\Core4\admin\editors\email.js" />
+    <Content Include="Themes\Core4\admin\editors\pageTemplateContent.js" />
+    <Content Include="Themes\Core4\admin\editors\snippet.js" />
+    <Content Include="Themes\Core4\admin\editors\web_page.js" />
     <Content Include="Themes\Core4\compiled\scripts\build.txt" />
     <Content Include="Themes\Core4\compiled\scripts\modules\common.js" />
     <Content Include="Themes\Core4\compiled\scripts\pages\cart.js" />
