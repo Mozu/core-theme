@@ -1,8 +1,8 @@
 ﻿define([
     "modules/jquery-mozu",
-    "underscore",
+    "shim!vendor/underscore>_",
     "modules/api",
-    "backbone",
+    "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone",
     "modules/models-messages",
     "modules/backbone-mozu-validation"], function ($, _, api, Backbone, MessageModels) {
 
@@ -76,17 +76,15 @@
             passErrors: function() {
                 var self = this;
                 _.defer(function() {
-                    var ctx = self,
-                        passFn = function(e, c) {
-                            ctx.trigger('error', e, c);
-                        };
-                    do {
+                    var ctx = self;
+                    while(ctx = ctx.parent) {
                         if (ctx.handlesMessages) {
-                            self.on('error', passFn);
+                            self.on('error', function(e, c) {
+                                ctx.trigger('error', e, c);
+                            });
                             break;
                         }
-                        ctx = ctx.parent;
-                    } while (ctx);
+                    }
                 }, 300);
             },
 
@@ -127,12 +125,10 @@
                 return ret;
             },
 
-            /** @private */
-            setRelation: function(attr, val, options) {
+            setRelation: function (attr, val, options) {
                 var relation = this.attributes[attr],
-                    id = this.idAttribute || "id";
-                
-                if (!("parse" in options)) options.parse = true;
+                    id = this.idAttribute || "id",
+                    modelToSet, modelsToAdd = [], modelsToRemove = [];
 
                 //if (options.unset && relation) delete relation.parent;
 
@@ -148,8 +144,38 @@
                         // within the collection.
                         if (val instanceof Collection || val instanceof Array) {
                             val = val.models || val;
+                            modelsToAdd = _.clone(val);
 
-                            relation.reset(_.clone(val), options);
+                            relation.each(function (model, i) {
+
+                                // If the model does not have an "id" skip logic to detect if it already
+                                // exists and simply add it to the collection
+                                if (typeof model.id == 'undefined') return;
+
+                                // If the incoming model also exists within the existing collection,
+                                // call set on that model. If it doesn't exist in the incoming array,
+                                // then add it to a list that will be removed.
+                                var rModel = _.find(val, function (_model) {
+                                    return _model[id] === model.id;
+                                });
+
+                                if (rModel) {
+                                    model.set(rModel.toJSON ? rModel.toJSON() : rModel);
+
+                                    // Remove the model from the incoming list because all remaining models
+                                    // will be added to the relation
+                                    modelsToAdd = _.without(modelsToAdd, rModel);
+                                } else {
+                                    modelsToRemove.push(model);
+                                }
+
+                            });
+
+                            _.each(modelsToRemove, function (model) {
+                                relation.remove(model);
+                            });
+
+                            relation.add(modelsToAdd);
 
                         } else {
 
@@ -158,9 +184,9 @@
                             // all models that aren't the same as this one (by id). If it is the same, call set on that
                             // model.
 
-                            relation.each(function(model) {
+                            relation.each(function (model) {
                                 if (val && val[id] === model[id]) {
-                                    model.set(val, options);
+                                    model.set(val);
                                 } else {
                                     relation.remove(model);
                                 }
@@ -171,23 +197,23 @@
                     }
 
                     if (relation && relation instanceof Model) {
+                        if (options.useExistingInstances && val instanceof this.relations[attr]) return val;
                         if (options.unset) {
-                            relation.clear(options);
+                            relation.clear();
                         } else {
-                            relation.set((val && val.toJSON) ? val.toJSON() : val, options);
+                            relation.set((val && val.toJSON) ? val.toJSON() : val);
                         }
                         return relation;
                     }
 
                     options._parent = this;
 
-                    if (!(val instanceof this.relations[attr])) val = new this.relations[attr](val, options);
+                    if (!(val instanceof this.relations[attr])) val =  new this.relations[attr](val, options);
                     val.parent = this;
                 }
 
                 return val;
             },
-
 
             /**
              * Set the value of an attribute or a hash of attributes. Unlike the `set()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations}).
@@ -199,7 +225,7 @@
              */
             set: function (key, val, options) {
                 var attr, attrs, unset, changes, silent, changing, prev, current;
-                if (!key && key !== 0) return this;
+                if (key == null) return this;
 
                 // Handle both `"key", value` and `{key: value}` -style arguments.
                 if (typeof key === 'object') {
@@ -209,7 +235,7 @@
                     (attrs = {})[key] = val;
                 }
 
-                options = options || {};
+                options || (options = {});
 
                 // allow for dot notation in setting properties remotely on related models, by shifting context!
                 attrs = deepen(attrs);
@@ -228,8 +254,7 @@
                     this._previousAttributes = _.clone(this.attributes);
                     this.changed = {};
                 }
-                current = this.attributes;
-                prev = this._previousAttributes;
+                current = this.attributes, prev = this._previousAttributes;
 
                 // Check for changes of `id`.
                 if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
@@ -252,11 +277,7 @@
                         delete this.changed[attr];
                     }
                     var isARelation = this.relations && this.relations[attr] && (val instanceof this.relations[attr]);
-                    if (unset && !isARelation) {
-                        delete current[attr];
-                    } else {
-                        current[attr] = val;
-                    }
+                    (unset && !isARelation) ? delete current[attr] : current[attr] = val;
                 }
 
                 // Trigger all relevant attribute changes.
@@ -417,7 +438,7 @@
                         me.off('loadingchange', handler);
                         cb();
                     }
-                };
+                }
                 me.on('loadingchange', handler);
             },
 
@@ -464,7 +485,7 @@
              * @static
              */
             fromCurrent: function () {
-                return new this(require.mozuData(this.prototype.mozuType), { silent: true, parse: true });
+                return new this(require.mozuData(this.prototype.mozuType), { silent: true });
             },
             DataTypes: {
                 "Int": function (val) {
@@ -525,17 +546,17 @@
         };
 
         Backbone.Collection.prototype.resetRelations = function (options) {
-            _.each(this.models, function(model) {
-                _.each(model.relations, function(rel, key) {
+            _.each(this.models, function (model) {
+                _.each(model.relations, function (rel, key) {
                     if (model.get(key) instanceof Backbone.Collection) {
                         model.get(key).trigger('reset', model, options);
                     }
                 });
-            });
+            })
         };
 
         Backbone.Collection.prototype.reset = function (models, options) {
-            options = options || {};
+            options || (options = {});
             for (var i = 0, l = this.models.length; i < l; i++) {
                 this._removeReference(this.models[i]);
             }

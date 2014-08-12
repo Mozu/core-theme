@@ -1,7 +1,9 @@
 ﻿/**
  * Can be used on any Backbone.MozuModel that has had the paging mixin in mixins-paging added to it.
  */
-define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu'], function($, _, Backbone) {
+define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'], function($, _, Backbone) {
+
+    var pagingHelpers = ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage'];
 
     var PagingBaseView = Backbone.MozuView.extend({
         initialize: function() {
@@ -9,19 +11,22 @@ define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu'], function(
                 throw "Cannot bind a Paging view to a model that does not have the Paging mixin!";
             }
         },
-        render: function() {
-            Backbone.MozuView.prototype.render.apply(this, arguments);
-            this.$('select').each(function() {
-                var $this = $(this);
-                $this.val($this.find('option[selected]').val());
+        render: function () {
+            var model = this.model.toJSON({ helpers: true }),
+                me = this;
+            _.each(pagingHelpers, function (helperName) {
+                model[helperName] = me.model[helperName]();
             });
+            this.undelegateEvents();
+            this.$el.html(this.template.render({ model: model }));
+            this.delegateEvents();
         }
     });
 
     var PagingControlsView = PagingBaseView.extend({
         templateName: 'modules/common/paging-controls',
         autoUpdate: ['pageSize'],
-        updatePageSize: function(e) {
+        updatePageSize: function (e) {
             var newSize = parseInt($(e.currentTarget).val()),
             currentSize = this.model.get('pageSize');
             if (isNaN(newSize)) throw new SyntaxError("Cannot set page size to a non-number!");
@@ -31,48 +36,23 @@ define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu'], function(
 
     var PageNumbersView = PagingBaseView.extend({
         templateName: 'modules/common/page-numbers',
-        previous: function(e) {
+        previous: function (e) {
             e.preventDefault();
             return this.model.previousPage();
         },
-        next: function(e) {
+        next: function (e) {
             e.preventDefault();
             return this.model.nextPage();
         },
-        page: function(e) {
+        page: function (e) {
             e.preventDefault();
             return this.model.setPage(parseInt($(e.currentTarget).data('mz-page-num')) || 1);
         }
     });
 
-    var scrollToTop = function() {
-        $('body').ScrollTo({ duration: 200 });
-    };
-
-    var TopScrollingPageNumbersView = PageNumbersView.extend({
-        previous: function() {
-            return PageNumbersView.prototype.previous.apply(this, arguments).then(scrollToTop);
-        },
-        next: function() {
-            return PageNumbersView.prototype.next.apply(this, arguments).then(scrollToTop);
-        },
-        page: function() {
-            return PageNumbersView.prototype.page.apply(this, arguments).then(scrollToTop);
-        }
-    });
-
-    var PageSortView = PagingBaseView.extend({
-        templateName: 'modules/common/page-sort',
-        updateSortBy: function(e) {
-            return this.model.sortBy($(e.currentTarget).val());
-        }
-    });
-
     return {
         PagingControls: PagingControlsView,
-        PageNumbers: PageNumbersView,
-        TopScrollingPageNumbers: TopScrollingPageNumbersView,
-        PageSortView: PageSortView
+        PageNumbers: PageNumbersView
     };
 
 });

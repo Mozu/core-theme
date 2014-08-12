@@ -1,8 +1,8 @@
 ﻿define([
     "modules/jquery-mozu",
-    "underscore",
+    "shim!vendor/underscore>_",
     "hyprlive",
-    "backbone",
+    "shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone",
     "modules/views-messages"
 ], function ($, _, Hypr, Backbone, messageViewFactory) {
 
@@ -36,12 +36,12 @@
 
         constructor: function (conf) {
             Backbone.View.apply(this, arguments);
-            this.template = Hypr.getTemplate(conf.templateName || this.templateName);
+            this.template = Hypr.getTemplate(this.options.templateName || this.templateName);
             this.listenTo(this.model, "sync", this.render);
             this.listenTo(this.model, "loadingchange", this.handleLoadingChange);
-            if (this.model.handlesMessages && conf.messagesEl) {
+            if (this.model.handlesMessages && this.options.messagesEl) {
                 this.messageView = messageViewFactory({
-                    el: conf.messagesEl,
+                    el: this.options.messagesEl,
                     model: this.model.messages
                 });
             }
@@ -61,7 +61,6 @@
                 }, this);
             }
             Backbone.Validation.bind(this);
-            Backbone.MozuView.trigger('create', this);
 
         },
             enqueueRender: function () {
@@ -187,7 +186,7 @@
                     }, 50);
                 });
             }
-            return Backbone.View.extend.call(this, conf, statics);
+            return Backbone.View.extend.call(this, conf, statics)
         }
     });
 });

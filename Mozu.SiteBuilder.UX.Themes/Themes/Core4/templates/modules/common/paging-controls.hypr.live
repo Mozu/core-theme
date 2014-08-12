@@ -1,20 +1,18 @@
-﻿<label class="mz-pagingcontrols-pagestate-label">
-{% if model.totalCount %}
-  {% if model.totalCount != 1 %}
-    {{ labels.pageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
-  {% else %}
-    {{ labels.pageStateSingular }}
-  {% endif %}
+﻿{% if model.totalCount %}
+{% if model.totalCount != 1 %}
+{{ labels.pageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
+{% else %}
+{{ labels.pageStateSingular }}
 {% endif %}
-</label>
-
+{% endif %}
 <label class="mz-pagingcontrols-pagesize-label">
-  <span class="mz-paging-title">{{ labels.show }}:</span>
-  <select data-mz-value="pageSize" class="mz-pagingcontrols-pagesize-dropdown" autocomplete="off">
-    {% block page-sizes %}
-      {% for pageSize in themeSettings.pageSizeOptions %}
+    {{ labels.show }}
+    <select data-mz-value="PageSize" class="mz-pagingcontrols-pagesize-dropdown">
+        {% block page-sizes %}
+        {% for pageSize in themeSettings.pageSizeOptions %}
         <option {% if model.pageSize == pageSize %}selected="selected"{% endif %} value="{{ pageSize }}">{{ pageSize }}</option>
-      {% endfor %}
-    {% endblock page-sizes %}
-  </select>
+        {% endfor %}
+        {% endblock page-sizes %}
+    </select>
+    {{ labels.resultsPerPage }}
 </label>

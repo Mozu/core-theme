@@ -8,13 +8,13 @@
 		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
 		-->
 
-		<dt>{{ labels.return }}</dt>
+		<dt>Return #</dt>
 		<dd>{{ model.returnNumber }}</dd>
 
 		<dt>{{ labels.orderDate }}:</dt>
 		<dd>{{ model.auditInfo.createDate }}</dd>
 
-		<dt>{{ labels.returnRequestDate }}</dt>
+		<dt>Return Request Date:</dt>
 		<dd>{{ model.rmaDeadline }}</dd>
 	</dl>
 	<br />

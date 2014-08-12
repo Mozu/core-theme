@@ -1,4 +1,4 @@
-﻿define(['underscore', "modules/backbone-mozu", "hyprlive", "modules/models-product"], function (_, Backbone, Hypr, ProductModels) {
+﻿define(['shim!vendor/underscore>_', "modules/backbone-mozu", "hyprlive", "modules/models-product", "modules/mixin-paging"], function (_, Backbone, Hypr, ProductModels, PagingMixin) {
 
     var OrderItem = Backbone.MozuModel.extend({
         relations: {
@@ -50,7 +50,7 @@
                     {
                         text: j.comments
                     }
-                ];
+                ]
             }
             delete j.reason;
             delete j.quantity;
@@ -59,17 +59,28 @@
         }
     }),
 
-    RMACollection = Backbone.MozuPagedCollection.extend({
+    RMACollection = Backbone.MozuModel.extend(_.extend({
         mozuType: 'rmas',
+        validation: {
+            pageSize: { min: 1 },
+            pageCount: { min: 1 },
+            startIndex: { min: 0 }
+        },
         defaults: {
             pageSize: 5
+        },
+        dataTypes: {
+            pageSize: Backbone.MozuModel.DataTypes.Int,
+            pageCount: Backbone.MozuModel.DataTypes.Int,
+            startIndex: Backbone.MozuModel.DataTypes.Int,
+            totalCount: Backbone.MozuModel.DataTypes.Int,
         },
         relations: {
             items: Backbone.Collection.extend({
                 model: RMA
             })
         }
-    }),
+    }, PagingMixin)),
 
     Order = Backbone.MozuModel.extend({
         mozuType: 'order',
@@ -78,10 +89,21 @@
         }
     }),
 
-    OrderCollection = Backbone.MozuPagedCollection.extend({
+    OrderCollection = Backbone.MozuModel.extend(_.extend({
         mozuType: 'orders',
+        validation: {
+            pageSize: { min: 1 },
+            pageCount: { min: 1 },
+            startIndex: { min: 0 }
+        },
         defaults: {
             pageSize: 5
+        },
+        dataTypes: {
+            pageSize: Backbone.MozuModel.DataTypes.Int,
+            pageCount: Backbone.MozuModel.DataTypes.Int,
+            startIndex: Backbone.MozuModel.DataTypes.Int,
+            totalCount: Backbone.MozuModel.DataTypes.Int,
         },
         relations: {
             items: Backbone.Collection.extend({
@@ -121,7 +143,7 @@
                 });
             }
         }
-    });
+    }, PagingMixin));
 
     return {
         OrderItem: OrderItem,

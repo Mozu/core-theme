@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, $, _, CustomerModels, PagingViews) {
+﻿define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'shim!vendor/underscore>_', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, $, _, CustomerModels, PagingViews) {
     
     var EditableView = Backbone.MozuView.extend({
         constructor: function () {
@@ -57,12 +57,7 @@
             this.render();
         },
         finishEditPassword: function() {
-            var self = this;
-            this.doModelAction('changePassword').then(function() {
-                _.delay(function() {
-                    self.$('[data-mz-validationmessage-for="passwordChanged"]').show().text(Hypr.getLabel('passwordChanged')).fadeOut(3000);
-                }, 250);
-            });
+            this.doModelAction('changePassword');
             this.editing.password = false;
         },
         cancelEditPassword: function() {
@@ -109,10 +104,10 @@
         finishRemoveItem: function(e) {
             var self = this;
             var id = $(e.currentTarget).data('mzItemId');
-            return this.model.apiDeleteItem(id).then(function() {
+            return this.model.apiDeleteItem(id).then(function () {
                 self.editing.remove = false;
                 return self.model.apiGet();
-            });
+            })
         }
     });
 
@@ -200,7 +195,6 @@
             'editingCard.expireMonth',
             'editingCard.expireYear',
             'editingCard.cvv',
-            'editingCard.isCvvOptional',
             'editingCard.contactId',
             'editingContact.firstName',
             'editingContact.lastNameOrSurname',
@@ -239,7 +233,7 @@
             var self = this,
                 id = e.currentTarget.getAttribute('data-mz-card'),
                 card = this.model.get('cards').get(id);
-            if (window.confirm(Hypr.getLabel('confirmDeleteCard', card.get('cardNumberPart')))) {
+            if (confirm(Hypr.getLabel('confirmDeleteCard', card.get('cardNumberPart')))) {
                 this.doModelAction('deleteCard', id);
             }
         }
@@ -290,7 +284,7 @@
             var self = this,
                 id = e.currentTarget.getAttribute('data-mz-contact'),
                 contact = this.model.get('contacts').get(id);
-            if (window.confirm(Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')))) {
+            if (confirm(Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')))) {
                 this.doModelAction('deleteContact', id);
             }
         }
