@@ -9,6 +9,8 @@ Ext.define('Taco.view.customers.Contacts', {
 
     order: null,
 
+    autoAddContact: false,
+
     initComponent: function () {
 
         this.addressContainer = Ext.widget({
@@ -25,6 +27,8 @@ Ext.define('Taco.view.customers.Contacts', {
         this.items = [this.addressContainer];
 
         this.callParent(arguments);
+
+        if (!this.contacts.length && this.autoAddContact) this.createNewContact();
     },
 
     sortContacts: function () {
@@ -38,7 +42,6 @@ Ext.define('Taco.view.customers.Contacts', {
         Ext.Array.sort(this.contacts, function (a, b) {
             return fnValue(a) - fnValue(b);
         });
-
     },
 
     buildAddresses: function () {
