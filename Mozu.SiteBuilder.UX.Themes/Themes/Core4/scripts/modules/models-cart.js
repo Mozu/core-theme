@@ -1,16 +1,14 @@
-﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
+﻿define(['shim!vendor/underscore>_', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
 
     var CartItemProduct = Backbone.MozuModel.extend({
         helpers: ['mainImage'],
         mainImage: function() {
             var imgs = this.get("productImages"),
-                img = imgs && imgs[0],
-                imgurl = 'http://placehold.it/160&text=' + Hypr.getLabel('noImages');
-            return img || { ImageUrl: imgurl, imageUrl: imgurl }; // to support case insensitivity
+                img = imgs && imgs[0];
+            return img || { ImageUrl: 'http://placehold.it/160&text=' + Hypr.getLabel('noImages') }
         },
         initialize: function() {
-            var url = "/product/" + this.get("productCode");
-            this.set({ Url: url, url: url });
+            this.set({Url: "/product/" + this.get("productCode")})
         }
     }),
 

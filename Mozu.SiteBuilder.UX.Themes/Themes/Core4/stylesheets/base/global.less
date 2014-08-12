@@ -28,8 +28,12 @@ p {
 }
 
 // preventing FOUT since web fonts are loading asynchronously    
-html.js.fontface.mz-fontloading body {
+html.js.fontface body {
     visibility: hidden;
+}
+
+html.js.fontface.wf-active body {
+    visibility: visible;
 }
 
 /* Inputs -------------------*/

@@ -1,15 +1,7 @@
 ﻿<script>
-    document.documentElement.className += " mz-fontloading";
     WebFontConfig = {
         google: {
-            families: [
-                {% for font in themeSettings.fonts %}                
-                    '{{ font }}'{% if not forloop.last %},{% endif %}
-                {% endfor %}
-            ]
-        },
-        active: function() {
-            document.documentElement.className = document.documentElement.className.replace('mz-fontloading', '');
+            families: ['{{ themeSettings.font }}:regular,italic,bold,bolditalic']
         }
     };
     (function() {

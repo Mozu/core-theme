@@ -3,23 +3,22 @@ modules/common.js
 ----------------
 modules/common.js
 modules/api.js
-vendor/underscore/underscore.js
-vendor/backbone/backbone.js
+shim!vendor/underscore>_
+shim!vendor/backbone[shim!vendor/underscore>_=_,jquery=jQuery]>Backbone
 modules/backbone-mozu-validation.js
 vendor/jquery-scrollto.js
-vendor/jquery.cookie/jquery.cookie.js
+vendor/jquery-cookie.js
 modules/jquery-mozu.js
 modules/models-messages.js
 modules/backbone-mozu-model.js
-modules/backbone-mozu-pagedcollection.js
 modules/views-messages.js
 modules/backbone-mozu-view.js
 modules/backbone-mozu.js
 modules/cart-monitor.js
 modules/contextify.js
-shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery
-shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery
+shim!vendor/bootstrap-popover[modules/jquery-mozu=jQuery]>jQuery
 modules/login-links.js
+modules/mixin-paging.js
 modules/models-address.js
 modules/models-price.js
 modules/models-product.js
@@ -27,11 +26,9 @@ modules/models-orders.js
 modules/models-paymentmethods.js
 modules/models-customer.js
 modules/models-faceting.js
-shim!vendor/bootstrap/js/affix[jquery=jQuery]
-shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]
+shim!vendor/bootstrap-affix[jquery=jQuery]
+shim!vendor/bootstrap-scrollspy[jquery=jQuery]
 modules/scroll-nav.js
-shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery
-modules/search-autocomplete.js
 modules/views-paging.js
 modules/views-productlists.js
 
@@ -42,7 +39,6 @@ pages/cart.js
 
 pages/category.js
 ----------------
-modules/views-collections.js
 pages/category.js
 
 pages/checkout.js
