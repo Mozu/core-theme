@@ -226,9 +226,9 @@ Ext.define('Taco.view.product.variant.Grid', {
 
 
         if (isDigitalCredit) {
-            this.store.whenLoaded(function () {
+            this.mon(this.store, 'load', function () {
                 me.store.each(function (item) {
-                    item.set('fulfillmentTypesSupported', 'Digital');
+                    item.set('fulfillmentTypesSupported', ['Digital']);
                 });
             });
         }
