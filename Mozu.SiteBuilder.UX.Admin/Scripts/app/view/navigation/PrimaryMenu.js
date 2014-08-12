@@ -72,7 +72,10 @@ Ext.define('Taco.view.navigation.PrimaryMenu', {
         }
         controller = controller.toLowerCase();
 
+        this.breadcrumb[controller == 'dashboard' ? 'hide' : 'show']();
+
         fourndRecords = this.findNavRecords(this.store, appStateAddress);
+
         if (fourndRecords) {
             this.syncBreadcrumb(fourndRecords.parentRecord, fourndRecords.selectedRecord);
         }
