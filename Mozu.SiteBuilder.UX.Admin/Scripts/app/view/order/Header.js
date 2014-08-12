@@ -46,14 +46,14 @@ Ext.define('Taco.view.order.Header', {
         ]);
 
         // after the record is reloaded we will need to refresh the ui
-        this.mon(this.record, "aftercommit", this.onRecordChange, this);
-
-        this.callParent(arguments);
+        this.mon(this.record, 'aftercommit', this.onRecordChange, this);
 
         this.on({
-            afterrender: this.checkAddresses,
+            customerchanged: this.checkAddresses,
             scope: this
         });
+
+        this.callParent(arguments);
 
         this.loadCustomer();
     },
@@ -295,7 +295,7 @@ Ext.define('Taco.view.order.Header', {
             width: 300,
             emptyText: 'Customer Search',
             listeners: {
-                select: function (combo, records, eOpts) {
+                select: function (combo, records) {
                     if (records[0]) this.changeCustomer(records[0]);
                 },
                 scope: this
@@ -356,8 +356,6 @@ Ext.define('Taco.view.order.Header', {
         this.customerSelectionContainer[this.record.getCustomer() ? 'hide' : 'show']();
 
         Ext.resumeLayouts(true);
-
-        this.checkAddresses();
     },
 
     createCustomer: function () {
@@ -370,7 +368,7 @@ Ext.define('Taco.view.order.Header', {
                     var createNewCustomerButton = this.down("#createNewCustomerButton");
                     createNewCustomerButton.focus();
                 },
-                aftersaveclose: function (view, record) {
+                aftersaveclose: function () {
                     me.fireEvent('addresschanged', me, me.record);
                     me.updateHeader();
                 }
@@ -386,12 +384,12 @@ Ext.define('Taco.view.order.Header', {
             order: this.record,
             listeners: {
                 scope: me,
-                afterclose: function (view, e) {
+                afterclose: function () {
                     if (focusAfterCloseCmp) {
                         focusAfterCloseCmp.focus();
                     }
                 },
-                aftersaveclose: function (view, record) {
+                aftersaveclose: function () {
                     me.fireEvent('addresschanged', me, me.record);
                     me.updateHeader();
                 }
