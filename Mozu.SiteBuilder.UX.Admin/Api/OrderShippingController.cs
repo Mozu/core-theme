@@ -17,9 +17,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public partial class OrderController
     {
         [HttpGetRoute(UriTemplate = "shipping/runtimemethods")]
-        public async Task<Response<List<DCs.ShippingRate>>> GetRuntimeShipmentMethods([FromUri]string orderId)
+        public async Task<Response<List<DCs.ShippingRate>>> GetRuntimeShipmentMethods([FromUri]string orderId, [FromUri]bool? draft)
         {
-            List<DCs.ShippingRate> rates = (await _orderWebApiClient.GetAvailableShipmentMethods(orderId)).ReadAsSync();
+            List<DCs.ShippingRate> rates = (await _orderWebApiClient.GetAvailableShipmentMethods(orderId, draft)).ReadAsSync();
 
             return List2(rates);
         }

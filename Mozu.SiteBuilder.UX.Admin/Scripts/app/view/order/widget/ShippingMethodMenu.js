@@ -16,6 +16,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
 
     config: {
         orderId: null,
+        isDraft: false,
 
         showMethodsByCarrier:false,
 
@@ -27,7 +28,6 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
         var me = this;
 
         me.InitShippingMethodsData();
-        
 
 
         // this is the shipping methods that are available for the specific order. Will include pricing.
@@ -36,7 +36,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
             autoLoad: false,
             proxy: {
                 type: 'ajax',
-                url: '/admin/app/order/shipping/runtimemethods?orderId=' + me.getOrderId(),
+                url: '/admin/app/order/shipping/runtimemethods?orderId=' + me.getOrderId() + '&draft=' + me.getIsDraft(),
                 reader: {
                     type: 'json',
                     root: 'items',
