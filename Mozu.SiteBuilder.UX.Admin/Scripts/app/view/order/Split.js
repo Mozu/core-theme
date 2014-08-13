@@ -122,7 +122,8 @@ Ext.define('Taco.view.order.Split', {
         ids = Ext.Array.merge(ids, ['cancelActionButton', 'saveActionButton']);
 
         return this.editor.header.down('toolbar').queryBy(function (cmp) {
-            return ids.indexOf(cmp.getItemId()) > -1;
+            var index = Ext.Array.indexOf(ids, cmp.getItemId());
+            return index > -1;
         });
     },
 
@@ -268,7 +269,7 @@ Ext.define('Taco.view.order.Split', {
         });
         
         // insert each additionalAction into the toolbar after the spacer
-        buttons.forEach(function (button, index) {
+        Ext.Array.forEach(buttons, function (button, index) {
             var id = button.getItemId();
 
             if (toolbar.getComponent(id)) {
