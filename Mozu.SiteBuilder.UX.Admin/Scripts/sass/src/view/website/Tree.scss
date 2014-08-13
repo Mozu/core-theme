@@ -44,7 +44,7 @@
         display: inline-block;
         margin-right: 4px;
         overflow: hidden;
-        @include icon-font($glyph-pagecategory);
+        @include icon-font($glyph-category);
         height: 14px;
         width: 13px;
 
