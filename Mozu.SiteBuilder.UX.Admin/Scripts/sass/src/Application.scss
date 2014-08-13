@@ -29,3 +29,6 @@
 //         background-image: url('http://i.imgur.com/igIUXoR.png');
 //     }
 // }
+
+// this is an override to  disable the clear button for fields in IE10
+input[type=text]::-ms-clear{display:none;}
