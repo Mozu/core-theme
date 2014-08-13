@@ -47,7 +47,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Siesta
             "customers/contacts.t.js",
             "customunit/view/order/header.t.js",
 
-
+            
+            "modal/createCustomer.t.js"
 
             
         };
