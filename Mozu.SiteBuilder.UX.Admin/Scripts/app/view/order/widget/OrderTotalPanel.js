@@ -201,6 +201,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
                     showRuntimePricing: true,
                     orderId: me.record.getId(),
+                    isDraft: this.record.get("isDraft"),
                     onShippingMethodChange: function (menu, selection) {
                         
                         if (selection && (selection.shippingMethodName || Ext.isNumeric(selection.price))) {

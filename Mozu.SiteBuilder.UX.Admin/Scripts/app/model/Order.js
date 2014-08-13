@@ -848,7 +848,7 @@ Ext.define('Taco.model.Order', {
                     model: 'Taco.model.ShippingMethod',
                     proxy: {
                         type: 'ajax',
-                        url: '/admin/app/order/shipping/runtimemethods?orderId=' + this.getId(),
+                        url: '/admin/app/order/shipping/runtimemethods?orderId=' + this.getId() + '&draft=' + this.get('isDraft'),
                         reader: {
                             type: 'json',
                             root: 'items',
