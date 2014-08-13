@@ -16,9 +16,8 @@ Ext.define('Taco.model.Product', {
         'Taco.model.ProductVariation',
         'Taco.model.BundledProduct',
         'Taco.store.ProductTypes'
-     
     ],
-   // requiredStores: ['Taco.store.ProductTypes'],
+    // requiredStores: ['Taco.store.ProductTypes'],
     statics: {
         publishBulk: function (cfg) {
             this.doPublish(Ext.apply({}, {
@@ -48,14 +47,14 @@ Ext.define('Taco.model.Product', {
 
         doPublish: function (cfg) {
             var options = Ext.apply({}, {
-                    method: 'POST',
-                    success: function () {
-                        Taco.core.data.StoreManager.markChanged('Taco.model.Product');
-                        if (cfg.success) {
-                            cfg.success.apply(cfg.scope || this, arguments);
-                        }
+                method: 'POST',
+                success: function () {
+                    Taco.core.data.StoreManager.markChanged('Taco.model.Product');
+                    if (cfg.success) {
+                        cfg.success.apply(cfg.scope || this, arguments);
                     }
-                }, cfg);
+                }
+            }, cfg);
             Ext.Ajax.request(options);
         }
     },
@@ -386,8 +385,6 @@ Ext.define('Taco.model.Product', {
             useNull: true,
             dateFormat: 'c'
         },
-
-
         {
             "name": "packageWeight",
             "type": "float",
@@ -438,8 +435,6 @@ Ext.define('Taco.model.Product', {
             type: "auto",
             defaultValue: []
         },
-    
-    
         {
             name: "hasConfigurableOptions",
             type: "boolean"
@@ -464,14 +459,13 @@ Ext.define('Taco.model.Product', {
         {
             name: "baseProductCode",
             type: "string",
-            persist:false
+            persist: false
         }, {
             name: 'masterCatalogId',
             type: 'int',
-            useNull:true,
-            persist:false
+            useNull: true,
+            persist: false
         }
-
     ],
     loadRuntimeProduct: function (cfg) {
 
@@ -502,7 +496,7 @@ Ext.define('Taco.model.Product', {
     },
     getMasterCatalog: function () {
         var mc = this.get('masterCatalogId');
-        if ( mc == null ) {
+        if (mc == null) {
             return Taco.app.context.getMasterCatalog();
         }
         return Taco.app.context.findMasterCatalog(mc);
@@ -562,23 +556,23 @@ Ext.define('Taco.model.Product', {
 
         var me = this,
             options = Ext.apply(
-                {
-                    method: 'POST',
-                    url: '/admin/app/productruntime/configure?productCode=' + this.getId(),
-                    success: function (response) {
-                        var res = Ext.JSON.decode(response.responseText) || {};
-                        if (cfg.callback) {
-                            cfg.callback.apply(cfg.scope || me, [res.items, response]);
-                        }
-                        if (cfg.success && res.success) {
-                            cfg.success.apply(cfg.scope || me, [res.items, response]);
-                        }
-                        if (!res.success && cfg.failure) {
-                            cfg.failure.apply(cfg.scope || me, [res.items, response]);
-                        }
-
+            {
+                method: 'POST',
+                url: '/admin/app/productruntime/configure?productCode=' + this.getId(),
+                success: function (response) {
+                    var res = Ext.JSON.decode(response.responseText) || {};
+                    if (cfg.callback) {
+                        cfg.callback.apply(cfg.scope || me, [res.items, response]);
                     }
-                }, cfg);
+                    if (cfg.success && res.success) {
+                        cfg.success.apply(cfg.scope || me, [res.items, response]);
+                    }
+                    if (!res.success && cfg.failure) {
+                        cfg.failure.apply(cfg.scope || me, [res.items, response]);
+                    }
+
+                }
+            }, cfg);
         Ext.Ajax.request(options);
     },
     getContextualValue: function (fieldName, formatCurrency) {
@@ -596,7 +590,7 @@ Ext.define('Taco.model.Product', {
                 level = this;
             }
         }
-        if (formatCurrency && level.get(fieldName)!= null ) {
+        if (formatCurrency && level.get(fieldName) != null) {
             return level.formatCurrency(level.get(fieldName));
         }
         return level.get(fieldName);
@@ -674,7 +668,11 @@ Ext.define('Taco.model.Product', {
             model: 'Taco.model.ProductVariation',
             autoLoad: false,
             pageSize: 900,
-            loadFromOptions: function () {
+                loadFromOptions: function () {
+                    var beforeState =[];
+                    if (me.productVariationStore && me.productVariationStore.data && me.productVariationStore.data.items) {
+                        beforeState = Ext.Array.pluck(me.productVariationStore.data.items, 'internalId')
+                    }
                 params.options = [];
                 me.getOptions().each(function (option) {
                     params.options.push({
@@ -689,7 +687,9 @@ Ext.define('Taco.model.Product', {
                     params: params,
                     callback: function (records) {
                         Ext.Array.each(records, function (newRecord) {
-                            newRecord.set('isActive', true);
+                            if (Ext.Array.indexOf(beforeState, newRecord.internalId) == -1) {
+                                newRecord.set('isActive', true);
+                            }
                         });
                     }
                 });
@@ -720,7 +720,18 @@ Ext.define('Taco.model.Product', {
         }, this);
 
 
-        this.getOptions().on('update', me.productVariationStore.loadFromOptions, me.productVariationStore, { buffer: 20 });
+        this.getOptions().on('update', function () {
+                me.productVariationStore.loadFromOptions();
+
+                //if (me.phantom) {
+                //    me.productVariationStore.loadFromOptions();
+                //} else {
+                //    this.productVariationStore.load();
+
+                //}
+            },
+            me,
+            { buffer: 20 });
 
 
         return this.productVariationStore;

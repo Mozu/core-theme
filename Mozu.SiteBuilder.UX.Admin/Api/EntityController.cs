@@ -193,9 +193,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                               TotalCount = 1
                           };
                 }
-                else
+                else if (string.IsNullOrEmpty(view))
                 {
                     res = (await _documentListWebApiClient.GetDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy)).ReadAsSync();
+                }
+                else
+                {
+                    res = (await _documentListWebApiClient.GetViewDocuments(documentListName: list, pageSize: pagingParams.pageSize, filter: filter, startIndex: pagingParams.startIndex, sortBy: sortBy, viewName: view)).ReadAsSync();
+                    
                 }
 
                 

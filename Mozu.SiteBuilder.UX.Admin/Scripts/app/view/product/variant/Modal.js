@@ -12,7 +12,7 @@ Ext.define('Taco.view.product.variant.Modal', {
     ],
 
     primaryText: 'Save',
-    
+    closeAction :'destroy',
 
     secondaryHandler: function () {
         this.onCancel();

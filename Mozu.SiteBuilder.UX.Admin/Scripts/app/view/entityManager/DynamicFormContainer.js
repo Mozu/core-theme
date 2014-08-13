@@ -35,17 +35,16 @@
 
   //  padding: '20px',
     initComponent: function () {
-        var me=this,
-            code = this.editor.get('code');
+    
 
         this.data = Ext.clone(this.record.get('fields'));
         if (this.editor) {
 
             try {
-                this.dynamicForm = eval(code);
+                this.dynamicForm = eval(this.editor.get('code'));
                 
             } catch (e) {
-                console.log(e, code);
+                console.log(e, this.editor.get('code'));
             }
         }
         if (!this.dynamicForm) {
@@ -81,7 +80,7 @@
         if (this.dynamicForm.setData) {
             this.dynamicForm.setData(this.data, this.name);
         } else if (this.dynamicForm.getForm) {
-            var form = this.dynamicForm.getForm().setValues(this.data);
+            this.dynamicForm.getForm().setValues(this.data);
         }
 
 
