@@ -494,7 +494,6 @@
             "abbreviation": "WY",
             "name": "Wyoming"
         }],
-        "useAnimatedProductLists": false,
         "useDebugScripts": false,
         "useSearchAutocomplete": true,
         "allowCustomerInitiatedReturns": true
