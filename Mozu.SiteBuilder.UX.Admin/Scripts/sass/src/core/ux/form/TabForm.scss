@@ -29,6 +29,10 @@
     line-height: 20px;
     padding: 6px 8px 4px 8px;
 
+	&:focus {	            
+		text-decoration: underline;
+	}
+
     @include transition(color 0.2s, border-color 0.2s);
 
         &:hover {

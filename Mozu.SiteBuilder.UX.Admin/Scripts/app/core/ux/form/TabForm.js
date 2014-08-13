@@ -62,14 +62,18 @@ Ext.define('Taco.core.ux.form.TabForm', {
             autoShow: true,
             itemSelector: '.taco-form-tabform-nav-link',
             plugins: ["autoselect"],
-            listeners: {
-                itemclick: this.onNavClick,
+            selModel: Ext.create('Ext.selection.DataViewModel',{
+                enableKeyNav : false
+            }),
+            listeners: {                
+                itemclick: function (view, record, item, index, e, eOpts) {
+                    this.onNavClick(view, record, item, index, e);
+                    Ext.fly(item).focus();
+                },                
                 itemkeydown: function (view, record, item, index, e) {
-                    
                     if (e.getKey() == Ext.EventObject.ENTER) {
-                        this.onNavClick(view, record, e);
+                        item.click();
                     }
-
                 },
                 scope: this
             },
@@ -77,7 +81,7 @@ Ext.define('Taco.core.ux.form.TabForm', {
                 '<ul>',
                     '<tpl for=".">',
                         //'<tpl if="this.isVisible(values)">',
-                            '<li class="taco-form-tabform-nav-link"><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
+                            '<li tabIndex="0" class="taco-form-tabform-nav-link"><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
                         //'</tpl>',
                     '</tpl>',
                 '</ul>',
@@ -88,6 +92,11 @@ Ext.define('Taco.core.ux.form.TabForm', {
                 }
             ]
         })
+
+        
+        
+
+        
 
         var items = excludedItems;
         items.push(this.leftNav)

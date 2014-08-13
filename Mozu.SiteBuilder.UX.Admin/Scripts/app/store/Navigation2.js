@@ -153,6 +153,7 @@ Ext.define('Taco.store.Navigation2', {
             }, {
                 "id": "marketing",
                 "label": "Marketing",
+                "keyNavShortcut": Ext.EventObject.M,
                 "address": "discounts",
                 "behaviorIds": [24],
                 "icon": "nav-marketing",
@@ -181,6 +182,7 @@ Ext.define('Taco.store.Navigation2', {
             }, {
                 "id": "sitebuilder",
                 "label": "Site Builder",
+                "keyNavShortcut": Ext.EventObject.B,
                 "address": "siteSelection",
                 "showBreadCrumbs":false,
                 //"address": "sites/pages",
@@ -221,6 +223,7 @@ Ext.define('Taco.store.Navigation2', {
             }, {
                 "id": "settings",
                 "label": "Settings",
+                "keyNavShortcut": Ext.EventObject.S,
                 "address": "generalsettings",
                 "icon": "nav-settings",
                 "visible": false,
@@ -299,6 +302,7 @@ Ext.define('Taco.store.Navigation2', {
                 ]
             }, {
                 "id": "locations",
+                "keyNavShortcut": Ext.EventObject.L,
                 "label": "Locations",
                 "address": "locations",
                 "icon": "nav-locations",
@@ -351,6 +355,7 @@ Ext.define('Taco.store.Navigation2', {
             {
                 "id": "report",
                 "label": "Reports",
+                "keyNavShortcut": Ext.EventObject.R,
                 "address": "report",
                 "icon": "nav-dashboard",
                 "behaviorIds": [188],

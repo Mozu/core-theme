@@ -66,6 +66,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             //forcePrecision: true,
             selectOnFocus: true,
             hideTrigger: true,
+
             //fieldStyle: "text-align:right;padding-right:4px;",
             mouseWheelEnabled: false,
             allowBlank: false,
@@ -465,7 +466,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         
         this.setProductConfiguration(null);
         me.productPickerField.reset();
-        me.productPickerField.focus();
+        
         
         me.fulfillmentPickerField.reset();
         me.fulfillmentPickerField.blur()
@@ -483,6 +484,14 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         me.priceField.setValue("");
 
         me.addItemButton.disable();
+
+        // adding a small delay to let IE/Firefox catch up
+        Ext.Function.defer(function () {
+            if (this.productPickerField) {
+                this.productPickerField.focus()
+            }
+        }, 100, me);
+        
     }
 });
 

@@ -1,1 +1,13 @@
-﻿
+﻿.discount-picker-menu{
+	.codelabel{		
+		padding-right:5px;
+    }
+	.code{
+		color: $color-theme-base-dark;
+		padding-right:10px;
+    }
+
+    .name{		
+		padding-right:15px;		
+	}
+}

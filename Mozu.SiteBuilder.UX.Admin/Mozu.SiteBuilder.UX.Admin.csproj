@@ -781,6 +781,7 @@
     <Content Include="Scripts\app\overrides\form\field\Number.js" />
     <Content Include="Scripts\app\overrides\grid\plugin\CellEditing.js" />
     <Content Include="Scripts\app\overrides\grid\plugin\RowEditing.js" />
+    <Content Include="Scripts\app\overrides\grid\Panel.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditorButtons.js" />
     <Content Include="Scripts\app\overrides\grid\RowEditor.js" />
     <Content Include="Scripts\app\overrides\menu\Menu.js" />
@@ -1472,6 +1473,7 @@
     <Content Include="Tests\.jshintignore" />
     <Content Include="Scripts\.jshintignore" />
     <Content Include="Scripts\.jshintrc" />
+    <Content Include="Scripts\sass\src\overrides\grid\Panel.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

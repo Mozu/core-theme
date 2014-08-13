@@ -20,10 +20,11 @@ Ext.define('Taco.view.order.widget.DiscountPickerField', {
     //height: 24,
     listConfig: {
         loadingText: 'Searching...',
+        cls: "discount-picker-menu",
         emptyText: 'No matching discounts found.',
         // Custom rendering template for each item
         getInnerTpl: function () {
-            return "{name}"
+            return "<span class='name'>{name},</span><span class='codelabel'>Coupon:</span><span class='code'>\"{couponCode}\"</span>"
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;
