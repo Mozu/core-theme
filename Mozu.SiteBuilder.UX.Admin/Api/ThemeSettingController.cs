@@ -63,7 +63,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 JToken o = null;
                 if (!values.TryGetValue(setting.Id, out o))
                 {
-                    values.Add(setting.Id, setting.DefaultValue.ToString());
+                    var jToken =   JToken.FromObject(setting.DefaultValue);
+                    values.Add(setting.Id, jToken);
                 }
             }
 
@@ -100,6 +101,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "instance/save/{themeId}")]
         public async Task<Response<JObject>> SaveInstance(string themeId, Newtonsoft.Json.Linq.JObject values)
         {
+            var existingValues = (IDictionary<string, JToken>) await _themeSettingsRepository.GetInstanceValues(themeId);
+            var valueDic = (IDictionary<string, JToken>) values;
+            if (existingValues != null)
+            {
+
+                foreach (var props in existingValues)
+                {
+                    if (!valueDic.ContainsKey(props.Key))
+                    {
+                        valueDic[props.Key] = props.Value;
+                    }
+                    
+                }    
+            }
+
+            
             var retval = await _themeSettingsRepository.SaveInstanceValues(values, themeId);
             return Single2(retval);
         }

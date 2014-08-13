@@ -49,7 +49,7 @@ Ext.define('Taco.view.themesettings.Form', {
         var me = this;
         tasks.add({
             fn:function (task) {
-               var values = me.getForm().getValues();
+                var values = me.getForm().getValues(false, true, false, false);
 
                 Ext.Object.each(values, function (key, value, object) {
                     if (Ext.isEmpty(value)) {

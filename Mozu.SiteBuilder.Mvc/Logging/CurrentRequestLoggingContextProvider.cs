@@ -32,10 +32,15 @@ namespace Mozu.SiteBuilder.Mvc.Logging
                 dict.Add("VisitId", _pageContext.Visit.VisitId);
                 dict.Add("VisitorId", _pageContext.Visit.VisitorId);
             }
-
+            if (_pageContext != null && !string.IsNullOrEmpty(_pageContext.Url))
+            {
+                dict.Add("PageUrl", _pageContext.Url);
+            }
+          
             // if context was passed via container
             if (_httpContext != null && _httpContext.Request != null)
             {
+              
                 dict.Add("RawUrl", _httpContext.Request.RawUrl);
                 dict.Add("AbsoluteUrl", _httpContext.Request.Url != null ? _httpContext.Request.Url.AbsoluteUri : null);
             }
