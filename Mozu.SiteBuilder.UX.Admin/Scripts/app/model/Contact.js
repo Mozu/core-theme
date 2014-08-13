@@ -119,6 +119,9 @@ isShipping: false
         {
             "name": "countryCode",
             "type": "string",
+            convert: function (val, record) {                
+                return Ext.util.Format.uppercase(val);
+            },
             "useNull": true
         },
         {
