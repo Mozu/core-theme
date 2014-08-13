@@ -1,0 +1,17 @@
+﻿{
+  "name": "mozu-core4",
+  "author": "Volusion, Inc.",
+  "description": "The core storefront theme for Mozu.",
+  "version": "1.1.0",
+  "devDependencies": {
+    "grunt": "~0.4",
+    "grunt-contrib-jshint": "~0.8",
+    "grunt-contrib-watch": "~0.6",
+    "grunt-jsonlint": "*",
+    "zubat": "git://github.com/zetlen/mozu-zubat.git#master",
+    "async": "~0.2.10"
+  },
+  "engines": {
+	"node": ">=0.10"
+  }
+}

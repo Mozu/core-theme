@@ -1,0 +1,40 @@
+﻿<div class="mz-checkout-payment">
+                <h4 class="mz-checkout-paymenttitle"><strong>{% if model.amountCollected > 0 %}{{ model.amountCollected|currency }}{% else %}{{ model.amountRequested|currency }}{% endif %}</strong> &mdash; {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }} {% endif %}{% if model.billingInfo.paymentType == "PaypalExpress" %} {{ labels.payPal }} {% endif %}{% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}{% if model.billingInfo.paymentType == "StoreCredit" %}{{ labels.storeCredit }}{% endif %}</h4>
+                <dl class="mz-propertylist">
+                    {% if model.billingInfo.billingContact.email %}
+                    <dt>{{ labels.billingEmail }}</dt>
+                    <dd>{{ model.billingInfo.billingContact.email }}</dd>
+                    {% endif %}
+                    {% if model.billingInfo.paymentType == "StoreCredit" %}
+                    <dt>{{ labels.storeCreditNumber }}</dt>
+                    <dd>{{ model.billingInfo.storeCreditCode }}</dd>
+                    {% else %}
+                    <dt>{{ labels.billingName }}</dt>
+                    <dd>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</dd>
+                    <dt>{{ labels.billingAddress }}</dt>
+                    <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</dd>
+                    {% endif %}
+                    {% if model.billingInfo.paymentType == "CreditCard" %}
+                    <dt>{{ labels.cardType }}</dt>
+                    <dd>{{ model.billingInfo.card.paymentOrCardType }}</dd>
+                    <dt>{{ labels.cardNumber }}</dt>
+                    <dd>{{ model.billingInfo.card.cardNumberPartOrMask|default("****************") }}</dd>
+                    {% endif %}
+                    {% if model.billingInfo.paymentType == "PaypalExpress" %}
+                    <dt>{{ labels.paymentType }}</dt>
+                    <dd>{{ labels.payPal }}</dd>
+                    {% endif %}
+                    {% if model.billingInfo.paymentType == "Check" %}
+                    <!--
+                    <dt>{{ labels.checkNumber }}</dt>
+                    <dd>{{ model.billingInfo.check.checkNumber }}</dd>
+                    -->
+                    <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
+                    <dd class="mz-addresssummary">
+                        <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+                        <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+                        {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}
+                    </dd>
+                    {% endif %}
+                </dl>
+            </div>

@@ -1,0 +1,20 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{{ labels.noResultsTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-searchresults mz-noresults {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">{{ labels.noResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
+
+    <p class="mz-searchresults-noresultstext">{{ labels.noResultsText }}</p>
+
+    {% dropzone "no-results" scope="template" %}
+
+</div>
+
+
+{% endblock body-content %}
+

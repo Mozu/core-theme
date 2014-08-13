@@ -1,0 +1,146 @@
+{
+  "items": [
+    {
+      "xtype": "panel",
+      "title": "Features",
+      "collapsed": false,
+      "items": [
+        {
+          "xtype": "checkbox",
+          "name": "allowWishlist",
+          "fieldLabel": "Allow Wishlist"
+        },
+        {
+          "xtype": "checkbox",
+          "name": "useAnimatedProductLists",
+          "fieldLabel": "Use Animated Product Lists"
+        },
+       {
+          "xtype": "checkbox",
+          "name": "enablePartialCaching",
+          "fieldLabel": "Enable Partial Caching",
+          "value" :true
+        },
+        {
+          "xtype": "checkbox",
+          "name": "useDebugScripts",
+          "fieldLabel": "Debug Mode (use unminified JavaScript)"
+        },
+        {
+          "xtype": "checkbox",
+          "name": "showAddressTypeDropdown",
+          "fieldLabel": "Show Address Type dropdown in Address Forms (Residential/Commercial)"
+        }
+      ]
+    },
+    {
+      "xtype": "panel",
+      "title": "Layout",
+      "collapsed": false,
+      "items": [
+        {
+          "xtype": "combo",
+          "name": "gutterWidth",
+          "fieldLabel": "Base Margin Width",
+          "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
+          "store": [
+            "15px",
+            "20px",
+            "25px",
+            "30px",
+            "35px"
+          ],
+          "queryMode": "local"
+        }
+      ]
+    },
+    {
+      "xtype": "panel",
+      "title": "Text",
+      "collapsed": false,
+      "items": [
+        {
+          "xtype": "combo",
+          "name": "font",
+          "fieldLabel": "Font",
+          "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
+          "store": [
+            "Source Sans Pro",
+            "Open Sans",
+            "Raleway",
+            "Lora",
+            "Rokkitt"
+          ],
+          "queryMode": "local"
+        },
+        {
+          "xtype": "combo",
+          "name": "fallbackFontFamily",
+          "fieldLabel": "Fallback Font Family",
+          "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
+          "store": [
+            "sans-serif",
+            "serif"
+          ],
+          "queryMode": "local"
+        },
+        {
+          "xtype": "colorfield",
+          "name": "textColor",
+          "fieldLabel": "Text Color"
+        }
+      ]
+    },
+    {
+      "xtype": "panel",
+      "title": "Paging",
+      "defaultType": "textfield",
+      "collapsed": false,
+      "items": [
+        {
+          "fieldLabel": "Default Items Per Page",
+          "xtype": "combo",
+          "name": "defaultPageSize",
+          "allowBlank": false,
+          "editable": false,
+          "forceSelection": true,
+          "store": [
+            15,
+            25,
+            50
+          ],
+          "queryMode": "local"
+        }
+      ]
+    },
+    {
+        "xtype": "panel",
+        "title": "Navigation",
+        "collapsed": false,
+        "items": [
+            {
+                "fieldLabel": "Maximum Items In Main Nav",
+                "xtype": "numberfield",
+                "name": "maxTopLevelNavItems",
+                "hideTrigger": false,
+                "allowDecimal": false,
+                "minValue": 1
+            },
+            {
+                "fieldLabel": "Maximum Nav Item Label Length",
+                "xtype": "numberfield",
+                "name": "maxTopLevelNavLabelLength",
+                "hideTrigger": false,
+                "allowDecimal": false,
+                "minValue": 1
+            }
+        ]
+	}
+  ]
+}

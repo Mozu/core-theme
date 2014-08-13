@@ -1,0 +1,29 @@
+﻿.mz-l-stack {
+    .mz-l-stack-section {
+        margin: 0 0 @gutter;
+        .clearfix();
+        .mz-l-stack-sectiontitle {
+            margin: 0 0 @gutter/4;
+            padding: 0 0 @gutter/8;
+            font-size: @fontSizeLarger;
+            border-bottom: 1px solid #eee;
+        }
+    }
+}
+
+.mz-l-stack-large {
+    .mz-l-stack-section {
+        min-height: 400px; // TODO: remove
+        .mz-l-stack-sectiontitle {
+            font-size: @fontSizeLarge;
+            a {
+                float: right;
+                margin-left: @gutter/2;
+                font-size: @fontSizeSmall;
+                line-height: @fontSizeLarge*2;
+                font-weight: normal;
+                .permalink(@textColor);
+            }
+        }
+    }
+}

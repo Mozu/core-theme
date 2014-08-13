@@ -1,0 +1,38 @@
+﻿<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
+    
+    <div class="mz-productlisting-image">
+        {% if model.mainImage.imageUrl %}
+        <a href="{{model.url}}">
+            <img src="{{model.mainImage.imageUrl}}?max={% block thumbnail-size %}{{ themeSettings.listProductThumbSize }}{% endblock thumbnail-size %}" />
+        </a>
+        {% else %}
+            <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+        {% endif %}
+    </div>
+    <div class="mz-productlisting-info">
+        <a class="mz-productlisting-title" href="{{model.url}}">{{model.content.productName}}</a>
+        {% if model.content.productShortDescription and themeSettings.listProductShortDesc %}
+        <p class="mz-productlisting-shortdesc">{{ model.content.productShortDescription|striptags|truncatewords(themeSettings.maxProductSummaryWords) }}</p>
+        {% endif %}
+        {% block product-code %}
+        {% if themeSettings.listProductCode %}
+        <div class="mz-productlisting-productcode">{{model.productCode}}</div>
+        {% endif %}
+        {% endblock product-code %}
+        {% include "modules/product/price-stack" %}
+        {% block product-extrainfo %}
+        {% if dealOfTheDay %}
+          {% if dealOfTheDay.savings %}
+            {% if model.price.discount.impact %}
+              <p class="mz-productlisting-savings">You save: {{ model.price.discount.impact|currency }}</p>
+            {% endif %}
+          {% endif %}
+          {% if dealOfTheDay.expirationDate %}
+            {% if model.price.discount.discount.expirationDate %}
+              <p class="mz-productlisting-expirationdate">Expires: {{ model.price.discount.discount.expirationDate.createDate|date("F j, Y") }}</p>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+        {% endblock product-extrainfo %}
+    </div>
+</div>

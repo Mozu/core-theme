@@ -23,13 +23,6 @@
         "path": "web_page.js",
         "priority": 0.2
     }, {
-        "documentTypes": [
-            "post@mozu"
-        ],
-        "id": "post@mozu",
-        "path": "post.js",
-        "priority": 0.2
-    }, {
         "id": "about-us@mozu",
         "path": "about-us.js"
     }, {
@@ -61,7 +54,7 @@
             "subject": "Your Order Has Shipped #{model.orderNumber}"
         },
         "template": "email/order-shipped",
-        "title": "Order Shipped"
+        "title": "Order Shipped" 
     }, {
         "id": "order.changed",
         "customEditor": "email-orderconfirmation",

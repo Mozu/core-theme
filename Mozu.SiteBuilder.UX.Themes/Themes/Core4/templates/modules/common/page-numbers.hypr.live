@@ -1,0 +1,15 @@
+﻿<a class="mz-pagenumbers-prev{% if not model.hasPreviousPage %} is-disabled{% endif %}" href="#" data-mz-action="previous">{{ labels.previousPage }}</a>
+<a class="mz-pagenumbers-number {% if model.currentPage == 1 %}is-current{% endif %}" href="#" data-mz-action="page" data-mz-page-num="1">1</a>
+{% if model.currentPage > 4 %}
+    <span class="mz-pagenumbers-break">...</span>
+{% endif %}
+{% for pageNumber in model.middlePageNumbers %}
+<a class="mz-pagenumbers-number {% if model.currentPage == pageNumber %}is-current{% endif %}" href="#" data-mz-action="page" data-mz-page-num="{{ pageNumber }}">{{ pageNumber }}</a>
+{% if forloop.last && pageNumber < model.pageCount - 1 && model.pageCount > 1 %}
+<span class="mz-pagenumbers-break mz-pagenumbers-breaklast">...</span>
+{% endif %}
+{% endfor %}
+{% if model.pageCount > 1 %}
+<a class="mz-pagenumbers-number {% if model.currentPage == model.pageCount %}is-current{% endif %}" href="#" data-mz-action="page" data-mz-page-num="{{ model.pageCount }}">{{ model.pageCount }}</a>
+{% endif %}
+<a class="mz-pagenumbers-next{% if not model.hasNextPage %} is-disabled{% endif %}" href="#" data-mz-action="next">{{ labels.nextPage }}</a>

@@ -1,0 +1,11 @@
+﻿{% extends "modules/common/credit-card-form" %}
+{% block credit-card-form %}
+    {% set cardcontext="card." %}
+        {% parent %}
+        <div class="mz-l-formfieldgroup-row">
+            <div class="mz-l-formfieldgroup-cell"></div>
+            <div class="mz-l-formfieldgroup-cell">
+                <label class="mz-inline"><input type="checkbox" name="save-card-info" data-mz-value="{{ cardcontext }}isCardInfoSaved" value="true" {% if model.isCardInfoSaved %}checked="checked"{% endif %}> {{ labels.saveCard }}</label>
+            </div>
+        </div>
+{% endblock credit-card-form %}

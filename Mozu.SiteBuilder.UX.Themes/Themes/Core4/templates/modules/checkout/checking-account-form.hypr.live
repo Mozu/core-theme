@@ -1,0 +1,27 @@
+﻿    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
+            <label for="nameOnCheck">{{ labels.nameOnCheck }}<span class="is-required"> *</span>:</label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" name="nameOnCheck" id="nameOnCheck" data-mz-value="check.nameOnCheck" value="{{ model.check.nameOnCheck }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="check.nameOnCheck"></span>
+        </div>
+    </div>
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
+            <label for="checkNumber">{{ labels.routingNumber }}<span class="is-required"> *</span>:</label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" name="checkNumber" id="checkNumber" data-mz-value="check.routingNumber" value="{{ model.check.routingNumber }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="check.routingNumber"></span>
+        </div>
+    </div>                    
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
+            <label for="checkNumber">{{ labels.checkNumber }}<span class="is-required"> *</span>:</label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" name="checkNumber" id="checkNumber" data-mz-value="check.checkNumber" value="{{ model.check.checkNumber }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="check.checkNumber"></span>
+        </div>
+    </div>

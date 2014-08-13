@@ -1,0 +1,16 @@
+﻿body.mz-product {
+    .mz-productimages {
+        width: @productImagesContainerWidth;
+    }
+    .mz-productdetail-wrap {
+        margin-left: @productImagesContainerWidth + @gutter
+    }
+    @media (max-width: 800px) {
+        .mz-productimages {
+            margin: 0 auto;
+        }
+        .mz-productdetail-wrap {
+            margin-left: 0;
+        }
+    }
+}
