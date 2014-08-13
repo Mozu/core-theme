@@ -93,7 +93,7 @@
         //     this.title = this.dynamicForm.getTitle();
         // }
         this.items = [];
-        if (this.record.get('entityType') == 'cms' && this.showNameEditor ) {
+        if (this.record.get('entityType') === 'cms' && this.showNameEditor ) {
             this.items.push({
                 xtype: 'taco-slugfield',
                 itemId:'cms_entity_name',
@@ -145,11 +145,11 @@
             data = me.dynamicForm.getData();
         }
 
-        data = data || (this.record.get('entityType') == 'mzdb' ? containerData.item : containerData.properties);
+        data = data || (this.record.get('entityType') === 'mzdb' ? containerData.item : containerData.properties);
 
         //this.record.data.properties = this.data;
         //this.record.data.item = this.data;
-        if (this.record.get('entityType') == 'mzdb') {
+        if (this.record.get('entityType') === 'mzdb') {
             this.record.set('item', data);
         } else {
             this.record.set('properties', data);

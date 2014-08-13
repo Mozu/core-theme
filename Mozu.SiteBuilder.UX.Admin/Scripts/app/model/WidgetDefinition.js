@@ -65,6 +65,10 @@ Ext.define('Taco.model.WidgetDefinition', {
              type: "string",
              useNull: true
          }, {
+             name: "customEditor",
+             type: "string",
+             useNull: true
+         }, {
              name:"editViewFields",
              type:'auto',
              defaultValue: []

@@ -31,11 +31,21 @@ Ext.define('Taco.view.website.WidgetEditor', {
         this.setValues();
         
         this.on('beforesave', function () {
-            me.widgetData = Ext.apply(me.widgetData, me.form.getForm().getValues(false, false, false, true));
+            if (me.form.getData) {
+                me.widgetData = me.form.getData();
+            } else {
+                me.widgetData = Ext.apply(me.widgetData, me.form.getForm().getValues(false, false, false, true));
+            }
+            
         });
     },
 
     setValues: function () {
-        this.form.getForm().setValues(this.widgetData);
+        if (this.form.setData) {
+            this.form.setData(this.widgetData);
+        } else {
+            this.form.getForm().setValues(this.widgetData);
+        }
+        
     }
 });

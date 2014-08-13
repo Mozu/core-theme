@@ -390,6 +390,7 @@
     <Content Include="Themes\Core4\admin\editors\pageTemplateContent.js" />
     <Content Include="Themes\Core4\admin\editors\snippet.js" />
     <Content Include="Themes\Core4\admin\editors\web_page.js" />
+    <Content Include="Themes\Core4\admin\editors\horizontalRule.js" />
     <Content Include="Themes\Core4\compiled\scripts\build.txt" />
     <Content Include="Themes\Core4\compiled\scripts\modules\common.js" />
     <Content Include="Themes\Core4\compiled\scripts\pages\cart.js" />
@@ -823,6 +824,7 @@
     <Folder Include="SampleThemes\helloWorld\Modules\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Fonts\" />
     <Folder Include="SampleThemes\helloWorld\Resources\Scripts\Pages\" />
+    <Folder Include="Themes\Core4\admin\widgets\" />
     <Folder Include="Themes\Core4\templates\modules\entities\" />
   </ItemGroup>
   <ItemGroup>
