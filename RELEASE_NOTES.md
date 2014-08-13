@@ -24,6 +24,22 @@ Core5 supports sorting in paginated lists of products and items. In Core4, the C
   
 * The `model.currentSort` parameter will be blank if no sort has been specified (in Search Results, this equates to a relevance-based sort). Otherwise, it will contain the value of the last sort. 
 
+### Autocomplete
+
+Core5 now has a rich search-suggestion engine that appears as a typeahead prompt on the Search box in the page header. The engine is powered by the open-source [typeahead.js](http://twitter.github.io/typeahead.js/) library. It shows *simple results*, which are just search terms, and *complex results*, which are currently just products, but could in the future be more types of Mozu document or object, such as categories or CMS pages. There are two theme settings which govern its effect:
+
+* `useSearchAutocomplete`: Turn the autocomplete feature on or off. `true` by default.
+* `searchExpandOnFocus`: Widen the search field when it is focused. `true` by default. **Setting this to `false` when `useSearchAutocomplete` is `true` is not recommended.**
+
+The `templates/modules/search-box.hypr` template has changed. The markup has changed minimally to accommodate new JavaScript (mostly the addition of a data attribute for script targeting), and a `require_script` tag has been added for the new `search-autocomplete.js` script.
+
+There is a new file, `scripts/modules/search-autocomplete.js`, which implements the typeahead library. Override this file to modify details about the autocomplete implementation.
+
+There are also two new Hypr templates, used in `search-autocomplete.js` to render the autocomplete UI: 
+
+*  `templates/modules/search/autocomplete-page-result.hypr.live` is the outer wrapper for each complex result
+*  `templates/modules/search/autocomplete-listing-product.hypr.live` is the inner template for complex results of type "product" (currently the only type)
+
 ### Gift Cards
 
 *TBA*

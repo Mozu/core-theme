@@ -6,7 +6,7 @@ Core theme for Mozu. A good starting point, if a bit grayish.
 
 The Mozu R5 release includes an upgraded Core theme called **Core5**. It includes bugfixes, visual adjustments, changes to JavaScript module structure, and a couple of great new features! You'll have to manually upgrade themes that extend the Core4 theme to use Core5 instead. Here's how it works in three steps:
 
-1. Read the [release notes](release_notes.md) for Core5 to see what's changed!
+1. Read the [release notes](RELEASE_NOTES.md) for Core5 to see what's changed!
 
 2. Change the `extends` property in your `theme.json` from this:
    ```json
@@ -27,7 +27,7 @@ Until now, the updates to Core4 have mostly been hotfixes, and we've updated Cor
 
 ### What's breaking?
 
-The [release notes](release_notes.md) contain a good summary of the changes in Core5. Most commonly, **your JavaScript modules will break if they reference Core4 vendored scripts like Underscore or Backbone**. If you've overridden `scripts/modules/models-product.js`, for instance, and left its first line (the `define` call and the array of dependencies) more or less intact, then you'll get a script error on `'shim!vendor/underscore>_'` and will need to replace it with the string `'underscore'`. Here, in our estimation, is the list of other significant changes, in order of the likelihood that you'll need to make them.
+The [release notes](RELEASE_NOTES.md) contain a good summary of the changes in Core5. Most commonly, **your JavaScript modules will break if they reference Core4 vendored scripts like Underscore or Backbone**. If you've overridden `scripts/modules/models-product.js`, for instance, and left its first line (the `define` call and the array of dependencies) more or less intact, then you'll get a script error on `'shim!vendor/underscore>_'` and will need to replace it with the string `'underscore'`. Here, in our estimation, is the list of other significant changes, in order of the likelihood that you'll need to make them.
 
 * **storefront.less**: New features, like digital fulfillment, require new Less modules. You'll need to merge Core5's version of `stylesheets/storefront.less` with your own, which you have doubtless changed.
 
