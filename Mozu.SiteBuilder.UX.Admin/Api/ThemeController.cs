@@ -228,7 +228,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             catch
             {
-                theme = _themeRepository.GetTheme(new ThemeSelection() {Id = "core4"});
+                theme = _themeRepository.GetTheme(new ThemeSelection() {Id = "core5"});
             }
 
 
@@ -366,7 +366,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 settings.DesktopTheme = new ThemeSelection()
                 {
-                    Id = "Core4"
+                    Id = "Core5"
                 };
             }
 

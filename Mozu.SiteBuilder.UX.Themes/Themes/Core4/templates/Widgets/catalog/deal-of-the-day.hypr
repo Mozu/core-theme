@@ -1,0 +1,4 @@
+﻿<div class="mz-deal-of-the-day" data-mz-deal-of-the-day ="{% json_attribute Model.config %}">
+  <h3>Deal of the Day</h3>
+</div>
+{% require_script "widgets/deal-of-the-day" %}

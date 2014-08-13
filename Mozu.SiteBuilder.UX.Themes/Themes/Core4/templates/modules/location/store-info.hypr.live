@@ -1,0 +1,35 @@
+<div class="mz-loc-dialog-cover">
+
+    <div class="mz-loc-dialog">
+
+        <h1>Store Information</h1>
+
+        <div class="mz-loc-store-address">
+            <div class="mz-loc-name">
+                {{model.name}} (Store {{model.code}})
+            </div>
+            <div>{{model.address.address1}}</div>
+            <div>{{model.address.address2}}</div>
+            <div>{{model.address.address3}}</div>
+            <div>{{model.address.address4}}</div>
+            <div>
+                {{model.address.cityOrTown}}, {{model.address.stateOrProvince}}
+            </div>
+
+            {% if model.phone %}
+                <div>Phone: {{model.phone}}
+            {% endif %}
+        </div>
+
+        <div class="mz-loc-store-hours">
+            <div>Hours:</div>
+            <div>{{model.regularHours.monday.label}}</div>
+            <div>{{model.regularHours.tuesday.label}}</div>
+            <div>{{model.regularHours.wednesday.label}}</div>
+            <div>{{model.regularHours.thursday.label}}</div>
+            <div>{{model.regularHours.friday.label}}</div>
+            <div>{{model.regularHours.saturday.label}}</div>
+            <div>{{model.regularHours.sunday.label}}</div>
+        </div>
+    </div>
+</div>

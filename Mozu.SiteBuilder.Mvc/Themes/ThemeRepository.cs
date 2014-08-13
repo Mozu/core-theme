@@ -58,7 +58,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     {
         private readonly ThemeFactory _themeFactory;
         private readonly IThemeMetaDataProvider _themeMetaDataProvider;
-         const string DEFAULT_THEME = "Core4";
+         const string DEFAULT_THEME = "Core5";
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _addons = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
         private static List<System.IO.FileSystemWatcher> _watchers = null;

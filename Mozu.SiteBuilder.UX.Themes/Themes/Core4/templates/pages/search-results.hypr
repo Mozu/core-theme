@@ -1,0 +1,23 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{{ labels.searchTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-searchresults {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/search" %}
+
+<div {% if pageContext.categoryId %}data-mz-category="{{ pageContext.categoryId }}" {% endif %}data-mz-search="{{ pageContext.search.query }}" class="mz-l-container">
+    <h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
+    {% include "modules/product/faceted-products" %}
+    {% comment %}
+    {% if model.items.length < themeSettings.defaultPageSize and pageContext.categoryId %}
+    <p>Your search for {{ pageContext.search.query }} within {{ pageContext.categoryName }} returned {{ model.items.length }} results. <a href="#" data-mz-action="expandSearch">Repeat this search across all categories.</a></p>
+    {% endif %}
+    {% endcomment %}
+    {% dropzone "search-results" scope="template" %}
+</div>
+
+{% endblock body-content %}
+

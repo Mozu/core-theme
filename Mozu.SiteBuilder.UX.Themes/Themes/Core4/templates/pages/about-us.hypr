@@ -1,0 +1,3 @@
+﻿{% extends "page" %}
+
+{% block body-tag-classes %} mz-aboutus {% endblock body-tag-classes %}

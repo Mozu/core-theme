@@ -1,0 +1,15 @@
+{% if model.content.productImages %}
+<figure class="mz-productimages-main">
+  <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{{ model.mainImage.imageUrl }}?max={{ themeSettings.productImagesContainerWidth }}" />
+</figure>
+<figure class="mz-productimages-thumbs">
+    {% for image in model.content.productImages %}
+    <a class="mz-productimages-thumb" data-mz-productimage-thumb="{{ image.sequence }}" href="{{ image.imageUrl }}">
+        <img class="mz-productimages-thumbimage"  src="{{ image.imageUrl }}?max={{ themeSettings.maxProductImageThumbnailSize }}" />
+    </a>
+    {% endfor %}
+</figure>
+{% else %}
+<span class="mz-productimages-noimage">[{{ labels.noImages}}]</span>
+{% endif %}
+

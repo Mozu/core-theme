@@ -1,0 +1,68 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %} {{ labels.yourAccount }} - {% parent %} {% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/myaccount" %}
+
+{% preload_json model "customer" %}
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        {{ labels.yourAccount }}
+    </h1>
+
+    <div class="mz-l-sidebar mz-myaccount-nav">
+        {% include "modules/my-account/my-account-nav" with navtarget="body" %}
+    </div>
+
+    <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
+
+        <div id="account-messages">
+            {% include "modules/common/message-bar" with model=model.messages %}
+        </div>
+
+        <a id="settings"></a>
+        <div class="mz-l-stack-section mz-accountsettings" id="account-settings">
+            {% include "modules/my-account/my-account-settings" %}
+        </div>
+
+        {% if themeSettings.allowWishlist %}
+        <a id="wishlist"></a>
+        <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">
+            {% include "modules/my-account/my-account-wishlist" with model=model.wishlist %}
+        </div>
+        {% endif %}
+
+        <a id="orderhistory"></a>
+        <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
+            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory %}
+        </div>
+        
+        <a id="returnhistory"></a>
+        <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
+            {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
+        </div>
+
+        <a id="paymentmethods"></a>
+        <div class="mz-l-stack-section mz-accountpaymentmethods" id="account-paymentmethods">
+            {% include "modules/my-account/my-account-paymentmethods" %}
+        </div>
+
+        <a id="addressbook"></a>
+        <div class="mz-l-stack-section mz-accountaddressbook" id="account-addressbook">
+            {% include "modules/my-account/my-account-addressbook" %}
+        </div>
+
+        <a id="storecredit"></a>
+        <div class="mz-l-stack-section mz-accountstorecredit" id="account-storecredit">
+            {% include "modules/my-account/my-account-storecredit" %}
+        </div>
+
+    </div>
+</div>
+{% endblock body-content %}
+

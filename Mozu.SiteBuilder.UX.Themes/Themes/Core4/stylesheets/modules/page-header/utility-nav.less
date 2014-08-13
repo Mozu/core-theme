@@ -1,0 +1,23 @@
+﻿.mz-utilitynav {
+    float: right;
+    clear: both;
+    color: @textColor;
+    font-size: @fontSizeSmall;
+
+    .mz-utilitynav-item {
+        float: left;
+        margin: 0;
+        padding: 0 10px;
+        text-align: right;
+
+        &:last-child {
+            padding-right: 0;
+            text-align: right;
+        }
+    }
+
+    .mz-utilitynav-link {
+        .permalink(@textColor);
+    }
+
+}
