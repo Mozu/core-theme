@@ -28,6 +28,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.paymentsStore = record.getPayments();
         this.orderItemsStore = order.items();
 
+        this.itemsStore.each(function (item) {
+            item.set('quantityShipped', item.get('quantity'));
+        });
+
         // set up major components
         this.itemsGrid = this.initItemsGrid();
         this.paymentsGrid = this.initPaymentsGrid();
@@ -203,21 +207,18 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     return oItem ? oItem.get('productName') : '--';
                 }
             }, {
-                dataIndex: 'priceSnapshot',
-                text: 'Cost',
-                draggable: false,
-                sortable: false,
-                resizable: false,
-                menuDisabled: true,
-                width: 100
-            }, {
-                dataIndex: 'priceSnapshot',
+                dataIndex: 'orderItemId',
                 text: 'Price',
                 draggable: false,
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                width: 100
+                width: 100,
+                renderer: function (value, meta, record) {
+                    var oItem = me.orderItemsStore.getById(record.getId());
+
+                    return oItem ? Taco.app.context.getCurrent().formatCurrency(oItem.get('unitPrice')) : '--';
+                }
             }, {
                 dataIndex: 'productLossAmount',
                 text: 'Loss',
@@ -227,8 +228,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 menuDisabled: true,
                 width: 100,
                 renderer: function (value, meta, record) {
-                    console.log(record);
-                    return value;
+                    return Taco.app.context.getCurrent().formatCurrency(value);
                 }
             }, {
                 dataIndex: 'reason',
@@ -385,6 +385,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     initStatus: function (record) {
+        var me = this;
+
         return Ext.create('Ext.Component', {
             cls: 'return-properties',
             data: record.getData(),
@@ -395,14 +397,22 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         '<td><span class="label">Returning:</span>{[Ext.Array.sum(Ext.Array.pluck(values.items, "quantity"))]} item(s)</td>',
                     '</tr><tr>',
                         '<td><span class="label">Type:</span>{type}</td>',
-                        '<td><span class="label">Price:</span>--</td>',
+                        '<td><span class="label">Price:</span>{[this.getUnitPriceTotal(values.items)]}</td>',
                     '</tr><tr>',
                         '<td><span class="label">Created:</span>{createDate:date("m/d/Y g:ia")}</td>',
-                        '<td><span class="label">Cost:</span>--</td>',
-                    '</tr><tr>',
-                        '<td colspan="2"><span class="label">Loss:</span>--</td>',
+                        '<td><span class="label">Loss:</span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.items, "productLossAmount")))]}</td>',
                     '</tr>',
-                '</tbody></table>'
+                '</tbody></table>', {
+                    getUnitPriceTotal: function (items) {
+                        var prices = Ext.Array.map(items, function (item) {
+                            var oItem = this.orderItemsStore.getById(item.orderItemId);
+
+                            return oItem ? oItem.get('unitPrice') : 0;
+                        }, me);
+
+                        return Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(prices));
+                    }
+                }
             ]
         });
     },
