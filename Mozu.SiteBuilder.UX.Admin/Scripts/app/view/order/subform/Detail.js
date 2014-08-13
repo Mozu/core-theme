@@ -331,6 +331,7 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         me.rebuildItems();
         me.updateHasDraftToolbar();
+        me.updateButtonActions();
     },
     
 
@@ -374,19 +375,32 @@ Ext.define('Taco.view.order.subform.Detail', {
     
     // removed temporarily. due to designer snerst
 
+    // update whether the buttons are enabled or disabled with every update of the record;
+    updateButtonActions: function () {
+        var me = this,
+            availableActions = me.record.get("availableActions"),
+            canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
+            canEdit = !(me.record.get("orderStatus") == "Completed"),
+            cancelOrderButton = this.down("#cancelOrderButton"),
+            editOrderButton = this.down("#editOrderButton")
+        
+        cancelOrderButton.setDisabled(!canCancel);
+        editOrderButton.setDisabled(!canEdit);
+    },
+
     getButtonActions: function () {
         var me = this,
             availableActions = me.record.get("availableActions"),
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = true,
+            canEdit = !(me.record.get("orderStatus")=="Completed"),
             buttons;
         
-
         buttons = [
             {
                 text: 'Cancel Order',
                 xtype: "button",
                 ui: "action",
+                itemId:"cancelOrderButton",
                 scale: "medium",
                 margin: {
                     right:2
@@ -401,12 +415,16 @@ Ext.define('Taco.view.order.subform.Detail', {
                 ui: 'action',
                 scale: 'medium',
                 text: 'Print Order',
+                margin: {
+                    right: 2
+                },
                 handler: me.openPrintWindow,
                 scope: me
             }, {
                 text: 'Edit Details',
                 xtype: "button",
                 ui: "action",
+                itemId: "editOrderButton",
                 scale: "medium",
                 handler: this.editOrder,
                 scope: me,
