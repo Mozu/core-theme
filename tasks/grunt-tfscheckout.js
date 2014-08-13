@@ -30,7 +30,7 @@ module.exports = function (grunt) {
 
         if (process.platform !== "win32" || !workingConf) {
             grunt.log.warn("No TFS present.")
-            done(true);
+            return done(true);
         }
 
         child = spawn(workingConf.path, workingConf.args);

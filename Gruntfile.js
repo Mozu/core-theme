@@ -56,6 +56,7 @@
         setver: {
             release: {
                 packagejson: true,
+                bowerjson: true,
                 thumbnail: {
                     src: 'thumb.tpt.png',
                     color: '#ffffff',
