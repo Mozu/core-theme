@@ -1445,10 +1445,17 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="AfterCompile">
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core5\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+  
     <!-- ugh... the worst -->
     <Exec Command="npm cache clean" WorkingDirectory="$(ProjectDir)Themes\Core5" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core5" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core5" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
