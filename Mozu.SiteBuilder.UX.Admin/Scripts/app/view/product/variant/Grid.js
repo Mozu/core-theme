@@ -52,8 +52,17 @@ Ext.define('Taco.view.product.variant.Grid', {
         staticColumns = [{
                 text: 'Product Code',
                 dataIndex: 'productCode',
+                
                 editor: {
-                    xtype: 'textfield'
+                    onEditorShow:function ( field , editor, contex) {
+                        if (contex.record.get('exists') === true) {
+                            field.disable();
+                        } else {
+                            field.enable();
+                        }
+                    },
+                    xtype: 'textfield',
+                    msgTarget: "qtip",
                 }
         }, {
                 text: 'Extra Price',
@@ -65,7 +74,8 @@ Ext.define('Taco.view.product.variant.Grid', {
                     decimalPrecision: 2,
                     hideTrigger: true,
                     keyNavEnabled: false,
-                    mouseWheelEnabled: false
+                    mouseWheelEnabled: false,
+                    msgTarget: "qtip",
                 }
         }, {
                 text: 'Extra Cost',
@@ -107,7 +117,8 @@ Ext.define('Taco.view.product.variant.Grid', {
                     decimalPrecision: 2,
                     hideTrigger: true,
                     keyNavEnabled: false,
-                    mouseWheelEnabled: false
+                    mouseWheelEnabled: false,
+                    msgTarget: "qtip"
                 }
         }, {
                 text: 'Extra Weight',
