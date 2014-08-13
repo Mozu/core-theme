@@ -32,7 +32,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
             //}
             var editEl = me.getEditorEl();
             editEl.setHTML(me.getValue()||null);
-            if (!ace) {
+            if (!window.ace) {
                 return;
             }
             

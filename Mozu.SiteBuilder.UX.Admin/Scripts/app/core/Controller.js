@@ -338,6 +338,11 @@ Ext.define('Taco.core.Controller', {
         viewClass = Ext.isString(viewClass) ? Ext.ClassManager.get(viewClass) : viewClass;
         requiresContextOfType = (viewClass.prototype.contextConfig || {}).requiresContextOfType;
 
+        // fix for ie8. apply doesn't like having undefined arguments;
+        if (!args) {
+            args = []
+        }
+
         if (this.worksInContext(viewClass.prototype, context)) {
             return callback.apply(scope || this, args);
 
