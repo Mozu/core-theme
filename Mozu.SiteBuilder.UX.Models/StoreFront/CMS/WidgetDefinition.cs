@@ -32,6 +32,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
         [DataMember(Name = "editView")]
         public string EditView { get; set; }
 
+        [DataMember(Name = "customEditor")]
+        public string CustomEditor { get; set; }
+
         [DataMember(Name = "editViewConfig")]
         public string  EditViewConfig { get; set; }
 

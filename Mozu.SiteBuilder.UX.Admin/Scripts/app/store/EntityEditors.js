@@ -15,18 +15,20 @@ Ext.define('Taco.store.EntityEditors', {
         },
 
         constructor: function () {
-            if (Taco.app.context.getCurrent().contextType == 's') {
+            if (Taco.app.context.getCurrent().contextType === 's') {
                 this.pageTypeDefinitions = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions');
             }
             this.callParent(arguments);
         },
 
     //
-        
+        findCustomEditor: function (themeEditorId) {
+            return this.getById('theme_' + themeEditorId);
+        },
         findEditor: function (entityRecord) {
 
             var ret;
-            if (entityRecord.get('entityType') == 'cms' && this.pageTypeDefinitions && entityRecord.data && entityRecord.data.properties && entityRecord.data.properties.page_type_definition) {
+            if (entityRecord.data.entityType === 'cms' && this.pageTypeDefinitions && entityRecord.data && entityRecord.data.properties && entityRecord.data.properties.page_type_definition) {
                 ret = this.pageTypeDefinitions.getById( entityRecord.data.properties.page_type_definition);
                 if (ret ) {
                     ret = this.getById('theme_' + ret.data.customEditor);

@@ -66,8 +66,7 @@ Ext.define('Taco.view.website.Index', {
 
     initComponent: function () {
         var navStore,
-            items,
-            gridStore,
+           productStore,
             me = this;
 
 
@@ -447,7 +446,7 @@ Ext.define('Taco.view.website.Index', {
                                         xtype: 'button',
                                         text: '← back',
                                         scope: this,
-                                        handler: function (field) {
+                                        handler: function () {
                                             this.sideBar.getLayout().setActiveItem(0);
                                         }
                                     }
@@ -561,7 +560,8 @@ Ext.define('Taco.view.website.Index', {
         
     },
     getCardPanel: function () {
-        return this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
+        this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
+        return this.cardpanel;
     },
     toggleCard: function (item) {
         this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
@@ -637,9 +637,9 @@ Ext.define('Taco.view.website.Index', {
     createEntityTypeAdapter: function (pageContext, editor) {
         var cls = this.entityTypeEditConfig[pageContext.pageType || "default"] || this.entityTypeEditConfig["default"];
 
-        if ((pageContext.editMode || "").toLowerCase() == 'template') {
+        if ((pageContext.editMode || "").toLowerCase() === 'template') {
             cls = 'Taco.view.website.entityAdapters.TemplateEntityAdapter';
-        } else if ((pageContext.editMode || "").toLowerCase() == 'site') {
+        } else if ((pageContext.editMode || "").toLowerCase() === 'site') {
             //todo create sitetemplate
             cls = 'Taco.view.website.entityAdapters.SiteTemplateEntityAdapter';
         }
@@ -680,13 +680,13 @@ Ext.define('Taco.view.website.Index', {
         this.pageSettings.removeAll(true);
         this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme);
         Taco.core.StateManager.addState('website/page' + config.url);
-        if (config.view == 'page') {
+        if (config.view === 'page') {
             this.toggleCard(0);
         }
-        if (config.view == 'settings') {
+        if (config.view === 'settings') {
             this.toggleCard(1);
         }
-        if (config.view == 'contentGrid') {
+        if (config.view === 'contentGrid') {
             this.toggleCard(3);
         }
 
@@ -735,7 +735,7 @@ Ext.define('Taco.view.website.Index', {
                 e.stopEvent();
                 return;
             }
-            if (target.hostname == this.iframe.getWin().location.hostname) {
+            if (target.hostname === this.iframe.getWin().location.hostname) {
                 me.fireEvent('beforeIframeClickNavigate', {
                     url: target.pathname + target.search
                 });
@@ -784,6 +784,8 @@ Ext.define('Taco.view.website.Index', {
                 source: pageContext.cmsContext.page,
                 definitionId: cfg.widgetTypeId
             },
+            widgetEditForm,
+            entityEditor,
             serverRenderFn;
 
         cfg.config = Ext.apply({}, def.get('defaultConfig'));
@@ -814,11 +816,27 @@ Ext.define('Taco.view.website.Index', {
             });
         };
 
+  
 
-        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
+
+
+        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('customEditor')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
+            
+            if (!Ext.isEmpty(def.get('customEditor'))) {
+                entityEditor = this.entityEditors.findCustomEditor(def.get('customEditor'));
+            
+                try {
+                    widgetEditForm = eval(entityEditor.get('code'));
+
+                } catch (e) {
+                    console.log(e, def.get('customEditor'), entityEditor.get('code'));
+                }
+            }
+
             Ext.widget(def.get('editView') || 'taco-widgeteditor', {
                 editViewFields: def.get('editViewFields'),
                 editViewConfig: def.get('editViewConfig'),
+                form: widgetEditForm,
                 autoShow: true,
                 closeAction: 'destroy',
                 widgetData: cfg.config,
@@ -848,7 +866,9 @@ Ext.define('Taco.view.website.Index', {
                 source: pageContext.cmsContext.page,
                 definitionId: cfg.data.definitionId
             },
-            callbackWrapper;
+            callbackWrapper,
+                entityEditor,
+                widgetEditForm;
 
         callbackWrapper = function (ret, cfg) {
             cfg.callback(ret.output, {
@@ -859,10 +879,22 @@ Ext.define('Taco.view.website.Index', {
         };
 
 
-        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
+        if (!Ext.isEmpty(def.get('editViewFields')) || !Ext.isEmpty(def.get('customEditor')) || !Ext.isEmpty(def.get('editViewConfig')) || !Ext.isEmpty(def.get('editView'))) {
+
+            if (!Ext.isEmpty(def.get('customEditor'))) {
+                entityEditor = this.entityEditors.findCustomEditor(def.get('customEditor'));
+
+                try {
+                    widgetEditForm = eval(entityEditor.get('code'));
+
+                } catch (e) {
+                    console.log(e, def.get('customEditor'), entityEditor.get('code'));
+                }
+            }
             Ext.widget(def.get('editView') || 'taco-widgeteditor', {
                 editViewFields: def.get('editViewFields'),
                 editViewConfig: def.get('editViewConfig'),
+                form: widgetEditForm,
                 autoShow: true,
                 closeAction: 'destroy',
                 widgetData: cfg.data.config,
@@ -894,7 +926,7 @@ Ext.define('Taco.view.website.Index', {
         }
     },
 
-    onSearchTextChange: function (field, newValue, oldValue, eOpts) {
+    onSearchTextChange: function (field, newValue) {
         var store = this.productGrid.store;
 
         if (!newValue) {
@@ -902,7 +934,7 @@ Ext.define('Taco.view.website.Index', {
             return;
         }
 
-        if (this.sideBar.getLayout().getActiveItem() != this.productGrid) {
+        if (this.sideBar.getLayout().getActiveItem() !== this.productGrid) {
             store.extraFilters.clear();
         }
 
@@ -938,15 +970,14 @@ Ext.define('Taco.view.website.Index', {
         store.load();
     },
 
-    onTreeUrlClick: function (tree, url, record, item, index, e, eOpts) {
+    onTreeUrlClick: function (tree, url) {
         this.navigate({
             url: url
         });
     },
-    onContentListClick: function (tree, metaData, record, item, index, e, eOpts) {
+    onContentListClick: function (tree, metaData) {
 
-        var me = this,
-            contentContainer = me.down('#contentListContainer');
+        var me = this;
 
         Ext.suspendLayouts();
         me.showEntityManagerGrid(metaData);
@@ -968,7 +999,7 @@ Ext.define('Taco.view.website.Index', {
             }
 
             Ext.Object.each(this.tree.store.tree.nodeHash, function (key, value) {
-                if (value.raw.metaData && value.raw.metaData.entityType == 'cms' && value.raw.metaData.listFQN == metaData) {
+                if (value.raw.metaData && value.raw.metaData.entityType === 'cms' && value.raw.metaData.listFQN === metaData) {
                     metaData = value.raw.metaData;
                 }
             });
@@ -990,7 +1021,6 @@ Ext.define('Taco.view.website.Index', {
     },
     OnCreateClick: function () {
         var me = this,
-            contentContainer = me.down('#contentListContainer'),
             grid = me.down('#entityManagerGrid'),
             listMetaData = grid.listMetaData,
             newRecord = new Taco.model.Entity({
@@ -1003,7 +1033,8 @@ Ext.define('Taco.view.website.Index', {
                 properties: {},
                 item: {}
 
-            });
+            }),
+            menu;
 
 
         if (listMetaData.documentTypes && listMetaData.documentTypes.length > 1) {
@@ -1030,9 +1061,7 @@ Ext.define('Taco.view.website.Index', {
     },
 
     loadEntityEditor: function (record) {
-        var me = this,
-            contentContainer = me.down('#contentListContainer'),
-            form;
+       
 
 
         this.pageSettings.removeAll(false);
@@ -1071,10 +1100,10 @@ Ext.define('Taco.view.website.Index', {
     },
 
 
-    onContentListItemEdit: function (grid, record, listMetaData) {
-        var me = this,
+    onContentListItemEdit: function (grid, record) {
+        var me = this;
             // cardpanel = me.down('#editorCardPanel'),
-            contentContainer = me.down('#contentListContainer');
+            //contentContainer = me.down('#contentListContainer');
 
 
         //todo if page.. navigate

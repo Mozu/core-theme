@@ -40,3 +40,9 @@ Ext.define('Taco.platter.forms.CategoryEditorForm', {
     alias: ['widget.mz-form-category']
 });
 
+Ext.define('Taco.platter.forms.WidgetForm', {
+    extend: 'Ext.form.Panel',
+    alias: 'widget.mz-form-widget'
+});
+
+

@@ -1,10 +1,5 @@
-/**
- * @author Michael Speed Elder
- * Date: 9/10/12
- * Time: 12:17 PM
- * @class Taco.view.site.widget.HorizontalRule
- * Widget editor for a horizontal rule
- */
+// still used by core 4
+//depricated
 Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
     extend: 'Taco.view.website.WidgetEditor',
     requires: [
@@ -100,13 +95,7 @@ Ext.define('Taco.view.website.widgetEditors.HorizontalRule', {
 
         var previewEl = this.down('#preview').getEl(),
             formValues = this.form.getForm().getValues(),
-            newStyles = {},
-            marginMap = {
-                'None': 0,
-                'Small (4px)': '4px',
-                'Medium (8px)': '8px',
-                'Large (12px)': '12px'
-            };
+            newStyles = {};
 
         if (previewEl) {
             newStyles['border-top-width'] = formValues.hrBorderWidth;
