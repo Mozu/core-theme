@@ -1,4 +1,8 @@
 ﻿
+// this is the border color seperating the order item grid rows
+.x-grid-rowwrap {
+    border-color:$color-neutral-95;
+}
 
 // title toolbar in the order detail editor
 .title-toolbar {	
@@ -95,8 +99,10 @@
     
 	.taco-product-column {
 		.x-grid-cell-inner {
+			/*
 			padding-top:5px;
 			padding-bottom:5px;
+			*/
 		}
 	}
     
@@ -180,7 +186,7 @@
         
         @include icon-font($glyph-close);
 
-        height: 20px;
+        height: 18px;
         width: 30px;
         cursor:pointer;				
         
@@ -188,7 +194,7 @@
             left: 8px;
             top:2px;
             font-size: 1.4rem;
-            line-height: 1.4rem;			
+            //line-height: 1.4rem;			
         }			
 
         &:hover{				
