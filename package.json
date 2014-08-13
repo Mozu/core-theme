@@ -2,13 +2,11 @@
   "name": "mozu-core-theme",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu.",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "devDependencies": {
     "grunt": "~0.4",
     "grunt-bower-task": "~0.4",
     "bower": "1.3.8",
-
-
     "bower-registry-client": "0.2.1",
     "request": "2.27.0",
     "form-data": "0.1.4",
@@ -33,8 +31,6 @@
     "mozu-require-compiler": "2.1.0",
     "package-json": "0.2.0",
     "tiny-lr-fork": "0.0.5",
-
-    
     "grunt-contrib-jshint": "~0.8",
     "grunt-contrib-watch": "~0.6",
     "grunt-jsonlint": "*",

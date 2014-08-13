@@ -1,6 +1,6 @@
 {
   "name": "mozu-core-theme",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "devDependencies": {
     "backbone": "~1.1",
     "underscore": "~1.6",
