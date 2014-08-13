@@ -1,6 +1,6 @@
 {
   "name": "mozu-core-theme",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "devDependencies": {
     "backbone": "~1.1",
     "underscore": "~1.6",
@@ -23,8 +23,5 @@
         "js/scrollspy.js"
       ]
     }
-  },
-  "resolutions": {
-    "jquery": ">= 1.9.0"
   }
 }
