@@ -88,8 +88,25 @@ Ext.define('Taco.view.Viewport', {
                 key: 191,
                 ctrl: false,
                 shift: false,                
-                fn: function () {
-                    
+                fn: function (key,e) {
+                    console.log("find search field");
+                    var searchFields = Ext.ComponentQuery.query('taco-quickfilter');
+                    if (searchFields.length) {
+                        searchFields[0].focus();
+                        e.stopEvent();
+                    }
+                },
+                // prevents the event from bubbling past the modal;
+                defaultEventAction: 'stopEvent',
+                scope: me
+            }, {
+                // forward slash to trigger app search
+                key: 191,
+                ctrl: true,
+                shift: false,
+                fn: function (key, e) {
+                    console.log("find global search field");
+
                 },
                 // prevents the event from bubbling past the modal;
                 //defaultEventAction: 'stopEvent',
@@ -108,19 +125,78 @@ Ext.define('Taco.view.Viewport', {
         me.keyMap = new Ext.util.KeyMap({
             target: me.el,
             ignoreInputFields: false,
-            
+        
             binding: [{
                 // Ctrl + Shift + S
                 key: Ext.EventObject.S,
                 ctrl: true,
                 shift: true,
                 fn: function () {
-                    console.log("save key press")
+                    //console.log("save key press")
+                    var saveButton = this.down("#saveActionButton");
+                    if (saveButton && saveButton.el) {
+                        saveButton.el.dom.click();
+                    }
                 },
                 // prevents the event from bubbling past the modal;
                 //defaultEventAction: 'stopEvent',
                 scope: me
-            }]
+            }, {
+                // Ctrl + Shift + N
+                key: Ext.EventObject.N,
+                ctrl: true,
+                shift: true,
+                fn: function () {
+                    //console.log("create key press")
+                    var createButton = this.down("#createActionButton");
+                    if (createButton && createButton.el) {
+                        createButton.el.dom.click();
+                    }
+                },
+                // prevents the event from bubbling past the modal;
+                //defaultEventAction: 'stopEvent',
+                scope: me
+            }
+
+            /*
+            ,
+
+            
+            {
+                
+                key: Ext.EventObject.ESC,
+                ctrl: false,
+                shift: true,
+                fn: function (key,e) {
+                    console.log("shift EXC press")
+                    if (this.escapedField) {
+                        this.escapedField.focus();
+                        delete this.escapedField                        
+                    }
+                },
+                // prevents the event from bubbling past the modal;
+                //defaultEventAction: 'stopEvent',
+                scope: me
+            }, {
+                // Escape key
+                key: Ext.EventObject.ESC,
+                ctrl: false,
+                shift: false,
+                fn: function (key, e) {                    
+                    //console.log("escape key")
+                    if (e.target.tagName == "INPUT") {
+                        this.escapedField = e.target;
+                        // todo: set focus on the viewport or window instead of just bluring the field;
+                        e.target.blur();
+                    }
+                },
+                // prevents the event from bubbling past the modal;
+                //defaultEventAction: 'stopEvent',
+                scope: me
+            }*/
+
+
+            ]
         });
     },
 

@@ -63,39 +63,22 @@ Ext.define('Taco.overrides.selection.CellModel', {
 
             me.mon(grid, 'boxready', function () {
 
-                
+                /*
                 me.mon(this.view.el, 'blur', function (e, t, eOpts) {
-                    console.log("gridBlur")
+                    //console.log("gridBlur")
                 })
+                */
 
 
                 // need to listen for focus on the grid el.
                 me.mon(this.view.el, 'focus', function (e, t, eOpts) {
-                   console.log("gridFocus")  
-
-
                     var lastRow = this.store.getCount() - 1;
                     if (lastRow == -1) {
                         return;
                     }
-
-                    
                     
                     this.getSelectionModel().setCurrentPosition({ row: 0, column: 0 });
-                    this.view.focusRow(0);
-                    
-
-                    if (e.getKey() == Ext.EventObject.TAB) {
-                        
-                    }
-                    /*
-                    if (this.store.getCount()) {
-                        if (this.store.getCount()) {
-                            this.getSelectionModel().setCurrentPosition({ row: 0, column: 0 });
-                            this.view.focusRow(0);
-                        }
-                    }
-                    */
+                    this.view.focusRow(0);                    
                     
                 }, this)
             }, grid)

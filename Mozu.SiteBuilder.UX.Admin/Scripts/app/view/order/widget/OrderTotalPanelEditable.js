@@ -479,14 +479,17 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             xtype: "component",            
             hidden: true,
             cls: "taco-order-discount-error",
-            tpl: this.couponErrorTpl
+            html:""
+            //tpl: this.couponErrorTpl
         })
         
     },
 
 
-    couponErrorTpl : new Ext.XTemplate(
-        '<div>Coupon "{couponCode}" did not apply. <br/>{reason}</div>'
+    couponErrorTpl: new Ext.XTemplate(
+        '<tpl for=".">',
+            '<div>Coupon "{couponCode}": {reason}</div>',
+        '</tpl>'
     ),
 
     // accepts an array of order coupons configuration data objects and calls the service to persist it.
@@ -506,11 +509,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     Taco.app.fireEvent('setmessage', "Error adding coupon.", 'error');
                     return;
                 }
-
+                
                 var invalidCoupons = json.items.invalidCoupons;
                 if (invalidCoupons.length) {
-                    var couponError = invalidCoupons[0]
-                    this.couponError.update(couponError);
+                    var couponErrorTxt = this.couponErrorTpl.apply(invalidCoupons);
+                    this.couponError.update(couponErrorTxt);
                     this.couponError.show();
                     this.deferCouponErrorhide = true;
                 } else {

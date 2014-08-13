@@ -138,7 +138,7 @@ Ext.define('Taco.view.redirects.Index', {
                 ui: 'action-primary',
                 scale: 'medium',
                 text: 'Add Redirect',
-                itemId: 'newbutton',
+                itemId: 'createActionButton',
                 hidden: !this.allowCreate(),
                 handler: this.onRowEditorCreate,
                 scope: this

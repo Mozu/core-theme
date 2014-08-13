@@ -62,7 +62,6 @@ window.console = window.console || {
     log: function () {}
 };
 
-
 //Ext.Loader.setPath('Taco', '/admin/Scripts/app');
 
 Ext.define('Taco.Application', {
@@ -84,6 +83,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.form.field.ComboBox',
         'Taco.overrides.form.field.Number',
         'Taco.overrides.form.field.HtmlEditor',
+        'Taco.overrides.grid.Panel',
         'Taco.overrides.grid.RowEditor',
         'Taco.overrides.grid.RowEditorButtons',
         'Taco.overrides.grid.plugin.RowEditing',
@@ -168,6 +168,8 @@ Ext.define('Taco.Application', {
     context: null,
     constructor: function (config) {
 
+
+        
 
         Ext.override(Ext.Component, {
             beforeRender: function () {

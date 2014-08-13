@@ -58,6 +58,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             siteContext,
             editModeCls = (this.getEditMode()) ? " order-editable " : "";
 
+
         // attribute names need to be looked up for each order item that contains an option. :(
         this.attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
 
@@ -198,7 +199,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 cls: (this.getEditMode()) ? "editmode-enabled" : "",
                 trackOver: (this.getEditMode()),
                 // changing the hover class to get rid of taco overrides of grid
-                overItemCls: 'taco-orderItem-grid-row-over',
+                //overItemCls: 'taco-orderItem-grid-row-over',
+                
                 emptyText: '<div class="empty-grid-message">No order items to display</div>',
                 deferEmptyText: false,
                 stripeRows: false,
@@ -521,6 +523,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             // pass focus to the add product field; 
             if (this.addProductToolbar) {
                 me.mon(me, 'boxready', function () {
+
                     // need to listen for focus on the grid el.
                     me.mon(me.el, 'focus', function () {
                         if (me.store.getCount()) {
@@ -528,7 +531,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         } else {
                             // no grid items to focus. pass focus to the productPickerField;
                             this.addProductToolbar.productPickerField.focus(null, 10);
-        }
+                        }
                     }, this)
 
 

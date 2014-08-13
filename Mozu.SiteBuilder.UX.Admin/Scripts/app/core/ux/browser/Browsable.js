@@ -143,7 +143,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         Ext.applyIf(this.header, {
             actions: [{
                 xtype: 'primarybutton',
-                itemId: 'newbutton',
+                itemId: 'createActionButton',
                 hidden: ! this.allowCreate(),
                 listeners: {
                     click: function () {
@@ -245,7 +245,7 @@ Ext.define('Taco.core.ux.browser.Browsable', {
         
         var newCreateButtonText = this.createButtonPrefix + this.typeName;
         Ext.Array.some(this.header.actions, function (item) {
-            if (item.itemId === "newbutton") {
+            if (item.itemId === "createActionButton") {
                 if (!item.rendered) {
                     item.text = newCreateButtonText;
                 } else {

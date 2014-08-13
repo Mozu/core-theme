@@ -33,6 +33,46 @@ document.createElement('nav');
 
 (function () {
 
+    /* start focusin/out event polyfill (firefox) */
+    // https://gist.github.com/nuxodin/9250e56a3ce6c0446efa
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=687787
+
+    var win = window,
+        doc = win.document;
+    
+    var addEvtFn = (doc.addEventListener) ? "addEventListener" : "attachEvent";
+    var removeEvtFn = (doc.removeEventListener) ? "removeEventListener" : "deattachEvent";
+
+    if (win.onfocusin === undefined) {
+        doc[addEvtFn]('focus', addFocusPolyfill, true);
+        doc[addEvtFn]('blur', addFocusPolyfill, true);
+        doc[addEvtFn]('focusin', removeFocusPolyfill, true);
+        doc[addEvtFn]('focusout', removeFocusPolyfill, true);
+    }
+    function addFocusPolyfill(e) {        
+        var type = e.type === 'focus' ? 'focusin' : 'focusout';
+        var event = new CustomEvent(type, { bubbles: true, cancelable: false });
+        event.c1Generated = true;
+        e.target.dispatchEvent(event);
+    }
+    function removeFocusPolyfill(e) {        
+        if (!e.c1Generated) { // focus after focusin, so chrome will the first time trigger tow times focusin
+            doc[removeEvtFn]('focus', addFocusPolyfill, true);
+            doc[removeEvtFn]('blur', addFocusPolyfill, true);
+            doc[removeEvtFn]('focusin', removeFocusPolyfill, true);
+            doc[removeEvtFn]('focusout', removeFocusPolyfill, true);
+        }
+        setTimeout(function () {
+            doc[removeEvtFn]('focusin', removeFocusPolyfill, true);
+            doc[removeEvtFn]('focusout', removeFocusPolyfill, true);
+        });
+    }
+
+    
+    /* End focusin/out event polyfill (firefox) */
+    
+
+
     var d = window.Date,
         regexIso8601 = /^(\d{4}|\+\d{6})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})\.(\d{1,3})(?:Z|([\-+])(\d{2}):(\d{2}))?)?)?)?$/;
 

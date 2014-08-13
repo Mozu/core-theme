@@ -167,7 +167,7 @@ Ext.define('Taco.view.inventory.Index', {
         this.header =  {
             actions: [{
                 xtype: 'primarybutton',
-                itemId: 'newbutton',
+                itemId: 'createActionButton',
                 hidden: !this.allowCreate(),
                 listeners: {
                     click: function () {
