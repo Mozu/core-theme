@@ -42,7 +42,58 @@ There are also two new Hypr templates, used in `search-autocomplete.js` to rende
 
 ### Gift Cards
 
-*TBA*
+**Core4** supported store credits in checkout.  In **Core5** we are expanding support to include purchasing digital gift cards and payment with gift cards.  When purchasing a digital gift card, Mozu will require an email address to fulfill the order.  We refer to this as *Digital Fulfillment*.  
+
+**Purchase Gift Card**
+
+---
+
+![Purchase Gift Card](https://cloud.githubusercontent.com/assets/1643758/3913570/d8ecf1bc-2337-11e4-9416-539cee2a1a3a.png)
+
+The shopper can enter the gift card's redemption code during checkout or if applicable they will be able to choose from previously added gift cards to their account.  We refer to this as payment with *Digital Credit*.  
+
+**Payment with Gift Card**
+
+---
+
+![Pay with gift card](https://cloud.githubusercontent.com/assets/1643758/3913569/d8ec7836-2337-11e4-95b2-17f34cc5aaec.png)
+
+
+We added the following Hypr files and JavaScript methods to enable gift card purchase and payment.
+    
+**Added checkout-digital-credit and checkout-digital-fulfillment Hypr files**    
+
+---
+
+![Gift Card Hypr files (yUml.me)](https://cloud.githubusercontent.com/assets/1643758/3913567/d8e8b25a-2337-11e4-824c-d3a9d7490b15.png)
+
+
+**Added Digital Credit and Fulfillment Methods to models-checkout.js**   
+
+---
+
+![Gift Card models-checkout.js (yUml.me)](https://cloud.githubusercontent.com/assets/1643758/3913571/d8ef69a6-2337-11e4-97a9-7d5aec76c533.png)
+
+
+**Added DigitalCredit to PaymentMethods**    
+
+---
+
+![Payment Methods (yUml.me)](https://cloud.githubusercontent.com/assets/1643758/3913568/d8e9d522-2337-11e4-8ab6-630ed7d94f21.png)
+
+
+**Supplemented Mozu SDK for Order to recognize GiftCard payments and for Customer to retrieve saved gift cards**
+  
+---
+
+![Mozu SDK Changes (yUml.me)](https://cloud.githubusercontent.com/assets/1643758/3913572/d8f9a614-2337-11e4-9cd3-e67cd52bbda9.png)
+
+
+**Added new Gift Card email template for purchase of digital gift cards**
+  
+---
+
+![Mozu Gift Card Email Template (yUml.me)](https://cloud.githubusercontent.com/assets/1643758/3913566/d8e858b4-2337-11e4-8cb9-a2f9e09adc60.png)
 
 ## Changes
 
@@ -64,7 +115,11 @@ You can see this new factory function in action in the new, slimmed-down `script
 
 ### models-checkout.js
 
-*TBA*
+Fixed saving new contacts to customer account.  Added new methods to the CheckoutPage in models-checkout.js.
+
+![Saving contacts in models-checkout.js (yUml.me)](https://cloud.githubusercontent.com/assets/1643758/3913565/d8e37cb8-2337-11e4-9a89-5974d044572b.png)
+
+
 
 ### Upgraded Vendored Libraries
 
