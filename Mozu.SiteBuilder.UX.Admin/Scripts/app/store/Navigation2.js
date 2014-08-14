@@ -356,7 +356,7 @@ Ext.define('Taco.store.Navigation2', {
                 "id": "report",
                 "label": "Reports",
                 "keyNavShortcut": Ext.EventObject.R,
-                "address": "report",
+                "address": "reports",
                 "icon": "nav-dashboard",
                 "behaviorIds": [188],
                 "items": [
