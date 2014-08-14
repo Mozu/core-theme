@@ -26,6 +26,7 @@
                 'modules/login-links',
                 'modules/models-address',
                 'modules/models-customer',
+                'modules/models-documents',
                 'modules/models-faceting',
                 'modules/models-messages',
                 'modules/models-product',

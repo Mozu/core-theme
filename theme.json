@@ -42,6 +42,9 @@
             "emailTemplateContent@mozu"
         ],
         "priority": 0.2
+    }, {
+      "id": "horizontalrule",
+      "path" : "horizontalRule.js" 
     },
      {
         "id": "pageTemplateContent@mozu",
@@ -806,7 +809,7 @@
         },
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",
-        "editView": "taco-horizontalrule-widgeteditor",
+        "customEditor": "horizontalrule",
         "icon": "/resources/admin/widgets/05_horizontal_divider.png",
         "id": "horizontal_rule",
         "validPageTypes": [
