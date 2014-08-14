@@ -72,7 +72,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 {
                     return "fulfillmentStatus eq " + filter.value; ;
                 }
-                    
+                case "id":
+                {
+                    return "id eq " + filter.value; ;
+                }
                 case "mintotal":
                     return "total GE " + filter.value;
                 case "maxtotal":
