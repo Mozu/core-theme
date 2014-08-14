@@ -392,25 +392,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
                     order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 ? 0 : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
                     order.ItemsDigitallyFulfilled = order.DigitalPackages == null || order.DigitalPackages.Count == 0 ? 0 : order.DigitalPackages.SelectMany(p => p.Items).Sum(i => i.Quantity);
-                    
-
-                    //List<BundledProduct> bundledProducts = order.Items.SelectMany(x => x.BundledProducts).ToList();
-
-                    //if (order.Packages != null)
-                    //{
-                    //    order.Packages.Where(p => p.Status == ShippingDC.FulfillmentStatusConst.FULFILLED).SelectMany(y => y.Items).ToList().ForEach(x =>
-                    //        {
-                                
-                    //        })
-                    //}
-
-                    //order.Items.ForEach(x => {
-                    //    x.QuantityFulfilled = x.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.PICKUP ? order.Pickups.Where(p => p.Status == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentStatusConst.FULFILLED).SelectMany(y => y.Items).Where(y => y.ProductCode == x.ProductCode).Sum(y => y.Quantity) : order.Packages.Where(p => p.Status == Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentStatusConst.FULFILLED).SelectMany(y => y.Items).Where(y => y.ProductCode == x.ProductCode).Sum(y => y.Quantity);
-                    //});
-
-                    //order.Items.SelectMany(x => x.BundledProducts).ToList().ForEach(x => {
-                        
-                    //});
                 })
                  .AfterMap((dc, order) =>
                  {
