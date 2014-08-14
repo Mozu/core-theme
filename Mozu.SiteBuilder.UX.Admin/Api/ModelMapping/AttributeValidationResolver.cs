@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                          if (x.Id == null)
                          {
-                             x.Id = Regex.Replace(x.Value as string  ??  "" , "[^a-zA-Z0-9]", "_"); ;
+                             x.Id = Regex.Replace(x.Value as string ?? "", "[^A-Za-z0-9-_\\.]", "-"); ;
                          }
                         
 
@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var destination = new DC.Attribute
             {
                 AdminName = source.AdminName ,
-                AttributeCode =  (source.Name ?? "").Trim(),
+                AttributeCode =  source.AttributeCode ,
                 Validation = attributeValidation,
                 VocabularyValues =   Mapper.Map<List<DC.AttributeVocabularyValue>>(source.Values),
                 AttributeFQN = source.Id,

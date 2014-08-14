@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AdminName, op => op.ResolveUsing(x => x.AdminName))
                 .ForMember(x => x.Values, opt => opt.ResolveUsing(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.AttributeFQN))
-                .ForMember(x => x.Code, opt => opt.ResolveUsing(x => x.AttributeCode))
+                .ForMember(x => x.AttributeCode, opt => opt.ResolveUsing(x => x.AttributeCode))
                 .ForMember(x => x.AttributeId, opt => opt.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Name, opt => opt.ResolveUsing(x => (x.Content != null) ? x.Content.Value : null))
                 .ForMember(x=> x.IsActive , opt => opt.ResolveUsing(x=> x.IsActive ))
@@ -180,7 +180,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         {
                             if (x.Id == null)
                             {
-                                x.Id = Regex.Replace(x.Value as string ?? "", "[^a-zA-Z0-9]", "_"); ;
+                                x.Id = Regex.Replace(x.Value as string ?? "", "[^A-Za-z0-9-_\\.]", "-"); ;
                             }
 
 
@@ -210,7 +210,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     IsVisible = source.IsVisible ,
                     IsActive = source.IsActive,
                     DisplayGroup = source.DisplayGroup ,
-                    AttributeCode = !String.IsNullOrEmpty(source.Code) ? source.Code : (source.Name ?? "").Trim(),
+                    AttributeCode = !String.IsNullOrEmpty(source.AttributeCode) ? source.AttributeCode : (source.Name ?? "").Trim(),
                     Id = source.AttributeId,
                     Validation = attributeValidation,
                     VocabularyValues = source.InputType == AttributeInputType.List 

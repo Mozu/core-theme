@@ -12,7 +12,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes
 
         public int? AttributeId { get; set; }
 
-        public string Code { get; set; }
+
+
+        [JsonProperty(PropertyName = "code")]
+        public string AttributeCode { get; set; }
 
         public string Name { get; set; }
 

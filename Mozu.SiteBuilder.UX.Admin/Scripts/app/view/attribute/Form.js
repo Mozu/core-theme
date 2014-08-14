@@ -6,7 +6,8 @@ Ext.define('Taco.view.attribute.Form', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [
         'Taco.view.option.valueEditor.MultiValue',
-        'Taco.shared.view.field.Product'
+        'Taco.shared.view.field.Product',
+        'Taco.core.ux.form.SlugField'
     ],
     createTitle: 'Create New Attribute',
     alias: ['widget.taco-attributeform'],
@@ -308,8 +309,8 @@ Ext.define('Taco.view.attribute.Form', {
                                             value: value
                                         })[0];
 
-                                        record.set('id', value.replace(/[^a-zA-Z0-9]/g, "_"));
-
+                                        record.set('id', value.replace(/[^a-zA-Z0-9-_//.]/g, "-"));
+                                   
                                     }
                                 }
                             }
@@ -655,18 +656,23 @@ Ext.define('Taco.view.attribute.Form', {
 
         this.items = [
             {
-                fieldLabel: 'Name',
+                fieldLabel: 'Attribute Label',
                 name: 'name',
                 allowBlank: false,
-                emptyText: 'Enter an attribute name',
+                emptyText: 'Enter a label for the attribute',
                 width: 300,
                 maxLength: 30,
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function (field, e, eOpts) {
-                        var adminName = this.findField('adminName');
+                        var adminName = this.findField('adminName'),
+                            attributeCode = this.findField('code');
+
                         if (!adminName.getValue() || (!this.record.get('adminName') && !field.hadKeyEvent)) {
                             adminName.setValue(field.getValue());
+                        }
+                        if (!attributeCode.getValue() || (!this.record.get('code') && !field.hadKeyEvent)) {
+                            attributeCode.setValue(field.getValue());
                         }
                     },
                     scope: this
@@ -677,6 +683,21 @@ Ext.define('Taco.view.attribute.Form', {
                 allowBlank: false,
                 emptyText: 'Enter an attribute name',
                 width: 300,
+                enableKeyEvents: true,
+                listeners: {
+                    keyup: function (field, e, eOpts) {
+                        field.hadKeyEvent = true;
+                    },
+                    scope: this
+                }
+            }, {
+                fieldLabel: 'Attribute Code',
+                name: 'code',
+                allowBlank: !this.record.phantom,
+                readOnly:!this.record.phantom,
+                emptyText: 'Enter a unique attribute code',
+                width: 300,
+                xtype:'taco-slugfield',
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function (field, e, eOpts) {

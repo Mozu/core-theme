@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
             
             return _attributeMapper.PerformAction(attributes, a =>
                 {
-                    a.AttributeCode = Regex.Replace(a.AttributeCode, "[^a-zA-Z0-9]", "_");
+                    a.AttributeCode = Regex.Replace(a.AttributeCode, "[^A-Za-z0-9-_\\.]", "-");  
                     return _attributeWebApiClient.AddAttribute(a);
                 });
             //await _attributeValueMapper.PerformAction(results.SelectMany(SelectValuesAssigned), (a, b) => _attributeWebApiClient.AddAttributeVocabularyValue(a, b.AttributeFQN));
