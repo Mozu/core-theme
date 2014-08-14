@@ -266,7 +266,7 @@ Ext.define('Taco.view.product.variant.Grid', {
     },
 
     findAttribute: function (record) {
-        return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
+        return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'), 0, false, false, true);
     },
 
     addSaveTasks: function (tasks, updateRecord, saveRecord) {

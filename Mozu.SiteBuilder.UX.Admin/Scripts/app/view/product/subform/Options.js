@@ -97,7 +97,7 @@ Ext.define('Taco.view.product.subform.Options', {
     },
 
     findAttribute: function (record) {
-        return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
+        return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'), 0, false, false, true);
     },
 
     loadByProductTypeId: function (value) {

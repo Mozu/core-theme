@@ -194,10 +194,15 @@ Ext.define('Taco.shared.view.modal.Address', {
             changed: null,
             validatedAddr: {},
             applyToRecord: function () {
-                this.validatedAddr.addressIsValidated = true;
-                for (item in this.validatedAddr) {
-                    me.record.set(item, this.validatedAddr[item]);
-                }
+
+                // Merge the result of validation with the fields from the form. 
+                // The form contains fields like first/last name that are not part of the validation result.
+                var mergedFormWithValidationResults = {
+                    addressIsValidated: true
+                };
+                Ext.Object.merge(mergedFormWithValidationResults, me.form.getValues(), this.validatedAddr);
+                me.record.set(mergedFormWithValidationResults);
+
                 me.form.loadRecord(me.record);
             }
         };
