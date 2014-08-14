@@ -22,7 +22,7 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
                     },
                     flex: 1
                 },
-                { text: 'Status', dataIndex: 'paymentStatus', flex: 1 }
+                { text: 'Status', dataIndex: 'orderStatus', flex: 1 }
             ]
 
         }];

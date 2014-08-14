@@ -88,7 +88,7 @@ Ext.define('Taco.view.product.variant.Options', {
     },
 
     findAttributeName: function (record) {
-        var option = this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'));
+        var option = this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'), 0, false, false, true);
 
         if (!option) return;
 
@@ -96,7 +96,7 @@ Ext.define('Taco.view.product.variant.Options', {
     },
 
     getOptionValues: function (attributeFQN) {
-        var option = this.product.getOptions().findRecord('attributeFQN', attributeFQN);
+        var option = this.product.getOptions().findRecord('attributeFQN', attributeFQN, 0, false, false, true);
 
         if (!option) return [];
 

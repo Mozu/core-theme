@@ -183,7 +183,7 @@ Ext.define('Taco.view.product.subform.Extras', {
     },
 
     findExtra: function (ptAttribute) {
-        return this.product.getExtras().findRecord('attributeFQN', ptAttribute.get('attributeFQN'));
+        return this.product.getExtras().findRecord('attributeFQN', ptAttribute.get('attributeFQN'), 0, false, false, true);
     },
 
     buildContainer: function (ptAttribute, createIfMissing) {
