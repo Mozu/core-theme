@@ -53,6 +53,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         width: 150,
         editor: {
             xtype: 'combobox',
+            showBorder: true,
             allowOnlyWhitespace: false,
             editable: false,
             forceSelection: true,
@@ -96,6 +97,36 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     config: {
         order: null,
         record: null
+    },
+    
+    initComponent: function () {
+        
+        this.store = this.getReturnableItemsStore();
+
+        this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        }));
+
+        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+            selType: 'checkboxmodel',
+            injectCheckbox: 'last',
+            headerWidth: 37,
+            checkOnly: true,
+            showHeaderCheckbox: true
+        });
+
+        this.callParent(arguments);
+
+        this.on({
+            select: {
+                scope: this,
+                fn: 'handleSelect'
+            },
+            boxready: {
+                scope: this,
+                fn: function () { this.addCls('returnable-items-grid'); }
+            }
+        });
     },
 
     getReturnedItemQuantityByProductCode: function() {
@@ -159,46 +190,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             data: eligibleItems
         });
     },
-    
-    initComponent: function () {
-        
-        this.store = this.getReturnableItemsStore();
-
-        this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
-            clicksToEdit: 1
-        }));
-
-        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-            selType: 'checkboxmodel',
-            injectCheckbox: 'last',
-            headerWidth: 37,
-            checkOnly: true,
-            showHeaderCheckbox: true
-        });
-
-        this.callParent(arguments);
-
-        this.on({
-            //edit: {
-            //    scope: this,
-            //    fn: 'onCreateStateChange'
-            //},
-            select: {
-                scope: this,
-                fn: 'handleSelect'
-            },
-          //boxready: {
-          //    scope: this,
-          //    fn: function () { this.addCls('return-item return-create'); }
-          //}
-        });
-    },
 
     handleSelect: function (selModel, record, index) {
         if (!record.get('quantity')) record.set('quantity', 1);
-    },
-
-    //onCreateStateChange: function () {
-    //    console.log('hello world');
-    //}
+    }
 });

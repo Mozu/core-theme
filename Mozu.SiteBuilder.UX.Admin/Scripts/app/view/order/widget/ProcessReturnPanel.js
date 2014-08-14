@@ -29,7 +29,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.orderItemsStore = order.items();
 
         this.itemsStore.each(function (item) {
-            item.set('quantityShipped', item.get('quantity'));
+            item.set({
+                quantityShipped: item.get('quantity'),
+                quantityRestockable: Ext.valueFrom(item.get('quantityRestockable'), 0)
+            });
         });
 
         // set up major components
@@ -227,8 +230,30 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 resizable: false,
                 menuDisabled: true,
                 width: 100,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    minValue: 0
+                },
                 renderer: function (value, meta, record) {
                     return Taco.app.context.getCurrent().formatCurrency(value);
+                }
+            }, {
+                dataIndex: 'quantityRestockable',
+                text: 'Restockable',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
+                width: 100,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: true,
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
+                    minValue: 0
                 }
             }, {
                 dataIndex: 'reason',
@@ -355,11 +380,15 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 itemId: 'Cancel',
                 text: 'Cancel'
             }, {
+                itemId: 'Reject',
+                text: 'Reject'
+            }, {
                 itemId: 'Authorize',
                 text: 'Authorize'
             }, {
-                itemId: 'Reject',
-                text: 'Reject'
+                itemId: 'Refund',
+                text: 'Refund',
+                handler: this.handleRefundClick
             }, {
                 itemId: 'Await',
                 text: 'Await'
@@ -370,9 +399,30 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 itemId: 'Restock',
                 text: 'Restock'
             }, {
-                itemId: 'Refund',
-                text: 'Refund',
-                handler: this.handleRefundClick
+                itemId: 'Ship',
+                text: 'Ship'
+            }, {
+                itemId: 'Close',
+                text: 'Close',
+                listeners: {
+                    boxready: {
+                        scope: this,
+                        fn: function (button) {
+                            var id = this.getRecord().get('returnOrderId');
+
+                            if (id) {
+                                var orders = Ext.create('Taco.store.Orders', {
+                                    autoLoad: true,
+                                    filters: [{ property: 'id', value: id }]
+                                });
+
+                                orders.on('load', function (store, records) {
+                                    button.setDisabled(records[0].get('orderStatus') !== 'Completed');
+                                });
+                            }
+                        }
+                    }
+                }
             }],
             listeners: {
                 afterlayout: {
@@ -401,7 +451,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     '</tr><tr>',
                         '<td><span class="label">Created:</span>{createDate:date("m/d/Y g:ia")}</td>',
                         '<td><span class="label">Loss:</span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.items, "productLossAmount")))]}</td>',
-                    '</tr>',
+                    '</tr><tpl if="returnOrderId"><tr>',
+                        '<td><span class="label">Return Order:</span><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/orders/edit/{returnOrderId}">{returnOrderId}</a></td><td>&nbsp;</td>',
+                    '</tr></tpl>',
                 '</tbody></table>', {
                     getUnitPriceTotal: function (items) {
                         var prices = Ext.Array.map(items, function (item) {
