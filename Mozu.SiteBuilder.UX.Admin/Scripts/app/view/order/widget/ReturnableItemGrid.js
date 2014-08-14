@@ -176,7 +176,6 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
         // adds an item unless it has been fully returned
         function addItem (item, orderItemId, parentBundleName) {
-            console.log(item);
             if (!allReturned(item)) {
                 eligibleItems.push({
                     orderItemId: parentBundleName ? null : orderItemId,
