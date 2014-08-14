@@ -14,6 +14,9 @@ Ext.define('Taco.shared.view.field.Customer', {
     emptyText: 'Search',
     remoteFilter: true,
     queryMode: 'remote',
+
+    // adds extraParam to the proxy to show anonymous customers as well;
+    showAnonymousCustomers: false,
    
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
@@ -60,36 +63,35 @@ Ext.define('Taco.shared.view.field.Customer', {
         
     },
     initComponent: function () {
+        var me = this;
 
-
-        
-        if (!this.store) {
-            this.store = Taco.core.data.StoreManager.getOrCreate({
+        if (!me.store) {
+           
+            me.store = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Customers',
-                pageSize: this.pageSize,
-                autoLoad: true
+                pageSize: me.pageSize,
+                autoLoad: false
             });
-        }
-        
-        //this.store = Ext.create('Taco.store.Customers', {
-        //    autoLoad: false
-        //});
 
+            var proxy = me.getStore().getProxy();
+            if (me.showAnonymousCustomers) {
+                proxy.setExtraParam("advancedSearch", '{"showAnonymous":true}');
+            } else {
+                // need to remove the advancedSearch filter since it can be set by the advanced search in the customers page;
+                if (proxy.extraParams["advancedSearch"]) {
+                    delete proxy.extraParams["advancedSearch"]
+                }
+            }
+            this.store.load();
+
+        }
 
         this.callParent(arguments);
 
         this.on({
             beforequery: this.formatQuery,
-            //afterrender:function () {
-            //    this.store.load();
-            //},
             scope: this
         });
-        //this.store.load();
-        //if (this.value && !this.stoer.getById(this.value)) {
-           
-
-        //}
     },
 
     formatQuery: function (queryEvent, e) {
