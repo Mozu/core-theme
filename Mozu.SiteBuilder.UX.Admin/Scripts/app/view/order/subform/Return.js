@@ -102,10 +102,11 @@ Ext.define('Taco.view.order.subform.Return', {
         });
     },
         
-    addProcessReturnPanel: function (record) {
+    addProcessReturnPanel: function (record, recordIndex) {
         this.add(Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
             order: this.record,
-            record: record
+            record: record,
+            collapsed: !!recordIndex
         }));
     },
         
@@ -176,9 +177,7 @@ Ext.define('Taco.view.order.subform.Return', {
     },
         
     initProcessReturnPanels: function (store) {
-        store.each(function (record) {
-            this.addProcessReturnPanel(record);
-        }, this);
+        store.each(this.addProcessReturnPanel, this);
     },
 
     onOrderChange: function () {
