@@ -47,14 +47,44 @@ Ext.define('Taco.view.attribute.Index', {
             text: 'Name',
             flex: 1,
             minWidth: 120
+
         }, {
             dataIndex: 'id',
+            hidden: true,
             text: 'ID',
             minWidth: 200
         }, {
+            dataIndex: 'code',
+            hidden: true,
+            
+            text: 'Code',
+            minWidth: 200
+        }, {
             dataIndex: 'inputType',
+            sortable: false,
             text: 'Input Type',
             width: 130
+        }, {
+            text: 'Type',
+            width: 200,
+            sortable: false,
+            renderer :function (value, metaData, record) {
+                ret = [];
+                if (record.get('isOption')) {
+                    ret.push('Option')
+                }
+                if (record.get('isExtra')) {
+                    ret.push('Extra')
+                }
+                if (record.get('isProperty')) {
+                    ret.push('Property')
+                }
+                return ret.join(', ');
+            }
+
+
+
+
         }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',

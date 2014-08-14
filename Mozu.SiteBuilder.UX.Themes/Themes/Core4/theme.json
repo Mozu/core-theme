@@ -5,7 +5,8 @@
         "extends": null,
         "isDesktop": true,
         "isMobile": false,
-        "defaultLanguage": "en-US"
+        "defaultLanguage": "en-US",
+         "allowProduction": false
     },
      "editors": [ {
         "documentTypes": [
