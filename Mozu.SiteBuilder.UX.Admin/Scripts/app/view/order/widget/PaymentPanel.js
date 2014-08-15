@@ -3,6 +3,11 @@
  */
 Ext.define('Taco.view.order.widget.PaymentPanel', {
     extend: 'Ext.panel.Panel',
+    ui: 'subform-section-child',    
+
+    margin: '10 0 10 0',
+    bodyPadding: '0',
+
     requires: [
         'Ext.MessageBox',
         'Taco.view.order.modal.CreditPayment',
@@ -28,17 +33,23 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         me.initTransactionList();
 
         me.items = [
-                me.statusRow,
-                {
-                    xtype: 'container',
-                    layout: 'column',
-                    items: [
-                        me.paymentDetails,
-                        me.displayAmount
-                    ]
-                },
-                me.transactionList
+            me.statusRow,
+            {
+                xtype: 'container',
+                cls: 'orderform-payment-main',
+                layout: 'column',
+                items: [
+                    me.paymentDetails,
+                    me.displayAmount
+                ]
+            }
         ];
+
+        if (me.transactionList) {
+            me.items.push(me.transactionList)
+        }
+
+        
 
         this.callParent(arguments);
     },
@@ -216,58 +227,99 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         this.captureButton = me.statusRow.getComponent('captureButton');
     },
 
-    // initialize the views and actions menu
+    // expand or collapse the transaction list history.
+    toggleTransactionList: function (btn, e) {
+        var me = this,
+            el = this.transactionList.el.down(".taco-history-collapsable"),
+            isCollapsed = (el.hasCls("collapsed"));
+        
+        if (isCollapsed) {
+            el.removeCls("collapsed")
+            // down arrow
+            btn.setGlyph("xe036");
+        } else {
+            el.addCls("collapsed");
+            // right arrow
+            btn.setGlyph("xe034");
+        }
+
+        this.transactionList.doLayout();
+    },
 
     initTransactionList: function () {
         var me = this;
-
-        //todo:rework below to work off of interactions.
-        //todo: remove issue credit from here.
+        
         this.interactionsStore = me.record.interactionsStore;
-        me.transactionList = Ext.create('Ext.view.View', {
-            cls: "orderform-payment-transactionlist",
-            listeners: {
-                itemclick: {
-                    fn: function (view, record, item, index, e, eOpts) {
-                        var isButtonClick = (e.target.localName == 'button'),
-                            btnEl = isButtonClick ? Ext.get(e.target) : null;
-                    },
-                    scope: me
-                }
-            },
-            itemSelector: "div.payment-transaction",
-            tpl: [
-                '<tpl for=".">',
-                    //'<tpl if="amountCollected!==0">',
-                    '<div class="payment-transaction">',
-                        '<div class="details">',
-                            ' {createDate:date("M d g:ia")} ',
-//                        '<span class="seperator">|</span>',
-//                            ' id: {id} ',
-                        '<span class="seperator">|</span>',
-                            ' Amount: {[Taco.app.context.getCurrent().formatCurrency(values.amount)]} ',
-                        '<span class="seperator">|</span>',
-                            'Type: {interactionType} ',
-                        '<span class="seperator">|</span>',
-                            'Status: {status} ',
-                        '<tpl if="gatewayTransactionId">',
-                            '<tpl if="gatewayTransactionId != 0">',
-                                '<span class="seperator">|</span>',
-                                ' Transaction ID: {gatewayTransactionId}',
-                             '</tpl>',
-                        '</tpl>',
-                        '<span class="seperator">|</span>',
-                            'Response Code: {gatewayResponseCode} ',
-                        '<tpl if="gatewayResponseText">',
-                            '<br />',
-                            'Response Message: {gatewayResponseText} ',
-                        '</tpl>',
+        if (this.interactionsStore.count()) {
+            var collapsableCls = "",
+                toggleBtnHtml = '';
+
+            if (this.interactionsStore.count() > 1){
+                collapsableCls =  "taco-history-collapsable";
+                toggleBtnHtml = '<div class="togglebtn"></div>';
+            }
+            
+            me.transactionList = Ext.create('Ext.container.Container', {
+                cls: "orderform-payment-transactionlist",
+                listeners: {
+                    boxready: {
+                        fn: function () {
+                            if (me.interactionsStore.count()>1) {
+                                // create an extjs button in place                               
+                                var btnEl = me.transactionList.el.down(".togglebtn");
+                                this.toggleButton = Ext.widget({
+                                    xtype: "button",
+                                    padding: '6px 0px 5px 6px',
+                                    renderTo: btnEl,
+                                    width: 30,
+                                    // right arrow
+                                    glyph: "xe034@mozicons",
+                                    ui: 'action',
+                                    scale: 'medium',
+                                    handler: this.toggleTransactionList,
+                                    scope: me
+                                });
+                            }
+                        },
+                        scope: me
+                    }
+                },
+                tpl: [
+                    '<div class="' + collapsableCls + ' collapsed">',
+                        '<div class="title">Transaction History</div>',
+                        '<div class="body" >',
+                            toggleBtnHtml,
+                            '<tpl for=".">',
+                                '<div class="payment-transaction {[xindex == 1 ? \'recent-transaction\' : \'previous-transaction\']}">',
+                                    '<div class="details">',
+                                        ' {createDate:date("M d g:ia")} ',
+                                        '<span class="seperator">|</span>',
+                                            ' Amount: {[Taco.app.context.getCurrent().formatCurrency(values.amount)]} ',
+                                        '<span class="seperator">|</span>',
+                                            'Type: {interactionType} ',
+                                        '<span class="seperator">|</span>',
+                                            'Status: {status} ',
+                                        '<tpl if="gatewayTransactionId">',
+                                            '<tpl if="gatewayTransactionId != 0">',
+                                                '<span class="seperator">|</span>',
+                                                ' Transaction ID: {gatewayTransactionId}',
+                                             '</tpl>',
+                                        '</tpl>',
+                                        '<span class="seperator">|</span>',
+                                            'Response Code: {gatewayResponseCode} ',
+                                        '<tpl if="gatewayResponseText">',
+                                            '<br />',
+                                            'Response Message: {gatewayResponseText} ',
+                                        '</tpl>',
+                                    '</div>',
+                                '</div>',
+                            '</tpl>',
                         '</div>',
-                    '</div>',
-                '</tpl>'
-            ],
-            store: this.interactionsStore
-        });
+                    '</div>'
+                ],
+                data: this.record.data.interactions
+            });
+        }
     },
 
 
@@ -491,6 +543,34 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 me.order.declinePaymentManual(config);
             }
         });
+    },
+
+    onDestroy: function () {
+        var me = this;
+        
+        var toBeDestroyed = [
+            "toggleButton",
+            "captureButton",
+            "displayAmount",
+            //"interactionsStore",
+            "paymentActions",
+            "paymentDetails",
+            "statusField",
+            "statusRow",
+            "transactionList"
+        ];
+        
+        Ext.Array.forEach(toBeDestroyed, function (item) {
+            
+            if (me[item]){
+                if (me[item].destroy){
+                    me[item].destroy();
+                }
+                delete me[item]
+            }
+        })
+
+        this.callParent(arguments);
     }
 
     //creditPayment: function(config) {
