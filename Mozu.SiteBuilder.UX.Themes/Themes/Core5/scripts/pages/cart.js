@@ -48,6 +48,8 @@
 
         window.cartView = cartView;
 
+        CartMonitor.setCount(cartModel.count());
+
     });
 
 });
