@@ -89,8 +89,6 @@
                             return '[All Zones]';
                         }
                     }
-
-
                 },
                 {
                     dataIndex: 'productTargetRuleCodes',
@@ -103,8 +101,6 @@
                             return '[All Products]';
                         }
                     }
-
-
                 },
                 {
                     dataIndex: 'serviceTypes',
@@ -125,10 +121,7 @@
                             return '[No methods]';
                         }
                     }
-
-
                 },
-
                 {
                     xtype: 'taco.menucolumn',
                     allowNavigation: false,
@@ -137,12 +130,18 @@
                     menuDisabled: true,
                     menuItems: [
                         {
+                            text: 'Edit',
+                            menuColumnHandler: function(item, eventData) {
+                                return me.launchEditor(eventData.record);
+                            }
+                        },
+                        {
                             text: 'Delete',
                             //requiredBehaviors: {
                             //    model: 'Taco.model.Discount',
                             //    behavior: 'destroy'
                             //},
-                            menuColumnHandler: me.onDeleteClick,
+                            menuColumnHandler: me.onDeleteClick
                         }
                     ]
                 }
