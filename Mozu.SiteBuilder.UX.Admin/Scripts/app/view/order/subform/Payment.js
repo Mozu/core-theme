@@ -19,6 +19,8 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     title: 'Payments',
 
+    bodyPadding:"0 0 0 0",
+
     // optional override of the title to be used in Tabs.
     tabTitle:"Payments",
 
