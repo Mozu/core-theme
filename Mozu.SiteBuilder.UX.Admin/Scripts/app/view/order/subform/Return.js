@@ -106,7 +106,7 @@ Ext.define('Taco.view.order.subform.Return', {
         this.add(Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
             order: this.record,
             record: record,
-            collapsed: !!recordIndex
+            collapsed: record.get('status') === 'Closed'
         }));
     },
         
@@ -177,7 +177,7 @@ Ext.define('Taco.view.order.subform.Return', {
     },
         
     initProcessReturnPanels: function (store) {
-        store.each(this.addProcessReturnPanel, this);
+        Ext.Array.each(store.data.items, this.addProcessReturnPanel, this, true);
     },
 
     onOrderChange: function () {
@@ -266,7 +266,7 @@ Ext.define('Taco.view.order.subform.Return', {
                 this.createButton.setDisabled(false);
             },
             success: function(batch) {
-                Ext.Array.each(records, this.addProcessReturnPanel, this);
+                Ext.Array.each(records, this.addProcessReturnPanel, this, true);
             },
             failure: function(batch) {
                 returnsStore.remove(records);
