@@ -13,7 +13,7 @@ Ext.define('Taco.view.website.NavigationTreeModal', {
     closeAction: 'destroy',
     primaryText: 'Apply',
     scale: 'medium',
-    title: 'Select Discounts',
+    title: 'Select Navigation Nodes',
 
     layout: {
         type: 'fit'
@@ -23,7 +23,8 @@ Ext.define('Taco.view.website.NavigationTreeModal', {
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             selType: 'checkboxmodel',
             checkOnly: true,
-            showHeaderCheckbox: true
+            showHeaderCheckbox: true,
+            mode: this.multiSelect === false ? "SINGLE" : "MULTI"
         });
 
         this.tree = Ext.create('Ext.tree.Panel', {

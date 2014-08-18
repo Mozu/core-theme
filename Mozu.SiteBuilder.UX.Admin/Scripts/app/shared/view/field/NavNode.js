@@ -1,98 +1,27 @@
 ﻿/**
- * @class Taco.shared.view.field.Category
+ * @class Taco.shared.view.field.NavNode
  */
 
-Ext.define('Taco.shared.view.field.Category', {
-    extend: 'Ext.container.Container',
-    layout: 'auto',
+Ext.define('Taco.shared.view.field.NavNode', {
+    extend: 'Taco.shared.view.field.BoxSelectWithModal',
     requires: [
-        'Taco.view.category.Modal',
-        'Taco.store.Categories'
+        'Taco.view.website.NavigationTreeModal',
+        'Taco.store.NavigationFlattened'
     ],
 
-    initComponent: function() {
-        var catStore = this.getCategoryStore();
-        // reset the list's dirty state when its store first loads
+    fieldLabel: 'Select Navigation Node',
+    displayField: 'name',
+    valueField: 'id',
+    buttonLabel: 'Add',
 
-        catStore.on({
-            load: function() {
-                this.categoryList.resetOriginalValue();
-            },
-            single: true,
-            scope: this
-        });
-        // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: this.name,
-            width: this.width || 290,
-            multiSelect: this.multiSelect,
-            margin: 0,
-            store: catStore,
-            getStore: function() {
-                return catStore;
-            },
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            displayField: 'name',
-            valueField: 'id',
-            fieldLabel: this.fieldLabel || 'Select Categories',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
-        });
-
-        this.items = [
-             this.categoryList,
-                {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Add',
-                    margin: '0 0 0 10',
-                    width: 70,
-                    style: {
-                        verticalAlign: 'bottom'
-                    },
-                    handler: this.launchCategoryModal,
-                    scope: this
-                }
-        ]
-
-        this.callParent(arguments);
-    },
-
-    /**
-     * Opens a modal with a TreePanel.
-     * @private
-     */
-    launchCategoryModal: function() {
-        var treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog(),
-            list = this.categoryList;
-
-        this.modal = Ext.create('Taco.view.category.Modal', {
-            store: treeStore
-        });
-
-        this.modal.on({
-            savesuccess: function(modal, values) {
-                list.addValue(values);
-            },
-            scope: this
-        });
-    },
-
-    getCategoryStore: function() {
+    getSelectStore: function() {
         var me = this;
         if (!me.categoryStore) {
             me.categoryStore = Taco.core.data.StoreManager.getOrCreate(
                 {
-                    type: 'Taco.store.Categories',
+                    type: 'Taco.store.NavigationFlattened',
                     createOnly: true,
-                    id: "cat-" + this.id,
+                    id: "nav-" + this.id,
                     autoLoad: true,
                     clearFilters: false,
                     remoteFilter: false
@@ -101,5 +30,12 @@ Ext.define('Taco.shared.view.field.Category', {
         }
         return me.categoryStore;
 
+    },
+
+    getModal: function() {
+        return Ext.create('Taco.view.website.NavigationTreeModal', {
+            store: Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes')
+        });
     }
+
 });

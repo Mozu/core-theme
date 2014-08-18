@@ -795,6 +795,7 @@
     <Content Include="Scripts\app\platter\fields\SimpleFields.js" />
     <Content Include="Scripts\app\platter\forms\SimpleForms.js" />
     <Content Include="Scripts\app\shared\view\field\ArrayField.js" />
+    <Content Include="Scripts\app\shared\view\field\BoxSelectWithModal.js" />
     <Content Include="Scripts\app\shared\view\field\NavNode.js" />
     <Content Include="Scripts\app\shared\view\field\Discount.js" />
     <Content Include="Scripts\app\shared\view\field\Category.js" />
@@ -2123,6 +2124,7 @@
     <Content Include="Tests\Automation\CIRunner.bat" />
     <Content Include="Tests\Mocks\Mystic1\Orders2Payments.json" />
     <Content Include="Tests\Mocks\Mystic1\Discounts1.json" />
+    <Content Include="Tests\Mocks\Mystic1\NavigationTreeNodes1.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
