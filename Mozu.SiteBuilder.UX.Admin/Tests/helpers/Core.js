@@ -1,26 +1,26 @@
 ﻿Class('Taco.TestClass.Core', {
     isa: Siesta.Test.ExtJS,
     methods: {
-        setup: function(callback, errback) {
+        setup: function (callback, errback) {
 
             var ext = this.getExt();
             ext.override(ext.ux.ajax.SimXhr, {
-                schedule: function() {
+                schedule: function () {
                     var me = this;
-                    me.timer = setTimeout(function() {
+                    me.timer = setTimeout(function () {
                         me.onTick();
                     }, me.mgr ? me.mgr.delay : 100);
                 }
             });
 
             ext.override(ext.ux.ajax.Simlet, {
-                doRedirect: function(ctx) {
+                doRedirect: function (ctx) {
                     if (this.jsonFile) {
                         return this.redirect('GET', this.jsonFile);
                     }
                     return false;
                 },
-                openRequest: function(method, url, options, async) {
+                openRequest: function (method, url, options, async) {
                     var xhr = this.callParent(arguments);
                     if (options) {
                         options.isSimulated = true;
@@ -38,7 +38,7 @@
 
 
         },
-        randomStringSuffix: function(seed, existing, depth) {
+        randomStringSuffix: function (seed, existing, depth) {
             var ret;
             depth = depth || 100;
             while (true) {
@@ -49,29 +49,29 @@
             }
 
         },
-        setContext: function(cfg, navigate) {
+        setContext: function (cfg, navigate) {
             var temp;
             this.diag('Loading Conext: ' + (cfg.$className || cfg));
 
             if (typeof cfg === 'string') {
                 switch (cfg) {
-                    case 'collection':
-                        temp = Taco.app.context.masterCatalogs;
+                case 'collection':
+                    temp = Taco.app.context.masterCatalogs;
 
-                        this.ok(temp.length, 'One or more site collections exist');
+                    this.ok(temp.length, 'One or more site collections exist');
 
-                        cfg = temp[0];
+                    cfg = temp[0];
 
-                        this.ok(cfg, 'A valid site collection exists');
+                    this.ok(cfg, 'A valid site collection exists');
 
-                        break;
+                    break;
                 }
             }
 
             Taco.app.context.setCurrentContext(cfg, navigate);
         },
 
-        clickSelect: function(cmp, value, next) {
+        clickSelect: function (cmp, value, next) {
             if (!cmp) {
                 return;
             }
@@ -89,9 +89,9 @@
             }
 
 
-            test.click(target, function() {
+            test.click(target, function () {
                 var nodes = cmp.getPicker().getNodes(),
-                    idx = cmp.store.findBy(function(rec) {
+                    idx = cmp.store.findBy(function (rec) {
                         return rec.get(cmp.valueField) == value || rec.get(cmp.displayField) == value;
                     });
                 if (idx > -1) {
@@ -100,7 +100,7 @@
                 }
 
 
-                Ext.each(nodes, function(node) {
+                Ext.each(nodes, function (node) {
                     var el = Ext.fly(node);
                     if (el.getHTML() === value) {
                         test.click(el, next);
@@ -110,9 +110,9 @@
 
             });
         },
-        validateFormValues: function(form, map) {
+        validateFormValues: function (form, map) {
             var test = this;
-            Ext.iterate(map, function(key, value) {
+            Ext.iterate(map, function (key, value) {
                 //  var fnComplete = function () {
 
                 var field = test.fieldFieldInForm(form, key);
@@ -125,7 +125,7 @@
 
             });
         },
-        validateRecordValues: function(desc, record, map, next) {
+        validateRecordValues: function (desc, record, map, next) {
             if (typeof desc !== 'string') {
                 next = map;
                 map = record;
@@ -133,22 +133,22 @@
                 desc = 'Checking record values';
             }
 
-            this.subTest(desc, function(t) {
-                Ext.iterate(map, function(key, val) {
+            this.subTest(desc, function (t) {
+                Ext.iterate(map, function (key, val) {
                     t.is(record.get(key), val, key + ' is set to ' + val);
                 }, this);
             }, next);
         },
-        fieldFieldInForm: function(form, name) {
+        fieldFieldInForm: function (form, name) {
             var field = form.findField(name);
 
             var fields = Ext.ComponentQuery.query('[isFormField][name="' + name + '"]', form);
             if (fields.length) {
-                field = Ext.Array.findBy(fields, function(f) {
+                field = Ext.Array.findBy(fields, function (f) {
                     if (f.isHidden()) {
                         return false;
                     }
-                    if (f.findParentBy(function(p) {
+                    if (f.findParentBy(function (p) {
                         return p.isHidden();
                     })) {
                         return false;
@@ -158,7 +158,7 @@
             }
             return field;
         },
-        setFormValues: function(desc, form, map, next) {
+        setFormValues: function (desc, form, map, next) {
             var t = this,
                 steps = [];
 
@@ -171,9 +171,9 @@
 
             if (form.getForm) form = form.getForm();
 
-            t.subTest(desc, function(t) {
+            t.subTest(desc, function (t) {
 
-                Ext.iterate(map, function(key, value) {
+                Ext.iterate(map, function (key, value) {
 
                     var field = t.fieldFieldInForm(form, key);
 
@@ -181,12 +181,12 @@
 
                     if (field.getPicker) {
                         steps.push(
-                            function(n) {
+                            function (n) {
                                 t.clickSelect(field, value, n);
                             });
                     } else {
                         steps.push(
-                            function(n) {
+                            function (n) {
                                 field.focus();
                                 t.selectText(field);
                                 t.type(field, value, n);
@@ -196,14 +196,14 @@
 
                 });
 
-                steps.push(function(n) {
+                steps.push(function (n) {
                     t.validateFormValues(form, map);
                     n();
                 });
                 t.chain(steps);
             }, next);
         },
-        setOnlyMocks: function(value) {
+        setOnlyMocks: function (value) {
             var sm = this.getExt().ux.ajax.SimManager;
 
             sm.init();
@@ -213,21 +213,21 @@
                 manager: sm
             });
         },
-        simManager: function() {
+        simManager: function () {
             return this.getExt().ux.ajax.SimManager;
         },
 
-        showViewPort: function() {
+        showViewPort: function () {
             Taco.app.initViewPort();
         },
 
-        waitForRender: function(t, component, afterRender) {
-            t.waitFor(function() {
+        waitForRender: function (t, component, afterRender) {
+            t.waitFor(function () {
                 return component.rendered;
             }, afterRender);
         },
 
-        getRoleStore: function() {
+        getRoleStore: function () {
             return Ext.create('Ext.data.Store', {
                 fields: [{
                     name: 'id',
@@ -252,7 +252,7 @@
         },
 
 
-        getBehaviorStore: function(roleId) {
+        getBehaviorStore: function (roleId) {
             var store,
                 data;
 
@@ -1397,45 +1397,59 @@
             return store;
         },
 
-        getHandleEl: function(cmp, fieldName) {
-          return cmp.getEl().down('[data-handle="' + fieldName + '"]');
+        getHandleEl: function (cmp, fieldName) {
+            return cmp.getEl().down('[data-handle="' + fieldName + '"]');
         },
 
-        isHandleHtml: function(cmp, field, expected, desc) {
-            var el = this.getHandleEl(cmp, field);
-
-            this.is(el.getHTML(), expected, desc);
+        selectHandleEl: function (cmp, fieldName) {
+            return cmp.getEl().select('[data-handle="' + fieldName + '"]');
         },
 
-        isHandlePresent: function(cmp, fieldName, desc) {
-           var el = this.getHandleEl(cmp, fieldName);
+        isHandleHtml: function (cmp, field, expected, desc, index) {
+            var el,
+                select,
+                html;
 
-           this.is(!!el, true, desc);
+            if (index) {
+                select = this.selectHandleEl(cmp, field);
+                html = select.elements[index].innerHTML;
+            } else {
+                el = this.getHandleEl(cmp, field);
+                html = el.getHTML();
+            }
+
+            this.is(html, expected, desc);
         },
 
-        isHandleNotPresent: function(cmp, fieldName, desc) {
+        isHandlePresent: function (cmp, fieldName, desc) {
             var el = this.getHandleEl(cmp, fieldName);
 
-           this.is(!!el, false, desc);
+            this.is(!!el, true, desc);
         },
 
-        isElementPresent: function(cmp, selector, desc) {
+        isHandleNotPresent: function (cmp, fieldName, desc) {
+            var el = this.getHandleEl(cmp, fieldName);
+
+            this.is(!!el, false, desc);
+        },
+
+        isElementPresent: function (cmp, selector, desc) {
             var el = cmp.getEl().down(selector);
 
             this.is(!!el, true, desc);
         },
 
-        isElementNotPresent: function(cmp, selector, desc) {
+        isElementNotPresent: function (cmp, selector, desc) {
             var el = cmp.getEl().down(selector);
 
             this.is(!!el, false, desc);
         },
 
-        isComponentVisible: function(cmp, desc) {
+        isComponentVisible: function (cmp, desc) {
             this.is(!cmp.isHidden(), true, desc);
         },
 
-        isComponentNotVisible: function(cmp, desc) {
+        isComponentNotVisible: function (cmp, desc) {
             this.is(!cmp.isHidden(), false, desc);
         }
     }
