@@ -16,8 +16,7 @@ Ext.define('Taco.model.CustomerAccountNote', {
     }, {
         "name": "createdOn",
         "type": "date",
-        "dateFormat": "MS",
-        dateFormat: 'c'
+        "dateFormat": "c"
     }],
     idProperty: 'id',
     

@@ -145,7 +145,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         /// </summary>
         [JsonProperty(PropertyName = "isTaxable")]
         public bool IsTaxable { get; set; }
-                
+
+        /// <summary>
+        /// ISO Currency Code
+        /// </summary>
+        [JsonProperty(PropertyName = "currencyCode")]
+        public string CurrencyCode { get; set; }
+
         /// <summary>
         /// The list price.
         /// </summary>

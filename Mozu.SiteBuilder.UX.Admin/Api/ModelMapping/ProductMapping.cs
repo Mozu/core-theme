@@ -91,6 +91,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MAPStartDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPStartDate))
                 .ForMember(x => x.MAPEndDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPEndDate))
                 .ForMember(x => x.CreditValue, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).CreditValue))
+                .ForMember(x => x.CurrencyCode, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).ISOCurrencyCode))
+            
                 
                 //todo:what?
                 // .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.ResolveUsing(dc => dc.i))
