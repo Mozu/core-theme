@@ -85,6 +85,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         }
         me.items = [me.bodyCont];
         this.callParent(arguments);
+        this.addEvents(['rerender']);
     },
 
     getNewPaymentActions: function() {
@@ -198,6 +199,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         //me.setActionsMenuVisibility();
         Ext.resumeLayouts(true);
         //this.fireEvent('orderchange');
+        this.fireEvent('rerender');
     },
 
     /*

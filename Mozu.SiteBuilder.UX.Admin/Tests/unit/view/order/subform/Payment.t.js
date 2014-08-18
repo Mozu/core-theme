@@ -39,14 +39,20 @@ StartTest(function(t) {
             m.panel = Ext.create(
                 'Taco.view.order.subform.Payment', { record: m.record, width: 500 }
             );
+
+            m.panel.on('boxready', next, { single: true });
+
             Taco.app.viewPort.add(m.panel);
 
-            t.waitForComponentVisible(m.panel, next);
+            
+
+            //t.waitForComponentVisible(m.panel, next);
 
         },
 
         function(next) {
             t.diag("panel header bound to record");
+            m.panel.on('rerender', next, { single: true });
             t.isHandleHtml(m.panel, 'order-payment-status', 'Fully Paid', 'panel header reflects fully paid status');
             m.record.set({
                 authorizationInfo: {
@@ -55,12 +61,14 @@ StartTest(function(t) {
                     captureAmount: 1045.85
                 }
             });
+
             m.record.commit();
-            t.waitForMs(200, next);
+            //t.waitForMs(500, next);
         },
 
         function(next) {
             t.isHandleHtml(m.panel, 'order-payment-status', 'Unpaid', 'panel header reflects unpaid status and updates');
+            m.panel.on('rerender', next, { single: true });
             m.record.set({
                 authorizationInfo: {
                     amountCollected: 1000,
@@ -68,8 +76,9 @@ StartTest(function(t) {
                     captureAmount: 45.85
                 }
             });
+
             m.record.commit();
-            t.waitForMs(200, next);
+            //t.waitForMs(500, next);
         },
 
         
@@ -91,9 +100,9 @@ StartTest(function(t) {
             m.panel = Ext.create(
                 'Taco.view.order.subform.Payment', { record: m.record, width: 500 }
             );
-            Taco.app.viewPort.add(m.panel);
+            m.panel.on('boxready', next, { single: true });
 
-            t.waitForComponentVisible(m.panel, next);
+            Taco.app.viewPort.add(m.panel);
         },
         function(next) {
 
