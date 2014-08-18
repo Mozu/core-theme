@@ -199,7 +199,8 @@
                 msg: Hypr.getLabel('cardBillingMissing')
             }
         }, PaymentMethods.CreditCard.prototype.validation),
-        selected: true // so that validation rules always run
+        selected: true, // so that validation rules always run,
+        isCvvOptional: true
     }),
 
     EditableCustomer = Customer.extend({
