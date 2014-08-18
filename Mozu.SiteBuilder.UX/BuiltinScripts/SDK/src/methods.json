@@ -188,7 +188,9 @@
     },
     "cartsummary": "{+cartService}summary",
     "cart": {
-        "get": "{+cartService}current",
+        "defaults": {
+            "template": "{+cartService}current"
+        },
         "add-product": {
             "verb": "POST",
             "returnType": "cartitem",

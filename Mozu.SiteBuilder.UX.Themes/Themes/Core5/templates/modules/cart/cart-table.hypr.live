@@ -99,6 +99,7 @@
   </tr>
   <tr class="mz-carttable-checkout-row">
     <td colspan="4">
+      {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.emptyCart }}</a>{% endif %}
       <button id="cart-checkout" class="mz-button mz-button-large"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
     </td>
     <td></td>
