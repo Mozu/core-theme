@@ -23,6 +23,13 @@
         "path": "web_page.js",
         "priority": 0.2
     }, {
+        "documentTypes": [
+            "post@mozu"
+        ],
+        "id": "post@mozu",
+        "path": "post.js",
+        "priority": 0.2
+    }, {
         "id": "about-us@mozu",
         "path": "about-us.js"
     }, {
@@ -54,7 +61,7 @@
             "subject": "Your Order Has Shipped #{model.orderNumber}"
         },
         "template": "email/order-shipped",
-        "title": "Order Shipped" 
+        "title": "Order Shipped"
     }, {
         "id": "order.changed",
         "customEditor": "email-orderconfirmation",
@@ -490,7 +497,6 @@
             "abbreviation": "WY",
             "name": "Wyoming"
         }],
-        "useAnimatedProductLists": false,
         "useDebugScripts": false,
         "useSearchAutocomplete": true,
         "allowCustomerInitiatedReturns": true
@@ -587,6 +593,49 @@
         }],
         "icon": "/resources/admin/widgets/22_category_navigation.png",
         "id": "catNav",
+        "validPageTypes": [
+            "*"
+        ]
+    }, {
+        "defaultConfig": {
+            "mainCategory": "Category",
+            "numberToDisplay": 4,
+            "template": "primary"
+        },
+        "displayName": "Navigation Subsection",
+        "displayTemplate": "misc/nav-subsection",
+        "editViewFields": [{
+            "anchor": "100%",
+            "fieldLabel": "Parent",
+            "name": "parent",
+            "xtype": "mz-input-navnode"
+        }, {
+            "anchor": "100%",
+            "fieldLabel": "Style",
+            "name": "style",
+            "store": [
+                [
+                    "primary",
+                    "primary"
+                ],
+                [
+                    "secondary",
+                    "secondary"
+                ],
+                [
+                    "tertiary",
+                    "tertiary"
+                ]
+            ],
+            "xtype": "combo"
+        }, {
+            "anchor": "100%",
+            "fieldLabel": "Count",
+            "name": "numberToDisplay",
+            "xtype": "mz-input-number"
+        }],
+        "icon": "/resources/admin/widgets/22_category_navigation.png",
+        "id": "subNav",
         "validPageTypes": [
             "*"
         ]
