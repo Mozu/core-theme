@@ -211,6 +211,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
     handlePrintPackingSlip: function () {
         var win = window.open(),
+            
             data = {
                 shippingMethodName: this.packageData.shippingMethodName,
                 items: this.packageData.items,
@@ -221,6 +222,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 orderRecord: this.record,
                 siteName: Taco.app.context.getSite().name
             },
+            formatCurrency = function (val) {                
+                return data.orderRecord.formatCurrency(val);
+            }
             tpl = new Ext.XTemplate(
                 '<div style="font: 14px/1.5 sans-serif;">',
                 '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody><tr>',
@@ -290,15 +294,18 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 '<td style="font-weight: bold; white-space: nowrap;">Price</td>',
                 '<td style="font-weight: bold; white-space: nowrap;">Total</td>',
                 '</tr>',
-                '<tpl for="items"><tr>',
+
+                '<tpl for="values.items"><tr>',
                 '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
                 '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{[values.orderRecord.formatCurrency(values.unitPrice)]}</td>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{[values.orderRecord.formatCurrency(values.total)]}</td>',
+                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',                
+                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{% out.push (this.formatCurrency(values.unitPrice)) %}</td>',
+                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{% out.push(this.formatCurrency(values.total))%}</td>',
                 '</tr></tpl>',
                 '</tbody></table>',
-                '</div>'
+                '</div>', {
+                    formatCurrency: formatCurrency
+                }
             ),
             html = tpl.apply(data);
 
