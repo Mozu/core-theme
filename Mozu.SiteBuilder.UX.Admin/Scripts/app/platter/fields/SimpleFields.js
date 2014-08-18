@@ -41,7 +41,7 @@ Ext.define('Taco.platter.fields.Checkbox', {
 
 Ext.define('Taco.platter.fields.Number', {
     extend: 'Ext.form.field.Number',
-    alias: ['widget.mz-input-Number'],
+    alias: ['widget.mz-input-number'],
     hideTrigger: true,
     mouseWheelEnabled: false
 
@@ -82,12 +82,12 @@ Ext.define('Taco.platter.fields.MultiProduct', {
 
 Ext.define('Taco.platter.fields.Category', {
     extend: 'Taco.shared.view.field.Category',
-    alias: ['widget.mz-input-category']
+    alias: ['widget.mz-input-category'],
+    multiSelect: false
 });
 
 Ext.define('Taco.platter.fields.MultiCategory', {
     extend: 'Taco.shared.view.field.Category',
-    multiSelect: true,
     alias: ['widget.mz-input-categorymulti']
 });
 
@@ -105,3 +105,16 @@ Ext.define('Taco.platter.fields.MultiDiscount', {
     multiSelect: true
 });
 
+Ext.define('Taco.platter.fields.NavNode', {
+    extend: 'Taco.shared.view.field.NavNode',
+    alias: ['widget.mz-input-navnode'],
+    emptyText: 'Select Navigation Nodes',
+    multiSelect: false
+});
+
+Ext.define('Taco.platter.fields.MultiNavNode', {
+    extend: 'Taco.shared.view.field.NavNode',
+    alias: ['widget.mz-input-navnodemulti'],
+    emptyText: 'Select Navigation Nodes',
+    multiSelect: true
+});

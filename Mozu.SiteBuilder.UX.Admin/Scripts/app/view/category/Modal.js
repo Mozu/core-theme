@@ -23,7 +23,8 @@ Ext.define('Taco.view.category.Modal', {
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             selType: 'checkboxmodel',
             checkOnly: true,
-            showHeaderCheckbox: true
+            showHeaderCheckbox: true,
+            mode: this.multiSelect === false ? "SINGLE" : "MULTI"
         });
 
         this.tree = Ext.create('Ext.tree.Panel', {

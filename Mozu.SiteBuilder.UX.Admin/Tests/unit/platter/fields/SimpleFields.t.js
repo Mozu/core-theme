@@ -21,6 +21,10 @@ StartTest(function (t) {
             jsonFile: '/admin/tests/mocks/Mystic1/Discounts1.json'
         },
         {
+            url: '/admin/app/navigation/list',
+            jsonFile: '/admin/tests/mocks/Mystic1/NavigationTreeNodes1.json'
+        },
+        {
             url: '/admin/app/Product/edit',
             stype: 'json',
             getData: function () {
@@ -64,6 +68,12 @@ StartTest(function (t) {
                  xtype: 'mz-input-text',
                  name: 'text',
                  fieldLabel: 'text',
+                 allowBlank: false,
+             });
+             m.form.add({
+                 xtype: 'mz-input-number',
+                 name: 'num',
+                 fieldLabel: 'mz-input-number',
                  allowBlank: false,
              });
              m.form.add({
@@ -113,7 +123,7 @@ StartTest(function (t) {
 
              m.form.add({
                  xtype: 'mz-input-categorymulti',
-                 name: 'category',
+                 name: 'categorymulti',
                  fieldLabel: 'mz-input-categorymulti',
              });
 
@@ -125,8 +135,20 @@ StartTest(function (t) {
 
              m.form.add({
                  xtype: 'mz-input-discountmulti',
-                 name: 'discount',
+                 name: 'discountmulti',
                  fieldLabel: 'mz-input-discountmulti',
+             });
+
+             m.form.add({
+                 xtype: 'mz-input-navnode',
+                 name: 'navnode',
+                 fieldLabel: 'mz-input-navnode',
+             });
+
+             m.form.add({
+                 xtype: 'mz-input-navnodemulti',
+                 name: 'navnodemulti',
+                 fieldLabel: 'mz-input-navnodemulti',
              });
 
              m.form.add({
