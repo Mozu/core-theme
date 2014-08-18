@@ -26,6 +26,7 @@ modules/models-product.js
 modules/models-orders.js
 modules/models-paymentmethods.js
 modules/models-customer.js
+modules/models-documents.js
 modules/models-faceting.js
 shim!vendor/bootstrap/js/affix[jquery=jQuery]
 shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]

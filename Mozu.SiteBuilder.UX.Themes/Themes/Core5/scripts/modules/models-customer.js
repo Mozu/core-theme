@@ -200,7 +200,7 @@
             }
         }, PaymentMethods.CreditCard.prototype.validation),
         selected: true // so that validation rules always run
-    })
+    }),
 
     EditableCustomer = Customer.extend({
         
