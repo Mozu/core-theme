@@ -322,6 +322,7 @@
   "cardExpInvalid"       : "Please enter an expiration date in the future",
   "securityCodeMissing"  : "Please enter your card's security code",
   "reenterCVV"           : "Please verify your card's security code",
+  "cardBillingMissing"   : "Please select a billing contact for this credit card.",
   "emailMissing"         : "Please enter a valid email address",
   "passwordMissing"      : "Please enter a password",
   "passwordsDoNotMatch"  : "Passwords did not match, please reenter",
