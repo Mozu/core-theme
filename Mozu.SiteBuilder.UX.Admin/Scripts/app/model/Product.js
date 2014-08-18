@@ -289,6 +289,17 @@ Ext.define('Taco.model.Product', {
             }
         },
         {
+            "name": "currencyCode",
+            "type": "string",
+            "useNull": true,
+            convert: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            },
+            serialize: function (v) {
+                return Taco.core.data.Model.nullIfEmpty(v);
+            }
+        },
+        {
             "name": "listPrice",
             "type": "float",
             "useNull": true
