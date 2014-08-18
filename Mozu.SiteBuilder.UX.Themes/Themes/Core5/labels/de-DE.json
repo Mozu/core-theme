@@ -303,6 +303,7 @@
     "cardExpInvalid"   : "Bitte geben Sie ein Ablaufdatum in der Zukunft",
     "securityCodeMissing"   : "Bitte geben Sie den Sicherheitscode Ihrer Karte",
     "reenterCVV"   : "Bitte überprüfen Sie den Sicherheitscode Ihrer Karte",
+    "cardBillingMissing"   : "Bitte wählen Sie oder geben Sie eine Rechnungsadresse für diese Kreditkarte.",
     "emailMissing"   : "Bitte geben Sie eine gültige E-Mail-Adresse",
     "passwordMissing"   : "Bitte geben Sie ein Passwort",
     "passwordsDoNotMatch"   : "Passwörter nicht überein, bitte neu eingeben",
