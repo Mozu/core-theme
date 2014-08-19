@@ -278,7 +278,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                     closeAction: 'hide',
                     title: 'Advanced Filter',
                     primaryText: 'Filter',
-
+                    draggable: false,
                     ui: 'dialog',
                     modal: false,
                     items: this.getAdvancedForm(),
@@ -300,7 +300,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 this.add(this.modal);
             }
 
-            this.modal.showBy(this.down('#textFilter'), 'tl-bl?', [0, 10]);
+            this.modal.showBy(this.down('#advancedFilter'), 'tl-bl?', [0, 5]);
         } else {
             if (this.modal) {
                 this.modal.close();
@@ -314,6 +314,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      */
     handleDialogClose: function () {
         this.down('#advancedFilter').toggle(false);
+
+        this.mun(this.up('viewport'), {
+            click: {
+                element: 'el',
+                scope: this,
+                fn: 'manageViewportListener'
+            }
+        });
     },
 
     /**
@@ -334,6 +342,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             jsonValue = this.parseTextFilterValue(simple);
 
         this.setAdvancedFilterValues(jsonValue);
+
+        this.manageViewportListener(false);
     },
 
     /**
@@ -368,6 +378,32 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         });
 
         this.filterStores = stores;
+    },
+
+    /**
+     * Establish a listener to close the dialog when the user clicks outside the dialog.
+     * This function doubles as the listener itself.
+     * 
+     * @param  {Ext.EventObject} e The event object.
+     * @param  {HTMLElement} t The target of the event.
+     */
+    manageViewportListener: function (e, t) {
+        if (e === false) {
+            // if this method isn't triggered by a click handler, set up the viewport listener
+            // the managed listener will be removed when the dialog is closed
+            this.mon(this.up('viewport'), {
+                click: {
+                    element: 'el',
+                    scope: this,
+                    fn: 'manageViewportListener'
+                }
+            });
+        } else {
+            // otherwise check the event and close the dialog if the click wasn't within it
+            if (!e.getTarget('#' + this.modal.getId(), 10) && !e.getTarget('#' + this.down('#advancedFilter').getId(), 10)) {
+                this.modal.close();
+            }
+        }
     },
 
     /**
