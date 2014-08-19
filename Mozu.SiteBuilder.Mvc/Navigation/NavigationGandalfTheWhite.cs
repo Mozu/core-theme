@@ -280,8 +280,10 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         OriginalId = cat.CategoryId.ToString(),
                         Url = cat.Content == null || String.IsNullOrEmpty(cat.Content.Slug) ? "/c/" + cat.CategoryId : "/" + cat.Content.Slug + "/c/" + cat.CategoryId,
                         Name = cat.Content.Name,
-                        // category "Sequence" is 1-indexed, but our navigation list is 0-indexed.. so we -1.
-                        Index = cat.Sequence.GetValueOrDefault(1) - 1,
+                        // category "Sequence" is 1-indexed, but our navigation list is 0-indexed.. so we subtract 1.
+                        // actually, "Sequence" does not appear to follow any rules, so sometimes it's zero indexed.
+                        // we have to do a Math.Max to guard against negative numbers.
+                        Index = Math.Max(cat.Sequence.GetValueOrDefault(1) - 1, 0),
                         IsHidden = !cat.IsDisplayed
                     });
 
