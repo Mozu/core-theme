@@ -62,9 +62,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? x.Target.IncludeAllProducts : null))
                 .ForMember(x => x.MinimumLifetimeValueAmount, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.MinimumLifetimeValueAmount : null))
-                .ForMember(x => x.MaximumQuantityPerRedemption, opt => opt.ResolveUsing(x => (x.Target  != null)
+                .ForMember(x => x.MaximumQuantityPerRedemption, opt => opt.ResolveUsing(x => (x.Target != null)
                                     ? x.Target.MaximumQuantityPerRedemption : null))
-                    
+
 
                 .ForMember(x => x.Categories, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.Categories != null)
                     ? (x.Target.Categories).Select(_ => _.Id).ToList()
@@ -80,17 +80,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? (x.Target.ExcludedProducts).Select(_ => _.ProductCode).ToList()
                     : (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
 
-                .ForMember(x => x.ShippingMethods, opt => opt.ResolveUsing( x => (x.Target != null && x.Target.ShippingMethods != null)
+                .ForMember(x => x.ShippingMethods, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingMethods != null)
                     ? ((x.Target.ShippingMethods).Select(_ => _.Code).ToList())
                     : new List<string>()))
 
-               .ForMember(x => x.ShippingZones , opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingZones  != null)
-                    ? ((x.Target.ShippingZones).Select(_ => _.Zone ).ToList())
+               .ForMember(x => x.ShippingZones, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingZones != null)
+                    ? ((x.Target.ShippingZones).Select(_ => _.Zone).ToList())
                     : new List<string>()))
-                
+
                //.ForMember(x => x.ShippingZones , opt => opt.ResolveUsing( x =>   (x.Target != null && x.Target.ShippingZones  != null)
-               //     ? x.Target.ShippingZones.Select(_ => __.z).ToList()
-               //     : new List<string>()))
+                //     ? x.Target.ShippingZones.Select(_ => __.z).ToList()
+                //     : new List<string>()))
 
 
                 .ForMember(x => x.MinimumOrderAmount, opt => opt.ResolveUsing(x => (x.Conditions != null)
@@ -130,15 +130,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? null
                     : dc.Amount))
                 .ForMember(x => x.DoesNotApplyToSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToSalePrice))
-                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content.Name));
-
+                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content.Name))
+                .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content.FriendlyDescription));
+                
             // To data contract
             Mapper.CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => (x.AmountType == null || x.AmountType.EqualsIgnoreCase(DC.Discount.AmountTypes.FREE))
                     ? null
                     : x.Amount))
-                .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new DC.DiscountLocalizedContent {Name = x.Name}))
+                .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new DC.DiscountLocalizedContent {Name = x.Name, FriendlyDescription = x.FriendlyDescription}))
                 .ForMember(x => x.Conditions, opt => opt.ResolveUsing(x => new DC.DiscountCondition
                                                                            {
                                                                                IncludedCategories = (x.DiscountConditionCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.CategoryDiscountCondition {CategoryId = _}).ToList(),

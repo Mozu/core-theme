@@ -14,6 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         public string Name { get; set; }
 
+        public string FriendlyDescription { get; set; }
+
         /// <summary>
         /// : Order, LineItem
         /// </summary>
