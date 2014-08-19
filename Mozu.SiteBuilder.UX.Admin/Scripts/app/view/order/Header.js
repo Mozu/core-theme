@@ -283,7 +283,7 @@ Ext.define('Taco.view.order.Header', {
                     xtype: 'button',
                     ui: 'link',
                     text: '(Change)',
-                    itemId:"changeLink",
+                    itemId: "changeLink",
                     handler: this.changeAddress,
                     scope: this
             },
@@ -349,7 +349,7 @@ Ext.define('Taco.view.order.Header', {
         } else {
             this.customerSelector.focus()
         }
-        
+
     },
 
     updateHeader: function () {
@@ -366,8 +366,6 @@ Ext.define('Taco.view.order.Header', {
         this.customerSelectionContainer[this.record.getCustomer() ? 'hide' : 'show']();
 
         Ext.resumeLayouts(true);
-
-        this.checkAddresses();
 
         var changeLink = this.down("#changeLink");
         changeLink.focus();
