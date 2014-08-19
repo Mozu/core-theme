@@ -31,8 +31,8 @@ Ext.define('Taco.view.order.modal.ApplyCheck', {
                 xtype: 'currencyfield',
                 currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
-                fieldLabel: 'Amount Collected',
-                value: this.record.data.amountAuthorized
+                fieldLabel: 'Amount Collected',                
+                value: Math.min(this.record.data.amountAuthorized, this.order.data.authorizationInfo.captureAmount)
             }]
         });
 
