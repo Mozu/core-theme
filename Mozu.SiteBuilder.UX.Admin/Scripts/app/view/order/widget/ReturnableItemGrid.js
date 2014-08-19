@@ -146,12 +146,13 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     },
 
     addReturnableItems: function (store, records) {
+        var ineligibleStatuses = [Taco.model.Return.constants.statuses.CANCELLED, Taco.model.Return.constants.statuses.REJECTED];
         var returnedItemQuantities = {};
         var eligibleItems = [];
 
         // track the returned quantities of each item in the order
         Ext.Array.each(records, function (record) {
-            if (record.get('status') !== Taco.model.Return.constants.statuses.CANCELLED) {
+            if (Ext.Array.contains(ineligibleStatuses, record.get('status'))) {
                 Ext.Array.each(record.get('items'), function (item) {
                     if (!(item.orderItemId in returnedItemQuantities)) {
                         returnedItemQuantities[item.orderItemId] = 0;

@@ -5,7 +5,7 @@
  */
 Ext.define('Taco.view.order.subform.Subform', {
     extend: 'Taco.core.ux.EditContainer',
-    alias: 'widget.taco.order.subform',
+    alias: 'widget.taco-order-subform',
     cls: Taco.baseCSSPrefix + 'order-subform',
     setHeaderTitle: function(status) {
         var header = this.getHeader();

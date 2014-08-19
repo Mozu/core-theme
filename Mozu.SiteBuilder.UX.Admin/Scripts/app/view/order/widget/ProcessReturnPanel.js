@@ -500,6 +500,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.summary.update(data);
         this.updatePaymentsGrid();
         this.setEditablity();
+        this.updateReturnableItemGrid();
     },
 
     onItemEdit: function () {
@@ -543,6 +544,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
 
     updatePaymentsGrid: function () {
         this.paymentsGrid[Ext.isEmpty(this.paymentsStore.getRange()) ? 'hide' : 'show']();
+    },
+
+    updateReturnableItemGrid: function () {
+        var subform = this.up('taco-order-subform');
+
+        if (subform && !subform.isDestroyed) {
+            subform.returnableItems.getView().refresh();
+        }
     },
 
     updateReturnActions: function () {
