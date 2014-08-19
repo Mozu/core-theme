@@ -6,9 +6,9 @@
     background-color: $color-framework-gray-lighter;
     border: 1px solid $color-standard-border;
     border-width:0px;
-    border-top-width:1px;    
+    border-top-width:1px;
     padding: 0px;
-    position: fixed;
+    position: absolute; // fixed doesn't really work out
     width: 100px;
     z-index:10;
     outline-style:none;
@@ -22,21 +22,21 @@
     }
 
     li {
-    border: 1px solid $color-standard-border;
-    border-top-width: 0px;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 20px;
-    padding: 6px 8px 4px 8px;
+        border: 1px solid $color-standard-border;
+        border-top-width: 0px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 20px;
+        padding: 6px 8px 4px 8px;
 
-	&:focus {	            
-		text-decoration: underline;
-	}
+        &:focus {
+            text-decoration: underline;
+        }
 
-    @include transition(color 0.2s, border-color 0.2s);
+        @include transition(color 0.2s, border-color 0.2s);
 
         &:hover {
-        text-decoration: underline;
+            text-decoration: underline;
         }
     }
 }
