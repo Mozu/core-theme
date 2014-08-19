@@ -143,7 +143,7 @@ Ext.define('Taco.view.Viewport', {
                 scope: me
             }, {
                 // Ctrl + Shift + N
-                key: Ext.EventObject.N,
+                key: Ext.EventObject.A,
                 ctrl: true,
                 shift: true,
                 fn: function () {
