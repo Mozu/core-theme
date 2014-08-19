@@ -116,7 +116,7 @@ module.exports = (function() {
             return this.api.action(this, (isUpdate ? 'update' : 'save'), makePayload(this)).then(function (res) {
                 self.prop(transform.toStorefrontData({
                     cardNumber: self.maskedCardNumber,
-                    cvv: self.prop('cvv').replace(/\d/g, self.maskCharacter),
+                    cvv: !!(self.prop('cvv'))? self.prop('cvv').replace(/\d/g, self.maskCharacter) : '',
                     cardId: isUpdate || res
                 }));
                 self.fire('sync', utils.clone(self.data), self.data);

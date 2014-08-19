@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-08-07
+ * Mozu JavaScript SDK - v0.3.0 - 2014-08-19
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3368,7 +3368,9 @@ module.exports=
     },
     "cartsummary": "{+cartService}summary",
     "cart": {
-        "get": "{+cartService}current",
+        "defaults": {
+            "template": "{+cartService}current"
+        },
         "add-product": {
             "verb": "POST",
             "returnType": "cartitem",
@@ -4160,7 +4162,7 @@ module.exports = (function() {
             return this.api.action(this, (isUpdate ? 'update' : 'save'), makePayload(this)).then(function (res) {
                 self.prop(transform.toStorefrontData({
                     cardNumber: self.maskedCardNumber,
-                    cvv: self.prop('cvv').replace(/\d/g, self.maskCharacter),
+                    cvv: !!(self.prop('cvv'))? self.prop('cvv').replace(/\d/g, self.maskCharacter) : '',
                     cardId: isUpdate || res
                 }));
                 self.fire('sync', utils.clone(self.data), self.data);

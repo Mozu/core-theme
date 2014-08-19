@@ -44,10 +44,15 @@
                 msg: Hypr.getLabel('cardNameMissing')
             },
             cvv: {
-                fn: function (value) {
+                fn: function(value, attr) {
+                    var cardType = attr.split('.')[0],
+                        card = this.get(cardType);
+
+                    if (card.get('isCvvOptional')) return '';
+
                     if (!this.selected) return undefined;
-                    if (!value && !this.isCvvOptional) 
-                        return Hypr.getLabel('securityCodeMissing');
+                    if (!value)
+                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
                 }
             }
         },
