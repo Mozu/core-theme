@@ -14,20 +14,19 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
     initComponent: function () {
         var me = this;
         
-        this.form = Ext.create('Taco.core.ux.form.Form',
-            {
-                defaults: {
-                    xtype: 'combobox',
-                    allowBlank: false,
-                    width: 400
+        this.form = Ext.create('Taco.core.ux.form.Form', {
+            defaults: {
+                xtype: 'combobox',
+                allowBlank: false,
+                width: 400
+            },
+           // title:'Site Provisioning',
+            items: [
+                {
+                    xtype: 'textfield',
+                    name: 'name',
+                   fieldLabel: 'Site Name'
                 },
-               // title:'Site Provisioning',
-                items: [
-                    {
-                        xtype: 'textfield',
-                        name: 'name',
-                       fieldLabel: 'Site Name'
-                    },
                 {
                     xtype: 'radiogroup',
                     fieldLabel: 'Storefront Site?',
@@ -39,44 +38,40 @@ Ext.define('Taco.view.provisioning.SiteProvisionerModal', {
                         { boxLabel: 'Non-Storefront', name: 'isMozuStorefront', inputValue: false }
                     ]
                 },
-                    {
-                        xtype: 'combobox',
-                        name: 'catalogId',
-                        store: this.catalogStore,
-                        valueField: 'id',
-                        displayField: 'name',
-                        fieldLabel: 'Catalog',
-                        queryMode:'local'
-                    },
-                    
-                    //{
-                    //    xtype: 'hidden',
-                    //    name: 'localeCode',
-                  
-                    //    value: 'en-US',
-                    //    fieldLabel: 'Locale Code'
-                    //},
-                    {
-                        xtype: 'combobox',
-                        name: 'CountryCode',
-                        store: { type:'Taco.store.Countries'},
-                        value: 'US',
-                        valueField: 'code',
-                        displayField: 'code',
-                        fieldLabel: 'Country Code'
-                    }
-                    //,
-                    //{
-                    //    xtype: 'hidden',
-                    //    name: 'CurrencyCode',
-                    //    store: ['USD'],
-                    //    value: 'USD',
-                    //    fieldLabel: 'Currency Code'
-                    //}
-                
-                ]
-            });
+                {
+                    xtype: 'combobox',
+                    name: 'catalogId',
+                    store: this.catalogStore,
+                    valueField: 'id',
+                    displayField: 'name',
+                    fieldLabel: 'Catalog',
+                    queryMode:'local'
+                },
+                {
+                    xtype: 'combobox',
+                    name: 'CountryCode',
+                    store: { type:'Taco.store.Countries'},
+                    value: 'US',
+                    valueField: 'code',
+                    displayField: 'code',
+                    fieldLabel: 'Country Code',
+                    tpl: [
+                        '<tpl for=".">',
+                            '<div class="x-boundlist-item">{code} - {name}</div>',
+                        '</tpl>'
+                    ],
+                    displayTpl: [
+                        '<tpl for=".">',
+                            '{code} - {name}',
+                            '<tpl if="xindex < xcount">,</tpl>',
+                        '</tpl>'
+                    ]
+                }
+            ]
+        });
+
         this.items = [this.form];
+
         me.callParent(arguments);
     },
 
