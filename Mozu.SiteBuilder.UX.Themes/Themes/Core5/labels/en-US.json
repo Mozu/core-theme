@@ -146,6 +146,7 @@
   "payPalTagline"        : "The safer, easier way to pay.",
   "paypalExpressInfo"    : "When you click 'Next', you will be taken to PayPal to complete your transaction.",
   "paypalExpressSummary" : "This transaction will be processed by PayPal Express.",
+  "paypalExpressCancelled" : "The Paypal Express transaction was cancelled.  Please select another payment method.",
   "checkByMail"          : "Check by Mail",
   "useShippingAddress"   : "Use my shipping address",
   "optIn"                : "Yes! I want to receive news and special offers from {0}!",
