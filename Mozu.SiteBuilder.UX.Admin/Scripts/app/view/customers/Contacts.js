@@ -9,8 +9,6 @@ Ext.define('Taco.view.customers.Contacts', {
 
     order: null,
 
-    autoAddContact: false,
-
     initComponent: function () {
 
         this.addressContainer = Ext.widget({

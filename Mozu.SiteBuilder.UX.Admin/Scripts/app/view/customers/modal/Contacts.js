@@ -37,8 +37,6 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
     initComponent: function () {
 
-        if (this.isNewCustomer) this.autoAddContact = true;
-
         this.form = Ext.create('Ext.form.Panel', {
             itemId: 'contactForm',
             items: [
@@ -46,10 +44,8 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     record: this.record,
                     itemId: 'customerContacts',
                     order: this.order,
-                    width: '100%',
-                    autoAddContact: true
+                    width: '100%'
                 }), {
-
                     scope: this
                 }
             ]
@@ -62,7 +58,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
         this.on({
             cancel: this.doCancel,
             savesuccess: function () {
-                if (typeof this.callback === 'function') this.callback()
+                if (typeof this.callback === 'function') this.callback();
             },
             activate: {
                 fn: function () {
@@ -71,7 +67,8 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     if (contactsView.contacts.length) return;
 
                     Ext.defer(function () {
-                        this.down('#customerContacts').createNewContact()
+                        console.log('Creating new customer');
+                        this.down('#customerContacts').createNewContact();
                     }, 1, this);
                 },
                 single: true
