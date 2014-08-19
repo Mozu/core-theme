@@ -51,13 +51,10 @@ Ext.define('Taco.shared.view.modal.Address', {
             xtype: 'button',
             itemId: 'primaryAction',
             formBind: true,
-            handler: function () {
-                this.form.save();
-                // var me = this;
-                // this.validateAndPrompt(false, function () {
-                //     me.form.save();
-                // });
-            }
+            handler: function () {                
+                this.doSave()
+            },
+            scope:this
         }]
     },
 
@@ -96,6 +93,11 @@ Ext.define('Taco.shared.view.modal.Address', {
         this.callParent(arguments);
 
         this.down('#otherAction').setDisabled(this.validateAddress === false);
+    },
+
+
+    doSave: function () {        
+        this.form.save();
     },
 
     /**
