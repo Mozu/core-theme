@@ -6,11 +6,11 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     extend: 'Taco.core.ux.BaseCardPanel',
     requires: ['Taco.core.ux.form.ToggleGroup', 'Ext.toolbar.Spacer', 'Taco.core.ux.ComboFilter', 'Taco.core.ux.form.FilterContainer'],
     alias: 'widget.itembrowser',
+
     cls: Taco.baseCSSPrefix + 'itembrowser',
-    toolbar:null,
+
     itemStoreId: false,
     filterProperty: 'title',
-    // bodyPadding: '12 0 0 0',
     useGridPanel: true,
     useTilePanel: false,
     
@@ -23,64 +23,22 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
     },
 
     createTopToolbar: function() {
-        var me = this,
-            conf;
+        var me = this;
+        var cfg, items;
 
-
-        me.sliderSpacer = Ext.create('Ext.toolbar.Spacer');
-        
-        // need to make the spacer fill the space when we are in a toggle mode, otherwise it should be the standard 2 pixels;
-        if (me.useGridPanel && me.useTilePanel) {
-            me.sliderSpacer.flex = 1;
-        }
-
-        conf = {
+        cfg = {
             dock: 'top',
             margin: '0 0 10',
-            height: 30,
-            items: [
-                
-                me.sliderSpacer,
-                {
-                xtype: 'slider',
-                hidden: true,
-                width: 100,
-                margin: '0 0 0 14',
-                value: 230,
-                increment: 70,
-                minValue: 90,
-                maxValue: 230,
-                tipText: function (thumb) {
-                    var minValue = thumb.slider.minValue,
-                        maxValue = thumb.slider.maxValue,
-                        thumbNewValue = thumb.slider.getValue(),
-                        valueToDisplay;
+            height: 30
+        };
 
-                    if (thumbNewValue <= minValue) {
-                        valueToDisplay = "Small";
-                    } else if (thumbNewValue >= maxValue) {
-                        valueToDisplay = "Large";
-                    } else {
-                        valueToDisplay = "Medium";
-                    }
-
-                    return valueToDisplay;
-                },
-                listeners: {
-                    change: function (slider, newValue, thumb) {
-                        me.tileView = me.tileView || me.down('tileview');
-                        me.tileView.changeTileSize(newValue);
-                    }
-                }
-            }, {
-                xtype: 'tbspacer'
-                //,flex: 1
-            }]
-        };        
-        
+        if (me.useGridPanel && me.useTilePanel) {
+            items = ['->', me.createToggleGroup()];
+        } else {
+            items = [];
+        }
 
         if (me.advancedSearchConfig) {
-
             me.searchBox = Ext.widget({
                 xtype: 'taco-filtercontainer',
                 width: '100%',
@@ -93,21 +51,16 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
                 filterStores: me.advancedSearchConfig.stores,
                 value: this.options && this.options.query ?  this.options.query : undefined 
             });
-            conf.items.unshift(me.searchBox);
+
+            items.unshift(me.searchBox);
         } else if (me.filterProperties) {
             Ext.log({
                 msg: 'filterProperties deprecated',
                 level: 'warn'
             });
-        } else {
-            conf.items.unshift("->");
         }
-        
 
-        
-        if (me.useGridPanel && me.useTilePanel) conf.items.push(me.createToggleGroup());
-        
-        me.topToolbar = Ext.widget('toolbar', conf);
+        me.topToolbar = Ext.isEmpty(items) ? null : Ext.widget('toolbar', Ext.apply(cfg, { items: items }));
         
         return me.topToolbar;
     },
@@ -133,7 +86,6 @@ Ext.define('Taco.core.ux.browser.ItemBrowser', {
         return me.expanderCollapser;
     },
 
-    //todo: replace this with buttons with a togglegroup
     createToggleGroup: function () {
         var me = this;
 
