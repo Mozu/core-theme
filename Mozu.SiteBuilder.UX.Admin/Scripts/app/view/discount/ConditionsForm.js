@@ -110,7 +110,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             name: 'maxRedemptionCount',
             hideTrigger: true,
             width: 600,
-            fieldLabel: 'Redemption limit' + (this.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
+            fieldLabel: 'Total Number of Redemptions: ' + (this.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
             emptyText: 'unlimited',
             minValue: 0
         });
@@ -144,8 +144,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
             name: 'oneTimeUsePerShopper',
-            hidden: true,
-            boxLabel: 'One Time Use per Shopper',
+            boxLabel: 'Discount Can Be Redeemed One Time Per Shopper',
             checked: this.record.get('maximumUsesPerUser') === 1,
             listeners: {
                 change: function (cb, newValue) {
@@ -158,22 +157,22 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.items = [
             {
                 xtype: 'component',
-                html: 'Choose what conditions must be met before a discount will be valid',
+                html: 'Discount conditions specify rules which must be met before a discount or coupon will be valid. All discount conditions are optional; if left blank, the discount or coupon will always be valid.s',
                 margin: '15 0 0 0'
             },
+            this.datesContainer,
             this.minimumOrderAmountInput,
             this.minimumLifetimeValueAmount,
             this.segmentsBox,
-            this.datesContainer,
             {
                 xtype: 'component',
-                html: 'Purchase one of the following items',
+                html: 'Shopper must purchase a quantity of any one of the following items:',
                 cls: 'x-form-item-label x-unselectable x-form-item-label-top'
             },
             this.productsBox,
             {
                 xtype: 'component',
-                html: 'Purchase an item from the following categories',
+                html: 'Shopper must purchase a quantity of any item(s) from the following categories:',
                 cls: 'x-form-item-label x-unselectable x-form-item-label-top'
             },
             this.categoriesBox,

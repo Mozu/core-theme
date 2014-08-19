@@ -18,6 +18,9 @@ Ext.define('Taco.model.Discount', {
         name: 'name',
         type: 'string'
     }, {
+        name: 'friendlyDescription',
+        type: 'string'
+    }, {
         name: 'scope',
         type: 'string'
     },

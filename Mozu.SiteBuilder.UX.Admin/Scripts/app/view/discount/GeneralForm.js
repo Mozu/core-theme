@@ -13,7 +13,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
     title: 'General',
 
-    initComponent: function () {
+    initComponent: function() {
+
+        
 
         this.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
@@ -26,9 +28,35 @@ Ext.define('Taco.view.discount.GeneralForm', {
             emptyText: 'Enter a discount name'
         });
 
+        this.descriptionInput = Ext.widget('htmleditor', {
+            enableFont: false,
+            fieldLabel: 'Description',
+            name: 'friendlyDescription',
+            width: 600,
+            height: 120,
+
+            listeners: {
+                // sync changes from code view of the htmleditor to WYSIWYG view
+                editmodechange: function(el, editMode, eOpts) {
+                    if (editMode) {
+                        if (!this.textareaEl._syncInited) {
+                            this.textareaEl.on('keydown', function() {
+                                this.fireEvent('sync', this, this.textareaEl.getValue());
+                                this.fireEvent('change', this, this.textareaEl.getValue());
+                            }, this, { buffer: 50 });
+                        }
+                        this.textareaEl._syncInited = true;
+                    }
+                }
+
+
+            }
+
+        });
+
         this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'scope',
-            fieldLabel: "Discount Scope",
+            fieldLabel: "Discount Applies To",
             labelAlign: 'top',
             editable: false,
             allowBlank: false,
@@ -53,7 +81,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',
-            fieldLabel: "Applies to",
+            fieldLabel: "Discount Affects",
             labelAlign: 'top',
             editable: false,
             allowBlank: false,
@@ -80,7 +108,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'amountType',
-            fieldLabel: "Type",
+            fieldLabel: "Discount Type",
             labelAlign: 'top',
             allowBlank: false,
             editable: false,
@@ -131,7 +159,8 @@ Ext.define('Taco.view.discount.GeneralForm', {
         });
 
         this.items = [
-            this.nameInput, {
+            this.nameInput,
+            this.descriptionInput, {
                 xtype: 'container',
                 layout: {
                     type: 'hbox',

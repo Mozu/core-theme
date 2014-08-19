@@ -43,6 +43,8 @@ Ext.define('Taco.view.discount.Form', {
         this.conditions = this.down('#conditions');
         this.criteria = this.down('#criteria');
 
+        if (!this.isEdit()) this.general.setTitle('Create');
+
         this.on({
             afterrender: this.onAfterRender,
             scope: this

@@ -33,10 +33,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.appliesToSaleProducts = Ext.widget({
             xtype: 'checkbox',
-            name: 'doesNotApplyToSalePrice',
-            boxLabel: 'Does Not Apply to On Sale Products',
+            name: 'appliesToSalePrice',
+            boxLabel: 'Applies to On Sale Products',
             width: 300,
-            value: this.record.get('doesNotApplyToSalePrice') === true
+            value: this.record.get('doesNotApplyToSalePrice') !== true,
+            listeners: {
+                change: function(field, newValue) {
+                    this.record.set('doesNotApplyToSalePrice', !newValue);
+                },
+                scope: this
+            }
         });
 
         catStore = this.record.getCategoryStore();
