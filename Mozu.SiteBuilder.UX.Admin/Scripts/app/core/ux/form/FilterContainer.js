@@ -313,15 +313,17 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * This method is responsible for depressing the advanced filters button.
      */
     handleDialogClose: function () {
-        this.down('#advancedFilter').toggle(false);
+        var doc, collapseIf;
 
-        this.mun(this.up('viewport'), {
-            click: {
-                element: 'el',
-                scope: this,
-                fn: 'manageViewportListener'
-            }
-        });
+        if (!this.isDestroyed && !this.modal.isDestroyed) {
+            doc = Ext.getDoc();
+            collapseIf = this.collapseIf;
+
+            doc.un('mousewheel', collapseIf, this);
+            doc.un('mousedown', collapseIf, this);
+
+            this.down('#advancedFilter').toggle(false);
+        }
     },
 
     /**
@@ -337,13 +339,22 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * Respond to the opening of the dialog.
      * This method triggers an update to the values of the dialog's form fields.
      */
-    handleDialogShow: function () {
-        var simple = this.down('#textFilter'),
-            jsonValue = this.parseTextFilterValue(simple);
+    handleDialogShow: function (dialog) {
+        var simple = this.down('#textFilter');
+        var jsonValue = this.parseTextFilterValue(simple);
+        var collapseIf;
+
+        if (dialog.rendered && !dialog.isDestroyed) {
+            collapseIf = this.collapseIf;
+
+            this.mon(Ext.getDoc(), {
+                mousewheel: collapseIf,
+                mousedown: collapseIf,
+                scope: this
+            });
+        }
 
         this.setAdvancedFilterValues(jsonValue);
-
-        this.manageViewportListener(false);
     },
 
     /**
@@ -378,32 +389,6 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         });
 
         this.filterStores = stores;
-    },
-
-    /**
-     * Establish a listener to close the dialog when the user clicks outside the dialog.
-     * This function doubles as the listener itself.
-     * 
-     * @param  {Ext.EventObject} e The event object.
-     * @param  {HTMLElement} t The target of the event.
-     */
-    manageViewportListener: function (e, t) {
-        if (e === false) {
-            // if this method isn't triggered by a click handler, set up the viewport listener
-            // the managed listener will be removed when the dialog is closed
-            this.mon(this.up('viewport'), {
-                click: {
-                    element: 'el',
-                    scope: this,
-                    fn: 'manageViewportListener'
-                }
-            });
-        } else {
-            // otherwise check the event and close the dialog if the click wasn't within it
-            if (!e.getTarget('#' + this.modal.getId(), 10) && !e.getTarget('#' + this.down('#advancedFilter').getId(), 10)) {
-                this.modal.close();
-            }
-        }
     },
 
     /**
@@ -548,5 +533,20 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         this.doFilter(syncedValues['json']);
 
         return syncedValues;
+    },
+
+    collapseIf: function (e) {
+        var modal = this.modal;
+        var button = this.down('#advancedFilter');
+
+        if (modal && button && !this.isDestroyed && !modal.isDestroyed && !e.within(modal.el, false, true) && !e.within(button.el)) {
+            modal.close();
+        }
+    },
+
+    onDestroy: function () {
+        Ext.destroy(this.modal);
+
+        this.callParent(arguments);
     }
 });
