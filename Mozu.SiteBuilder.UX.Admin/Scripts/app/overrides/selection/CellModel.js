@@ -76,8 +76,11 @@ Ext.define('Taco.overrides.selection.CellModel', {
                     if (lastRow == -1) {
                         return;
                     }
-                    
-                    this.getSelectionModel().setCurrentPosition({ row: 0, column: 0 });
+                    var columnIndex = 0
+                    if (grid.defaultFocusColumn) {
+                        columnIndex = grid.defaultFocusColumn
+                    }
+                    this.getSelectionModel().setCurrentPosition({ row: 0, column: columnIndex });
                     this.view.focusRow(0);                    
                     
                 }, this)

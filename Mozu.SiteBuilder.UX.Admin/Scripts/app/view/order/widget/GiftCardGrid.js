@@ -7,36 +7,28 @@
 Ext.define('Taco.view.order.widget.GiftCardGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.taco-order-gift-card-grid',
-    //requires:['Taco.view.product.variant.Modal'],
-
-    disableSelection: true,
+    requires: [
+        'Ext.grid.plugin.CellEditing',
+        'Taco.core.ux.form.CurrencyField',
+        'Ext.grid.column.Boolean'
+    ],
+    
     sortableColumns: false,
     enableColumnHide: false,
     overOrderBalanceError: "Gift cards cannot apply more than the total order balance.",
     overCardBalanceError: "You cannot apply more than the amount of a gift card's balance.",
-    plugins: [
-        {
-            ptype: 'cellediting',
-            clicksToEdit: 1,
-            listeners: {
-                beforeedit: function (editor, context) {
-                    this.editingContext = context;
-                    if (!context.value && context.field === "amtToApply") {
-                        context.record.set('amtToApply', Math.min(context.record.get('currentBalance'), context.grid.getOrderBalance() - context.grid.getTotalCardBalance()));
-                    }
-                },
-                edit: function (editor, e) {
-                    e.grid.fireEvent('amountchanged', e.grid.getTotalCardBalance());
-                }
-            }
-        }
-    ],
+    
     getOrderBalance: function () {
         return this.orderBalance;
     },
     getTotalCardBalance: function () {
         return this.store.sum('amtToApply');
     },
+
+    selModel: Ext.create('Ext.selection.CellModel', {
+        enableFieldTabbing: true
+        //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
+    }),
     viewConfig: {
         stripeRows: false,
         onRowFocus: Ext.emptyFn,
@@ -45,9 +37,34 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
     },
     deferEmptyText: false,
     emptyText: "This customer has no gift cards or store credits.",
+    // the index of the column to pass focus too by default when the grid gains focus via keyboard tab key;
+    defaultFocusColumn: 2,
     initComponent: function () {
         var me = this;
         this.orderBalance = this.order.get('authorizationInfo').captureAmount || 0;
+
+
+        Ext.apply(me, {
+            plugins: [
+                    Ext.create('Ext.grid.plugin.CellEditing', {
+                        clicksToEdit: 1,
+                        listeners: {
+                            beforeedit: function (editor, context) {
+                                this.editingContext = context;
+                                if (!context.value && context.field === "amtToApply") {
+                                    context.record.set('amtToApply', Math.min(context.record.get('currentBalance'), context.grid.getOrderBalance() - context.grid.getTotalCardBalance()));
+                                }
+                            },
+                            canceledit: function (editor, e) {                                
+                                e.record.set('amtToApply', 0);
+                            },
+                            edit: function (editor, e) {
+                                e.grid.fireEvent('amountchanged', e.grid.getTotalCardBalance());
+                            }
+                        }
+                    })
+            ]
+        });
 
         this.columns = [
         {
@@ -65,13 +82,16 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         {
             dataIndex: 'amtToApply',
             text: 'Amt. to Apply',
-                renderer: function (value) {
-                    return me.order.formatCurrency(value);
-                },
+            renderer: function (value) {
+                return me.order.formatCurrency(value);
+            },
+            
             editor: {
                 xtype: 'currencyfield',
-                    currencyCode: this.order.getCurrencyCode(),
+                currencyCode: this.order.getCurrencyCode(),
                 decimalPrecision: 2,
+                showBorder: true,
+                selectOnFocus:true,
                 hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false,
@@ -109,14 +129,11 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         ];
         this.callParent(arguments);
     },
-    startInitialEdit: function () {
+    startInitialFocus: function () {
+        var me = this;
         if (this.store.count() > 0) {
-            this.findPlugin('cellediting').startEditByPosition({ row: 0, column: 2 });
+            me.getSelectionModel().setCurrentPosition({ row: 0, column: 2 });
+            me.view.focusRow(0);
         }
-    },
-    startEditAtCode: function (code) {
-        this.findPlugin('cellediting').startEdit(this.store.getById(code), 2);
-    },
-    
-    
+    }
 });

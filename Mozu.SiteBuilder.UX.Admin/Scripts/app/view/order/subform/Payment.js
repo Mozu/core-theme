@@ -66,23 +66,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
         me.initUI();
         
-        if (me.record.get('paymentStatus') !== 'Fulfilled') {
-            this.storeCreditsStore = Taco.store.StoreCredits.createForCustomer(this.record.get('customerId'));
-            this.storeCreditsStore.load({
-                callback: function (records) {
-                    //me.availableCredits = Ext.Array.filter(records, function(credit) { return credit.get('currentBalance') > 0 });
-                    //if (me.availableCredits.length > 0) {
-                    //    me.onRecordChange();
-                    //}
-                    //me.storeCreditsStore.filter({
-                    //    property: 'currentBalance',
-                    //    operator: '>',
-                    //    value: 0
-                    //});
-                },
-                scope: me
-            });
-        }
+        
         me.items = [me.bodyCont];
         this.callParent(arguments);
         this.addEvents(['rerender']);
@@ -95,7 +79,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 text: text,
                 handler: function() {
                     Ext.create(cls, {
-                        record: me.record, storeCreditsStore: me.storeCreditsStore, listeners: {
+                        record: me.record,  listeners: {
                             afterclose: {
                                 scope: me,
                                 fn: function () {                                    

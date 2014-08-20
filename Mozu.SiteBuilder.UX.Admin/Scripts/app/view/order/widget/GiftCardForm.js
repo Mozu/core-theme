@@ -27,29 +27,50 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
 
         var me = this;
 
-        this.actions = {
+        me.actions = {
             applyGiftCard: Ext.create('Ext.Action', {
                 text: 'Apply Card',
+                ui: "action",
+                scale: "medium",
+                margin:'41 0 0 10',
                 handler: function() {
                     var codeField = me.getGiftCardCodeField(),
                         code = codeField.getValue();
+                    // prevent submit with empty data;
+                    if (!code) {
+                        return
+                    }
+
+                    me.setLoading("Loading...");
+
                     Taco.model.StoreCredit.load(code, {
                         scope: me,
-                        callback: function(validCredit) {
-
-                            // validation
+                        // todo add success failure handling and loading indicators
+                        failure: function (response) {
+                            me.setLoading(false);
+                            if (!response) return codeField.markInvalid([codeField.invalidText]);
+                        },
+                        success: function (record) {                            
+                            me.setLoading(false);
+                            // begin validation logic
                             var errorText;
-                            if (!validCredit) return codeField.markInvalid([codeField.invalidText]);
+                            if (!record) return codeField.markInvalid([codeField.invalidText]);
                             var now = new Date().getTime(),
-                                expDate = validCredit.get('expirationDate'),
-                                activationDate = validCredit.get('activationDate');
+                                expDate = record.get('expirationDate'),
+                                activationDate = record.get('activationDate');
                             if (expDate < now) errorText = "expired on " + expDate.toString();
                             if (activationDate > now) errorText = "does not become active until " + activationDate.toString();
-                            if (validCredit.get('currentBalance') <= 0) errorText = "has no remaining funds.";
-                            if (validCredit.get('customerId')) errorText = "has already been claimed.";
+                            if (record.get('currentBalance') <= 0) errorText = "has no remaining funds.";
+                            if (record.get('customerId')) errorText = "has already been claimed.";
+
+                            // check to see if the code has already been added to the store;double click on apply button.                
+                            if (me.store.getById(record.getId())) {
+                                errorText = "has already been added below";
+                            }
                             if (errorText) return codeField.markInvalid(["Credit code " + code + " " + errorText]);
-                            
-                            me.store.add(validCredit);
+
+                            // if no errorText add the gift card to the store;
+                            me.store.add(record);
                         }
                     });
                 }
@@ -90,7 +111,7 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                             }
                         }
                     },
-                    this.applyButton = new Ext.button.Button(this.actions.applyGiftCard),
+                    this.applyButton = Ext.create('Ext.button.Button',this.actions.applyGiftCard),
                     {
                         xtype: 'textfield',
                         hidden: true,
@@ -114,8 +135,8 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                 order: this.order,
                 margin: '20 0 0 0',
                 listeners: {
-                    viewready: function(grid) {
-                        grid.startInitialEdit();
+                    viewready: function (grid) {
+                        grid.startInitialFocus();
                     },
                     amountchanged: function(amount) {
                         this.getTotalField().setValue(amount);
@@ -124,11 +145,6 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                 }
             }
         ];
-
-        this.applyButton.setScale('medium');
-        this.applyButton.setUI('action');
-        this.applyButton.setMargin('41 0 0 10');
-
         this.callParent(arguments);
 
     }
