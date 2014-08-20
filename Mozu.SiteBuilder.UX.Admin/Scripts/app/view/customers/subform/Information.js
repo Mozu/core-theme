@@ -155,6 +155,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 scale: 'medium',
                 ui: 'link',
                 text: 'View Wishlist',
+                hidden: !(this.record),
                 handler: function () {
                     Ext.create('Taco.shared.view.modal.Wishlist', {
                         record: this.record
@@ -166,6 +167,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 scale: 'medium',
                 ui: 'link',
                 text: 'View Gift Cards & Store Credits',
+                hidden: !(this.record),
                 handler: function () {
                     Ext.create('Taco.shared.view.modal.StoreCredit', {
                         record: this.record
