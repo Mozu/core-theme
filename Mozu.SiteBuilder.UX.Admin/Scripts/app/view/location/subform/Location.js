@@ -49,7 +49,7 @@ Ext.define('Taco.view.location.subform.Location', {
             displayField: 'name',
             valueField: 'code',
             emptyText: 'Select',
-            allowBlank: false,
+            allowOnlyWhitespace: false,
             store: locationTypesStore
         });        
 
@@ -63,7 +63,7 @@ Ext.define('Taco.view.location.subform.Location', {
             displayField: 'name',
             valueField: 'code',
             emptyText: 'Select',
-            allowBlank: true,
+            allowOnlyWhitespace: true,
             store: Ext.create('Ext.data.Store', {
                 autoLoad: true,
                 fields: ['code', 'name', "shippingRequired"],
@@ -75,7 +75,7 @@ Ext.define('Taco.view.location.subform.Location', {
             name: 'shippingOriginContact',
             width: 400,
             fieldLabel: 'Shipping Origin Contact',
-            allowBlank: false,
+            allowOnlyWhitespace: false,
             validator: function (value) {
                 // check for required fields;
                 if (value && value.phoneNumber && value.companyOrOrganization) {
@@ -108,19 +108,19 @@ Ext.define('Taco.view.location.subform.Location', {
                                 fieldLabel: 'Last Name'
                             }, {
                                 name: 'companyOrOrganization',
-                                allowBlank: false,
+                                allowOnlyWhitespace: false,
                                 fieldLabel: 'Company Name'
                             }, {
                                 xtype: 'phonefield',
                                 name: 'phoneNumber',
                                 fieldLabel: 'Phone Number',
-                                allowBlank: false
+                                allowOnlyWhitespace: false
                             }, {
                                 xtype: 'textfield',
                                 name: 'email',
                                 fieldLabel: 'Email',
                                 // allow blank: if directship, then no.
-                                allowBlank: me.fulfillmentTypeIds && me.fulfillmentTypeIds.value && !Ext.Array.contains(me.fulfillmentTypeIds.value, "DS")
+                                allowOnlyWhitespace: me.fulfillmentTypeIds && me.fulfillmentTypeIds.value && !Ext.Array.contains(me.fulfillmentTypeIds.value, "DS")
                             }
                         ]
                     }],
@@ -151,7 +151,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
-            allowBlank: false
+            allowOnlyWhitespace: false
 
             // extra components to be inserted after the edit button
             
@@ -195,13 +195,13 @@ Ext.define('Taco.view.location.subform.Location', {
                 name: "name",
                 width: '100%',
                 fieldLabel: 'Name',
-                allowBlank: false
+                allowOnlyWhitespace: false
             }, {
                 xtype: "textfield",
                 name: "description",
                 width: '100%',
                 fieldLabel: 'Description',
-                allowBlank: true
+                allowOnlyWhitespace: true
             }, {
                 xtype: "textfield",
                 name: "code",
@@ -209,7 +209,7 @@ Ext.define('Taco.view.location.subform.Location', {
                 readOnly: me.record.get("code"),
                 width: 300,
                 fieldLabel: 'Code',
-                allowBlank: false
+                allowOnlyWhitespace: false
             }, {
                 // note: may need to convert this to a checkbox of on/off toggle if the service supports undelete. TBD
                 xtype: "displayfield",
@@ -238,7 +238,7 @@ Ext.define('Taco.view.location.subform.Location', {
                     margin:"0 2 0 0",
                     emptyText: "Example: 87.728056",
                     decimalPrecision: 10,
-                    allowBlank: true,
+                    allowOnlyWhitespace: true,
                     hideTrigger: true,
                     mouseWheelEnabled: false,
                     value: this.record.get("geo").lat,
@@ -248,7 +248,7 @@ Ext.define('Taco.view.location.subform.Location', {
                     fieldLabel: "Longitude",
                     emptyText: "Example: 87.728056",
                     margin: "0 0 0 2",
-                    allowBlank: true,
+                    allowOnlyWhitespace: true,
                     decimalPrecision:10,
                     hideTrigger: true,
                     mouseWheelEnabled: false,
@@ -261,26 +261,26 @@ Ext.define('Taco.view.location.subform.Location', {
                 name: "phone",
                 width: 200,
                 fieldLabel: 'Phone',
-                allowBlank: true
+                allowOnlyWhitespace: true
             }, {
                 xtype: "phonefield",
                 name: "fax",
                 width: 200,
                 fieldLabel: 'Fax',
-                allowBlank: true
+                allowOnlyWhitespace: true
             }, {
                 xtype: "textarea",
                 name: "note",
                 width: '100%',
                 fieldLabel: 'Notes',
-                allowBlank: true
+                allowOnlyWhitespace: true
             }, {
                 xtype: "checkbox",
                 name: "supportsInventory",
                 width: 200,
                 fieldLabel: 'Supports Inventory Flag',
                 boxLabel: "Enabled",
-                allowBlank: true
+                allowOnlyWhitespace: true
             }];
 
         this.callParent(arguments);
