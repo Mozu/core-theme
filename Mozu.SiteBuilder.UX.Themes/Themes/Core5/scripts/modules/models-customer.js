@@ -77,6 +77,7 @@
                     delete j['isPrimary'+contactType+'Contact'];
                 });
             }
+            if (j.id === "new") delete j.id;
             return j;
         },
         save: function () {
@@ -359,7 +360,7 @@
             });
         },
         toJSON: function (options) {
-            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            var j = Customer.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers)
                 delete j.customer;
             delete j.password;

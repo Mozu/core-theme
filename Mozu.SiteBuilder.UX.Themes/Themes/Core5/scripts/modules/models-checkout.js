@@ -738,6 +738,9 @@
             },
             submit: function () {
                 var order = this.getOrder();
+
+                // just can't sync these emails right
+                order.syncBillingAndCustomerEmail();
                 if (this.nonStoreCreditTotal() > 0 && this.validate()) return false;
                 var currentPayment = order.apiModel.getCurrentPayment();
                 if (currentPayment) {
@@ -1067,9 +1070,14 @@
                 return this.saveCustomerCard(false);
             },
             syncBillingAndCustomerEmail: function () {
-                var billingEmail = this.get('billingInfo').get('billingContact').get('email'),
-                    customerEmail = this.get('emailAddress');
-                if (!customerEmail) this.set('emailAddress', billingEmail);
+                var billingEmail = this.get('billingInfo.billingContact.email'),
+                    customerEmail = this.get('emailAddress') || require.mozuData('user').email;
+                if (!customerEmail) {
+                    this.set('emailAddress', billingEmail);
+                }
+                if (!billingEmail) {
+                    this.set('billingInfo.billingContact.email', customerEmail);
+                }
             },
             addDigitalCreditToCustomerAccount: function () {
                 var billingInfo = this.get('billingInfo'),
