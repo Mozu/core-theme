@@ -91,8 +91,8 @@
                     }
                 }
                 if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
-                    raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
-                    raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
+                    raw.minDate = formatDate(raw.attributeDetail.validation.minDateValue);
+                    raw.maxDate = formatDate(raw.attributeDetail.validation.maxDateValue);
                 }
             }
             return raw;
