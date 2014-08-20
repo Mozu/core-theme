@@ -419,7 +419,7 @@ Ext.define('Taco.store.Navigation', {
                         "address": "fileManager"
                     }, {
                         "id": "entities",
-                        "label": "Entity Manager",
+                        "label": "Content/Entity",
                         "address": "entities"
                     }, {
                         "id": "provisioning",
