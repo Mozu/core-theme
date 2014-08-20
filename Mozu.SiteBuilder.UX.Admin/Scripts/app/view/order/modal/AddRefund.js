@@ -264,17 +264,15 @@ Ext.define('Taco.view.order.modal.AddRefund', {
         
         this.record.performPaymentAction(payments, {
             success: function (response) {
-                // me.setLoading(false, me.body);
-                
                 var json = Ext.decode(response.responseText, true);
+
                 if (!json || !json.success) {
-                    // service didnt' return data properly
                     return;
                 }
                 
                 this.saveSuccess(json);
             },
-            scope:me
+            scope: me
         });
     }
 });

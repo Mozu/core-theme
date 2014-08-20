@@ -386,7 +386,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 itemId: 'Authorize',
                 text: 'Authorize'
             }, {
-                itemId: 'Refund',
+                itemId: 'IssueRefund',
                 text: 'Refund',
                 handler: this.handleRefundClick
             }, {
@@ -401,6 +401,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             }, {
                 itemId: 'Ship',
                 text: 'Ship'
+            }, {
+                itemId: 'Refund',
+                text: 'Refund Complete'
             }, {
                 itemId: 'Close',
                 text: 'Close',
@@ -555,325 +558,19 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     updateReturnActions: function () {
+        var validActions = this.getRecord().get('availableActions');
+
+        if (Ext.Array.contains(validActions, 'Refund')) {
+            validActions.push('IssueRefund');
+        }
+
         this.returnActions.items.each(function (button) {
             var enabled = false;
             var name = button.getItemId();
 
             if (!name) return;
 
-            button.setVisible(Ext.Array.contains(this.getRecord().get('availableActions'), name));
+            button.setVisible(Ext.Array.contains(validActions, name));
         }, this);
-    },
-
-    // replacing this function, bit by bit
-    oldInitComponent: function () {
-        // var me = this,
-        //     recieveBut,
-        //     returnActionButtons = new Ext.util.MixedCollection(),
-        //     addButton = function (name, text) {
-
-        //         returnActionButtons.add(
-        //             name,
-        //             Ext.create('Ext.button.Button', {
-        //                 ui: "action",
-        //                 scale:"medium",
-        //                 actionName: name,
-        //                 text: text || name,
-        //                 hidden: true,
-        //                 listeners: {
-        //                     click: me.onActionClick,
-        //                     scope: me
-        //                 }
-        //             }));
-        //     };
-        // me.returnActionButtons = returnActionButtons;
-        // me.itemsStore = me.record.getItems();
-        // me.paymentsStore = me.record.getPayments();
-        // me.orderItemsStore = me.order.items();
-
-        // returnActionButtons.add("->");
-
-        // addButton('Cancel');
-        // addButton('Authorize');
-        // addButton('Await');
-
-        // addButton('Close');
-        // addButton('Create');
-        // addButton('Receive');
-        // addButton('Refund');
-        // addButton('Ship');
-        // addButton('Restock');
-
-
-        // me.mon(me.record,'aftercommit', function () {
-        //     me.initReturnActions();
-        //     me.status.update(me.record.data);
-        //     me.setEditablity();
-        // });
-
-        // me.addPaymentButton = Ext.create('Taco.core.ux.action.SecondaryButton', {
-        //     text: 'Add Refund',
-        //     listeners: {
-        //         click: me.onAddPaymentButtonClick,
-        //         scope: me
-        //     }
-        // });
-
-        // me.grid = Ext.create('Taco.core.ux.grid.Panel', {
-        //     store: me.itemsStore,
-        //     title: 'Items',
-        //     viewConfig: {
-        //         emptyText: '<div class="empty-grid-message">No items to display</div>',
-        //         deferEmptyText: false
-        //     },
-        //     margin: "10px 0px 0px 0px ",
-        //     cls:"item-grid",
-        //     columns: [
-        //         {
-        //             text: 'Name',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             renderer: function (value, meta, record) {
-        //                 var oItem = me.orderItemsStore.getById(record.getId());
-        //                 if (oItem) {
-        //                     return oItem.get('productName');
-        //                 }
-        //                 return 'na';
-        //             },
-        //             width: 200
-        //         }, {
-        //             text: 'Customer Comments',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             renderer: function(value, meta, record) {
-        //                 var notes = record.get('notes');
-
-        //                 if (!notes || !notes.length || !notes[0].text) return '';
-
-        //                 return notes[0].text
-        //             },
-        //             flex:1
-        //         }, {
-        //             text: 'Quantity',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             width: 80,
-        //             dataIndex: 'quantity'
-        //         }, {
-        //             text: 'Recieved',
-        //             dataIndex: 'quantityReceived',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             width: 80,
-        //             editor: {
-        //                 xtype: 'numberfield',
-        //                 showBorder:true,
-        //                 hideTrigger: true,
-        //                 minValue: 0
-        //             }
-        //         }, {
-        //             text: 'Restockable',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             width: 80,
-        //             dataIndex: 'quantityRestockable',
-        //             editor: {
-        //                 xtype: 'numberfield',
-        //                 showBorder:true,
-        //                 hideTrigger: true,
-        //                 minValue: 0
-        //             }
-        //         }
-        //     ],
-        //     selType: 'cellmodel',
-        //     listeners: {
-        //         edit: me.onItemEdit,
-        //         beforeedit: function () {
-        //             return !me.isAtEndState();
-        //         },
-        //         scope: me
-        //     },
-        //     plugins: [
-        //         Ext.create('Ext.grid.plugin.CellEditing', {
-        //             clicksToEdit: 1
-        //         })
-        //     ]
-        // });
-
-        // me.paymentGrid = Ext.create('Taco.core.ux.grid.Panel', {
-        //     store: me.paymentsStore,
-        //     title: 'Refunds',
-        //     viewConfig: {
-        //         emptyText: '<div class="empty-grid-message">No refunds to display</div>',
-        //         trackOver: false,
-        //         disableSelection:true,
-        //         deferEmptyText: false
-        //     },
-        //     cls: "payment-grid",
-        //     dockedItems: [{
-        //         xtype: 'toolbar',
-        //         dock: 'top',
-        //         cls: "payment-toolbar",
-        //         items: ['->', me.addPaymentButton]
-        //     }],
-        //     columns: [
-        //         {
-        //             text: 'Payment Type',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             width: 150,
-        //             dataIndex: 'paymentType'
-        //         },
-        //         {
-        //             text: 'Card Type',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             width: 150,
-        //             dataIndex: 'cardType'
-        //         },
-        //         {
-        //             text: 'Card Number',
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             dataIndex: 'cardNumber',
-        //             flex: 1
-        //         },
-        //         {
-        //             text: 'Amount Credited',
-
-        //             renderer: function (value) {
-        //                 return me.order.formatCurrency(value);
-        //             },
-        //             draggable: false,
-        //             sortable: false,
-        //             resizable: false,
-        //             menuDisabled: true,
-        //             width: 150,
-        //             dataIndex: 'amountCredited'
-        //         }
-        //     ]
-        // });
-
-
-        // me.status = Ext.create('Ext.Component', {
-        //     // cls: "orderform-payment-paymentDetails",
-        //     tpl: [
-        //         '<div class="header">',
-        //             '<span class="title-row">',
-        //                 '<span class="status">RMA Status: {status}</span>',
-        //                 '<span class="seperator">|</span>',
-        //                 '<span class="create-date">Created: {createDate:date("F d Y g:ia")}</span>',
-        //                 '<tpl if="returnOrderId">',
-        //                     '<span class="seperator">|</span>',
-        //                     ' <a class="action" rmaAction="returnOrder">View Return Order</a>',
-        //                 '</tpl>',
-
-        //             '</span>',
-        //         '</div>'
-        //     ],
-        //     listeners: {
-        //         click: {
-        //             fn: function (e) {
-        //                 e.stopEvent();
-        //                 if (e.target.getAttribute("rmaAction") == "returnOrder") {
-        //                     Taco.app.StateManager.attemptNavigate('orders/edit/' + me.record.data.returnOrderId);
-        //                 }
-        //             },
-        //             element: 'el',
-        //             scope: this 
-        //         }
-        //     },
-
-        //     data: me.record.data
-        // });
-
-        // me.totalLossAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
-        //     name: 'totalLossAmount',
-
-        //     currencyCode: Taco.app.context.getCurrent().currencyCode,
-        //     forcePrecision:true,
-        //     unitAtEnd:false,
-        //     fieldLabel: 'Total Loss',
-        //     width: 150,
-        //     margin: "0 10 10 0",
-        //     labelAlign: 'top',
-        //     value: me.record.get('totalLossAmount'),
-        //     listeners: {
-        //         change: me.onItemEdit,
-        //         scope:me
-        //     }
-
-        // });
-
-
-        // me.rmaDeadline = Ext.create('Ext.form.field.Date', {
-        //     name: 'rmaDeadline',
-        //     fieldLabel: 'Deadline',
-        //     labelAlign: 'top',
-        //     width: 150,
-        //     margin:"0 10 10 0",
-        //     value: me.record.get('rmaDeadline'),
-        //     listeners: {
-        //         change: me.onItemEdit,
-        //         scope: me
-        //     }
-        // });
-
-        // me.dockedItems = [
-        //     {
-        //         xtype: 'container',
-        //         dock: 'top',
-        //         weight: 1,
-
-        //         items: [
-        //             me.status, 
-        //             {
-        //                 xtype:"container",
-        //                 layout:'hbox',
-        //                 items: [
-        //                     me.rmaDeadline,
-        //                     me.totalLossAmount
-        //                 ]
-        //             }
-        //         ]
-        //     },
-        //     {
-        //         xtype: 'toolbar',
-        //         dock: 'bottom',
-        //         weight: 1,
-        //         ui: 'footer',
-        //         cls:"rma-footer",
-        //         defaults: {
-        //             minWidth: 100,
-        //             margin: "0px 0px 0px 10px"
-        //         },
-        //         items: me.returnActionButtons.items
-        //     }
-        // ];
-
-
-        // me.items = [
-        //     me.grid,
-        //     me.paymentGrid
-        // ];
-
-        // me.initReturnActions();
-        // me.setEditablity();
     }
 });
