@@ -1,10 +1,31 @@
-﻿# Mozu Core Theme
+﻿# Upgraded Mozu Core Theme
 
-Core theme for Mozu. A good starting point, if a bit grayish.
+This release includes an upgraded Core theme called **Core5**.
+
+## What's New
+
+* New checkout UI for gift cards
+* New sorting UI for category and search pages
+* Support for digital downloads as a fulfillment type
+* Typeahead engine for searching
+* CMS Enhancements
+
+Refer to the [release notes](RELEASE_NOTES.md) for more information about the new features.
+
+## Breaking Changes
+
+The changes to the Mozu core theme include the following updates:
+
+*  Updates to storefront.less
+*  Updates to vendor libraries
+*  Paginated list model updates
+
+These updates are breaking changes. In order to preserve your live site's functionality, upgrading to Core5 is optional. If you don't update your theme, you can skip adapting your prior work to the new theme's breaking changes; however, you cannot get the new features without updating your site to be compatible with Core5. 
+
 
 ## Upgrading from Core4 to Core5
 
-The Mozu R5 release includes an upgraded Core theme called **Core5**. It includes bugfixes, visual adjustments, changes to JavaScript module structure, and a couple of great new features! You'll have to manually upgrade themes that extend the Core4 theme to use Core5 instead. Here's how it works in three steps:
+The Mozu R5 . It includes bugfixes, visual adjustments, changes to JavaScript module structure, and a couple of great new features! You'll have to manually upgrade themes that extend the Core4 theme to use Core5 instead. Here's how it works in three steps:
 
 1. Read the [release notes](RELEASE_NOTES.md) for Core5 to see what's changed!
 
