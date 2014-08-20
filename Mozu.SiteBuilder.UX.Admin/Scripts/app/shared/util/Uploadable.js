@@ -12,6 +12,10 @@ Ext.define('Taco.shared.util.Uploadable', {
             newDocs = [],
             files = [];
 
+        if (me.validateFiles && !me.validateFiles(fileList)) {
+            return;
+        }
+
         Ext.each(fileList, function (file) { files.push(file); });
         Ext.each(files, function (file) {
             var fileRecordIdx = me.store ? me.store.find('name', file.name) : -1;

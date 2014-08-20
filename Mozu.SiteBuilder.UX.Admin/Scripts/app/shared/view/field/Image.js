@@ -199,7 +199,22 @@ Ext.define('Taco.shared.view.field.Image', {
         });
     },
 
+    validateFiles: function (fileList) {
+        var allowedMediaTypes = ['image', 'video'],
+            invalidFiles = [];
 
+        Ext.each(fileList, function (file) {
+            var mediaType = file.type.split('/')[0];
+            if (allowedMediaTypes.indexOf(mediaType) === -1) {
+                invalidFiles.push(file.name);
+            }
+        });
+        if (invalidFiles.length > 0) {
+            Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
+            return false;
+        }
+        return true;
+    },
   
     onViewAfterRender: function () {
         var id = 'ImageFieldDD-' + Ext.id();
