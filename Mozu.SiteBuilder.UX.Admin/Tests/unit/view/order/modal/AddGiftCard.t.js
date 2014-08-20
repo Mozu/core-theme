@@ -18,14 +18,6 @@
         })
     }
 
-    function getStoreCreditsStore(cb) {
-        var store = m.store = Taco.store.StoreCredits.createForCustomer(1003);
-        store.load({
-            callback: cb
-        });
-        return store;
-    }
-
     t.setOnlyMocks();
     t.simManager().register([
         {
@@ -52,14 +44,11 @@
                 });
             },
 
-            getStoreCreditsStore,
-
             getOrder,
 
             function (next) {
                 t.it("should create with a store and an order", function (t) {
                     m.modal = Ext.create('Taco.view.order.modal.AddGiftCard', {
-                        storeCreditsStore: m.store,
                         record: m.record,
                         listeners: {
                             activate: function () {
@@ -75,7 +64,7 @@
 
             function (next) {
                 t.it("should have a getApplyingCreditData method that returns a collection of credits with positive amounts to apply", function (t) {
-                    m.store.findRecord('code', 'crm114').set('amtToApply', 100);
+                    m.modal.storeCreditsStore.findRecord('code', 'crm114').set('amtToApply', 100);
                     var payload = m.modal.getApplyingCreditData();
                     t.is(payload.orderId, m.record.getId(), "order ID present");
                     t.is(payload.customerId, m.record.get('customerId'), "customer ID present");
