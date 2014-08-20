@@ -213,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     // get all the product codes in the order.
                     var productCodes = order.Items.Where(item => item.ProductUsage != "Bundle").Select(item => item.ProductCode).ToList();
-                    productCodes.AddRange(order.Items.SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.ProductCode));
+                    productCodes.AddRange(order.Items.Where(i => i.BundledProducts != null).SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.ProductCode));
                     productCodes = productCodes.Distinct().ToList();
 
                     order.UnpackagedItems = new List<OrderPackageItem>();
