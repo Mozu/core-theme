@@ -18,7 +18,7 @@ Ext.define('Taco.view.entityManager.Index', {
         'Taco.view.entityManager.DynamicFormContainer',
         'Taco.core.data.StoreManager'
     ],
-    title: 'Entity Manager',
+    title: 'Content/Entity',
     createButtonEnabled: true,
     contextConfig: {
         supportedLevels: ['t', 'm', 'c', 's']
