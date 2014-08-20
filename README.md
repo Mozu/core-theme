@@ -22,7 +22,7 @@ The changes to the Mozu core theme include the following updates:
 
 These updates are breaking changes. In order to preserve your live site's functionality, upgrading to Core5 is optional. If you don't update your theme, you can skip adapting your prior work to the new theme's breaking changes; however, you cannot get the new features without updating your site to be compatible with Core5. 
 
-## Upgrading to Mozu Core THeme Version 5
+## Upgrading to Mozu Core Theme Version 5
 
 You must manually upgrade themes that extend Core4 to use Core5 instead. We recommend user acceptance, automated unit, and end-to-end testing of your site to ensure Core5 works for your site.
 
@@ -43,13 +43,11 @@ You must manually upgrade themes that extend Core4 to use Core5 instead. We reco
 5.  Merge the Core5 version of `stylesheets/storefront.less` with your site's version.
 
 6.  Update all references to vendor libraries, including underscore, Backbone, and the Bootstrap JavaScript plugins. For example,
-
     * `shim!vendor/underscore>_` should become `underscore`
     * `shim!vendor/backbone[jquery=jQuery,shim!vendor/underscore>_]>Backbone` should become `backbone`
     * `shim!vendor/bootstrap-popover[jquery=jQuery]` should become `shim!vendor/boostrap/popover[shim!vendor/bootstrap/tooltip[jquery=jQuery]>jQuery=jQuery]>jQuery`
 
 7.  Update any instances of `scripts/modules/mixin-paging` with `Backbone.MozuPagedCollection`. If you have overridden these files, consider merging your changes with Core5's new version:
-
     *  `scripts/modules/models-order`
     *  `scripts/modules/models-product`
     *  `scripts/modules/models-faceting`
