@@ -165,7 +165,7 @@ Ext.define('Taco.view.customers.Contacts', {
         if (!this.contacts.length) {
             this.addressContainer.add({
                 xtype: 'component',
-                html: '<div class="no-address>There are no Contacts for this user.<br><br>Add an address below.</div>'
+                html: '<div class="no-address">There are no Contacts for this user.<br><br>Add an address below.</div>'
             });
             return;
         }
