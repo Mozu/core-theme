@@ -5,24 +5,32 @@
 Ext.define('Taco.view.order.modal.AddGiftCard', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
-        'Taco.view.order.widget.GiftCardForm'
+        'Taco.view.order.widget.GiftCardForm',
+        'Taco.store.StoreCredits'
     ],
 
     layout: 'fit',
+
+    // need this layout in order for scrollbar showing up to cause the form to resize. criminy...
+    layout: "anchor",
 
     scale: 'large',
     title: 'Add Gift Card/Store Credit',
 
     initComponent: function () {
+        var me = this;
+        
+        me.storeCreditsStore = Taco.store.StoreCredits.createForCustomer(me.record.get('customerId'));
+        me.storeCreditsStore.load();
 
-        this.form = Ext.create('Taco.view.order.widget.GiftCardForm', {
-            store: this.storeCreditsStore,
-            order: this.record
+        me.form = Ext.create('Taco.view.order.widget.GiftCardForm', {
+            store: me.storeCreditsStore,
+            order: me.record
         });
 
-        this.items = [this.form];
+        me.items = [me.form];
 
-        this.callParent(arguments);
+        me.callParent(arguments);
     },
     
     getApplyingCreditData: function() {

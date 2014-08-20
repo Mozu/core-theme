@@ -84,22 +84,24 @@
                 t.it("should have a getOrderBalance method", function(t) {
                     t.ok(m.grid.getOrderBalance() == m.record.get('authorizationInfo').captureAmount);
                 });
-                t.it("should have a startInitialEdit method that edits the first credit", function(t) {
-                    var plugin = m.grid.findPlugin('cellediting');
-                    context = plugin.editingContext;
-                    t.ok(m.store.count() > 0, "store contains credits");
-                    m.grid.startInitialEdit();
-                    t.ok(editor = plugin.getActiveEditor(), "editor exists");
-                    t.ok(context.rowIdx === 0, "and is editing first row");
-                });
-                t.it("should set the editor value to be either the max card value or the order balance", function(t) {
-                    t.fieldHasValue(editor.field, context.record.get('currentBalance'));
-                });
-                t.it("should have a getTotalCardBalance method which reflects the total of all applied amounts", function(t) {
-                    t.willFireNTimes(m.grid, 'amountchanged', 1, "amountchanged event fired");
-                    m.grid.findPlugin('cellediting').completeEdit();
-                    t.is(m.grid.getTotalCardBalance(), m.store.first().get('currentBalance'));
-                });
+
+                // Note: I (simeon) removed this test, because I disabled the autoEdit feature in the view. it merely focuses on the cell so user can initiate the edit or choose another credit to use; Also I renamed the method to startInitialFocus();
+                //t.it("should have a startInitialEdit method that edits the first credit", function(t) {
+                //    var plugin = m.grid.findPlugin('cellediting');
+                //    context = plugin.editingContext;
+                //    t.ok(m.store.count() > 0, "store contains credits");
+                //    m.grid.startInitialEdit();
+                //    t.ok(editor = plugin.getActiveEditor(), "editor exists");
+                //    t.ok(context.rowIdx === 0, "and is editing first row");
+                //});
+                //t.it("should set the editor value to be either the max card value or the order balance", function(t) {
+                //    t.fieldHasValue(editor.field, context.record.get('currentBalance'));
+                //});
+                //t.it("should have a getTotalCardBalance method which reflects the total of all applied amounts", function(t) {
+                //    t.willFireNTimes(m.grid, 'amountchanged', 1, "amountchanged event fired");
+                //    m.grid.findPlugin('cellediting').completeEdit();
+                //    t.is(m.grid.getTotalCardBalance(), m.store.first().get('currentBalance'));
+                //});
             }
 
         );
