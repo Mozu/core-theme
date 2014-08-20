@@ -36,24 +36,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<Order>> AddGiftCards(GiftCardPaymentCollection args)
         {
             // apply all of the gift cards to the order.
-            var results = await Task.WhenAll( args.Payments.Select(p => AddGiftCard(args.OrderId, p.Code, p.AmtToApply)).ToList() );
+            // important: THESE MUST BE DONE SERIALLY
+            // the service is not friendly to concurrent requests and the last one in will win, resulting in a single payment being added.
+            foreach (var p in args.Payments)
+            {
+                (await AddGiftCard(args.OrderId, p.Code, p.AmtToApply)).ReadAsSync();
+            }
             
-            // force a read of all the results, which will throw an exception when appropriate.
-            results.ToList().ForEach(r => r.ReadAsSync());
-
             // for any cards where we had selected "remainder to account", tie the card to the customer account.
             if (args.CustomerId.HasValue)
             {
-                var customerTasks =
-                    (from p in args.Payments
-                     where p.RemainderToAccount.GetValueOrDefault(false)
-                     where p.CurrentBalance > p.AmtToApply
-                     select AssociateCardWithCustomer(args.CustomerId.Value, p.Code)
-                    ).ToList();
-                var cResults = await Task.WhenAll(customerTasks);
-
-                // use the old force a read trick again.
-                cResults.ToList().ForEach(r => r.ReadAsSync());
+                foreach (var p in args.Payments.Where(pp => pp.RemainderToAccount.GetValueOrDefault(false) && pp.CurrentBalance > pp.AmtToApply))
+                {
+                    (await AssociateCardWithCustomer(args.CustomerId.Value, p.Code)).ReadAsSync();
+                }
             }
 
             var order = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();

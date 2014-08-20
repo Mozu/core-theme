@@ -249,25 +249,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "updatecontactinfo")]
-        public async Task<Response<Order>> UpdateOrder(Order order)
+        public async Task<Response<Order>> UpdateContactInfo(Order order)
         {
             var dcOrder = (await _orderWebApiClient.GetOrder(order.Id)).ReadAsSync();
 
             var billingContact = Mapper.Map<Mozu.Core.Api.Contracts.Contact>(order.BillingContact);
-            var fullFillmentContact = Mapper.Map<Mozu.Core.Api.Contracts.Contact>(order.FulfillmentContact);
-            Task<ServiceClientResponse<DCs.FulfillmentInfo>> fTask = null;
-            Task<ServiceClientResponse<DCp.BillingInfo>> bTask = null;
- 
-            List<Task> tasks = new List<Task>();
+            var fulfillmentContact = Mapper.Map<Mozu.Core.Api.Contracts.Contact>(order.FulfillmentContact);
 
-            if (fullFillmentContact != null)
+            // IMPORTANT! these two service calls must run SERIALLY.
+            // We do not want to fire them at the same time because it is a race condition 
+            // and the last request will win.
+            if (fulfillmentContact != null)
             {
                 if (dcOrder.FulfillmentInfo == null)
                 {
                     dcOrder.FulfillmentInfo = new DCs.FulfillmentInfo();
                 }
-                dcOrder.FulfillmentInfo.FulfillmentContact = fullFillmentContact;
-                tasks.Add(_orderWebApiClient.SetFulFillmentInfo(dcOrder.Id, dcOrder.FulfillmentInfo));
+                dcOrder.FulfillmentInfo.FulfillmentContact = fulfillmentContact;
+                (await _orderWebApiClient.SetFulFillmentInfo(dcOrder.Id, dcOrder.FulfillmentInfo)).ReadAsSync();
 
             }
           
@@ -279,17 +278,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 dcOrder.BillingInfo.BillingContact = billingContact;
 
-                tasks.Add(_orderWebApiClient.SetBillingInfo(dcOrder.Id, dcOrder.BillingInfo));
+                (await _orderWebApiClient.SetBillingInfo(dcOrder.Id, dcOrder.BillingInfo)).ReadAsSync();
             }
-            await Task.WhenAll(tasks);
-            if (fTask != null && fTask.Result.HasException)
-            {
-                throw fTask.Result.ReadException();
-            }
-            if (bTask != null && bTask.Result.HasException)
-            {
-                throw bTask.Result.ReadException();
-            }
+
             dcOrder = (await _orderWebApiClient.GetOrder(order.Id)).ReadAsSync();
             return Single2(dcOrder.Map<Order>());
         }
