@@ -64,18 +64,18 @@ Ext.define('Taco.view.customers.subform.Information', {
                     cls: 'no-field-padding',
                     name: 'firstName',
                     fieldLabel: 'First Name',
-                    allowBlank: false
+                    allowOnlyWhitespace: false
                 }, {
                     xtype: 'textfield',
                     name: 'lastName',
                     fieldLabel: 'Last Name',
-                    allowBlank: false
+                    allowOnlyWhitespace: false
                 }, {
                     xtype: 'textfield',
                     padding: '0 0 16 0',
                     name: 'emailAddress',
                     fieldLabel: 'Email',
-                    allowBlank: false
+                    allowOnlyWhitespace: false
                 }, {
                     xtype: 'checkboxfield',
                     name: 'isAnonymous',
