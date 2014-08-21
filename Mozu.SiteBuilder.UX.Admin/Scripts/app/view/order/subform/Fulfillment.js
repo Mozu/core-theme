@@ -41,8 +41,7 @@ Ext.define('Taco.view.order.subform.Fulfillment', {
             this.add(Ext.create('Taco.view.order.subform.fulfillment.DigitalDelivery', {
                 record: this.record
             }));
-        }
-
-        this.title = '<span class="fulfillment-status"><span class="label-large">Status:</span>' + this.record.get('fulfillmentStatus') + '</span>';
+        }        
+        this.setTitle('<span class="fulfillment-status"><span class="label-large">Status:</span>' + this.record.get('fulfillmentStatus') + '</span>');
     }
 });
