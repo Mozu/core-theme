@@ -535,11 +535,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         return syncedValues;
     },
 
-    collapseIf: function (e) {
+    collapseIf: function (e, t) {
         var modal = this.modal;
         var button = this.down('#advancedFilter');
 
-        if (modal && button && !this.isDestroyed && !modal.isDestroyed && !e.within(modal.el, false, true) && !e.within(button.el)) {
+        if (modal && button && !this.isDestroyed && !modal.isDestroyed && !e.within(modal.el, false, true) && !e.within(button.el) && !e.getTarget('.x-layer', 10)) {
             modal.close();
         }
     },
