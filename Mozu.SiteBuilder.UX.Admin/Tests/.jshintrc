@@ -18,7 +18,7 @@
     "noempty": true, // true: Prohibit use of empty blocks
     "nonew": false, // true: Prohibit use of constructors for side-effects (without assignment)
     "plusplus": false, // true: Prohibit use of `++` & `--`
-    "quotmark": "single", // Quotation mark consistency:
+    "quotmark": false, // Quotation mark consistency:
     //   false    : do nothing (default)
     //   true     : ensure whatever is used is consistent
     //   "single" : require single quotes
@@ -66,7 +66,7 @@
     "jquery": false, // jQuery
     "mootools": false, // MooTools
     "node": false, // Node.js
-    "nonstandard": false, // Widely adopted globals (escape, unescape, etc)
+    "nonstandard": true, // Widely adopted globals (escape, unescape, etc)
     "prototypejs": false, // Prototype and Scriptaculous
     "rhino": false, // Rhino
     "worker": false, // Web Workers
