@@ -175,7 +175,7 @@
   "inStockBlob2"         : "<p>TO ADD THE ITEMS TO YOUR CART: <a href=\"http://{0}/p/{1}\">CLICK HERE</a>.</p>",
   "orderShipped"         : "Your Order Has Shipped",
   "orderShippedPkgHeader": "Shipped {0} via {1}",
-  "orderShipmentBlob1"   : "<p>Thank you for shopping at {0}.  Your order has shipped using {2}. Once an order has shipped, it can no longer be updated. If you must return an item from this order or check on other orders,  please visit <a href=\"http://{1}/myaccount\">My Account</a>.</p>",
+  "orderShipmentBlob1"   : "<p>Thank you for shopping at {0}.  Your order has shipped. Once an order has shipped, it can no longer be updated. If you must return an item from this order or check on other orders,  please visit <a href=\"http://{1}/myaccount\">My Account</a>.</p>",
   "orderShipmentBlob2"   : "<p>Data on tracking may not show up in your account for at least 24 hours from ship date.</p>",
   "returnApprovedBlob1"  : "<p>Thank you for shopping at {0}. Your request to return the following item(s) has been accepted.</p>",
   "returnApprovedBlob2"  : "<p>To return your online purchase:</p><ol><li>Pack your return in the original shipping package, if possible.</li><li>Include the attached packing slip and return label, and indicate the reason for the return.</li><li>Include all original packing materials and accessories.</li><li>Send your return to:</li></ol>",
