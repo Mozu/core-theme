@@ -172,6 +172,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         }, {
             text: 'View Shipping Label',
             hidden: !this.packageData.shipmentId,
+            disabled: !this.packageData.hasLabel,
             handler: this.handleViewShippingLabel
         }, {
             text: 'Get Shipping Label',
@@ -182,10 +183,11 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             hidden: this.packageData.status === 'Fulfilled',
             handler: this.handleCancel
         }, {
-            text: 'Mark as Shipped',
-            hidden: this.packageData.status === 'Fulfilled' || !this.packageData.shipmentId,
+            text: 'Mark as Shipped',            
+            hidden: this.packageData.status === 'Fulfilled',
             handler: this.handleMarkAsShipped
         }];
+
 
         this.collapsedInfo = {
             xtype: 'component',

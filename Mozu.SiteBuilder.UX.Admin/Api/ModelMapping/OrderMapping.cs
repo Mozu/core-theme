@@ -670,6 +670,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.HasLabel, op => op.ResolveUsing(dc => dc.HasLabel))
                 .ForMember(x => x.ShipmentId, op => op.ResolveUsing(dc => dc.ShipmentId))
                 .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
                 .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
