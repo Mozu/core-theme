@@ -17,6 +17,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string OrderId { get; set; }
 
+        public string Code { get; set; }
+
         /// <summary>
         /// Status of the pickup
         /// </summary>
