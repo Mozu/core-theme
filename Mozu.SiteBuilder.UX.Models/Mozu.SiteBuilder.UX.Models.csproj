@@ -230,7 +230,7 @@
       <HintPath>..\packages\Mozu.Content.Contracts.1.11.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core">
-      <HintPath>..\packages\Mozu.Core.1.11.0.1\lib\net45\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.11.0.7\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api">
       <HintPath>..\packages\Mozu.Core.Api.1.11.0.1\lib\net45\Mozu.Core.Api.dll</HintPath>
