@@ -19,6 +19,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string ShipmentId { get; set; }
 
+        public bool HasLabel { get; set; }
+
+
         /// <summary>
         /// "Fulfilled", "NotFulfilled", or "PartiallyFulfilled"
         /// </summary>

@@ -56,7 +56,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                 tpl: [
                     '<table class="section-summary">',
                         '<tr>',
-                            '<td>Pending Items:</td>',
+                            '<td>Unshipped Items:</td>',
                             '<td>{itemsNotShipped}</td>',
                         '</tr><tr>',
                             '<td>Fulfilled Items:</td>',
