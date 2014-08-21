@@ -262,7 +262,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         return
                             (from i in order.Items
-                             where i.ProductCode == productCode
+                             where (i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bp => bp.ProductCode == productCode)))
                              where i.FulfillmentMethod == fulfillmentMethod
                              select i.FulfillmentLocationCode
                             ).FirstOrDefault();
@@ -273,7 +273,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     var GetAllFulfillmentLocationCodeByFulfillmentMethod = new Func<string, string, IDictionary<string, int>>((productCode, fulfillmentMethod) => {
                         return
                             (from i in order.Items
-                             where i.ProductCode == productCode
+                             where (i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bp => bp.ProductCode == productCode)))
                              where i.FulfillmentMethod == fulfillmentMethod
                              group i by i.FulfillmentLocationCode into g
                              select g
