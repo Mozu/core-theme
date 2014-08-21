@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
 
     initComponent: function () {
 
-        this.title = '<span class="section-header">Direct Ship Items</span>',
+        this.title = '<span class="section-header">Direct Ship Items</span>';
 
         this.items = [];
 
@@ -25,6 +25,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
     },
 
     buildInfoHeader: function () {
+        var weight = this.calculateWeight();
+
         this.infoContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-fulfillment-info-header',
@@ -47,8 +49,11 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                 padding: '0 50 0 0',
                 tpl: [
                     '<span class="label">Total Weight:</span><br>',
-                    '61 lbs'
-                ]
+                    '{weight} lbs'
+                ],
+                data: {
+                    weight: weight
+                }
             }, {
                 flex: 1,
                 html: '',
@@ -103,5 +108,23 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                 packageData: packageData
             }));
         }, this);
+    },
+
+    calculateWeight: function () {
+        var weight = 0;
+
+        Ext.each(this.record.get('unpackagedItems'), function (item) {
+            weight += item.weight || 0;
+        });
+
+        Ext.each(this.record.get('unShippedPackages'), function (packageData) {
+            weight += packageData.weight || 0;
+        });
+
+        Ext.each(this.record.get('shippedPackages'), function (packageData) {
+            weight += packageData.weight || 0;
+        });
+
+        return weight.toFixed(1);
     }
 });

@@ -100,7 +100,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 }, {
                     margin: '8 0 0 0',
                     tpl: [
-                        '<span class="label">Total Weight:</span><br>{weight}'
+                        '<span class="label">Total Weight:</span><br>{weight} lbs'
                     ],
                     data: this.packageData
                 }]
@@ -213,7 +213,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
     handlePrintPackingSlip: function () {
         var win = window.open(),
-            
+
             data = {
                 shippingMethodName: this.packageData.shippingMethodName,
                 items: this.packageData.items,
@@ -223,7 +223,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 order: this.record.getData(),
                 orderRecord: this.record,
                 siteName: Taco.app.context.getSite().name
-            },            
+            },
             tpl = new Ext.XTemplate(
                 '<div style="font: 14px/1.5 sans-serif;">',
                 '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody><tr>',
@@ -289,13 +289,13 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 '<tr>',
                 '<td style="font-weight: bold; white-space: nowrap;">Code</td>',
                 '<td style="font-weight: bold; white-space: nowrap;">Name</td>',
-                '<td style="font-weight: bold; white-space: nowrap;">Qty</td>',                
+                '<td style="font-weight: bold; white-space: nowrap;">Qty</td>',
                 '</tr>',
 
                 '<tpl for="values.items"><tr>',
                 '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
                 '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',                                
+                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
                 '</tr></tpl>',
                 '</tbody></table>',
                 '</div>'
