@@ -881,7 +881,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'saveCustomerCardForNewCustomer', 'saveCustomerCardForCurrentCustomer', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact', 'addPrimaryBillingContact', 'addPrimaryShippingContact', 'addPrimaryShippingAndBillingContact');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
 
 
@@ -986,20 +986,11 @@
                     throw error;
                 });
             },
-            addPrimaryBillingContact: function() {
-                return this.addCustomerContact('billingInfo', 'billingContact', [{ name: 'Billing', isPrimary: true }]);
-            },
             addBillingContact: function () {
                 return this.addCustomerContact('billingInfo', 'billingContact', [{ name: 'Billing', isPrimary: false }]);
             },
-            addPrimaryShippingContact: function () {
-                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: true }]);
-            },
             addShippingContact: function () {
                 return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: false }]);
-            },
-            addPrimaryShippingAndBillingContact: function () {
-                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: true }, { name: 'Billing', isPrimary: true }]);
             },
             addShippingAndBillingContact: function () {
                 return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: false }, { name: 'Billing', isPrimary: false }]);
@@ -1008,6 +999,7 @@
                 var customer = this.get('customer'),
                     contactInfo = this.get(infoName),
                     contact = contactInfo.get(contactName).toJSON(),
+                    isPrimaryContact = this.isSavingNewCustomer(),
 
                     saveContact = function () {
                         if (contact.id === -1 || contact.id === 1) delete contact.id;
@@ -1020,6 +1012,12 @@
                 var contactId = contact.contactId;
                 if (contactId) contact.id = contactId;
 
+                if (isPrimaryContact) {
+                    _.each(contactTypes, function(type) {
+                        type.isPrimary = true;
+                    });
+                }
+
                 if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === "new") {
                     contact.types = contactTypes;
                     return saveContact();
@@ -1029,11 +1027,12 @@
                     return deferred.promise;
                 }
             },
-            saveCustomerCard: function (isPrimaryAddress) {
+            saveCustomerCard: function () {
                 var order = this,
                     customer = this.get('customer'), //new CustomerModels.EditableCustomer(this.get('customer').toJSON()),
                     billingInfo = this.get('billingInfo'),
                     isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
+                    isPrimaryAddress = this.isSavingNewCustomer(),
                     billingContact = billingInfo.get('billingContact').toJSON(),
                     card = billingInfo.get('card'),
                     doSaveCard = function () {
@@ -1063,12 +1062,6 @@
                     return doSaveCard();
                 }
             },
-            saveCustomerCardForNewCustomer: function () {
-                return this.saveCustomerCard(true);
-            },
-            saveCustomerCardForCurrentCustomer: function () {
-                return this.saveCustomerCard(false);
-            },
             syncBillingAndCustomerEmail: function () {
                 var billingEmail = this.get('billingInfo.billingContact.email'),
                     customerEmail = this.get('emailAddress') || require.mozuData('user').email;
@@ -1090,13 +1083,19 @@
                     return customer.apiAddStoreCredit(cred.get('code'));
                 });
             },
+            isSavingNewCustomer: function() {
+                return this.get("createAccount") && !this.customerCreated;
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
                     isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
                     isSavingCreditCard = false,
-                    isSavingNewCustomer = (this.get("createAccount") && !this.customerCreated),
+                    isSavingNewCustomer = this.isSavingNewCustomer(),
                     isAuthenticated = require.mozuData('user').isAuthenticated,
+                    nonStoreCreditTotal = billingInfo.nonStoreCreditTotal(),
+                    requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
+                    requiresBillingInfo = nonStoreCreditTotal > 0,
                     process = [function() {
                         return order.update({
                             ipAddress: order.get('ipAddress'),
@@ -1110,7 +1109,7 @@
 
                 this.syncBillingAndCustomerEmail();
 
-                if (billingInfo.nonStoreCreditTotal() > 0 && this.validate()) {
+                if (nonStoreCreditTotal > 0 && this.validate()) {
                     this.isSubmitting = false;
                     return false;
                 }
@@ -1123,11 +1122,7 @@
                 var card = billingInfo.get('card');
                 if (billingInfo.get('paymentType') === "CreditCard" && card.get('isCardInfoSaved') && (this.get('createAccount') || isAuthenticated)) {
                     isSavingCreditCard = true;
-                    if (isSavingNewCustomer) {
-                        process.push(this.saveCustomerCardForNewCustomer);
-                    } else {
-                        process.push(this.saveCustomerCardForCurrentCustomer);
-                    }
+                    process.push(this.saveCustomerCard);
                 }
 
                 if ((this.get('createAccount') || isAuthenticated) && billingInfo.getDigitalCreditsToAddToCustomerAccount().length > 0) {
@@ -1135,22 +1130,13 @@
                 }
 
                 //save contacts
-                if (isSavingNewCustomer) {
+                if (isAuthenticated || isSavingNewCustomer) {
                     if (!isSameBillingShippingAddress && !isSavingCreditCard) {
-                        process.push(this.addPrimaryShippingContact);
-                        process.push(this.addPrimaryBillingContact);
-                    } else if (isSameBillingShippingAddress && !isSavingCreditCard) {
-                        process.push(this.addPrimaryShippingAndBillingContact);
-                    } else if (!isSameBillingShippingAddress && isSavingCreditCard) {
-                        process.push(this.addPrimaryShippingContact);
-                    }
-                } else if (isAuthenticated) {
-                    if (!isSameBillingShippingAddress && !isSavingCreditCard) {
-                        process.push(this.addShippingContact);
-                        process.push(this.addBillingContact);
+                        if (requiresFulfillmentInfo) process.push(this.addShippingContact);
+                        if (requiresBillingInfo) process.push(this.addBillingContact);
                     } else if (isSameBillingShippingAddress && !isSavingCreditCard) {
                         process.push(this.addShippingAndBillingContact);
-                    } else if (!isSameBillingShippingAddress && isSavingCreditCard) {
+                    } else if (!isSameBillingShippingAddress && isSavingCreditCard && requiresFulfillmentInfo) {
                         process.push(this.addShippingContact);
                     }
                 }
