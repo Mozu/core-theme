@@ -44,25 +44,27 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
                     '{fulfillmentLocationCode}'
                 ],
                 data: this.packageData
-            }, {
+            }/*, {
                 tpl: [
                     'Location Phone Number:<br>',
                     '123-456-7890'
                 ],
                 data: {}
-            }]
+            } */]
         });
 
         this.actions = [{
             text: 'Cancel',
-            handler: this.handleCancel
+            handler: this.handleCancel,
+            hidden: this.packageData.status === 'Fulfilled'
         }, {
             text: 'Mark as Ready',
             handler: this.handleReady,
             hidden: true
         }, {
             text: 'Mark as Fulfilled',
-            handler: this.handleFulfilled
+            handler: this.handleFulfilled,
+            hidden: this.packageData.status === 'Fulfilled'
         }];
 
         this.collapsedInfo = {
