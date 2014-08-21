@@ -719,6 +719,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<ShippingDC.Pickup, OrderPickup>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.Code))
                 .ForMember(x => x.FulfillmentDate, op => op.ResolveUsing(dc => dc.FulfillmentDate))
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
                 .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
