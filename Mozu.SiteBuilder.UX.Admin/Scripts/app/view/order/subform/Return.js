@@ -210,10 +210,16 @@ Ext.define('Taco.view.order.subform.Return', {
             }
         });
 
+        console.log(type, items);
+
         return this.getReturnsStore().add({
             originalOrderId: this.record.getId(),
             type: type,
             items: Ext.Array.map(newItems.concat(Ext.Object.getValues(parentBundles)), function(item) {
+                if (item.reason === 'Other') {
+                    item.rmaNote = 'Other';
+                }
+
                 item.reasons = [{
                     reason: item.reason,
                     quantity: item.quantity
