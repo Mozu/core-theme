@@ -558,8 +558,15 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     updateReturnActions: function () {
-        var validActions = this.getRecord().get('availableActions');
+        var record = this.getRecord();
+        var validActions = record.get('availableActions');
 
+        // remove the Refund action if the return type is not Refund
+        if (record.get('type') === 'Replace') {
+            Ext.Array.remove(validActions, 'Refund');
+        }
+
+        // if Refund is a valid action, Refund Complete must also be a valid action
         if (Ext.Array.contains(validActions, 'Refund')) {
             validActions.push('IssueRefund');
         }

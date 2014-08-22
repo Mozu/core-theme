@@ -152,7 +152,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
         // track the returned quantities of each item in the order
         Ext.Array.each(records, function (record) {
-            if (Ext.Array.contains(ineligibleStatuses, record.get('status'))) {
+            if (!Ext.Array.contains(ineligibleStatuses, record.get('status'))) {
                 Ext.Array.each(record.get('items'), function (item) {
                     if (!(item.orderItemId in returnedItemQuantities)) {
                         returnedItemQuantities[item.orderItemId] = 0;
