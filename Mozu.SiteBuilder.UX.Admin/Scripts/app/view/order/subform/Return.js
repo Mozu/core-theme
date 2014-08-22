@@ -103,10 +103,12 @@ Ext.define('Taco.view.order.subform.Return', {
     },
         
     addProcessReturnPanel: function (record, recordIndex) {
+        var status = record.get('status');
+
         this.add(Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
             order: this.record,
             record: record,
-            collapsed: record.get('status') === 'Closed'
+            collapsed: status === Taco.model.Return.constants.statuses.CANCELLED || status === Taco.model.Return.constants.statuses.REJECTED || status === Taco.model.Return.constants.statuses.CLOSED
         }));
     },
         
