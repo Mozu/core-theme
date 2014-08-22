@@ -302,13 +302,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                {
                    SiteId = _apiContext.SiteId,
                    TenantId = _apiContext.TenantId,
+                   CatalogId = _apiContext.CatalogId,
+                   MasterCatalogId = _apiContext.MasterCatalogId,
                    LocaleCode = localeCode,
                    UserId = userId,
                    CreateBy = ApiContextExtensions.GetAuditInfoUserId(_apiContext),
                    CreateDate = DateTime.UtcNow,
                    CurrencyCode = _apiContext.CurrencyCode,
-                   CustomerId = customerId.HasValue ? customerId.Value.ToString(CultureInfo.InvariantCulture) : null
-
+                   CustomerId = customerId.HasValue ? customerId.Value.ToString(CultureInfo.InvariantCulture) : null,
+                   InitiatingAppId = _apiContext.InitiatingAppId
                };
                return notificationContext;
            }
@@ -392,7 +394,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                               Content = JsonConvert.SerializeObject(contractOrder),
                                               To = new Dictionary<string, string> {{email, email}},
                                           },
-                              MessagePublishingContext = CreateMessagePublishingContext(order)
+                              MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(_apiContext.UserClaims.UserId, contractOrder.CustomerAccountId)
                           };
 
             SetSenderData(message.EmailData);
@@ -421,7 +423,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var message = new SendOrderShipmentEmail
                           {
                               OrderId = order.Id,
-                              MessagePublishingContext = CreateMessagePublishingContext(order),
+                              MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(_apiContext.UserClaims.UserId, order.CustomerAccountId),
                               EmailData = new EmailData
                                           {
                                               RendererServiceId = ServiceIdRenderEmailTenant,
@@ -447,14 +449,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                           {
                               CreditCode = orderCredit.Credit.Code,
                               CreditMessage = orderCredit.Credit.CurrentBalance.ToString("C"),
-                              MessagePublishingContext = CreateMessagePublishingContext(orderCredit.Order),
+                              MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(_apiContext.UserClaims.UserId, orderCredit.Order.CustomerAccountId),
                               EmailData = new EmailData
                                           {
                                               RendererServiceId = ServiceIdRenderEmailTenant,
                                               Topic = EmailTopics.Order.OrderGiftCardTopic,
                                               Content = JsonConvert.SerializeObject(orderCredit),
                                               To = new Dictionary<string, string> {{email, email}}
-                                          },
+                                          }
                           };
 
             SetSenderData(message.EmailData);
@@ -474,7 +476,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var message = new SendOrderEmail
                           {
                               OrderId = order.Id,
-                              MessagePublishingContext = CreateMessagePublishingContext(order),
+                              MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(_apiContext.UserClaims.UserId, order.CustomerAccountId),
                               EmailData = new EmailData
                                           {
                                               RendererServiceId = ServiceIdRenderEmailTenant,
@@ -499,7 +501,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                           {
                               OrderId = rma.OriginalOrderId,
                               ReturnId = rma.Id,
-                              MessagePublishingContext = CreateMessagePublishingContext(rma),
+                              MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(rma.UserId, rma.CustomerAccountId),
                               EmailData = new EmailData
                                           {
                                               RendererServiceId = ServiceIdRenderEmailTenant,
@@ -547,45 +549,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-
-        //private async Task<CustomerAccount> GetCustomerAccount(int customerAcct)
-        //{
-        //    CustomerAccount acct = (await _accountClient.GetAccount(customerAcct)).ReadAsSync();
-        //    return acct;
-        //}
-
-        private MessagePublishingContext CreateMessagePublishingContext(Order order)
-        {
-            var notificationContext = new MessagePublishingContext
-                                      {
-                                          SiteId = _apiContext.SiteId,
-                                          TenantId = _apiContext.TenantId,
-                                          LocaleCode = _apiContext.LocaleCode,
-                                          //UserId = order.CustomerAccountId ,
-                                          CreateBy = _apiContext.GetAuditInfoUserId(),
-                                          CreateDate = DateTime.UtcNow,
-                                          CurrencyCode = _apiContext.CurrencyCode,
-                                          CustomerId = order.CustomerAccountId.HasValue ? order.CustomerAccountId.ToString() : null
-                                      };
-            return notificationContext;
-        }
-
-        private MessagePublishingContext CreateMessagePublishingContext(Return rma)
-        {
-            var notificationContext = new MessagePublishingContext
-                                      {
-                                          SiteId = _apiContext.SiteId,
-                                          TenantId = _apiContext.TenantId,
-                                          LocaleCode = _apiContext.LocaleCode,
-                                          UserId = rma.UserId,
-                                          CreateBy = _apiContext.GetAuditInfoUserId(),
-                                          CreateDate = DateTime.UtcNow,
-                                          CurrencyCode = _apiContext.CurrencyCode,
-                                          CustomerId = rma.CustomerAccountId.HasValue ? rma.CustomerAccountId.ToString() : null
-                                      };
-            return notificationContext;
-        }
-        
         public static class EmailTopics
         {
             public static class Order
