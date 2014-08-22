@@ -157,7 +157,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.items = [
             {
                 xtype: 'component',
-                html: 'Discount conditions specify rules which must be met before a discount or coupon will be valid. All discount conditions are optional; if left blank, the discount or coupon will always be valid.s',
+                html: 'Discount conditions specify rules which must be met before a discount or coupon will be valid. All discount conditions are optional; if left blank, the discount or coupon will always be valid.',
                 margin: '15 0 0 0'
             },
             this.datesContainer,
