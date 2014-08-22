@@ -972,8 +972,8 @@
                     account: {
                         emailAddress: email,
                         userName: email,
-                        firstName: billingContact.get("firstName"),
-                        lastName: billingContact.get("lastNameOrSurname"),
+                        firstName: billingContact.get("firstName") || this.get('fulfillmentInfo.fulfillmentContact.firstName'),
+                        lastName: billingContact.get("lastNameOrSurname") || this.get('fulfillmentInfo.fulfillmentContact.lastNameOrSurname'),
                         acceptsMarketing: self.get('acceptsMarketing')
                     },
                     password: this.get('password')
