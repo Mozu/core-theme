@@ -15,7 +15,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         var catStore,
             productStore,
             zoneStore,
-            shippingStore;
+            shippingStore,
+            me = this;
 
         this.includeAllProductsInput = Ext.widget({
             xtype: 'checkbox',
@@ -58,7 +59,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categories',
-            width: 520,
+            width: 382,
             margin: 0,
             store: catStore,
             getStore: function () {
@@ -71,16 +72,52 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Select Categories',
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
             }
         });
 
+        function toggleEnabledCriteriaQuantities(toEnable) {
+            var toDisable = toEnable === me.productsBox ? me.categoriesBox : me.productsBox;
+            Ext.Array.each(toDisable.query('[isFormField]'), function(cmp) {
+                if (cmp.xtype !== "radio") {
+                    cmp.disable();
+                    cmp.setValue('');
+                }
+            });
+            Ext.Array.each(toEnable.query('[isFormField]'), function(cmp) {
+                cmp.enable();
+            });
+        }
+
         this.categoriesBox = Ext.create('Ext.container.Container', {
-            layout: 'auto',
+            layout: 'hbox',
+            //width: 600,
             items: [
+                {
+                    xtype: 'radio',
+                    name: 'typeOfMinimumToEnforce',
+                    value: 'category',
+                    handler: function(box, isChecked) {
+                        toggleEnabledCriteriaQuantities(isChecked ? me.categoriesBox : me.productsBox);
+                    },
+                    padding: '0 10px 0 0'
+                },
+                {
+                    xtype: 'numberfield',
+                    name: 'maximumQuantityPerRedemption',
+                    hideTrigger: true,
+                    width: 80,
+                    minValue: 0,
+                    labelAlign: 'right',
+                    hideLable: true,
+                }, {
+                    xtype: 'component',
+                    html: 'of',
+                    padding: '0 10px 0 10px',
+                    cls: 'x-form-item-label x-unselectable x-form-item-label-left'
+                },
                 this.categoryList,
                 {
                     xtype: 'button',
@@ -92,7 +129,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     style: {
                         verticalAlign: 'bottom'
                     },
-                    handler: function () {
+                    handler: function() {
                         this.launchCategoryModal(this.categoryList);
                     },
                     scope: this
@@ -116,7 +153,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             typeAhead: true,
             displayField: 'name',
             valueField: 'id',
-            fieldLabel: 'Excluded Categories',
+            fieldLabel: 'Exclude products in the following categories',
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
@@ -157,7 +194,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'products',
-            width: 520,
+            width: 382,
             margin: 0,
             store: productStore,
             getStore: function () {
@@ -169,7 +206,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'productName',
-            fieldLabel: 'Select Products',
             valueField: 'productCode',
             style: {
                 display: 'inline-table',
@@ -178,11 +214,53 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
 
+        //this.productsBox = Ext.create('Ext.container.Container', {
+        //    layout: 'auto',
+        //    items: [
+        //        this.productList,
+        //        {
+        //            xtype: 'button',
+        //            scale: 'medium',
+        //            ui: 'action',
+        //            text: 'Add',
+        //            margin: '0 0 0 10',
+        //            width: 70,
+        //            style: {
+        //                verticalAlign: 'bottom'
+        //            },
+        //            handler: function () {
+        //                this.launchProductModal(this.productList);
+        //            },
+        //            scope: this
+        //        }
+        //    ]
+        //});
+
         this.productsBox = Ext.create('Ext.container.Container', {
-            layout: 'auto',
+            layout: 'hbox',
+            width: 600,
             items: [
-                this.productList,
                 {
+                    xtype: 'radio',
+                    name: 'typeOfMinimumToEnforce',
+                    value: 'product',
+                    padding: '0 10px 0 0'
+                },
+                {
+                    xtype: 'numberfield',
+                    name: 'maximumQuantityPerRedemption',
+                    hideTrigger: true,
+                    width: 80,
+                    minValue: 0,
+                    labelAlign: 'right',
+                    hideLable: true,
+                }, {
+                    xtype: 'component',
+                    html: 'of',
+                    padding: '0 10px 0 10px',
+                    cls: 'x-form-item-label x-unselectable x-form-item-label-left'
+                },
+                this.productList, {
                     xtype: 'button',
                     scale: 'medium',
                     ui: 'action',
@@ -192,13 +270,17 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     style: {
                         verticalAlign: 'bottom'
                     },
-                    handler: function () {
+                    handler: function() {
                         this.launchProductModal(this.productList);
                     },
                     scope: this
                 }
             ]
         });
+        
+        var activeQuantityMeasure = this.record.get('products') ? this.productsBox : this.categoriesBox;
+        activeQuantityMeasure.down('radio').setValue(true);
+        toggleEnabledCriteriaQuantities(activeQuantityMeasure);
 
         this.productExcludeList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'excludedProducts',
@@ -214,7 +296,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: false,
             displayField: 'productName',
-            fieldLabel: 'Excluded Products',
+            fieldLabel: 'Exclude the following products',
             valueField: 'productCode',
             style: {
                 display: 'inline-table',
@@ -269,12 +351,27 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                         this.includeAllProductsInput,
                         this.appliesToSaleProducts
                     ]
-                },
-                this.categoriesBox,
+            },
+            {
+                xtype: 'component',
+                html: 'Select the quantity of products that the shopper will receive the discount on:',
+                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
+            },
                 this.productsBox,
+            {
+                xtype: 'component',
+                html: 'Select the quantity of products from the categories that the shopper will receive the discount on:',
+                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
+            },
+                this.categoriesBox,
+                {
+                    xtype: 'component',
+                    html: '<hr />',
+                    padding: '20px 0 0 0'
+                },
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
-                this.maximumQuantityPerRedemptionTB
+                //this.maximumQuantityPerRedemptionTB
             ]
         });
 
