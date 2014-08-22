@@ -530,6 +530,17 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                             button.setDisabled(false);
                         }
                     });
+                },
+                failure: function (record, operation) {
+                    var msg;
+
+                    try {
+                        msg = operation.error.remoteException.data.message;
+                    } catch (e) {} finally {
+                        msg = msg ? msg : 'An error occured while updating the return.';
+                    }
+
+                    Taco.app.fireEvent('setmessage', msg, 'error');
                 }
             });
         }, this);
