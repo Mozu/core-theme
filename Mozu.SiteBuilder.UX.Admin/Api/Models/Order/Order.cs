@@ -149,13 +149,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public int ItemsShipped { get; set; }
 
+
+        /// <summary>
+        /// Total quantity of things shipped.
+        /// </summary>
+        public int ItemsPackaged { get; set; }
+
+
         /// <summary>
         /// Total quantity of things unpicked.
         /// </summary>
         public int ItemsNotPickedup { get; set; }
 
         /// <summary>
-        /// Total quantity of things picked.
+        /// Total quantity of things in pickups that haven't been marked as fulfilled.
+        /// </summary>
+        public int ItemsInPickups { get; set; }
+
+        /// <summary>
+        /// Total quantity of things in pickups that have been marked as fulfilled.
         /// </summary>
         public int ItemsPickedup { get; set; }
 

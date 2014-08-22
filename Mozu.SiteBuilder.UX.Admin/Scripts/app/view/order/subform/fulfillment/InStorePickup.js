@@ -56,7 +56,7 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
                 tpl: [
                     '<table class="section-summary">',
                         '<tr>',
-                            '<td>Pending Items:</td>',
+                            '<td>Unfulfilled Items:</td>',
                             '<td>{itemsNotPickedup}</td>',
                         '</tr><tr>',
                             '<td>Fulfilled Items:</td>',

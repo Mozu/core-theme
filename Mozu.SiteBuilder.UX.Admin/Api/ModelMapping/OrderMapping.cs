@@ -139,8 +139,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OrderSummary, op => op.Ignore())
                 .ForMember(x => x.ItemsOrdered, op => op.Ignore())
                 .ForMember(x => x.ItemsNotShipped, op => op.Ignore())
+                .ForMember(x => x.ItemsPackaged, op => op.Ignore())
                 .ForMember(x => x.ItemsShipped, op => op.Ignore())
                 .ForMember(x => x.ItemsNotPickedup, op => op.Ignore())
+                .ForMember(x => x.ItemsInPickups, op => op.Ignore())
                 .ForMember(x => x.ItemsPickedup, op => op.Ignore())
                 
                 .AfterMap((dc, order) =>
@@ -171,7 +173,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // fill out OrderSummary and AuthorizationInfo object
 
                     decimal totalAmount, amountCollected, balance;
-                    int totalItemCount, shippedItemCount, pickedupItemCount, digitallyFulfilledItemCount, fulfilledItemCount, unfulfilledItemCount;
+                    int totalItemCount, unshippedItemCount = 0, shippedItemCount = 0, unpickedupItemCount=0, pickedupItemCount = 0, digitallyFulfilledItemCount, fulfilledItemCount, unfulfilledItemCount;
 
                     totalAmount = dc.Total.GetValueOrDefault(0);
                     amountCollected = dc.TotalCollected;
@@ -184,8 +186,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                          select actualQuantity
                         ).Sum();
 
-                    shippedItemCount = order.Packages != null ? order.Packages.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
-                    pickedupItemCount = order.Pickups != null ? order.Pickups.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
+                    if (order.Packages != null) {
+                        shippedItemCount =
+                        (from i in order.Packages
+                         where i.Status == "Fulfilled"
+                         let itemsInPackage = i.Items.Sum(package => package.Quantity)
+                         select itemsInPackage
+                        ).Sum();
+
+                        unshippedItemCount =
+                        (from i in order.Packages
+                         where i.Status != "Fulfilled"
+                         let itemsInPackage = i.Items.Sum(package => package.Quantity)
+                         select itemsInPackage
+                        ).Sum();
+                    }
+                                        
+                    if (order.Pickups!= null) {
+                        pickedupItemCount =
+                        (from i in order.Pickups
+                         where i.Status == "Fulfilled"
+                         let itemsInPickup = i.Items.Sum(pickup => pickup.Quantity)
+                         select itemsInPickup
+                        ).Sum();
+
+                        unpickedupItemCount =
+                        (from i in order.Pickups
+                         where i.Status != "Fulfilled"                         
+                         let itemsInPickup = i.Items.Sum(pickup => pickup.Quantity)
+                         select itemsInPickup
+                        ).Sum();
+                    }
+                    
                     digitallyFulfilledItemCount = order.DigitalPackages != null ? order.DigitalPackages.SelectMany(p => p.Items.Select(i => i.Quantity)).Sum() : 0;
                     fulfilledItemCount = shippedItemCount + pickedupItemCount + digitallyFulfilledItemCount;
 
@@ -196,6 +228,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         AmountCollected = amountCollected,
                         Balance = balance,
                         TotalItemCount = totalItemCount,
+                        ShippedItemCount = shippedItemCount,
+                        UnshippedItemCount = unshippedItemCount,
+                        PickedupItemCount = pickedupItemCount,
+                        UnpickedupItemCount = unpickedupItemCount,
                         FulfilledItemCount = fulfilledItemCount,
                         UnfulfilledItemCount = unfulfilledItemCount
                     };
@@ -386,11 +422,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     // fill out number of items ordered, shipped, unshipped
                     order.ItemsOrdered = order.Items.Sum(i => i.Quantity);
-                    order.ItemsNotShipped = order.UnpackagedItems.Sum(i => i.Quantity);
-                    order.ItemsNotPickedup = order.UnpickedupItems.Sum(i => i.Quantity);
+                    order.ItemsNotShipped = order.UnpackagedItems.Sum(i => i.Quantity) + order.OrderSummary.UnshippedItemCount;
+                    order.ItemsNotPickedup = order.UnpickedupItems.Sum(i => i.Quantity) + order.OrderSummary.UnpickedupItemCount;
                     order.ItemsNotDigitallyFulfilled = order.UndeliveredDigitalItems.Sum(i => i.Quantity);
-                    order.ItemsShipped = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
-                    order.ItemsPickedup = order.Pickups == null || order.Pickups.Count == 0 ? 0 : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsPackaged = order.Packages == null || order.Packages.Count == 0 ? 0 : order.Packages.SelectMany(p => p.Items).Sum(i => i.Quantity);
+                    order.ItemsShipped = order.OrderSummary.ShippedItemCount;
+                    order.ItemsInPickups = order.Pickups == null || order.Pickups.Count == 0 ? 0 : order.Pickups.SelectMany(p => p.Items).Sum(i => i.Quantity);                    
+                    order.ItemsPickedup = order.OrderSummary.PickedupItemCount;
                     order.ItemsDigitallyFulfilled = order.DigitalPackages == null || order.DigitalPackages.Count == 0 ? 0 : order.DigitalPackages.SelectMany(p => p.Items).Sum(i => i.Quantity);
                 })
                  .AfterMap((dc, order) =>
