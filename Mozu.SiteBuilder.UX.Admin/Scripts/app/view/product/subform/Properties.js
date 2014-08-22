@@ -57,16 +57,17 @@ Ext.define('Taco.view.product.subform.Properties', {
                     }
                 ];
             },
-            'List': function (ptAttribute, values) {
+            'List': function(ptAttribute, values) {
+                var allowMulti = ptAttribute.get('allowMulti');
                 return [
                     {
-                        xtype: ptAttribute.get('allowMulti') ? 'taco.field.multiselect' : 'combobox',
+                        xtype: allowMulti ? 'taco.field.multiselect' : 'combobox',
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('attributeName'),
                         displayField: 'value',
                         valueField: 'id',
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        value: (values && values.length) ? values[0] : null,
+                        value: (values && values.length) ? (allowMulti ? values : values[0]) : null,
                         width: 400,
                         store: Ext.create('Ext.data.Store', {
                             fields: [
