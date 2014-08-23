@@ -60,20 +60,28 @@ Ext.define('Taco.shared.view.field.Image', {
     cls: 'taco-image-field',
     allowMulti: true,
     thumbnailSize: 150,
+    filters: null,
     
     initComponent: function () {
-        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.shared.store.Files');
         
         this.selectedImages = Ext.create('Taco.shared.store.Files', {
+
             listeners: {
                 datachanged: this.onSelectedImagesDataChanged,
                
                 scope:this
             }
-
-            
         });
 
+        if (this.filters) {
+            this.selectedImages.load({
+                filters: this.filters
+                //,callback: function(images) {
+                //}
+            });
+        }
+
+        //this.store = Taco.core.data.StoreManager.getOrCreate('Taco.shared.store.Files');
 
 
         this.emptyDropZone = Ext.widget({
@@ -215,7 +223,7 @@ Ext.define('Taco.shared.view.field.Image', {
         }
         return true;
     },
-  
+
     onViewAfterRender: function () {
         var id = 'ImageFieldDD-' + Ext.id();
 
@@ -369,9 +377,9 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onAfterRender: function () {
-        if (!this.store.data.length && !this.store.isLoading()) {
-            this.store.load();
-        }
+        //if (!this.store.data.length && !this.store.isLoading()) {
+        //    this.store.load();
+        //}
 
         this.emptyDropZoneEl = this.emptyDropZone.getEl();
 
