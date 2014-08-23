@@ -575,11 +575,17 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         // remove the Refund action if the return type is not Refund
         if (record.get('type') === 'Replace') {
             Ext.Array.remove(validActions, 'Refund');
+        } else if (record.get('status') === 'Restocked') {
+            validActions.push('Refund');
         }
 
         // if Refund is a valid action, Refund Complete must also be a valid action
         if (Ext.Array.contains(validActions, 'Refund')) {
             validActions.push('IssueRefund');
+
+            if (record.get('status') === 'Authorized') {
+                Ext.Array.remove(validActions, 'Refund');
+            }
         }
 
         this.returnActions.items.each(function (button) {
