@@ -402,6 +402,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         });
 
+        var trimmedZones = function() {
+            var zones = me.record.get('shippingZones');
+            if (!zones || zones.length === 0) return zones;
+            for (var i = 0; i < zones.length; i++) {
+                zones[i] = zones[i].trim();
+            }
+            return zones;
+        }();
 
         this.shippingZoneList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingZones',
@@ -416,7 +424,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
-            value: this.record.get('shippingZones'),
+            value: trimmedZones,
             //displayField: 'Value',
             displayField: 'code',
             fieldLabel: 'Select Shipping Zones',
