@@ -18,7 +18,7 @@ var ApiContextConstructor = function(conf) {
     }
 },
     mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode'], //, 'bypass-cache'],
-    immutableAccessors = ['tenant', 'site', 'master-catalog'],
+    immutableAccessors = ['tenant', 'site', 'master-catalog', 'catalog'],
     immutableAccessorLength = immutableAccessors.length,
     allAccessors = mutableAccessors.concat(immutableAccessors),
     allAccessorsLength = allAccessors.length,

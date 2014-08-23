@@ -10,6 +10,7 @@ define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
     var headers = apiConfig.headers,
         api = Mozu.Tenant(headers['x-vol-tenant'])
              .MasterCatalog(headers['x-vol-master-catalog'])
+             .Catalog(headers['x-vol-catalog'])
              .Site(headers['x-vol-site'])
              .AppClaims(headers['x-vol-app-claims'])
              .UserClaims(headers['x-vol-user-claims'])

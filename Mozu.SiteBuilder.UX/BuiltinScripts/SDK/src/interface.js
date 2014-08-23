@@ -18,8 +18,8 @@ var utils = require('./utils');
 var ApiReference = require('./reference');
 var ApiObject = require('./object');
 
-var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).",
-    requiredContextValues = ['Tenant', 'MasterCatalog', 'Site'];
+var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Catalog(catalogId).Site(siteId).",
+    requiredContextValues = ['Tenant', 'MasterCatalog', 'Site', 'Catalog'];
 var ApiInterfaceConstructor = function(context) {
     for (var i = 0, len = requiredContextValues.length; i < len; i++) {
         if (context[requiredContextValues[i]]() === undefined) throw new ReferenceError(errorMessage.split('{0}').join(requiredContextValues[i]));
