@@ -54,6 +54,8 @@ Ext.define('Taco.view.theme.ThemeView', {
                               /*  '<a class="action-addons" href="#">Addons</a>'      ,*/
                                 '<tpl if="!values.data.isSelected">',
                                     '<a class="action-apply" href="#">Apply</a>',
+                                '<tpl else>',
+                                    '<a class="action-remove" href="#">Remove</a>',
                                 '</tpl>',
                             '</li>',
                         '</ul>',
@@ -133,6 +135,25 @@ Ext.define('Taco.view.theme.ThemeView', {
 
                     this.store.sync();
                 }
+
+                if (targetEl.hasCls('action-remove')) {
+                    if (model.get("isDesktop")) {
+                        this.removeSelection("isSelectedDesktop", model);
+                    }
+
+                    if (model.get("isMobile")) {
+                        this.removeSelection("isSelectedMobile", model);
+                    }
+
+                    if (model.get("isTablet")) {
+                        this.removeSelection("isSelectedTablet", model);
+                    }
+
+                    this.removeSelection("isSelected", model);
+
+                    this.store.sync();
+                }
+
             },
 
             scope: this
@@ -148,9 +169,12 @@ Ext.define('Taco.view.theme.ThemeView', {
      * @param {Ext.data.Model} model
      */
     swapSelection: function(fieldName, model) {
+        this.removeSelection(fieldName);
+        model.set(fieldName, true);
+    },
+    removeSelection: function(fieldName) {
         // *** Grab the currently selected record (with matching fieldName) and set to false
         var selectedModel = this.store.findRecord(fieldName, true);
         if (selectedModel) selectedModel.set(fieldName, false);
-        model.set(fieldName, true);
     }
 });
