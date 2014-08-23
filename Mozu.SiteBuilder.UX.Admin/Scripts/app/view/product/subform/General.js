@@ -594,12 +594,24 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.on('afterrender', function () {
 
-            
+
             this.imagesConfig = {
                 fieldLabel: 'Product Image',
                 name: 'productImages',
                 xtype: 'taco.imagefield',
                 width: classDef.getBufferedWidth(),
+                filters: function () {
+                    var existingImages = me.record.get('productImages'),
+                        result = [];
+                    if (!existingImages || existingImages.length === 0) return null;
+                    Ext.Array.each(existingImages, function(img) {
+                        result.push({
+                            property: 'id',
+                            value: img.cmsId
+                        });
+                    });
+                    return result;
+                }()
             };
 
             this.priceOverRideConfig = {
