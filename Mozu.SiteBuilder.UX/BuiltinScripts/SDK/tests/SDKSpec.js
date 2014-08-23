@@ -168,10 +168,11 @@
     });
     
     describe("ApiInterface object", function () {
-        var completeContext = Mozu.Tenant(30001).MasterCatalog(1).Site(30002);
-        var noTenantContext = Mozu.MasterCatalog(1).Site(40000);
-        var noSiteContext = Mozu.Tenant(30000).MasterCatalog(1);
+        var completeContext = Mozu.Tenant(30001).MasterCatalog(1).Catalog(1).Site(30002);
+        var noTenantContext = Mozu.MasterCatalog(1).Catalog(1).Site(40000);
+        var noSiteContext = Mozu.Tenant(30000).MasterCatalog(1).Catalog(1);
         var noMasterCatalogContext = Mozu.Tenant(30000).Site(1);
+        var noCatalogContext = Mozu.Tenant(30000).MasterCatalog(1).Site(40000);
         //var noHostContext = Mozu.Tenant(4000).MasterCatalog(1).Site(2);
 
         it("should be returned by the 'api' method of a complete ApiContext", function () {
@@ -182,6 +183,7 @@
             expect(function () { return noTenantContext.api(); }).to.throw(/no tenant/i);
             expect(function () { return noSiteContext.api(); }).to.throw(/no site/i);
             expect(function () { return noMasterCatalogContext.api(); }).to.throw(/no mastercatalog/i);
+            expect(function () { return noCatalogContext.api(); }).to.throw(/no catalog/i);
         });
 
         var api = completeContext.api();

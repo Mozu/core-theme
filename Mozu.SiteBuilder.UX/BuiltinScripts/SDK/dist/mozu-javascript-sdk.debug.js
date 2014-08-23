@@ -1,11 +1,2493 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-08-19
+ * Mozu JavaScript SDK - v0.3.0 - 2014-08-23
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
  */
 
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.MozuSDK=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+
+
+//# sourceUrl=src/collection.js
+
+// BEGIN OBJECT
+
+var utils = require('./utils');
+var ApiObject = require('./object');
+
+    function convertItem(raw) {
+        return ApiObject.create(this.itemType, raw, this.api);
+    }
+
+    var ApiCollectionConstructor = function (type, data, api, itemType) {
+        ApiObject.apply(this, arguments);
+        this.itemType = itemType;
+    };
+
+    ApiCollectionConstructor.prototype = utils.extend(new ApiObject(), {
+        isCollection: true,
+        constructor: ApiCollectionConstructor,
+        postconstruct: function(type, data, api, itemType) {
+            var self = this;
+            if (!data) data = {};
+            if (!data.items) this.prop("items", data.items = []);
+            if (data.items.length > 0) this.add(data.items, true);
+            this.on('sync', function(raw) {
+                if (raw && raw.items) {
+                    self.removeAll();
+                    self.add(raw.items);
+                }
+            });
+        },
+        add: function (newItems, /*private*/ noUpdate) {
+            if (utils.getType(newItems) !== "Array") newItems = [newItems];
+            Array.prototype.push.apply(this, utils.map(newItems, convertItem, this));
+            if (!noUpdate) {
+                var rawItems = this.prop("items");
+                this.prop("items", rawItems.concat(newItems));
+            }
+        },
+        remove: function (indexOrItem) {
+            var index = indexOrItem;
+            if (typeof indexOrItem !== "number") {
+                index = utils.indexOf(this, indexOrItem);
+            }
+            Array.prototype.splice.call(this, index, 1);
+        },
+        replace: function(newItems, noUpdate) {
+            Array.prototype.splice.apply(this, [0, this.length].concat(utils.map(newItems, convertItem, this)));
+            if (!noUpdate) {
+                this.prop("items", newItems);
+            }
+        },
+        removeAll: function(noUpdate) {
+            Array.prototype.splice.call(this, 0, this.length);
+            if (!noUpdate) {
+                this.prop("items", []);
+            }
+        },
+        getIndex: function (newIndex) {
+            var index = this.currentIndex;
+            if (!index && index !== 0) index = this.prop("startIndex");
+            if (!index && index !== 0) index = 0;
+            return index;
+        },
+        setIndex: function(newIndex, req) {
+            var me = this;
+            var p = this.get(utils.extend(req, { startIndex: newIndex}));
+            p.then(function () {
+                me.currentIndex = newIndex;
+            });
+            return p;
+        },
+        firstPage: function(req) {
+            var currentIndex = this.getIndex();
+            if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
+            return this.setIndex(0, req);
+        },
+        prevPage: function (req) {
+            var currentIndex = this.getIndex(),
+                pageSize = this.prop("pageSize"),
+                newIndex = Math.max(currentIndex - pageSize, 0);
+            if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
+            return this.setIndex(newIndex, req);
+        },
+        nextPage: function (req) {
+            var currentIndex = this.getIndex(),
+                pageSize = this.prop("pageSize"),
+                newIndex = currentIndex + pageSize;
+            if (!(newIndex < this.prop("totalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
+            return this.setIndex(newIndex, req);
+        },
+        lastPage: function (req) {
+            var totalCount = this.prop("totalCount"),
+                pageSize = this.prop("pageSize"),
+                newIndex = totalCount - pageSize;
+            if (newIndex <= 0) throw "This " + this.type + " collection has only one page.";
+            return this.setIndex(newIndex, req);
+        }
+    });
+
+    ApiCollectionConstructor.types = {
+        locations: require('./types/locations')
+    };
+    ApiCollectionConstructor.hydratedTypes = {};
+
+    ApiCollectionConstructor.getHydratedType = ApiObject.getHydratedType;
+
+    ApiCollectionConstructor.create = function (type, data, api, itemType) {
+        return new (type in this.types ? this.types[type] : this)(type, data, api, itemType);
+    };
+
+    ApiCollectionConstructor.create = function (typeName, rawJSON, api, itemType) {
+        var ApiCollectionType = this.getHydratedType(typeName);
+
+        return new ApiCollectionType(typeName, rawJSON, api, itemType);
+    };
+
+    module.exports = ApiCollectionConstructor;
+
+// END OBJECT
+
+/***********/
+},{"./object":10,"./types/locations":16,"./utils":23}],2:[function(require,module,exports){
+
+
+//# sourceUrl=src/constants/default.js
+
+module.exports = {
+    DEFAULT_WISHLIST_NAME: 'my_wishlist',
+    PAYMENT_STATUSES: {
+        NEW: "New"
+    },
+    PAYMENT_ACTIONS: {
+        VOID: "VoidPayment"
+    },
+    ORDER_STATUSES: {
+        ABANDONED: "Abandoned",
+        ACCEPTED: "Accepted",
+        CANCELLED: "Cancelled",
+        COMPLETED: "Completed",
+        CREATED: "Created",
+        PENDING_REVIEW: "PendingReview",
+        PROCESSING: "Processing",
+        SUBMITTED: "Submitted",
+        VALIDATED: "Validated"
+    },
+    ORDER_ACTIONS: {
+        CREATE_ORDER: "CreateOrder",
+        SUBMIT_ORDER: "SubmitOrder",
+        ACCEPT_ORDER: "AcceptOrder",
+        VALIDATE_ORDER: "ValidateOrder",
+        SET_ORDER_AS_PROCESSING: "SetOrderAsProcessing",
+        COMPLETE_ORDER: "CompleteOrder",
+        CANCEL_ORDER: "CancelOrder",
+        REOPEN_ORDER: "ReopenOrder"
+    },
+    FULFILLMENT_METHODS: {
+        SHIP: "Ship",
+        PICKUP: "Pickup",
+        DIGITAL: "Digital"
+    }
+};
+
+},{}],3:[function(require,module,exports){
+
+
+//# sourceUrl=src/context.js
+
+// BEGIN CONTEXT
+/**
+ * @class
+ * @classdesc The context object helps you configure the SDK to connect to a particular Mozu site. Supply it with tenant, site, mastercatalog, currency code, locale code, app claims, and user claims, and  it will produce for you an ApiInterface object.
+ */
+
+var ApiInterface = require('./interface');
+var ApiReference = require('./reference');
+var utils = require('./utils');
+
+/**
+ * @private
+ */
+var ApiContextConstructor = function(conf) {
+    utils.extend(this, conf);
+    if (ApiContextConstructor.__debug__ === true) {
+        ApiContextConstructor.__debug__ = require('when/monitor/console');
+    }
+},
+    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode'], //, 'bypass-cache'],
+    immutableAccessors = ['tenant', 'site', 'master-catalog', 'catalog'],
+    immutableAccessorLength = immutableAccessors.length,
+    allAccessors = mutableAccessors.concat(immutableAccessors),
+    allAccessorsLength = allAccessors.length,
+    j;
+
+var setImmutableAccessor = function(propName) {
+    ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function(val) {
+        if (val === undefined) return this[propName];
+        var newConf = this.asObject();
+        newConf[propName] = val;
+        return new ApiContextConstructor(newConf);
+    };
+};
+
+var setMutableAccessor = function(propName) {
+    ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function(val) {
+        if (val === undefined) return this[propName];
+        this[propName] = val;
+        return this;
+    };
+};
+
+ApiContextConstructor.prototype = {
+    constructor: ApiContextConstructor,
+
+    /**
+     * Gets or creates the `ApiInterface` for this context that will do all the real work.
+     * Call this method only when you've built a complete context including tenant, site, master catalog,
+     * locale, currency code, app claims, and user claims. Assign its return value to a local variable.
+     * You'll use this interface object to create your `ApiObject`s and do API requests!
+     *
+     * @public
+     * @memberof ApiContext#
+     * @returns {ApiInterface} The single `ApiInterface` for this context.
+     * @throws {ReferenceError} if the context is not yet complete.
+     */
+    api: function() {
+        return this._apiInstance || (this._apiInstance = new ApiInterface(this));
+    },
+    Store: function(conf) {
+        return new ApiContextConstructor(conf);
+    },
+    asObject: function(prefix) {
+        var obj = {};
+        prefix = prefix || '';
+        for (var i = 0; i < allAccessorsLength; i++) {
+            obj[prefix + allAccessors[i]] = this[allAccessors[i]];
+        }
+        return obj;
+    },
+    setServiceUrls: function(urls) {
+        ApiReference.urls = urls;
+    },
+    getServiceUrls: function() {
+        return utils.extend({}, ApiReference.urls);
+    },
+    currency: 'usd',
+    locale: 'en-US'
+};
+
+for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
+for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+
+module.exports = ApiContextConstructor;
+
+// END CONTEXT
+
+/********/
+},{"./interface":8,"./reference":11,"./utils":23,"when/monitor/console":29}],4:[function(require,module,exports){
+
+
+//# sourceUrl=src/errors.js
+
+// BEGIN ERRORS
+var utils = require('./utils');
+
+function errorToString() {
+    return this.name + ": " + this.message;
+}
+
+var errorTypes = {};
+
+var errors = {
+    register: function(code, message) {
+        if (typeof code === "object") {
+            for (var i in code) {
+                errors.register(i, code[i]);
+            }
+        } else {
+            errorTypes[code] = {
+                code: code,
+                message: message
+            };
+        }
+    },
+    create: function(code) {
+        var msg = utils.formatString.apply(utils, [errorTypes[code].message].concat(utils.slice(arguments, 1)));
+        return {
+            name: code,
+            level: 1,
+            message: msg,
+            htmlMessage: msg,
+            toString: errorToString
+        };
+    },
+    throwOnObject: function(obj, code) {
+        var error = errors.create.apply(errors, [code].concat(utils.slice(arguments, 2)));
+        obj.fire('error', error);
+        obj.api.fire('error', error, obj);
+        throw error;
+    },
+    passFrom: function(from, to) {
+        from.on('error', function() {
+            to.fire.apply(to, ['error'].concat(utils.slice(arguments)));
+        });
+    }
+};
+
+module.exports = errors;
+// END ERRORS
+},{"./utils":23}],5:[function(require,module,exports){
+
+
+//# sourceUrl=src/iframexhr.js
+
+// BEGIN IFRAMEXHR
+var utils = require('./utils');
+module.exports = (function (window, document, undefined) {
+
+    var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1,
+        firefoxVersion = (function () {
+            var ua = navigator.userAgent,
+                re = /Firefox\/(\d+)/i,
+                match = ua.match(re),
+                versionStr = parseInt(match ? (match[1] || false) : false),
+                version = isNaN(versionStr) ? false : versionStr;
+
+            return version;
+        }()),
+        cacheBust = 1,
+        hashRE = /^#?\d+&/,
+        originRE = /^https?:\/\/[^/]+/i,
+        validateOrigin = function (ixhr, origin) {
+            return ixhr.frameOrigin === origin.toLowerCase().match(originRE)[0];
+        },
+        messageDelimiter = '|||||',
+        messageMethods = hasPostMessage ? {
+            listen: function () {
+                var self = this;
+                this.messageListener = function (e) {
+                    if (!e) e = window.event;
+                    if (e && e.data === "process-tick") return; // browserify clogs up this channel
+                    if (!validateOrigin(self, e.origin)) throw new Error("Origin " + e.origin + " does not match required origin " + self.frameOrigin);
+                    if (e.data === "ready") return self.postMessage();
+                    self.update(e.data);
+                };
+                window.addEventListener('message', this.messageListener, false);
+            },
+            postMessage: function () {
+                return this.getFrameWindow().postMessage(this.getMessage(), this.frameOrigin);
+            },
+            detachListeners: function () {
+                window.removeEventListener('message', this.messageListener, false);
+            }
+        } : {
+            listen: function () {
+                var self = this;
+                this.interval = setInterval(function () {
+                    var data;
+                    self.hash = document.location.hash;
+                    data = self.hash.replace(hashRE, '');
+                    if (self.hash !== self.lastHash) {
+                        if (data === "ready") return self.postMessage();
+
+                        if (hashRE.test(self.hash)) {
+                            self.lastHash = self.hash;
+                            self.update(data);
+                        }
+                    }
+                }, 100);
+            },
+            postMessage: function (message) {
+                this.getFrameWindow().location = this.frameUrl.replace(/#.*$/, '') + '#' + (+new Date) + (cacheBust++) + '&' + this.getMessage();
+            },
+            detachListeners: function () {
+                clearInterval(this.interval);
+                this.interval = null;
+            }
+        };
+
+    var IframeXMLHttpRequest = function (frameUrl) {
+        var frameMatch = frameUrl.match(originRE);
+        if (!frameMatch || !frameMatch[0]) throw new Error(frameUrl + " does not seem to have a valid origin.");
+        this.frameOrigin = frameMatch[0].toLowerCase();
+        this.frameUrl = frameUrl + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + '//' + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter);
+        this.headers = {};
+    };
+
+    utils.extend(IframeXMLHttpRequest.prototype, messageMethods, {
+        readyState: 0,
+        status: 0,
+        open: function (method, url) {
+            this.readyState = 1;
+            this.method = method;
+            this.url = url;
+        },
+        send: function (data) {
+            this.messageBody = data;
+            this.listen();
+            this.createIframe();
+        },
+        createIframe: function () {
+            this.iframe = document.createElement('iframe');
+            this.iframe.style.position = 'absolute';
+            this.iframe.style.left = '-9999px';
+            this.iframe.style.width = '1px';
+            this.iframe.style.height = '1px';
+            this.iframe.src = this.frameUrl;
+            document.body.appendChild(this.iframe);
+        },
+        setRequestHeader: function (key, value) {
+            this.headers[key] = value;
+        },
+        getMessage: function () {
+            var msg = [this.url, this.messageBody, this.method];
+            for (var header in this.headers) {
+                msg.push(header, this.headers[header]);
+            }
+            return msg.join(messageDelimiter);
+        },
+        onreadystatechange: function () { },
+        getFrameWindow: function () {
+            return this.iframe.contentWindow || this.iframe;
+        },
+        cleanup: function () {
+            var self = this;
+            if (!self.destroyed) setTimeout(function () {
+                self.detachListeners();
+                self.iframe.parentNode && self.iframe.parentNode.removeChild(self.iframe);
+            }, 250);
+            self.destroyed = true;
+        },
+        update: function(data) {
+            data = data.split(messageDelimiter);
+            this.readyState = parseInt(data[0]) || 0;
+            this.status = parseInt(data[1]) || 0;
+            this.responseText = data[2];
+            this.onreadystatechange();
+            if (this.readyState === 4) this.cleanup();
+        },
+        abort: function () {
+            this.status = 0;
+            this.readyState = 0;
+            this.cleanup();
+        }
+    });
+
+    return IframeXMLHttpRequest;
+
+}(window, document));
+// END IFRAMEXHR
+},{"./utils":23}],6:[function(require,module,exports){
+
+
+//# sourceUrl=src/init.js
+
+// BEGIN INIT
+var ApiContext = require('./context');
+var initialGlobalContext = new ApiContext();
+module.exports = initialGlobalContext;
+// END INIT
+},{"./context":3}],7:[function(require,module,exports){
+
+
+//# sourceUrl=src/init_debug.js
+
+// EXPOSE DEBUGGING STUFF
+var _init = require('./init');
+
+_init.Utils = require('./utils');
+_init.ApiContext = require('./context');
+_init.ApiInterface = require('./interface');
+_init.ApiObject = require('./object');
+_init.ApiCollection = require('./collection');
+_init.ApiReference = require('./reference');
+
+_init._expose = function (r) {
+    _init.lastResult = r;
+    console.log(r && r.inspect ? r.inspect() : r);
+};
+
+_init.ApiObject.prototype.inspect = function () {
+    return JSON.stringify(this.data, true, 2);
+};
+
+_init.ApiContext.__debug__ = true;
+
+module.exports = _init;
+},{"./collection":1,"./context":3,"./init":6,"./interface":8,"./object":10,"./reference":11,"./utils":23}],8:[function(require,module,exports){
+
+
+//# sourceUrl=src/interface.js
+
+﻿/**
+ * @external Promise
+ * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
+ */
+
+/**
+ * Attach handlers to and transform the promise.
+ * @function external:Promise#then
+ * @returns external:Promise#
+ */
+
+// BEGIN INTERFACE
+/**
+ * @class
+ * @classdesc The interface object makes requests to the API and returns API object. You can use it to make raw requests using the ApiInterface#request method, but you're more likely to use the ApiInterface#action method to create a external:Promise# that returns an ApiObject#.
+ */
+var utils = require('./utils');
+var ApiReference = require('./reference');
+var ApiObject = require('./object');
+
+var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Catalog(catalogId).Site(siteId).",
+    requiredContextValues = ['Tenant', 'MasterCatalog', 'Site', 'Catalog'];
+var ApiInterfaceConstructor = function(context) {
+    for (var i = 0, len = requiredContextValues.length; i < len; i++) {
+        if (context[requiredContextValues[i]]() === undefined) throw new ReferenceError(errorMessage.split('{0}').join(requiredContextValues[i]));
+    }
+    this.context = context;
+};
+
+ApiInterfaceConstructor.prototype = {
+    constructor: ApiInterfaceConstructor,
+    /**
+     * @public
+     * @memberof ApiInterface#
+     * @returns {external:Promise#}
+     */
+    request: function(method, requestConf, conf) {
+        var me = this,
+            url = typeof requestConf === "string" ? requestConf : requestConf.url;
+        if (requestConf.verb)
+            method = requestConf.verb;
+
+        var deferred = me.defer();
+
+        var data;
+        if (requestConf.overridePostData) {
+            data = requestConf.overridePostData;
+        } else if (conf && !requestConf.noBody) {
+            data = conf.data || conf;
+        }
+
+        var xhr;
+        var triedRefresh = false;
+        var makeRequest = function () {
+            var contextHeaders = me.getRequestHeaders();
+            xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
+            // update context with response headers
+            me.fire('success', rawJSON, xhr, requestConf);
+            deferred.resolve(rawJSON, xhr);
+            }, function (error) {
+
+                var failRequest = function () {
+            deferred.reject(error, xhr, url);
+                }
+
+                if (error && error.errorCode === "INVALID_ACCESS_TOKEN" && !triedRefresh) {
+                    me.refresh().then(makeRequest, failRequest);
+                    triedRefresh = true;
+                } else {
+                    failRequest();
+                }
+        }, requestConf.iframeTransportUrl);
+        };
+
+        var cancelled = false,
+            canceller = function() {
+                cancelled = true;
+                xhr.abort();
+                deferred.reject("Request cancelled.")
+            };
+
+        makeRequest();
+        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
+
+        deferred.promise.otherwise(function(error) {
+            var res;
+            if (!cancelled) {
+                me.fire('error', error, xhr, requestConf);
+                throw error;
+            }
+        });
+
+
+        return deferred.promise;
+    },
+    refresh: function() {
+        var me = this,
+            updateClaimsHeaders = function(json, xhr, conf) {
+                if (conf === '/token/refresh') {
+                    me.context.AppClaims(xhr.getResponseHeader('x-vol-app-claims'));
+                    me.context.UserClaims(xhr.getResponseHeader('x-vol-user-claims'));
+                }
+            };
+        me.on('success', updateClaimsHeaders);
+        return me.request('POST', '/token/refresh').ensure(function () {
+            me.off('success', updateClaimsHeaders);
+            return null;
+        });
+    },
+    /**
+     * @public
+     * @memberof ApiInterface#
+     * @returns external:Promise#
+     */
+    action: function(instanceOrType, actionName, data) {
+        var me = this,
+            obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
+            type = obj.type;
+
+        obj.fire('action', actionName, data);
+        me.fire('action', obj, actionName, data);
+        var requestConf = ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
+
+        if ((actionName == "update" || actionName == "create") && !data) {
+            data = obj.data;
+        }
+
+        return me.request(ApiReference.basicOps[actionName], requestConf, data).then(function(rawJSON) {
+            if (requestConf.returnType) {
+                var returnObj = ApiObject.create(requestConf.returnType, rawJSON, me);
+                obj.fire('spawn', returnObj);
+                me.fire('spawn', returnObj, obj);
+                return returnObj;
+            } else {
+                if (rawJSON || rawJSON === 0 || rawJSON === false)
+                    obj.data = utils.clone(rawJSON);
+                delete obj.unsynced;
+                obj.fire('sync', rawJSON, obj.data);
+                me.fire('sync', obj, rawJSON, obj.data);
+                return obj;
+            }
+        }, function(errorJSON) {
+            if (!requestConf.suppressErrors) {
+            obj.fire('error', errorJSON);
+            me.fire('error', errorJSON, obj);
+            }
+            throw errorJSON;
+        });
+    },
+    getActionConfig: function(instanceOrType, actionName, data) {
+        var me = this,
+            obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
+            type = obj.type;
+        return ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
+    },
+    getRequestHeaders: function() {
+        return this.context.asObject("x-vol-");
+    },
+    all: function() {
+        return utils.when.join.apply(utils.when, arguments);
+    },
+    steps: function() {
+        var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
+        return utils.pipeline(Array.prototype.slice.call(args));
+    },
+    defer: function() {
+        return utils.when.defer();
+    },
+    getAvailableActionsFor: function(type) {
+        return ApiReference.getActionsFor(type);
+    }
+};
+var setOp = function(fnName) {
+    ApiInterfaceConstructor.prototype[fnName] = function(type, conf, isRemote) {
+        return this.action(type, fnName, conf, isRemote);
+    };
+};
+for (var i in ApiReference.basicOps) {
+    if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
+}
+
+// add createSync method for a different style of development
+ApiInterfaceConstructor.prototype.createSync = function(type, conf) {
+    var newApiObject = ApiObject.create(type, conf, this);
+    newApiObject.unsynced = true;
+    this.fire('spawn', newApiObject);
+    return newApiObject;
+};
+
+utils.addEvents(ApiInterfaceConstructor);
+
+module.exports = ApiInterfaceConstructor;
+
+// END INTERFACE
+
+/*********/
+},{"./object":10,"./reference":11,"./utils":23}],9:[function(require,module,exports){
+module.exports=
+
+//# sourceUrl=src/methods.json
+
+{
+    "document": {
+        "template": "{+documentListService}{listName}/documents/{id}{?_*}",
+        "defaultParams": {
+            "listName": "pages"
+        },
+        "shortcutParam": "id"
+    },
+    "documentList": {
+        "template": "{+documentListService}{listName}/documents{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "listName": "pages",
+            "startIndex": 0,
+            "pageSize": 15
+        },
+        "collectionOf": "document"
+    },
+    "documentView": {
+        "template": "{+documentListService}{listName}/views/{viewName}/documents{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "listName": "pages",
+            "viewName": "default",
+            "startIndex": 0,
+            "pageSize": 15
+        },
+        "collectionOf": "document"
+    },
+    "entityList": {
+        "template": "{+entityListService}{listName}/entities{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "startIndex": 0,
+            "pageSize": 15
+        },
+        "collectionOf": "entity"
+    },
+    "entityView": {
+        "template": "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "startIndex": 0,
+            "viewName": "default",
+            "pageSize": 15
+        },
+        "collectionOf": "entity"
+    },
+    "entity": {
+        "template": "{+entityListService}{listName}/entities/{id}{?_*}",
+        "shortcutParam": "listName",
+
+    },
+    "entityContainer": {
+        "template": "{+entityListService}{listName}/entityContainers/{id}{?_*}",
+        "shortcutParam": "listName"
+    },
+    "entityContainerList": {
+        "template": "{+entityListService}{listName}/entityContainers{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "startIndex": 0,
+            "pageSize": 15
+        },
+        "collectionOf": "entityContainer"
+    },
+    "entityContainerView": {
+        "template": "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "startIndex": 0,
+            "viewName": "default",
+            "pageSize": 15
+        },
+        "collectionOf": "entityContainer"
+    },
+
+    "products": {
+        "template": "{+productService}{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "startIndex": 0,
+            "pageSize": 15
+        },
+        "collectionOf": "product"
+    },
+    "categories": {
+        "template": "{+categoryService}{?_*}",
+        "shortcutParam": "filter",
+        "defaultParams": {
+            "startIndex": 0,
+            "pageSize": 15
+        },
+        "collectionOf": "category"
+    },
+    "category": {
+        "template": "{+categoryService}{id}{?allowInactive}",
+        "shortcutParam": "id",
+        "defaultParams": {
+            "allowInactive": false
+        }
+    },
+    "categorytree": {
+        "template": "{+categoryService}tree",
+        "returnType": "json"
+    },
+    "search": {
+        "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}",
+        "shortcutParam": "query",
+        "defaultParams": {
+            "startIndex": 0,
+            "query": "*:*",
+            "pageSize": 15
+        },
+        "collectionOf": "product"
+    },
+    "suggest": {
+        "template": "{+searchService}suggest{?_*}",
+        "shortcutParam": "query"
+    },
+    "customers": {
+        "collectionOf": "customer"
+    },
+    "orders": {
+        "template": "{+orderService}{?_*}",
+        "defaultParams": {
+            "filter": "Status ne Created and Status ne Validated and Status ne Pending",
+            "startIndex": 0,
+            "pageSize": 5
+        },
+        "collectionOf": "order"
+    },
+    "product": {
+        "get": {
+            "template": "{+productService}{productCode}?{&allowInactive*}",
+            "shortcutParam": "productCode",
+            "defaultParams": {
+                "allowInactive": false
+            }
+        },
+        "configure": {
+            "verb": "POST",
+            "template": "{+productService}{productCode}/configure{?includeOptionDetails}",
+            "defaultParams": {
+                "includeOptionDetails": true
+            },
+            "includeSelf": true
+        },
+        "add-to-cart": {
+            "verb": "POST",
+            "includeSelf": {
+                "asProperty": "product"
+            },
+            "overridePostData": [
+                "product",
+                "quantity",
+                "fulfillmentLocationCode",
+                "fulfillmentMethod"
+            ],
+            "shortcutParam": "quantity",
+            "returnType": "cartitem",
+            "template": "{+cartService}current/items/"
+        },
+        "get-inventory": {
+            "template": "{+productService}{productCode}/locationinventory{?locationCodes}",
+            "includeSelf": true,
+            "shortcutParam": "locationcodes",
+            "returnType": "string"
+        }
+    },
+    "location": {
+        "get": {
+            "template": "{+locationService}locationUsageTypes/SP/locations/{code}",
+            "shortcutParam": "code"
+        }
+    },
+    "locations": {
+        "defaultParams": {
+            "pageSize": 15
+        },
+        "collectionOf": "location",
+        "get": {
+            "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter}"
+        },
+        "get-by-lat-long": {
+            "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize}"
+        }
+    },
+    "cartsummary": "{+cartService}summary",
+    "cart": {
+        "defaults": {
+            "template": "{+cartService}current"
+        },
+        "add-product": {
+            "verb": "POST",
+            "returnType": "cartitem",
+            "template": "{+cartService}current/items/"
+        },
+        "empty": {
+            "verb": "DELETE",
+            "template": "{+cartService}current/items/"
+        },
+        "checkout": {
+            "verb": "POST",
+            "template": "{+orderService}?cartId={id}",
+            "returnType": "order",
+            "noBody": true,
+            "includeSelf": true
+        }
+    },
+    "cartitem": {
+        "defaults": {
+            "template": "{+cartService}current/items/{id}",
+            "shortcutParam": "id"
+        },
+        "update-quantity": {
+            "verb": "PUT",
+            "template": "{+cartService}current/items{/id,quantity}",
+            "shortcutParam": "quantity",
+            "includeSelf": true,
+            "noBody": true
+        }
+    },
+    "customer": {
+        "template": "{+customerService}{id}",
+        "shortcutParam": "id",
+        "includeSelf": true,
+        "create": {
+            "verb": "POST",
+            "template": "{+customerService}add-account-and-login",
+            "returnType": "login"
+        },
+        "create-storefront": {
+            "useIframeTransport": "{+storefrontUserService}../../receiver",
+            "verb": "POST",
+            "template": "{+storefrontUserService}create",
+            "returnType": "login"
+        },
+        "login": {
+            "useIframeTransport": "{+customerService}../../receiver",
+            "verb": "POST",
+            "template": "{+customerService}../authtickets",
+            "returnType": "login"
+        },
+        "login-storefront": {
+            "useIframeTransport": "{+storefrontUserService}../../receiver",
+            "verb": "POST",
+            "template": "{+storefrontUserService}login",
+            "returnType": "login"
+        },
+        "update": {
+            "verb": "PUT",
+            "template": "{+customerService}{id}",
+            "includeSelf": true
+        },
+        "reset-password": {
+            "verb": "POST",
+            "template": "{+customerService}reset-password",
+            "returnType": "string"
+        },
+        "reset-password-storefront": {
+            "useIframeTransport": "{+storefrontUserService}../../receiver",
+            "verb": "POST",
+            "template": "{+storefrontUserService}resetpassword",
+            "returnType": "string"
+        },
+        "change-password": {
+            "verb": "POST",
+            "template": "{+customerService}{id}/change-password",
+            "includeSelf": true
+        },
+        "get-orders": {
+            "template": "{+orderService}?filter=OrderNumber ne null",
+            "includeSelf": true,
+            "returnType": "orders"
+        },
+        "get-cards": {
+            "template": "{+customerService}{id}/cards",
+            "includeSelf": true,
+            "returnType": "accountcards"
+        },
+        "add-card": {
+            "verb": "POST",
+            "template": "{+customerService}{customer.id}/cards",
+            "includeSelf": {
+                "asProperty": "customer"
+            },
+            "returnType": "accountcard"
+        },
+        "update-card": {
+            "verb": "PUT",
+            "template": "{+customerService}{customer.id}/cards/{id}",
+            "includeSelf": {
+                "asProperty": "customer"
+            },
+            "returnType": "accountcard"
+        },
+        "delete-card": {
+            "verb": "DELETE",
+            "template": "{+customerService}{customer.id}/cards/{id}",
+            "shortcutParam": "id",
+            "includeSelf": {
+                "asProperty": "customer"
+            },
+            "returnType": "accountcard"
+        },
+        "add-contact": {
+            "verb": "POST",
+            "template": "{+customerService}{id}/contacts",
+            "includeSelf": true,
+            "returnType": "contact"
+        },
+        "get-contacts": {
+            "template": "{+customerService}{id}/contacts",
+            "includeSelf": true,
+            "returnType": "contacts"
+        },
+        "delete-contact": {
+            "verb": "DELETE",
+            "template": "{+customerService}{customer.id}/contacts/{id}",
+            "shortcutParam": "id",
+            "includeSelf": {
+                "asProperty": "customer"
+            },
+            "returnType": "contact"
+        },
+        "get-credits": {
+            "template": "{+creditService}",
+            "returnType": "storecredits"
+        },
+        "get-credit": {
+            "verb": "GET",
+            "template": "{+creditService}/{id}",
+            "includeSelf": true,
+            "returnType": "storecredit"
+        },
+    },
+    "storecredit": {
+        "associate-to-shopper": {
+            "verb": "PUT",
+            "template": "{+creditService}{code}/associate-to-shopper",
+            "includeSelf": true
+        },
+        "get-credit": {
+            "verb": "GET",
+            "template": "{+creditService}{code}",
+            "includeSelf": true,
+            "returnType": "storecredit"
+        }
+    },
+    "storecredits": {
+        "template": "{+creditService}",
+        "collectionOf": "storecredit"
+    },
+    "contact": {
+        "template": "{+customerService}{accountId}/contacts/{id}",
+        "includeSelf": true
+    },
+    "contacts": {
+        "collectionOf": "contact"
+    },
+    "login": "{+userService}login",
+    "address": {
+        "validate-address": {
+            "verb": "POST",
+            "template": "{+addressValidationService}",
+            "includeSelf": {
+                "asProperty": "address"
+            },
+            "overridePostData": true,
+            "returnType": "address"
+        },
+        "validate-address-lenient": {
+            "verb": "POST",
+            "template": "{+addressValidationService}",
+            "includeSelf": {
+                "asProperty": "address"
+            },
+            "overridePostData": true,
+            "returnType": "address",
+            "suppressErrors": true
+        }
+    },
+    "order": {
+        "template": "{+orderService}{id}",
+        "includeSelf": true,
+        "create": {
+            "template": "{+orderService}{?cartId*}",
+            "shortcutParam": "cartId",
+            "noBody": true
+        },
+        "update-shipping-info": {
+            "template": "{+orderService}{id}/fulfillmentinfo",
+            "verb": "PUT",
+            "returnType": "shipment",
+            "includeSelf": true
+        },
+        "get-shipping-methods": {
+            "template": "{+orderService}{id}/shipments/methods",
+            "returnType": "shippingmethods"
+        },
+        "set-user-id": {
+            "verb": "PUT",
+            "template": "{+orderService}{id}/users",
+            "noBody": true,
+            "includeSelf": true,
+            "returnType": "user"
+        },
+        "create-payment": {
+            "verb": "POST",
+            "template": "{+orderService}{id}/payments/actions",
+            "includeSelf": true
+        },
+        "perform-payment-action": {
+            "verb": "POST",
+            "template": "{+orderService}{id}/payments/{paymentId}/actions",
+            "includeSelf": true,
+            "shortcutParam": "paymentId",
+            "returnType": "string"
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+orderService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+orderService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+orderService}{id}/coupons",
+            "includeSelf": true
+        },
+        "get-available-actions": {
+            "template": "{+orderService}{id}/actions",
+            "includeSelf": true,
+            "returnType": "orderactions"
+        },
+        "perform-order-action": {
+            "verb": "POST",
+            "template": "{+orderService}{id}/actions",
+            "shortcutParam": "actionName",
+            "overridePostData": [
+                "actionName"
+            ],
+            "includeSelf": true
+        },
+        "add-order-note": {
+            "verb": "POST",
+            "template": "{+orderService}{id}/notes",
+            "includeSelf": true,
+            "returnType": "ordernote"
+        }
+    },
+    "rma": {
+        "create": {
+            "verb": "POST",
+            "template": "{+returnService}"
+        }
+    },
+    "rmas": {
+        "template": "{+returnService}{?_*}",
+        "defaultParams": {
+            "startIndex": 0,
+            "pageSize": 5
+        },
+        "collectionOf": "rma"
+    },
+    "payment": {
+        "create": {
+            "template": "{+orderService}{orderId}/payments/actions",
+            "includeSelf": true
+        }
+    },
+    "accountcard": {
+        "template": "{+customerService}{id}/cards"
+    },
+    "accountcards": {
+        "collectionOf": "accountcard"
+    },
+    "creditcard": {
+        "defaults": {
+            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver.html"
+        },
+        "save": {
+            "verb": "POST",
+            "template": "{+paymentService}",
+            "returnType": "string"
+        },
+        "update": {
+            "verb": "PUT",
+            "template": "{+paymentService}{cardId}",
+            "returnType": "string"
+        },
+        "del": {
+            "verb": "DELETE",
+            "shortcutParam": "cardId",
+            "template": "{+paymentService}{cardId}"
+        }
+    },
+    "creditcards": {
+        "collectionOf": "creditcard"
+    },
+    "ordernote": {
+        "template": "{+orderService}{orderId}/notes/{id}"
+    },
+    "addressschemas": "{+referenceService}addressschemas",
+    "wishlist": {
+        "get": {
+            "template": "{+wishlistService}{id}",
+            "includeSelf": true
+        },
+        "get-by-name": {
+            "template": "{+wishlistService}customers/{customerAccountId}/{name}",
+            "includeSelf": true
+        },
+        "get-default": {
+            "template": "{+wishlistService}customers/{customerAccountId}/my_wishlist",
+            "includeSelf": true
+        },
+        "create-default": {
+            "verb": "POST",
+            "template": "{+wishlistService}",
+            "defaultParams": {
+                "name": "my_wishlist",
+                "typeTag": "default"
+            },
+            "overridePostData": true
+        },
+        "add-item": {
+            "verb": "POST",
+            "template": "{+wishlistService}{id}/items/",
+            "includeSelf": true
+        },
+        "delete-all-items": {
+            "verb": "DELETE",
+            "template": "{+wishlistService}{id}/items/"
+        },
+        "delete-item": {
+            "verb": "DELETE",
+            "template": "{+wishlistService}{id}/items/{itemId}",
+            "includeSelf": true,
+            "shortcutParam": "itemId"
+        },
+        "edit-item": {
+            "verb": "PUT",
+            "template": "{+wishlistService}{id}/items/{itemId}",
+            "includeSelf": true
+        },
+        "add-item-to-cart": {
+            "verb": "POST",
+            "returnType": "cartitem",
+            "template": "{+cartService}current/items/"
+        },
+        "get-items-by-name": {
+            "returnType": "wishlistitems",
+            "template": "{+wishlistService}customers/{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}",
+            "defaultParams": {
+                "sortBy": "UpdateDate asc"
+            },
+            "includeSelf": true
+        }
+    },
+    "wishlists": {
+        "collectionOf": "wishlist"
+    },
+    "instockrequest": {
+        "create": {
+            "useIframeTransport": "{+storefrontUserService}../../receiver",
+            "verb": "POST",
+            "template": "{+inStockNotificationService}"
+        }
+    }
+}
+},{}],10:[function(require,module,exports){
+
+
+//# sourceUrl=src/object.js
+
+// BEGIN OBJECT
+
+var utils = require('./utils');
+var ApiReference;
+var ApiCollection; // lazy loading to prevent circular dep
+
+var ApiObjectConstructor = function(type, data, iapi) {
+    this.data = data || {};
+    this.api = iapi;
+    this.type = type;
+};
+
+ApiObjectConstructor.prototype = {
+    constructor: ApiObjectConstructor,
+    getAvailableActions: function() {
+        ApiReference = ApiReference || require('./reference');
+        return ApiReference.getActionsFor(this.type);
+    },
+    prop: function(k, v) {
+        switch (arguments.length) {
+            case 1:
+                if (typeof k === "string") return this.data[k];
+                if (typeof k === "object") {
+                    for (var hashkey in k) {
+                        if (k.hasOwnProperty(hashkey)) this.prop(hashkey, k[hashkey]);
+                    }
+                }
+                break;
+            case 2:
+                this.data[k] = v;
+        }
+        return this;
+    }
+};
+
+utils.addEvents(ApiObjectConstructor);
+
+ApiObjectConstructor.types = {
+    //address: require('./types/address'),
+    cart: require('./types/cart'),
+    cartsummary: require('./types/cartsummary'),
+    creditcard: require('./types/creditcard'),
+    customer: require('./types/customer'),
+    login: require('./types/login'),
+    order: require('./types/order'),
+    product: require('./types/product'),
+    shipment: require('./types/shipment'),
+    user: require('./types/user'),
+    wishlist: require('./types/wishlist')
+};
+ApiObjectConstructor.hydratedTypes = {};
+
+ApiObjectConstructor.getHydratedType = function(typeName) {
+    ApiReference = ApiReference || require('./reference');
+    if (!(typeName in this.hydratedTypes)) {
+        var availableActions = ApiReference.getActionsFor(typeName),
+            reflectedMethods = {};
+        for (var i = availableActions.length - 1; i >= 0; i--) {
+            utils.setOp(reflectedMethods, availableActions[i]);
+        }
+        this.hydratedTypes[typeName] = utils.inherit(this, utils.extend({}, reflectedMethods, this.types[typeName] || {}));
+    }
+    return this.hydratedTypes[typeName];
+};
+
+ApiObjectConstructor.create = function(typeName, rawJSON, api) {
+    ApiReference = ApiReference || require('./reference');
+    var type = ApiReference.getType(typeName);
+    if (!type) {
+        // for forward compatibility the API should return a response,
+        // even one that it doesn't understand
+        return rawJSON;
+    }
+    if (type.collectionOf) {
+        // lazy load to prevent circular dep
+        ApiCollection = ApiCollection || require('./collection');
+        return ApiCollection.create(typeName, rawJSON, api, type.collectionOf);
+    }
+
+    var ApiObjectType = this.getHydratedType(typeName);
+
+    return new ApiObjectType(typeName, rawJSON, api);
+};
+
+module.exports = ApiObjectConstructor;
+
+// END OBJECT
+
+/***********/
+},{"./collection":1,"./reference":11,"./types/cart":12,"./types/cartsummary":13,"./types/creditcard":14,"./types/customer":15,"./types/login":17,"./types/order":18,"./types/product":19,"./types/shipment":20,"./types/user":21,"./types/wishlist":22,"./utils":23}],11:[function(require,module,exports){
+
+
+//# sourceUrl=src/reference.js
+
+// BEGIN REFERENCE
+var utils = require('./utils');
+var errors = require('./errors');
+var ApiCollection;
+var ApiObject = require('./object');
+var objectTypes = require('./methods.json');
+
+errors.register({
+    'NO_REQUEST_CONFIG_FOUND': 'No request configuration was found for {0}.{1}',
+    'NO_SHORTCUT_PARAM_FOUND': 'No shortcut parameter available for {0}. Please supply a configuration object instead of "{1}".'
+});
+
+var basicOps = {
+    get: 'GET',
+    update: 'PUT',
+    create: 'POST',
+    del: 'DELETE'
+};
+var copyToConf = ['verb', 'returnType', 'noBody', 'suppressErrors'],
+    copyToConfLength = copyToConf.length;
+var reservedWords = {
+    template: true,
+    defaultParams: true,
+    shortcutParam: true,
+    defaults: true,
+    verb: true,
+    returnType: true,
+    noBody: true,
+    includeSelf: true,
+    collectionOf: true,
+    overridePostData: true,
+    useIframeTransport: true,
+    construct: true,
+    postconstruct: true,
+};
+var ApiReference = {
+
+    basicOps: basicOps,
+    urls: {},
+
+    getActionsFor: function(typeName) {
+        ApiCollection = ApiCollection || require('./collection');
+        if (!objectTypes[typeName]) return false;
+        var actions = [],
+            isSimpleType = (typeof objectTypes[typeName] === "string");
+        for (var a in basicOps) {
+            if (isSimpleType || !(a in objectTypes[typeName]))
+                actions.push(a);
+        }
+        if (!isSimpleType) {
+            for (a in objectTypes[typeName]) {
+                if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a])
+                    actions.push(utils.camelCase(a));
+            }
+        }
+        var declaredType = (objectTypes[typeName].collectionOf ? ApiCollection : ApiObject).types[typeName];
+        if (declaredType) {
+            for (a in declaredType) {
+                if (isSimpleType || !(utils.dashCase(a) in objectTypes[typeName] && !reservedWords[a]) && typeof declaredType[a] === "function") actions.push(a);
+            }
+        }
+
+        return actions;
+    },
+
+    getRequestConfig: function(operation, typeName, conf, context, obj) {
+
+        var returnObj, tptData;
+
+        // get object type from our reference
+        var oType = objectTypes[typeName];
+
+        // there may not be one
+        if (!oType) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, '');
+
+        // get specific details of the requested operation
+        if (operation) operation = utils.dashCase(operation);
+        if (oType[operation]) oType = oType[operation];
+
+        // some oTypes are a simple template as a string
+        if (typeof oType === "string") oType = {
+            template: oType
+        };
+
+        // the defaults at the root object type should be copied into all operation configs
+        if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
+
+        // a template is required
+        if (!oType.template) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, operation);
+
+        returnObj = {};
+        tptData = {};
+
+        // cache templates lazily
+        if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
+
+        // add the requesting object's data itself to the tpt context
+        if (oType.includeSelf && obj) {
+            if (oType.includeSelf.asProperty) {
+                tptData[oType.includeSelf.asProperty] = obj.data
+            } else {
+                tptData = utils.extend(tptData, obj.data);
+            }
+        }
+
+        // shortcutparam allows you to use the most commonly used conf property as a string or number argument
+        if (conf !== undefined && typeof conf !== "object") {
+            if (!oType.shortcutParam) errors.throwOnObject(obj, 'NO_SHORTCUT_PARAM_FOUND', typeName, conf);
+            tptData[oType.shortcutParam] = conf;
+        } else if (conf) {
+            // add the conf argued directly into this request fn to the tpt context
+            utils.extend(tptData, conf);
+        }
+
+        // default params added to template, but overridden by existing tpt data
+        if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
+
+        // remove stuff that the UriTemplate parser can't parse
+        for (var tvar in tptData) {
+            if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
+        }
+        var fullTptContext = utils.extend({
+            _: tptData
+        }, context.asObject('context-'), utils.flatten(tptData, {}), ApiReference.urls);
+        returnObj.url = oType.template.expand(fullTptContext);
+        for (var j = 0; j < copyToConfLength; j++) {
+            if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
+        }
+        if (oType.useIframeTransport) {
+            // cache templates lazily
+            if (typeof oType.useIframeTransport === "string") oType.useIframeTransport = utils.uritemplate.parse(oType.useIframeTransport);
+            returnObj.iframeTransportUrl = oType.useIframeTransport.expand(fullTptContext);
+        }
+        if (oType.overridePostData) {
+            var overriddenData;
+            if (utils.getType(oType.overridePostData) == "Array") {
+                overriddenData = {};
+                for (var tOK = 0; tOK < oType.overridePostData.length; tOK++) {
+                    overriddenData[oType.overridePostData[tOK]] = tptData[oType.overridePostData[tOK]];
+                }
+            } else {
+                overriddenData = tptData;
+            }
+            returnObj.overridePostData = overriddenData;
+        }
+        return returnObj;
+    },
+
+    getType: function(typeName) {
+        return objectTypes[typeName];
+    }
+};
+
+module.exports = ApiReference;
+
+// END REFERENCE
+
+/***********/
+},{"./collection":1,"./errors":4,"./methods.json":9,"./object":10,"./utils":23}],12:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/cart.js
+
+var utils = require('../utils');
+module.exports = {
+    count: function () {
+        var items = this.prop('items');
+        if (!items || !items.length) return 0;
+        return utils.reduce(items, function (total, item) { return total + item.quantity; }, 0);
+    }
+};
+},{"../utils":23}],13:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/cartsummary.js
+
+var utils = require('../utils');
+module.exports = {
+    count: function () {
+        return this.data.totalQuantity || 0;
+    }
+};
+},{"../utils":23}],14:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/creditcard.js
+
+var utils = require('../utils');
+var errors = require('../errors');
+module.exports = (function() {
+
+    errors.register({
+        'CARD_TYPE_MISSING': 'Card type missing.',
+        'CARD_NUMBER_MISSING': 'Card number missing.',
+        'CVV_MISSING': 'Card security code missing.',
+        'CARD_NUMBER_UNRECOGNIZED': 'Card number is in an unrecognized format.',
+        'MASK_PATTERN_INVALID': 'Supplied mask pattern did not match a valid card number.'
+    });
+
+    var charsInCardNumberRE = /[\s-]/g;
+
+    function validateCardNumber(obj, cardNumber) {
+        var maskCharacter = obj.maskCharacter;
+        if (!cardNumber) return false;
+        return (cardNumber.indexOf(maskCharacter) !== -1) || luhn10(cardNumber);
+    }
+
+    function luhn10(s) {
+        // luhn 10 algorithm for card numbers
+        var i, n, c, r, t;
+        r = "";
+        for (i = 0; i < s.length; i++) {
+            c = parseInt(s.charAt(i), 10);
+            if (c >= 0 && c <= 9) r = c + r;
+        }
+        if (r.length <= 1) return false;
+        t = "";
+        for (i = 0; i < r.length; i++) {
+            c = parseInt(r.charAt(i), 10);
+            if (i % 2 != 0) c *= 2;
+            t = t + c;
+        }
+        n = 0;
+        for (i = 0; i < t.length; i++) {
+            c = parseInt(t.charAt(i), 10);
+            n = n + c;
+        }
+        return (n != 0 && n % 10 == 0);
+    }
+
+    function createCardNumberMask(obj, cardNumber) {
+        var maskRE = new RegExp(obj.maskPattern),
+            matches = cardNumber.match(maskRE),
+            toDisplay = cardNumber,
+            toSend = [],
+            maskCharacter = obj.maskCharacter,
+            tempMask = "";
+
+        if (!matches) errors.throwOnObject(obj, 'MASK_PATTERN_INVALID');
+        for (var i = 1; i < matches.length; i++) {
+            tempMask = "";
+            for (var j = 0; j < matches[i].length; j++) {
+                tempMask += maskCharacter;
+            }
+            toDisplay = toDisplay.replace(matches[i], tempMask);
+        }
+        for (i = toDisplay.length - 1; i >= 0; i--) {
+            toSend.unshift(toDisplay.charAt(i) === maskCharacter ? cardNumber.charAt(i) : maskCharacter);
+        }
+        obj.maskedCardNumber = toDisplay;
+        return toSend.join('');
+    }
+
+    function makePayload(obj) {
+        var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
+        if (!data.paymentOrCardType) errors.throwOnObject(obj, 'CARD_TYPE_MISSING');
+        if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, 'CARD_NUMBER_MISSING');
+        if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
+        maskedData = transform.toCardData(data)
+        var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
+        if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
+
+        // only add numberPart if the current card number isn't already masked
+        if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
+        delete maskedData.cardNumber;
+
+        return maskedData;
+    }
+
+
+    var transform = {
+        fields: {
+            "cardNumber": "cardNumberPartOrMask",
+            "persistCard": "isCardInfoSaved",
+            "cardholderName": "nameOnCard",
+            "cardType": "paymentOrCardType",
+            "cardId": "paymentServiceCardId",
+            "cvv": "cvv"
+        },
+        toStorefrontData: function (data) {
+            var storefrontData = {};
+            for (var serviceField in this.fields) {
+                if (serviceField in data) storefrontData[this.fields[serviceField]] = data[serviceField];
+            }
+            return storefrontData;
+        },
+        toCardData: function (data) {
+            var cardData = {};
+            for (var serviceField in this.fields) {
+                if (this.fields[serviceField] in data) cardData[serviceField] = data[this.fields[serviceField]]
+            }
+            return cardData;
+        }
+    };
+    
+
+    return {
+        maskCharacter: "*",
+        maskPattern: "^(\\d+?)\\d{4}$",
+        save: function () {
+            var self = this,
+                isUpdate = this.prop(transform.fields.cardId);
+            return this.api.action(this, (isUpdate ? 'update' : 'save'), makePayload(this)).then(function (res) {
+                self.prop(transform.toStorefrontData({
+                    cardNumber: self.maskedCardNumber,
+                    cvv: !!(self.prop('cvv'))? self.prop('cvv').replace(/\d/g, self.maskCharacter) : '',
+                    cardId: isUpdate || res
+                }));
+                self.fire('sync', utils.clone(self.data), self.data);
+                return self;
+            });
+        },
+        saveToCustomer: function (customerId) {
+            var self = this;
+            return this.save().then(function (cardId) {
+                cardId = cardId || self.prop('id');
+                var customer = self.api.createSync('customer', { id: customerId });
+                errors.passFrom(customer, this);
+                return customer.addCard(self.data);
+            });
+        },
+        getOrderData: function () {
+            return {
+                cardNumberPartOrMask: this.maskedCardNumber || this.data.cardNumberPartOrMask || this.data.cardNumberPart || this.data.cardNumber,
+                cvv: this.data.cvv,
+                nameOnCard: this.data.nameOnCard,
+                paymentOrCardType: this.data.paymentOrCardType || this.data.cardType,
+                paymentServiceCardId: this.data.paymentServiceCardId || this.data.cardId,
+                isCardInfoSaved: this.data.isCardInfoSaved || this.data.persistCard,
+                expireMonth: this.data.expireMonth,
+                expireYear: this.data.expireYear
+            }
+        }
+    };
+
+}());
+},{"../errors":4,"../utils":23}],15:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/customer.js
+
+var utils = require('../utils');
+var errors = require('../errors');
+module.exports = (function () {
+    return {
+        postconstruct: function() {
+            var self = this;
+            this.on('sync', function (json) {
+                if (json && json.authTicket && json.authTicket.accessToken) {
+                    self.api.context.UserClaims(json.authTicket.accessToken);
+                    self.api.fire('login', json.authTicket);
+                }
+            });
+        },
+        savePaymentCard: function (unmaskedCardData) {
+            var self = this, card = this.api.createSync('creditcard', unmaskedCardData),
+                isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
+            errors.passFrom(card, this);
+            return card.save().then(function (card) {
+                var payload = utils.clone(card.data);
+                payload.cardNumberPart = payload.cardNumberPartOrMask || payload.cardNumber;
+                payload.id = payload.paymentServiceCardId;
+                delete payload.cardNumber;
+                delete payload.cardNumberPartOrMask;
+                delete payload.paymentServiceCardId;
+                return isUpdate ? self.updateCard(payload) : self.addCard(payload);
+            });
+        },
+        deletePaymentCard: function (id) {
+            var self = this;
+            return this.deleteCard(id).then(function () {
+                return self.api.del('creditcard', id);
+            });
+        },
+        getStoreCredits: function() {
+            var credits = this.api.createSync('storecredits');
+            errors.passFrom(credits, this);
+            return credits.get();
+        },
+        getDigitalCredit: function (id) {
+            var credit = this.api.createSync('storecredit', { code: id });
+            errors.passFrom(credit, this);
+            return credit.getCredit();
+        },
+        addStoreCredit: function (id) {
+            var credit = this.api.createSync('storecredit', { code: id });
+            errors.passFrom(credit, this);
+            return credit.associateToShopper();
+        },
+        // as of 12/30/2013 partial updates on customer will
+        // blank out these values unless they are included
+        // TODO: remove as soon as TFS#21775 is fixed
+        getMinimumPartial: function () {
+            return {
+                firstName: this.prop('firstName'),
+                lastName: this.prop('lastName'),
+                emailAddress: this.prop('emailAddress')
+            };
+        },
+        update: function (data) {
+            return this.api.action(this, 'update', utils.extend(this.getMinimumPartial(), utils.clone(data)));
+        }
+    }
+}());
+},{"../errors":4,"../utils":23}],16:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/locations.js
+
+var utils = require('../utils');
+module.exports = (function () {
+
+    // haversine
+    // By Nick Justice (niix)
+    // https://github.com/niix/haversine
+
+    var haversine = (function () {
+
+        // convert to radians
+        var toRad = function (num) {
+            return num * Math.PI / 180
+        }
+
+        return function haversine(start, end, options) {
+            var miles = 3960
+            var km = 6371
+            options = options || {}
+
+            var R = options.unit === 'km' ? km : miles
+
+            var dLat = toRad(end.latitude - start.latitude)
+            var dLon = toRad(end.longitude - start.longitude)
+            var lat1 = toRad(start.latitude)
+            var lat2 = toRad(end.latitude)
+
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+            if (options.threshold) {
+                return options.threshold > (R * c)
+            } else {
+                return R * c
+            }
+        }
+
+    })()
+
+    return {
+
+        getByLatLong: function (opts) {
+            var self = this;
+            return this.api.action('locations', 'get-by-lat-long', {
+                latitude: opts.location.coords.latitude,
+                longitude: opts.location.coords.longitude
+            }).then(function (coll) {
+                var locations = coll.data.items;
+                for (var i = 0, len = locations.length; i < len; i++) {
+                    locations[i].distance = haversine(opts.location.coords, { latitude: locations[i].geo.lat, longitude: locations[i].geo.lng }).toFixed(1);
+                }
+                var data = utils.clone(coll.data);
+                self.fire('sync', data, data);
+                return self;
+            });
+        },
+
+        getForProduct: function (opts) {
+            var self = this,
+                coll,
+                // not running the method on self since it shouldn't sync until it's been processed!
+                operation = opts.location ?
+                this.api.action('locations', 'get-by-lat-long', {
+                    latitude: opts.location.coords.latitude,
+                    longitude: opts.location.coords.longitude
+                }) :
+                this.api.get('locations');
+            return operation.then(function (c) {
+                coll = c;
+                var codes = utils.map(coll.data.items, function (loc) {
+                    return loc.code;
+                }).join(',');
+                return self.api.action('product', 'getInventory', {
+                    productCode: opts.productCode,
+                    locationCodes: codes
+                });
+            }).then(function (inventory) {
+                var j,
+                    ilen,
+                    locations = coll.data.items,
+                    inventories = inventory.items,
+                    validLocations = [];
+                for (var i = 0, len = locations.length; i < len; i++) {
+                    for (j = 0, ilen = inventories.length; j < ilen; j++) {
+                        if (inventories[j].locationCode === locations[i].code) {
+                            locations[i].quantity = inventories[j].stockAvailable;
+                            if (opts.location) locations[i].distance = haversine(opts.location.coords, { latitude: locations[i].geo.lat, longitude: locations[i].geo.lng }).toFixed(1);
+                            validLocations.push(locations[i]);
+                            inventories.splice(j, 1);
+                            break;
+                        }
+                    }
+                }
+                var data = { items: utils.clone(validLocations) };
+                self.fire('sync', data, data);
+                return self;
+            });
+        }
+    }
+
+}());
+},{"../utils":23}],17:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/login.js
+
+module.exports = {
+    postconstruct: function (type, json) {
+        var accessToken;
+        if (json.authTicket && json.authTicket.accessToken) {
+            accessToken = json.authTicket.accessToken;
+        } else if (json.accessToken) {
+            accessToken = json.accessToken;
+        }
+        if (accessToken) {
+            this.api.context.UserClaims(accessToken);
+            this.api.fire('login', json);
+        }
+    }
+};
+},{}],18:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/order.js
+
+var errors = require('../errors');
+var CONSTANTS = require('../constants/default');
+var utils = require('../utils');
+var ApiReference;
+module.exports = (function () {
+
+    errors.register({
+        'BILLING_INFO_MISSING': 'Billing info missing.',
+        'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
+        'PAYMENT_MISSING': 'Sorry, something went wrong: Expected a payment to exist on this order and one did not.',
+        'PAYPAL_TRANSACTION_ID_MISSING': 'Sorry, something went wrong: Expected the active payment to include a paymentServiceTransactionId and it did not.',
+        'ORDER_CANNOT_SUBMIT': 'Sorry, this order cannot be submitted. Please refresh the page and try again, or contact Support.',
+        'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
+        //'ADD_GIFT_CARD_FAILED': 'Adding gift card failed for the following reason: {0}',
+        'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
+    });
+
+    var OrderStatus2IsComplete = {};
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
+
+    var OrderStatus2IsReady = {};
+    OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER] = true;
+    OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.ACCEPT_ORDER] = true;
+
+
+    var PaymentStrategies = {
+        "PaypalExpress": function (order, billingInfo) {
+            if (!ApiReference) ApiReference = require('../reference');
+            return order.createPayment({
+                returnUrl: billingInfo.paypalReturnUrl,
+                cancelUrl: billingInfo.paypalCancelUrl
+            }).ensure(function () {
+                var payment = order.getCurrentPayment();
+                if (!payment) errors.throwOnObject(order, 'PAYMENT_MISSING');
+                if (!payment.paymentServiceTransactionId) errors.throwOnObject(order, 'PAYPAL_TRANSACTION_ID_MISSING');
+                window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
+                });
+        },
+        "CreditCard": function (order, billingInfo) {
+            var card = order.api.createSync('creditcard', billingInfo.card);
+            errors.passFrom(card, order);
+            return card.save().then(function(card) {
+                billingInfo.card = card.getOrderData();
+                order.prop('billingInfo', billingInfo);
+                return order.createPayment();
+            });
+        },
+        "Check": function (order, billingInfo) {
+            return order.createPayment();
+        }
+    };
+    
+    return {
+        getShippingMethodsFromContact: function (contact) {
+            var self = this;
+            var fulfillmentContact = utils.clone(self.prop('fulfillmentInfo').fulfillmentContact);
+            // currently the service can't handle not having a state
+            if (fulfillmentContact.address && !fulfillmentContact.address.stateOrProvince) fulfillmentContact.address.stateOrProvince = "n/a";
+            return self.update({ fulfillmentInfo: { fulfillmentContact: fulfillmentContact } }).then(function () {
+                return self.getShippingMethods();
+            });
+        },
+        addCoupon: function(couponCode) {
+            var self = this;
+            return this.applyCoupon(couponCode).then(function () {
+                return self.get();
+            }, function(reason) {
+                errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
+            });
+        },
+        addNewCustomer: function (newCustomerPayload) {
+            var self = this;
+            return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
+                return self.setUserId();
+            }, function (reason) {
+                errors.throwOnObject(self, 'ADD_CUSTOMER_FAILED', reason.message);
+            });
+        },
+        createPayment: function(extraProps) {
+            return this.api.action(this, 'createPayment', utils.extend({
+                currencyCode: this.api.context.Currency().toUpperCase(),
+                amount: this.prop('amountRemainingForPayment'),
+                newBillingInfo: this.prop('billingInfo')
+            }, extraProps || {}));
+        },
+        addStoreCredit: function(payment) {
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'StoreCredit',
+                    storeCreditCode: payment.storeCreditCode
+                }
+            });
+        },
+        addPayment: function (payment) {
+            var billingInfo = payment || this.prop('billingInfo');
+            if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
+            if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
+            return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
+        },
+        getActivePayments: function() {
+            var payments = this.prop('payments'),
+                activePayments = [];
+            if (payments.length !== 0) {
+                for (var i = payments.length - 1; i >= 0; i--) {
+                    if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
+                        activePayments.push(utils.clone(payments[i]))
+                }
+            }
+            return activePayments;
+        },
+        getCurrentPayment: function() {
+            var activePayments = this.getActivePayments();
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType !== "StoreCredit" && activePayments[i].paymentType !== 'GiftCard') return activePayments[i];
+            }
+        },
+        getActiveStoreCredits: function() {
+            var activePayments = this.getActivePayments(),
+                credits = [];
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType === "StoreCredit" || activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
+            }
+            return credits;
+        },
+        voidPayment: function (id) {
+            var obj = this;
+            return this.performPaymentAction({
+                paymentId: id,
+                actionName: CONSTANTS.PAYMENT_ACTIONS.VOID
+            }).then(function (rawJSON) {
+                if (rawJSON || rawJSON === 0 || rawJSON === false) {
+                    delete rawJSON.billingInfo;
+                    obj.data = utils.clone(rawJSON);
+                }
+                delete obj.unsynced;
+                obj.fire('sync', rawJSON, obj.data);
+                obj.api.fire('sync', obj, rawJSON, obj.data);
+                return obj;
+            });
+        },
+        checkout: function() {
+            var self = this,
+                availableActions = this.prop('availableActions');
+            if (!this.isComplete()) {
+                for (var i = availableActions.length - 1; i >= 0; i--) {
+                    if (availableActions[i] in OrderStatus2IsReady) return this.performOrderAction(availableActions[i]).otherwise(function(e) {
+                        return self.get().ensure(function() {
+                            throw e;
+                        })
+                    });
+                }
+            }
+            errors.throwOnObject(this, 'ORDER_CANNOT_SUBMIT');
+        },
+        isComplete: function () {
+            return !!OrderStatus2IsComplete[this.prop('status')];
+        }
+    };
+}());
+},{"../constants/default":2,"../errors":4,"../reference":11,"../utils":23}],19:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/product.js
+
+var errors = require('../errors');
+var utils = require('../utils');
+var CONSTANTS = require('../constants/default');
+module.exports = {
+    addToWishlist: function (payload) {
+        var self = this;
+        var list = this.api.createSync('wishlist', { customerAccountId: payload.customerAccountId });
+        return list.getOrCreate().then(function () {
+            errors.passFrom(list, self);
+            return list.addItem({
+                quantity: payload.quantity,
+                currencyCode: payload.currencyCode || self.api.context.Currency(),
+                localeCode: payload.localeCode || self.api.context.Locale(),
+                product: self.data
+            });
+        });
+    },
+    addToCartForPickup: function (opts) {
+        return this.addToCart(utils.extend({}, this.data, {
+            fulfillmentMethod: CONSTANTS.FULFILLMENT_METHODS.PICKUP
+        }, opts));
+    }
+};
+},{"../constants/default":2,"../errors":4,"../utils":23}],20:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/shipment.js
+
+var utils = require('../utils');
+module.exports = {
+    getShippingMethodsFromContact: function (contact) {
+        var self = this;
+        var fulfillmentContact = utils.clone(self.prop('fulfillmentContact'));
+        // currently the service can't handle not having a state
+        if (fulfillmentContact.address && !fulfillmentContact.address.stateOrProvince) fulfillmentContact.address.stateOrProvince = "n/a";
+        return self.update({ fulfillmentContact: fulfillmentContact }).then(function () {
+            return self.getShippingMethods();
+        });
+    }
+};
+},{"../utils":23}],21:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/user.js
+
+module.exports = {
+    postconstruct: function () {
+        var self = this;
+        this.on('sync', function (json) {
+            if (json && json.authTicket && json.authTicket.accessToken) {
+                self.api.context.UserClaims(json.authTicket.accessToken);
+                self.api.fire('login', json.authTicket);
+            }
+        });
+    },
+    createAndLogin: function(payload) {
+        var self = this;
+        if (!payload) payload = this.data;
+        return this.create(payload).then(function () {
+            return self.login({
+                emailAddress: payload.emailAddress,
+                password: payload.password
+            });
+        });
+    },
+    createWithCustomer: function (payload) {
+        var self = this;
+        return this.createAndLogin(payload).then(function () {
+            return self.api.action('customer', 'create', {
+                userId: self.prop('id')
+            })
+        }).then(function (customer) {
+            return customer.addContact({
+                email: self.prop('emailAddress'),
+                firstName: self.prop('firstName'),
+                lastNameOrSurname: self.prop('lastName'),
+                address: {}
+            });
+        });
+    }
+};
+},{}],22:[function(require,module,exports){
+
+
+//# sourceUrl=src/types/wishlist.js
+
+var errors = require('../errors'),
+    utils = require('../utils');
+module.exports = (function() {
+
+    errors.register({
+        'NO_ITEMS_IN_WISHLIST': 'No items in wishlist.',
+        'NO_MATCHING_ITEM_IN_WISHLIST': 'No wishlist item matching ID {0}'
+    });
+
+    var getItem = function (list, item) {
+        var items = list.prop('items');
+        if (!items || items.length === 0) {
+            return errors.throwOnObject(list, 'NO_ITEMS_IN_WISHLIST');
+        }
+        if (typeof item === "string") {
+            for (var i = items.length - 1; i >= 0; i--) {
+                if (items[i].id === item) {
+                    item = items[i];
+                    break;
+                }
+            }
+            if (typeof item === "string") {
+                return errors.throwOnObject(list, 'NO_MATCHING_ITEM_IN_WISHLIST', item);
+            }
+        }
+        return item;
+    }
+
+    return {
+        getOrCreate: function (cid) {
+            var self = this;
+            return this.getDefault({ customerAccountId: cid }).then(function (list) {
+                return list;
+            }, function () {
+                return self.createDefault({ customerAccountId: cid });
+            });
+        },
+        addItemToCartById: function (item) {
+            return this.addItemToCart(getItem(this, item));
+        },
+        get: function () {
+            // overriding get to always use getItemsByName to get the items collection
+            // so items are always sorted by update date
+            var self = this;
+            return this.getItemsByName().then(function (items) {
+                self.prop('items', items);
+                self.fire('sync', self.data, self);
+                return self;
+            });
+        }
+    };
+}());
+},{"../errors":4,"../utils":23}],23:[function(require,module,exports){
+var process=require("__browserify_process");
+
+//# sourceUrl=src/utils.js
+
+// BEGIN UTILS
+// Many of these poached from lodash
+
+    var maxFlattenDepth = 20;
+
+    var MicroEvent = require('microevent');
+    var isNode = typeof process === "object" && process.title === "node";
+    var XHR;
+    var IframeXHR;
+    var getXHR = isNode ? function() {
+        XHR = XHR || require('xmlhttprequest').XMLHttpRequest;
+        return new XHR();
+    } : (window.XMLHttpRequest ? function() {
+        return new XMLHttpRequest();
+    } : function() {
+        return new window.ActiveXObject("Microsoft.XMLHTTP");
+    });
+    var utils = {
+        extend: function () {
+            var src, copy, name, options,
+                target = arguments[0],
+                i = 1,
+                length = arguments.length;
+
+            for (; i < length; i++) {
+                // Only deal with non-null/undefined values
+                if ((options = arguments[i]) != null) {
+                    // Extend the base object
+                    for (name in options) {
+                        copy = options[name];
+
+                        // Prevent never-ending loop
+                        if (target === copy) {
+                            continue;
+                        }
+
+                        if (copy !== undefined) {
+                            target[name] = copy;
+                        }
+                    }
+                }
+            }
+            return target;
+        },
+        clone: function(obj) {
+            return JSON.parse(JSON.stringify(obj)); // cheap copy :)
+        },
+        compose: function(first, second) {
+            return function() {
+                first.call(this, arguments);
+                second.call(this, arguments);
+            }
+        },
+        flatten: function (obj, into, prefix, separator, depth) {
+            if (depth === 0) throw "Cannot flatten circular object.";
+            if (!depth) depth = maxFlattenDepth;
+            into = into || {};
+            separator = separator || ".";
+            prefix = prefix || '';
+            for (var n in obj) {
+                key = n;
+                val = obj[n];
+                if (obj.hasOwnProperty(key)) {
+                    if (val && typeof val === 'object' && !(
+                      val instanceof Array ||
+                      val instanceof Date ||
+                      val instanceof RegExp)
+                    ) {
+                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
+                    }
+                    else {
+                        into[prefix + key] = val;
+                    }
+                }
+            }
+
+            return into;
+        },
+        inherit: (function(composedMethods) {
+            return function (parent, more) {
+                var ApiInheritedObject = function() {
+                    if (this.construct) this.construct.apply(this, arguments);
+                    parent.apply(this, arguments);
+                    if (this.postconstruct) this.postconstruct.apply(this, arguments);
+                },
+                parentObject = new parent();
+                for (var i = 0; i < composedMethods.length; i++) {
+                    if (parentObject[composedMethods[i]] && more[composedMethods[i]])
+                        more[composedMethods[i]] = utils.compose(parentObject[composedMethods[i]], more[composedMethods[i]]);
+                }
+                ApiInheritedObject.prototype = utils.extend(parentObject, more);
+                return ApiInheritedObject;
+            };
+        })(['construct','postconstruct']),
+        map: function (arr, fn, scope) {
+            var newArr = [], len = arr.length;
+            scope = scope || window;
+            for (var i = 0; i < len; i++) {
+                newArr[i] = fn.call(scope, arr[i]);
+            }
+            return newArr;
+        },
+        reduce: function(collection, callback, accumulator) {
+            var index = -1,
+                length = collection.length;
+            while (++index < length) {
+                accumulator = callback(accumulator, collection[index], index, collection);
+            }
+            return accumulator;
+        },
+        slice: function(arrayLikeObj, ix) {
+            return Array.prototype.slice.call(arrayLikeObj, ix);
+        },
+        indexOf: (function(nativeIndexOf) {
+            return (nativeIndexOf && typeof nativeIndexOf === "function") ? function(arr, val) {
+                return nativeIndexOf.call(arr, val);
+            } : function (arr, val) {
+                for (var i = 0, l = arr.length; i < length; i++) {
+                    if (arr[i] === val) return i;
+                }
+                return -1;
+            };
+        }(Array.prototype.indexOf)),
+        formatString: function(tpt) {
+            var formatted = tpt, otherArgs = utils.slice(arguments, 1);
+            for (var i = 0, len = otherArgs.length; i < len; i++) {
+                formatted = formatted.split('{' + i + '}').join(otherArgs[i] || '');
+            }
+            return formatted;
+        },
+        setOp: function(proto, fnName) {
+            proto[fnName] = function (conf) {
+                return this.api.action(this, fnName, conf);
+            };
+        },
+        getType: (function () {
+            var reType = /\[object (\w+)\]/;
+            return function (thing) {
+                var match = reType.exec(Object.prototype.toString.call(thing));
+                return match && match[1];
+            };
+        }()),
+        camelCase: (function () {
+            var rdashAlpha = /-([\da-z])/gi,
+                cccb = function (match, l) {
+                    return l.toUpperCase();
+                };
+            return function (str, firstCap) {
+                return (firstCap ? str.charAt(0).toUpperCase() + str.substring(1) : str).replace(rdashAlpha, cccb);
+            };
+        }()),
+
+        dashCase: (function () {
+            var rcase = /([a-z])([A-Z])/g,
+                rstr = "$1-$2";
+            return function (str) {
+                return str.replace(rcase, rstr).toLowerCase();
+            };
+        }()),
+
+        request: function (method, url, headers, data, success, failure, iframePath) {
+            if (typeof data !== "string") data = JSON.stringify(data);
+            
+            var xhr;
+            if (iframePath) {
+                IframeXHR = IframeXHR || require('./iframexhr');
+                xhr = new IframeXHR(iframePath);
+            } else {
+                xhr = getXHR();
+            }
+
+            var timeout = setTimeout(function () {
+                clearTimeout(timeout);
+                failure({
+                    items: [
+                        {
+                            message: 'Request timed out.',
+                            code: 'TIMEOUT'
+                        }
+                    ]
+                }, xhr);
+            }, 60000);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    clearTimeout(timeout);
+                    var json = null;
+                    if (xhr.responseText && xhr.responseText.length > 0) {
+                        try {
+                            json = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            failure({
+                                items: [
+                                    {
+                                        message: "Unable to parse response: " + xhr.responseText,
+                                        code: 'UNKNOWN'
+                                    }
+                                ]
+                            }, xhr, e);
+                        }
+                    }
+                    if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                        success(json, xhr);
+                    } else {
+                        failure(json || {
+                            items: [
+                                {
+                                    message: 'Request failed, no response given.',
+                                    code: xhr.status
+                                }
+                            ]
+                        }, xhr);
+                    }
+                }
+            };
+            xhr.open(method || 'GET', url);
+            if (headers) {
+                for (var h in headers) {
+                    if (headers[h]) xhr.setRequestHeader(h, headers[h]);
+                }
+            }
+            xhr.setRequestHeader('Content-type', 'application/json');
+            xhr.setRequestHeader('Accept', 'application/json');
+            if (data && method !== 'GET') {
+                xhr.send(data);
+            } else {
+                xhr.send();
+            }
+            return xhr;
+        },
+
+        pipeline: function (tasks /* initialArgs... */) {
+            // Self-optimizing function to run first task with multiple
+            // args using apply, but subsequence tasks via direct invocation
+            var runTask = function (args, task) {
+                runTask = function (arg, task) {
+                    return task(arg);
+                };
+
+                return task.apply(null, args);
+            };
+
+            return utils.when.all(Array.prototype.slice.call(arguments, 1)).then(function (args) {
+                return utils.when.reduce(tasks, function (arg, task) {
+                    return runTask(arg, task);
+                }, args);
+            });
+        },
+
+        when: require('when'),
+        uritemplate: require('uritemplate'),
+
+        addEvents: function (ctor) {
+            MicroEvent.mixin(ctor);
+            ctor.prototype.on = ctor.prototype.bind;
+            ctor.prototype.off = ctor.prototype.unbind;
+            ctor.prototype.fire = ctor.prototype.trigger;
+        }
+    };
+
+    module.exports = utils;
+// END UTILS
+
+/*********/
+},{"./iframexhr":5,"__browserify_process":24,"microevent":25,"uritemplate":26,"when":35,"xmlhttprequest":false}],24:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -60,7 +2542,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],2:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/microevent/microevent.js
@@ -116,7 +2598,7 @@ if( typeof module !== "undefined" && ('exports' in module)){
 	module.exports	= MicroEvent
 }
 
-},{}],3:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};
 
 //# sourceUrl=node_modules/uritemplate/bin/uritemplate.js
@@ -1007,7 +3489,7 @@ var UriTemplate = (function () {
     }
 ));
 
-},{}],4:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/aggregator.js
@@ -1106,7 +3588,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],5:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/array.js
@@ -1168,7 +3650,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],6:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/console.js
@@ -1225,7 +3707,7 @@ define(function(require) {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
-},{"./aggregator":4,"./logger/consoleGroup":7,"./simpleFormatter":8,"./simpleReporter":9,"./stackFilter":10,"./throttledReporter":11}],7:[function(require,module,exports){
+},{"./aggregator":27,"./logger/consoleGroup":30,"./simpleFormatter":31,"./simpleReporter":32,"./stackFilter":33,"./throttledReporter":34}],30:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/logger/consoleGroup.js
@@ -1307,7 +3789,7 @@ define(function(require) {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
-},{"../array":5}],8:[function(require,module,exports){
+},{"../array":28}],31:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/simpleFormatter.js
@@ -1386,7 +3868,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],9:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/simpleReporter.js
@@ -1450,7 +3932,7 @@ define(function() {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],10:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/stackFilter.js
@@ -1506,7 +3988,7 @@ define(function(require) {
 });
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
-},{"./array":5}],11:[function(require,module,exports){
+},{"./array":28}],34:[function(require,module,exports){
 
 
 //# sourceUrl=node_modules/when/monitor/throttledReporter.js
@@ -1548,7 +4030,7 @@ define(function(require) {
 	});
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
-},{}],12:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 var process=require("__browserify_process");
 
 //# sourceUrl=node_modules/when/when.js
@@ -2482,2488 +4964,6 @@ define(function (require) {
 });
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); });
 
-},{"__browserify_process":1}],13:[function(require,module,exports){
-
-
-//# sourceUrl=src/collection.js
-
-// BEGIN OBJECT
-
-var utils = require('./utils');
-var ApiObject = require('./object');
-
-    function convertItem(raw) {
-        return ApiObject.create(this.itemType, raw, this.api);
-    }
-
-    var ApiCollectionConstructor = function (type, data, api, itemType) {
-        ApiObject.apply(this, arguments);
-        this.itemType = itemType;
-    };
-
-    ApiCollectionConstructor.prototype = utils.extend(new ApiObject(), {
-        isCollection: true,
-        constructor: ApiCollectionConstructor,
-        postconstruct: function(type, data, api, itemType) {
-            var self = this;
-            if (!data) data = {};
-            if (!data.items) this.prop("items", data.items = []);
-            if (data.items.length > 0) this.add(data.items, true);
-            this.on('sync', function(raw) {
-                if (raw && raw.items) {
-                    self.removeAll();
-                    self.add(raw.items);
-                }
-            });
-        },
-        add: function (newItems, /*private*/ noUpdate) {
-            if (utils.getType(newItems) !== "Array") newItems = [newItems];
-            Array.prototype.push.apply(this, utils.map(newItems, convertItem, this));
-            if (!noUpdate) {
-                var rawItems = this.prop("items");
-                this.prop("items", rawItems.concat(newItems));
-            }
-        },
-        remove: function (indexOrItem) {
-            var index = indexOrItem;
-            if (typeof indexOrItem !== "number") {
-                index = utils.indexOf(this, indexOrItem);
-            }
-            Array.prototype.splice.call(this, index, 1);
-        },
-        replace: function(newItems, noUpdate) {
-            Array.prototype.splice.apply(this, [0, this.length].concat(utils.map(newItems, convertItem, this)));
-            if (!noUpdate) {
-                this.prop("items", newItems);
-            }
-        },
-        removeAll: function(noUpdate) {
-            Array.prototype.splice.call(this, 0, this.length);
-            if (!noUpdate) {
-                this.prop("items", []);
-            }
-        },
-        getIndex: function (newIndex) {
-            var index = this.currentIndex;
-            if (!index && index !== 0) index = this.prop("startIndex");
-            if (!index && index !== 0) index = 0;
-            return index;
-        },
-        setIndex: function(newIndex, req) {
-            var me = this;
-            var p = this.get(utils.extend(req, { startIndex: newIndex}));
-            p.then(function () {
-                me.currentIndex = newIndex;
-            });
-            return p;
-        },
-        firstPage: function(req) {
-            var currentIndex = this.getIndex();
-            if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
-            return this.setIndex(0, req);
-        },
-        prevPage: function (req) {
-            var currentIndex = this.getIndex(),
-                pageSize = this.prop("pageSize"),
-                newIndex = Math.max(currentIndex - pageSize, 0);
-            if (currentIndex === 0) throw "This " + this.type + " collection is already at record 0 and has no previous page.";
-            return this.setIndex(newIndex, req);
-        },
-        nextPage: function (req) {
-            var currentIndex = this.getIndex(),
-                pageSize = this.prop("pageSize"),
-                newIndex = currentIndex + pageSize;
-            if (!(newIndex < this.prop("totalCount"))) throw "This " + this.type + " collection is already at its last page and has no next page.";
-            return this.setIndex(newIndex, req);
-        },
-        lastPage: function (req) {
-            var totalCount = this.prop("totalCount"),
-                pageSize = this.prop("pageSize"),
-                newIndex = totalCount - pageSize;
-            if (newIndex <= 0) throw "This " + this.type + " collection has only one page.";
-            return this.setIndex(newIndex, req);
-        }
-    });
-
-    ApiCollectionConstructor.types = {
-        locations: require('./types/locations')
-    };
-    ApiCollectionConstructor.hydratedTypes = {};
-
-    ApiCollectionConstructor.getHydratedType = ApiObject.getHydratedType;
-
-    ApiCollectionConstructor.create = function (type, data, api, itemType) {
-        return new (type in this.types ? this.types[type] : this)(type, data, api, itemType);
-    };
-
-    ApiCollectionConstructor.create = function (typeName, rawJSON, api, itemType) {
-        var ApiCollectionType = this.getHydratedType(typeName);
-
-        return new ApiCollectionType(typeName, rawJSON, api, itemType);
-    };
-
-    module.exports = ApiCollectionConstructor;
-
-// END OBJECT
-
-/***********/
-},{"./object":22,"./types/locations":28,"./utils":35}],14:[function(require,module,exports){
-
-
-//# sourceUrl=src/constants/default.js
-
-module.exports = {
-    DEFAULT_WISHLIST_NAME: 'my_wishlist',
-    PAYMENT_STATUSES: {
-        NEW: "New"
-    },
-    PAYMENT_ACTIONS: {
-        VOID: "VoidPayment"
-    },
-    ORDER_STATUSES: {
-        ABANDONED: "Abandoned",
-        ACCEPTED: "Accepted",
-        CANCELLED: "Cancelled",
-        COMPLETED: "Completed",
-        CREATED: "Created",
-        PENDING_REVIEW: "PendingReview",
-        PROCESSING: "Processing",
-        SUBMITTED: "Submitted",
-        VALIDATED: "Validated"
-    },
-    ORDER_ACTIONS: {
-        CREATE_ORDER: "CreateOrder",
-        SUBMIT_ORDER: "SubmitOrder",
-        ACCEPT_ORDER: "AcceptOrder",
-        VALIDATE_ORDER: "ValidateOrder",
-        SET_ORDER_AS_PROCESSING: "SetOrderAsProcessing",
-        COMPLETE_ORDER: "CompleteOrder",
-        CANCEL_ORDER: "CancelOrder",
-        REOPEN_ORDER: "ReopenOrder"
-    },
-    FULFILLMENT_METHODS: {
-        SHIP: "Ship",
-        PICKUP: "Pickup",
-        DIGITAL: "Digital"
-    }
-};
-
-},{}],15:[function(require,module,exports){
-
-
-//# sourceUrl=src/context.js
-
-// BEGIN CONTEXT
-/**
- * @class
- * @classdesc The context object helps you configure the SDK to connect to a particular Mozu site. Supply it with tenant, site, mastercatalog, currency code, locale code, app claims, and user claims, and  it will produce for you an ApiInterface object.
- */
-
-var ApiInterface = require('./interface');
-var ApiReference = require('./reference');
-var utils = require('./utils');
-
-/**
- * @private
- */
-var ApiContextConstructor = function(conf) {
-    utils.extend(this, conf);
-    if (ApiContextConstructor.__debug__ === true) {
-        ApiContextConstructor.__debug__ = require('when/monitor/console');
-    }
-},
-    mutableAccessors = ['app-claims', 'user-claims', 'callchain', 'currency', 'locale','dataview-mode'], //, 'bypass-cache'],
-    immutableAccessors = ['tenant', 'site', 'master-catalog'],
-    immutableAccessorLength = immutableAccessors.length,
-    allAccessors = mutableAccessors.concat(immutableAccessors),
-    allAccessorsLength = allAccessors.length,
-    j;
-
-var setImmutableAccessor = function(propName) {
-    ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function(val) {
-        if (val === undefined) return this[propName];
-        var newConf = this.asObject();
-        newConf[propName] = val;
-        return new ApiContextConstructor(newConf);
-    };
-};
-
-var setMutableAccessor = function(propName) {
-    ApiContextConstructor.prototype[utils.camelCase(propName, true)] = function(val) {
-        if (val === undefined) return this[propName];
-        this[propName] = val;
-        return this;
-    };
-};
-
-ApiContextConstructor.prototype = {
-    constructor: ApiContextConstructor,
-
-    /**
-     * Gets or creates the `ApiInterface` for this context that will do all the real work.
-     * Call this method only when you've built a complete context including tenant, site, master catalog,
-     * locale, currency code, app claims, and user claims. Assign its return value to a local variable.
-     * You'll use this interface object to create your `ApiObject`s and do API requests!
-     *
-     * @public
-     * @memberof ApiContext#
-     * @returns {ApiInterface} The single `ApiInterface` for this context.
-     * @throws {ReferenceError} if the context is not yet complete.
-     */
-    api: function() {
-        return this._apiInstance || (this._apiInstance = new ApiInterface(this));
-    },
-    Store: function(conf) {
-        return new ApiContextConstructor(conf);
-    },
-    asObject: function(prefix) {
-        var obj = {};
-        prefix = prefix || '';
-        for (var i = 0; i < allAccessorsLength; i++) {
-            obj[prefix + allAccessors[i]] = this[allAccessors[i]];
-        }
-        return obj;
-    },
-    setServiceUrls: function(urls) {
-        ApiReference.urls = urls;
-    },
-    getServiceUrls: function() {
-        return utils.extend({}, ApiReference.urls);
-    },
-    currency: 'usd',
-    locale: 'en-US'
-};
-
-for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
-for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
-
-module.exports = ApiContextConstructor;
-
-// END CONTEXT
-
-/********/
-},{"./interface":20,"./reference":23,"./utils":35,"when/monitor/console":6}],16:[function(require,module,exports){
-
-
-//# sourceUrl=src/errors.js
-
-// BEGIN ERRORS
-var utils = require('./utils');
-
-function errorToString() {
-    return this.name + ": " + this.message;
-}
-
-var errorTypes = {};
-
-var errors = {
-    register: function(code, message) {
-        if (typeof code === "object") {
-            for (var i in code) {
-                errors.register(i, code[i]);
-            }
-        } else {
-            errorTypes[code] = {
-                code: code,
-                message: message
-            };
-        }
-    },
-    create: function(code) {
-        var msg = utils.formatString.apply(utils, [errorTypes[code].message].concat(utils.slice(arguments, 1)));
-        return {
-            name: code,
-            level: 1,
-            message: msg,
-            htmlMessage: msg,
-            toString: errorToString
-        };
-    },
-    throwOnObject: function(obj, code) {
-        var error = errors.create.apply(errors, [code].concat(utils.slice(arguments, 2)));
-        obj.fire('error', error);
-        obj.api.fire('error', error, obj);
-        throw error;
-    },
-    passFrom: function(from, to) {
-        from.on('error', function() {
-            to.fire.apply(to, ['error'].concat(utils.slice(arguments)));
-        });
-    }
-};
-
-module.exports = errors;
-// END ERRORS
-},{"./utils":35}],17:[function(require,module,exports){
-
-
-//# sourceUrl=src/iframexhr.js
-
-// BEGIN IFRAMEXHR
-var utils = require('./utils');
-module.exports = (function (window, document, undefined) {
-
-    var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1,
-        firefoxVersion = (function () {
-            var ua = navigator.userAgent,
-                re = /Firefox\/(\d+)/i,
-                match = ua.match(re),
-                versionStr = parseInt(match ? (match[1] || false) : false),
-                version = isNaN(versionStr) ? false : versionStr;
-
-            return version;
-        }()),
-        cacheBust = 1,
-        hashRE = /^#?\d+&/,
-        originRE = /^https?:\/\/[^/]+/i,
-        validateOrigin = function (ixhr, origin) {
-            return ixhr.frameOrigin === origin.toLowerCase().match(originRE)[0];
-        },
-        messageDelimiter = '|||||',
-        messageMethods = hasPostMessage ? {
-            listen: function () {
-                var self = this;
-                this.messageListener = function (e) {
-                    if (!e) e = window.event;
-                    if (e && e.data === "process-tick") return; // browserify clogs up this channel
-                    if (!validateOrigin(self, e.origin)) throw new Error("Origin " + e.origin + " does not match required origin " + self.frameOrigin);
-                    if (e.data === "ready") return self.postMessage();
-                    self.update(e.data);
-                };
-                window.addEventListener('message', this.messageListener, false);
-            },
-            postMessage: function () {
-                return this.getFrameWindow().postMessage(this.getMessage(), this.frameOrigin);
-            },
-            detachListeners: function () {
-                window.removeEventListener('message', this.messageListener, false);
-            }
-        } : {
-            listen: function () {
-                var self = this;
-                this.interval = setInterval(function () {
-                    var data;
-                    self.hash = document.location.hash;
-                    data = self.hash.replace(hashRE, '');
-                    if (self.hash !== self.lastHash) {
-                        if (data === "ready") return self.postMessage();
-
-                        if (hashRE.test(self.hash)) {
-                            self.lastHash = self.hash;
-                            self.update(data);
-                        }
-                    }
-                }, 100);
-            },
-            postMessage: function (message) {
-                this.getFrameWindow().location = this.frameUrl.replace(/#.*$/, '') + '#' + (+new Date) + (cacheBust++) + '&' + this.getMessage();
-            },
-            detachListeners: function () {
-                clearInterval(this.interval);
-                this.interval = null;
-            }
-        };
-
-    var IframeXMLHttpRequest = function (frameUrl) {
-        var frameMatch = frameUrl.match(originRE);
-        if (!frameMatch || !frameMatch[0]) throw new Error(frameUrl + " does not seem to have a valid origin.");
-        this.frameOrigin = frameMatch[0].toLowerCase();
-        this.frameUrl = frameUrl + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + '//' + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter);
-        this.headers = {};
-    };
-
-    utils.extend(IframeXMLHttpRequest.prototype, messageMethods, {
-        readyState: 0,
-        status: 0,
-        open: function (method, url) {
-            this.readyState = 1;
-            this.method = method;
-            this.url = url;
-        },
-        send: function (data) {
-            this.messageBody = data;
-            this.listen();
-            this.createIframe();
-        },
-        createIframe: function () {
-            this.iframe = document.createElement('iframe');
-            this.iframe.style.position = 'absolute';
-            this.iframe.style.left = '-9999px';
-            this.iframe.style.width = '1px';
-            this.iframe.style.height = '1px';
-            this.iframe.src = this.frameUrl;
-            document.body.appendChild(this.iframe);
-        },
-        setRequestHeader: function (key, value) {
-            this.headers[key] = value;
-        },
-        getMessage: function () {
-            var msg = [this.url, this.messageBody, this.method];
-            for (var header in this.headers) {
-                msg.push(header, this.headers[header]);
-            }
-            return msg.join(messageDelimiter);
-        },
-        onreadystatechange: function () { },
-        getFrameWindow: function () {
-            return this.iframe.contentWindow || this.iframe;
-        },
-        cleanup: function () {
-            var self = this;
-            if (!self.destroyed) setTimeout(function () {
-                self.detachListeners();
-                self.iframe.parentNode && self.iframe.parentNode.removeChild(self.iframe);
-            }, 250);
-            self.destroyed = true;
-        },
-        update: function(data) {
-            data = data.split(messageDelimiter);
-            this.readyState = parseInt(data[0]) || 0;
-            this.status = parseInt(data[1]) || 0;
-            this.responseText = data[2];
-            this.onreadystatechange();
-            if (this.readyState === 4) this.cleanup();
-        },
-        abort: function () {
-            this.status = 0;
-            this.readyState = 0;
-            this.cleanup();
-        }
-    });
-
-    return IframeXMLHttpRequest;
-
-}(window, document));
-// END IFRAMEXHR
-},{"./utils":35}],18:[function(require,module,exports){
-
-
-//# sourceUrl=src/init.js
-
-// BEGIN INIT
-var ApiContext = require('./context');
-var initialGlobalContext = new ApiContext();
-module.exports = initialGlobalContext;
-// END INIT
-},{"./context":15}],19:[function(require,module,exports){
-
-
-//# sourceUrl=src/init_debug.js
-
-// EXPOSE DEBUGGING STUFF
-var _init = require('./init');
-
-_init.Utils = require('./utils');
-_init.ApiContext = require('./context');
-_init.ApiInterface = require('./interface');
-_init.ApiObject = require('./object');
-_init.ApiCollection = require('./collection');
-_init.ApiReference = require('./reference');
-
-_init._expose = function (r) {
-    _init.lastResult = r;
-    console.log(r && r.inspect ? r.inspect() : r);
-};
-
-_init.ApiObject.prototype.inspect = function () {
-    return JSON.stringify(this.data, true, 2);
-};
-
-_init.ApiContext.__debug__ = true;
-
-module.exports = _init;
-},{"./collection":13,"./context":15,"./init":18,"./interface":20,"./object":22,"./reference":23,"./utils":35}],20:[function(require,module,exports){
-
-
-//# sourceUrl=src/interface.js
-
-﻿/**
- * @external Promise
- * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
- */
-
-/**
- * Attach handlers to and transform the promise.
- * @function external:Promise#then
- * @returns external:Promise#
- */
-
-// BEGIN INTERFACE
-/**
- * @class
- * @classdesc The interface object makes requests to the API and returns API object. You can use it to make raw requests using the ApiInterface#request method, but you're more likely to use the ApiInterface#action method to create a external:Promise# that returns an ApiObject#.
- */
-var utils = require('./utils');
-var ApiReference = require('./reference');
-var ApiObject = require('./object');
-
-var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Site(siteId).",
-    requiredContextValues = ['Tenant', 'MasterCatalog', 'Site'];
-var ApiInterfaceConstructor = function(context) {
-    for (var i = 0, len = requiredContextValues.length; i < len; i++) {
-        if (context[requiredContextValues[i]]() === undefined) throw new ReferenceError(errorMessage.split('{0}').join(requiredContextValues[i]));
-    }
-    this.context = context;
-};
-
-ApiInterfaceConstructor.prototype = {
-    constructor: ApiInterfaceConstructor,
-    /**
-     * @public
-     * @memberof ApiInterface#
-     * @returns {external:Promise#}
-     */
-    request: function(method, requestConf, conf) {
-        var me = this,
-            url = typeof requestConf === "string" ? requestConf : requestConf.url;
-        if (requestConf.verb)
-            method = requestConf.verb;
-
-        var deferred = me.defer();
-
-        var data;
-        if (requestConf.overridePostData) {
-            data = requestConf.overridePostData;
-        } else if (conf && !requestConf.noBody) {
-            data = conf.data || conf;
-        }
-
-        var xhr;
-        var triedRefresh = false;
-        var makeRequest = function () {
-            var contextHeaders = me.getRequestHeaders();
-            xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
-            // update context with response headers
-            me.fire('success', rawJSON, xhr, requestConf);
-            deferred.resolve(rawJSON, xhr);
-            }, function (error) {
-
-                var failRequest = function () {
-            deferred.reject(error, xhr, url);
-                }
-
-                if (error && error.errorCode === "INVALID_ACCESS_TOKEN" && !triedRefresh) {
-                    me.refresh().then(makeRequest, failRequest);
-                    triedRefresh = true;
-                } else {
-                    failRequest();
-                }
-        }, requestConf.iframeTransportUrl);
-        };
-
-        var cancelled = false,
-            canceller = function() {
-                cancelled = true;
-                xhr.abort();
-                deferred.reject("Request cancelled.")
-            };
-
-        makeRequest();
-        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
-
-        deferred.promise.otherwise(function(error) {
-            var res;
-            if (!cancelled) {
-                me.fire('error', error, xhr, requestConf);
-                throw error;
-            }
-        });
-
-
-        return deferred.promise;
-    },
-    refresh: function() {
-        var me = this,
-            updateClaimsHeaders = function(json, xhr, conf) {
-                if (conf === '/token/refresh') {
-                    me.context.AppClaims(xhr.getResponseHeader('x-vol-app-claims'));
-                    me.context.UserClaims(xhr.getResponseHeader('x-vol-user-claims'));
-                }
-            };
-        me.on('success', updateClaimsHeaders);
-        return me.request('POST', '/token/refresh').ensure(function () {
-            me.off('success', updateClaimsHeaders);
-            return null;
-        });
-    },
-    /**
-     * @public
-     * @memberof ApiInterface#
-     * @returns external:Promise#
-     */
-    action: function(instanceOrType, actionName, data) {
-        var me = this,
-            obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
-            type = obj.type;
-
-        obj.fire('action', actionName, data);
-        me.fire('action', obj, actionName, data);
-        var requestConf = ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
-
-        if ((actionName == "update" || actionName == "create") && !data) {
-            data = obj.data;
-        }
-
-        return me.request(ApiReference.basicOps[actionName], requestConf, data).then(function(rawJSON) {
-            if (requestConf.returnType) {
-                var returnObj = ApiObject.create(requestConf.returnType, rawJSON, me);
-                obj.fire('spawn', returnObj);
-                me.fire('spawn', returnObj, obj);
-                return returnObj;
-            } else {
-                if (rawJSON || rawJSON === 0 || rawJSON === false)
-                    obj.data = utils.clone(rawJSON);
-                delete obj.unsynced;
-                obj.fire('sync', rawJSON, obj.data);
-                me.fire('sync', obj, rawJSON, obj.data);
-                return obj;
-            }
-        }, function(errorJSON) {
-            if (!requestConf.suppressErrors) {
-            obj.fire('error', errorJSON);
-            me.fire('error', errorJSON, obj);
-            }
-            throw errorJSON;
-        });
-    },
-    getActionConfig: function(instanceOrType, actionName, data) {
-        var me = this,
-            obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
-            type = obj.type;
-        return ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
-    },
-    getRequestHeaders: function() {
-        return this.context.asObject("x-vol-");
-    },
-    all: function() {
-        return utils.when.join.apply(utils.when, arguments);
-    },
-    steps: function() {
-        var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
-        return utils.pipeline(Array.prototype.slice.call(args));
-    },
-    defer: function() {
-        return utils.when.defer();
-    },
-    getAvailableActionsFor: function(type) {
-        return ApiReference.getActionsFor(type);
-    }
-};
-var setOp = function(fnName) {
-    ApiInterfaceConstructor.prototype[fnName] = function(type, conf, isRemote) {
-        return this.action(type, fnName, conf, isRemote);
-    };
-};
-for (var i in ApiReference.basicOps) {
-    if (ApiReference.basicOps.hasOwnProperty(i)) setOp(i);
-}
-
-// add createSync method for a different style of development
-ApiInterfaceConstructor.prototype.createSync = function(type, conf) {
-    var newApiObject = ApiObject.create(type, conf, this);
-    newApiObject.unsynced = true;
-    this.fire('spawn', newApiObject);
-    return newApiObject;
-};
-
-utils.addEvents(ApiInterfaceConstructor);
-
-module.exports = ApiInterfaceConstructor;
-
-// END INTERFACE
-
-/*********/
-},{"./object":22,"./reference":23,"./utils":35}],21:[function(require,module,exports){
-module.exports=
-
-//# sourceUrl=src/methods.json
-
-{
-    "document": {
-        "template": "{+documentListService}{listName}/documents/{id}{?_*}",
-        "defaultParams": {
-            "listName": "pages"
-        },
-        "shortcutParam": "id"
-    },
-    "documentList": {
-        "template": "{+documentListService}{listName}/documents{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "listName": "pages",
-            "startIndex": 0,
-            "pageSize": 15
-        },
-        "collectionOf": "document"
-    },
-    "documentView": {
-        "template": "{+documentListService}{listName}/views/{viewName}/documents{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "listName": "pages",
-            "viewName": "default",
-            "startIndex": 0,
-            "pageSize": 15
-        },
-        "collectionOf": "document"
-    },
-    "entityList": {
-        "template": "{+entityListService}{listName}/entities{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "startIndex": 0,
-            "pageSize": 15
-        },
-        "collectionOf": "entity"
-    },
-    "entityView": {
-        "template": "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "startIndex": 0,
-            "viewName": "default",
-            "pageSize": 15
-        },
-        "collectionOf": "entity"
-    },
-    "entity": {
-        "template": "{+entityListService}{listName}/entities/{id}{?_*}",
-        "shortcutParam": "listName",
-
-    },
-    "entityContainer": {
-        "template": "{+entityListService}{listName}/entityContainers/{id}{?_*}",
-        "shortcutParam": "listName"
-    },
-    "entityContainerList": {
-        "template": "{+entityListService}{listName}/entityContainers{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "startIndex": 0,
-            "pageSize": 15
-        },
-        "collectionOf": "entityContainer"
-    },
-    "entityContainerView": {
-        "template": "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "startIndex": 0,
-            "viewName": "default",
-            "pageSize": 15
-        },
-        "collectionOf": "entityContainer"
-    },
-
-    "products": {
-        "template": "{+productService}{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "startIndex": 0,
-            "pageSize": 15
-        },
-        "collectionOf": "product"
-    },
-    "categories": {
-        "template": "{+categoryService}{?_*}",
-        "shortcutParam": "filter",
-        "defaultParams": {
-            "startIndex": 0,
-            "pageSize": 15
-        },
-        "collectionOf": "category"
-    },
-    "category": {
-        "template": "{+categoryService}{id}{?allowInactive}",
-        "shortcutParam": "id",
-        "defaultParams": {
-            "allowInactive": false
-        }
-    },
-    "categorytree": {
-        "template": "{+categoryService}tree",
-        "returnType": "json"
-    },
-    "search": {
-        "template": "{+searchService}search{?query,filter,facetTemplate,facetTemplateSubset,facet,facetFieldRangeQuery,facetHierPrefix,facetHierValue,facetHierDepth,facetStartIndex,facetPageSize,facetSettings,facetValueFilter,sortBy,pageSize,PageSize,startIndex,StartIndex}",
-        "shortcutParam": "query",
-        "defaultParams": {
-            "startIndex": 0,
-            "query": "*:*",
-            "pageSize": 15
-        },
-        "collectionOf": "product"
-    },
-    "suggest": {
-        "template": "{+searchService}suggest{?_*}",
-        "shortcutParam": "query"
-    },
-    "customers": {
-        "collectionOf": "customer"
-    },
-    "orders": {
-        "template": "{+orderService}{?_*}",
-        "defaultParams": {
-            "filter": "Status ne Created and Status ne Validated and Status ne Pending",
-            "startIndex": 0,
-            "pageSize": 5
-        },
-        "collectionOf": "order"
-    },
-    "product": {
-        "get": {
-            "template": "{+productService}{productCode}?{&allowInactive*}",
-            "shortcutParam": "productCode",
-            "defaultParams": {
-                "allowInactive": false
-            }
-        },
-        "configure": {
-            "verb": "POST",
-            "template": "{+productService}{productCode}/configure{?includeOptionDetails}",
-            "defaultParams": {
-                "includeOptionDetails": true
-            },
-            "includeSelf": true
-        },
-        "add-to-cart": {
-            "verb": "POST",
-            "includeSelf": {
-                "asProperty": "product"
-            },
-            "overridePostData": [
-                "product",
-                "quantity",
-                "fulfillmentLocationCode",
-                "fulfillmentMethod"
-            ],
-            "shortcutParam": "quantity",
-            "returnType": "cartitem",
-            "template": "{+cartService}current/items/"
-        },
-        "get-inventory": {
-            "template": "{+productService}{productCode}/locationinventory{?locationCodes}",
-            "includeSelf": true,
-            "shortcutParam": "locationcodes",
-            "returnType": "string"
-        }
-    },
-    "location": {
-        "get": {
-            "template": "{+locationService}locationUsageTypes/SP/locations/{code}",
-            "shortcutParam": "code"
-        }
-    },
-    "locations": {
-        "defaultParams": {
-            "pageSize": 15
-        },
-        "collectionOf": "location",
-        "get": {
-            "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter}"
-        },
-        "get-by-lat-long": {
-            "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize}"
-        }
-    },
-    "cartsummary": "{+cartService}summary",
-    "cart": {
-        "defaults": {
-            "template": "{+cartService}current"
-        },
-        "add-product": {
-            "verb": "POST",
-            "returnType": "cartitem",
-            "template": "{+cartService}current/items/"
-        },
-        "empty": {
-            "verb": "DELETE",
-            "template": "{+cartService}current/items/"
-        },
-        "checkout": {
-            "verb": "POST",
-            "template": "{+orderService}?cartId={id}",
-            "returnType": "order",
-            "noBody": true,
-            "includeSelf": true
-        }
-    },
-    "cartitem": {
-        "defaults": {
-            "template": "{+cartService}current/items/{id}",
-            "shortcutParam": "id"
-        },
-        "update-quantity": {
-            "verb": "PUT",
-            "template": "{+cartService}current/items{/id,quantity}",
-            "shortcutParam": "quantity",
-            "includeSelf": true,
-            "noBody": true
-        }
-    },
-    "customer": {
-        "template": "{+customerService}{id}",
-        "shortcutParam": "id",
-        "includeSelf": true,
-        "create": {
-            "verb": "POST",
-            "template": "{+customerService}add-account-and-login",
-            "returnType": "login"
-        },
-        "create-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
-            "verb": "POST",
-            "template": "{+storefrontUserService}create",
-            "returnType": "login"
-        },
-        "login": {
-            "useIframeTransport": "{+customerService}../../receiver",
-            "verb": "POST",
-            "template": "{+customerService}../authtickets",
-            "returnType": "login"
-        },
-        "login-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
-            "verb": "POST",
-            "template": "{+storefrontUserService}login",
-            "returnType": "login"
-        },
-        "update": {
-            "verb": "PUT",
-            "template": "{+customerService}{id}",
-            "includeSelf": true
-        },
-        "reset-password": {
-            "verb": "POST",
-            "template": "{+customerService}reset-password",
-            "returnType": "string"
-        },
-        "reset-password-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
-            "verb": "POST",
-            "template": "{+storefrontUserService}resetpassword",
-            "returnType": "string"
-        },
-        "change-password": {
-            "verb": "POST",
-            "template": "{+customerService}{id}/change-password",
-            "includeSelf": true
-        },
-        "get-orders": {
-            "template": "{+orderService}?filter=OrderNumber ne null",
-            "includeSelf": true,
-            "returnType": "orders"
-        },
-        "get-cards": {
-            "template": "{+customerService}{id}/cards",
-            "includeSelf": true,
-            "returnType": "accountcards"
-        },
-        "add-card": {
-            "verb": "POST",
-            "template": "{+customerService}{customer.id}/cards",
-            "includeSelf": {
-                "asProperty": "customer"
-            },
-            "returnType": "accountcard"
-        },
-        "update-card": {
-            "verb": "PUT",
-            "template": "{+customerService}{customer.id}/cards/{id}",
-            "includeSelf": {
-                "asProperty": "customer"
-            },
-            "returnType": "accountcard"
-        },
-        "delete-card": {
-            "verb": "DELETE",
-            "template": "{+customerService}{customer.id}/cards/{id}",
-            "shortcutParam": "id",
-            "includeSelf": {
-                "asProperty": "customer"
-            },
-            "returnType": "accountcard"
-        },
-        "add-contact": {
-            "verb": "POST",
-            "template": "{+customerService}{id}/contacts",
-            "includeSelf": true,
-            "returnType": "contact"
-        },
-        "get-contacts": {
-            "template": "{+customerService}{id}/contacts",
-            "includeSelf": true,
-            "returnType": "contacts"
-        },
-        "delete-contact": {
-            "verb": "DELETE",
-            "template": "{+customerService}{customer.id}/contacts/{id}",
-            "shortcutParam": "id",
-            "includeSelf": {
-                "asProperty": "customer"
-            },
-            "returnType": "contact"
-        },
-        "get-credits": {
-            "template": "{+creditService}",
-            "returnType": "storecredits"
-        },
-        "get-credit": {
-            "verb": "GET",
-            "template": "{+creditService}/{id}",
-            "includeSelf": true,
-            "returnType": "storecredit"
-        },
-    },
-    "storecredit": {
-        "associate-to-shopper": {
-            "verb": "PUT",
-            "template": "{+creditService}{code}/associate-to-shopper",
-            "includeSelf": true
-        },
-        "get-credit": {
-            "verb": "GET",
-            "template": "{+creditService}{code}",
-            "includeSelf": true,
-            "returnType": "storecredit"
-        }
-    },
-    "storecredits": {
-        "template": "{+creditService}",
-        "collectionOf": "storecredit"
-    },
-    "contact": {
-        "template": "{+customerService}{accountId}/contacts/{id}",
-        "includeSelf": true
-    },
-    "contacts": {
-        "collectionOf": "contact"
-    },
-    "login": "{+userService}login",
-    "address": {
-        "validate-address": {
-            "verb": "POST",
-            "template": "{+addressValidationService}",
-            "includeSelf": {
-                "asProperty": "address"
-            },
-            "overridePostData": true,
-            "returnType": "address"
-        },
-        "validate-address-lenient": {
-            "verb": "POST",
-            "template": "{+addressValidationService}",
-            "includeSelf": {
-                "asProperty": "address"
-            },
-            "overridePostData": true,
-            "returnType": "address",
-            "suppressErrors": true
-        }
-    },
-    "order": {
-        "template": "{+orderService}{id}",
-        "includeSelf": true,
-        "create": {
-            "template": "{+orderService}{?cartId*}",
-            "shortcutParam": "cartId",
-            "noBody": true
-        },
-        "update-shipping-info": {
-            "template": "{+orderService}{id}/fulfillmentinfo",
-            "verb": "PUT",
-            "returnType": "shipment",
-            "includeSelf": true
-        },
-        "get-shipping-methods": {
-            "template": "{+orderService}{id}/shipments/methods",
-            "returnType": "shippingmethods"
-        },
-        "set-user-id": {
-            "verb": "PUT",
-            "template": "{+orderService}{id}/users",
-            "noBody": true,
-            "includeSelf": true,
-            "returnType": "user"
-        },
-        "create-payment": {
-            "verb": "POST",
-            "template": "{+orderService}{id}/payments/actions",
-            "includeSelf": true
-        },
-        "perform-payment-action": {
-            "verb": "POST",
-            "template": "{+orderService}{id}/payments/{paymentId}/actions",
-            "includeSelf": true,
-            "shortcutParam": "paymentId",
-            "returnType": "string"
-        },
-        "apply-coupon": {
-            "verb": "PUT",
-            "template": "{+orderService}{id}/coupons/{couponCode}",
-            "shortcutParam": "couponCode",
-            "includeSelf": true,
-            "noBody": true,
-            "returnType": "coupon"
-        },
-        "remove-coupon": {
-            "verb": "DELETE",
-            "template": "{+orderService}{id}/coupons/{couponCode}",
-            "shortcutParam": "couponCode",
-            "includeSelf": true
-        },
-        "remove-all-coupons": {
-            "verb": "DELETE",
-            "template": "{+orderService}{id}/coupons",
-            "includeSelf": true
-        },
-        "get-available-actions": {
-            "template": "{+orderService}{id}/actions",
-            "includeSelf": true,
-            "returnType": "orderactions"
-        },
-        "perform-order-action": {
-            "verb": "POST",
-            "template": "{+orderService}{id}/actions",
-            "shortcutParam": "actionName",
-            "overridePostData": [
-                "actionName"
-            ],
-            "includeSelf": true
-        },
-        "add-order-note": {
-            "verb": "POST",
-            "template": "{+orderService}{id}/notes",
-            "includeSelf": true,
-            "returnType": "ordernote"
-        }
-    },
-    "rma": {
-        "create": {
-            "verb": "POST",
-            "template": "{+returnService}"
-        }
-    },
-    "rmas": {
-        "template": "{+returnService}{?_*}",
-        "defaultParams": {
-            "startIndex": 0,
-            "pageSize": 5
-        },
-        "collectionOf": "rma"
-    },
-    "payment": {
-        "create": {
-            "template": "{+orderService}{orderId}/payments/actions",
-            "includeSelf": true
-        }
-    },
-    "accountcard": {
-        "template": "{+customerService}{id}/cards"
-    },
-    "accountcards": {
-        "collectionOf": "accountcard"
-    },
-    "creditcard": {
-        "defaults": {
-            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver.html"
-        },
-        "save": {
-            "verb": "POST",
-            "template": "{+paymentService}",
-            "returnType": "string"
-        },
-        "update": {
-            "verb": "PUT",
-            "template": "{+paymentService}{cardId}",
-            "returnType": "string"
-        },
-        "del": {
-            "verb": "DELETE",
-            "shortcutParam": "cardId",
-            "template": "{+paymentService}{cardId}"
-        }
-    },
-    "creditcards": {
-        "collectionOf": "creditcard"
-    },
-    "ordernote": {
-        "template": "{+orderService}{orderId}/notes/{id}"
-    },
-    "addressschemas": "{+referenceService}addressschemas",
-    "wishlist": {
-        "get": {
-            "template": "{+wishlistService}{id}",
-            "includeSelf": true
-        },
-        "get-by-name": {
-            "template": "{+wishlistService}customers/{customerAccountId}/{name}",
-            "includeSelf": true
-        },
-        "get-default": {
-            "template": "{+wishlistService}customers/{customerAccountId}/my_wishlist",
-            "includeSelf": true
-        },
-        "create-default": {
-            "verb": "POST",
-            "template": "{+wishlistService}",
-            "defaultParams": {
-                "name": "my_wishlist",
-                "typeTag": "default"
-            },
-            "overridePostData": true
-        },
-        "add-item": {
-            "verb": "POST",
-            "template": "{+wishlistService}{id}/items/",
-            "includeSelf": true
-        },
-        "delete-all-items": {
-            "verb": "DELETE",
-            "template": "{+wishlistService}{id}/items/"
-        },
-        "delete-item": {
-            "verb": "DELETE",
-            "template": "{+wishlistService}{id}/items/{itemId}",
-            "includeSelf": true,
-            "shortcutParam": "itemId"
-        },
-        "edit-item": {
-            "verb": "PUT",
-            "template": "{+wishlistService}{id}/items/{itemId}",
-            "includeSelf": true
-        },
-        "add-item-to-cart": {
-            "verb": "POST",
-            "returnType": "cartitem",
-            "template": "{+cartService}current/items/"
-        },
-        "get-items-by-name": {
-            "returnType": "wishlistitems",
-            "template": "{+wishlistService}customers/{customerAccountId}/{name}/items{?startIndex,pageSize,sortBy,filter}",
-            "defaultParams": {
-                "sortBy": "UpdateDate asc"
-            },
-            "includeSelf": true
-        }
-    },
-    "wishlists": {
-        "collectionOf": "wishlist"
-    },
-    "instockrequest": {
-        "create": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
-            "verb": "POST",
-            "template": "{+inStockNotificationService}"
-        }
-    }
-}
-},{}],22:[function(require,module,exports){
-
-
-//# sourceUrl=src/object.js
-
-// BEGIN OBJECT
-
-var utils = require('./utils');
-var ApiReference;
-var ApiCollection; // lazy loading to prevent circular dep
-
-var ApiObjectConstructor = function(type, data, iapi) {
-    this.data = data || {};
-    this.api = iapi;
-    this.type = type;
-};
-
-ApiObjectConstructor.prototype = {
-    constructor: ApiObjectConstructor,
-    getAvailableActions: function() {
-        ApiReference = ApiReference || require('./reference');
-        return ApiReference.getActionsFor(this.type);
-    },
-    prop: function(k, v) {
-        switch (arguments.length) {
-            case 1:
-                if (typeof k === "string") return this.data[k];
-                if (typeof k === "object") {
-                    for (var hashkey in k) {
-                        if (k.hasOwnProperty(hashkey)) this.prop(hashkey, k[hashkey]);
-                    }
-                }
-                break;
-            case 2:
-                this.data[k] = v;
-        }
-        return this;
-    }
-};
-
-utils.addEvents(ApiObjectConstructor);
-
-ApiObjectConstructor.types = {
-    //address: require('./types/address'),
-    cart: require('./types/cart'),
-    cartsummary: require('./types/cartsummary'),
-    creditcard: require('./types/creditcard'),
-    customer: require('./types/customer'),
-    login: require('./types/login'),
-    order: require('./types/order'),
-    product: require('./types/product'),
-    shipment: require('./types/shipment'),
-    user: require('./types/user'),
-    wishlist: require('./types/wishlist')
-};
-ApiObjectConstructor.hydratedTypes = {};
-
-ApiObjectConstructor.getHydratedType = function(typeName) {
-    ApiReference = ApiReference || require('./reference');
-    if (!(typeName in this.hydratedTypes)) {
-        var availableActions = ApiReference.getActionsFor(typeName),
-            reflectedMethods = {};
-        for (var i = availableActions.length - 1; i >= 0; i--) {
-            utils.setOp(reflectedMethods, availableActions[i]);
-        }
-        this.hydratedTypes[typeName] = utils.inherit(this, utils.extend({}, reflectedMethods, this.types[typeName] || {}));
-    }
-    return this.hydratedTypes[typeName];
-};
-
-ApiObjectConstructor.create = function(typeName, rawJSON, api) {
-    ApiReference = ApiReference || require('./reference');
-    var type = ApiReference.getType(typeName);
-    if (!type) {
-        // for forward compatibility the API should return a response,
-        // even one that it doesn't understand
-        return rawJSON;
-    }
-    if (type.collectionOf) {
-        // lazy load to prevent circular dep
-        ApiCollection = ApiCollection || require('./collection');
-        return ApiCollection.create(typeName, rawJSON, api, type.collectionOf);
-    }
-
-    var ApiObjectType = this.getHydratedType(typeName);
-
-    return new ApiObjectType(typeName, rawJSON, api);
-};
-
-module.exports = ApiObjectConstructor;
-
-// END OBJECT
-
-/***********/
-},{"./collection":13,"./reference":23,"./types/cart":24,"./types/cartsummary":25,"./types/creditcard":26,"./types/customer":27,"./types/login":29,"./types/order":30,"./types/product":31,"./types/shipment":32,"./types/user":33,"./types/wishlist":34,"./utils":35}],23:[function(require,module,exports){
-
-
-//# sourceUrl=src/reference.js
-
-// BEGIN REFERENCE
-var utils = require('./utils');
-var errors = require('./errors');
-var ApiCollection;
-var ApiObject = require('./object');
-var objectTypes = require('./methods.json');
-
-errors.register({
-    'NO_REQUEST_CONFIG_FOUND': 'No request configuration was found for {0}.{1}',
-    'NO_SHORTCUT_PARAM_FOUND': 'No shortcut parameter available for {0}. Please supply a configuration object instead of "{1}".'
-});
-
-var basicOps = {
-    get: 'GET',
-    update: 'PUT',
-    create: 'POST',
-    del: 'DELETE'
-};
-var copyToConf = ['verb', 'returnType', 'noBody', 'suppressErrors'],
-    copyToConfLength = copyToConf.length;
-var reservedWords = {
-    template: true,
-    defaultParams: true,
-    shortcutParam: true,
-    defaults: true,
-    verb: true,
-    returnType: true,
-    noBody: true,
-    includeSelf: true,
-    collectionOf: true,
-    overridePostData: true,
-    useIframeTransport: true,
-    construct: true,
-    postconstruct: true,
-};
-var ApiReference = {
-
-    basicOps: basicOps,
-    urls: {},
-
-    getActionsFor: function(typeName) {
-        ApiCollection = ApiCollection || require('./collection');
-        if (!objectTypes[typeName]) return false;
-        var actions = [],
-            isSimpleType = (typeof objectTypes[typeName] === "string");
-        for (var a in basicOps) {
-            if (isSimpleType || !(a in objectTypes[typeName]))
-                actions.push(a);
-        }
-        if (!isSimpleType) {
-            for (a in objectTypes[typeName]) {
-                if (a && objectTypes[typeName].hasOwnProperty(a) && !reservedWords[a])
-                    actions.push(utils.camelCase(a));
-            }
-        }
-        var declaredType = (objectTypes[typeName].collectionOf ? ApiCollection : ApiObject).types[typeName];
-        if (declaredType) {
-            for (a in declaredType) {
-                if (isSimpleType || !(utils.dashCase(a) in objectTypes[typeName] && !reservedWords[a]) && typeof declaredType[a] === "function") actions.push(a);
-            }
-        }
-
-        return actions;
-    },
-
-    getRequestConfig: function(operation, typeName, conf, context, obj) {
-
-        var returnObj, tptData;
-
-        // get object type from our reference
-        var oType = objectTypes[typeName];
-
-        // there may not be one
-        if (!oType) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, '');
-
-        // get specific details of the requested operation
-        if (operation) operation = utils.dashCase(operation);
-        if (oType[operation]) oType = oType[operation];
-
-        // some oTypes are a simple template as a string
-        if (typeof oType === "string") oType = {
-            template: oType
-        };
-
-        // the defaults at the root object type should be copied into all operation configs
-        if (objectTypes[typeName].defaults) oType = utils.extend({}, objectTypes[typeName].defaults, oType);
-
-        // a template is required
-        if (!oType.template) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, operation);
-
-        returnObj = {};
-        tptData = {};
-
-        // cache templates lazily
-        if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
-
-        // add the requesting object's data itself to the tpt context
-        if (oType.includeSelf && obj) {
-            if (oType.includeSelf.asProperty) {
-                tptData[oType.includeSelf.asProperty] = obj.data
-            } else {
-                tptData = utils.extend(tptData, obj.data);
-            }
-        }
-
-        // shortcutparam allows you to use the most commonly used conf property as a string or number argument
-        if (conf !== undefined && typeof conf !== "object") {
-            if (!oType.shortcutParam) errors.throwOnObject(obj, 'NO_SHORTCUT_PARAM_FOUND', typeName, conf);
-            tptData[oType.shortcutParam] = conf;
-        } else if (conf) {
-            // add the conf argued directly into this request fn to the tpt context
-            utils.extend(tptData, conf);
-        }
-
-        // default params added to template, but overridden by existing tpt data
-        if (oType.defaultParams) tptData = utils.extend({}, oType.defaultParams, tptData);
-
-        // remove stuff that the UriTemplate parser can't parse
-        for (var tvar in tptData) {
-            if (utils.getType(tptData[tvar]) == "Array") tptData[tvar] = JSON.stringify(tptData[tvar]);
-        }
-        var fullTptContext = utils.extend({
-            _: tptData
-        }, context.asObject('context-'), utils.flatten(tptData, {}), ApiReference.urls);
-        returnObj.url = oType.template.expand(fullTptContext);
-        for (var j = 0; j < copyToConfLength; j++) {
-            if (copyToConf[j] in oType) returnObj[copyToConf[j]] = oType[copyToConf[j]];
-        }
-        if (oType.useIframeTransport) {
-            // cache templates lazily
-            if (typeof oType.useIframeTransport === "string") oType.useIframeTransport = utils.uritemplate.parse(oType.useIframeTransport);
-            returnObj.iframeTransportUrl = oType.useIframeTransport.expand(fullTptContext);
-        }
-        if (oType.overridePostData) {
-            var overriddenData;
-            if (utils.getType(oType.overridePostData) == "Array") {
-                overriddenData = {};
-                for (var tOK = 0; tOK < oType.overridePostData.length; tOK++) {
-                    overriddenData[oType.overridePostData[tOK]] = tptData[oType.overridePostData[tOK]];
-                }
-            } else {
-                overriddenData = tptData;
-            }
-            returnObj.overridePostData = overriddenData;
-        }
-        return returnObj;
-    },
-
-    getType: function(typeName) {
-        return objectTypes[typeName];
-    }
-};
-
-module.exports = ApiReference;
-
-// END REFERENCE
-
-/***********/
-},{"./collection":13,"./errors":16,"./methods.json":21,"./object":22,"./utils":35}],24:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/cart.js
-
-var utils = require('../utils');
-module.exports = {
-    count: function () {
-        var items = this.prop('items');
-        if (!items || !items.length) return 0;
-        return utils.reduce(items, function (total, item) { return total + item.quantity; }, 0);
-    }
-};
-},{"../utils":35}],25:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/cartsummary.js
-
-var utils = require('../utils');
-module.exports = {
-    count: function () {
-        return this.data.totalQuantity || 0;
-    }
-};
-},{"../utils":35}],26:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/creditcard.js
-
-var utils = require('../utils');
-var errors = require('../errors');
-module.exports = (function() {
-
-    errors.register({
-        'CARD_TYPE_MISSING': 'Card type missing.',
-        'CARD_NUMBER_MISSING': 'Card number missing.',
-        'CVV_MISSING': 'Card security code missing.',
-        'CARD_NUMBER_UNRECOGNIZED': 'Card number is in an unrecognized format.',
-        'MASK_PATTERN_INVALID': 'Supplied mask pattern did not match a valid card number.'
-    });
-
-    var charsInCardNumberRE = /[\s-]/g;
-
-    function validateCardNumber(obj, cardNumber) {
-        var maskCharacter = obj.maskCharacter;
-        if (!cardNumber) return false;
-        return (cardNumber.indexOf(maskCharacter) !== -1) || luhn10(cardNumber);
-    }
-
-    function luhn10(s) {
-        // luhn 10 algorithm for card numbers
-        var i, n, c, r, t;
-        r = "";
-        for (i = 0; i < s.length; i++) {
-            c = parseInt(s.charAt(i), 10);
-            if (c >= 0 && c <= 9) r = c + r;
-        }
-        if (r.length <= 1) return false;
-        t = "";
-        for (i = 0; i < r.length; i++) {
-            c = parseInt(r.charAt(i), 10);
-            if (i % 2 != 0) c *= 2;
-            t = t + c;
-        }
-        n = 0;
-        for (i = 0; i < t.length; i++) {
-            c = parseInt(t.charAt(i), 10);
-            n = n + c;
-        }
-        return (n != 0 && n % 10 == 0);
-    }
-
-    function createCardNumberMask(obj, cardNumber) {
-        var maskRE = new RegExp(obj.maskPattern),
-            matches = cardNumber.match(maskRE),
-            toDisplay = cardNumber,
-            toSend = [],
-            maskCharacter = obj.maskCharacter,
-            tempMask = "";
-
-        if (!matches) errors.throwOnObject(obj, 'MASK_PATTERN_INVALID');
-        for (var i = 1; i < matches.length; i++) {
-            tempMask = "";
-            for (var j = 0; j < matches[i].length; j++) {
-                tempMask += maskCharacter;
-            }
-            toDisplay = toDisplay.replace(matches[i], tempMask);
-        }
-        for (i = toDisplay.length - 1; i >= 0; i--) {
-            toSend.unshift(toDisplay.charAt(i) === maskCharacter ? cardNumber.charAt(i) : maskCharacter);
-        }
-        obj.maskedCardNumber = toDisplay;
-        return toSend.join('');
-    }
-
-    function makePayload(obj) {
-        var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
-        if (!data.paymentOrCardType) errors.throwOnObject(obj, 'CARD_TYPE_MISSING');
-        if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, 'CARD_NUMBER_MISSING');
-        if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
-        maskedData = transform.toCardData(data)
-        var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
-        if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
-
-        // only add numberPart if the current card number isn't already masked
-        if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
-        delete maskedData.cardNumber;
-
-        return maskedData;
-    }
-
-
-    var transform = {
-        fields: {
-            "cardNumber": "cardNumberPartOrMask",
-            "persistCard": "isCardInfoSaved",
-            "cardholderName": "nameOnCard",
-            "cardType": "paymentOrCardType",
-            "cardId": "paymentServiceCardId",
-            "cvv": "cvv"
-        },
-        toStorefrontData: function (data) {
-            var storefrontData = {};
-            for (var serviceField in this.fields) {
-                if (serviceField in data) storefrontData[this.fields[serviceField]] = data[serviceField];
-            }
-            return storefrontData;
-        },
-        toCardData: function (data) {
-            var cardData = {};
-            for (var serviceField in this.fields) {
-                if (this.fields[serviceField] in data) cardData[serviceField] = data[this.fields[serviceField]]
-            }
-            return cardData;
-        }
-    };
-    
-
-    return {
-        maskCharacter: "*",
-        maskPattern: "^(\\d+?)\\d{4}$",
-        save: function () {
-            var self = this,
-                isUpdate = this.prop(transform.fields.cardId);
-            return this.api.action(this, (isUpdate ? 'update' : 'save'), makePayload(this)).then(function (res) {
-                self.prop(transform.toStorefrontData({
-                    cardNumber: self.maskedCardNumber,
-                    cvv: !!(self.prop('cvv'))? self.prop('cvv').replace(/\d/g, self.maskCharacter) : '',
-                    cardId: isUpdate || res
-                }));
-                self.fire('sync', utils.clone(self.data), self.data);
-                return self;
-            });
-        },
-        saveToCustomer: function (customerId) {
-            var self = this;
-            return this.save().then(function (cardId) {
-                cardId = cardId || self.prop('id');
-                var customer = self.api.createSync('customer', { id: customerId });
-                errors.passFrom(customer, this);
-                return customer.addCard(self.data);
-            });
-        },
-        getOrderData: function () {
-            return {
-                cardNumberPartOrMask: this.maskedCardNumber || this.data.cardNumberPartOrMask || this.data.cardNumberPart || this.data.cardNumber,
-                cvv: this.data.cvv,
-                nameOnCard: this.data.nameOnCard,
-                paymentOrCardType: this.data.paymentOrCardType || this.data.cardType,
-                paymentServiceCardId: this.data.paymentServiceCardId || this.data.cardId,
-                isCardInfoSaved: this.data.isCardInfoSaved || this.data.persistCard,
-                expireMonth: this.data.expireMonth,
-                expireYear: this.data.expireYear
-            }
-        }
-    };
-
-}());
-},{"../errors":16,"../utils":35}],27:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/customer.js
-
-var utils = require('../utils');
-var errors = require('../errors');
-module.exports = (function () {
-    return {
-        postconstruct: function() {
-            var self = this;
-            this.on('sync', function (json) {
-                if (json && json.authTicket && json.authTicket.accessToken) {
-                    self.api.context.UserClaims(json.authTicket.accessToken);
-                    self.api.fire('login', json.authTicket);
-                }
-            });
-        },
-        savePaymentCard: function (unmaskedCardData) {
-            var self = this, card = this.api.createSync('creditcard', unmaskedCardData),
-                isUpdate = !!(unmaskedCardData.paymentServiceCardId || unmaskedCardData.id);
-            errors.passFrom(card, this);
-            return card.save().then(function (card) {
-                var payload = utils.clone(card.data);
-                payload.cardNumberPart = payload.cardNumberPartOrMask || payload.cardNumber;
-                payload.id = payload.paymentServiceCardId;
-                delete payload.cardNumber;
-                delete payload.cardNumberPartOrMask;
-                delete payload.paymentServiceCardId;
-                return isUpdate ? self.updateCard(payload) : self.addCard(payload);
-            });
-        },
-        deletePaymentCard: function (id) {
-            var self = this;
-            return this.deleteCard(id).then(function () {
-                return self.api.del('creditcard', id);
-            });
-        },
-        getStoreCredits: function() {
-            var credits = this.api.createSync('storecredits');
-            errors.passFrom(credits, this);
-            return credits.get();
-        },
-        getDigitalCredit: function (id) {
-            var credit = this.api.createSync('storecredit', { code: id });
-            errors.passFrom(credit, this);
-            return credit.getCredit();
-        },
-        addStoreCredit: function (id) {
-            var credit = this.api.createSync('storecredit', { code: id });
-            errors.passFrom(credit, this);
-            return credit.associateToShopper();
-        },
-        // as of 12/30/2013 partial updates on customer will
-        // blank out these values unless they are included
-        // TODO: remove as soon as TFS#21775 is fixed
-        getMinimumPartial: function () {
-            return {
-                firstName: this.prop('firstName'),
-                lastName: this.prop('lastName'),
-                emailAddress: this.prop('emailAddress')
-            };
-        },
-        update: function (data) {
-            return this.api.action(this, 'update', utils.extend(this.getMinimumPartial(), utils.clone(data)));
-        }
-    }
-}());
-},{"../errors":16,"../utils":35}],28:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/locations.js
-
-var utils = require('../utils');
-module.exports = (function () {
-
-    // haversine
-    // By Nick Justice (niix)
-    // https://github.com/niix/haversine
-
-    var haversine = (function () {
-
-        // convert to radians
-        var toRad = function (num) {
-            return num * Math.PI / 180
-        }
-
-        return function haversine(start, end, options) {
-            var miles = 3960
-            var km = 6371
-            options = options || {}
-
-            var R = options.unit === 'km' ? km : miles
-
-            var dLat = toRad(end.latitude - start.latitude)
-            var dLon = toRad(end.longitude - start.longitude)
-            var lat1 = toRad(start.latitude)
-            var lat2 = toRad(end.latitude)
-
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-            if (options.threshold) {
-                return options.threshold > (R * c)
-            } else {
-                return R * c
-            }
-        }
-
-    })()
-
-    return {
-
-        getByLatLong: function (opts) {
-            var self = this;
-            return this.api.action('locations', 'get-by-lat-long', {
-                latitude: opts.location.coords.latitude,
-                longitude: opts.location.coords.longitude
-            }).then(function (coll) {
-                var locations = coll.data.items;
-                for (var i = 0, len = locations.length; i < len; i++) {
-                    locations[i].distance = haversine(opts.location.coords, { latitude: locations[i].geo.lat, longitude: locations[i].geo.lng }).toFixed(1);
-                }
-                var data = utils.clone(coll.data);
-                self.fire('sync', data, data);
-                return self;
-            });
-        },
-
-        getForProduct: function (opts) {
-            var self = this,
-                coll,
-                // not running the method on self since it shouldn't sync until it's been processed!
-                operation = opts.location ?
-                this.api.action('locations', 'get-by-lat-long', {
-                    latitude: opts.location.coords.latitude,
-                    longitude: opts.location.coords.longitude
-                }) :
-                this.api.get('locations');
-            return operation.then(function (c) {
-                coll = c;
-                var codes = utils.map(coll.data.items, function (loc) {
-                    return loc.code;
-                }).join(',');
-                return self.api.action('product', 'getInventory', {
-                    productCode: opts.productCode,
-                    locationCodes: codes
-                });
-            }).then(function (inventory) {
-                var j,
-                    ilen,
-                    locations = coll.data.items,
-                    inventories = inventory.items,
-                    validLocations = [];
-                for (var i = 0, len = locations.length; i < len; i++) {
-                    for (j = 0, ilen = inventories.length; j < ilen; j++) {
-                        if (inventories[j].locationCode === locations[i].code) {
-                            locations[i].quantity = inventories[j].stockAvailable;
-                            if (opts.location) locations[i].distance = haversine(opts.location.coords, { latitude: locations[i].geo.lat, longitude: locations[i].geo.lng }).toFixed(1);
-                            validLocations.push(locations[i]);
-                            inventories.splice(j, 1);
-                            break;
-                        }
-                    }
-                }
-                var data = { items: utils.clone(validLocations) };
-                self.fire('sync', data, data);
-                return self;
-            });
-        }
-    }
-
-}());
-},{"../utils":35}],29:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/login.js
-
-module.exports = {
-    postconstruct: function (type, json) {
-        var accessToken;
-        if (json.authTicket && json.authTicket.accessToken) {
-            accessToken = json.authTicket.accessToken;
-        } else if (json.accessToken) {
-            accessToken = json.accessToken;
-        }
-        if (accessToken) {
-            this.api.context.UserClaims(accessToken);
-            this.api.fire('login', json);
-        }
-    }
-};
-},{}],30:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/order.js
-
-var errors = require('../errors');
-var CONSTANTS = require('../constants/default');
-var utils = require('../utils');
-var ApiReference;
-module.exports = (function () {
-
-    errors.register({
-        'BILLING_INFO_MISSING': 'Billing info missing.',
-        'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
-        'PAYMENT_MISSING': 'Sorry, something went wrong: Expected a payment to exist on this order and one did not.',
-        'PAYPAL_TRANSACTION_ID_MISSING': 'Sorry, something went wrong: Expected the active payment to include a paymentServiceTransactionId and it did not.',
-        'ORDER_CANNOT_SUBMIT': 'Sorry, this order cannot be submitted. Please refresh the page and try again, or contact Support.',
-        'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
-        //'ADD_GIFT_CARD_FAILED': 'Adding gift card failed for the following reason: {0}',
-        'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
-    });
-
-    var OrderStatus2IsComplete = {};
-    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
-    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
-    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
-
-    var OrderStatus2IsReady = {};
-    OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER] = true;
-    OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.ACCEPT_ORDER] = true;
-
-
-    var PaymentStrategies = {
-        "PaypalExpress": function (order, billingInfo) {
-            if (!ApiReference) ApiReference = require('../reference');
-            return order.createPayment({
-                returnUrl: billingInfo.paypalReturnUrl,
-                cancelUrl: billingInfo.paypalCancelUrl
-            }).ensure(function () {
-                var payment = order.getCurrentPayment();
-                if (!payment) errors.throwOnObject(order, 'PAYMENT_MISSING');
-                if (!payment.paymentServiceTransactionId) errors.throwOnObject(order, 'PAYPAL_TRANSACTION_ID_MISSING');
-                window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
-                });
-        },
-        "CreditCard": function (order, billingInfo) {
-            var card = order.api.createSync('creditcard', billingInfo.card);
-            errors.passFrom(card, order);
-            return card.save().then(function(card) {
-                billingInfo.card = card.getOrderData();
-                order.prop('billingInfo', billingInfo);
-                return order.createPayment();
-            });
-        },
-        "Check": function (order, billingInfo) {
-            return order.createPayment();
-        }
-    };
-    
-    return {
-        getShippingMethodsFromContact: function (contact) {
-            var self = this;
-            var fulfillmentContact = utils.clone(self.prop('fulfillmentInfo').fulfillmentContact);
-            // currently the service can't handle not having a state
-            if (fulfillmentContact.address && !fulfillmentContact.address.stateOrProvince) fulfillmentContact.address.stateOrProvince = "n/a";
-            return self.update({ fulfillmentInfo: { fulfillmentContact: fulfillmentContact } }).then(function () {
-                return self.getShippingMethods();
-            });
-        },
-        addCoupon: function(couponCode) {
-            var self = this;
-            return this.applyCoupon(couponCode).then(function () {
-                return self.get();
-            }, function(reason) {
-                errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
-            });
-        },
-        addNewCustomer: function (newCustomerPayload) {
-            var self = this;
-            return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
-                return self.setUserId();
-            }, function (reason) {
-                errors.throwOnObject(self, 'ADD_CUSTOMER_FAILED', reason.message);
-            });
-        },
-        createPayment: function(extraProps) {
-            return this.api.action(this, 'createPayment', utils.extend({
-                currencyCode: this.api.context.Currency().toUpperCase(),
-                amount: this.prop('amountRemainingForPayment'),
-                newBillingInfo: this.prop('billingInfo')
-            }, extraProps || {}));
-        },
-        addStoreCredit: function(payment) {
-            return this.createPayment({
-                amount: payment.amount,
-                newBillingInfo: {
-                    paymentType: 'StoreCredit',
-                    storeCreditCode: payment.storeCreditCode
-                }
-            });
-        },
-        addPayment: function (payment) {
-            var billingInfo = payment || this.prop('billingInfo');
-            if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
-            if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
-            return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
-        },
-        getActivePayments: function() {
-            var payments = this.prop('payments'),
-                activePayments = [];
-            if (payments.length !== 0) {
-                for (var i = payments.length - 1; i >= 0; i--) {
-                    if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
-                        activePayments.push(utils.clone(payments[i]))
-                }
-            }
-            return activePayments;
-        },
-        getCurrentPayment: function() {
-            var activePayments = this.getActivePayments();
-            for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType !== "StoreCredit" && activePayments[i].paymentType !== 'GiftCard') return activePayments[i];
-            }
-        },
-        getActiveStoreCredits: function() {
-            var activePayments = this.getActivePayments(),
-                credits = [];
-            for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType === "StoreCredit" || activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
-            }
-            return credits;
-        },
-        voidPayment: function (id) {
-            var obj = this;
-            return this.performPaymentAction({
-                paymentId: id,
-                actionName: CONSTANTS.PAYMENT_ACTIONS.VOID
-            }).then(function (rawJSON) {
-                if (rawJSON || rawJSON === 0 || rawJSON === false) {
-                    delete rawJSON.billingInfo;
-                    obj.data = utils.clone(rawJSON);
-                }
-                delete obj.unsynced;
-                obj.fire('sync', rawJSON, obj.data);
-                obj.api.fire('sync', obj, rawJSON, obj.data);
-                return obj;
-            });
-        },
-        checkout: function() {
-            var self = this,
-                availableActions = this.prop('availableActions');
-            if (!this.isComplete()) {
-                for (var i = availableActions.length - 1; i >= 0; i--) {
-                    if (availableActions[i] in OrderStatus2IsReady) return this.performOrderAction(availableActions[i]).otherwise(function(e) {
-                        return self.get().ensure(function() {
-                            throw e;
-                        })
-                    });
-                }
-            }
-            errors.throwOnObject(this, 'ORDER_CANNOT_SUBMIT');
-        },
-        isComplete: function () {
-            return !!OrderStatus2IsComplete[this.prop('status')];
-        }
-    };
-}());
-},{"../constants/default":14,"../errors":16,"../reference":23,"../utils":35}],31:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/product.js
-
-var errors = require('../errors');
-var utils = require('../utils');
-var CONSTANTS = require('../constants/default');
-module.exports = {
-    addToWishlist: function (payload) {
-        var self = this;
-        var list = this.api.createSync('wishlist', { customerAccountId: payload.customerAccountId });
-        return list.getOrCreate().then(function () {
-            errors.passFrom(list, self);
-            return list.addItem({
-                quantity: payload.quantity,
-                currencyCode: payload.currencyCode || self.api.context.Currency(),
-                localeCode: payload.localeCode || self.api.context.Locale(),
-                product: self.data
-            });
-        });
-    },
-    addToCartForPickup: function (opts) {
-        return this.addToCart(utils.extend({}, this.data, {
-            fulfillmentMethod: CONSTANTS.FULFILLMENT_METHODS.PICKUP
-        }, opts));
-    }
-};
-},{"../constants/default":14,"../errors":16,"../utils":35}],32:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/shipment.js
-
-var utils = require('../utils');
-module.exports = {
-    getShippingMethodsFromContact: function (contact) {
-        var self = this;
-        var fulfillmentContact = utils.clone(self.prop('fulfillmentContact'));
-        // currently the service can't handle not having a state
-        if (fulfillmentContact.address && !fulfillmentContact.address.stateOrProvince) fulfillmentContact.address.stateOrProvince = "n/a";
-        return self.update({ fulfillmentContact: fulfillmentContact }).then(function () {
-            return self.getShippingMethods();
-        });
-    }
-};
-},{"../utils":35}],33:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/user.js
-
-module.exports = {
-    postconstruct: function () {
-        var self = this;
-        this.on('sync', function (json) {
-            if (json && json.authTicket && json.authTicket.accessToken) {
-                self.api.context.UserClaims(json.authTicket.accessToken);
-                self.api.fire('login', json.authTicket);
-            }
-        });
-    },
-    createAndLogin: function(payload) {
-        var self = this;
-        if (!payload) payload = this.data;
-        return this.create(payload).then(function () {
-            return self.login({
-                emailAddress: payload.emailAddress,
-                password: payload.password
-            });
-        });
-    },
-    createWithCustomer: function (payload) {
-        var self = this;
-        return this.createAndLogin(payload).then(function () {
-            return self.api.action('customer', 'create', {
-                userId: self.prop('id')
-            })
-        }).then(function (customer) {
-            return customer.addContact({
-                email: self.prop('emailAddress'),
-                firstName: self.prop('firstName'),
-                lastNameOrSurname: self.prop('lastName'),
-                address: {}
-            });
-        });
-    }
-};
-},{}],34:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/wishlist.js
-
-var errors = require('../errors'),
-    utils = require('../utils');
-module.exports = (function() {
-
-    errors.register({
-        'NO_ITEMS_IN_WISHLIST': 'No items in wishlist.',
-        'NO_MATCHING_ITEM_IN_WISHLIST': 'No wishlist item matching ID {0}'
-    });
-
-    var getItem = function (list, item) {
-        var items = list.prop('items');
-        if (!items || items.length === 0) {
-            return errors.throwOnObject(list, 'NO_ITEMS_IN_WISHLIST');
-        }
-        if (typeof item === "string") {
-            for (var i = items.length - 1; i >= 0; i--) {
-                if (items[i].id === item) {
-                    item = items[i];
-                    break;
-                }
-            }
-            if (typeof item === "string") {
-                return errors.throwOnObject(list, 'NO_MATCHING_ITEM_IN_WISHLIST', item);
-            }
-        }
-        return item;
-    }
-
-    return {
-        getOrCreate: function (cid) {
-            var self = this;
-            return this.getDefault({ customerAccountId: cid }).then(function (list) {
-                return list;
-            }, function () {
-                return self.createDefault({ customerAccountId: cid });
-            });
-        },
-        addItemToCartById: function (item) {
-            return this.addItemToCart(getItem(this, item));
-        },
-        get: function () {
-            // overriding get to always use getItemsByName to get the items collection
-            // so items are always sorted by update date
-            var self = this;
-            return this.getItemsByName().then(function (items) {
-                self.prop('items', items);
-                self.fire('sync', self.data, self);
-                return self;
-            });
-        }
-    };
-}());
-},{"../errors":16,"../utils":35}],35:[function(require,module,exports){
-var process=require("__browserify_process");
-
-//# sourceUrl=src/utils.js
-
-// BEGIN UTILS
-// Many of these poached from lodash
-
-    var maxFlattenDepth = 20;
-
-    var MicroEvent = require('microevent');
-    var isNode = typeof process === "object" && process.title === "node";
-    var XHR;
-    var IframeXHR;
-    var getXHR = isNode ? function() {
-        XHR = XHR || require('xmlhttprequest').XMLHttpRequest;
-        return new XHR();
-    } : (window.XMLHttpRequest ? function() {
-        return new XMLHttpRequest();
-    } : function() {
-        return new window.ActiveXObject("Microsoft.XMLHTTP");
-    });
-    var utils = {
-        extend: function () {
-            var src, copy, name, options,
-                target = arguments[0],
-                i = 1,
-                length = arguments.length;
-
-            for (; i < length; i++) {
-                // Only deal with non-null/undefined values
-                if ((options = arguments[i]) != null) {
-                    // Extend the base object
-                    for (name in options) {
-                        copy = options[name];
-
-                        // Prevent never-ending loop
-                        if (target === copy) {
-                            continue;
-                        }
-
-                        if (copy !== undefined) {
-                            target[name] = copy;
-                        }
-                    }
-                }
-            }
-            return target;
-        },
-        clone: function(obj) {
-            return JSON.parse(JSON.stringify(obj)); // cheap copy :)
-        },
-        compose: function(first, second) {
-            return function() {
-                first.call(this, arguments);
-                second.call(this, arguments);
-            }
-        },
-        flatten: function (obj, into, prefix, separator, depth) {
-            if (depth === 0) throw "Cannot flatten circular object.";
-            if (!depth) depth = maxFlattenDepth;
-            into = into || {};
-            separator = separator || ".";
-            prefix = prefix || '';
-            for (var n in obj) {
-                key = n;
-                val = obj[n];
-                if (obj.hasOwnProperty(key)) {
-                    if (val && typeof val === 'object' && !(
-                      val instanceof Array ||
-                      val instanceof Date ||
-                      val instanceof RegExp)
-                    ) {
-                        utils.flatten(val.toJSON ? val.toJSON() : val, into, prefix + key + separator, separator, --depth);
-                    }
-                    else {
-                        into[prefix + key] = val;
-                    }
-                }
-            }
-
-            return into;
-        },
-        inherit: (function(composedMethods) {
-            return function (parent, more) {
-                var ApiInheritedObject = function() {
-                    if (this.construct) this.construct.apply(this, arguments);
-                    parent.apply(this, arguments);
-                    if (this.postconstruct) this.postconstruct.apply(this, arguments);
-                },
-                parentObject = new parent();
-                for (var i = 0; i < composedMethods.length; i++) {
-                    if (parentObject[composedMethods[i]] && more[composedMethods[i]])
-                        more[composedMethods[i]] = utils.compose(parentObject[composedMethods[i]], more[composedMethods[i]]);
-                }
-                ApiInheritedObject.prototype = utils.extend(parentObject, more);
-                return ApiInheritedObject;
-            };
-        })(['construct','postconstruct']),
-        map: function (arr, fn, scope) {
-            var newArr = [], len = arr.length;
-            scope = scope || window;
-            for (var i = 0; i < len; i++) {
-                newArr[i] = fn.call(scope, arr[i]);
-            }
-            return newArr;
-        },
-        reduce: function(collection, callback, accumulator) {
-            var index = -1,
-                length = collection.length;
-            while (++index < length) {
-                accumulator = callback(accumulator, collection[index], index, collection);
-            }
-            return accumulator;
-        },
-        slice: function(arrayLikeObj, ix) {
-            return Array.prototype.slice.call(arrayLikeObj, ix);
-        },
-        indexOf: (function(nativeIndexOf) {
-            return (nativeIndexOf && typeof nativeIndexOf === "function") ? function(arr, val) {
-                return nativeIndexOf.call(arr, val);
-            } : function (arr, val) {
-                for (var i = 0, l = arr.length; i < length; i++) {
-                    if (arr[i] === val) return i;
-                }
-                return -1;
-            };
-        }(Array.prototype.indexOf)),
-        formatString: function(tpt) {
-            var formatted = tpt, otherArgs = utils.slice(arguments, 1);
-            for (var i = 0, len = otherArgs.length; i < len; i++) {
-                formatted = formatted.split('{' + i + '}').join(otherArgs[i] || '');
-            }
-            return formatted;
-        },
-        setOp: function(proto, fnName) {
-            proto[fnName] = function (conf) {
-                return this.api.action(this, fnName, conf);
-            };
-        },
-        getType: (function () {
-            var reType = /\[object (\w+)\]/;
-            return function (thing) {
-                var match = reType.exec(Object.prototype.toString.call(thing));
-                return match && match[1];
-            };
-        }()),
-        camelCase: (function () {
-            var rdashAlpha = /-([\da-z])/gi,
-                cccb = function (match, l) {
-                    return l.toUpperCase();
-                };
-            return function (str, firstCap) {
-                return (firstCap ? str.charAt(0).toUpperCase() + str.substring(1) : str).replace(rdashAlpha, cccb);
-            };
-        }()),
-
-        dashCase: (function () {
-            var rcase = /([a-z])([A-Z])/g,
-                rstr = "$1-$2";
-            return function (str) {
-                return str.replace(rcase, rstr).toLowerCase();
-            };
-        }()),
-
-        request: function (method, url, headers, data, success, failure, iframePath) {
-            if (typeof data !== "string") data = JSON.stringify(data);
-            
-            var xhr;
-            if (iframePath) {
-                IframeXHR = IframeXHR || require('./iframexhr');
-                xhr = new IframeXHR(iframePath);
-            } else {
-                xhr = getXHR();
-            }
-
-            var timeout = setTimeout(function () {
-                clearTimeout(timeout);
-                failure({
-                    items: [
-                        {
-                            message: 'Request timed out.',
-                            code: 'TIMEOUT'
-                        }
-                    ]
-                }, xhr);
-            }, 60000);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    clearTimeout(timeout);
-                    var json = null;
-                    if (xhr.responseText && xhr.responseText.length > 0) {
-                        try {
-                            json = JSON.parse(xhr.responseText);
-                        } catch (e) {
-                            failure({
-                                items: [
-                                    {
-                                        message: "Unable to parse response: " + xhr.responseText,
-                                        code: 'UNKNOWN'
-                                    }
-                                ]
-                            }, xhr, e);
-                        }
-                    }
-                    if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
-                        success(json, xhr);
-                    } else {
-                        failure(json || {
-                            items: [
-                                {
-                                    message: 'Request failed, no response given.',
-                                    code: xhr.status
-                                }
-                            ]
-                        }, xhr);
-                    }
-                }
-            };
-            xhr.open(method || 'GET', url);
-            if (headers) {
-                for (var h in headers) {
-                    if (headers[h]) xhr.setRequestHeader(h, headers[h]);
-                }
-            }
-            xhr.setRequestHeader('Content-type', 'application/json');
-            xhr.setRequestHeader('Accept', 'application/json');
-            if (data && method !== 'GET') {
-                xhr.send(data);
-            } else {
-                xhr.send();
-            }
-            return xhr;
-        },
-
-        pipeline: function (tasks /* initialArgs... */) {
-            // Self-optimizing function to run first task with multiple
-            // args using apply, but subsequence tasks via direct invocation
-            var runTask = function (args, task) {
-                runTask = function (arg, task) {
-                    return task(arg);
-                };
-
-                return task.apply(null, args);
-            };
-
-            return utils.when.all(Array.prototype.slice.call(arguments, 1)).then(function (args) {
-                return utils.when.reduce(tasks, function (arg, task) {
-                    return runTask(arg, task);
-                }, args);
-            });
-        },
-
-        when: require('when'),
-        uritemplate: require('uritemplate'),
-
-        addEvents: function (ctor) {
-            MicroEvent.mixin(ctor);
-            ctor.prototype.on = ctor.prototype.bind;
-            ctor.prototype.off = ctor.prototype.unbind;
-            ctor.prototype.fire = ctor.prototype.trigger;
-        }
-    };
-
-    module.exports = utils;
-// END UTILS
-
-/*********/
-},{"./iframexhr":17,"__browserify_process":1,"microevent":2,"uritemplate":3,"when":12,"xmlhttprequest":false}]},{},[19])
-(19)
+},{"__browserify_process":24}]},{},[7])
+(7)
 });

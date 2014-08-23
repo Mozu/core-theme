@@ -10,6 +10,7 @@ define(['sdk', 'jquery', 'hyprlive'], function(Mozu, $, Hypr) {
     var headers = apiConfig.headers,
         api = Mozu.Tenant(headers['x-vol-tenant'])
              .MasterCatalog(headers['x-vol-master-catalog'])
+             .Catalog(headers['x-vol-catalog'])
              .DataviewMode(headers['x-vol-dataview-mode'] || 'Live')
              .Site(headers['x-vol-site'])
              .Locale(headers['x-vol-locale'])
