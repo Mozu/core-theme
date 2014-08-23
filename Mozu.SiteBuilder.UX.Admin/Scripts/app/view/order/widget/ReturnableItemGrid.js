@@ -41,6 +41,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         editor: {
             xtype: 'combobox',
             allowOnlyWhitespace: false,
+            showBorder: true,
             editable: false,
             forceSelection: true,
             store: ['Replace', 'Refund']
@@ -57,6 +58,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             xtype: 'combobox',
             showBorder: true,
             allowOnlyWhitespace: false,
+            showBorder: true,
             editable: false,
             forceSelection: true,
             store: Taco.model.Return.getValidReasons()
