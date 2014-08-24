@@ -369,6 +369,8 @@ Ext.define('Taco.view.attribute.Form', {
                         name: 'addValueProductCode',
                         multiSelect: false,
 
+                        showVariations: true,
+                        showProductUsages: 'standard,bundle',
                         ignoreParentFormTracking: true,
                         submitValue: false,
                         width: 600,

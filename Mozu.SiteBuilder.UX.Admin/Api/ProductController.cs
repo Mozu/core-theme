@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Text;
 using AutoMapper;
 using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts;
@@ -51,6 +52,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups) ? extFilter.ResponseGroups : (extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "ProductInCatalogs,Min,Price");
 
             string filter = extFilter.ToFilterString();
+
+            if (!String.IsNullOrEmpty(extFilter.ShowProductUsages))
+            {
+                StringBuilder filterB = new StringBuilder("productUsage eq ");
+
+                filterB.Append(string.Join(" or productUsage eq ", extFilter.ShowProductUsages.Split(',')));
+
+                if (extFilter.ShowVariations)
+                {
+                    filterB.Insert(0, "isVariation eq true or ");
+                }
+
+                filter = filterB.ToString();
+            }
+
             string sort = pagingParams.sort.ToSortString();
 		    string q = extFilter.ToQString();
             int? qLimit = extFilter.SearchType == "global" ? (int?)3 : (int?)null;
