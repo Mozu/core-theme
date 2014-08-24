@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using System.Web;
+using System.Text;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.Runtime.Serialization.Json;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
 {
@@ -70,6 +72,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
             }
             col.SearchType = qs["searchType"];
             col.ResponseGroups = qs["responseGroups"];
+            col.ShowVariations = Convert.ToBoolean(qs["showVariations"]);
+            col.ShowProductUsages = qs["showProductUsages"];
             col.query = qs["query"];
 
 

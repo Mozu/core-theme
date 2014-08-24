@@ -19,7 +19,7 @@ Ext.define('Taco.core.data.StoreManager', {
     },
 
     getOrCreate: function (config, contextSuffix) {
-        var me = this, store, needsRefresh, ctxLvl, id;
+        var me = this, store, needsRefresh, ctxLvl, id, proxy;
         if (Ext.isString(config)) {
             config = { type: config };
         }
@@ -124,7 +124,8 @@ Ext.define('Taco.core.data.StoreManager', {
 
         if (needsRefresh) {
             if (config.extraParams) {
-                store.getProxy().extraParams = config.extraParams.params;
+                proxy = store.getProxy();
+                proxy.extraParams = Ext.apply(proxy.extraParams || {}, config.extraParams.params);
             }
             store.load();
             store.hasUpdates = null;
@@ -133,7 +134,8 @@ Ext.define('Taco.core.data.StoreManager', {
 
         if (config.autoLoad && !store.hasLoaded()) {
             if (config.extraParams) {
-                store.getProxy().extraParams = config.extraParams.params;
+                proxy = store.getProxy();
+                proxy.extraParams = Ext.apply(proxy.extraParams || {}, config.extraParams.params);
             }
             store.load();
         }

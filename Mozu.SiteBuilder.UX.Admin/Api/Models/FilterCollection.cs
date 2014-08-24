@@ -40,6 +40,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         public string SearchType { get; set; }
 
+        public string ShowProductUsages { get; set; }
+
+        public bool ShowVariations { get; set; }
+
         public bool TryGetValue<T>(string id, out T outValue)
         {
             object val = this.Where(x => string.Equals(x.property, id, StringComparison.OrdinalIgnoreCase)).Select(x => x.value).FirstOrDefault();

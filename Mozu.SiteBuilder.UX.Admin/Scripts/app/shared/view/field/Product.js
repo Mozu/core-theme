@@ -19,10 +19,22 @@ Ext.define('Taco.shared.view.field.Product', {
     queryMode: 'remote',
     valueField: 'productCode',
     pageSize: 25,
-    initComponent: function () {
-        this.store = Taco.core.data.StoreManager.getOrCreate({
-            type: 'Taco.store.ProductComboBox'
-        });
+    initComponent: function() {
+        var storeCfg = {
+            type: 'Taco.store.ProductComboBox',
+            extraParams: {
+                responseGroups: "Min,Price"
+            }
+        };
+        if (this.showVariations) {
+            storeCfg.extraParams.responseGroups = "Min,Price,VariationOptions";
+            storeCfg.extraParams.showVariations = true;
+        }
+        if (this.showProductUsages) storeCfg.extraParams.showProductUsages = this.showProductUsages;
+        this.store = Taco.core.data.StoreManager.getOrCreate(storeCfg);
+
+        //for good measure if the storemanagerconfig changes, we'll do the same thing after store creation
+        Ext.apply(this.store.getProxy().extraParams, storeCfg.extraParams);
 
         this.callParent(arguments);
     },
