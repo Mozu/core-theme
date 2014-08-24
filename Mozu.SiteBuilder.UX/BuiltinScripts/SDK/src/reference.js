@@ -38,6 +38,8 @@ var ApiReference = {
     basicOps: basicOps,
     urls: {},
 
+    headerPrefix: 'x-vol-',
+
     getActionsFor: function(typeName) {
         ApiCollection = ApiCollection || require('./collection');
         if (!objectTypes[typeName]) return false;

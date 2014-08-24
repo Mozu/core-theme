@@ -59,7 +59,17 @@ ApiContextConstructor.prototype = {
         return this._apiInstance || (this._apiInstance = new ApiInterface(this));
     },
     Store: function(conf) {
-        return new ApiContextConstructor(conf);
+        var xform = {}, l = ApiReference.headerPrefix.length;
+        for (var k in conf) {
+            if (conf.hasOwnProperty(k)) {
+                if (k.indexOf(ApiReference.headerPrefix) === 0) {
+                    xform[k.substring(l)] = conf[k];
+                } else {
+                    xform[k] = conf[k];
+                }
+            }
+        }
+        return new ApiContextConstructor(xform);
     },
     asObject: function(prefix) {
         var obj = {};
@@ -68,6 +78,9 @@ ApiContextConstructor.prototype = {
             obj[prefix + allAccessors[i]] = this[allAccessors[i]];
         }
         return obj;
+    },
+    asHeaders: function() {
+        return this.asObject(ApiReference.headerPrefix);
     },
     setServiceUrls: function(urls) {
         ApiReference.urls = urls;
