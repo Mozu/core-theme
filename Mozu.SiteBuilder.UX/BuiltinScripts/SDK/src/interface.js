@@ -97,8 +97,8 @@ ApiInterfaceConstructor.prototype = {
         var me = this,
             updateClaimsHeaders = function(json, xhr, conf) {
                 if (conf === '/token/refresh') {
-                    me.context.AppClaims(xhr.getResponseHeader('x-vol-app-claims'));
-                    me.context.UserClaims(xhr.getResponseHeader('x-vol-user-claims'));
+                    me.context.AppClaims(xhr.getResponseHeader(ApiReference.headerPrefix + 'app-claims'));
+                    me.context.UserClaims(xhr.getResponseHeader(ApiReference.headerPrefix + 'user-claims'));
                 }
             };
         me.on('success', updateClaimsHeaders);
@@ -154,7 +154,7 @@ ApiInterfaceConstructor.prototype = {
         return ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
     },
     getRequestHeaders: function() {
-        return this.context.asObject("x-vol-");
+        return this.context.asHeaders();
     },
     all: function() {
         return utils.when.join.apply(utils.when, arguments);
