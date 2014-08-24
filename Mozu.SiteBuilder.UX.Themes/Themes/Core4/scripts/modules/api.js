@@ -7,7 +7,7 @@
 define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
     var apiConfig = require.mozuData('apicontext');
     Mozu.setServiceUrls(apiConfig.urls);
-    var api = Mozu.Store(apiConfig.headers);
+    var api = Mozu.Store(apiConfig.headers).api();
     if (Hypr.getThemeSetting('useDebugScripts') || require.mozuData('pagecontext').isDebugMode) {
         api.on('error', function (badPromise, xhr, requestConf) {
             var e = "Error communicating with Mozu API";
