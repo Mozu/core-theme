@@ -987,40 +987,55 @@
                 });
             },
             addBillingContact: function () {
-                return this.addCustomerContact('billingInfo', 'billingContact', [{ name: 'Billing', isPrimary: false }]);
+                return this.addCustomerContact('billingInfo', 'billingContact', [{ name: 'Billing' }]);
             },
             addShippingContact: function () {
-                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: false }]);
+                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping' }]);
             },
             addShippingAndBillingContact: function () {
-                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping', isPrimary: false }, { name: 'Billing', isPrimary: false }]);
+                return this.addCustomerContact('fulfillmentInfo', 'fulfillmentContact', [{ name: 'Shipping' }, { name: 'Billing' }]);
             },
             addCustomerContact: function (infoName, contactName, contactTypes) {
                 var customer = this.get('customer'),
                     contactInfo = this.get(infoName),
                     contact = contactInfo.get(contactName).toJSON(),
-                    isPrimaryContact = this.isSavingNewCustomer(),
-
-                    saveContact = function () {
-                        if (contact.id === -1 || contact.id === 1) delete contact.id;
-                        return customer.apiModel.addContact(contact).then(function (contactResult) {
+                    process = [function() {
+                        if (contact.id === -1 || contact.id === 1 || contact.id === "new") delete contact.id;
+                        return customer.apiModel.addContact(contact).then(function(contactResult) {
                             contact.id = contactResult.data.id;
                             return contactResult;
                         });
-                    };
+                    }];
 
-                var contactId = contact.contactId;
-                if (contactId) contact.id = contactId;
-
-                if (isPrimaryContact) {
+                // if customer doesn't have a primary of any of the contact types we're setting, then set primary for those types
+                if (!this.isSavingNewCustomer()) {
+                    process.unshift(function() {
+                        return customer.apiModel.getContacts().then(function(contacts) {
+                            _.each(contactTypes, function(newType) {
+                                var primaryExistsAlready = _.find(contacts, function(existingContact) {
+                                    return _.find(existingContact.prop('types') || {}, function(existingContactType) {
+                                        return existingContactType.name === newType.name && existingContactType.isPrimary;
+                                    });
+                                });
+                                newType.isPrimary = !primaryExistsAlready;
+                            });
+                        });
+                    });
+                } else {
                     _.each(contactTypes, function(type) {
                         type.isPrimary = true;
                     });
                 }
 
+                // handle email
+                if (!contact.email) contact.email = this.get('emailAddress') || customer.get('emailAddress') || require.mozuData('user').email;
+
+                var contactId = contact.contactId;
+                if (contactId) contact.id = contactId;
+
                 if (!contact.id || contact.id === -1 || contact.id === 1 || contact.id === "new") {
                     contact.types = contactTypes;
-                    return saveContact();
+                    return api.steps(process);
                 } else {
                     var deferred = api.defer();
                     deferred.resolve();
