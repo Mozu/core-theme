@@ -28,7 +28,7 @@ Ext.define('Taco.core.context.TaContext', {
         Taco.core.StateManager.on('navigate', me.onNavigate, this);
         me.init(config);
         Ext.Ajax.on('beforerequest', me.onBeforeAjaxRequest, me);
-        Ext.Ajax.on('requestexception', function (conn, resp, opts) {
+        Ext.Ajax.on('requestexception', function (conn, resp) {
             var corId,
                 logzuUrl,
                 url;
@@ -91,7 +91,7 @@ Ext.define('Taco.core.context.TaContext', {
         }
         return ret;
     },
-    onBeforeAjaxRequest: function (conn, options, eOpts) {
+    onBeforeAjaxRequest: function (conn, options) {
 
         var headers = options.headers = options.headers || {},
             volHeaders = {
@@ -99,7 +99,7 @@ Ext.define('Taco.core.context.TaContext', {
                 'x-vol-master-catalog': this.getMasterCatalogId(),
                 'x-vol-catalog': this.getCatalogId(),
                 'x-vol-site': this.getSiteId(),
-                'x-vol-locale': this.getCurrent().localeCode || "en-US",
+                'x-vol-locale': this.getCurrent().localeCode ,
                 'x-vol-currency': this.getCurrent().currencyCode
             };
 
@@ -127,9 +127,7 @@ Ext.define('Taco.core.context.TaContext', {
             smState = Taco.core.StateManager.getCurrentState(),
             newUrl = '';
 
-        if (Ext.isString(cfg)) {
-            //do stuff. // *** Great work, Thom
-        }
+        
 
         if (this.currentCtx != cfg) {
             if (!me.fireEvent('beforecontextchange', cfg)) {
@@ -194,7 +192,7 @@ Ext.define('Taco.core.context.TaContext', {
 
     getContextAtLevel: function (level) {
         var cur = this.getCurrentContext();
-        if (cur.contextType == level) {
+        if (cur.contextType === level) {
             return cur;
         }
         if (level == 's') {
@@ -205,7 +203,7 @@ Ext.define('Taco.core.context.TaContext', {
                 return cur.sites[0];
             }
         }
-        if (level == 'c') {
+        if (level === 'c') {
             switch (cur.contextType) {
             case 't':
                 return cur.masterCatalogs[0].catalogs[0];
@@ -215,7 +213,7 @@ Ext.define('Taco.core.context.TaContext', {
                 return cur.catalog;
             }
         }
-        if (level == 'm') {
+        if (level === 'm') {
             switch (cur.contextType) {
             case 't':
                 return cur.masterCatalogs[0];
@@ -229,7 +227,7 @@ Ext.define('Taco.core.context.TaContext', {
     },
 
     getMasterCatalogId: function () {
-        if (this == this.getCurrentContext()) {
+        if (this === this.getCurrentContext()) {
             return null;
         }
         return this.getCurrentContext().getMasterCatalogId();
@@ -303,14 +301,14 @@ Ext.define('Taco.core.context.TaContext', {
 
     getCatalog: function () {
         var cc = this.getCurrentContext();
-        if (cc == this) {
+        if (cc === this) {
             return null;
         }
         return cc.getCatalog();
     },
     getSite: function () {
         var cc = this.getCurrentContext();
-        if (cc == this) {
+        if (cc === this) {
             return null;
         }
         return cc.getSite();
@@ -403,7 +401,7 @@ Ext.define('Taco.core.context.TaContext', {
         return this.contentPublishingEnabled;
     },
     updateContentPublishingMode: function (value) {
-        this.publishingEnabled = value == 'Pending';
+        this.publishingEnabled = value === 'Pending';
 
         Ext.Ajax.request({
             url: '/admin/app/cmspublishing/enablePublishing',
