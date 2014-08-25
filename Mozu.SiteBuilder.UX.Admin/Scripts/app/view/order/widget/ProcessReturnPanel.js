@@ -364,7 +364,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
-                flex: 1
+                flex: 1,
+                renderer: function (value) {
+                    return Taco.app.context.getCurrent().formatCurrency(value);
+                }
             }]
         });
     },
@@ -492,7 +495,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 '<span class="label">Return ID:</span>{returnNumber}',
                 '<span class="label">Status:</span>{status}',
                 '<span class="label">Type:</span>{type}',
-                '<span class="label">Amount:</span>--',
+                '<span class="label">Amount:</span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}',
                 '<span class="label">Items:</span>{[values.items.length]}'
             ]
         });
