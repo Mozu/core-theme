@@ -64,12 +64,37 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             width: 300,
             margin: '0 10 0 0',
             labelAlign: 'left',
-            labelWidth: 80,
+            labelWidth: 80,            
             value: this.getRecord().get('rmaDeadline'),
             listeners: {
                 change: {
                     scope: this,
-                    fn: 'onItemEdit'
+                    buffer:500,
+                    fn: function (field, newValue, oldValue) {
+                        if (field.isValid() && field.isDirty()) {
+                            var origStr = (field.originalValue) ? Ext.Date.clearTime(field.originalValue).toString() : "";
+                            var newStr = (newValue) ? newValue.toString() : "";
+                            
+                            // check to make sure the date has changed by stripping out the time from the dates and compare them;
+                            if (origStr == newStr) {
+                                return
+                            }
+
+                            var valueToPersist = "";
+                            if (newValue) {
+                                //clone of newValue with time removed - start of day
+                                valueToPersist = Ext.Date.clearTime(newValue, true);
+                                // add a single day;
+                                valueToPersist = Ext.Date.add(valueToPersist, Ext.Date.DAY, 1);
+                                // remove a millisecond so this is the end of the original day
+                                valueToPersist = Ext.Date.subtract(valueToPersist, Ext.Date.MILLI, 1);
+                            }
+                        
+                            var record = this.getRecord();                            
+                            record.set('rmaDeadline', valueToPersist);
+                            this.onItemEdit()
+                        }
+                    }
                 }
             }
         });
@@ -522,8 +547,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     onItemEdit: function () {
-        var me = this;
-        var record = this.getRecord();
+        var me = this,
+            record = this.getRecord(),
+            isRmaDateChange = (record.modified && record.modified.rmaDeadline);
 
         this.returnActions.items.each(function (button) {
             // make sure its a button and not a spacer "->"
@@ -531,8 +557,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 button.setDisabled(true);
             }
         });
-
-        record.set('rmaDeadline', this.rmaDeadline.getValue());
+        
         // record.set('totalLossAmount', this.totalLossAmount.getValue());
 
         // Debounce Ext pattern
@@ -546,6 +571,12 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         }
                     });
                 },
+                success: function (record, operation){
+                    if (isRmaDateChange) {
+                        // need to update the fields original value so that changes will persist properly
+                        me.rmaDeadline.resetOriginalValue();
+                    }
+                },
                 failure: function (record, operation) {
                     var msg;
 
@@ -554,7 +585,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     } catch (e) {} finally {
                         msg = msg ? msg : 'An error occured while updating the return.';
                     }
-
+                    // need to clear the field so that the subsequent calls dont' pass the invalid deadline;                    
+                    // if the deadline is dirty we need to reset it to its previous value;
+                    if (isRmaDateChange) {
+                        // need to suspend events so that the reset doesn't make a call to persist (ie. fire change event on the field)
+                        me.rmaDeadline.suspendEvents();
+                        me.rmaDeadline.reset();
+                        me.rmaDeadline.resumeEvents();
+                    }
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 }
             });
