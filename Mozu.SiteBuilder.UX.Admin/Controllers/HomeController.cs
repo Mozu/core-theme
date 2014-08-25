@@ -28,9 +28,12 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json;
 using DCproduct = Mozu.ProductAdmin.Contracts;
 using IProvisioningWebApiClient = Mozu.Content.Contracts.Clients.IProvisioningWebApiClient;
 using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Entities;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -156,10 +159,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         private async Task<ActionResult> GetIndex()
         {
-            Task<ServiceClientResponse<Core.Api.Contracts.User>> userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
-            Task<List<UserRole>> rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
-            Task<ServiceClientResponse<Tenant.Contracts.Tenant>> tenantTask = _tenantsWebApi.GetTenantInternal(_apiContext.TenantId, false);
-            Task<ServiceClientResponse<EntityCollection>> adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu.extensiblity", 6000);
+            var userDcTask = _adminUserWebApiClient.GetUser(_apiContext.UserClaims.UserId, UserScopeType.Tenant.ToString(), _apiContext.TenantId);
+           var rolesTask = GetUserSitesRoles(_apiContext.UserClaims.UserId);
+           var tenantTask = _tenantsWebApi.GetTenantInternal(_apiContext.TenantId, false);
+            var adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
+            var tenantAdminSettingsTask = _entityListsWebApiClient.GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global");
 
             Task<ServiceClientResponse<AdminUserCollection>> siteUsersTask = _usersRepo.GetUsers(UserScopeType.Tenant.ToString(), _apiContext.TenantId, pageSize: 200, startIndex: 0);
 
@@ -167,7 +171,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             Task<ServiceClientResponse<DCproduct.MasterCatalogCollection>> masterCatalogsTask;
             masterCatalogsTask = _masterCatalogClient.GetMasterCatalogs();
 
-            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask);
+            await Task.WhenAll(userDcTask, rolesTask, tenantTask, siteUsersTask, masterCatalogsTask, adminSubNavExtensibiltyTask, tenantAdminSettingsTask);
 
             //var tenants2 = tenantTask2.Result.ReadAsSync();
 
@@ -193,17 +197,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 await _entityListsWebApiClient.CreateEntityList(new EntityList
                                                                 {
-                                                                    NameSpace = "mozu.extensiblity",
+                                                                    NameSpace = "mozu",
                                                                     ContextLevel = "Tenant",
                                                                     IsVisibleInStorefront = false,
                                                                     UseSystemAssignedId = true,
                                                                     Name = "subNavLinks",
-                                                                    Usages = new List<string> { "entityManager" },
+                                                                    Usages = new List<string> { "entityManagerAdvanced" },
                                                                     Views = new List<ListView>
                                                                             {
                                                                                 new ListView
                                                                                 {
-                                                                                    Usages = new List<string> {"entityManager"},
+                                                                                    Usages = new List<string> {"entityManagerAdvanced"},
                                                                                     Name = "Default",
                                                                                     Fields = new List<ListViewField>
                                                                                              {
@@ -222,9 +226,59 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                                                                                 }
                                                                             }
                                                                 });
-                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu.extensiblity", 6000);
+                adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntities("subNavLinks@mozu", 6000);
                 await adminSubNavExtensibiltyTask;
             }
+            if (!tenantAdminSettingsTask.Result.ResponseMessage.IsSuccessStatusCode  )
+            {
+                await _entityListsWebApiClient.CreateEntityList(new EntityList
+                                                                {
+                                                                    NameSpace = "mozu",
+                                                                    ContextLevel = "Tenant",
+                                                                    IsVisibleInStorefront = false,
+                                                                    IdProperty =new IndexedProperty()
+                                                                                {
+                                                                                    DataType= "string",
+                                                                                    PropertyName ="name"
+                                                                                } ,
+                                                                    UseSystemAssignedId = false,
+                                                                    Name = "tenantAdminSettings",
+                                                                    Usages = new List<string>(),
+                                                                    Views = new List<ListView>
+                                                                            {
+                                                                                new ListView
+                                                                                {
+                                                                                    Usages = new List<string>(),
+                                                                                    Name = "Default",
+                                                                                    Fields = new List<ListViewField>
+                                                                                             {
+                                                                                                 new ListViewField
+                                                                                                 {
+                                                                                                     Name = "name",
+                                                                                                     Target = "name"
+                                                                                                 }
+                                                                                             }
+
+                                                                                }
+                                                                            }
+                                                                });
+
+                await _entityListsWebApiClient.InsertEntity(entityListFullName: "tenantAdminSettings@mozu", item: JObject.FromObject(new TenantAdminGlobalSettings()
+                                                                                                                               {
+                                                                                                                                   EntityManagerVisible = string.Equals(_settings.CoreSettings.ScaleUnitId, "sb", StringComparison.OrdinalIgnoreCase) 
+
+                                                                                                                               }, GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer()));
+
+
+                tenantAdminSettingsTask = _entityListsWebApiClient.GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global");
+                
+                await tenantAdminSettingsTask;
+
+
+
+            }
+
+            
 
 
             var user = new User
@@ -272,6 +326,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 LoggingService.LoggerFor<HomeController>().Error(err.Message, err);
             }
+
+
+             try
+            {
+                ViewData["tenantGlobalSettings"] = tenantAdminSettingsTask.Result.ReadAsSync();
+            }
+            catch (Exception err)
+            {
+                LoggingService.LoggerFor<HomeController>().Error(err.Message, err);
+            }
+
+            
 
             // IE8 compatibility (http://hsivonen.fi/doctype/)
             Response.AddHeader("X-UA-Compatible", "IE=Edge");
