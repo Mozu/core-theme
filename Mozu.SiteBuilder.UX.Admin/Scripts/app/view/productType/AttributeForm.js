@@ -79,12 +79,14 @@
         });
 
         this.cancelButton = Ext.widget({
-            xtype: 'secondarybutton',
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
             text: 'Cancel',
-            click: function () {
+            scope: this,
+            handler: function () {
                 this.fireEvent('cancel');
-            },
-            scope: this
+            }
         });
 
         this.buttonContainer = Ext.create('Ext.container.Container', {

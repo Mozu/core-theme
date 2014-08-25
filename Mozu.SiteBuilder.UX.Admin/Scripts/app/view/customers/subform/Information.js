@@ -143,12 +143,14 @@ Ext.define('Taco.view.customers.subform.Information', {
                     disableKeyFilter: true,
                     flex: 1
                 }, {
-                    xtype: 'secondarybutton',
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
                     text: 'Add',
-                    click: function () {
+                    scope: this,
+                    handler: function () {
                         this.launchSegmentModal();
-                    },
-                    scope: this
+                    }
                 }]
             }, {
                 xtype: 'button',

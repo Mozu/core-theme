@@ -110,6 +110,7 @@ Ext.define('Taco.view.inventory.Index', {
                 ui: 'action-primary',
                 scale: 'medium',
                 itemId: 'createActionButton',
+                margin: '0 0 0 10',
                 hidden: !this.allowCreate(),
                 scope: this,
                 handler: function () {
