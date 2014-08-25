@@ -99,6 +99,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     }],
 
     viewConfig: {
+        deferEmptyText: false,
+        stripeRows:false,
+        emptyText: "No items availabe to return",
         getRowClass: function(record) {
             return record.get('parentBundleName') && "taco-returnableitem-bundled" || '';
         }
@@ -147,24 +150,53 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         });
     },
 
-    addReturnableItems: function (store, records) {
-        var ineligibleStatuses = [Taco.model.Return.constants.statuses.CANCELLED, Taco.model.Return.constants.statuses.REJECTED];
-        var returnedItemQuantities = {};
-        var eligibleItems = [];
+    reload: function () {
+        //this.removeAll();
+        
+        //this.addReturnableItems()
 
+        var returnsStore = this.order.getReturnsStore();
+
+        returnsStore.load();
+    },
+
+    addReturnableItems: function (store, records) {
+        var ineligibleStatuses = [
+            Taco.model.Return.constants.statuses.CANCELLED,
+            Taco.model.Return.constants.statuses.REJECTED
+        ];
+
+
+
+
+        // list of items and their qty currently added to active returns
+        var returnedItemQuantities = {};
+
+        //list of items availabie in the returnable item grid
+        var eligibleItems = [];
+        
         // track the returned quantities of each item in the order
+
+        // build a list of items already added to a return and determine the qty of each that has already been added;
         Ext.Array.each(records, function (record) {
+            // ignore any records that have been cancelled or rejected;
             if (!Ext.Array.contains(ineligibleStatuses, record.get('status'))) {
+
+                // for each item in the return add it
                 Ext.Array.each(record.get('items'), function (item) {
+
+                    // initialize the item in the list if its not already in the list
                     if (!(item.orderItemId in returnedItemQuantities)) {
                         returnedItemQuantities[item.orderItemId] = 0;
                     }
+                    // increment the quantity for the current item;
                     returnedItemQuantities[item.orderItemId] += item.quantity;
                 });
             }
         }, this);
 
         // add items to the returnable items store
+        // generate a full list of items to add to the returnable items store; Expanding list of bundled items;
         Ext.Array.each(this.order.get('items'), function (orderItem) {
             if (orderItem.bundledProducts && orderItem.bundledProducts.length > 0) {
                 Ext.Array.each(orderItem.bundledProducts, function(item) {
@@ -175,7 +207,11 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             }
         });
 
-        this.store.add(eligibleItems);
+
+        // add configured item to the store;        
+        //this.store.add(eligibleItems);
+        this.store.loadData(eligibleItems);
+
 
         // adds an item unless it has been fully returned
         function addItem (item, orderItemId, parentBundleName) {
