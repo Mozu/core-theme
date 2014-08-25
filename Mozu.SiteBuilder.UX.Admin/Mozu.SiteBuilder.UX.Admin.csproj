@@ -444,6 +444,7 @@
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
+    <Compile Include="Api\Models\Entities\TenantAdminGlobalSettings.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
     <Compile Include="Api\Models\Localization\LocalizedAttributeValue.cs" />
     <Compile Include="Api\Models\Localization\LocalizedProductProperty.cs" />

@@ -8,7 +8,7 @@ Ext.define('Taco.store.Navigation', {
     statics: {
         subNavLinksLoaded: false,
         getSubNavLinksLoaded: function () { return this.subNavLinksLoaded; },
-        setSubNavLinksLoaded: function (val) {this.subNavLinksLoaded=val }
+        setSubNavLinksLoaded: function (val) { this.subNavLinksLoaded = val; }
     },
     listeners: {
         beforeload: function (store) {
@@ -25,7 +25,7 @@ Ext.define('Taco.store.Navigation', {
                                 res = item;
                                 return;
                             }
-                        } else if (item[key] == val) {
+                        } else if (item[key] === val) {
                             res = item;
                             return;
                         }
@@ -42,7 +42,7 @@ Ext.define('Taco.store.Navigation', {
                     }
 
                     if (item.locAtts) {
-                        if (item.locAtts.length == 2 && !(isMultiLang || isMultiCurrency)) {
+                        if (item.locAtts.length === 2 && !(isMultiLang || isMultiCurrency)) {
                             return false;
                         } else if (  Ext.Array.indexOf( item.locAtts,"multiLang") > -1 && !isMultiLang) {
                             return false;
@@ -69,6 +69,7 @@ Ext.define('Taco.store.Navigation', {
 
 
 
+
             if (Taco.store.Navigation.getSubNavLinksLoaded() || !Taco.extensiblity || !Taco.extensiblity.subNavLinks) {
                 return;
             }
@@ -90,7 +91,7 @@ Ext.define('Taco.store.Navigation', {
 
                 Ext.Array.each(parts, function (nodePart, nodeIndex) {
                     var node = recursiveFind('label', nodePart, parentNode.items),
-                        isLeaf = nodeIndex == parts.length - 1;
+                        isLeaf = nodeIndex === parts.length - 1;
                     parentNode.items = parentNode.items || [];
 
 
@@ -122,9 +123,7 @@ Ext.define('Taco.store.Navigation', {
     filters: [
         {
             filterFn: function (record) {
-                var ret = true,
-                    isMultiCurrency = false,
-                    isMultiLang = false;
+                var ret = true;
 
 
                
@@ -420,7 +419,8 @@ Ext.define('Taco.store.Navigation', {
                     }, {
                         "id": "entities",
                         "label": "Content/Entity",
-                        "address": "entities"
+                        "address": "entities",
+                        "visible": !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
                     }, {
                         "id": "provisioning",
                         "label": "Structure",
@@ -469,17 +469,7 @@ Ext.define('Taco.store.Navigation', {
                         "address": "locationInventory"
                     }
                 ]
-            } /*, {
-            "id": "capability",
-            "label": "Applications",
-            "address": "capability",
-            "icon": "nav-locations",
-            "items": [{
-                "id": "applications-manage",
-                "label": "Applications",
-                "address": "capability"
-            }]
-        }*/, {
+            } , {
                 "id": "reports",
                 "label": "Reports",
                 "address": "reports",
