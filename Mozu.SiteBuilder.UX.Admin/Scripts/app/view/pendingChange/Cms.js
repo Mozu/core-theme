@@ -6,7 +6,6 @@ Ext.define('Taco.view.pendingChange.Cms', {
     requires: [
         'Taco.model.CmsDocumentDraft',
         'Taco.store.CmsDocumentDrafts',
-        'Taco.core.ux.action.PrimarySplitButton',
         'Taco.core.ux.grid.MenuColumn'
     ],
 

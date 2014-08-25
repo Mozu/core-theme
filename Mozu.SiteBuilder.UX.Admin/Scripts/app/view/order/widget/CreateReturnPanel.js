@@ -130,47 +130,45 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
             }
         });
 
-        me.createButton = Ext.create('Taco.core.ux.action.DirtyButton', {
+        me.createButton = Ext.create('Ext.button.Button', {
+            ui: 'action-primary',
+            scale: 'medium',
             text: 'Create Return',
-            listeners: {
-                click: function () {
-                    var returnData = {
-                        originalOrderId: me.order.getId(),
-                        items: [],
-                        rmaDeadline: me.rmaDeadline.getValue(),
-                        type: me.returnType.getValue(),
-                        rmaNote: me.rmaNote.getValue()
-                    };
-                    me.store.each(function (item) {
-                        if (item.data.returnQuantity > 0) {
-                            returnData.items.push({
-                                orderItemId: item.getId(),
-                                quantity: item.data.returnQuantity,
-                                parentItemId: item.raw.parentItemId,
-                                productCode: item.data.productCode,
-                                reason: me.returnReason.getValue(),
-                                rmaNote: me.rmaNote.getValue()
-                        });
-                        }
+            scope: this,
+            handler: function () {
+                var returnData = {
+                    originalOrderId: me.order.getId(),
+                    items: [],
+                    rmaDeadline: me.rmaDeadline.getValue(),
+                    type: me.returnType.getValue(),
+                    rmaNote: me.rmaNote.getValue()
+                };
+
+                me.store.each(function (item) {
+                    if (item.data.returnQuantity > 0) {
+                        returnData.items.push({
+                            orderItemId: item.getId(),
+                            quantity: item.data.returnQuantity,
+                            parentItemId: item.raw.parentItemId,
+                            productCode: item.data.productCode,
+                            reason: me.returnReason.getValue(),
+                            rmaNote: me.rmaNote.getValue()
                     });
-                    me.fireEvent('create', me, returnData);
-                }
+                    }
+                });
+                me.fireEvent('create', me, returnData);
             }
         });
 
         me.cancelButton = Ext.create('Ext.button.Button', {
             text: 'Cancel',
-            ui: "action",
-            scale:"medium",
-            listeners: {
-                click: function () {
-                    me.fireEvent('cancel');
-                }
+            ui: 'action',
+            scale: 'medium',
+            scope: this,
+            handler: function () {
+                me.fireEvent('cancel');
             }
         });
-
-
-
 
         me.dockedItems = [
             {
@@ -239,6 +237,6 @@ Ext.define('Taco.view.order.widget.CreateReturnPanel', {
         }
         me.rmaNote.validate();
 
-        me.createButton.setDirty(savableState);
+        // me.createButton.setDirty(savableState);
     }
 });

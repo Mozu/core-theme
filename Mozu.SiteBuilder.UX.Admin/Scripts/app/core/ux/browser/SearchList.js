@@ -178,13 +178,17 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             cls: Taco.baseCSSPrefix + 'expandercollapser',
             layout: { type: 'hbox', align: 'middle' },
             items: [{
-                xtype: 'action',
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
                 text: 'Expand All',
-                click: function () { me.gridPanel.findPlugin('rowexpander').expandAllRows(true); }
+                handler: function () { me.gridPanel.findPlugin('rowexpander').expandAllRows(true); }
             }, {
-                xtype: 'action',
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
                 text: 'Collapse All',
-                click: function () { me.gridPanel.findPlugin('rowexpander').expandAllRows(false); }
+                handler: function () { me.gridPanel.findPlugin('rowexpander').expandAllRows(false); }
             }]
         });
 

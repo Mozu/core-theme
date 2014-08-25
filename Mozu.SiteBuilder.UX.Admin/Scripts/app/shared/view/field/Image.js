@@ -130,13 +130,13 @@ Ext.define('Taco.shared.view.field.Image', {
         this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.imageView.refresh, this.imageView);
 
         this.uploadAction = Ext.widget({
-            xtype: 'action',
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
             text: 'upload from computer',
             scope: this,
-            listeners : {
-                'click': function () {
-                    this.scope.uploadButton.fileInputEl.dom.click();
-                }
+            handler: function () {
+                this.uploadButton.fileInputEl.dom.click();
             }
         });
 
@@ -144,19 +144,24 @@ Ext.define('Taco.shared.view.field.Image', {
             buttonOnly: true,
             hideLabel: true,
             hidden: true,
+            scope: this,
             listeners: {
-                'change': function (fb, v) {
-                    this.scope.onUploadFile(fb.fileInputEl.dom.files);
+                change: {
+                    scope: this,
+                    fn: function (fb, v) {
+                        this.onUploadFile(fb.fileInputEl.dom.files);
+                    }
                 }
-            },
-            scope: this
+            }
         });
 
         this.fileManagerAction = Ext.widget({
-            xtype: 'action',
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
             text: 'upload from file manager',
-            click: this.onAssociatorClick,
-            scope: this
+            scope: this,
+            handler: this.onAssociatorClick
         });
 
         this.items = [
@@ -183,8 +188,6 @@ Ext.define('Taco.shared.view.field.Image', {
                 el.removeCls('drag-and-drop-active');
             }
         }, this);
-        
-        
 
         this.on({
             afterrender: this.onAfterRender,

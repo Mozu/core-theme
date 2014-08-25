@@ -1,7 +1,7 @@
 ﻿Ext.define('Taco.view.productType.AttributeForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.producttype.attributeform',
-    requires: ['Taco.store.Attributes', 'Taco.core.ux.action.DirtyButton'],
+    requires: ['Taco.store.Attributes'],
 
     layout: {
         type: 'hbox',
@@ -72,10 +72,12 @@
 
     addButtons: function () {
         this.saveButton = Ext.widget({
-            xtype: 'dirtybutton',
+            xtype: 'button',
+            ui: 'action-primary',
+            scale: 'medium',
             text: 'Done',
-            click: this.onSave,
-            scope: this
+            scope: this,
+            handler: this.onSave
         });
 
         this.cancelButton = Ext.widget({
@@ -149,7 +151,7 @@
                                 return;
                             }
                             this.addEditor(records[0]);
-                            this.saveButton.setDirty(true);
+                            // this.saveButton.setDirty(true);
                             this.selectedAttribute = records[0];
                         },
                         buffer: 1,

@@ -40,7 +40,6 @@
         var me = this;
         
         this.additionalActions = [{
-            //xtype: 'dirtybutton',
             xtype: "button",
             ui: "action-primary",
             scale:"medium",
