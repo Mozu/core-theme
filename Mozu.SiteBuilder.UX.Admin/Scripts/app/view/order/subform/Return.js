@@ -22,15 +22,47 @@ Ext.define('Taco.view.order.subform.Return', {
 
     initComponent: function (eOpts) {
         var me = this;
+
+        this.cls += " " +  Taco.baseCSSPrefix + 'orderform-returns';
+    
+        // initialize and tear down the ui when the view becomes active;
+        this.mon(this, {
+            'activate': this.initUI,
+            'deactivate': this.destroyUI
+        }, this);
+
+        this.callParent(arguments);
+    },
+
+    destroyUI: function (){
+        
+        this.removeAll();
+
+        this.createButton.destroy();
+        this.returnableItemsErrorEl.destroy();
+        this.returnableItems.destroy();
+        this.returnPanels.destroy();
+        
+        this.createButton = this.returnableItemsErrorEl = this.returnableItems = this.returnPanels = null
+        
+    },
+
+    initUI: function () {
+        var me = this;
         var record = this.record;
+        
+        this.initHeader();
+
         var store = record.getReturnsStore();
         var returnStatus = record.get('returnStatus');
-
         this.setReturnsStore(store);
 
+        this.setLoading(true);
+        
         // if (returnStatus && returnStatus !== 'None') {
-        store.load(function() {
-                me.initProcessReturnPanels(store);
+        store.load(function () {
+            me.initProcessReturnPanels(store);
+            me.setLoading(false);
         });
 
         this.createButton = Ext.create('Ext.button.Button', {
@@ -47,7 +79,7 @@ Ext.define('Taco.view.order.subform.Return', {
             renderTpl: '<div role="alert" aria-live="polite" class="x-form-invalid-under" colspan="2"><ul class="x-list-plain"><li id="{id}-messageEl">{message}</li></ul></div>',
             childEls: ['messageEl'],
             height: 14,
-            setError: function(s) {
+            setError: function (s) {
                 s = Ext.util.Format.htmlEncode(s);
                 if (this.rendered) {
                     this.messageEl.setHTML(s);
@@ -61,112 +93,56 @@ Ext.define('Taco.view.order.subform.Return', {
         });
 
         this.initCreateButton();
-        
+
+
         this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
             order: this.record,
             returnsStore: store
         });
 
-        Ext.apply(this, {
-            items: [
-                this.returnableItems, {
-                    xtype: 'container',
-                    margin: '10px 0 20px 0',
+        // container for holding all of the return panels
+        this.returnPanels = Ext.widget({
+            xtype: 'container',
+            title: "return panels here"
+        });
+
+        this.add(
+            this.returnableItems,
+            {
+                xtype: 'container',
+                margin: '10px 0 20px 0',
                 layout: {
                     type: 'hbox',
                     align: 'stretch',
                     pack: 'end'
                 },
                 items: [this.returnableItemsErrorEl, this.createButton]
-            }]
-        });
-
-
-        this.callParent(arguments);
-
-        this.mon(record, {
-            aftercommit: {
-                scope: this,
-                fn: 'onOrderChange'
-            }
-        });
-                
-        this.on({
-            boxready: {
-                scope: this,
-                fn: function () {
-                    this.addCls(Taco.baseCSSPrefix + 'orderform-returns');
-                    this.initHeader();
-                }
-            }
-        });
+            },
+            this.returnPanels
+        );
     },
         
+    refreshReurnableItemsGrid : function (){
+        
+        this.returnableItems.reload();
+
+    },
+
     addProcessReturnPanel: function (record, recordIndex) {
         var status = record.get('status');
-
-        this.add(Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
+        this.returnPanels.add(Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
             order: this.record,
             record: record,
+            listeners: {
+                'refresh-returnable-items': this.refreshReurnableItemsGrid,
+                scope:this
+            },
             collapsed: status === Taco.model.Return.constants.statuses.CANCELLED || status === Taco.model.Return.constants.statuses.REJECTED || status === Taco.model.Return.constants.statuses.CLOSED
         }));
     },
         
     initHeader: function() {
-
         this.setHeaderTitle("Status: <strong>" + Taco.core.util.Common.camelToSpace(this.record.get('returnStatus')) + "</strong>");
-
-        // this.getHeader().add([
-        //     {
-        //         xtype: 'panelheaderstat',
-        //         label: "Ordered",
-        //         value: Ext.Array.sum(Ext.Array.map(this.record.items().getRange(), function(item) {
-        //             return Math.max(Ext.Array.sum(Ext.Array.pluck(item.get('bundledProducts') || [], 'quantity')), 1) * item.get('quantity');
-        //         })),
-        //     },
-        //     {
-        //         xtype: 'panelheaderstat',
-        //         label: "Fulfilled",
-        //         value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(Ext.Array.filter(this.record.get('packages'), function(pkg) { return pkg.status === Taco.model.Order.constants.packageStatuses.FULFILLED; }), function(pkg) {
-        //             return Ext.Array.pluck(pkg.items, 'quantity');
-        //         })))
-        //     },
-        //     {
-        //         xtype: 'panelheaderstat',
-        //         label: "Replaced",
-        //         value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(this.getReturnsStore().getRange(), function(rtn) {
-        //             var status = rtn.get('status'),
-        //                 statuses = Taco.model.Return.constants.statuses;
-        //             return (status === statuses.CLOSED ||
-        //                 status === statuses.SHIPPED) ? Ext.pluck(rtn.get('items'), 'quantity') : [];
-        //         })))
-        //     },
-        //     {
-        //         xtype: 'panelheaderstat',
-        //         label: "Refunded",
-        //         value: Ext.Array.sum(Ext.Array.flatten(Ext.Array.map(this.getReturnsStore().getRange(), function(rtn) {
-        //             var status = rtn.get('status'),
-        //                 statuses = Taco.model.Return.constants.statuses;
-        //             return (status === statuses.CLOSED ||
-        //                 status === statuses.REFUNDED) ? Ext.pluck(rtn.get('items'), 'quantity') : [];
-        //         })))
-        //     },
-        //     {
-        //         xtype: 'tbseparator'
-        //     },
-        //     {
-        //         xtype: 'panelheaderstat',
-        //         label: 'Order Total',
-        //         value: this.record.formatCurrency(this.record.get('total')),
-        //         width: 120
-        //     },
-        //     {
-        //         xtype: 'panelheaderstat',
-        //         label: 'Refund Total',
-        //         value: this.record.formatCurrency(this.getReturnsStore().sum('refundAmount') || 0)
-        //     }
-
-        // ])
     },
 
     initCreateButton: function () {
@@ -174,19 +150,37 @@ Ext.define('Taco.view.order.subform.Return', {
         var fulfillmentStatus = this.record.get('fulfillmentStatus');
         var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled'));
         
+
+        /*
+        // disable the create button if we have no returnable items;
+        this.mon(this.returnableItems, 'viewready', function () {
+            if (!this.returnableItems.store.count()) {
+                this.createButton.disable();
+            } else {
+                this.createButton.enable();
+            }
+        }, me);
+
+        */
+
+
         this.createButton.setDisabled(!enabled);
         this.returnableItemsErrorEl.setError(enabled? "" : "This order must be at least partially fulfilled before a return can be initiated.");
     },
         
     initProcessReturnPanels: function (store) {
-        Ext.Array.each(store.data.items, this.addProcessReturnPanel, this, true);
-    },
-
-    onOrderChange: function () {
         Ext.suspendLayouts();
-        this.initCreateButton();
+        Ext.Array.each(store.data.items, this.addProcessReturnPanel, this, true);
         Ext.resumeLayouts(true);
     },
+
+    /*
+    onOrderChange: function () {
+        Ext.suspendLayouts();
+        //this.initCreateButton();
+        Ext.resumeLayouts(true);
+    },
+    */
         
     createReturn: function(type, items) {
 
@@ -229,7 +223,9 @@ Ext.define('Taco.view.order.subform.Return', {
         })[0];
     },
 
-    handleCreateClick: function() {
+    handleCreateClick: function () {
+        var me = this;
+
         this.returnableItemsErrorEl.setError('');
         var returnsStore = this.getReturnsStore();
         var items, records = [],
@@ -275,10 +271,11 @@ Ext.define('Taco.view.order.subform.Return', {
             },
             success: function(batch) {
                 Ext.Array.each(records, this.addProcessReturnPanel, this, true);
+                //after we add the new return we need to reload the returnable items grid data;
+                me.refreshReurnableItemsGrid();
             },
             failure: function(batch) {
                 returnsStore.remove(records);
-
                 var msg = batch.exceptions && batch.exceptions.length && batch.exceptions[0].error && batch.exceptions[0].error.remoteException ? batch.exceptions[0].error.remoteException.data.message : 'Error Creating the Return';
                 Taco.app.fireEvent('setmessage', msg, 'error');
             },
@@ -288,7 +285,7 @@ Ext.define('Taco.view.order.subform.Return', {
 
 
     onDestroy: function () {
-        this.mun(this.record, 'aftercommit', this.onOrderChange, this);
+        //this.mun(this.record, 'aftercommit', this.onOrderChange, this);
 
         this.callParent(arguments);
     }

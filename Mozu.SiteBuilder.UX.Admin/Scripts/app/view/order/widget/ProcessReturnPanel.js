@@ -21,7 +21,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         var order = this.getOrder();
         var record = this.getRecord();
 
-        console.log('order', order, '\nreturn', record);
+        //console.log('order', order, '\nreturn', record);
 
         // set up stores
         this.itemsStore = record.getItems();
@@ -88,13 +88,13 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         'border-bottom': '1px solid rgb(191, 191, 191)'
                     },
                     items: [{
-                            xtype: 'component',
-                            html: ('Return #' + record.get('returnNumber')),
-                            style: {
-                                fontWeight: 'bold'
-                            }
+                        xtype: 'component',
+                        html: ('Return #' + record.get('returnNumber')),
+                        style: {
+                            fontWeight: 'bold'
+                        }
                     }, {
-                            xtype: 'tbfill'
+                        xtype: 'tbfill'
                     },
                         this.returnActions]
                 },
@@ -108,8 +108,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         pack: 'end'
                     },
                     items: [this.rmaDeadline, {
-                            xtype: 'tbfill'
-                        },
+                        xtype: 'tbfill'
+                    },
                         this.moveButton]
                 },
                 this.paymentsGrid
@@ -147,8 +147,15 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         var me = this;
 
         this.setLoading(true);
+        var buttonId = button.getItemId();
 
-        this.getRecord().performAction(button.getItemId(), {
+        this.getRecord().performAction(buttonId, {
+            success: function (response) {                
+                // if the user rejects or cancels the return we need to update the returnable items grid since the qty returned will change;
+                if (buttonId == 'Cancel' || buttonId == 'Reject') {                    
+                    me.fireEvent("refresh-returnable-items");
+                }
+            },
             callback: function () {
                 me.setLoading(false);
             }
@@ -496,14 +503,19 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     onAfterCommit: function () {
+        var me = this;
         var data = this.getRecord().getData();
-
+        
         this.updateReturnActions();
         this.status.update(data);
         this.summary.update(data);
         this.updatePaymentsGrid();
         this.setEditablity();
-        this.updateReturnableItemGrid();
+        var status = this.record.get("status");
+        // if rejected or cancelled collapse the panel;        
+        if (status == "Rejected" || status == "Cancelled") {            
+            this.collapse();
+        }
     },
 
     onItemEdit: function () {
@@ -560,6 +572,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.paymentsGrid[Ext.isEmpty(this.paymentsStore.getRange()) ? 'hide' : 'show']();
     },
 
+    /*
     updateReturnableItemGrid: function () {
         var subform = this.up('taco-order-subform');
 
@@ -567,6 +580,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             subform.returnableItems.getView().refresh();
         }
     },
+    */
 
     updateReturnActions: function () {
         var record = this.getRecord();

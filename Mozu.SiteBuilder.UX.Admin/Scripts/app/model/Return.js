@@ -184,7 +184,7 @@ Ext.define('Taco.model.Return', {
             config.failure2 = config.failure;
             config.scope2 = config.scope;
         }
-        Ext.applyIf(config, {
+        Ext.apply(config, {
             jsonData : {
                 actionName: action,
                 returnIds:[this.getId()]
