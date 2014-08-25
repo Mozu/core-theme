@@ -133,13 +133,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
             var sb = new StringBuilder();
             kvPairList.ForEach(kvp =>
             {
-                if (sb.Length == 0)
+                if (sb.Length != 0)
                 {
                     sb.Append("&");
                 }
-                sb.Append(System.Web.HttpUtility.UrlEncode(kvp.Key));
+                //sdk decodes it
+              //  sb.Append(System.Web.HttpUtility.UrlEncode(kvp.Key));
+                 sb.Append(kvp.Key);
                 sb.Append("=");
-                sb.Append(System.Web.HttpUtility.UrlEncode(kvp.Value));
+                //sdk decodes it
+              //  sb.Append(System.Web.HttpUtility.UrlEncode(kvp.Value));
+                sb.Append(kvp.Value);
             });
 
          
