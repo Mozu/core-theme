@@ -16,8 +16,12 @@ Ext.define('Taco.view.inventory.QuantityEdit', {
         var record = this.record,
             saveAction;
 
-        saveAction = Ext.create('Taco.core.ux.action.Action', {
-            text: 'Apply'
+        saveAction = Ext.create('Ext.button.Button', {
+            ui: 'action',
+            scale: 'medium',
+            text: 'Apply',
+            scope: this,
+            handler: this.updateQuantity
         });
 
         this.items = [{
@@ -60,8 +64,6 @@ Ext.define('Taco.view.inventory.QuantityEdit', {
         }];
 
         this.callParent(arguments);
-
-        saveAction.on('click', this.updateQuantity, this);
     },
 
     reconfigure: function (record) {

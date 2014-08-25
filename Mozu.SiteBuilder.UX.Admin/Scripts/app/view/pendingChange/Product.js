@@ -7,7 +7,6 @@ Ext.define('Taco.view.pendingChange.Product', {
     requires: [
         'Taco.model.Product',
         'Taco.store.Products',
-        'Taco.core.ux.action.PrimarySplitButton',
         'Taco.core.ux.grid.MenuColumn'
    ],
 

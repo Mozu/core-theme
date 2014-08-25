@@ -30,7 +30,6 @@
 
             this.dataView.on({
                 viewready: function () {
-                    console.log('FUUUUUUUUUUCCCCCCCCCCCCKKKKKKKKKKKKK');
                     me.bindCustomEvents();
                 }
             });
