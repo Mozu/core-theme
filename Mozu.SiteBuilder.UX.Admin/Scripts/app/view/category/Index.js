@@ -20,9 +20,12 @@ Ext.define('Taco.view.category.Index', {
         me.header = {
             title: 'Categories',
             actions: [{
-                xtype: 'primarybutton',
+                xtype: 'button',
+                ui: 'action-primary',
+                scale: 'medium',
+                itemId: 'createActionButton',
                 text: 'Create New Category',
-                click: function () {
+                handler: function () {
                     Taco.core.StateManager.attemptNavigate('categories/create');
                 
                 }

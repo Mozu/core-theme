@@ -18,84 +18,25 @@ Ext.define('Taco.view.inventory.Index', {
 
     typeName: 'Inventory',
     modelName: 'Taco.model.Product',
+    enableRowEditing: false,
+    gridHeaderLabel: 'product',
+    plural: false,
+    useTilePanel: false,
+    launchEditorOnClick: false,
+    hasSidebar: false,
+
     store: {
         type: 'Taco.store.InventoriedProducts',
         createOnly:true
     },
-    enableRowEditing: false,
-    
-    gridHeaderLabel: 'product',
-    plural: false,
-    
+
+    advancedSearchConfig: {
+        advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
+    },
 
     contextConfig: {
         supportedLevels: ['m','c'],
         requiresContextOfType: ['m', 's', 'c']
-    },
-    
-  
-    useTilePanel: false,
-    launchEditorOnClick: false,
-    hasSidebar: false,
-    advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
-    },
-    
-    
-
-
-    layoutItemBrowser: function () {
-        
-        var me = this;
-
-        this.createLocationBrowser();
-
-        Ext.apply(this.itemBrowser, {
-            region: "west",
-            split: true,
-            width: 350
-        });
-
-        Ext.apply(this.body, {
-            layout: { type: 'border' },
-            items: [
-                this.itemBrowser,
-                this.locationList
-            ]
-        });
-    },
-
-    createLocationBrowser: function () {
-        var me = this;        
-        
-        this.locationList = Ext.create('Taco.view.location.inventory.LocationInventory', {
-            region: "center",
-            showProductColumns: false,
-            showLocationColumns: true,
-            secondToolbarItems: [],
-            viewConfig: {
-                deferEmptyText: false,
-                emptyText: "No inventory at this location."
-            }
-        });
-    },
-
-    createItemBrowser: function (conf) {
-
-        this.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
-            itemStore: this.store,
-            secondToolbarItems: this.secondToolbarItems,
-            options: this.options,
-            itemType: this.token,
-            typeName: this.typeName,
-            gridHeaderLabel: this.gridHeaderLabel,
-            advancedSearchConfig: this.advancedSearchConfig,
-            isCollectionContext: Taco.app.context.getCurrent().contextType === "m",
-            gridPanel: this.gridPanel,
-            tilePanel: this.tilePanel,
-            useGridPanel: this.useGridPanel,
-            useTilePanel: this.useTilePanel
-        });
     },
 
     gridPanelConf: {
@@ -126,7 +67,6 @@ Ext.define('Taco.view.inventory.Index', {
                     if (record.get('productUsage') == 'Configurable') {
                         name += ' <br>(' + Ext.Array.pluck(record.get('variationOptions'), 'value').join() + ')';
                     }
-
 
                     return name;
                 }
@@ -166,21 +106,20 @@ Ext.define('Taco.view.inventory.Index', {
         
         this.header =  {
             actions: [{
-                xtype: 'primarybutton',
+                xtype: 'button',
+                ui: 'action-primary',
+                scale: 'medium',
                 itemId: 'createActionButton',
                 hidden: !this.allowCreate(),
-                listeners: {
-                    click: function () {
-                        this.locationList.onRowEditorCreate();
-                    },
-                    scope: this
+                scope: this,
+                handler: function () {
+                    this.locationList.onRowEditorCreate();
                 }
             }]
         };
         
         this.callParent(arguments);
-        
-        
+
         // auto select the first record in the grid so the location grid can get loaded;
         me.mon(this.store,'load', function (store, records, success, eOpts) {            
             if (records && records.length) {
@@ -190,5 +129,57 @@ Ext.define('Taco.view.inventory.Index', {
    //             single: true
             }
         );
+    },
+
+    createItemBrowser: function (conf) {
+        this.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
+            itemStore: this.store,
+            secondToolbarItems: this.secondToolbarItems,
+            options: this.options,
+            itemType: this.token,
+            typeName: this.typeName,
+            gridHeaderLabel: this.gridHeaderLabel,
+            advancedSearchConfig: this.advancedSearchConfig,
+            isCollectionContext: Taco.app.context.getCurrent().contextType === "m",
+            gridPanel: this.gridPanel,
+            tilePanel: this.tilePanel,
+            useGridPanel: this.useGridPanel,
+            useTilePanel: this.useTilePanel
+        });
+    },
+
+    createLocationBrowser: function () {
+        var me = this;        
+        
+        this.locationList = Ext.create('Taco.view.location.inventory.LocationInventory', {
+            region: "center",
+            showProductColumns: false,
+            showLocationColumns: true,
+            secondToolbarItems: [],
+            viewConfig: {
+                deferEmptyText: false,
+                emptyText: "No inventory at this location."
+            }
+        });
+    },
+
+    layoutItemBrowser: function () {
+        var me = this;
+
+        this.createLocationBrowser();
+
+        Ext.apply(this.itemBrowser, {
+            region: "west",
+            split: true,
+            width: 350
+        });
+
+        Ext.apply(this.body, {
+            layout: { type: 'border' },
+            items: [
+                this.itemBrowser,
+                this.locationList
+            ]
+        });
     }
 });

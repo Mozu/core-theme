@@ -23,20 +23,6 @@ Ext.define('Taco.view.discount.Index', {
         requiresContextOfType: ['s']
     },
     
-    initComponent: function () {
-        var me = this;
-        me.header = {
-            actions: [{
-                xtype: 'primarybutton',
-                text: 'Create New Discount',
-                click: function () {
-                    Taco.core.StateManager.attemptNavigate('discounts/create');
-                }
-            }]
-        };
-        this.callParent(arguments);
-    },
-    
     gridPanelConf: {
         columns: [{
             xtype: 'gridcolumn',
@@ -170,6 +156,9 @@ Ext.define('Taco.view.discount.Index', {
         ]
     },
 
+    initComponent: function () {
+        this.callParent(arguments);
+    },
 
     /**
     * Handler for the list item click event
@@ -190,4 +179,3 @@ Ext.define('Taco.view.discount.Index', {
         return;
     }
 });
-

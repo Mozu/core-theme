@@ -19,19 +19,9 @@ Ext.define('Taco.view.productType.Index', {
         requiresContextOfType: ['m', 's', 'c']
     },
     
-    //initComponent: function () {
-    //    var me = this;
-    //    me.header = {
-    //        actions: [{
-    //            xtype: 'primarybutton',
-    //            text: 'Create New Product type',
-    //            click: function () {
-    //                me.launchEditor(Ext.create('Taco.model.ProductType'));
-    //            }
-    //        }]
-    //    };
-    //    this.callParent(arguments);
-    //},
+    initComponent: function () {
+        this.callParent(arguments);
+    },
     
     gridPanelConf: {
         columns: [{
