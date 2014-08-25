@@ -42,13 +42,13 @@ Ext.define('Taco.view.pendingChange.Cms', {
 
     header: {
         actions: [{
-            xtype: 'secondarybutton',
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
             text: 'Discard All',
-            listeners: {
-                click: function() {
-
-                    this.discardAll();
-                }
+            scope: this,
+            handler: function () {
+                this.discardAll();
             }
         }, {
             xtype: 'splitbutton',
@@ -195,10 +195,14 @@ Ext.define('Taco.view.pendingChange.Cms', {
                     menu.removeAll();
                     if (e.record.get('draftType') === 'Page') {
                         menu.add({
-                            xtype: "secondarybutton",
+                            xtype: 'button',
+                            ui: 'action',
+                            scale: 'medium',
                             text: 'Preview',
-                            click: function() {
+                            scope: this,
+                            handler: function () {
                                 var r = e.record;
+
                                 window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent('/pages/' + r.get('name')), 'taco-preview');
                             }
                         });

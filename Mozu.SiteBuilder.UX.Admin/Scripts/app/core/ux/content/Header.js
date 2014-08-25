@@ -5,7 +5,7 @@
 
 Ext.define('Taco.core.ux.content.Header', {
     extend: 'Ext.container.Container',
-    requires: ['Taco.core.ux.action.SecondaryButton', 'Taco.core.ux.action.PrimaryButton', 'Taco.core.ux.content.ContextMenu'],
+    requires: ['Taco.core.ux.content.ContextMenu'],
     alias: 'widget.contentheader',
     
     cls: 'taco-content-header',
@@ -81,9 +81,10 @@ Ext.define('Taco.core.ux.content.Header', {
             itemId: 'actionsContainer',
             items: actions,
             hidden: isHidden,
+            shrinkWrap: true,
             layout: {
                 type: 'hbox',
-                align: 'middle'
+                align: 'middle',
             }
         };
 

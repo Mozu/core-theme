@@ -9,7 +9,6 @@ Ext.define('Taco.view.settings.shipping.TargetRuleEdit', {
         'Ext.Date',
         'Ext.form.Panel', 'Taco.core.ux.BaseGrid',
         'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter',
-        'Taco.core.ux.action.SecondaryButton',
         'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn',
         'Taco.store.ShippingZones',
         'Taco.model.TargetRule',

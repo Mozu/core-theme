@@ -31,89 +31,66 @@ Ext.define('Taco.view.account.Users', {
                 type: 'hbox',
                 align: 'middle'
             },
-            hidden: true,
             defaults: {
-                xtype: 'container',
-                layout: {
-                    type: 'vbox',
-                    align: 'left'
-                },
-                cls: Taco.baseCSSPrefix + 'toolbar-form-cell'
+                margin: '0 15 0 0'
             },
+            hidden: true,
             items: [{
-                width: 400,
-                defaults: {
-                    layout: 'vbox'
-                },
-                items: [{
-                    xtype: 'label',
-                    html: 'Email'
-                 }, {
-                    xtype: 'textfield',
-                    name: 'email'
-                 }]
+                xtype: 'textfield',
+                name: 'email',
+                fieldLabel: 'Email',
+                labelAlign: 'left',
+                labelWidth: 60,
+                msgTarget: 'qtip',
+                allowOnlyWhitespace: false
              }, {
-                width: 300,
-                layout: {
-                    type: 'vbox'
-                },
-                items: [{
-                    xtype: 'label',
-                    html: '&nbsp;'
-                 }, {
-                    xtype: 'selectfield',
-                    name: 'accessLevel',
-                    mode: 'local',
-                    valueField: 'id',
-                    displayField: 'name',
-                    allowBlank: false,
-                    emptyText: 'Select access',
-                    store: me.roles
-                 }]
+                xtype: 'combobox',
+                name: 'accessLevel',
+                fieldLabel: 'Access Level',
+                labelAlign: 'left',
+                labelWidth: 100,
+                msgTarget: 'qtip',
+                queryMode: 'local',
+                valueField: 'id',
+                displayField: 'name',
+                emptyText: 'Select access',
+                allowOnlyWhitespace: false,
+                editable: false,
+                forceSelection: true,
+                store: me.roles
              }, {
-                width: 300,
-                layout: {
-                    type: 'hbox',
-                    align: 'center'
-                },
-                items: [{
-                    xtype: 'secondaryaction',
-                    text: 'Cancel',
-                    margin: '5 15 5 15',
-                    click: function () {
-                        me.addbutton.show();
-                        me.addform.hide();
-                    },
-                    scope: this
-                 }, {
-                    xtype: 'secondarybutton',
-                    text: 'Send Invite',
-                    listeners: {
-                        click: {
-                            element: 'el',
-                            fn: function () {
-                                var form = me.addform.getForm();
-                                me.fireEvent('adduser', form.getFieldValues());
-                                form.reset();
-                            },
-                            scope: this
-                        }
-                    }
-                 }]
-             }]
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Cancel',
+                scope: this,
+                handler: function () {
+                    this.addbutton.show();
+                    this.addform.hide();
+                }
+            }, {
+                xtype: 'button',
+                ui: 'action-primary',
+                scale: 'medium',
+                text: 'Send Invite',
+                scope: this,
+                handler: function () {
+                    var form = me.addform.getForm();
+
+                    this.fireEvent('adduser', form.getFieldValues());
+                    form.reset();
+                }
+            }]
         });
 
-        me.addbutton = Ext.widget('secondarybutton', {
+        me.addbutton = Ext.widget('button', {
+            ui: 'action',
+            scale: 'medium',
             text: '+ Add new User',
-            listeners: {
-                click: {
-                    element: 'el',
-                    fn: function () {
-                        me.addform.show();
-                        me.addbutton.hide();
-                    },
-                    scope: this
-                }
+            scope: this,
+            handler: function () {
+                this.addform.show();
+                this.addbutton.hide();
             }
         });
 
@@ -179,6 +156,7 @@ Ext.define('Taco.view.account.Users', {
                 xtype: 'toolbar',
                 dock: 'bottom',
                 weight: 101,
+                padding: '5 0 0 0',
                 layout: {
                     type: 'hbox',
                     align: 'stretch'

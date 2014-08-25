@@ -7,8 +7,7 @@ Ext.define('Taco.view.discount.Index', {
     requires: ['Ext.Date', 'Taco.store.TargetedShippingMethods', 
         'Ext.form.Panel', 'Taco.core.ux.BaseGrid', 
         'Ext.tip.QuickTipManager', 'Taco.core.ux.TextFilter', 
-        'Taco.view.discount.Edit', 'Taco.core.ux.action.SecondaryButton',
-        'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn'
+        'Taco.view.discount.Edit', 'Taco.core.ux.FilterableDataView', 'Taco.core.ux.grid.MenuColumn'
     ],
     modelName: 'Taco.model.Discount',
     store: {

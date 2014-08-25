@@ -210,15 +210,17 @@ Ext.define('Taco.view.productType.Form', {
                         data: attribute.raw,
                         tpl: tpl
                     }, {
-                        xtype: 'secondarybutton',
+                        xtype: 'button',
+                        ui: 'action',
+                        scale: 'medium',
                         text: 'Delete'
                     }, {
-                        xtype: 'secondarybutton',
+                        xtype: 'button',
+                        ui: 'action',
+                        scale: 'medium',
                         text: 'Edit',
-                        click: {
-                            fn: this.editAttribute,
-                            scope: this
-                        }
+                        scope: this,
+                        handler: this.editAttribute
                     }]
                 }, {
                     xtype: 'container',
