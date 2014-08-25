@@ -7,13 +7,6 @@ Ext.define('Taco.view.attribute.Index', {
     alias: "widget.taco-attribute-index",
     requires: ['Taco.model.Attribute', 'Taco.store.Attributes', 'Taco.view.attribute.Edit'],
 
-  
-    contextConfig: {
-        supportedLevels: ['m'],
-        requiresContextOfType: ['m', 'c', 's']
-    },
-    
-
     modelName: 'Taco.model.Attribute',
     store: {
         type: 'Taco.store.Attributes'
@@ -21,19 +14,10 @@ Ext.define('Taco.view.attribute.Index', {
     editorName: 'Taco.view.attribute.Edit',
     filterProperty: 'name',
     typeName: 'Attribute',
-    initComponent: function () {
-        var me = this;
-        me.header = {
-            actions: [{
-                xtype: 'primarybutton',
-                itemId:'createbutton',
-                text: 'Create New Attribute',
-                click: function () {
-                    Taco.core.StateManager.attemptNavigate('attributes/create');
-                }
-            }]
-        };
-        this.callParent(arguments);
+
+    contextConfig: {
+        supportedLevels: ['m'],
+        requiresContextOfType: ['m', 'c', 's']
     },
 
     gridPanelConf: {
@@ -96,6 +80,10 @@ Ext.define('Taco.view.attribute.Index', {
                 menuColumnHandler: 'destroyMenuColumnHandler'
             }]
         }]
+    },
+
+    initComponent: function () {
+        this.callParent(arguments);
     },
     
     launchEditor: function (record) {

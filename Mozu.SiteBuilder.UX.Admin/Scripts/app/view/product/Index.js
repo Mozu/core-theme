@@ -285,26 +285,7 @@ Ext.define('Taco.view.product.Index', {
         advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
     },
 
-
-    /*
     initComponent: function() {
-        var me = this;
-        me.header = {
-            title: 'Products',
-            actions: [{
-                xtype: 'primarybutton',
-                text: 'Create New Product',
-                click: function() {
-                    //me.launchEditor(Ext.create('Taco.model.Product'));
-                }
-            }]
-        };
-    },
-    */
-    //launchEditor: function (record) {
-    //    Ext.defer(function () {
-    //        Taco.core.StateManager.attemptNavigate('product/edit/' + record.getId(), { complexMetaData: { _record: record } });
-    //    }, 1, this);
-    //    return;
-    //}
+        this.callParent(arguments);
+    }
 });

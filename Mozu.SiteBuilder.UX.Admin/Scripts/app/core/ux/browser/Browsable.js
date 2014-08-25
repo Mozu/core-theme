@@ -134,32 +134,24 @@ Ext.define('Taco.core.ux.browser.Browsable', {
             this.launchEditorOnClick = false;
         }
 
-
-        // add grid row selection plugin.
-        //this.gridPanelConf.plugins.push();
-        
-        
-
         Ext.applyIf(this.header, {
             actions: [{
-                xtype: 'primarybutton',
+                xtype: 'button',
+                ui: 'action-primary',
+                scale: 'medium',
                 itemId: 'createActionButton',
                 hidden: ! this.allowCreate(),
-                listeners: {
-                    click: function () {
-                        var controller = this.getControllerName();
-                        
-                        if (this.enableRowEditing) {
-                            this.onRowEditorCreate();
-                        } else if (controller) {
-                            Taco.app.StateManager.attemptNavigate(controller + '/create');
-                        } else {
-                            this.launchEditor(Ext.create(this.modelName));
-                        }
-                        
-                        
-                    },
-                    scope: this
+                scope: this,
+                handler: function () {
+                    var controller = this.getControllerName();
+                    
+                    if (this.enableRowEditing) {
+                        this.onRowEditorCreate();
+                    } else if (controller) {
+                        Taco.app.StateManager.attemptNavigate(controller + '/create');
+                    } else {
+                        this.launchEditor(Ext.create(this.modelName));
+                    }
                 }
             }]
         });

@@ -15,11 +15,13 @@
         this.cls = [this.cls, Taco.baseCSSPrefix + 'producttype-attribute-panel'].join(' ');
 
         this.tools = [{
-            xtype: 'primarybutton',
+            xtype: 'button',
+            ui: 'action-primary',
+            scale: 'medium',
+            itemId: 'createActionButton',
             text: 'Add',
-            click: this.create,
-            itemId: 'add',
-            scope: this
+            scope: this,
+            handler: this.create
         }];
 
         this.title = Ext.util.Format.capitalize(this.type);
@@ -149,7 +151,7 @@
     },
    
     create: function () {
-        this.down('[itemId=add]').disable();
+        this.down('#createActionButton').disable();
         this.editor.record = Ext.create('Taco.model.ProductTypeAttribute', {
             productTypeId: this.productType.getId()
         });
@@ -185,7 +187,7 @@
     onCancel: function (record) {
         var listCt, name;
 
-        this.down('[itemId=add]').enable();
+        this.down('#createActionButton').enable();
 
         listCt = this.getLayout().setActiveItem(0);
 

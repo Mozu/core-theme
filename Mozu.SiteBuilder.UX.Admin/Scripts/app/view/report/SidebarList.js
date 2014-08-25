@@ -6,9 +6,6 @@
 
 Ext.define('Taco.view.report.SidebarList', {
     extend: 'Ext.container.Container',
-    requires: [
-        'Taco.core.ux.action.PrimaryButton'
-    ],
 
     cls: Taco.baseCSSPrefix + 'sidebarlist',
     store: null,
