@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -20,8 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public CustomerAttributeController(ICustomerAttributeDefinitionWebApiClient  customerAttributeDefinitionWebApiClient)
         {
-            _customerAttributeDefinitionWebApiClient = customerAttributeDefinitionWebApiClient;
-            
+            _customerAttributeDefinitionWebApiClient = customerAttributeDefinitionWebApiClient.CloneWithApiContext(x => x.LocaleCode = "en-US");
+
         }
 
         [HttpGetRoute(UriTemplate = "list")]
