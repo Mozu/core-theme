@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
     {
         private static byte[] OnePixelGif = Convert.FromBase64String(@"R0lGODlhAQABAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAABAAEAAAgEAP8FBAA7");
 
-        private static string NotFoundImage = "/admin/scripts/resources/images/noimage.png";
+        //private static string NotFoundImage = "/admin/scripts/resources/images/noimage.png";
 
         private static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
         private static long g_quality = 60;
@@ -257,7 +257,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(int? tenant = null, int? mastercat = null, int? site = null, string list = "files@mozu.com", string documentId = null, int size = 0, int max = 0)
         {
-            //for local dev testing...
+            //todo send out appoligy letter
+
             ApiContext context = null;
 
             _docRepo = _docRepo.CloneWithApiContext(x =>
@@ -285,6 +286,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     context.TenantId = tenant.Value;
                 }
+                context.UserClaims = null;
             });
             Semaphore mutex = null;
             FileSystemResult tpl = null;
@@ -354,7 +356,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     {
                         tpl.Stream.Dispose();
                     }
-                    return Redirect(NotFoundImage);
+                    //return Redirect(NotFoundImage);
+                    return new NotFoundResult();
                 }
 
 
@@ -406,10 +409,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 Debug.WriteLine(ex);
 
-                //return new MyFileStreamResult(new MemoryStream(OnePixelGif), "image/gif");
+                return new NotFoundResult();
+               // return new MyFileStreamResult(new MemoryStream(OnePixelGif), "image/gif");
 
 
-                return Redirect("/admin/scripts/resources/images/noimage.png");
+                //return Redirect("/admin/scripts/resources/images/noimage.png");
             }
             finally
 

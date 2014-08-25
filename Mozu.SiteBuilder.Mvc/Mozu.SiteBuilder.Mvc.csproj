@@ -438,6 +438,7 @@
     <Compile Include="ActionFilters\SiteBuilderAuthorizeAttribute.cs" />
     <Compile Include="ActionFilters\SslOnlyActionFilter.cs" />
     <Compile Include="ActionResults\ActionResult.cs" />
+    <Compile Include="ActionResults\NotFoundResult.cs" />
     <Compile Include="ActionResults\RazorViewResult.cs" />
     <Compile Include="ActionResults\ViewResult.cs" />
     <Compile Include="ActionResults\ContentResult.cs" />
