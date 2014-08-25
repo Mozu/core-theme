@@ -15,7 +15,8 @@ Ext.define('Taco.view.order.Split', {
         'Taco.store.OrderGrid',
         'Taco.view.order.Form',
         'Taco.view.order.modal.ProductConfigurator',
-        'Taco.view.order.AdvancedSearchForm'
+        'Taco.view.order.AdvancedSearchForm',
+        'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
     ],
 
     stateId: 'taco-orders',
@@ -67,9 +68,10 @@ Ext.define('Taco.view.order.Split', {
                 },
                 itemclick: {
                     scope: this,
-                    fn: function (grid, record) {
-                    
-                        this.onSelectRecord(record);
+                    fn: function (grid, record, row, index, e, opts) {
+                        if (!e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.iconCls) && !e.getTarget('.' + Taco.core.ux.grid.MenuColumn.prototype.tdCls)) {
+                            this.onSelectRecord(record);
+                        }
                     }
                 }
             }
