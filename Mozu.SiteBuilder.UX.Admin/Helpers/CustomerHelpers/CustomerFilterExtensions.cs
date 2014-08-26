@@ -80,9 +80,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             
             switch (filter.property.ToLowerInvariant())
             {
-                case "showanonymous":
+                case "excludeanonymous":
                     return string.Empty;
-                   // return string.Format("isanonymous eq {0}", filter.value);
+                // return string.Format("excludeAnonymous eq {0}", filter.value);
                 case "groups":
                     return string.Format("groups eq {0}", filter.value);
                 case "segments":

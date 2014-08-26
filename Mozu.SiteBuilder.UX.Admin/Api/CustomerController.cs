@@ -140,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous= null)
         {
             int customerId;
             if (pagingParameters.id != null)
@@ -170,7 +170,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(new List<ApiCustomer>());
             }
 
-            bool isAnonymous = extFilter.GetValue<bool>("showanonymous", false);
+            bool isAnonymous = showAnonymous.GetValueOrDefault(false);
+            bool excludeAnonymous;
+            if (extFilter.TryGetValue("excludeAnonymous", out excludeAnonymous))
+            {
+                isAnonymous = !excludeAnonymous;
+            }
+                
+               
 
             int? qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?)3 : (int?)null;
             var sort = pagingParameters.sort.ToSortString();
