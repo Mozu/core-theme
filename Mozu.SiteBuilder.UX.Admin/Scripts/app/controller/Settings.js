@@ -32,9 +32,15 @@
     },
 
     tax: function () {
-        this.createContentView('Taco.view.settings.tax.Edit', {
-            record: null
-        });
+
+        this.confirmContext('Taco.view.settings.tax.Edit',  function () {
+            this.createContentView('Taco.view.settings.tax.Edit', {
+                record: null
+            });
+        }, this, arguments);
+
+
+       
     },
 
     shipping: function () {
