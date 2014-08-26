@@ -223,10 +223,10 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
 
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.unitPrice)]})</div>',
+                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '"></div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
+                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '"></div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                     '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.total)]})</div>',
