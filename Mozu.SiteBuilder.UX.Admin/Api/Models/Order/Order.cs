@@ -214,11 +214,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public string FraudScore { get; set; }
 
-        /// <summary>
-        /// A list of store credits which were used in a valid payment on this order.
-        /// </summary>
-        public List<DCcredit.Credit> AssociatedCredits { get; set; }
-
         #region Totals
 
         /// <summary>

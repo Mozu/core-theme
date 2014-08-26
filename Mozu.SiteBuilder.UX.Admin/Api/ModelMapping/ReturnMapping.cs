@@ -119,6 +119,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   ;
 
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
+                  // TODO: not sure why the ReturnItem model on our side doesn't have an id..
+                  .ForMember(dc => dc.Id, opt => opt.Ignore())
                   .ForMember(x => x.Reasons, opt => opt.ResolveUsing(x => x.Reason == null 
                       ? null : new List<ReturnsDC.ReturnReason>()
                       {
@@ -130,18 +132,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(dc => dc.Product, op => op.Ignore())
                 .ForMember(dc => dc.BundledProducts, op => op.Ignore())
-                ;
-
-           // Mapper.CreateMap<ReturnUnitPrice, ReturnsDC.ReturnUnitPrice>();
-            Mapper.CreateMap<OrderNote, OrdersDC.OrderNote>()
-                //todo: confirm new AuditInfo mapping Greg Murray on 2014-01-24 
-                .ForMember(dc => dc.AuditInfo, op => op.ResolveUsing(x => new AuditInfo()
-                {
-                    CreateBy = x.CreateBy,
-                    CreateDate = x.CreateDate,
-                    UpdateBy = x.UpdateBy,
-                    UpdateDate = x.UpdateDate
-                }))
                 ;
 
         }
