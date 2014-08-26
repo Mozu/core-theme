@@ -72,7 +72,7 @@ Ext.define('Taco.store.shared.TreeStore', {
         Ext.each(newNodes, function (newNode) {
             var parent = lookup[newNode.get('parentId') || 666];
             if (parent) {
-                parent.appendChild(newNode, undefined, true);
+                parent.appendChild(newNode, true, true);
             } else {
                // fillNodes.push(newNode);
             }
