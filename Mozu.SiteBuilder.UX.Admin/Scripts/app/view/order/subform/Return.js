@@ -62,6 +62,7 @@ Ext.define('Taco.view.order.subform.Return', {
         // if (returnStatus && returnStatus !== 'None') {
         store.load(function () {
             me.initProcessReturnPanels(store);
+            me.initHeader();
             me.setLoading(false);
         });
 
@@ -122,10 +123,9 @@ Ext.define('Taco.view.order.subform.Return', {
         );
     },
         
-    refreshReurnableItemsGrid : function (){
-        
+    refreshReturnableItemsGrid : function (){
         this.returnableItems.reload();
-
+        this.initHeader();
     },
 
     addProcessReturnPanel: function (record, recordIndex) {
@@ -134,7 +134,7 @@ Ext.define('Taco.view.order.subform.Return', {
             order: this.record,
             record: record,
             listeners: {
-                'refresh-returnable-items': this.refreshReurnableItemsGrid,
+                'refresh-returnable-items': this.refreshReturnableItemsGrid,
                 scope:this
             },
             collapsed: status === Taco.model.Return.constants.statuses.CANCELLED || status === Taco.model.Return.constants.statuses.REJECTED || status === Taco.model.Return.constants.statuses.CLOSED
@@ -142,7 +142,11 @@ Ext.define('Taco.view.order.subform.Return', {
     },
         
     initHeader: function() {
-        this.setHeaderTitle("Status: <strong>" + Taco.core.util.Common.camelToSpace(this.record.get('returnStatus')) + "</strong>");
+        var returnsStore = this.getReturnsStore();
+        var returnCount = returnsStore ? Ext.valueFrom(returnsStore.count(), 0) : 0;
+        // var returnStatus = Taco.core.util.Common.camelToSpace(this.record.get('returnStatus'));
+
+        this.setHeaderTitle("Status: <strong>" + (returnCount ? returnCount : 'No') + " Return" + (returnCount === 1 ? "" : "s") + "</strong>");
     },
 
     initCreateButton: function () {
@@ -272,7 +276,7 @@ Ext.define('Taco.view.order.subform.Return', {
             success: function(batch) {
                 Ext.Array.each(records, this.addProcessReturnPanel, this, true);
                 //after we add the new return we need to reload the returnable items grid data;
-                me.refreshReurnableItemsGrid();
+                me.refreshReturnableItemsGrid();
             },
             failure: function(batch) {
                 returnsStore.remove(records);
