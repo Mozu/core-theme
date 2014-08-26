@@ -812,6 +812,7 @@
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\Currencies.js" />
+    <Content Include="Scripts\app\store\CustomerGrid.js" />
     <Content Include="Scripts\app\store\DocumentTypes.js" />
     <Content Include="Scripts\app\store\EntityLists.js" />
     <Content Include="Scripts\app\store\Locales.js" />

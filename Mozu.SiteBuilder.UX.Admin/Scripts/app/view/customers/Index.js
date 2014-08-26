@@ -7,21 +7,20 @@ Ext.define('Taco.view.customers.Index', {
     alias: 'widget.taco.index.customer',
     requires: [
         'Taco.model.CustomerAccount',
-        'Taco.store.Customers',
+        'Taco.store.CustomerGrid',
         'Taco.view.customers.AdvancedSearchForm',
         'Taco.store.CustomerSegments'
     ],
     reFetchRecordOnEdit: true,
     typeName: 'Customer',
     modelName: 'Taco.model.CustomerAccount',
-    store: { type: 'Taco.store.Customers' },
+    store: { type: 'Taco.store.CustomerGrid' },
     editorName: 'Taco.view.customer.Edit',
     useTilePanel: false,
     
   
     initComponent: function () {
-        var me = this;
-
+       
         this.header = {
             title: 'Customers'
         };
@@ -86,7 +85,7 @@ Ext.define('Taco.view.customers.Index', {
                     sortable: true,
                     text: 'Lifetime Value',
                     width: 100,
-                    renderer: function (value, metaData, record) {
+                    renderer: function (value) {
                         return value;
                         //todo localization
                     }
@@ -98,7 +97,7 @@ Ext.define('Taco.view.customers.Index', {
                     dataIndex: 'segments',
                     text: 'Segments',
                     width: 300,
-                    renderer: function (value, metaData, record) {
+                    renderer: function (value) {
                         var codes = [];
                         if (value && value.length) {
                             codes = Ext.Array.pluck(value, 'code');
@@ -128,7 +127,7 @@ Ext.define('Taco.view.customers.Index', {
                         }
                     }],
                     // do any processing needed to show menu
-                    onMenuShow: function (menu, eventData) { }
+                    onMenuShow: function () { }
                 }]
             } 
         };
