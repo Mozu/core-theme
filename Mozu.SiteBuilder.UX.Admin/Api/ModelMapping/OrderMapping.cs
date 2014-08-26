@@ -133,6 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 }))
 
                 //ignores, handled in aftermap
+                .ForMember(x => x.Customer, op => op.Ignore())
                 .ForMember(x => x.UnpackagedItems, op => op.Ignore())
                 .ForMember(x => x.UnpickedupItems, op => op.Ignore())
                 .ForMember(x => x.AuthorizationInfo, op => op.Ignore())
@@ -144,6 +145,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsNotPickedup, op => op.Ignore())
                 .ForMember(x => x.ItemsInPickups, op => op.Ignore())
                 .ForMember(x => x.ItemsPickedup, op => op.Ignore())
+                .ForMember(x => x.UndeliveredDigitalItems, op => op.Ignore())
+                .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
+                .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 
                 .AfterMap((dc, order) =>
                 {
@@ -512,7 +516,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
                   .ForMember(x => x.FulfillmentMethod, op => op.ResolveUsing(dc => dc.FulfillmentMethod))
 
+                  // handled by after mapper
                   .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
+                  .ForMember(x => x.ProductUsage, op => op.Ignore())
 
                   .AfterMap((dc, orderItem) =>
                   {
@@ -603,14 +609,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcShippingDiscount_to_ShippingDiscount()
         {
+            Mapper.CreateMap<DiscountDC.AppliedLineItemShippingDiscount, ShippingDiscount>()
+                .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Discount != null ? dc.Discount.Discount.Id : 0))
+                .ForMember(x => x.MethodCode, op => op.ResolveUsing(dc => dc.MethodCode))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null && dc.Discount.Discount != null)
+                    ? dc.Discount.Discount.Name : null))
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => (dc.Discount != null)
+                    ? dc.Discount.Impact : null))
+                .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => (dc.Discount != null)
+                    ? dc.Discount.CouponCode : null))
+                .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Excluded.HasValue && !dc.Discount.Excluded.Value))
+                ;
+
             Mapper.CreateMap<DiscountDC.ShippingDiscount, ShippingDiscount>()
                 .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Discount != null ? dc.Discount.Discount.Id : 0))
                 .ForMember(x => x.MethodCode, op => op.ResolveUsing(dc => dc.MethodCode))
-                .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null && dc.Discount.Discount != null) 
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null && dc.Discount.Discount != null)
                     ? dc.Discount.Discount.Name : null))
-                .ForMember(x => x.Total, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => (dc.Discount != null)
                     ? dc.Discount.Impact : null))
-                .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => (dc.Discount != null) 
+                .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => (dc.Discount != null)
                     ? dc.Discount.CouponCode : null))
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Excluded.HasValue && !dc.Discount.Excluded.Value))
                 ;
@@ -812,8 +830,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.GiftCardCode, op => op.ResolveUsing(dc => dc.GiftCardCode))
+                .ForMember(x => x.Weight, op => op.UseValue(null))
                 //ignores, handled in Order mapping
                 .ForMember(x => x.ProductName, op => op.Ignore())
+                .ForMember(x => x.UnitPrice, op => op.Ignore())
+                .ForMember(x => x.Total, op => op.Ignore())
                 ;
         }
 
@@ -917,7 +938,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.ShippingTaxTotal, op => op.Ignore())
                   .ForMember(dc => dc.ShippingTotal, op => op.Ignore())
                   .ForMember(dc => dc.FeeTotal, op => op.Ignore())
-                  .ForMember(dc => dc.AuditInfo, op => op.Ignore())                  
+                  .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                  .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
                   ;
         }
 
@@ -992,9 +1014,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.CreateBy))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.UpdateDate))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.UpdateBy))
+                .ForMember(x => x.OrderId, op => op.Ignore())
                 ;
         }
 
+        private void Map_OrderNote_to_DcOrderNote()
+        {
+            Mapper.CreateMap<OrderNote, OrdersDC.OrderNote>()
+                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.NoteId))
+                .ForMember(dc => dc.Text, op => op.ResolveUsing(x => x.Text))
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                ;
+        }
         /// <summary>
         /// Looks up a package item by OrderItemId and fills in the other information.
         /// </summary>
