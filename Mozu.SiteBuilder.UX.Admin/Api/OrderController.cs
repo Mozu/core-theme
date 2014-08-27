@@ -328,11 +328,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string ShippingMethodCode { get; set; }
         }
         [HttpPostRoute(UriTemplate = "setshippinginfo")]
-        public async Task<Response<Order>> SetShippingInfo(SetShippingInfoArgs args)
+        public async Task<Response<Order>> SetShippingInfo(SetShippingInfoArgs args, [FromUri]bool draft = false)
         {
             DCs.FulfillmentInfo  shippingInfo;
 
-            var shippingInfoResult = await _orderWebApiClient.GetFulfillmentInfo(args.OrderId);
+            var shippingInfoResult = await _orderWebApiClient.GetFulfillmentInfo(args.OrderId, draft);
             if (shippingInfoResult.HasException && shippingInfoResult.ResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 shippingInfo = new DCs.FulfillmentInfo();
@@ -346,13 +346,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             shippingInfo.ShippingMethodName = !String.IsNullOrWhiteSpace(args.ShippingMethodName) ? args.ShippingMethodName : null;
             shippingInfo.ShippingMethodCode = !String.IsNullOrWhiteSpace(args.ShippingMethodCode) ? args.ShippingMethodCode : null;
 
-            await _orderWebApiClient.SetFulFillmentInfo( args.OrderId, shippingInfo, APPLY_TO_ORIGINAL);
+            await _orderWebApiClient.SetFulFillmentInfo( args.OrderId, shippingInfo, (draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL));
 
-            DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+            DCo.Order dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId, draft)).ReadAsSync();
             if (dcOrder.BillingInfo == null || dcOrder.BillingInfo.IsSameBillingShippingAddress)
             {
                 dcOrder.BillingInfo = new DCp.BillingInfo { BillingContact = null, IsSameBillingShippingAddress = true };
-                await _orderWebApiClient.SetBillingInfo(args.OrderId, dcOrder.BillingInfo, APPLY_TO_ORIGINAL);
+                await _orderWebApiClient.SetBillingInfo(args.OrderId, dcOrder.BillingInfo, (draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL));
             }
 
             return Single2(dcOrder.Map<Order>());
