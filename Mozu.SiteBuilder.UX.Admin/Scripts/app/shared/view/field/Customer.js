@@ -74,13 +74,13 @@ Ext.define('Taco.shared.view.field.Customer', {
             });
 
             var proxy = me.getStore().getProxy();
-            if (me.showAnonymousCustomers) {
-                proxy.setExtraParam("advancedSearch", '{"showAnonymous":true}');
+            if (me.showAnonymousCustomers) {                
+                proxy.setExtraParam("showAnonymous", 'true');
             } else {
-                // need to remove the advancedSearch filter since it can be set by the advanced search in the customers page;
-                if (proxy.extraParams["advancedSearch"]) {
-                    delete proxy.extraParams["advancedSearch"]
+                if (proxy.extraParams["showAnonymous"]) {
+                    delete proxy.extraParams["showAnonymous"]
                 }
+
             }
             this.store.load();
 
