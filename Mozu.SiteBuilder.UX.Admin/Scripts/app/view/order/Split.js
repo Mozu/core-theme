@@ -290,14 +290,15 @@ Ext.define('Taco.view.order.Split', {
         });
     },
 
+    handleChildCollapseExpand: function (panel) {
+        this.callParent(arguments);
+
+        this.updateSplitTitle();
+    },
+
     updateSplitTitle: function () {
         var record = this.getRecord();
-       
-        var activeTitle = '<a href="/admin/orders" class="taco-content-header-title-root">' + (this.getWestTitle() || 'Records') + '</a>';
-
-        if (record) {
-            activeTitle += (' / Order #' + record.get('orderNumber'));
-        }
+        var activeTitle = record && !this.getEast().getCollapsed() ? ('Order #' + record.get('orderNumber')) : (this.getWestTitle() || 'Records');
 
         Ext.suspendLayouts();
         this.setTitle(activeTitle);
