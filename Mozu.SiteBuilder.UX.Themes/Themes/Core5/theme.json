@@ -8,14 +8,7 @@
         "isTablet": false,
         "name": "Core5"
     },
-    "editors": [{
-        "documentTypes": [
-            "snippets@mozu"
-        ],
-        "id": "snippet@mozu",
-        "path": "snippet.js",
-        "priority": 0.2
-    }, {
+    "editors": [ {
         "documentTypes": [
             "web_page@mozu"
         ],
@@ -814,31 +807,6 @@
         "editView": "taco-image-widgeteditor",
         "icon": "/resources/admin/widgets/00_photo.png",
         "id": "cms-image",
-        "validPageTypes": [
-            "*"
-        ]
-    }, {
-       "displayName": "snippet" ,
-           "displayTemplate": "cms/snippet",
-           "editViewFields": [{
-            "fieldLabel": "snippet",
-            "name": "snippetId",
-            "width": "100%",
-            "store": {
-                "type": "Taco.store.Entities",
-                "listName": "siteSnippets@mozu",
-                "entityType": "cms"
-            },
-            "displayField": "name",
-            "valueField": "id",
-            "xtype": "combo"
-            }, 
-             {
-                   "xtype": "hidden",
-                   "value": "siteSnippets@mozu",
-                   "name": "listName"
-               }],
-        "id": "cms-snippet",
         "validPageTypes": [
             "*"
         ]

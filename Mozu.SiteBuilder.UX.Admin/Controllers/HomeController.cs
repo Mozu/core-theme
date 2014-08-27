@@ -265,7 +265,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
                 await _entityListsWebApiClient.InsertEntity(entityListFullName: "tenantAdminSettings@mozu", item: JObject.FromObject(new TenantAdminGlobalSettings()
                                                                                                                                {
-                                                                                                                                   EntityManagerVisible = string.Equals(_settings.CoreSettings.ScaleUnitId, "sb", StringComparison.OrdinalIgnoreCase) 
+                                                                                                                                   EntityManagerVisible = false,
+                                                                                                                                   CustomRoutesVisible = false,
+                                                                                                                                   SiteBuilderContentListsVisible = false
 
                                                                                                                                }, GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer()));
 
