@@ -39,22 +39,10 @@
                     cellclick: me.onCellClick,
                     drop: function (node, data, overModel, dropPosition, eOpts) {
                         var store = me.down('grid').store,
-                            rec1 = data.records[0],
-                            rec2 = overModel,
-                            //   newRec1Seq = rec2.get('sequence'),
-                            //  newRec2Seq = rec1.get('sequence'),
-                            rec1Index = store.indexOf(rec1),
-                            rec2Index = store.indexOf(rec2),
-                            i,
-                            resquence = {
-                                rec1Index: rec2Index,
-                                rec2Index: rec1Index
-                            },
-                            seedIndex = store.getAt(resquence[0] || 0).get('sequence');
+                            i;
 
                         for (i = 0; i < store.getCount(); i++) {
-
-                            store.getAt(resquence[i] || i).set('sequence', i + seedIndex);
+                            store.getAt(i).set('sequence', i + 1);
                         }
                         store.sync();
                     },
