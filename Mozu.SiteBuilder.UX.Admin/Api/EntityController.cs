@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
@@ -286,9 +287,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "lists/tree")]
-        public async Task<Response<List<Node>>> ReadListsTree(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string view = null)
+        public async Task<Response<List<Node>>> ReadListsTree(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string view = null, string usages = null)
         {
             var nodes = new List<Node>();
+            var usagesArray = usages == null ? null : usages.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
+            var usageFilter = new Func<IEnumerable<string>, bool>(listUsages =>
+            {
+                if (usagesArray == null || usagesArray.Length == 0)
+                {
+                    return true;
+                }
+                if (listUsages == null || listUsages.Count() == 0)
+                {
+                    return false;
+                }
+                return listUsages.Any(u => usagesArray.Any(v => u.Equals(v, StringComparison.OrdinalIgnoreCase)));
+            });
 
 
             if (entityType == "cms" || string.IsNullOrEmpty(entityType))
@@ -298,17 +312,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 string sortBy = null;
                 string filter = null;
-                try //todo:remove when support is there for tenant.
+
+                DC.DocumentListCollection res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+                if (res.Items != null)
                 {
-                    DC.DocumentListCollection res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
-                    if (res.Items != null)
-                    {
-                        res.Items.ForEach(x => cms.Items.Add(new Node() {Text = x.Name, Id = "cms_" + x.Name, MetaData = AddViews(x), Leaf = true}));
-                    }
+                    res.Items.Where(x => usageFilter(x.Usages)).ToList().ForEach(x => cms.Items.Add(new Node() {Text = x.Name, Id = "cms_" + x.Name, MetaData = AddViews(x), Leaf = true}));
                 }
-                catch
-                {
-                }
+
             }
             if (entityType == "mzdb" || string.IsNullOrEmpty(entityType))
             {
@@ -319,7 +329,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 EntityListCollection res = (await _entityListsWebApiClient.GetEntityLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
                 if (res.Items != null)
                 {
-                    mzdb.Items.AddRange(res.Items.Where(x =>
+                    mzdb.Items.AddRange(res.Items
+                        .Where(x=> usageFilter(x.Usages ))
+                        .Where(x =>
                     {
                         switch (x.ContextLevel)
                         {
