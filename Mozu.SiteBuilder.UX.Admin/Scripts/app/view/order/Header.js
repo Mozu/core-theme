@@ -287,6 +287,7 @@ Ext.define('Taco.view.order.Header', {
         this.customerSelector = Ext.widget({
             xtype: 'taco-customerfield',
             itemId: 'customerSelector',
+            showAnonymousCustomers: true,
             width: 300,
             emptyText: 'Customer Search',
             listeners: {
