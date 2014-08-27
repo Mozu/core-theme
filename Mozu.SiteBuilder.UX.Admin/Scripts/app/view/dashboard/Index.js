@@ -23,6 +23,7 @@ Ext.define('Taco.view.dashboard.Index', {
                                 '<a data-url="{[values.address]}">{[values.label]}</a>',
                             '</tpl></div>',
                         '</li>',
+                        '{[xindex % 4 === 0 && xindex !== xcount ? "</ul><ul class=\'taco-dashboard-group\'>" : ""]}',
                     '</tpl>',
                 '</ul>'
             ],
