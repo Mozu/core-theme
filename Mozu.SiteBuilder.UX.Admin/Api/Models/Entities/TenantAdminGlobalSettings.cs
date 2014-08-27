@@ -13,5 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Entities
         }
 
         public bool? EntityManagerVisible { get; set; }
+        public bool? SiteBuilderContentListsVisible { get; set; }
+        public bool? CustomRoutesVisible { get; set; }
     }
 }

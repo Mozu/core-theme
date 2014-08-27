@@ -56,10 +56,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ///     Returns the combined navigation tree.
         /// </summary>
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<HttpResponseMessage > List()
+        public async Task<HttpResponseMessage > List(bool showContentLists )
         {
             _log.Debug("Generating list.");
-            List<ITreeNavigationNode> list = await GetFlatList();
+            List<ITreeNavigationNode> list = await GetFlatList(showContentLists);
             bool needsFixup = false;
             foreach (var sibblingNodes in list.GroupBy(x => x.ParentId))
             {
@@ -155,7 +155,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        public async Task<List<ITreeNavigationNode>> GetFlatList()
+        public async Task<List<ITreeNavigationNode>> GetFlatList(bool? showContentLists)
         {
             List<ITreeNavigationNode> list = await _gandalf.GetFlatList();
             var pageTypes = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.PageTypes;
@@ -220,48 +220,53 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                          IsHidden = false
                      });
 
-            list.Add(new NavigationTreeNode
-                     {
-                         AllowDrag = false,
-                         AllowDrop = false,
-                         NodeType = NavigationNodeType.ContentList,
-                         Id = "_cmsContentTypes",
-                         OriginalId = "_cmsContentTypes",
-                         Expanded = false,
-                         Expandable = true,
-                         Index = 101,
-                         Name = "Content Lists",
-                         ParentId = SUPER_ROOT_NODE_NAME,
-                         IsHidden = false
-                     });
+            if (showContentLists.GetValueOrDefault(false))
+            {
 
-            var etC = this.Request.Resolve<EntityControllerController>();
-            var etcRet = (await etC.ReadListsTree(pagingParams: new PagingParamaters(), extFilter: null, entityType: "cms"));
-            list.AddRange(etcRet.Items[0].Items
-                .Where(x =>
-                {
-                    var usages = x.MetaData["usages"].ToObject<string[]>();
 
-                    return usages != null && usages.Contains("sitebuilder", StringComparer.OrdinalIgnoreCase);
-                    
-                }
-                ).
-                Select(x => new NavigationTreeNode()
-                            {
-                                AllowDrag = true,
-                                AllowDrop = false,
-                                NodeType = NavigationNodeType.ContentList,
-                                Id = "_cmsContentTypes" + x.Id,
-                                MetaData = x.MetaData,
-                                OriginalId = "_cmsContentTypes",
-                                Expanded = true,
-                                Expandable = true,
-                                Index = 101,
-                                Name = x.Text,
-                                ParentId = "_cmsContentTypes",
-                                IsHidden = false
-                            }))
-                ;
+                list.Add(new NavigationTreeNode
+                         {
+                             AllowDrag = false,
+                             AllowDrop = false,
+                             NodeType = NavigationNodeType.ContentList,
+                             Id = "_cmsContentTypes",
+                             OriginalId = "_cmsContentTypes",
+                             Expanded = false,
+                             Expandable = true,
+                             Index = 101,
+                             Name = "Content Lists",
+                             ParentId = SUPER_ROOT_NODE_NAME,
+                             IsHidden = false
+                         });
+
+                var etC = this.Request.Resolve<EntityControllerController>();
+                var etcRet = (await etC.ReadListsTree(pagingParams: new PagingParamaters(), extFilter: null, entityType: "cms"));
+                list.AddRange(etcRet.Items[0].Items
+                    .Where(x =>
+                    {
+                        var usages = x.MetaData["usages"].ToObject<string[]>();
+
+                        return usages != null && usages.Contains("sitebuilder", StringComparer.OrdinalIgnoreCase);
+
+                    }
+                    ).
+                    Select(x => new NavigationTreeNode()
+                                {
+                                    AllowDrag = true,
+                                    AllowDrop = false,
+                                    NodeType = NavigationNodeType.ContentList,
+                                    Id = "_cmsContentTypes" + x.Id,
+                                    MetaData = x.MetaData,
+                                    OriginalId = "_cmsContentTypes",
+                                    Expanded = true,
+                                    Expandable = true,
+                                    Index = 101,
+                                    Name = x.Text,
+                                    ParentId = "_cmsContentTypes",
+                                    IsHidden = false
+                                }));
+                
+            }
             return list;
         }
 
@@ -539,7 +544,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             Task<IList<INavigationNode>> navTask = _navRepo.GetNavigationSetAsync();
             Task<ServiceClientResponse<DC.Category>> catTask = _catClient.GetCategory(categoryId);
-            Task<List<ITreeNavigationNode>> listTask = GetFlatList();
+            Task<List<ITreeNavigationNode>> listTask = GetFlatList(false);
 
             return Task.WhenAll(navTask, catTask, listTask)
                 .ContinueWith(_ => {

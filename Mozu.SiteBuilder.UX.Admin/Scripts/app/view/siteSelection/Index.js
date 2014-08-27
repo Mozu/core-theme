@@ -22,7 +22,7 @@ Ext.define('Taco.view.siteSelection.Index', {
 
         
         Ext.Array.forEach(contextStore.data.items, function (el) {
-            dataStore.site.push({ "id": el.data.id, "name": el.data.name, "urlToken": el.data.urlToken });
+            dataStore.site.push({ "id": el.data.id, "name": el.data.name, "urlToken": el.data.urlToken, "urlRouteDisplay": (Taco.tenantSettings && Taco.tenantSettings.customRoutesVisible ? "block" : "none") });
         }, me);
 
         this.body = {
@@ -42,7 +42,7 @@ Ext.define('Taco.view.siteSelection.Index', {
                                             '<div><a  data-siteId="{[values.id]}" data-url="themes" href="/admin/{[values.urlToken]}/themes">Theme</a></div>',
                                             '<div><a  data-siteId="{[values.id]}" data-url="website" href="/admin/{[values.urlToken]}/website">Edit</a></div>',
                                             '<div><a  data-siteId="{[values.id]}" data-url="redirects" href="/admin/{[values.urlToken]}/redirects">Redirects</a></div>',
-                                            '<div><a  data-siteId="{[values.id]}" data-url="siteroutes" href="/admin/{[values.urlToken]}/siteroutes">Custom Url Routes</a></div>',
+                                            '<div style="display:{[values.urlRouteDisplay]}"><a  data-siteId="{[values.id]}"  data-url="siteroutes" href="/admin/{[values.urlToken]}/siteroutes">Custom Url Routes</a></div>',
                                             '<div><a  data-siteId="{[values.id]}" target="_blank" href="/_gosite/{[values.id]}">View Live Site</a></div>',
                                             '<div><a  data-siteId="{[values.id]}" target="_blank" href="/_gosite/{[values.id]}?environment=preview">View Staged Site</a></div>',
                                         '</li>',
