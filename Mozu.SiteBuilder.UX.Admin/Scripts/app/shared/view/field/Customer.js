@@ -17,6 +17,8 @@ Ext.define('Taco.shared.view.field.Customer', {
 
     // adds extraParam to the proxy to show anonymous customers as well;
     showAnonymousCustomers: false,
+
+    enableKeyboardPaging: true,
    
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
