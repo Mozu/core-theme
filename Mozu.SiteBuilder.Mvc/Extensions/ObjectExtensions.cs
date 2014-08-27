@@ -35,7 +35,14 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             JToken tok;
             if (doc.Properties.CastAs<JObject>().TryGetValue(key, out tok))
             {
-                return (T) tok.ToObject<T>();
+                try
+                {
+                    return (T) tok.ToObject<T>();
+                }
+                catch
+                {
+                    return defaultValue;
+                }
             }
             return defaultValue;
             
@@ -53,9 +60,15 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             if (doc.Properties.CastAs<JObject>().TryGetValue(key, out tok))
             {
                 //todo test if can be cast..
-                value = (T) tok.ToObject<T>();
-                return true;
-                
+                try
+                {
+                    value = (T) tok.ToObject<T>();
+                    return true;
+                }
+                catch
+                {
+                }
+
             }
             value = default(T);
             return false;
