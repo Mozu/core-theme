@@ -560,14 +560,32 @@
             },
 
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
+                var self = this;
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
                     var creditModel = new PaymentMethods.DigitalCredit(credit.data);
                     creditModel.set("isTiedToCustomer", false);
 
-                    // todo: add validation call (expired 0 balance.) - Greg Murray on 2014-07-01 
-                    if (!creditModel.get('currentBalance')) {
-                        creditModel.set('currentBalance', creditModel.get('initialBalance'));
+                    var validateCredit = function() {
+                        var now = new Date(),
+                            activationDate = creditModel.get('activationDate') ? new Date(creditModel.get('activationDate')) : null,
+                            expDate = creditModel.get('expirationDate') ? new Date(creditModel.get('expirationDate')) : null;
+                        if (expDate && expDate < now) {
+                            return self.deferredError(Hypr.getLabel('expiredCredit', expDate.toLocaleDateString()), self);
+                        }
+                        if (activationDate && activationDate > now) {
+                            return self.deferredError(Hypr.getLabel('digitalCreditNotYetActive', activationDate.toLocaleDateString()), self);
+                        }
+                        if (!creditModel.get('currentBalance') || creditModel.get('currentBalance') <= 0) {
+                            return self.deferredError(Hypr.getLabel('digitalCreditNoRemainingFunds'), self);
+                        }
+                        return null;
+                    };
+
+                    var validate = validateCredit();
+                    if (validate !== null) {
+                        return null;
                     }
+                    
                     var maxAmt = me.getMaxCreditToApply(creditModel, me, amountRequested);
                     if (!!amountRequested && amountRequested < maxAmt) {
                         maxAmt = amountRequested;

@@ -342,9 +342,11 @@
   "noLongerWanted"       : "No longer needed/wanted",
   "tooLate"              : "Arrived too late",
   "wrongCountryForType"  : "Please select a country supported for this contact type",
-  "digitalCodeAlreadyUsed" : "This code has already been used.",
-  "digitalCreditExceedsBalance" : "The amount to apply exceeds the total remaining.",
-
+  "digitalCodeAlreadyUsed": "This code has already been used.",
+  "digitalCreditExceedsBalance": "The amount to apply exceeds the total remaining.",
+  "digitalCreditNoRemainingFunds": "This code has no remaining funds.",
+  "digitalCreditNotYetActive": "This code does not become active until {0}.",
+  "digitalCreditExpired": "This code expired on {0}.",
 
   "clearAllFilters"      : "Clear All Filters",
 
