@@ -108,7 +108,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         me.fireEvent('save', this);
 
         Ext.Ajax.request({
-            url: '/admin/app/order/setshippinginfo',
+            url: '/admin/app/order/setshippinginfo' + '?draft=' + this.record.get("isDraft"),
             method: 'POST',
             jsonData: {
                 orderId: this.record.getId(),
