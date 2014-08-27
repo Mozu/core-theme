@@ -298,7 +298,12 @@ Ext.define('Taco.view.order.Split', {
 
     updateSplitTitle: function () {
         var record = this.getRecord();
-        var activeTitle = record && !this.getEast().getCollapsed() ? ('Order #' + record.get('orderNumber')) : (this.getWestTitle() || 'Records');
+        var eastCollapsed = this.getEast().getCollapsed();
+        var activeTitle = this.getWestTitle() || 'Records';
+
+        if (record && !eastCollapsed) {
+            activeTitle = '<a href="/admin/orders" class="taco-content-header-title-root">' + activeTitle + '</a> / Order #' + record.get('orderNumber');
+        }
 
         Ext.suspendLayouts();
         this.setTitle(activeTitle);
