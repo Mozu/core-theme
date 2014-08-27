@@ -123,7 +123,7 @@ Ext.define('Taco.view.Header', {
                         id = linkEl.getAttribute('data-nav-id');
                         if (id) {
                             Ext.Array.each(breadcrumb.data.items, function (item) {
-                                if (item.id == id) {
+                                if (item.id === id) {
                                     node = item;
                                 }
                             });
@@ -164,7 +164,7 @@ Ext.define('Taco.view.Header', {
         Ext.Array.each(items, function (item) {
             var itemCfg = {
                 text: item.label
-            }
+            };
             menuCfg.items.push(itemCfg);
             if (item.address) {
                 itemCfg.handler = function () {
@@ -173,7 +173,7 @@ Ext.define('Taco.view.Header', {
                     } else {
                         Taco.core.StateManager.attemptNavigate(item.address);
                     }
-                }
+                };
             }
             if (item.items && item.items.length) {
                 itemCfg.menu = {
@@ -243,15 +243,15 @@ Ext.define('Taco.view.Header', {
         };
 
         if (secureForm) {
-            Ext.Array.each(secureForm.body , function (kvp) {
+            Ext.Array.each(secureForm.body, function (kvp) {
                 configForm.items.push({
                     xtype: 'hiddenfield',
                     name: kvp.key,
                     value: kvp.value
                 });
-            })
-            configForm.url =Ext.String.urlAppend(configForm.url, 'dt=' + secureForm.dateStamp);
-            configForm.url = Ext.String.urlAppend(configForm.url, 'messageHash=' + secureForm.messageHash);
+            });
+            configForm.url = Ext.String.urlAppend(configForm.url, 'dt=' + encodeURIComponent(secureForm.dateStamp));
+            configForm.url = Ext.String.urlAppend(configForm.url, 'messageHash=' + encodeURIComponent(secureForm.messageHash));
         }
 
 

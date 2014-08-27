@@ -20,6 +20,9 @@ Ext.define('Taco.store.EntitiesListsTree', {
             api: {
                 read: '/admin/app/entities/lists/tree'
             },
+            extraParams: {
+                usages: 'entitymanager'
+            },
             reader: {
                 type: 'json',
                 root: 'items',
