@@ -107,6 +107,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
         me.fireEvent('save', this);
 
+        // need to do loading indicator when not in order editor
+
+        if (!me.isEditable) {
+            me.setLoading(true);
+        }
+
         Ext.Ajax.request({
             url: '/admin/app/order/setshippinginfo' + '?draft=' + this.record.get("isDraft"),
             method: 'POST',
@@ -116,11 +122,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 shippingMethodCode: shippingMethodCode,
                 shippingMethodName: shippingMethodName
             },
-            success: function (record, operation) {
-                // when the shipping method changes we need to reload the order record to pickup the changes;
-                
-                me.onShippingInfoChange()
-                
+            callback: function (record, operation) {                
+                if (!me.isEditable) {
+                    me.setLoading(false);
+                }
             },
             success: function (response) {
                 // success handling here
@@ -145,8 +150,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         });
     },
 
-    onShippingInfoChange: function (){
-        //me.fireEvent('savesuccess', this);
+    onShippingInfoChange: function (){        
         // need to reload the record manually since the shipping method has changed;
         this.record.reload();
     },
@@ -155,38 +159,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         var me = this;
         
         var items = [];
-        
-        /*
-        this.shippingMethodField = Ext.widget({
-            xtype: "editabledisplayfield",
-            fieldLabel: "Shipping Method",
-            labelStyle: "padding-top: 13px;",
-            disabled : !this.record.get("fulfillmentContact").id,
-            value : this.record.data,
-            tpl: [
-                '<tpl if="values.shippingMethodName">{shippingMethodName}<tpl else>None Chosen</tpl>'
-            ],
-            onClick: function (e, el, eOpts) {
-                var menu = Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
-                    showRuntimePricing: true,
-                    orderId: me.record.getId(),
-                    onShippingMethodChange: function (menu, selection) {
-                        
-                        var data = {
-                            shippingMethodName: selection.shippingMethodName,
-                            shippingMethodCode: selection.shippingMethodCode
-                        };
-                        me.setShippingInfo(data);
-                    }
-                });
-                menu.showBy(el);
-            }
-        })
-        */
-        
-        
-        
-        
 
         //only show this field if this is a phone order in pending status or when editing a draft;
         if (this.record.get("orderStatus") == "Pending" || this.record.get("isDraft")) {            
