@@ -271,6 +271,7 @@ Ext.define('Taco.view.provisioning.Index', {
                         me.siteStore.reload();
                     } else {
                         me.catalogTreeStore.reload();
+                        me.siteStore.reload();
                     }
                 },
                 failure: function (response, opts) {
@@ -281,8 +282,8 @@ Ext.define('Taco.view.provisioning.Index', {
                 }
             };
             Ext.Msg.show({
-                title: 'Delete Catalog',
-                msg: ('<p style="padding-right: 1em;">Are you certain you want to delete the following catalog?</p><ul style="margin-top: 1em;"><li>' +
+                title: 'Delete',
+                msg: ('<p style="padding-right: 1em;">Are you certain you want to delete the following?</p><ul style="margin-top: 1em;"><li>' +
                     entity.name + '</li></ul>'),
                 buttons: Ext.Msg.YESNO,
                 // buttonText: {yes: "Yes, delete it", no: "No, keep it"},
