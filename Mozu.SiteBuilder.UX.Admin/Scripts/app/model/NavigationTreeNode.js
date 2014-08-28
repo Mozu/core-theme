@@ -83,7 +83,7 @@ Ext.define('Taco.model.NavigationTreeNode', {
     proxy: {
         type: 'ajaxproxy',
         extraParams: {
-            showContentLists: Taco.tenantSettings && Taco.tenantSettings.siteBuilderContentListsVisible
+            showContentLists: !!(Taco.tenantSettings && Taco.tenantSettings.siteBuilderContentListsVisible)
         },
         api: {
             create: '/admin/app/navigation/create',
