@@ -113,11 +113,11 @@
             // Typically this is a client side validation error; 
             // The form is responsible to call setMessage to display the errors or update the form fields with error messaging where appropriate;
             beforesavefailure: function (view, errors) {                                
-                this.saveFailure()
+                this.saveFailure(arguments)
             },
             // fire when a service returns an error saving the record;
-            savefailure: function (view, errors) {                                
-                this.saveFailure()
+            savefailure: function (view, errors) {
+                this.saveFailure(arguments)
             },
             savecomplete: function () {
 

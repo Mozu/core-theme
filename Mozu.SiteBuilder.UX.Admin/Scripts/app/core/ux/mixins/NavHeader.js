@@ -424,8 +424,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this,
             data = null;
         
-        console.log("doSave")
-        console.warn("The instances and subclasses of this Modal typically overide the doSave() Method and this modal has not.")
+        //console.log("doSave")
+        //console.warn("The instances and subclasses of this Modal typically overide the doSave() Method and this modal has not.")
 
         /*        
             // your persistance code goes here. 
