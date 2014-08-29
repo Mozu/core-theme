@@ -22,11 +22,7 @@ Ext.define('Taco.model.Order', {
         },
 
         extend: 'Taco.core.data.Model',
-        /**********************************************************    
-         *
-         *
-         *
-         ***************************************************************/
+
         behaviors: {
             read: 73,
             create: 74,
@@ -36,13 +32,6 @@ Ext.define('Taco.model.Order', {
             cancel: 78,
             applypayment: 79
         },
-
-        //requiredStores: [
-
-        //    'Taco.store.ShippingMethods',
-        //    'Taco.store.Channels',
-        //    'Taco.store.Attributes'
-        //],
         fields: [{
                 name: 'id',
                 type: 'string',

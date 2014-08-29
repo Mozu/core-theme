@@ -225,8 +225,8 @@ Ext.define('Taco.model.Return', {
             success: function (response) {
                 var json = Ext.decode(response.responseText, true);
 
-                if (json.items && json.items.length) {
-                    this.set(json.items[0]);
+                if (json.items) {
+                    this.set(json.items);
                     this.commit();
                 }
                 if (cfg.callback) cfg.callback.call(cfg.scope || this, this, null, true);
@@ -261,8 +261,8 @@ Ext.define('Taco.model.Return', {
             success: function (response) {
                 var json = Ext.decode(response.responseText, true);
 
-                if (json.items && json.items.length) {
-                    this.set(json.items[0]);
+                if (json.items) {
+                    this.set(json.items);
                     this.commit();
                 }
                 if (cfg.callback) cfg.callback.call(cfg.scope || this, this, null, true);
