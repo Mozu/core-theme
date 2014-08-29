@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "createStoreCredit")]
-        public async Task<Response<Return>> RefundPayments(CreateStoreCreditArgs args) {
+        public async Task<Response<Return>> CreateStoreCredit(CreateStoreCreditArgs args) {
             var dcPaymentAction = new DCp.PaymentAction {
                 ActionName = DCp.PaymentAction.PaymentActionNameConst.CREDIT_PAYMENT,
                 Amount = args.Amount,
