@@ -395,20 +395,12 @@ Ext.define('Taco.view.order.subform.Detail', {
     getButtonActions: function () {
         var me = this,
             availableActions = me.record.get("availableActions"),
-            canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
             canEdit = !(me.record.get("orderStatus")=="Completed"),
             buttons;
         
         buttons = [
             {
-                text: 'Accept Order',
-                handler: function () {
-                    this.detailGrid.acceptOrder();
-                },
-                scope: me,
-                hidden: !canAccept
-            },{
                 text: 'Cancel Order',
                 xtype: "button",
                 ui: "action",
@@ -472,15 +464,15 @@ Ext.define('Taco.view.order.subform.Detail', {
         tpl = new Ext.XTemplate(
             '<table class="print-order-page">',
             '<thead class="header"><tr>',
-            '<th class="company-info"><h1>Prizm Audio & Video</h1></th>',
-            '<th class="company-contacts">http://www.prizmav.com</th>',
+            '<th class="company-info">&nbsp;</th>',
+            '<th class="company-contacts">&nbsp;</th>',
             '<th class="order-essentials">',
                 '<div class="order-number"><span class="label">Order #</span><span>{orderNumber}</span></div>',
                 '<div class="order-date"><span class="label">Date: </span><span>{createDate:date("m/d/Y")}</span></div>',
             '</th>',
             '</tr></thead>',
             '<tfoot class="footer"><tr>',
-                '<td colspan="3">For questions or feedback, email us at http://www.prizmav.com. Thanks - please visit us again at http://www.prizmav.com!</td>',
+                '<td colspan="3">&nbsp;</td>',
             '</tr></tfoot>',
             '<tbody><tr><td colspan="3">',
                 '<div class="section section-contacts"><table class="panes"><tbody><tr>',
@@ -669,7 +661,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             '</table>'
         );
 
-        cssText = 'body{font-family:"Source Sans Pro";font-size:14px;line-height:1;margin:0;padding:0}h1,h2,h3{font-weight:600;margin:0}table{border-collapse:collapse;font-size:inherit;line-height:inherit}.section{border-bottom:1px solid #b3b3b3;padding-bottom:10px}.section>h2{border-bottom:1px solid #bfbfbf;font-size:17px;line-height:1;margin:0 2%;padding:17px 1% 16px}.subsection-wrapper{margin:10px 2%}.subsection-wrapper>h3{padding:7px 2%}.subsection-wrapper .grid{margin-left:0;margin-right:0;width:100%}.subsection{margin:0 2%;width:96%}.subsection .label{font-weight:600;margin:14px 0 7px}.subsection .label:nth-of-type(1){margin-top:0}.subsection td{padding:7px 7px 0 0;vertical-align:top}.grid{border:1px solid #bfbfbf;margin:10px 2%;width:96%}.grid th{background-color:#e5e5e5;font-weight:600;padding:8px 14px;text-align:left;white-space:nowrap}.grid td{border-top:1px solid #bfbfbf;padding:8px 14px;text-align:left}.grid tr:nth-of-type(1) td{border-top-width:0}.panes{margin:10px 2%;width:96%}.panes td{border-left:1px solid #bfbfbf;padding:2px 14px 8px;vertical-align:top;width:33%}.panes td:nth-of-type(1){border-left-width:0}.panes .label{color:#b3b3b3;font-size:13px;margin-bottom:7px}.panes .price-total{font-size:24px;margin-bottom:7px}.panes .item-total{font-size:16px}.print-order-page{width:100%}.header th{border-bottom:1px solid #b3b3b3;font-weight:400;padding:14px 2%;text-align:left;vertical-align:top;width:33%}.header .company-info h1{font-size:24px}.header .company-contacts{text-align:center;vertical-align:middle}.header .order-essentials{text-align:right}.header .order-essentials .order-number{font-size:17px;font-weight:600;margin-bottom:3px}.header .order-essentials .order-number .label{color:#b3b3b3;font-weight:400}.header .order-essentials .order-date .label{font-weight:600}.footer td{padding:14px 3%}.section-attributes .attribute{margin:10px 4%}.section-attributes .attribute span{font-style:italic;margin-right:10px}.section-attributes .attribute .label{font-style:normal;font-weight:600}';
+        cssText = 'body{font-family:"Source Sans Pro",tahoma,sans-serif;font-size:14px;line-height:1;margin:0;padding:0}h1,h2,h3{font-weight:600;margin:0}table{border-collapse:collapse;font-size:inherit;line-height:inherit}.section{border-bottom:1px solid #b3b3b3;padding-bottom:10px}.section>h2{border-bottom:1px solid #bfbfbf;font-size:17px;line-height:1;margin:0 2%;padding:17px 1% 16px}.subsection-wrapper{margin:10px 2%}.subsection-wrapper>h3{padding:7px 2%}.subsection-wrapper .grid{margin-left:0;margin-right:0;width:100%}.subsection{margin:0 2%;width:96%}.subsection .label{font-weight:600;margin:14px 0 7px}.subsection .label:nth-of-type(1){margin-top:0}.subsection td{padding:7px 7px 0 0;vertical-align:top}.grid{border:1px solid #bfbfbf;margin:10px 2%;width:96%}.grid th{background-color:#e5e5e5;font-weight:600;padding:8px 14px;text-align:left;white-space:nowrap}.grid td{border-top:1px solid #bfbfbf;padding:8px 14px;text-align:left}.grid tr:nth-of-type(1) td{border-top-width:0}.panes{margin:10px 2%;width:96%}.panes td{border-left:1px solid #bfbfbf;padding:2px 14px 8px;vertical-align:top;width:33%}.panes td:nth-of-type(1){border-left-width:0}.panes .label{color:#b3b3b3;font-size:13px;margin-bottom:7px}.panes .price-total{font-size:24px;margin-bottom:7px}.panes .item-total{font-size:16px}.print-order-page{width:100%}.header th{border-bottom:1px solid #b3b3b3;font-weight:400;padding:14px 2%;text-align:left;vertical-align:top;width:33%}.header .company-info h1{font-size:24px}.header .company-contacts{text-align:center;vertical-align:middle}.header .order-essentials{text-align:right}.header .order-essentials .order-number{font-size:17px;font-weight:600;margin-bottom:3px}.header .order-essentials .order-number .label{color:#b3b3b3;font-weight:400}.header .order-essentials .order-date .label{font-weight:600}.footer td{padding:14px 3%}.section-attributes .attribute{margin:10px 4%}.section-attributes .attribute span{font-style:italic;margin-right:10px}.section-attributes .attribute .label{font-style:normal;font-weight:600}';
 
         styleEl.setAttribute('type', 'text/css');
 
