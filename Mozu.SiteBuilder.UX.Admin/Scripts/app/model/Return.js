@@ -5,7 +5,7 @@ Ext.define('Taco.model.Return', {
     extend: 'Taco.core.data.Model',
     requires: ['Taco.model.ReturnItem', 'Taco.model.OrderPayment'],
 
-    statics: (function() {
+    statics: (function () {
 
         var constants = {
                 reasons: {
@@ -14,7 +14,7 @@ Ext.define('Taco.model.Return', {
                     MISSING_PARTS: 'MissingParts',
                     DIFFERENT_EXPECTATIONS: 'DifferentExpectations',
                     LATE: 'Late',
-                    NO_LONGER_WANTED: 'NoLongerWanted', 
+                    NO_LONGER_WANTED: 'NoLongerWanted',
                     OTHER: 'Other'
                 },
                 statuses: {
@@ -29,20 +29,20 @@ Ext.define('Taco.model.Return', {
                     RESTOCKED: "Restocked",
                     SHIPPED: "Shipped"
                 }
-            }, 
-            storeReasons = Ext.Array.map(Ext.Object.getValues(constants.reasons),  function toStoreReason (s) {
+            },
+            storeReasons = Ext.Array.map(Ext.Object.getValues(constants.reasons), function toStoreReason(s) {
                 return [s, Taco.core.util.Common.camelToSpace(s)];
             });
 
 
         return {
             constants: constants,
-            getValidReasons: function() {
+            getValidReasons: function () {
                 return storeReasons;
             }
         };
     }()),
-   
+
     fields: [
         {
             "name": "id",
@@ -92,10 +92,10 @@ Ext.define('Taco.model.Return', {
             "useNull": true,
             defaultValue: null
         }, {
-             "name": "rmaDeadline",
-             "type": "date",
-             "useNull": true,
-             defaultValue: null,
+            "name": "rmaDeadline",
+            "type": "date",
+            "useNull": true,
+            defaultValue: null,
             dateFormat: 'c'
          },
         {
@@ -112,27 +112,27 @@ Ext.define('Taco.model.Return', {
             defaultValue: null,
             dateFormat: 'c'
         },
-        
-         {
-             "name": "type",
-             "type": "string",
-             "useNull": true,
-             defaultValue: null
+
+        {
+            "name": "type",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
          },
-         {
-             "name": "payments",
-             "type": "auto",
-             "useNull": true,
-             defaultValue: []
+        {
+            "name": "payments",
+            "type": "auto",
+            "useNull": true,
+            defaultValue: []
          },
-         {
-             "name": "totalLossAmount",
-             "type": "number",
-             "useNull": true,
-             defaultValue: null
+        {
+            "name": "totalLossAmount",
+            "type": "number",
+            "useNull": true,
+            defaultValue: null
          }
     ],
-    
+
     getItems: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ReturnItem',
@@ -147,8 +147,7 @@ Ext.define('Taco.model.Return', {
             foreignProperty: 'return'
         });
     },
-    
-    
+
 
     proxy: {
         type: 'ajaxproxy',
@@ -169,9 +168,6 @@ Ext.define('Taco.model.Return', {
             type: 'json'
         }
     },
-    
-
-
 
 
     performAction: function (action, config) {
@@ -185,11 +181,11 @@ Ext.define('Taco.model.Return', {
             config.scope2 = config.scope;
         }
         Ext.apply(config, {
-            jsonData : {
+            jsonData: {
                 actionName: action,
-                returnIds:[this.getId()]
+                returnIds: [this.getId()]
             },
-            success: function(response){
+            success: function (response) {
                 var json = Ext.decode(response.responseText, true);
                 if (json.items && json.items.length) {
                     me.set(json.items[0]);
@@ -198,9 +194,9 @@ Ext.define('Taco.model.Return', {
                 if (config.success2) {
                     config.success2.apply(config.scope2 || me, arguments);
                 }
-                
+
             },
-            failure:function (response, options) {
+            failure: function (response, options) {
                 var json = Ext.decode(response.responseText, true),
                     msg;
                 if (config.failure2) {
@@ -212,61 +208,82 @@ Ext.define('Taco.model.Return', {
             },
             url: '/admin/app/return/action',
             method: "POST"
-            
+
         });
 
         Ext.Ajax.request(config);
     },
-    
 
-    // Note: payments should be an array
-    
-    performPaymentAction: function ( payments, config) {
-        var me = this;
-        if (config.success) {
-            config.success2 = config.success;
-            config.scope2 = config.scope;
-        }
-        if (config.failure) {
-            config.failure2 = config.failure;
-            config.scope2 = config.scope;
-        }
-        Ext.apply(config, {
-            jsonData:payments,
-            success: function(response){
-                var json = Ext.decode(response.responseText, true);
-                if (json.items && json.items.length) {
-
-                    
-                    Ext.each(json.items,function(item) {
-                        me.set(item);
-                    });
-                    me.commit();
-                }
-                if (config.success2) {
-                    config.success2.apply(config.scope2 || me, arguments);
-                }
-                
+    refundPayments: function (cfg) {
+        Ext.Ajax.request({
+            url: '/admin/app/return/refundPayments',
+            method: 'POST',
+            jsonData: {
+                returnId: cfg.returnId,
+                refunds: cfg.refunds
             },
-            failure:function (response, options) {
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true);
+
+                if (json.items && json.items.length) {
+                    this.set(json.items[0]);
+                    this.commit();
+                }
+                if (cfg.callback) cfg.callback.call(cfg.scope || this, this, null, true);
+                if (cfg.success) cfg.success.call(cfg.scope || this, this);
+            },
+            failure: function (response, options) {
                 var json = Ext.decode(response.responseText, true),
                     msg;
-                if (config.failure2) {
-                    config.failure2.apply(config.scope2 || me, [response, options, json]);
+
+                if (cfg.failure) {
+                    cfg.failure.call(cfg || this, response, options, json);
                 } else {
-                    msg = json && json.message ? json.message : 'Error Adding Payments ';
+                    msg = json && json.message ? json.message : 'Error creating refunds';
                     Taco.app.fireEvent('setmessage', msg, 'error');
                 }
-            },
-            url: '/admin/app/return/paymentActions',
-            method: "POST"
-            
-        });
 
-        Ext.Ajax.request(config);
+                if (cfg.callback) cfg.callback.call(cfg.scope || this, this, null, false);
+            },
+            scope: this
+        });
+    },
+
+
+    createStoreCredit: function (cfg) {
+        Ext.Ajax.request({
+            url: '/admin/app/return/createStoreCredit',
+            method: 'POST',
+            jsonData: {
+                returnId: cfg.returnId,
+                amount: cfg.amount
+            },
+            success: function (response) {
+                var json = Ext.decode(response.responseText, true);
+
+                if (json.items && json.items.length) {
+                    this.set(json.items[0]);
+                    this.commit();
+                }
+                if (cfg.callback) cfg.callback.call(cfg.scope || this, this, null, true);
+                if (cfg.success) cfg.success.call(cfg.scope || this, this);
+            },
+            failure: function (response, options) {
+                var json = Ext.decode(response.responseText, true),
+                    msg;
+
+                if (cfg.failure) {
+                    cfg.failure.call(cfg || this, response, options, json);
+                } else {
+                    msg = json && json.message ? json.message : 'Error creating refunds';
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                }
+
+                if (cfg.callback) cfg.callback.call(cfg.scope || this, this, null, false);
+            },
+            scope: this
+        });
     }
-    
-    
-    
+
 
 });
