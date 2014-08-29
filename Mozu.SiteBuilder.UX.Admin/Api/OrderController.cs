@@ -241,13 +241,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(order.Map<Order>());
         }
 
-        public class SetBillingInfoArgs
-        {
-            public string OrderId { get; set; }
-            public CardPaymentInformation BillingInfo { get; set; }
-            public Contact BillingContact { get; set; }
-        }
-
         [HttpPostRoute(UriTemplate = "updatecontactinfo")]
         public async Task<Response<Order>> UpdateContactInfo(Order order)
         {
@@ -284,9 +277,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             dcOrder = (await _orderWebApiClient.GetOrder(order.Id)).ReadAsSync();
             return Single2(dcOrder.Map<Order>());
         }
-        
 
 
+        public class SetBillingInfoArgs
+        {
+            public string OrderId { get; set; }
+            public CardPaymentInformation BillingInfo { get; set; }
+            public Contact BillingContact { get; set; }
+        }
         [HttpPostRoute(UriTemplate = "setbillinginfo")]
         public async Task<Response<Order>> SetBillingInfo(SetBillingInfoArgs args)
         {
