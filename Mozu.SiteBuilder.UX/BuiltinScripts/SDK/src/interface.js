@@ -21,6 +21,13 @@ var ApiObject = require('./object');
 var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Catalog(catalogId).Site(siteId).",
     requiredContextValues = ['Tenant', 'MasterCatalog', 'Site', 'Catalog'];
 var ApiInterfaceConstructor = function(context) {
+    // for now, cheat and try to grab context from the known preload if it's not being supplied correctly
+    var headerPreload = document.getElementById('data-mz-preload-apicontext'),
+        headerPreloadText = headerPreload && (headerPreload.textContent || headerPreload.innerText || headerPreload.text || headerPreload.innerHTML),
+        headerJSON = headerPreloadText && JSON.parse(headerPreloadText);
+
+    if (headerJSON && headerJSON.headers) context = context.Store(headerJSON.headers);
+
     for (var i = 0, len = requiredContextValues.length; i < len; i++) {
         if (context[requiredContextValues[i]]() === undefined) throw new ReferenceError(errorMessage.split('{0}').join(requiredContextValues[i]));
     }
