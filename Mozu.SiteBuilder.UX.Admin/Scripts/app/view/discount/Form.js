@@ -23,18 +23,21 @@ Ext.define('Taco.view.discount.Form', {
             xtype: 'taco-discount-general',
             itemId: 'general',
             parentForm: this,
-            record: this.record
+            record: this.record,
+            manageHeight: true
         }, {
             xtype: 'taco-discount-conditions',
             itemId: 'conditions',
             parentForm: this,
-            record: this.record
+            record: this.record,
+            manageHeight: true
         }, {
             xtype: 'taco-discount-criteria',
             itemId: 'criteria',
             parentForm: this,
             record: this.record,
-            hidden: true
+            hidden: true,
+            manageHeight: true
         }];
 
         this.callParent(arguments);
