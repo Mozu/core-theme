@@ -1030,7 +1030,7 @@
                     process.unshift(function() {
                         return customer.apiModel.getContacts().then(function(contacts) {
                             _.each(contactTypes, function(newType) {
-                                var primaryExistsAlready = _.find(contacts, function(existingContact) {
+                                var primaryExistsAlready = _.find(contacts.data.items, function(existingContact) {
                                     return _.find(existingContact.prop('types') || {}, function(existingContactType) {
                                         return existingContactType.name === newType.name && existingContactType.isPrimary;
                                     });
