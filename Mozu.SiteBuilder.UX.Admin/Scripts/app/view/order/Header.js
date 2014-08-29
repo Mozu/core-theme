@@ -292,7 +292,14 @@ Ext.define('Taco.view.order.Header', {
             emptyText: 'Customer Search',
             listeners: {
                 select: function (combo, records) {
-                    if (records[0]) this.changeCustomer(records[0]);
+                    // need to check to see if the custtomer has an email address for the default shipping address.
+                    // if not, need to prompt user to edit the customer on the customer detail view.
+                    if (records[0]) {
+                        var customer = records[0];
+                        if (this.isCustomerValid(customer)) {
+                            this.changeCustomer(customer);
+                        }
+                    }
                 },
                 scope: this
             }
@@ -345,6 +352,43 @@ Ext.define('Taco.view.order.Header', {
             this.customerSelector.focus()
         }
 
+    },
+
+    isCustomerValid: function (customer) {
+        var me = this,
+            isValid = true;
+
+        // need to check to see if the customer has an email address on the default shipping address.
+        var defaultShippingAddress = Ext.Array.findBy(customer.data.contacts, function (contact) {
+            return contact.isPrimaryShipping
+        })
+        
+        // if we have a default shipping address that lacks an email. prompty
+        if (defaultShippingAddress && !defaultShippingAddress.email) {
+            isValid = false;
+            Ext.MessageBox.show({                
+                title: "Invalid Shipping Address",
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: "<div style='padding:0px 10px ;'>The customer's default shipping address is missing an email address.<div style='padding-top:20px'>Edit customer now?</div>",
+                closable: false,
+                buttons: Ext.Msg.YESNO,
+                fn: function (val) {
+                    if (val === 'yes') {
+                        Taco.core.StateManager.attemptNavigate("/admin/customers/edit/" + customer.data.id);
+                    } else {
+                        me.customerSelector.reset();
+                        me.customerSelector.focus(true);
+                    }
+                }
+            });
+
+
+        }
+
+        return isValid
     },
 
     updateHeader: function () {

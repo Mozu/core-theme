@@ -93,8 +93,24 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                 me.saveSuccess(me.record);
             };
 
-        if (shipping) this.order.set('fulfillmentContact', shipping.inputValue);
-        if (billing) this.order.set('billingContact', billing.inputValue);
+        var errors = [];        
+        if (shipping) {
+            // need to check for the shipping contact email as its required for the order;
+            if (!shipping.inputValue.email) {
+                errors.push("The selected shipping address is missing an email address.")
+            } else {
+                this.order.set('fulfillmentContact', shipping.inputValue);
+            }
+        }
+
+        if (billing) {
+            this.order.set('billingContact', billing.inputValue);
+        }
+        
+        if (errors.length) {
+            Taco.app.fireEvent('setmessage', errors.join("<br/>"), 'error', me);
+            return;
+        }
 
         if (this.record.dirty) {
             this.record.save({
