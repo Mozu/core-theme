@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 return defaultValue;
             }
             JToken tok;
-            if (doc.Properties.CastAs<JObject>().TryGetValue(key, out tok))
+            if (doc.Properties.CastAs<JObject>().TryGetValue(key,  StringComparison.InvariantCultureIgnoreCase, out tok))
             {
                 try
                 {
@@ -55,9 +55,9 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 value = default (T);
                 return false;
             }
-          
+            
             JToken tok;
-            if (doc.Properties.CastAs<JObject>().TryGetValue(key, out tok))
+            if (doc.Properties.CastAs<JObject>().TryGetValue(key, StringComparison.InvariantCultureIgnoreCase, out tok))
             {
                 //todo test if can be cast..
                 try

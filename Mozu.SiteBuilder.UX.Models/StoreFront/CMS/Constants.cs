@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS
             public const string default_collection_name = "pages@mozu";
             public static string template = "template";
             //public const string widget_prop_old = "widgets";
-            public const string widget_prop = "dropZones";
+            public const string widget_prop = "dropzones";
         }
     }
 }
