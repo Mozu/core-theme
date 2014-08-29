@@ -21,8 +21,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         var order = this.getOrder();
         var record = this.getRecord();
 
-        //console.log('order', order, '\nreturn', record);
-
         // set up stores
         this.itemsStore = record.getItems();
         this.paymentsStore = record.getPayments();
@@ -64,21 +62,19 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             width: 300,
             margin: '0 10 0 0',
             labelAlign: 'left',
-            labelWidth: 80,            
+            labelWidth: 80,
             value: this.getRecord().get('rmaDeadline'),
             listeners: {
                 change: {
                     scope: this,
-                    buffer:500,
-                    fn: function (field, newValue, oldValue) {
+                    buffer: 500,
+                    fn: function (field, newValue) {
                         if (field.isValid() && field.isDirty()) {
                             var origStr = (field.originalValue) ? Ext.Date.clearTime(field.originalValue).toString() : "";
                             var newStr = (newValue) ? newValue.toString() : "";
-                            
+
                             // check to make sure the date has changed by stripping out the time from the dates and compare them;
-                            if (origStr == newStr) {
-                                return
-                            }
+                            if (origStr === newStr) return;
 
                             var valueToPersist = "";
                             if (newValue) {
@@ -89,10 +85,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                                 // remove a millisecond so this is the end of the original day
                                 valueToPersist = Ext.Date.subtract(valueToPersist, Ext.Date.MILLI, 1);
                             }
-                        
-                            var record = this.getRecord();                            
+
+                            var record = this.getRecord();
                             record.set('rmaDeadline', valueToPersist);
-                            this.onItemEdit()
+                            this.onItemEdit();
                         }
                     }
                 }
@@ -113,13 +109,13 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         'border-bottom': '1px solid rgb(191, 191, 191)'
                     },
                     items: [{
-                        xtype: 'component',
-                        html: ('Return #' + record.get('returnNumber')),
-                        style: {
-                            fontWeight: 'bold'
-                        }
+                            xtype: 'component',
+                            html: ('Return #' + record.get('returnNumber')),
+                            style: {
+                                fontWeight: 'bold'
+                            }
                     }, {
-                        xtype: 'tbfill'
+                            xtype: 'tbfill'
                     },
                         this.returnActions]
                 },
@@ -133,7 +129,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         pack: 'end'
                     },
                     items: [this.rmaDeadline, {
-                        xtype: 'tbfill'
+                            xtype: 'tbfill'
                     },
                         this.moveButton]
                 },
@@ -175,9 +171,9 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         var buttonId = button.getItemId();
 
         this.getRecord().performAction(buttonId, {
-            success: function (response) {                
+            success: function () {
                 // if the user rejects or cancels the return we need to update the returnable items grid since the qty returned will change;
-                if (buttonId == 'Cancel' || buttonId == 'Reject') {                    
+                if (buttonId === 'Cancel' || buttonId === 'Reject') {
                     me.fireEvent("refresh-returnable-items");
                 }
             },
@@ -269,7 +265,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     mouseWheelEnabled: false,
                     minValue: 0
                 },
-                renderer: function (value, meta, record) {
+                renderer: function (value) {
                     return Taco.app.context.getCurrent().formatCurrency(value);
                 }
             }, {
@@ -313,7 +309,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 width: 80,
                 editor: {
                     xtype: 'numberfield',
-                    showBorder:true,
+                    showBorder: true,
                     hideTrigger: true,
                     mouseWheelEnabled: false,
                     minValue: 0
@@ -451,7 +447,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                             if (id) {
                                 var orders = Ext.create('Taco.store.Orders', {
                                     autoLoad: true,
-                                    filters: [{ property: 'id', value: id }]
+                                    filters: [{
+                                        property: 'id',
+                                        value: id
+                                    }]
                                 });
 
                                 orders.on('load', function (store, records) {
@@ -531,9 +530,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     onAfterCommit: function () {
-        var me = this;
         var data = this.getRecord().getData();
-        
+
         this.updateReturnActions();
         this.status.update(data);
         this.summary.update(data);
@@ -541,7 +539,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.setEditablity();
         var status = this.record.get("status");
         // if rejected or cancelled collapse the panel;        
-        if (status == "Rejected" || status == "Cancelled") {            
+        if (status === "Rejected" || status === "Cancelled") {
             this.collapse();
         }
     },
@@ -557,7 +555,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 button.setDisabled(true);
             }
         });
-        
+
         // record.set('totalLossAmount', this.totalLossAmount.getValue());
 
         // Debounce Ext pattern
@@ -571,7 +569,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         }
                     });
                 },
-                success: function (record, operation){
+                success: function () {
                     if (isRmaDateChange) {
                         // need to update the fields original value so that changes will persist properly
                         me.rmaDeadline.resetOriginalValue();
@@ -605,23 +603,11 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         var isEndState = this.isAtEndState();
 
         this.rmaDeadline.setDisabled(isEndState);
-        // this.totalLossAmount.setDisabled(isEndState);
-        // this.addPaymentButton.setDisabled(isEndState);
     },
 
     updatePaymentsGrid: function () {
         this.paymentsGrid[Ext.isEmpty(this.paymentsStore.getRange()) ? 'hide' : 'show']();
     },
-
-    /*
-    updateReturnableItemGrid: function () {
-        var subform = this.up('taco-order-subform');
-
-        if (subform && !subform.isDestroyed) {
-            subform.returnableItems.getView().refresh();
-        }
-    },
-    */
 
     updateReturnActions: function () {
         var record = this.getRecord();
@@ -644,7 +630,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         }
 
         this.returnActions.items.each(function (button) {
-            var enabled = false;
             var name = button.getItemId();
 
             if (!name) return;

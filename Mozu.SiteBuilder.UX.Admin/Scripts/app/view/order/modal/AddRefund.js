@@ -235,7 +235,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
             }, this);
 
             if (!refunds.length) {
-                this.saveSuccess();
+                this.close();
                 return;
             }
 
@@ -248,7 +248,7 @@ Ext.define('Taco.view.order.modal.AddRefund', {
                 scope: this
             });
         } else {
-            this.createStoreCredit({
+            this.record.createStoreCredit({
                 returnId: this.record.getId(),
                 amount: this.storeCreditPanel.getValues().refundAmount,
                 success: function () {
