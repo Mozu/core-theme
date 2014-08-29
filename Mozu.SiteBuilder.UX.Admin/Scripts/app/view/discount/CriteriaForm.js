@@ -25,7 +25,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             width: 300,
             value: this.record.get('includeAllProducts'),
             listeners: {
-                change: function () {
+                change: function() {
                     this.parentForm.setFieldVisibility();
                     enableDisableCriteriaQuantities();
                 },
@@ -96,12 +96,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 }
                 if (cmp.itemId === "maxQuantity") cmp.setValue(maximumQuantity);
             });
+            toDisable.down('button').disable();
             Ext.Array.each(toEnable.query('[isFormField]'), function(cmp) {
                 cmp.enable();
                 if (cmp.itemId === "maxQuantity") {
                     cmp.setValue(toDisable.down('#maxQuantity').getValue() || maximumQuantity);
                 }
             });
+            toEnable.down('button').enable();
         }
 
         this.categoriesBox = Ext.create('Ext.container.Container', {
@@ -231,28 +233,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-
-        //this.productsBox = Ext.create('Ext.container.Container', {
-        //    layout: 'auto',
-        //    items: [
-        //        this.productList,
-        //        {
-        //            xtype: 'button',
-        //            scale: 'medium',
-        //            ui: 'action',
-        //            text: 'Add',
-        //            margin: '0 0 0 10',
-        //            width: 70,
-        //            style: {
-        //                verticalAlign: 'bottom'
-        //            },
-        //            handler: function () {
-        //                this.launchProductModal(this.productList);
-        //            },
-        //            scope: this
-        //        }
-        //    ]
-        //});
 
         this.productsBox = Ext.create('Ext.container.Container', {
             layout: 'hbox',
@@ -527,7 +507,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
         this.modal.on({
-            savesuccess: function (modal, values) {
+            savesuccess: function(modal, values) {
                 list.addValue(values);
             },
             scope: this
