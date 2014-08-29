@@ -18,11 +18,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/orderattributes", SuppressDescriptorGeneration = true)]
     public class OrderAttributeController : BaseController
     {
-        private readonly IOrderAttributeWebApiClient _customerAttributeDefinitionWebApiClient;
+        private readonly IOrderAttributeWebApiClient _orderAttributeDefinitionWebApiClient;
 
-        public OrderAttributeController(IOrderAttributeWebApiClient  customerAttributeDefinitionWebApiClient)
+        public OrderAttributeController(IOrderAttributeWebApiClient  orderAttributeDefinitionWebApiClient)
         {
-            _customerAttributeDefinitionWebApiClient = customerAttributeDefinitionWebApiClient.CloneWithApiContext(x => x.LocaleCode = "en-US");
+            _orderAttributeDefinitionWebApiClient = orderAttributeDefinitionWebApiClient.CloneWithApiContext(x => x.LocaleCode = "en-US");
 
         }
 
@@ -33,13 +33,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (!String.IsNullOrEmpty(pagingParams.id))
             {
-                var dcitem = (await _customerAttributeDefinitionWebApiClient.GetAttribute(  pagingParams.id )).ReadAsSync();
+                var dcitem = (await _orderAttributeDefinitionWebApiClient.GetAttribute(  pagingParams.id )).ReadAsSync();
                 var vmitem = Mapper.Map<AttributeModel>(dcitem);
                 return this.List2(vmitem);
             }
             else
             {
-                var results = (await _customerAttributeDefinitionWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize)).ReadAsSync();
+                var results = (await _orderAttributeDefinitionWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize)).ReadAsSync();
                 var vmItems = Mapper.Map<List<AttributeModel>>(results.Items);
                 return this.List2(vmItems, (int)results.TotalCount);
 
@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<AttributeModel>>> CreateAttribute([FromBody] List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.CreateAttribute(_)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _orderAttributeDefinitionWebApiClient.CreateAttribute(_)).ToList();
             await Task.WhenAll(tasks);
 
             var newAttributes = tasks.Select(x => x.Result.ReadAsSync()).Select(Mapper.Map<AttributeModel>).ToList();
@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //Dictionary<string, string> lookup = new Dictionary<string, string>();
            
         
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.UpdateAttribute(_.AttributeFQN , _)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _orderAttributeDefinitionWebApiClient.UpdateAttribute(_.AttributeFQN , _)).ToList();
             await Task.WhenAll(tasks);
 
             var newAttributes = tasks.Select(x => x.Result.ReadAsSync()).Select(Mapper.Map<AttributeModel>).ToList();
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<AttributeModel>>> DeleteAttribute(List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute( _.AttributeFQN)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _orderAttributeDefinitionWebApiClient.DeleteAttribute( _.AttributeFQN)).ToList();
             await Task.WhenAll(tasks);
 
             var newAttributes = tasks.Select(x => x.Result.ResponseMessage.IsSuccessStatusCode).ToList();
