@@ -163,6 +163,7 @@ Ext.define('Taco.view.customers.Contacts', {
             });
         }, this);
 
+
         if (!this.contacts.length) {
             this.addressContainer.add({
                 xtype: 'component',
