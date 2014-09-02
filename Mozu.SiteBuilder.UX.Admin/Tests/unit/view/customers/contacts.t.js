@@ -10,6 +10,7 @@ StartTest(function (t) {
     return !m.run[m.runCount++];
   };
 
+
   t.setOnlyMocks();
 
   t.simManager().register([{
@@ -363,8 +364,15 @@ StartTest(function (t) {
             });
 
             t.it('Should display each of the radio boxes', function (t) {
-              Ext.each(n.contacts.query('radiofield'), function (radio, i) {
-                t.isComponentVisible(radio, 'Radiofield ' + (1 + i) + ' is visible: ' + radio.name);
+                Ext.each(n.contacts.query('radiofield'), function (radio, i) {
+                    // no radio for billing if the order is not pending;
+                    if (radio.name == 'customerBillToAddress') {
+                        if (n.order.data.orderStatus == "Pending") {
+                            t.isComponentVisible(radio, 'Radiofield ' + (1 + i) + ' is visible: ' + radio.name);
+                        }
+                    } else {
+                        t.isComponentVisible(radio, 'Radiofield ' + (1 + i) + ' is visible: ' + radio.name);
+                    }                     
               });
             });
 
@@ -377,8 +385,8 @@ StartTest(function (t) {
             });
 
             t.it('Should select the current Order Billing and Shipping addresses', function (t) {
-              var selection = n.contacts.getSelection();
-              t.is(selection.customerShipToAddress.id, 1008, 'Correct shipping address is selected');
+                var selection = n.contacts.getSelection();
+              t.is(selection.customerShipToAddress.id, 1008, 'Correct shipping address is selected');                
               t.is(selection.customerBillToAddress.id, 0, 'Correct billing address is selected');
             });
 
@@ -503,7 +511,7 @@ StartTest(function (t) {
           function (next) {
             t.it('Should select the current Order Billing and Shipping addresses', function (t) {
               var selection = n.contacts.getSelection();
-              t.is(selection.customerShipToAddress.id, 0, 'Correct shipping address is selected');
+              t.is(selection.customerShipToAddress.id, 0, 'Correct shipping address is selected');              
               t.is(selection.customerBillToAddress.id, 0, 'Correct billing address is selected');
               next();
             });
@@ -513,20 +521,26 @@ StartTest(function (t) {
             var shipping = Ext.Array.findBy(n.contacts.query('[name="customerShipToAddress"]'), function (item) {
                 return item.inputValue && item.inputValue.id === 1002;
               }),
-              billing = Ext.Array.findBy(n.contacts.query('[name="customerBillToAddress"]'), function (item) {
+              billing = Ext.Array.findBy(n.contacts.query('[name="customerBillToAddress"]'), function (item) {                  
                 return item.inputValue && item.inputValue.id === 1005;
               });
-
+              
             t.click(shipping);
-            t.click(billing, next);
+              // billing address selection is only available for orders in pending state;
+            if (billing.isVisible()) {
+                t.click(billing);
+            }
+            next();
           },
 
           function () {
             t.it('Should return the correct selection when the user selects a different address', function (t) {
-              var selection = n.contacts.getSelection();
-
+              var selection = n.contacts.getSelection();              
               t.is(selection.customerShipToAddress.id, 1002, 'Correct shipping address is selected');
-              t.is(selection.customerBillToAddress.id, 1005, 'Correct billing address is selected');
+                // billing address selection is only available for orders in pending state;
+              if (n.order.data.orderStatus == "pending"){
+                t.is(selection.customerBillToAddress.id, 1005, 'Correct billing address is selected');
+              }
             });
           }
         );

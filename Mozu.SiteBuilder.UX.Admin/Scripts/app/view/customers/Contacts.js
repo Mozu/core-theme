@@ -155,9 +155,10 @@ Ext.define('Taco.view.customers.Contacts', {
                     xtype: 'radiofield',
                     name: 'customerBillToAddress',
                     inputValue: contact,
-                    boxLabel: 'Bill to this address',
+                    boxLabel: 'Bill to this address',                    
+                    //disabled:(this.order.get('orderStatus') !== 'Pending'),
                     checked: billingChecked,
-                    hidden: !this.order
+                    hidden: !this.order || (this.order.get('orderStatus') !== 'Pending')
                 }]
             });
         }, this);

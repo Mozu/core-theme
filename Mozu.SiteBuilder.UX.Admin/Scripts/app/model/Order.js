@@ -942,14 +942,30 @@ Ext.define('Taco.model.Order', {
             Ext.Ajax.request(config);
         },
 
+
+    /**
+     * service call to void an authorized payment transaction for an order     
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
+        {
+            jsonData: {
+                id: '987654321',
+                fulfillmentContact: {},
+                billingContact: {}  // optional
+            }
+        }
+
+     *
+     */
+
         updateContactInfo: function (config) {
             Ext.apply(config, {
-                jsonData: this.getData(),
                 url: '/admin/app/order/updatecontactinfo',
                 method: 'POST'
             });
 
-            config.errorMsg = config.errorMsg || 'Error updating order contacts';
+            config.errorMsg = config.errorMsg || 'Error updating order billing and shipping address';
             this.addErrorHandling(config);
 
             Ext.Ajax.request(config);
