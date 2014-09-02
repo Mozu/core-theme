@@ -428,6 +428,7 @@ Ext.define('Taco.view.order.Header', {
         });
     },
 
+
     changeAddress: function (focusAfterCloseCmp) {
         var me = this;
 

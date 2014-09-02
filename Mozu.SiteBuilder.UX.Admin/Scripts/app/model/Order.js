@@ -965,6 +965,7 @@ Ext.define('Taco.model.Order', {
                 method: 'POST'
             });
 
+
             config.errorMsg = config.errorMsg || 'Error updating order billing and shipping address';
             this.addErrorHandling(config);
 

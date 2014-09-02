@@ -109,6 +109,7 @@ StartTest(function (t) {
           },
           function (next) {
 
+
             t.it('Should launch address modal for new contact', function (t) {
               t.chain({
                   waitFor: 5
