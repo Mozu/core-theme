@@ -151,20 +151,24 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             }
         });
     },
+
     onBeforeSelect:function (combo, record) {
         var newValue = record.get('field1'),
             picker = combo.getPicker();
+
         if (newValue && combo.findRecordByValue(newValue)) {
-            this.syncAndFilter(newValue);
+            this.setAdvancedFilterValues(newValue);
+            this.setTextFilterValue(newValue);
         }
         combo.reset();
         Ext.defer(function () {
             //picker.hide();
             combo.reset();
         }, 1, this);
+
         return true;
-        
     },
+
     onQuickFilterChange: function (combo, newValue, oldValue) {
         //var params = this.store.getProxy().extraParams = this.store.getProxy().extraParams || {};
         //if (newValue && combo.findRecordByValue(newValue)) {
