@@ -85,6 +85,9 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
     doSave: function () {
         var me = this,
+            jsonData = {
+                id : this.order.data.id
+            },
             count = 0,
             shipping = this.down('[name="customerShipToAddress"]{getValue()}'),
             billing = this.down('[name="customerBillToAddress"]{getValue()}'),
@@ -93,20 +96,22 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                 me.saveSuccess(me.record);
             };
 
-        var errors = [];        
+        var errors = [];
         if (shipping) {
             // need to check for the shipping contact email as its required for the order;
             if (!shipping.inputValue.email) {
                 errors.push("The selected shipping address is missing an email address.")
             } else {
                 this.order.set('fulfillmentContact', shipping.inputValue);
+                jsonData.fulfillmentContact = shipping.inputValue;
             }
         }
 
-        if (billing) {
-            this.order.set('billingContact', billing.inputValue);
+        if (billing && (this.order.get('orderStatus') == 'Pending')) {
+            this.order.set('billingContact', billing.inputValue);            
+            jsonData.billingContact = billing.inputValue;
         }
-        
+
         if (errors.length) {
             Taco.app.fireEvent('setmessage', errors.join("<br/>"), 'error', me);
             return;
@@ -126,8 +131,13 @@ Ext.define('Taco.view.customers.modal.Contacts', {
             fnComplete();
         }
 
+
+
+
+        
         if (this.order && this.order.dirty) {
             this.order.updateContactInfo({
+                jsonData: jsonData,
                 success: function (response) {
                     var json = Ext.decode(response.responseText).items[0];
                     me.order.set(json);
