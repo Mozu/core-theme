@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -33,7 +34,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         {
             var httpContextBase = (HttpContextBase)request.Properties["MS_HttpContext"];
 
-            
+            var apiContext = request.Resolve<ISiteBuilderApiContext>();
 
             var repo = request.Resolve<IRedirectRepository>();
             var redirects = await repo.FetchRedirectEntries().ConfigureAwait(false);
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     rctx.RouteData = routeData;
                      
                 }
-                else
+                else if ( !apiContext.IsEditMode )
                 {
                     HttpResponseMessage resp = request.CreateResponse(HttpStatusCode.MovedPermanently);
                     var uri = new Uri(redir.Destination, UriKind.RelativeOrAbsolute);
