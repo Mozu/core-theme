@@ -167,7 +167,13 @@ Ext.define('Taco.model.OrderItem', {
             "name": "supportsInStorePickup",
             "type": "boolean",
             "defaultValue": true
+        },
+
+        {
+            "name": "handlingAmount",
+            "type": "auto" 
         }
+
     ],
 
     associations: [

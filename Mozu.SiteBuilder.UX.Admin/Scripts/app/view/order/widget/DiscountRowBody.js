@@ -89,7 +89,8 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             shippingDiscounts = record.get("shippingDiscounts"),
             rowBodyCls = ( (discounts && discounts.length) || (shippingDiscounts && shippingDiscounts.length)) ? "hasDiscount" : "noDiscount",
             rowBodyData = {
-                orderItemId:orderItemId,
+                orderItemId: orderItemId,
+                handlingAmount: record.get("handlingAmount"),
                 discounts: record.get("discounts"),
                 shippingDiscounts: record.get("shippingDiscounts")
             },
@@ -116,48 +117,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         '%}',
 
         '{rowBody}'
-                        
-        //,
-                    
-        // removing the original code of the plugin so that I can control the entire dom structure.
-        //'<tr class="' + Ext.baseCSSPrefix + 'grid-rowbody-tr {rowBodyCls}">',
-        //    '<td class="' + Ext.baseCSSPrefix + 'grid-cell-rowbody' + '" colspan="{rowBodyColspan}">',
-        //        '<div class="' + Ext.baseCSSPrefix + 'grid-rowbody' + ' {rowBodyDivCls}">{rowBody}</div>',
-        //    '</td>',
-        //'</tr>',
-        /*
-        {
-            priority: 100,
-
-            syncRowHeights: function (firstRow, secondRow) {
-                var owner = this.owner,
-                    firstRowBody = Ext.fly(firstRow).down(owner.eventSelector, true),
-                    secondRowBody,
-                    firstHeight, secondHeight;
-
-                // Sync the heights of row body elements in each row if they need it.
-                if (firstRowBody && (secondRowBody = Ext.fly(secondRow).down(owner.eventSelector, true))) {
-                    if ((firstHeight = firstRowBody.offsetHeight) > (secondHeight = secondRowBody.offsetHeight)) {
-                        Ext.fly(secondRowBody).setHeight(firstHeight);
-                    }
-                    else if (secondHeight > firstHeight) {
-                        Ext.fly(firstRowBody).setHeight(secondHeight);
-                    }
-                }
-            },
-
-            syncContent: function (destRow, sourceRow) {
-                var owner = this.owner,
-                    destRowBody = Ext.fly(destRow).down(owner.eventSelector, true),
-                    sourceRowBody;
-
-                // Sync the heights of row body elements in each row if they need it.
-                if (destRowBody && (sourceRowBody = Ext.fly(sourceRow).down(owner.eventSelector, true))) {
-                    Ext.fly(destRowBody).syncContent(sourceRowBody);
-                }
-            }
-           
-        } */
+            
     ],
                     
                     
@@ -243,7 +203,24 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                     '</div>',
                 '</td>',
                 '</tr>',
+            '</tpl>',
+            // not a discount but adds additional cost to order itesm based on the additional fee in the shipping settings 
+            '<tpl if="handlingAmount">',
+                '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls}" tabindex="-1">',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
+                    '<div class="' + this.rowBodyDivCls + '">Additional Handling</div>',
+                '</td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
+                    '<div style="text-align: right;" class=" ' + this.rowBodyDivCls + '">{[Taco.app.context.getCurrent().formatCurrency(values.handlingAmount)]}</div>',
+                '</td>',
+                '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '"></td>',
+                '</tr>',
             '</tpl>'
+
         ].join('');
     }    
 });
