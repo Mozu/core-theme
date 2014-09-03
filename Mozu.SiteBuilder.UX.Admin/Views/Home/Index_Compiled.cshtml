@@ -15,9 +15,15 @@
     <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/resources/lib/init.min.js")"></script>    
     <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/build/" + ViewData["applib"])?ver=@ver.FileVersion"></script>
     <script src="@cdn@Url.Content("~/Scripts/build/locale/" + ViewData["extlocalefile"])"></script>
-    <script src="@Url.Content("~/Scripts/resources/lib/ace/ace.js")" type="text/javascript" charset="utf-8"></script>
-    <script src="@Url.Content("~/Scripts/resources/lib/ace/theme-textmate.js")" type="text/javascript" charset="utf-8"></script>
-    <script src="@Url.Content("~/Scripts/resources/lib/ace/mode-mozufilter.js")" type="text/javascript" charset="utf-8"></script>
+    
+    @if (!(Request.Browser.Type.Contains("IE") && Request.Browser.MajorVersion < 9))
+    {
+        <script src="@cdn@Url.Content("~/Scripts/resources/lib/ace/ace.js")" type="text/javascript" charset="utf-8"></script>
+        <script src="@cdn@Url.Content("~/Scripts/resources/lib/ace/theme-textmate.js")" type="text/javascript" charset="utf-8"></script>
+        <script src="@cdn@Url.Content("~/Scripts/resources/lib/ace/mode-mozufilter.js")" type="text/javascript" charset="utf-8"></script>
+    }
+    
+
 
 
 
