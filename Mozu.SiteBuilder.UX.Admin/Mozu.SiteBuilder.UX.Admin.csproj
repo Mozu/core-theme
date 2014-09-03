@@ -799,6 +799,7 @@
     <Content Include="Scripts\app\overrides\toolbar\Paging.js" />
     <Content Include="Scripts\app\overrides\window\MessageBox.js" />
     <Content Include="Scripts\app\overrides\window\Window.js" />
+    <Content Include="Scripts\app\overrides\LoadMask.js" />
     <Content Include="Scripts\app\overrides\ZIndexManager.js" />
     <Content Include="Scripts\app\platter\fields\SimpleFields.js" />
     <Content Include="Scripts\app\platter\forms\SimpleForms.js" />
@@ -1046,6 +1047,8 @@
     <Content Include="Scripts\resources\images\icons\icon-target.png" />
     <Content Include="Scripts\resources\images\icons\icon-theme-tablet.png" />
     <Content Include="Scripts\resources\images\icons\icon-tools.png" />
+    <Content Include="Scripts\resources\images\loader_25x25.gif" />
+    <Content Include="Scripts\resources\images\loader_51x51.gif" />
     <Content Include="Scripts\resources\images\noimage.png" />
     <Content Include="Scripts\resources\lib\ace\ace.js" />
     <Content Include="Scripts\resources\lib\ace\ext-beautify.js" />
@@ -1484,6 +1487,9 @@
     <Content Include="Scripts\.jshintignore" />
     <Content Include="Scripts\.jshintrc" />
     <Content Include="Scripts\sass\src\overrides\grid\Panel.scss" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.eot" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.ttf" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.woff" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

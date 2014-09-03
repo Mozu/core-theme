@@ -113,6 +113,9 @@
         .#{$vprefix}icon-nav-locations::after {
             content: $glyph-locations;
         }
+        .#{$vprefix}icon-nav-settings::after {
+            content: $glyph-settings;
+        }
 
         ul {
             display: inline-block;
