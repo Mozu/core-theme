@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DiscountedSubtotal, op => op.ResolveUsing(dc => dc.DiscountedSubtotal))
                 .ForMember(x => x.DiscountTotal, op => op.ResolveUsing(dc => dc.DiscountTotal))
                 .ForMember(x => x.DiscountedTotal, op => op.ResolveUsing(dc => dc.DiscountedTotal))
-                .ForMember(x => x.HandlingTotal, op => op.ResolveUsing(dc => dc.HandlingAmount))
+                .ForMember(x => x.HandlingTotal, op => op.ResolveUsing(dc => dc.HandlingTotal))
                 .ForMember(x => x.FeeTotal, op => op.ResolveUsing(dc => dc.FeeTotal))
                 .ForMember(x => x.ShippingSubtotal, op => op.ResolveUsing(dc => dc.ShippingSubTotal))
                 .ForMember(x => x.ShippingTotal, op => op.ResolveUsing(dc => dc.ShippingTotal))
