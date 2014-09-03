@@ -516,6 +516,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
                   .ForMember(x => x.FulfillmentMethod, op => op.ResolveUsing(dc => dc.FulfillmentMethod))
 
+                  .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
+                      ? dc.HandlingAmount : null))
+
                   // handled by after mapper
                   .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                   .ForMember(x => x.ProductUsage, op => op.Ignore())

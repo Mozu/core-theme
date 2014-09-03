@@ -79,6 +79,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public int Quantity { get; set; }
 
+        public decimal? HandlingAmount { get; set; }
+
         public OrderItemDiscount ActiveDiscount { get; set; }
 
         public List<OrderItemDiscount> Discounts { get; set; }
