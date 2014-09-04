@@ -305,6 +305,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             });
 
 
+            if (this.HttpContext.Request.Cookies["debugext"] != null && string.Equals(this.HttpContext.Request.Cookies["debugext"].Value, "true", StringComparison.InvariantCultureIgnoreCase))
+            {
+                usageFilter = new Func<IEnumerable<string>, bool>(listUsages => true);
+            }
+
+
             if (entityType == "cms" || string.IsNullOrEmpty(entityType))
             {
                 var cms = new Node() {Text = "content", Id = "cms", Expanded = true, Items = new List<Node>()};
