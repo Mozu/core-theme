@@ -50,6 +50,18 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         xtype: 'button',
         itemId: 'primaryAction'
         //this will call save() which will eventualy call doSave();
+    }, {
+        // special button for the non-draft mode (editing an unsubmitted order).
+        // this button will be shown instead of primaryAction.
+        // primaryAction automatically calls saveDraft() which is very bad to do on a non-draft order.
+        xtype: 'button',
+        itemId: 'dismissWithoutSavingDraftAction',
+        ui: 'action-primary',
+        scale: 'medium',
+        text: 'Save',
+        handler: function () {
+            this.close();
+        }
     }],
 
     config: {
@@ -141,8 +153,12 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         }
 
         if (!this.isDraftMode) {
+            this.down('#primaryAction').hide();
             this.down('#discardAction').hide();
             this.down('#secondaryAction').hide();
+        }
+        else {
+            this.down('#dismissWithoutSavingDraftAction').hide();
         }
     },
     
@@ -462,7 +478,8 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
     },
 
     doSave: function () {
-        var me = this;        
+        var me = this;
+        debugger;
         me.saveDraftOrder();
     },
 
