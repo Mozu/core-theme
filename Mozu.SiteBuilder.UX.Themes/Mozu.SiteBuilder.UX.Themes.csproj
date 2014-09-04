@@ -709,9 +709,6 @@
     <Content Include="Themes\Core5\templates\email\order-shipped.hypr" />
     <Content Include="Themes\Core5\templates\email\password-reset.hypr" />
     <Content Include="Themes\Core5\templates\email\product-instock.hypr" />
-    <Content Include="Themes\Core5\templates\email\product-return-authorized.hypr" />
-    <Content Include="Themes\Core5\templates\email\product-return-received.hypr" />
-    <Content Include="Themes\Core5\templates\email\product-return-rejected.hypr" />
     <Content Include="Themes\Core5\templates\modules\checkout\checkout-payment.hypr.live">
       <SubType>Designer</SubType>
     </Content>
