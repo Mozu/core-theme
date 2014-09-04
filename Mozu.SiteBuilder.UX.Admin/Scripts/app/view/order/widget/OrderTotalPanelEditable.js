@@ -74,6 +74,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
     },
 
+
+    
+
     initTableComponents : function (){
         var me = this;
 
@@ -326,6 +329,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     Taco.app.fireEvent('setmessage', "Error adding adjustments", 'error');
                     return;
                 }
+
+                
+                // need to reset the fields so that they don't show as dirty after the save
+                this.shippingAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.shippingAdjustmentFieldInput.getValue(), "0.00")
+                
+                // need to reset the fields so that they don't show as dirty after the save
+                this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00")                
+
                 this.fireEvent('savesuccess', json);
                 
             },
@@ -584,18 +595,18 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     // check to see if there is unpersisted content;
     needsToPersist: function () {
         var me = this;
+         
         
-
-        if (me.customerNoteField.getValue() != this.record.data.customerNote) {            
+        if (me.customerNoteField.getValue() != me.customerNoteField.originalValue) {
             return true;
         }
 
-        if (me.orderAdjustmentFieldInput.getValue() != Math.abs(this.record.data.orderAdjustment.amount)) {            
+        if (me.orderAdjustmentFieldInput.getValue() != me.orderAdjustmentFieldInput.originalValue) {
             return true;
         }
 
 
-        if (me.shippingAdjustmentFieldInput.getValue() != Math.abs(this.record.data.shippingAdjustment.amount)) {                    
+        if (me.shippingAdjustmentFieldInput.getValue() != me.shippingAdjustmentFieldInput.originalValue) {
             return true
         }
 

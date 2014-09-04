@@ -943,8 +943,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     // accepts an array of orderItem configuration data objects and calls the service to persist it.
     addConfiguredProduct: function (orderItems) {
         var me = this;
-
         me.fireEvent('save');
+
+        me.addInProgress = true;
+
         me.record.addOrderItem({
             jsonData: {
                 orderId: me.record.get('id'),
@@ -952,6 +954,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             },
             success: function (response) {
                 // success handling here
+                me.addInProgress = false;
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
@@ -961,15 +964,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     return;
                 }
                 
-                me.fireEvent('saveSuccess', json);
-                
                 this.addProductToolbar.reset();
+
+                me.fireEvent('saveSuccess', json);
 
                 // after a successful add, pass focus back to the searchfield;
                 //me.focusActiveSearchField();
             },
             failure: function (response) {
                 // error handling here
+                me.addInProgress = false;
                 var json = Ext.decode(response.responseText, true),
                     msg = (json && json.message) ? json.message : "Error adding order item.";
 
@@ -1059,53 +1063,55 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     },
 
 
+    // deprecated and moved to the orderTotalEditable Panel;
     // accepts an array of orderItem configuration data objects and calls the service to persist it.
-    updateOrderAdjustment: function (config) {
-        var me = this,
-            jsonData = {
-                orderId: this.record.get('id'),
-                orderAdjustment: Ext.clone(this.record.get("orderAdjustment")),
-                shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment"))
-            };
-        
-        if (!config.data) {
-            return;
-        }
-        
-        // override the json data with passed in data
-        if (config.data.orderAdjustment) {
-            Ext.apply(jsonData.orderAdjustment, config.data.orderAdjustment);
-        }
-    
-        if (config.data.shippingAdjustment) {
-            Ext.apply(jsonData.shippingAdjustment, config.data.shippingAdjustment);
-        }
-        
-        this.fireEvent('save');
-        
-        this.record.updateOrderAdjustment({
-            jsonData: jsonData,
-            success: function (response) {
-                // success handling here
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    this.fireEvent('saveFailure');
-                    Taco.app.fireEvent('setmessage', "Error adding adjustments", 'error');
-                    return;
-                }
-                me.removeDocked(me.activeAddToolbar, true);
-                this.fireEvent('saveSuccess', json);
-            },
-            failure: function (response) {
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error adding adjustments.";
-                Taco.app.fireEvent('setmessage', msg, 'error');
-                this.fireEvent('saveFailure');
-            },
-            scope: this
-        });
+    //updateOrderAdjustment: function (config) {
 
-    },
+    //    var me = this,
+    //        jsonData = {
+    //            orderId: this.record.get('id'),
+    //            orderAdjustment: Ext.clone(this.record.get("orderAdjustment")),
+    //            shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment"))
+    //        };
+        
+    //    if (!config.data) {
+    //        return;
+    //    }
+        
+    //    // override the json data with passed in data
+    //    if (config.data.orderAdjustment) {
+    //        Ext.apply(jsonData.orderAdjustment, config.data.orderAdjustment);
+    //    }
+    
+    //    if (config.data.shippingAdjustment) {
+    //        Ext.apply(jsonData.shippingAdjustment, config.data.shippingAdjustment);
+    //    }
+        
+    //    this.fireEvent('save');
+        
+    //    this.record.updateOrderAdjustment({
+    //        jsonData: jsonData,
+    //        success: function (response) {
+    //            // success handling here
+    //            var json = Ext.decode(response.responseText, true);
+    //            if (!json || !json.success) {
+    //                this.fireEvent('saveFailure');
+    //                Taco.app.fireEvent('setmessage', "Error adding adjustments", 'error');
+    //                return;
+    //            }
+    //            me.removeDocked(me.activeAddToolbar, true);
+    //            this.fireEvent('saveSuccess', json);
+    //        },
+    //        failure: function (response) {
+    //            var json = Ext.decode(response.responseText, true),
+    //                msg = (json && json.message) ? json.message : "Error adding adjustments.";
+    //            Taco.app.fireEvent('setmessage', msg, 'error');
+    //            this.fireEvent('saveFailure');
+    //        },
+    //        scope: this
+    //    });
+
+    //},
     
     removeOrderItem: function (config) {
         var me = this;

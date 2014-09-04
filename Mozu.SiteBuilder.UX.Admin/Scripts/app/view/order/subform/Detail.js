@@ -205,6 +205,11 @@ Ext.define('Taco.view.order.subform.Detail', {
                     me.fireEvent('orderchange');
                 },
 
+                phoneOrderSaved: function () {
+                    me.record.reload();
+                    me.setLoading(false, this.body);
+                },
+
                 draftOrderSaved: function () {
                         me.record.reload();
                         me.setLoading(false, this.body);

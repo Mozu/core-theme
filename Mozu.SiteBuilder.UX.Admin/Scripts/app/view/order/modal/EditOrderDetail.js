@@ -50,18 +50,6 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         xtype: 'button',
         itemId: 'primaryAction'
         //this will call save() which will eventualy call doSave();
-    }, {
-        // special button for the non-draft mode (editing an unsubmitted order).
-        // this button will be shown instead of primaryAction.
-        // primaryAction automatically calls saveDraft() which is very bad to do on a non-draft order.
-        xtype: 'button',
-        itemId: 'dismissWithoutSavingDraftAction',
-        ui: 'action-primary',
-        scale: 'medium',
-        text: 'Save',
-        handler: function () {
-            this.close();
-        }
     }],
 
     config: {
@@ -152,13 +140,9 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             this.onLoadRecord();
         }
 
-        if (!this.isDraftMode) {
-            this.down('#primaryAction').hide();
+        if (!me.isDraftMode) {
             this.down('#discardAction').hide();
             this.down('#secondaryAction').hide();
-        }
-        else {
-            this.down('#dismissWithoutSavingDraftAction').hide();
         }
     },
     
@@ -260,10 +244,14 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     fn: function () {
                         me.saveInProgress = false;
                         me.setLoading(false, me.body);
-                        // if user tries to save(collapse) the order while already in the middle of a persistance call. we need to wait until the call returns;
+                        // if user tries to save(collapse) the order while already in the middle of a persistance call. we need to wait until the call returns;                        
                         if (me.deferSave) {
+                            if (me.isDraftMode) {
                             // user hit save button while another request was being persisted or when data was left unpersisted;
-                            me.detailGrid.saveDraftOrder();
+                                me.saveDraftOrder();
+                            } else {
+                                me.savePhoneOrder();
+                            }
                         } else {
                             me.reloadData();
                         }
@@ -371,8 +359,12 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     me.setLoading(false, me.body);
                     //me.fireEvent('saveSuccess', data);
                     if (me.deferSave) {
+                        if (me.isDraftMode) {
                         // user hit save button while another request was being persisted or when data was left unpersisted;
-                        me.detailGrid.saveDraftOrder();
+                            me.saveDraftOrder();
+                        } else {
+                            me.savePhoneOrder();
+                        }
                     } else {
                         me.reloadData();
                     }
@@ -439,7 +431,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             msg;
 
         // if user has valid add item data prompt them to add the item;
-        if (me.detailGrid.addProductToolbar.isValid()) {
+        if (me.detailGrid.addProductToolbar.isValid() && !me.detailGrid.addInProgress) {
             msg = (isSave) ? 'Do you want to add the configured order item before saving this order?' : 'Do you want to add the configured item before closing the order editor?'
 
             Ext.MessageBox.show({
@@ -479,8 +471,12 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
     doSave: function () {
         var me = this;
-        //debugger;
-        me.saveDraftOrder();
+        
+        if (me.isDraftMode) {
+            me.saveDraftOrder();
+        } else {
+            me.savePhoneOrder();            
+        }
     },
 
 
@@ -506,10 +502,25 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         if (me.needsToPersist() || me.saveInProgress) {
             // need to wait to save until any persistance calls complete;
             me.deferSave = true;
-            console.log('deferSave')
+            //console.log('deferSave')
         } else {
             me.detailGrid.saveDraftOrder();
         }
+    },
+
+    savePhoneOrder: function () {
+        var me = this;
+
+        if (me.needsToPersist() || me.saveInProgress) {
+            // need to wait to save until any persistance calls complete;
+            me.deferSave = true;
+            //console.log('deferPhoneOrderSave')
+        } else {
+            me.fireEvent('phoneOrderSaved', this.record.data);
+            me.close();
+        }
+
+        
     },
 
     constrainResizer: function () {

@@ -13,10 +13,8 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
     // todo: move this to a seperate class.
     // need to add support for discount suppression and activation
 
-    
-    //rowBodyTrCls: "x-grid-row-adjustment x-grid-row x-grid-data-row x-grid-rowbody-tr",
     rowBodyTrCls: "x-grid-row-adjustment x-grid-row x-grid-rowbody-tr",
-    rowBodyDivCls: "x-grid-cell-inner adjustment-cell-inner",
+    rowBodyDivCls: "x-grid-cell-inner adjustment-cell-inner",    
     rowBodyTdCls: "adjustment-cell x-grid-cell x-grid-td x-unselectable ",
 
     init: function (grid){
@@ -133,31 +131,17 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                         ' isSuppressed ',
                     '</tpl>',
                 '" tabindex="-1">',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    
+                    '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">Discount: {description}</div>',
                 '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div class="' + this.rowBodyDivCls + '">Discount: {description}</div>',
-                '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    
-                '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                   
-                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '"></div>',
-                '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    //'<div style="text-align: right;" class="' + this.rowBodyDivCls + '">{quantity}</div>',
-                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '"></div>',
-                '</td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                 '<td role="gridcell"  class="' + this.rowBodyTdCls + '">',
                     '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.total)]})</div>',
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '">',
-                    
-                    //'<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col" style="text-align:left;">',
-                    //    '<div roles="button" alt="" class="x-action-col-icon x-action-col-0   taco-grid-row-action-trigger taco-grid-row-action-trigger-remove"></div>',
-                    //'</div>',
                         
                     '<div unselectable="on" class="x-grid-cell-inner x-grid-cell-inner-action-col">',
                     '<div unselectable="on" class="order-action-icon discount-',
@@ -173,21 +157,13 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
             '</tpl>', 
             '<tpl for="shippingDiscounts">',
                 '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls}" tabindex="-1">',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                
+                    '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">Shipping Discount: {description}</div>',
                 '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div class="' + this.rowBodyDivCls + '">Shipping Discount: {description}</div>',
-                '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-
-                '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '"></div>',
-                '</td>',
-                '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div style="text-align: right;" class="' + this.rowBodyDivCls + '"></div>',
-                '</td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
                     '<div style="text-align: right;" class="adjustment-cell-inner-value ' + this.rowBodyDivCls + '">({[Taco.app.context.getCurrent().formatCurrency(values.total)]})</div>',
                 '</td>',
@@ -209,7 +185,7 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                 '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls}" tabindex="-1">',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
-                    '<div class="' + this.rowBodyDivCls + '">Additional Handling</div>',
+                    '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">Additional Handling</div>',
                 '</td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
                 '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',

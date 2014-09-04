@@ -2,6 +2,10 @@
     color:$color-theme-red;
 }
 
+.adjustment-cell-inner-wrap {
+    white-space:normal;
+}
+
 // applies to both the readonly and editable orderItemGrid versions;
 .x-grid-row-adjustment{
     // td cell for discount RowBody rows;
