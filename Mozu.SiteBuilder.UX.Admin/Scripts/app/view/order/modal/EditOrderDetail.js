@@ -479,7 +479,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
 
     doSave: function () {
         var me = this;
-        debugger;
+        //debugger;
         me.saveDraftOrder();
     },
 
