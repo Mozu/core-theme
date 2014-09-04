@@ -95,11 +95,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
              string allString;
              if (extFilter.TryGetValue<string>("all", out allString) && !string.IsNullOrWhiteSpace(allString))
              {
-                 return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x=> x+"*")).Trim();
+                 return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x + (x.Length > 3 ? "*" : ""))).Trim();
              }
              if (!string.IsNullOrEmpty( extFilter.query) )
              {
-                 return string.Join(" ", extFilter.query.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x + "*")).Trim();
+                 return string.Join(" ", extFilter.query.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x + (x.Length > 3 ? "*" : ""))).Trim();
              }
              return null;
          }
