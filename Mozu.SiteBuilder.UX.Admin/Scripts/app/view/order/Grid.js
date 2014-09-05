@@ -202,11 +202,13 @@ Ext.define('Taco.view.order.Grid', {
                 }, {
                     stateId: 'channelName',
                     text: 'Channel',
-                    dataIndex: "channelName",
                     flex: 1,
                     minWidth: 100,
                     width: 100,
-                    sortable: false
+                    sortable: false,
+                    renderer: function (value, metaData, record) {
+                        return record.getChannelName();
+                    }
                 }, {
                     stateId: 'siteName',
                     text: 'SiteName',

@@ -106,7 +106,7 @@ Ext.define('Taco.view.order.Header', {
                 '<div class="create-date">', '<span class="label">Order Date:</span>{createDate:date("m/d/Y h:i a")}', '</div>',
                 '<div class="update-date">', '<span class="label">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</div>',
                 '<div class="site">', '<span class="label">Site:</span><a href="/_gosite/{siteId}" target="_blank">{siteName}</a>', '</div>',
-                '<div class="channel">', '<span class="label">Channel:</span><span data-handle="channelName">{[values.orderType === "Offline" ? "Online" : values.orderType]}', '</div>',
+                '<div class="channel">', '<span class="label">Channel:</span><span data-handle="channelName">{channelName}', '</div>',
                 '<tpl if="orderType === \'Online\'">',
                     '<div class="ip-address" data-handle="ipAddress">', '<span class="label">IP Address:</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</div>',
                 '<tpl elseif="orderType === \'Offline\'">',
@@ -115,7 +115,7 @@ Ext.define('Taco.view.order.Header', {
                 '<div>', '', '</div>',
                 '<div>', '', '</div>'
             ],
-            data: this.record.getData()
+            data: Ext.apply({}, { channelName: this.record.getChannelName() }, this.record.getData())
         });
 
         this.statusCmp = Ext.widget({
