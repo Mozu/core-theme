@@ -384,11 +384,16 @@ Ext.define('Taco.view.order.subform.Detail', {
     updateButtonActions: function () {
         var me = this,
             availableActions = me.record.get("availableActions"),
+            canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
             canEdit = !(me.record.get("orderStatus") == "Completed"),
+            acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
             editOrderButton = this.down("#editOrderButton");
 
+        if (acceptOrderButton) {
+            acceptOrderButton.setVisible(canAccept);
+        }
         if (cancelOrderButton) {
             cancelOrderButton.setDisabled(!canCancel);
         }
@@ -407,7 +412,11 @@ Ext.define('Taco.view.order.subform.Detail', {
         
         buttons = [
             {
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
                 text: 'Accept Order',
+                itemId: 'acceptOrderButton',
                 handler: function () {
                     this.detailGrid.acceptOrder();
                 },
