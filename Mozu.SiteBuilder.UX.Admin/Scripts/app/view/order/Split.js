@@ -40,8 +40,31 @@ Ext.define('Taco.view.order.Split', {
                 xtype: 'panel',
                 html: 'test'
             }
+        },
+        factory: function (cfg, callback, scope) {
+            cfg = Ext.apply(cfg,
+            {
+                channelsStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels')
+            });
+
+            var tasks = Ext.create('Taco.core.ux.form.Tasks', {
+                finalCallback: function () {
+                    callback.call(scope || this, Ext.create('Taco.view.order.Split', cfg));
+                }
+            });
+            tasks.add([
+                {
+                    storeToLoad: cfg.channelsStore
+                }
+            ]);
+
+            tasks.execute();
         }
     },
+
+
+
+
 
     // cls: "taco-content-navcontainer-padding",
 
