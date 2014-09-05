@@ -2,13 +2,13 @@
     
     <div class="mz-productlisting-image">
         {% block product-image %}
-        {% if model.mainImage.imageUrl %}
         <a href="{{model.url}}">
-            <img src="{{model.mainImage.imageUrl}}?max={% block thumbnail-size %}{{ themeSettings.listProductThumbSize }}{% endblock thumbnail-size %}" />
+            {% if model.mainImage.imageUrl %}
+                <img src="{{model.mainImage.imageUrl}}?max={% block thumbnail-size %}{{ themeSettings.listProductThumbSize }}{% endblock thumbnail-size %}" />
+            {% else %}
+                <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+            {% endif %}
         </a>
-        {% else %}
-            <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
-        {% endif %}
         {% endblock product-image %}
     </div>
     <div class="mz-productlisting-info">
