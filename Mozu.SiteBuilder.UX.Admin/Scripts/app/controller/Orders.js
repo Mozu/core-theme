@@ -18,7 +18,16 @@ Ext.define('Taco.controller.Orders', {
 
     //todo:  changing to s until orders support siteId  in resource
     createContentView: function (viewName, cfg) {
-        var split;
+        var split,
+            viewClass,
+            loadSplit = function (split, cfg) {
+                if (cfg && cfg.record) {
+                    split.setRecord(cfg.record);
+                } else {
+                    split.setRecord(null);
+                }
+            };
+    
 
 
         //Ext.suspendLayouts(); 
@@ -28,16 +37,32 @@ Ext.define('Taco.controller.Orders', {
 
         if (!split) {
             Taco.app.contentView.removeAll(true);
-            split = Ext.create(this.indexView);
+            viewClass = Ext.ClassManager.get(this.indexView);
+
+            if (viewClass.factory) {
+                loadmaskTask = Ext.defer(
+                    function () {
+                        Taco.app.setLoading();
+                    }, 200);
+
+                viewClass.factory(cfg, function (view) {
+                    cfg.loadmaskTask = loadmaskTask;
+                    split = view;
+                    Taco.app.contentView.add(split);
+                    loadSplit(split, cfg);
+                });
+                return;
+            }
+
+           
+
+
             Taco.app.contentView.add(split);
         }
 
-        Ext.resumeLayouts(true);
-        if (cfg && cfg.record) {
-            split.setRecord(cfg.record);
-        } else {
-            split.setRecord(null);
-        }
+
+        loadSplit(split, cfg);
+        
 
         // Ext.resumeLayouts(true);
 
@@ -45,6 +70,66 @@ Ext.define('Taco.controller.Orders', {
 
 
     },
+
+
+
+
+
+    createContentView: function (view, cfg) {
+        var me = this,
+            cfg = cfg || {},
+            container = cfg && cfg.options && cfg.options.container ? cfg.options.container : Taco.app.contentView,
+            loadmaskTask = cfg.loadmaskTask,
+            viewClass;
+
+        if (!view.$className) {
+
+            viewClass = Ext.ClassManager.get(view);
+            if (viewClass.factory) {
+                loadmaskTask = Ext.defer(
+                    function () {
+                        Taco.app.setLoading();
+                    }, 200);
+
+                viewClass.factory(cfg, function (view) {
+                    cfg.loadmaskTask = loadmaskTask;
+                    me.createContentView(view, cfg);
+                });
+                return;
+            }
+        }
+
+
+        //removing initial view  to aviod events firing from the create of the view from messin with the 
+
+        view = view.$className ? view : Ext.create(view, cfg);
+        if (view.contextConfig && view.contextConfig.requiresContextOfType) {
+            view.mon(Taco.app.context, "beforecontextchange", function (newContext) {
+                var works = this.worksInContext(view, newContext);
+                if (!works) {
+                    Taco.app.context.setCurrentContext(Taco.app.context.getStore().findRecord('contextType', Ext.isArray(view.contextConfig.requiresContextOfType) ? view.contextConfig.requiresContextOfType[0] : view.contextConfig.requiresContextOfType).raw, undefined, true);
+                }
+                return works;
+            }, this);
+        }
+
+        Ext.suspendLayouts();
+
+        container.removeAll(true);
+        container.add(view);
+
+        //console.time('resumeLayouts');
+        Ext.resumeLayouts(true);
+
+        //console.timeEnd('resumeLayouts');
+
+        if (Ext.isNumeric(loadmaskTask)) {
+            window.clearTimeout(loadmaskTask);
+            Taco.app.setLoading(false);
+        }
+
+    },
+
 
 
     //copy and paste override to disable the load mask turn offing
