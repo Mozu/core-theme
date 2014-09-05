@@ -115,7 +115,7 @@ Ext.define('Taco.view.order.Header', {
                 '<div>', '', '</div>',
                 '<div>', '', '</div>'
             ],
-            data: Ext.apply({}, { channelName: this.record.getChannelName() }, this.record.getData())
+            data: Ext.apply( { channelName: this.record.getChannelName() }, this.record.getData())
         });
 
         this.statusCmp = Ext.widget({
@@ -395,7 +395,7 @@ Ext.define('Taco.view.order.Header', {
         Ext.suspendLayouts();
 
         this.customerCmp.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
-        this.detailCmp.update(this.record.getData());
+        this.detailCmp.update( Ext.apply( { channelName: this.record.getChannelName() }, this.record.getData()));
         this.statusCmp.update(Ext.apply(this.record.getData(), {
             orderRecord: this.record
         }));
