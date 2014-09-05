@@ -49,7 +49,7 @@
 
   {% if siteContext.supportsInStorePickup %}
   <form class="mz-instorepickup" method="POST" data-mz-localstoresform action="/location/product">
-    <button type="submit" {% if model.notDoneConfiguring %} disabled="disabled" {% endif %} class="mz-button mz-instorepickuplink-button" data-mz-action="checkLocalStores">{{ labels.checkLocalStores }}</button>
+    <button type="submit" {% if model.notDoneConfiguring or not model.purchasableState.isPurchasable or not model.supportsInStorePickup %} disabled="disabled" {% endif %} class="mz-button mz-instorepickuplink-button {% if model.notDoneConfiguring or not model.purchasableState.isPurchasable or not model.supportsInStorePickup %}is-disabled{% endif %}" data-mz-action="checkLocalStores">{{ labels.checkLocalStores }}</button>
     <input type="hidden" data-mz-localstoresform-input name="item" value="{% json_attribute model %}" />
   </form>
   {% endif %}

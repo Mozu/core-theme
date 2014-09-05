@@ -77,6 +77,7 @@
                     delete j['isPrimary'+contactType+'Contact'];
                 });
             }
+            if (j.id === "new") delete j.id;
             return j;
         },
         save: function () {
@@ -192,11 +193,22 @@
         }
     }),
 
+    CustomerCardWithContact = PaymentMethods.CreditCard.extend({
+        validation: _.extend({
+            contactId: {
+                required: true,
+                msg: Hypr.getLabel('cardBillingMissing')
+            }
+        }, PaymentMethods.CreditCard.prototype.validation),
+        selected: true, // so that validation rules always run,
+        isCvvOptional: true
+    }),
+
     EditableCustomer = Customer.extend({
         
         handlesMessages: true,
         relations: _.extend({
-            editingCard: PaymentMethods.CreditCard,
+            editingCard: CustomerCardWithContact,
             editingContact: CustomerContact,
             wishlist: Wishlist,
             orderHistory: OrderModels.OrderCollection,
@@ -262,31 +274,33 @@
         endEditCard: function() {
             this.get('editingCard').clear({ silent: true });
         },
-        saveCard: function () {
-            var self = this,
-                editingCard = this.get('editingCard').toJSON(),
-                doSaveCard = function () {
-                    return self.apiSavePaymentCard(editingCard).then(function () {
-                        return self.getCards();
-                    }).then(function () {
-                        return self.get('editingCard').clear({ silent: true });
-                    });
-                },
-                saveContactFirst = function () {
-                    self.get('editingContact').set('isBillingContact', true);
-                    var op = self.get('editingContact').save();
-                    if (!op) throw new Error("Could not save contact!");
-                    return op.then(function (contact) {
-                        editingCard.contactId = contact.prop('id');
-                        self.endEditContact();
-                        self.getContacts();
-                        return true;
-                    });
-                };
-            if (!editingCard.contactId || editingCard.contactId === "new") {
-                return saveContactFirst().then(doSaveCard);
-            } else {
-                return doSaveCard();
+        saveCard: function() {
+            if (!this.validate('editingCard')) {
+                var self = this,
+                    editingCard = this.get('editingCard').toJSON(),
+                    doSaveCard = function() {
+                        return self.apiSavePaymentCard(editingCard).then(function() {
+                            return self.getCards();
+                        }).then(function() {
+                            return self.get('editingCard').clear({ silent: true });
+                        });
+                    },
+                    saveContactFirst = function() {
+                        self.get('editingContact').set('isBillingContact', true);
+                        var op = self.get('editingContact').save();
+                        if (!op) throw new Error("Could not save contact!");
+                        return op.then(function(contact) {
+                            editingCard.contactId = contact.prop('id');
+                            self.endEditContact();
+                            self.getContacts();
+                            return true;
+                        });
+                    };
+                if (!editingCard.contactId || editingCard.contactId === "new") {
+                    return saveContactFirst().then(doSaveCard);
+                } else {
+                    return doSaveCard();
+                }
             }
         },
         deleteCard: function (id) {
@@ -346,7 +360,7 @@
             });
         },
         toJSON: function (options) {
-            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            var j = Customer.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers)
                 delete j.customer;
             delete j.password;

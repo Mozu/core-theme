@@ -23,6 +23,7 @@
 
     var CreditCard = PaymentMethod.extend({
         mozuType: 'creditcard',
+        isCvvOptional: false,
         validation: {
             paymentOrCardType: {
                 fn: "present",
@@ -43,8 +44,16 @@
                 msg: Hypr.getLabel('cardNameMissing')
             },
             cvv: {
-                fn: "present",
-                msg: Hypr.getLabel('securityCodeMissing')
+                fn: function(value, attr) {
+                    var cardType = attr.split('.')[0],
+                        card = this.get(cardType);
+
+                    if (card.get('isCvvOptional')) return '';
+
+                    if (!this.selected) return undefined;
+                    if (!value)
+                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
+                }
             }
         },
         initialize: function () {

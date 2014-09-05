@@ -19,7 +19,16 @@
             _.defer(function() {
                 me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
-            var attributeDetail = me.get('attributeDetail');
+
+            var equalsThisValue = function(fvalue, newVal) {
+                return fvalue.value.toString() === newVal.toString();
+            },
+            containsThisValue = function(existingOptionValueListing, newVal) {
+                return _.some(newVal, function(val) {
+                    return equalsThisValue(existingOptionValueListing, val);
+                });
+            },
+            attributeDetail = me.get('attributeDetail');
             if (attributeDetail) {
                 if (attributeDetail.valueType === ProductOption.Constants.ValueTypes.Predefined) {
                     this.legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v; }).value();
@@ -42,22 +51,23 @@
                     });
                 } else {
                     me.on("change:value", function(model, newVal) {
-                        var newValObj, values = me.get("values");
+                        var newValObj, values = me.get("values"),
+                            comparator = this.get('isMultiValue') ? containsThisValue : equalsThisValue;
                         if (typeof newVal === "string") newVal = $.trim(newVal);
                         if (newVal || newVal === false || newVal === 0 || newVal === '') {
                             _.each(values, function(fvalue) {
-                                if (fvalue.value.toString() === newVal.toString()) {
+                                if (comparator(fvalue, newVal)) {
                                     newValObj = fvalue;
                                     fvalue.isSelected = true;
-                                    me.set("value", newVal);
+                                    me.set("value", newVal, { silent: true });
                                 } else {
                                     fvalue.isSelected = false;
                                 }
                             });
                             me.set("values", values);
-                            //if (me.get("attributeDetail").inputType !== "List") {
-                            //    me.set("shopperEnteredValue", newVal);
-                            //}
+                            if (me.get("attributeDetail").valueType === ProductOption.Constants.ValueTypes.ShopperEntered) {
+                                me.set("shopperEnteredValue", newVal, { silent: true });
+                            }
                         } else {
                             me.unset('value');
                             me.unset("shopperEnteredValue");
@@ -77,8 +87,11 @@
             }
         },
         parse: function(raw) {
-            var selectedValue, storedShopperValue;
-            if (!raw.isMultiValue) {
+            var selectedValue, vals, storedShopperValue;
+            if (raw.isMultiValue) {
+                vals = _.pluck(_.where(raw.values, { isSelected: true }), 'value');
+                if (vals && vals.length > 0) raw.value = vals;
+            } else {
                 selectedValue = _.findWhere(raw.values, { isSelected: true });
                 if (selectedValue) raw.value = selectedValue.value;
             }
@@ -91,8 +104,8 @@
                     }
                 }
                 if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
-                    raw.minDate = formatDate(this.attributeDetail.validation.minDateValue);
-                    raw.maxDate = formatDate(this.attributeDetail.validation.maxDateValue);
+                    raw.minDate = formatDate(raw.attributeDetail.validation.minDateValue);
+                    raw.maxDate = formatDate(raw.attributeDetail.validation.maxDateValue);
                 }
             }
             return raw;
@@ -105,7 +118,7 @@
         },
         isValidValue: function() {
             var value = this.get('value') || this.get('shopperEnteredValue');
-            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value.toString()));
+            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || (this.get('isMultiValue') ? !_.difference(_.map(value, function(v) { return v.toString(); }), this.legalValues).length : _.contains(this.legalValues, value.toString())));
         },
         isConfigured: function() {
             var attributeDetail = this.get('attributeDetail');
@@ -121,6 +134,32 @@
             }
 
             return j;
+        },
+        addConfiguration: function(biscuit, options) {
+            var fqn, value, attributeDetail, valueKey, pushConfigObject;
+            if (this.isConfigured()) {
+                if (options && options.unabridged) {
+                    biscuit.push(this.toJSON());
+                } else {
+                    fqn = this.get('attributeFQN');
+                    value = this.get('value') || this.get('shopperEnteredValue');
+                    attributeDetail = this.get('attributeDetail');
+                    valueKey = attributeDetail.valueType === ProductOption.Constants.ValueTypes.ShopperEntered ? "shopperEnteredValue" : "value";
+                    if (attributeDetail.dataType === "Number") value = parseFloat(value);
+                    pushConfigObject = function(val) {
+                        var o = {
+                            attributeFQN: fqn
+                        };
+                        o[valueKey] = val;
+                        biscuit.push(o);
+                    };
+                    if (_.isArray(value)) {
+                        _.each(value, pushConfigObject);
+                    } else {
+                        pushConfigObject(value);
+                    }
+                }
+            }
         }
     }, {
         Constants: {
@@ -143,7 +182,7 @@
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange'],
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup'],
         defaults: {
             purchasableState: {},
             quantity: 1
@@ -225,10 +264,14 @@
         notDoneConfiguring: function() {
             return this.get('productUsage') === Product.Constants.ProductUsage.Configurable && !this.get('variationProductCode');
         },
-        getConfiguredOptions: function() {
-            return _.invoke(this.get("options").filter(function(opt) {
-                return opt.isConfigured();
-            }), 'toJSON');
+        supportsInStorePickup: function() {
+            return _.contains(this.get('fulfillmentTypesSupported'), Product.Constants.FulfillmentTypes.IN_STORE_PICKUP);
+        },
+        getConfiguredOptions: function(options) {
+            return this.get('options').reduce(function(biscuit, opt) {
+                opt.addConfiguration(biscuit, options);
+                return biscuit;
+            }, []);
         },
         addToCart: function() {
             var me = this;
@@ -294,7 +337,7 @@
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) {
-                j.options = this.getConfiguredOptions();
+                j.options = this.getConfiguredOptions({ unabridged: true });
             }
             if (options && options.helpers) {
                 if (typeof j.mfgPartNumber == "string") j.mfgPartNumber = [j.mfgPartNumber];
@@ -308,7 +351,11 @@
             FulfillmentMethods: {
                 SHIP: "Ship",
                 PICKUP: "Pickup",
-                DIGITAL: "Digital"
+                DIGITAL: "Digital",
+            },
+            // for catalog instead of commerce
+            FulfillmentTypes: {
+                IN_STORE_PICKUP: "InStorePickup"
             },
             ProductUsage: {
                 Configurable: 'Configurable'

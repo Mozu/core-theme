@@ -70,7 +70,7 @@
               </td>
             </tr>
             {% endfor %}
-            {% if model.handlingAmount %}
+            {% if model.handlingTotal %}
             <tr class="mz-ordersummary-additionalhandling">
                 <td colspan="4">
                   <span class="mz-ordersummary-totalname">{{ labels.additionalHandling }}{% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ( {{ model.handlingAmount|currency }} )</span>{% endif %}</span>

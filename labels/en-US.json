@@ -120,6 +120,7 @@
   "cartEmpty"            : "You have no items in your cart.",
   "taxAtCheckout"        : "Tax & Shipping Calculated at Checkout",
   "orderTotal"           : "Order Total",
+  "emptyCart"            : "Empty Cart",
   "proceedToCheckout"    : "Proceed to Checkout",
   "storePickupAt"        : "In-Store Pickup at <strong>{0}</strong>",
 
@@ -145,6 +146,7 @@
   "payPalTagline"        : "The safer, easier way to pay.",
   "paypalExpressInfo"    : "When you click 'Next', you will be taken to PayPal to complete your transaction.",
   "paypalExpressSummary" : "This transaction will be processed by PayPal Express.",
+  "paypalExpressCancelled" : "The Paypal Express transaction was cancelled.  Please select another payment method.",
   "checkByMail"          : "Check by Mail",
   "useShippingAddress"   : "Use my shipping address",
   "optIn"                : "Yes! I want to receive news and special offers from {0}!",
@@ -173,7 +175,7 @@
   "inStockBlob2"         : "<p>TO ADD THE ITEMS TO YOUR CART: <a href=\"http://{0}/p/{1}\">CLICK HERE</a>.</p>",
   "orderShipped"         : "Your Order Has Shipped",
   "orderShippedPkgHeader": "Shipped {0} via {1}",
-  "orderShipmentBlob1"   : "<p>Thank you for shopping at {0}.  Your order has shipped using {2}. Once an order has shipped, it can no longer be updated. If you must return an item from this order or check on other orders,  please visit <a href=\"http://{1}/myaccount\">My Account</a>.</p>",
+  "orderShipmentBlob1"   : "<p>Thank you for shopping at {0}.  Your order has shipped. Once an order has shipped, it can no longer be updated. If you must return an item from this order or check on other orders,  please visit <a href=\"http://{1}/myaccount\">My Account</a>.</p>",
   "orderShipmentBlob2"   : "<p>Data on tracking may not show up in your account for at least 24 hours from ship date.</p>",
   "returnApprovedBlob1"  : "<p>Thank you for shopping at {0}. Your request to return the following item(s) has been accepted.</p>",
   "returnApprovedBlob2"  : "<p>To return your online purchase:</p><ol><li>Pack your return in the original shipping package, if possible.</li><li>Include the attached packing slip and return label, and indicate the reason for the return.</li><li>Include all original packing materials and accessories.</li><li>Send your return to:</li></ol>",
@@ -322,6 +324,7 @@
   "cardExpInvalid"       : "Please enter an expiration date in the future",
   "securityCodeMissing"  : "Please enter your card's security code",
   "reenterCVV"           : "Please verify your card's security code",
+  "cardBillingMissing"   : "Please select a billing contact for this credit card.",
   "emailMissing"         : "Please enter a valid email address",
   "passwordMissing"      : "Please enter a password",
   "passwordsDoNotMatch"  : "Passwords did not match, please reenter",
@@ -339,9 +342,11 @@
   "noLongerWanted"       : "No longer needed/wanted",
   "tooLate"              : "Arrived too late",
   "wrongCountryForType"  : "Please select a country supported for this contact type",
-  "digitalCodeAlreadyUsed" : "This code has already been used.",
-  "digitalCreditExceedsBalance" : "The amount to apply exceeds the total remaining.",
-
+  "digitalCodeAlreadyUsed": "This code has already been used.",
+  "digitalCreditExceedsBalance": "The amount to apply exceeds the total remaining.",
+  "digitalCreditNoRemainingFunds": "This code has no remaining funds.",
+  "digitalCreditNotYetActive": "This code does not become active until {0}.",
+  "digitalCreditExpired": "This code expired on {0}.",
 
   "clearAllFilters"      : "Clear All Filters",
 

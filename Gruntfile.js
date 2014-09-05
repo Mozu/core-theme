@@ -1,7 +1,7 @@
-﻿module.exports = function (grunt) {
+﻿module.exports = function(grunt) {
 
     grunt.initConfig({
-        
+
         bower: {
             install: {
                 options: {
@@ -94,9 +94,9 @@
      'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
 
     grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', [ 'jshint', 'tfscheckout', 'bower', 'zubat']);
-    grunt.registerTask('notfs', [ 'jshint', 'zubat']);
+    grunt.registerTask('default', ['jshint', 'tfscheckout', 'bower', 'zubat']);
+    grunt.registerTask('notfs', ['jshint', 'zubat']);
     grunt.registerTask('release', ['jshint', 'tfscheckout', 'bower', 'zubat', 'setver']);
     grunt.registerTask('releasenotfs', ['jshint', 'tfscheckout', 'bower', 'zubat', 'setver']);
-   
-}; 
+
+};

@@ -3,7 +3,7 @@
     {% for contact in model.contacts %}
     <label class="mz-contactselector-contact">
         <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="{{ contact.id }}" {% if model.id == contact.id or model.contactId == contact.id" %} checked="checked" {% endif %}>
+            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="{{ contact.id }}" {% if model.contactId == contact.id %} checked="checked" {% endif %}>
         </span>
         <span class="mz-contactselector-summarywrapper">
             <div class="mz-addresssummary">
@@ -12,10 +12,10 @@
         </span>
     </label>
   {% endfor %}
-  {% if model.id == 0 %}
+  {% if model.contactId == "new" %}
   <div class="mz-contactselector-contact mz-contactselector-new">
         <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="0" data-mz-enternewcontact checked="checked">
+            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="new" data-mz-enternewcontact checked="checked">
         </span>
         <span class="mz-contactselector-summarywrapper">
             {% block enter-new-form %}
@@ -26,7 +26,7 @@
     {% else %}
     <label class="mz-contactselector-contact mz-contactselector-new">
         <span class="mz-contactselector-inputwrapper">
-            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="0" data-mz-enternewcontact {% if model.contactId == "new" %} checked="checked" {% endif %}>
+            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="new" data-mz-enternewcontact>
         </span>
         <span class="mz-contactselector-summarywrapper">
             <div class="mz-addresssummary">

@@ -19,6 +19,11 @@
             this.model.removeItem(id);
             return false;
         },
+        empty: function() {
+            this.model.apiDel().then(function() {
+                window.location.reload();
+            });
+        },
         proceedToCheckout: function () {
             //commenting  for ssl for now...
             //this.model.toOrder();
@@ -47,6 +52,8 @@
         });
 
         window.cartView = cartView;
+
+        CartMonitor.setCount(cartModel.count());
 
     });
 

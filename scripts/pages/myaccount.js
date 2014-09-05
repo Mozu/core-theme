@@ -109,10 +109,17 @@
         finishRemoveItem: function(e) {
             var self = this;
             var id = $(e.currentTarget).data('mzItemId');
-            return this.model.apiDeleteItem(id).then(function() {
-                self.editing.remove = false;
-                return self.model.apiGet();
-            });
+            if (id) {
+                var removeWishId = id;
+                return this.model.apiDeleteItem(id).then(function () {
+                    self.editing.remove = false;
+                    var itemToRemove = self.model.get('items').where({ id: removeWishId });
+                    if (itemToRemove) {
+                        self.model.get('items').remove(itemToRemove);
+                        self.render();
+                    }
+                });
+            }
         }
     });
 

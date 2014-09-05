@@ -8,14 +8,7 @@
         "isTablet": false,
         "name": "Core5"
     },
-    "editors": [{
-        "documentTypes": [
-            "snippets@mozu"
-        ],
-        "id": "snippet@mozu",
-        "path": "snippet.js",
-        "priority": 0.2
-    }, {
+    "editors": [ {
         "documentTypes": [
             "web_page@mozu"
         ],
@@ -598,6 +591,49 @@
         ]
     }, {
         "defaultConfig": {
+            "mainCategory": "Category",
+            "numberToDisplay": 4,
+            "template": "primary"
+        },
+        "displayName": "Navigation Subsection",
+        "displayTemplate": "misc/nav-subsection",
+        "editViewFields": [{
+            "anchor": "100%",
+            "fieldLabel": "Parent",
+            "name": "parent",
+            "xtype": "mz-input-navnode"
+        }, {
+            "anchor": "100%",
+            "fieldLabel": "Style",
+            "name": "style",
+            "store": [
+                [
+                    "primary",
+                    "primary"
+                ],
+                [
+                    "secondary",
+                    "secondary"
+                ],
+                [
+                    "tertiary",
+                    "tertiary"
+                ]
+            ],
+            "xtype": "combo"
+        }, {
+            "anchor": "100%",
+            "fieldLabel": "Count",
+            "name": "numberToDisplay",
+            "xtype": "mz-input-number"
+        }],
+        "icon": "/resources/admin/widgets/22_category_navigation.png",
+        "id": "subNav",
+        "validPageTypes": [
+            "*"
+        ]
+    }, {
+        "defaultConfig": {
             "attributeId": "tenant~product-crosssell",
             "count": "4",
             "template": "modules/product/product-list-carousel",
@@ -771,31 +807,6 @@
         "editView": "taco-image-widgeteditor",
         "icon": "/resources/admin/widgets/00_photo.png",
         "id": "cms-image",
-        "validPageTypes": [
-            "*"
-        ]
-    }, {
-       "displayName": "snippet" ,
-           "displayTemplate": "cms/snippet",
-           "editViewFields": [{
-            "fieldLabel": "snippet",
-            "name": "snippetId",
-            "width": "100%",
-            "store": {
-                "type": "Taco.store.Entities",
-                "listName": "siteSnippets@mozu",
-                "entityType": "cms"
-            },
-            "displayField": "name",
-            "valueField": "id",
-            "xtype": "combo"
-            }, 
-             {
-                   "xtype": "hidden",
-                   "value": "siteSnippets@mozu",
-                   "name": "listName"
-               }],
-        "id": "cms-snippet",
         "validPageTypes": [
             "*"
         ]

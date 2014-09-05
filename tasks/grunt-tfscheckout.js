@@ -1,6 +1,6 @@
 ﻿'use strict';
-module.exports = function (grunt) {
-    grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function () {
+module.exports = function(grunt) {
+    grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function() {
         var done = this.async(),
             spawn = require('child_process').spawn,
             fs = require('fs'),
@@ -19,7 +19,7 @@ module.exports = function (grunt) {
                 path: "C:\\Program Files\ (x86)\\Microsoft\ Visual\ Studio\ 11.0\\Common7\\IDE\\TF.exe",
                 args: ["checkout", this.data.dir + "\\*"]
             }
-        ].some(function (conf) {
+        ].some(function(conf) {
             if (fs.existsSync(conf.path)) {
                 workingConf = conf;
                 return true;
@@ -35,11 +35,11 @@ module.exports = function (grunt) {
 
         child = spawn(workingConf.path, workingConf.args);
 
-        child.stderr.on('data', function (data) {
+        child.stderr.on('data', function(data) {
             grunt.log.error(data);
         });
 
-        child.on('close', function (code) {
+        child.on('close', function(code) {
             if (code !== 0) {
                 grunt.log.error("Could not check files out of TFS.") && grunt.fatal("TFS checkout failed.");
                 done(false);

@@ -11,10 +11,12 @@
         </div>
         <div class="mz-l-formfieldgroup-cell">
             {% include "modules/my-account/my-account-contact-selector" %}
+			<span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}contactId"></span>
         </div>
     </div>
     {% else %}
         {% include "modules/common/address-form" with addresscontext="editingContact." model=editingContact %}
+		<span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}contactId"></span>
     {% endif %}
     </div>
     <div class="mz-creditcard-actions">
