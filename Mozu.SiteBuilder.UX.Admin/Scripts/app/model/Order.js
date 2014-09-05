@@ -62,23 +62,7 @@ Ext.define('Taco.model.Order', {
                 name: 'channelCode',
                 type: 'string'
         },
-
-            {
-                name: 'channelName',
-                type: 'string',
-                persist: false,
-                convert: function (val, record) {
-                    var channelCode = record.get('channelCode'),
-                        store = Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
-                        channelRecord = store.getById(channelCode),
-                        name = '';
-
-                    if (channelRecord) {
-                        name = channelRecord.get('name');
-                    }
-                    return name;
-                }
-        }, {
+        {
                 name: 'siteId',
                 type: 'int',
                 useNull: true
@@ -637,6 +621,15 @@ Ext.define('Taco.model.Order', {
         isShippable: function () {
             // if we have unshipped packages or unpackaged items we are a shippable order;
             return this.get('unpackagedItems').length || this.get('unShippedPackages').length;
+        },
+
+
+        getChannelName: function () {
+            var channelCode = this.get('channelCode'),
+                ccStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Channels'),
+                channelRecord = ccStore.getById(channelCode);
+
+            return channelRecord ? channelRecord.get('name') : channelCode;
         },
 
 
