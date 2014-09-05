@@ -64,6 +64,15 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
         [DataMember(EmitDefaultValue = false)]
         public new ProductPriceRange PriceRange { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
+        public bool SupportsInStorePickup
+        {
+            get
+            {
+                return FulfillmentTypesSupported != null && FulfillmentTypesSupported.Any(x => x == FulfillmentTypeConst.InStorePickUp);
+            }
+        }
+
     }
     //public class ProductPrice: Mozu.ProductRuntime.Contracts.ProductPrice
     //{

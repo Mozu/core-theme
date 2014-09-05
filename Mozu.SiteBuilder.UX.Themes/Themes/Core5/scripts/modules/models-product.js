@@ -135,27 +135,29 @@
 
             return j;
         },
-        addConfiguration: function(biscuit) {
-            var fqn, value, pushConfigObject;
+        addConfiguration: function(biscuit, options) {
+            var fqn, value, attributeDetail, valueKey, pushConfigObject;
             if (this.isConfigured()) {
-                fqn = this.get('attributeFQN');
-                value = this.get('value') || this.get('shopperEnteredValue');
-                if (this.get('attributeDetail').dataType === "Number") value = parseFloat(value);
-                pushConfigObject = this.get('attributeDetail').valueType === ProductOption.Constants.ValueTypes.ShopperEntered ? function(val) {
-                    biscuit.push({
-                        attributeFQN: fqn,
-                        shopperEnteredValue: val
-                    });
-                } : function(val) {
-                    biscuit.push({
-                        attributeFQN: fqn,
-                        value: val
-                    });
-                };
-                if (_.isArray(value)) {
-                    _.each(value, pushConfigObject);
+                if (options && options.unabridged) {
+                    biscuit.push(this.toJSON());
                 } else {
-                    pushConfigObject(value);
+                    fqn = this.get('attributeFQN');
+                    value = this.get('value') || this.get('shopperEnteredValue');
+                    attributeDetail = this.get('attributeDetail');
+                    valueKey = attributeDetail.valueType === ProductOption.Constants.ValueTypes.ShopperEntered ? "shopperEnteredValue" : "value";
+                    if (attributeDetail.dataType === "Number") value = parseFloat(value);
+                    pushConfigObject = function(val) {
+                        var o = {
+                            attributeFQN: fqn
+                        };
+                        o[valueKey] = val;
+                        biscuit.push(o);
+                    };
+                    if (_.isArray(value)) {
+                        _.each(value, pushConfigObject);
+                    } else {
+                        pushConfigObject(value);
+                    }
                 }
             }
         }
@@ -180,7 +182,7 @@
         mozuType: 'product',
         idAttribute: 'productCode',
         handlesMessages: true,
-        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange'],
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup'],
         defaults: {
             purchasableState: {},
             quantity: 1
@@ -262,9 +264,12 @@
         notDoneConfiguring: function() {
             return this.get('productUsage') === Product.Constants.ProductUsage.Configurable && !this.get('variationProductCode');
         },
-        getConfiguredOptions: function() {
+        supportsInStorePickup: function() {
+            return _.contains(this.get('fulfillmentTypesSupported'), Product.Constants.FulfillmentTypes.IN_STORE_PICKUP);
+        },
+        getConfiguredOptions: function(options) {
             return this.get('options').reduce(function(biscuit, opt) {
-                opt.addConfiguration(biscuit);
+                opt.addConfiguration(biscuit, options);
                 return biscuit;
             }, []);
         },
@@ -332,7 +337,7 @@
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             if (!options || !options.helpers) {
-                j.options = this.getConfiguredOptions();
+                j.options = this.getConfiguredOptions({ unabridged: true });
             }
             if (options && options.helpers) {
                 if (typeof j.mfgPartNumber == "string") j.mfgPartNumber = [j.mfgPartNumber];
@@ -346,7 +351,11 @@
             FulfillmentMethods: {
                 SHIP: "Ship",
                 PICKUP: "Pickup",
-                DIGITAL: "Digital"
+                DIGITAL: "Digital",
+            },
+            // for catalog instead of commerce
+            FulfillmentTypes: {
+                IN_STORE_PICKUP: "InStorePickup"
             },
             ProductUsage: {
                 Configurable: 'Configurable'
