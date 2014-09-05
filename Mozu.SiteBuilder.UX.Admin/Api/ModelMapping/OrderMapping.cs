@@ -521,7 +521,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                   // handled by after mapper
                   .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
-                  .ForMember(x => x.ProductUsage, op => op.Ignore())
+                  
 
                   .AfterMap((dc, orderItem) =>
                   {
