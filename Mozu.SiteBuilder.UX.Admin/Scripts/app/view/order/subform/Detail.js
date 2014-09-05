@@ -400,12 +400,20 @@ Ext.define('Taco.view.order.subform.Detail', {
     getButtonActions: function () {
         var me = this,
             availableActions = me.record.get("availableActions"),
+            canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
             canEdit = !(me.record.get("orderStatus")=="Completed"),
             buttons;
         
         buttons = [
             {
+                text: 'Accept Order',
+                handler: function () {
+                    this.detailGrid.acceptOrder();
+                },
+                scope: me,
+                hidden: !canAccept
+            }, {
                 text: 'Cancel Order',
                 xtype: "button",
                 ui: "action",
