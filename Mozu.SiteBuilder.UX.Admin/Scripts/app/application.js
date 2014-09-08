@@ -74,6 +74,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.panel.Header',
         'Taco.overrides.dom.ElementAddons',
         'Taco.overrides.selection.CellModel',
+        'Taco.overrides.view.AbstractView',
         'Taco.overrides.LoadMask',
         'Taco.overrides.ZIndexManager',
         'Taco.overrides.picker.Month',
