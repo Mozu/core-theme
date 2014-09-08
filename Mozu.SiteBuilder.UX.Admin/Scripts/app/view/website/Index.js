@@ -735,7 +735,7 @@ Ext.define('Taco.view.website.Index', {
                 e.stopEvent();
                 return;
             }
-            if (target.hostname === this.iframe.getWin().location.hostname) {
+            if (target.hostname === this.iframe.getWin().location.hostname && !e.browserEvent.defaultPrevented) {
                 me.fireEvent('beforeIframeClickNavigate', {
                     url: target.pathname + target.search
                 });
