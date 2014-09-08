@@ -23,6 +23,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumOrderAmount',
             fieldLabel: "Minimum Order Amount",
+            hidden: this.record.get('scope') !== 'Order',
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
@@ -545,5 +546,6 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     setFieldVisibility: function (isLineItem, appliesToShipping) {
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);
+        this.minimumOrderAmountInput.setVisible(!isLineItem);
     }
 });
