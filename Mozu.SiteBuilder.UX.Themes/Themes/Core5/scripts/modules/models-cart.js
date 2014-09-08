@@ -66,10 +66,7 @@
             });
         },
         removeItem: function (id) {
-            var self = this;
-            this.get('items').get(id).apiModel.del().then(function() {
-                return self.fetch();
-            });
+            return this.get('items').get(id).apiModel.del();
         }
     });
 
