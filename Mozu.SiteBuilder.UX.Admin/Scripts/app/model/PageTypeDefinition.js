@@ -6,7 +6,7 @@
     Ext.define('Taco.model.PageTypeDefinition', {
 
         extend: 'Taco.core.data.Model',
-        fields: ['id', 'title', 'template', 'entityType',  'documentTypeFQN', 'userCreatable', 'properties', 'zones','widgets','customEditors',
+        fields: ['id', 'title', 'template', 'entityType',  'documentTypeFQN', 'userCreatable', 'properties', 'zones','widgets','customEditor',
             {
                 name: 'isDefault',
                 convert: function fullName(v, record) {
