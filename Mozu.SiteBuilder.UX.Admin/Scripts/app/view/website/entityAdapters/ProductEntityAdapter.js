@@ -40,6 +40,11 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
 
     },
 
+
+    getDocument: function () {
+        return this.getCmsPageDoc();
+    },
+
     set: function (record, add) {
         this.isLoading = false;
         if (record.$className == this.modelName) {
@@ -68,7 +73,10 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
                 entityType: 'cms',
                 documentTypeFQN: pageReq.documentTypeFQN,
                 name: pageReq.path,
-                listFQN: pageReq.listFQN
+                listFQN: pageReq.listFQN,
+                properties: {
+                    page_type_definition: 'product'
+                }
             });
             me.set(cmsDoc);
         }
@@ -90,17 +98,37 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
     setHidden: function (hide) {
         this.get().set('isActive', !hide);
     },
+
+
     addSaveTasks: function (tasks) {
+
         var record = this.get();
+        this.manager.pageSettings.addSaveTasks(tasks);
+
+        if (this.dynamicFormContainer) {
+            tasks.add([
+                {
+                    updateRecord: this.getCmsPageDoc(),
+                    updateForm: this.dynamicFormContainer
+                }, {
+                    saveRecord: this.getCmsPageDoc()
+                }
+            ]);
+        }
+
+        
         tasks.add({
             saveRecord: record,
             dependencyFilter: function (item) {
                 return item.updateRecord && (item.updateRecord.modelName == 'Taco.model.ProductInCatalogInfo' || item.updateRecord.modelName == 'Taco.model.Product');
             }
         });
-        
-        this.callParent(arguments);
+
+
     },
+
+
+
     getCmsPageDoc: function () {
         return this.cmsPageDoc;
     },
@@ -108,6 +136,12 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
 
         var ret = this.callParent(arguments);
         var me = this;
+
+        //fix broken themes
+        if (ret.length == 0) {
+            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: Ext.create("Taco.model.EntityEditor", { code: "Ext.widget({xtype: 'mz-form-productPage'});" }), record: this.getCmsPageDoc(), showNameEditor: this.showNameEditor() });
+            ret.push(me.dynamicFormContainer);
+        }
 
         ret.push(
             Ext.create('Taco.view.website.settings.CatalogSeo', {

@@ -82,6 +82,9 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
     getCmsPageDoc: function () {
         return this.cmsPageDoc;
     },
+    getDocument: function () {
+        return this.getCmsPageDoc();
+    },
 
     fetchCmsPageDoc: function () {
         var me = this,
@@ -99,14 +102,29 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
                 entityType:'cms',
                 documentTypeFQN: pageReq.documentTypeFQN,
                 name: pageReq.path,
-                listFQN: pageReq.listFQN
+                listFQN: pageReq.listFQN,
+                properties: {
+                    page_type_definition: 'category'
+                }
             });
             me.set(cmsDoc);
         }
     },
 
     addSaveTasks: function (tasks) {
-        this.callParent(arguments);
+        this.manager.pageSettings.addSaveTasks(tasks);
+
+        if (this.dynamicFormContainer) {
+            tasks.add([
+                {
+                    updateRecord: this.getCmsPageDoc(),
+                    updateForm: this.dynamicFormContainer
+                }, {
+                    saveRecord: this.getCmsPageDoc()
+                }
+            ]);
+        }
+
         if (this.get().getFacetSets()) {
             tasks.add({
                 store: this.get().getFacetSets(),
@@ -134,6 +152,14 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
         var me = this,
             ret = this.callParent(arguments);
         
+
+        //fix broken themes
+        if (ret.length == 0) {
+            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: Ext.create("Taco.model.EntityEditor", { code: "Ext.widget({xtype: 'mz-form-categoryPage'});" }), record: this.getCmsPageDoc(), showNameEditor: this.showNameEditor() });
+            ret.push(me.dynamicFormContainer);
+        }
+
+
         return ret.concat(
         [
             Ext.create('Taco.view.website.settings.facets.Facets', {

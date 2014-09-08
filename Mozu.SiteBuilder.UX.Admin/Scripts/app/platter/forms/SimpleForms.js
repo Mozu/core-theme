@@ -27,7 +27,10 @@ Ext.define('Taco.platter.forms.WebPageEditorForm', {
 
 Ext.define('Taco.platter.forms.ProductEditorForm', {
     extend: 'Taco.core.ux.form.entities.ProductEditorForm',
-    alias: ['widget.mz-form-product']
+    alias: [
+        'widget.mz-form-product',
+        'widget.mz-form-productPage'
+    ]
 });
 
 Ext.define('Taco.platter.forms.EntityEditorForm', {
@@ -37,7 +40,10 @@ Ext.define('Taco.platter.forms.EntityEditorForm', {
 
 Ext.define('Taco.platter.forms.CategoryEditorForm', {
     extend: 'Taco.core.ux.form.entities.CategoryEditorForm',
-    alias: ['widget.mz-form-category']
+    alias: [
+        'widget.mz-form-category',
+        'widget.mz-form-categoryPage'
+    ]
 });
 
 Ext.define('Taco.platter.forms.WidgetForm', {
