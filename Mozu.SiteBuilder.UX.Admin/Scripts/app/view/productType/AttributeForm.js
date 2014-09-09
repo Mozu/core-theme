@@ -28,7 +28,6 @@
             autoLoad: true
         });
 
-
         this.createFilter = function (attributeRecord) {
             return !me.ptAttributeStore.containsById(attributeRecord);
         };
@@ -123,12 +122,17 @@
     },
 
     addAttributes: function (filter, attribute) {
-
+        
         this.attributeStore.suspendEvents(false);
         this.attributeStore.clearFilter();
         this.attributeStore.filter(filter);
+        this.attributeStore.sort({
+            property: 'name',
+            direction: 'ASC'
+        });
+        
         this.attributeStore.resumeEvents();
-
+        
         this.insert(this.items.getCount() - 1, Ext.create('Taco.core.ux.form.field.MultiSelect', {
             name: 'attribute',
             fieldLabel: 'Attribute',
@@ -195,14 +199,23 @@
 
         valuesStore = Ext.create('Ext.data.Store', {
             fields: fields,
+            sorters: [{
+                property: 'value',
+                direction: 'ASC'
+            }],
             data: attribute.get('values')
         });
 
         this.selectionStore = Ext.create('Ext.data.Store', {
             fields: fields,
+            sorters:[{
+                property: 'value',
+                direction: 'ASC'
+            }],
             data: this.record.get('selectedValues')
         });
 
+        
         // Ext.util.Observable.capture(this.selectionStore, function (eventName, e) { console.log(eventName, e); });
 
         valuesField = Ext.create('Taco.core.ux.form.field.MultiSelect', {
