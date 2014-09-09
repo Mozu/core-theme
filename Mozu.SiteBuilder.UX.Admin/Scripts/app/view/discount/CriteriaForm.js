@@ -131,7 +131,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideLabel: true,
                     listeners: {
                         change: function(f, newValue) {
-                            console.log('changed', newValue);
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
                         }
                     }
