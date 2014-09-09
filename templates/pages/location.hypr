@@ -1,6 +1,6 @@
 {% extends "page" %}
 
-{% block title-tag-content %}{% if pageContext.metaTitle %}{{ pageContext.metaTitle }}{% else %}{{ labels.localStores }}  - {% parent %}{% endif %}{% endblock title-tag-content %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.localStores %} - {% parent %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-locations {% endblock body-tag-classes %}
 
