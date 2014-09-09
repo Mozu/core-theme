@@ -1,6 +1,6 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %} {{ labels.cart }} - {% parent %} {% endblock title-tag-content %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.cart %} - {% parent %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-cart {% endblock body-tag-classes %}
 
