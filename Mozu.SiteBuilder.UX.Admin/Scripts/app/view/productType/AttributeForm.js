@@ -185,7 +185,10 @@
     },
 
     addListEditor: function (attribute) {
+        
+
         var valuesField, selectionsField, valuesStore,
+            dataType = attribute.get("dataType"),
             fields = [
                 {
                     name: 'id',
@@ -193,10 +196,10 @@
                 },
                 {
                     name: 'value',
-                    type: 'string'
+                    type: (dataType && dataType == "Number") ? 'float' : 'string'
                 }
             ];
-
+        
         valuesStore = Ext.create('Ext.data.Store', {
             fields: fields,
             sorters: [{
