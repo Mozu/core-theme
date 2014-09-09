@@ -149,12 +149,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                          new ServiceInfo
                         {
                             Id = "DocumentListService",
-                            InternalUrl = settings.Urls("service-url-DocumentListWebApi")
+                            InternalUrl = settings.Urls("service-url-DocumentListWebApi"),
+                            RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "EntityListService",
-                            InternalUrl = settings.Urls("service-url-EntityListsWebApi")
+                            InternalUrl = settings.Urls("service-url-EntityListsWebApi"),
+                            RequiresSsl = true
                         },
                         new ServiceInfo
                         {

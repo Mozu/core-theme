@@ -1,80 +1,80 @@
 {
     "document": {
         "template": "{+documentListService}{listName}/documents/{id}{?_*}",
-        "defaultParams": {
-            "listName": "pages"
-        },
-        "shortcutParam": "id"
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "documentList": {
         "template": "{+documentListService}{listName}/documents{?_*}",
-        "shortcutParam": "filter",
+        "shortcutParam": "listName",
         "defaultParams": {
-            "listName": "pages",
             "startIndex": 0,
             "pageSize": 15
         },
-        "collectionOf": "document"
+        "collectionOf": "document",
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "documentView": {
         "template": "{+documentListService}{listName}/views/{viewName}/documents{?_*}",
-        "shortcutParam": "filter",
+        "shortcutParam": "listName",
         "defaultParams": {
-            "listName": "pages",
             "viewName": "default",
             "startIndex": 0,
             "pageSize": 15
         },
-        "collectionOf": "document"
+        "collectionOf": "document",
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "entityList": {
         "template": "{+entityListService}{listName}/entities{?_*}",
-        "shortcutParam": "filter",
+        "shortcutParam": "listName",
         "defaultParams": {
             "startIndex": 0,
             "pageSize": 15
         },
-        "collectionOf": "entity"
+        "collectionOf": "entity",
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "entityView": {
         "template": "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
-        "shortcutParam": "filter",
+        "shortcutParam": "listName",
         "defaultParams": {
-            "startIndex": 0,
             "viewName": "default",
+            "startIndex": 0,
             "pageSize": 15
         },
-        "collectionOf": "entity"
+        "collectionOf": "entity",
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "entity": {
         "template": "{+entityListService}{listName}/entities/{id}{?_*}",
-        "shortcutParam": "listName",
-
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "entityContainer": {
         "template": "{+entityListService}{listName}/entityContainers/{id}{?_*}",
-        "shortcutParam": "listName"
+        "shortcutParam": "listName",
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "entityContainerList": {
         "template": "{+entityListService}{listName}/entityContainers{?_*}",
-        "shortcutParam": "filter",
+        "shortcutParam": "listName",
         "defaultParams": {
             "startIndex": 0,
             "pageSize": 15
         },
-        "collectionOf": "entityContainer"
+        "collectionOf": "entityContainer",
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
     "entityContainerView": {
         "template": "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
-        "shortcutParam": "filter",
+        "shortcutParam": "listName",
         "defaultParams": {
             "startIndex": 0,
             "viewName": "default",
             "pageSize": 15
         },
-        "collectionOf": "entityContainer"
+        "collectionOf": "entityContainer",
+        "useIframeTransport": "{+storefrontUserService}../../receiver"
     },
-
     "products": {
         "template": "{+productService}{?_*}",
         "shortcutParam": "filter",
