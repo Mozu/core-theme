@@ -124,9 +124,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     itemId: 'maxQuantity',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 0,
+                    minValue: 1,
                     labelAlign: 'right',
-                    hideLable: true,
+                    hideLabel: true,
                     listeners: {
                         change: function(f, newValue) {
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
@@ -249,9 +249,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     itemId: 'maxQuantity',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 0,
+                    minValue: 1,
                     labelAlign: 'right',
-                    hideLable: true,
+                    hideLabel: true,
                     listeners: {
                         change: function(f, newValue) {
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
