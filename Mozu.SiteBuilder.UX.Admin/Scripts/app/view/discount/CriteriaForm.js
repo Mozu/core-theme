@@ -100,7 +100,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             Ext.Array.each(toEnable.query('[isFormField]'), function(cmp) {
                 cmp.enable();
                 if (cmp.itemId === "maxQuantity") {
-                    cmp.setValue(toDisable.down('#maxQuantity').getValue() || maximumQuantity);
+                    // console.log(cmp.getValue(), toDisable.down('#maxQuantity').getValue(), maximumQuantity);
+                    cmp.setValue(maximumQuantity || 1);
                 }
             });
             toEnable.down('button').enable();
@@ -125,10 +126,12 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
+                    value: 1,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
                         change: function(f, newValue) {
+                            console.log('changed', newValue);
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
                         }
                     }
@@ -250,6 +253,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
+                    value: 1,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
