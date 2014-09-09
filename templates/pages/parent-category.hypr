@@ -1,6 +1,6 @@
 {% extends "page" %}
 
-{% block title-tag-content %}{% if pageContext.metaTitle %}{{pageContext.metaTitle}}{% else %}{{model.name}} - {% parent %} {%endif%}{% endblock title-tag-content %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
 
 
 {% block body-tag-classes %} mz-category {% endblock body-tag-classes %}
