@@ -13,7 +13,7 @@ Ext.define('Taco.store.ProductBundlePicker', {
     remoteFilter: true,
 
     storeManagerConfig: {
-        clearFilters: true,
+        clearFilters: false,
         contextLevel: 'sc',
         autoLoad: false,
         createOnly: true
@@ -26,7 +26,7 @@ Ext.define('Taco.store.ProductBundlePicker', {
         },
         extraParams: {
             responseGroups: 'Min,Price',
-            advancedSearch:Ext.JSON.encodeValue({productUsage:['Standard','Component']})
+            ShowProductUsages: ['Standard', 'Component']
         },
         reader: {
             type: 'json',
