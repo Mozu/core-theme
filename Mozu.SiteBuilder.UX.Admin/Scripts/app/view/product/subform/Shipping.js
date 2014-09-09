@@ -190,8 +190,8 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 }
             }, {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Package Dimensions',
-                labelClsExtra: 'x-form-item-required',
+                //fieldLabel: 'Package Dimensions',
+                labelClsExtra: '',
                 disabled: (!isPhysical),
                 width: 480,
                 layout: {
@@ -215,15 +215,18 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 items: [
                     {
                         margin: 0,
+                        fieldLabel:"Length",
                         name: (isBundle) ? "" : 'packageLength',
                         value:  (isPhysical ? record.get('packageLength') : '0 in'),
                         emptyText: 'l'
                     }, {
                         name: (isBundle) ? "" : 'packageWidth',
+                        fieldLabel: "Width",
                         value: (isPhysical ? record.get('packageWidth') : '0 in'),
                         emptyText: 'w'
                     }, {
                         name: (isBundle) ? "" : 'packageHeight',
+                        fieldLabel: "Height",
                         value: (isPhysical ? record.get('packageHeight') : '0 in'),
                         emptyText: 'h'
                     }
