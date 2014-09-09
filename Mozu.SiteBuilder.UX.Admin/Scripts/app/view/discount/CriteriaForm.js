@@ -89,7 +89,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         function toggleEnabledCriteriaQuantities(toEnable) {
             var toDisable = toEnable === me.productsBox ? me.categoriesBox : me.productsBox,
-                maximumQuantity = me.record.get("maximumQuantityPerRedemption");
+                maximumQuantity = me.record.get("maximumQuantityPerRedemption"),
+                isEdit = me.up('formform').isEdit();
+
             Ext.Array.each(toDisable.query('[isFormField]'), function(cmp) {
                 if (cmp.xtype !== "radio") {
                     cmp.disable();
@@ -100,8 +102,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             Ext.Array.each(toEnable.query('[isFormField]'), function(cmp) {
                 cmp.enable();
                 if (cmp.itemId === "maxQuantity") {
-                    // console.log(cmp.getValue(), toDisable.down('#maxQuantity').getValue(), maximumQuantity);
-                    cmp.setValue(maximumQuantity || 1);
+                    cmp.setValue(toDisable.down('#maxQuantity').getValue() || (isEdit ? maximumQuantity : 1));
                 }
             });
             toEnable.down('button').enable();
@@ -126,7 +127,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
-                    value: 1,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
@@ -252,7 +252,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
-                    value: 1,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
