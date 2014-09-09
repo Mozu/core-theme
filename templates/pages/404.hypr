@@ -1,6 +1,6 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %}{% if PageContext.MetaTitle %}{{PageContext.MetaTitle}}{% else %}{{model.Name}}{%endif%}  - {% parent %}{% endblock title-tag-content %}
+{% block title-tag-content %}{% if pageContext.metaTitle %}{{pageContext.metaTitle}}{% else %}{{model.name}}{%endif%}  - {% parent %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-notfoundpage {% endblock body-tag-classes %}
 
@@ -9,5 +9,4 @@
     <h1 class="mz-pagetitle">{{ labels.pageNotFound }}</h1>
     {% dropzone "notfound" scope="template" %}
 </div>
-{% endblock body-content %} 
-
+{% endblock body-content %}
