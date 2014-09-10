@@ -20,10 +20,12 @@ Ext.define('Taco.controller.Orders', {
     createContentView: function (viewName, cfg) {
         var split,
             viewClass,
-            loadSplit = function (split, cfg) {
-               
-                if (cfg && cfg.record) {
-                    split.setRecord(cfg.record);
+            cfg = cfg || {},
+            record = cfg.record,
+            loadSplit = function (split, record) {
+
+                if (record) {
+                    split.setRecord(record);
                 } else {
                     split.setRecord(null);
                 }
@@ -47,13 +49,13 @@ Ext.define('Taco.controller.Orders', {
                     function () {
                         Taco.app.setLoading();
                     }, 200);
-
+                delete cfg.record;
                 viewClass.factory(cfg, function (view) {
                     cfg.loadmaskTask = loadmaskTask;
                     window.clearTimeout(loadmaskTask);
                     split = view;
                     Taco.app.contentView.add(split);
-                    loadSplit(split, cfg);
+                    loadSplit(split, record);
                 });
                 return;
             }
@@ -65,10 +67,10 @@ Ext.define('Taco.controller.Orders', {
         }
 
 
-        loadSplit(split, cfg);
+        loadSplit(split, record);
         
 
-        // Ext.resumeLayouts(true);
+       
 
         return split;
 
