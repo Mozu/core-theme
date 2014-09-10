@@ -12,7 +12,6 @@ Ext.define('Taco.core.ux.content.Header', {
     title: 'Header Title',
     titleData: null,
 
-    flexFirstItem: true,
     hideActions: false,
     instructionText: null,
 
@@ -26,37 +25,49 @@ Ext.define('Taco.core.ux.content.Header', {
             title = this.initTitle(),
             actionsCt = this.initActionsContainer();
 
+
+        //todo: ug this is annoying. find out why this is happening
+        // bug fix: 34630
+        this.mon(this, 'boxready', function () {
+            // for some reason the for: context combo shift left after the view is resized; this fixes the default size
+            this.doLayout()
+        }, this, {
+            delay:100
+        })
+        
         items = Ext.isArray(items) ? items : [items];
 
-        if (actionsCt) {
-            // items.push({ xtype: 'container', flex: 1 });
+        if (actionsCt) {            
             items.push(actionsCt);
         }
+
+        // force actions to the right
+        items.unshift({
+            flex: 1
+        })
+
         if (!Ext.isEmpty(this.contextConfig)) {
+            
             items.unshift(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
+            
             if (title) {
                 items.unshift({
-                    autoEl: 'h3',
+                    autoEl: 'h3',                    
                     style: {
-                        'font-weight' : 'normal'
+                        'font-weight': 'normal',
+                        'padding-right': "10px",
+                        'padding-left': "10px"
                     },
                     xtype: 'component',
-                    html: '&nbsp;for&nbsp;'
+                    html: 'for'
                 });
             }
         }
-        if (title) items.unshift(title);
+        if (title) {
+            items.unshift(title);
+        } 
 
         
-        //if (this.flexFirstItem && items.length > 0) {
-        //    Ext.apply(items[0], {
-        //        flex: 1
-        //    });
-        //}
-        
-        
-
-
         this.items = items;
 
         this.callParent(arguments);
@@ -98,7 +109,7 @@ Ext.define('Taco.core.ux.content.Header', {
     initTitle: function () {
         var me = this,
             title = this.title;
-
+        
         if (title === false) {
             return;
         } else if (typeof title !== 'object' || title === null) {
@@ -109,9 +120,8 @@ Ext.define('Taco.core.ux.content.Header', {
         }
 
         Ext.apply(title, {
-            autoEl: 'h1',
-            itemId: 'title',
-            flex: 1
+            autoEl: 'h1',            
+            itemId: 'title'
         });
 
         return title;
