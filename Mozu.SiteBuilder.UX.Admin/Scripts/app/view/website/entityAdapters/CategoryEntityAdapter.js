@@ -11,7 +11,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
     ],
 
     modelName: 'Taco.model.Category',
-
+    showNameEditor:false,
     allowedActions: {
         copy: false,
         preview: true,
@@ -155,7 +155,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
 
         //fix broken themes
         if (ret.length == 0) {
-            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: Ext.create("Taco.model.EntityEditor", { code: "Ext.widget({xtype: 'mz-form-categoryPage'});" }), record: this.getCmsPageDoc(), showNameEditor: this.showNameEditor() });
+            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: Ext.create("Taco.model.EntityEditor", { code: "Ext.widget({xtype: 'mz-form-categoryPage'});" }), record: this.getCmsPageDoc(), showNameEditor: this.showNameEditor});
             ret.push(me.dynamicFormContainer);
         }
 

@@ -8,7 +8,7 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
         'Taco.view.website.settings.CatalogSeo'
     ],
     modelName: 'Taco.model.Product',
-
+    showNameEditor: false,
     allowedActions: {
         copy: false,
         preview: true,
@@ -139,7 +139,7 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
 
         //fix broken themes
         if (ret.length == 0) {
-            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: Ext.create("Taco.model.EntityEditor", { code: "Ext.widget({xtype: 'mz-form-productPage'});" }), record: this.getCmsPageDoc(), showNameEditor: this.showNameEditor() });
+            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: Ext.create("Taco.model.EntityEditor", { code: "Ext.widget({xtype: 'mz-form-productPage'});" }), record: this.getCmsPageDoc(), showNameEditor: this.showNameEditor });
             ret.push(me.dynamicFormContainer);
         }
 
