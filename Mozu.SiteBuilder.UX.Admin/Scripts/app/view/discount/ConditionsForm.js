@@ -237,7 +237,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     name: 'minimumQuantityRequiredProducts',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 0,
+                    minValue: 1,
+                    allowBlank: true,
                     labelAlign: 'right',
                     hideLable: true,
                 }, {
@@ -367,7 +368,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     name: 'minimumQuantityProductsRequiredInCategories',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 0,
+                    minValue: 1,
+                    allowBlank: true,
                     labelAlign: 'right',
                     hideLable: true,
                 }, {
@@ -483,9 +485,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 if (delayed !== true) {
                     Ext.defer(this.onProductsCategoriesChange, 3000, this, [true]);
 
-                } else {
-                    this.minimumQuantityProductsRequiredInCategories.setValue(1);
                 }
+                //else {
+                //    this.minimumQuantityProductsRequiredInCategories.setValue(1);
+                //}
 
             }
 
@@ -507,9 +510,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 if (delayed !== true) {
                     Ext.defer(this.onProductsCategoriesChange, 3000, this, [true]);
 
-                } else {
-                    this.minimumQuantityRequiredProducts.setValue(1);
                 }
+                //else {
+                //    this.minimumQuantityRequiredProducts.setValue(1);
+                //}
             }
 
         } else {

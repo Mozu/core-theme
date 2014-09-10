@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -147,16 +148,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                IncludedProducts = (x.DiscountConditionProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
                                                                                ExcludedProducts = (x.DiscountConditionExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
                                                                                CustomerSegments = (x.CustomerSegments ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerSegment {Id = _}).ToList(),
-                                                                               MinimumQuantityProductsRequiredInCategories = (x.DiscountConditionCategories.IsNullOrEmpty()) 
+                                                                               MinimumQuantityProductsRequiredInCategories = (x.DiscountConditionCategories.IsNullOrEmpty() || ! x.MinimumQuantityProductsRequiredInCategories.HasValue) 
                                                                                 ? (int?)null 
-                                                                                : (x.MinimumQuantityProductsRequiredInCategories.GetValueOrDefault() > 0) 
-                                                                                   ? x.MinimumQuantityProductsRequiredInCategories  
-                                                                                   : 1,
-                                                                               MinimumQuantityRequiredProducts = (x.DiscountConditionProducts.IsNullOrEmpty()) 
+                                                                                : Math.Max(x.MinimumQuantityProductsRequiredInCategories.Value, 1),
+                                                                               MinimumQuantityRequiredProducts = (x.DiscountConditionProducts.IsNullOrEmpty() || !x.MinimumQuantityRequiredProducts.HasValue) 
                                                                                 ? (int?)null
-                                                                                : (x.MinimumQuantityRequiredProducts.GetValueOrDefault() > 0)
-                                                                                    ? x.MinimumQuantityRequiredProducts
-                                                                                    : 1,
+                                                                                : Math.Max(x.MinimumQuantityRequiredProducts.Value, 1),
                                                                                MinimumCategorySubtotalBeforeDiscounts = x.MinimumCategorySubtotalBeforeDiscounts,
                                                                                MinimumOrderAmount = x.MinimumOrderAmount == 0 ? null : x.MinimumOrderAmount,
                                                                                MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount == 0 ? null : x.MinimumLifetimeValueAmount,
@@ -169,11 +166,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Target, opt => opt.ResolveUsing(x => new DC.DiscountTarget
                                                                        {
                                                                            Type = x.Target,
-                                                                           MaximumQuantityPerRedemption = (x.Categories.IsNullOrEmpty() && x.Products.IsNullOrEmpty()) 
+                                                                           MaximumQuantityPerRedemption = ((x.Categories.IsNullOrEmpty() && x.Products.IsNullOrEmpty()) || ! x.MaximumQuantityPerRedemption.HasValue)
                                                                             ? (int?)null 
-                                                                            : (x.MaximumQuantityPerRedemption.GetValueOrDefault() > 0) 
-                                                                                ? x.MaximumQuantityPerRedemption 
-                                                                                : 1,
+                                                                            : Math.Max(x.MaximumQuantityPerRedemption.Value, 1),
                                                                            Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedCategories = (x.ExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),

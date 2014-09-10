@@ -127,6 +127,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
+                    allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
@@ -252,6 +253,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
+                    allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
