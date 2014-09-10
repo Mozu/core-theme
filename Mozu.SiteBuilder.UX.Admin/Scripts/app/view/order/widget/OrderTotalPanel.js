@@ -235,7 +235,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         
         '<tr class="subtotalrow">',
             '<td class="{tdCls}"><div class="{tdInnerCls}">SubTotal</div></td>',
-            '<td class="subtotalcell {tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.discountedTotal)]}</div></td>',
+            '<td class="subtotalcell {tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.discountedSubTotal)]}</div></td>',
         '</tr>',
             
         '<tpl for="orderDiscounts">',
