@@ -242,7 +242,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                             foreach (var widget in column.Widgets)
                             {
-                                widget.Config = widget.Config ?? new JObject();
+                                widget.Config = widget.Config  as JObject ?? new JObject();
                                 bool isContent = widget.DefinitionId == "content";
                                 widget.isRichText = isContent;
 
@@ -280,20 +280,22 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                                 sb.Append(">");
                                 sb.Append("<div class=\"mz-cms-content\"");
 
-                                var height = ((Newtonsoft.Json.Linq.JObject) widget.Config)["height"];
+                                var widgetConfig = widget.Config;
 
+                                var height = widgetConfig["height"];
                                 if (height != null)
                                 {
                                     sb.Append(" style=\"height:");
                                     sb.Append(height);
                                     sb.Append("px;\"");
                                 }
+
                                 sb.Append(">");
 
                                 if (isContent)
                                 {
 
-                                    sb.Append((string) ((Newtonsoft.Json.Linq.JObject) widget.Config)["body"]);
+                                    sb.Append((string)widgetConfig["body"]);
                                 }
                                 else
                                 {
