@@ -147,8 +147,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                IncludedProducts = (x.DiscountConditionProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
                                                                                ExcludedProducts = (x.DiscountConditionExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
                                                                                CustomerSegments = (x.CustomerSegments ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerSegment {Id = _}).ToList(),
-                                                                               MinimumQuantityProductsRequiredInCategories = x.MinimumQuantityProductsRequiredInCategories,
-                                                                               MinimumQuantityRequiredProducts = x.MinimumQuantityRequiredProducts,
+                                                                               MinimumQuantityProductsRequiredInCategories = (x.DiscountConditionCategories.IsNullOrEmpty()) 
+                                                                                ? (int?)null 
+                                                                                : (x.MinimumQuantityProductsRequiredInCategories.GetValueOrDefault() > 0) 
+                                                                                   ? x.MinimumQuantityProductsRequiredInCategories  
+                                                                                   : 1,
+                                                                               MinimumQuantityRequiredProducts = (x.DiscountConditionProducts.IsNullOrEmpty()) 
+                                                                                ? (int?)null
+                                                                                : (x.MinimumQuantityRequiredProducts.GetValueOrDefault() > 0)
+                                                                                    ? x.MinimumQuantityRequiredProducts
+                                                                                    : 1,
                                                                                MinimumCategorySubtotalBeforeDiscounts = x.MinimumCategorySubtotalBeforeDiscounts,
                                                                                MinimumOrderAmount = x.MinimumOrderAmount == 0 ? null : x.MinimumOrderAmount,
                                                                                MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount == 0 ? null : x.MinimumLifetimeValueAmount,
@@ -161,7 +169,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Target, opt => opt.ResolveUsing(x => new DC.DiscountTarget
                                                                        {
                                                                            Type = x.Target,
-                                                                           MaximumQuantityPerRedemption = x.MaximumQuantityPerRedemption ,
+                                                                           MaximumQuantityPerRedemption = (x.Categories.IsNullOrEmpty() && x.Products.IsNullOrEmpty()) 
+                                                                            ? (int?)null 
+                                                                            : (x.MaximumQuantityPerRedemption.GetValueOrDefault() > 0) 
+                                                                                ? x.MaximumQuantityPerRedemption 
+                                                                                : 1,
                                                                            Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedCategories = (x.ExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
