@@ -386,7 +386,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             availableActions = me.record.get("availableActions"),
             canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = !(me.record.get("orderStatus") == "Completed"),
+            canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')),
             acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
             editOrderButton = this.down("#editOrderButton");
@@ -407,7 +407,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             availableActions = me.record.get("availableActions"),
             canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = !(me.record.get("orderStatus")=="Completed"),
+            canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')),
             buttons;
         
         buttons = [
