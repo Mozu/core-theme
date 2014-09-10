@@ -19,8 +19,10 @@ Ext.define('Taco.view.productType.Index', {
         requiresContextOfType: ['m', 's', 'c']
     },
     
-    initComponent: function () {
+    initComponent: function () {        
         this.callParent(arguments);
+        // bug: 34634 detail view of product type lacks the productCount and zero's out the grid record. reloading store on view to keep records fresh.
+        this.store.load();
     },
     
     gridPanelConf: {
