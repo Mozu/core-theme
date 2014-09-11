@@ -5,8 +5,39 @@
         "extends": null,
         "isDesktop": true,
         "isMobile": false,
-        "defaultLanguage": "en-US"
+        "defaultLanguage": "en-US",
+         "allowProduction": false
     },
+     "editors": [ {
+        "documentTypes": [
+            "web_page@mozu"
+        ],
+        "id": "web_page@mozu",
+        "path": "web_page.js",
+        "priority": 0.2
+    },   {
+        "id": "email-orderconfirmation",
+        "path": "email-orderconfirmation.js"
+    }, {
+        "id": "email@mozu",
+        "path": "email.js",
+        "documentLists": [
+            "emailTemplateContent@mozu"
+        ],
+        "priority": 0.2
+    }, {
+      "id": "horizontalrule",
+      "path" : "horizontalRule.js" 
+    },
+     {
+        "id": "pageTemplateContent@mozu",
+        "path": "pageTemplateContent.js",
+        "documentTypes": [
+            "pageTemplateContent@mozu"
+        ],
+        "priority": 0.2
+    }
+    ],
     "settings": {
 
         "internal-themeAddons": [],

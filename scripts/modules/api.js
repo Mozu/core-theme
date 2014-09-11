@@ -7,13 +7,7 @@
 define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
     var apiConfig = require.mozuData('apicontext');
     Mozu.setServiceUrls(apiConfig.urls);
-    var headers = apiConfig.headers,
-        api = Mozu.Tenant(headers['x-vol-tenant'])
-             .MasterCatalog(headers['x-vol-master-catalog'])
-             .Site(headers['x-vol-site'])
-             .AppClaims(headers['x-vol-app-claims'])
-             .UserClaims(headers['x-vol-user-claims'])
-             .api();
+    var api = Mozu.Store(apiConfig.headers).api();
     if (Hypr.getThemeSetting('useDebugScripts') || require.mozuData('pagecontext').isDebugMode) {
         api.on('error', function (badPromise, xhr, requestConf) {
             var e = "Error communicating with Mozu API";

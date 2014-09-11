@@ -1,8 +1,8 @@
 {% extends "page" %}
 
-{% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.content.productName %}  - {% parent %}{% endblock title-tag-content %}
 
-{% block title-tag-content %}{% if PageContext.MetaTitle %}{{PageContext.MetaTitle}}{% else %}{{model.content.productName}} - {% parent %} {%endif%}{% endblock title-tag-content %}
+{% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
 
 {% block body-content %}
 
