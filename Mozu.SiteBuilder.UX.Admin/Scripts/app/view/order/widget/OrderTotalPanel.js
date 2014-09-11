@@ -234,7 +234,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     subTpl_1: new Ext.XTemplate(
         
         '<tr class="subtotalrow">',
-            '<td class="{tdCls}"><div class="{tdInnerCls}">SubTotal</div></td>',
+            '<td class="{tdCls}"><div class="{tdInnerCls}">Subtotal</div></td>',
             '<td class="subtotalcell {tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.discountedSubtotal)]}</div></td>',
         '</tr>',
             
@@ -268,7 +268,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '</tr>',
 
         '<tr class="row-group-start">',
-            '<td class="{tdCls}"><div class="{tdInnerCls}">Shipping <tpl if="values.shippingMethodName">({shippingMethodName})</tpl>:</div></td>',
+            '<td class="{tdCls}"><div class="{tdInnerCls}">Shipping <tpl if="values.shippingMethodName">({shippingMethodName})</tpl></div></td>',
             '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubtotal)]}</div></td>',
         '</tr>',
 
@@ -283,7 +283,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             '<tr class="discount ',
                 '<tpl if="!isActive">suppressed<tpl else>active</tpl>',
             '">',
-                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Discount ({description}):</div></td>',
+                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Discount ({description})</div></td>',
                 '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
                 '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
                     '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
@@ -315,7 +315,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
 
         '<tr class="row-group-start totalrow" >',
-            '<td class="{tdCls}"><div class="{tdInnerCls}">OrderTotal</div></td>',
+            '<td class="{tdCls}"><div class="{tdInnerCls}">Order Total</div></td>',
             '<td class="totalcell {tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.total)]}</div></td>',
         '</tr>'
     ),
