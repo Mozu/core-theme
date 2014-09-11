@@ -1,0 +1,35 @@
+﻿.mz-facetingform {
+    padding-right: @gutter/2;
+    border-right: 1px solid #eee;
+    h4 {
+        border-bottom: 1px solid #eee;
+        margin: 0 0 5px;
+        font-size: @fontSizeLarger;
+    }
+    .mz-facetingform-facet {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        li {
+            margin: 8px 0;
+        }
+    }
+    .mz-facetingform-valuelabel {
+        display: inline-block;
+        margin-left: 8px;
+    }
+
+    .mz-facetingform-facet-hierarchy {
+        .mz-facetingform-facet-hierarchy {
+            li {
+                margin: 0 0 4px 0.5em;
+                line-height: 1em;
+                &::before {
+                    display: inline-block;
+                    content: "\221F";
+                    font-size: @fontSizeLarger;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,21 @@
+﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.searchExpandOnFocus %} mz-searchbox-expands{% endif %}" action="/search">
+    <span class="mz-searchbox-field">
+        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
+        <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
+    </span>
+	<select class="mz-searchbox-categories" name="facetValueFilter" 
+            data-mz-contextify='[value="categoryId:{{ pageContext.categoryId }}"]'
+            data-mz-contextify-attr='selected'
+            data-mz-contextify-val='selected'>
+		<option value="">{{ labels.all }}</option>
+        {% partial_cache %}
+        {% for cat in navigation.rootCategories %}
+        <option value="categoryId:{{cat.originalId}}">{{cat.Name}}</option>
+		{% endfor %}
+        {% endpartial_cache %}
+	</select>
+    {% require_script "modules/contextify" %}
+    {% if themeSettings.useSearchAutocomplete %}
+        {% require_script "modules/search-autocomplete" %}
+    {% endif %}
+</form>

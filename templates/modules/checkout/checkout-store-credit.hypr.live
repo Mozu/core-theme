@@ -1,0 +1,54 @@
+﻿<div class="mz-checkout-storecredit mz-l-stack-section">
+  <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredits }}</h4>
+  <div class="mz-l-formfieldgroup-cell">
+    <label for="digital-credit-code">{{ labels.digitalCreditCode }}: </label>
+  </div>
+  <div class="mz-l-formfieldgroup-cell">
+    <input type="text" id="digital-credit-code" name="digital-credit-code" value="{{ model.digitalCreditCode }}" data-mz-value="digitalCreditCode" />
+    <button class="mz-button" data-mz-action="getDigitalCredit" {% if not model.digitalCreditCode  %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+  </div>
+  
+{% if model.activeStoreCredits %}
+    <div class="mz-checkout-appliedcredits">
+        <p>{{ labels.digitalCreditApplied }}</p>
+        <ul class="mz-checkout-storecredit-appliedcreditslist">
+            {% for credit in model.activeStoreCredits %}
+            <li class="mz-checkout-storecredit-credit mz-checkout-storecredit-credit-applied">
+                <span class="mz-checkout-storecredit-creditamount">{{ credit.amountRequested|currency }}</span>
+                <span class="mz-checkout-storecredit-creditcode">{{ labels.digitalCreditCode }}: {{ credit.billingInfo.storeCreditCode }}</span>
+                <a href="javascript:;" class="mz-icon mz-icon-close" data-mz-action="removeCredit" data-mz-credit-id="{{ credit.id }}">{{ labels.remove }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <p>{{ labels.remainingTotal }}</p>
+        <p class="mz-checkout-appliedcredits-remainingtotal">
+            {{ model.nonStoreCreditTotal|currency }}
+        </p>
+    </div>
+{% endif %}
+{% if model.applyingCredit %}
+
+<div class="mz-checkout-storecredit-apply">
+    <div class="mz-checkout-storecredit-applyamount">
+        {{ labels.apply }} <input type="number" max="{{ model.maxCreditAmountToApply }}" data-mz-value="creditAmountToApply" min="1" step="0.01" value="{{ model.maxCreditAmountToApply }}" /> {{ labels.of }} {{ model.applyingCredit.currentBalance|currency }} {{ labels.from }} {{ model.applyingCredit.code }}
+    </div>
+    <div class="mz-checkout-storecredit-applyactions">
+        <button class="mz-button" data-mz-action="finishApplyCredit">{{ labels.apply }}</button>
+        <button class="mz-button" data-mz-action="cancelApplyCredit">{{ labels.cancel }}</button>
+    </div>
+</div>
+{% else %} {% if model.availableStoreCredits and model.nonStoreCreditTotal > 0 %}
+  <p>{{ labels.digitalCreditAvailable }}</p>
+  <div class="mz-checkout-storecredit-list">
+    {% for credit in model.availableStoreCredits %}
+    <label class="mz-checkout-storecredit-credit">
+      <input type="radio" {% if model.selectedCredit == credit.code %}checked="checked"{% endif %} name="applycredit" value="{{ credit.code }}" data-mz-value="selectedCredit" />
+      <span class="mz-checkout-storecredit-creditamount">{{ credit.currentBalance|currency }}</span>
+      <span class="mz-checkout-storecredit-creditcode">{{ credit.code }}</span>
+    </label>
+    {% endfor %}
+  </div>
+  <button class="mz-button" {% if not model.selectedCredit %}disabled="disabled"{% endif %} data-mz-action="beginApplyCredit">{{ labels.applyCredit }}</button>
+  {% endif %}
+{% endif %}
+</div>

@@ -1,0 +1,44 @@
+﻿<div class="mz-productoptions">
+    {% for option in model.options %}
+    <div class="mz-productoptions-optioncontainer">
+        {% if option.isRequired %}
+            <strong class="is-required">*</strong>
+        {% endif %}
+        <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}</label>
+        <div class="mz-productoptions-valuecontainer">
+            {% if option.attributeDetail.inputType == "List" %}
+                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
+                    {% if not option.isMultiValue %}<option></option>{% endif %}
+                    {% for value in option.values %}
+                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}{% if value.deltaPrice and value.deltaPrice > 0 %} ( {{ value.deltaPrice|currency }} {{ labels.more }} ){% endif %}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                {% if option.attributeDetail.inputType == "YesNo" %}
+                    <input class="mz-productoptions-option" type="checkbox" {% if option.shopperEnteredValue %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />
+                {% endif %}
+                {% if option.attributeDetail.inputType == "TextBox" %}
+                    {% if option.attributeDetail.dataType == "Number" %}
+                    <input class="mz-productoptions-option" type="number" min="{{ option.attributeDetail.validation.minNumericValue }}" max="{{ option.attributeDetail.validation.maxNumericValue }}" value="{{ option.shopperEnteredValue }}" data-mz-product-option="{{ option.attributeFQN }}" data-mz-focus-bookmark="{{ option.attributeFQN }}">
+                        {% else %}
+                    <input class="mz-productoptions-option" type="text" value="{{ option.shopperEnteredValue }}" data-mz-product-option="{{ option.attributeFQN }}" data-mz-focus-bookmark="{{ option.attributeFQN }}">
+                        {% endif %}
+                {% endif %}
+                {% if option.attributeDetail.inputType == "TextArea" %}
+                    <textarea class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" data-mz-focus-bookmark="{{ option.attributeFQN }}">{{ option.shopperEnteredValue }}</textarea>
+                {% endif %}
+                {% if option.attributeDetail.inputType == "Date" %}
+                    <input type="text" data-mz-is-datepicker data-mz-focus-bookmark="{{ option.attributeFQN }}" data-mz-product-option="{{ option.attributeFQN }}" class="mz-productoptions-option" style="color:transparent" value="{{ option.shopperEnteredValue }}" data-format="mm/dd/yy" data-max="{{option.maxValue}}" data-min="{{ option.minValue }}">
+                {% endif %}
+                {% if option.values %}
+                  {% for value in option.values %}
+                    {% if forloop.counter0 == 0 and value.deltaPrice > 0 %}
+                      ({{ value.deltaPrice|currency }} {{ labels.more }})
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

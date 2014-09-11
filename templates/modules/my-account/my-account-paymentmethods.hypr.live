@@ -1,0 +1,18 @@
+﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }} <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a></h3>
+{% if model.hasSavedCards || editing.card == "new" %}
+<ul class="mz-accountpaymentmethods-list mz-l-tiles">
+    {% for card in model.cards %}
+    {% if editing.card == card.id %}
+        {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard %}
+    {% else %}
+        {% include "modules/my-account/my-account-paymentmethod" with model=card %}
+         
+    {% endif %}
+    {% endfor %}
+    {% if editing.card == "new" %}
+        {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
+    {% endif %}
+</ul>
+{% else %}
+<p class="mz-accountpaymentmethods-empty">{{ labels.noSavedCards }} <a href="javacript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a></p>
+{% endif %}

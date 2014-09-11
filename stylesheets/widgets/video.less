@@ -1,0 +1,67 @@
+.mz-cms-video-container {
+    width: 100%;
+}
+
+.mz-cms-video-placeholder {
+    background-color: black;
+    padding-top: 56.25%;
+    position: relative;
+    width: 100%;
+
+    box-sizing: border-box !important;
+
+    & * {
+        box-sizing: border-box !important;
+    }
+
+    iframe.mz-cms-video-player {
+        left: 0;
+        height: 100%;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+
+        -webkit-transition: opacity 2s;
+    }
+}
+
+.mz-cms-video-cover {
+    background-size: cover;
+    content: "";
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+
+    -webkit-transition: opacity 2s;
+}
+
+.mz-cms-video-play {
+    background-color: white;
+    background-color: rgba(255,255,255,0.7);
+    box-sizing: border-box;
+    color: black;
+    content: "Play";
+    cursor: pointer;
+    font-weight: bold;
+    height: 42px;
+    left: 50%;
+    margin-left: -40px;
+    margin-top: -21px !important;
+    opacity: 1;
+    padding-top: 11px;
+    position: absolute;
+    top: 50%;
+    text-align: center;
+    width: 80px;
+    z-index: 5;
+    -webkit-border-radius: 5px;
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.9);
+
+    -webkit-transition: opacity 2s;
+}

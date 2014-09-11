@@ -1,0 +1,40 @@
+﻿.mz-locationlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.mz-locationlisting {
+    border: 1px solid #999;
+    margin: @gutter/2 0;
+    display: table;
+    width: 80%;
+    .mz-locationlisting-locationdetails {
+        vertical-align: middle;
+        display: table-cell;
+        background: #eee;
+        padding: @gutter/2;
+        width: 160px;
+        h4 {
+            margin: 0 0 @gutter/4;
+        }
+    }
+    .mz-locationlisting-inventory, .mz-locationlisting-distance, .mz-locationlisting-actions {
+        vertical-align: middle;
+        display: table-cell;
+        padding: @gutter/2 @gutter;
+        text-align: right;
+    }
+    .mz-locationlisting-inventorystatus {
+        font-weight: bold;
+        text-transform: uppercase;
+        color: @availableText;
+    }
+    &.is-disabled {
+        .opacity(.75);
+        .mz-locationlisting-inventorystatus {
+            color: @unavailableText;
+        }
+    }
+}
