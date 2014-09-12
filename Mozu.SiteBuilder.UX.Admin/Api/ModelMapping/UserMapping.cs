@@ -20,7 +20,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(x => x.RequiresBehaviorIds, m => m.Ignore())
                 .ForMember(x => x.ValidUserTypes, op => op.Ignore())
-                .ForMember(x => x.IsPrivate, op => op.Ignore());
+                .ForMember(x => x.IsPrivate, op => op.Ignore())
+                .ForMember(x => x.SystemRoles, op => op.Ignore())   // todo: xverify - Greg Murray on 2014-08-28
+                ;
             
             Mapper.CreateMap<Core.Api.Contracts.Behavior, Behavior>()
                 .ForMember(x => x.Category, m => m.Ignore());

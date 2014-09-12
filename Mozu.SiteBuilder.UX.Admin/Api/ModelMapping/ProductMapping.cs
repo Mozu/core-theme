@@ -510,11 +510,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<ProductExtraValue, DC.ProductExtraValue>()
-                  .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => new DC.ProductExtraValueDeltaPrice()
-                  {
-               //       CurrencyCode = DEFAULT_CURRENCY_CODE,
-                      DeltaPrice = x.DeltaPrice
-                  }));
+                .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => new DC.ProductExtraValueDeltaPrice()
+                {
+            //       CurrencyCode = DEFAULT_CURRENCY_CODE,
+                    DeltaPrice = x.DeltaPrice
+                }))
+                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+                ;
 
             Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>()
                   .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPrice != null
@@ -559,6 +561,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         Cost = x.DeltaCost
                     }
                 }))
+                .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26
                 ;
 
             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()

@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.LastNameOrSurname, op => op.Ignore())
                 .ForMember(dc => dc.Address, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-
+                .ForMember(dc => dc.Label, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26
                 ;
 
         }

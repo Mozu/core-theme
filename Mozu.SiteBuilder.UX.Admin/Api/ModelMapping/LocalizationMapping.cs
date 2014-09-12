@@ -76,6 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Options, op => op.ResolveUsing(dc => (dc.Options != null)
                     ? dc.Options.Select(x => string.Format("{0} - {1}", x.AdminName, x.Value)).ToList()
                     : new List<string>()))
+                .ForMember(x => x.SupportedCurrencies, op => op.Ignore())   // todo: xverify - Greg Murray on 2014-08-28
                 ;
 
             Mapper.CreateMap<DC.ReportProductVariation, JObject>().ConvertUsing<ReportLocalizedProductVariantConverter>();
