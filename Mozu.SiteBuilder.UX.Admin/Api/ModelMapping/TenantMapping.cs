@@ -21,6 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                       .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
                       .ForMember(x => x.MasterCatalogs, op => op.ResolveUsing(x => x.MasterCatalogs))
+                      .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
+                      .ForMember(x => x.Currencies, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                       .AfterMap((tenant, context) =>
                           {
                               foreach (var site in tenant.Sites)
@@ -39,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            AutoMapper.Mapper.CreateMap<DC.MasterCatalog , MasterCatalog >()
+            AutoMapper.Mapper.CreateMap<DC.MasterCatalog , MasterCatalog>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
                 .ForMember(x => x.Catalogs, op => op.ResolveUsing(x => x.Catalogs ))
@@ -48,12 +50,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(x => x.ProductPublishingMode, op => op.Ignore())
                 .ForMember(x => x.Sites, op => op.Ignore())
+                .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                 ;
             AutoMapper.Mapper.CreateMap<DC.Catalog, TaContextCatalog>()
-                      .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
-                      .ForMember(x => x.Currency, op => op.ResolveUsing(x => x.DefaultCurrencyCode))
-                      .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
-                      .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name));
+                .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(x => x.Currency, op => op.ResolveUsing(x => x.DefaultCurrencyCode))
+                .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
+                .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
+                .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
+                ;
+            
               //.ForMember(x => x.StagingHost, op => op.ResolveUsing(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
 
 

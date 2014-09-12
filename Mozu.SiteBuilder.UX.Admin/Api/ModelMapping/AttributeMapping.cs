@@ -125,19 +125,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsRequiredByAdmin, opt => opt.ResolveUsing(x => x.IsRequired))
                 .ForMember(dc => dc.IsMultiValueProperty  , opt => opt.ResolveUsing(x => x.AllowMulti))
                 .ForMember(dc => dc.VocabularyValues, opt => opt.ResolveUsing(x => MapSelectedValuesToVocabularyValueInProductTypeList(x.SelectedValues)))
+                .ForMember(x => x.DisplayInfo, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
+            
                 ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
-                .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) =>  x.Value  is string 
+                .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) => x.Value is string
                     ? new DC.AttributeVocabularyValueLocalizedContent
-                      {
-          //                LocaleCode = "??-??", 
-                          StringValue = x.Value as string
-                      } 
+                    {
+                        //                LocaleCode = "??-??", 
+                        StringValue = x.Value as string
+                    }
                     : null))
-                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id))
                 // TODO: do not hard code this.
-                .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing(( AttributeValue x) => 0))
+                .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing((AttributeValue x) => 0))
+                .ForMember(dc => dc.LocalizedContent, op => op.Ignore()); // todo: xverify - Greg Murray on 2014-08-26 
+            
             ;
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null &&!string.IsNullOrEmpty( x.Content.StringValue) 
@@ -152,6 +156,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(dc => dc.Order, op => op.Ignore())
                 .ForMember(dc => dc.VocabularyValueDetail, op => op.Ignore())
+                .ForMember(dc => dc.DisplayInfo, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
                 ;
 
             Mapper.CreateMap<DC.AttributeVocabularyValueInProductType, AttributeValue>()
@@ -199,7 +204,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>();
 
-            Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>();
+            Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>()
+                .ForMember(dc => dc.LocalizedContent, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
+                ;
 
             Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeVocabularyValueLocalizedContent>();
             Mapper.CreateMap<DC.AttributeVocabularyValueLocalizedContent, AttributeVocabularyValueLocalizedContent>();

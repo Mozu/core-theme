@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             Mapper.Reset();
         }
 
-        [Test, Ignore]
+        [Test]//, Ignore]
         public void AdminMappings_should_be_valid()
         {
             Mapper.AssertConfigurationIsValid();

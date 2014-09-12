@@ -103,6 +103,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.PaymentProcessingFlowType, op => op.ResolveUsing(x => x.PaymentProcessingFlowType))
                 .ForMember(dc => dc.UseOverridePriceToCalculateDiscounts, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                .ForMember(dc => dc.AbandonedOrderThresholdInMinutes, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26
                 ;
 
             Mapper.CreateMap<Gateway, DCss.Gateway>()
