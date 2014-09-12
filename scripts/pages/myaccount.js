@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, $, _, CustomerModels, PagingViews) {
+﻿define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews) {
     
     var EditableView = Backbone.MozuView.extend({
         constructor: function () {
@@ -48,8 +48,11 @@
             this.editing.name = false;
             this.render();
         },
-        finishEditName: function () {
-            this.doModelAction('updateName');
+        finishEditName: function() {
+            var self = this;
+            this.doModelAction('updateName').otherwise(function() {
+                self.editing.name = true;
+            });
             this.editing.name = false;
         },
         startEditPassword: function () {
@@ -62,6 +65,8 @@
                 _.delay(function() {
                     self.$('[data-mz-validationmessage-for="passwordChanged"]').show().text(Hypr.getLabel('passwordChanged')).fadeOut(3000);
                 }, 250);
+            }, function() {
+                self.editing.password = true;
             });
             this.editing.password = false;
         },
@@ -234,8 +239,15 @@
             this.model.beginEditCard(id);
             this.render();
         },
-        finishEditCard: function () {
-            if (this.doModelAction('saveCard')) this.editing.card = false;
+        finishEditCard: function() {
+            var self = this;
+            var operation = this.doModelAction('saveCard');
+            if (operation) {
+                operation.otherwise(function() {
+                    self.editing.card = true;
+                });
+                this.editing.card = false;
+            }
         },
         cancelEditCard: function () {
             this.editing.card = false;
@@ -286,7 +298,15 @@
             this.render();
         },
         finishEditContact: function () {
-            if (this.doModelAction('saveContact')) this.editing.contact = false;
+            var self = this,
+                isAddressValidationEnabled = HyprLiveContext.locals.siteContext.generalSettings.isAddressValidationEnabled;
+            var operation = this.doModelAction('saveContact', { forceIsValid: isAddressValidationEnabled }); // hack in advance of doing real validation in the myaccount page, tells the model to add isValidated: true
+            if (operation) {
+                operation.otherwise(function() {
+                    self.editing.contact = true;
+                });
+                this.editing.contact = false;
+            }
         },
         cancelEditContact: function () {
             this.editing.contact = false;
