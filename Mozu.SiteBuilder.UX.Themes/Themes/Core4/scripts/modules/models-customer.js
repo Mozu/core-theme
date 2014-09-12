@@ -310,10 +310,14 @@
             editingContact.clear();
             editingContact.set('accountId', this.get('id'));
         },
-        saveContact: function () {
+        saveContact: function (options) {
             var self = this,
                 editingContact = this.get('editingContact'),
                 apiContact;
+
+            if (options && options.forceIsValid) {
+                editingContact.set('address.isValidated', true);
+            }
             
             var op = editingContact.save();
             if (op) return op.then(function (contact) {
