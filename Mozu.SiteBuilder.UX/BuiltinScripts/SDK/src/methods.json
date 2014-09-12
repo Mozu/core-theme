@@ -223,6 +223,9 @@
     },
     "customer": {
         "template": "{+customerService}{id}",
+        "defaults": { 
+            "useIframeTransport": "{+storefrontUserService}../../receiver"
+        },
         "shortcutParam": "id",
         "includeSelf": true,
         "create": {
@@ -231,19 +234,16 @@
             "returnType": "login"
         },
         "create-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
             "verb": "POST",
             "template": "{+storefrontUserService}create",
             "returnType": "login"
         },
         "login": {
-            "useIframeTransport": "{+customerService}../../receiver",
             "verb": "POST",
             "template": "{+customerService}../authtickets",
             "returnType": "login"
         },
         "login-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
             "verb": "POST",
             "template": "{+storefrontUserService}login",
             "returnType": "login"
@@ -259,7 +259,6 @@
             "returnType": "string"
         },
         "reset-password-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
             "verb": "POST",
             "template": "{+storefrontUserService}resetpassword",
             "returnType": "string"
