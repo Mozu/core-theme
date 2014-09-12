@@ -84,16 +84,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             public bool? AllowProduction { get; set; }
 
+
+            public DateTime TimeStamp { get; set; }
+
         [JsonIgnore]
             public Thumbnail Thumbnail { get; set; }
 
             [JsonProperty(PropertyName = "thumbnail")]
             public string ThumbnailAsDataUri
             {
-                get
-                {
-                    return Thumbnail == null ? null : Thumbnail.AsDataUri;
-                }
+                get { return "/admin/app/themes/thumNamil/" + System.Web.HttpUtility.UrlPathEncode(Id) + "?" + TimeStamp.ToString("O"); }
                 set
                 {
                     // a public setter is required by .
@@ -110,6 +110,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public ThemeDTO(GeneralSettings genSettings, Theme theme, bool? isSelectedDesktop = null, bool? isSelectedMobile = null, bool? isSelectedTablet = null)
             {
                 Name = theme.Name;
+                TimeStamp = theme.TimeStamp;
                 Author = theme.Author;
                 AllowProduction = theme.AllowProduction;
                 Thumbnail = theme.Thumbnail;
@@ -145,74 +146,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        [HttpPutRoute(UriTemplate = "CMSPROVISION")]
-       
-        public async Task<HttpResponseMessage> what()
+
+
+        [HttpGetRoute(UriTemplate = "thumNamil/{themeId}")]
+        public async Task<HttpResponseMessage> GetThumbByTheme(string themeId)
         {
-            var tenantService = this.Request.Resolve<Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient>().CloneWithoutUserClaims();
-            var cmsProv = this.Request.Resolve<Mozu.Content.Contracts.Clients.IProvisioningWebApiClient>().CloneWithoutUserClaims();
-             
-            int startIndex = 0;
-            while (true)
-            {
-                var res = (await tenantService.GetTenants(false, false, startIndex, 200)).ReadAsSync();
+            var theme = _themeRepository.GetTheme(new ThemeSelection() {Id = themeId});
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
-                foreach (var tenant in res.Items)
-                {
-                    ProvisionCMSMAYBE(tenant, cmsProv);
-                }
+            response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
+            response.Content.Headers.Expires = new DateTimeOffset(DateTime.Now.AddYears(1));
+            response.Headers.CacheControl = new CacheControlHeaderValue()
+                                            {
+                                                MaxAge = new TimeSpan(365,0,0,0),
+                                               Public = true
 
-                startIndex += 200;
-                if (res.Items.Count == 0)
-                {
-                    break;
-                    
-                }
+                                            };
 
-            }
-            return this.Request.CreateResponse();
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/" + System.IO.Path.GetExtension(theme.Thumbnail.Name).Replace(".", ""));
 
-        }
-
-
-        private void ProvisionCMSMAYBE(Tenant.Contracts.Tenant tenant, Mozu.Content.Contracts.Clients.IProvisioningWebApiClient cmsProv)
-        {
-
-
-            var tenantCmsReq = new CreateTenantRequest()
-                               {
-                                   TenantId = tenant.Id,
-                                   MasterCatalogs = tenant.MasterCatalogs == null ? null :
-                                       tenant.MasterCatalogs.Select(mc => new CreateMasterCatalogRequest()
-                                                                          {
-                                                                              MasterCatalogId = mc.Id,
-                                                                              TenantId = mc.TenantId,
-                                                                              DefaultCurrencyCode = mc.DefaultCurrencyCode,
-                                                                              DefaultLocaleCode = mc.DefaultLocaleCode,
-                                                                              Sites = tenant.Sites == null ? null : tenant.Sites.Where(x => mc.Catalogs != null && mc.Catalogs.Any(c => c.Id == x.CatalogId))
-                                                                                  .Select(site => new CreateSiteRequest()
-                                                                                                  {
-                                                                                                      SiteId = site.Id,
-                                                                                                      MasterCatalogId = site.MasterCatalogId,
-                                                                                                      CatalogId = site.CatalogId,
-                                                                                                      TenantId = site.TenantId,
-                                                                                                      CurrencyCode = site.DefaultCurrencyCode,
-                                                                                                      LocaleCode = site.DefaultLocaleCode,
-                                                                                                      CountryCode = site.CountryCode,
-                                                                                                      CatalogRequest = mc.Catalogs.Where(x => x.Id == site.CatalogId)
-                                                                                                          .Select(cat => new CreateCatalogRequest()
-                                                                                                                         {
-                                                                                                                             CatalogId = cat.Id,
-                                                                                                                             DefaultCurrencyCode = cat.DefaultCurrencyCode,
-                                                                                                                             DefaultLocaleCode = cat.DefaultLocaleCode,
-                                                                                                                             MasterCatalogId = cat.MasterCatalogId,
-                                                                                                                             TenantId = cat.TenantId
-                                                                                                                         }).First()
-                                                                                                  }).ToList()
-                                                                          }).ToList()
-                               };
-
-            cmsProv.CreateTenant(tenantCmsReq, 1);
+            return response;
         }
 
         [HttpGetRoute(UriTemplate = "sitethumbNail")]
@@ -233,7 +186,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new ByteArrayContent(theme.Thumbnail.Contents);
+            response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
 
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/" + System.IO.Path.GetExtension(theme.Thumbnail.Name).Replace(".", ""));
 
