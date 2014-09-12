@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             {
                 if (_contextInitTasks == null)
                 {
-                    _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService).InitCmsPageContext(this.PageContext), this.SiteContext.Init(), this.NavigationContext.ASyncGetTree());
+                    _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService).InitCmsPageContext(this.PageContext, this.SiteContext ), this.SiteContext.Init(), this.NavigationContext.ASyncGetTree());
                 }
                 return _contextInitTasks;
             }

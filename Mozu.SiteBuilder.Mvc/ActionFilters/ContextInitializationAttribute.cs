@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                             controller.PageContext.CmsContext != null &&
                             !controller.PageContext.CmsContext.Initialized)
                         {
-                            return new CmsHelper(controller.CmsService).InitCmsPageContext(controller.PageContext).ContinueWith(y => x.Result);
+                            return new CmsHelper(controller.CmsService).InitCmsPageContext(controller.PageContext, controller.SiteContext  ).ContinueWith(y => x.Result);
 
                         }
                         else

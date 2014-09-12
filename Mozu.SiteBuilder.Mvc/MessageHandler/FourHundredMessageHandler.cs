@@ -31,6 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         private static async Task<HttpResponseMessage> Process400(HttpRequestMessage request, HttpResponseMessage message)
         {
             var pageContext = request.Resolve<PageContext>();
+             var siteContext = request.Resolve<SiteContext>();
             var cmsHelper = request.Resolve<CmsHelper>();
             pageContext.CmsContext = new CmsPageContext()
             {
@@ -41,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                     Path = "404"
                 }
             };
-            await cmsHelper.InitCmsPageContext(pageContext).ConfigureAwait(false);
+            await cmsHelper.InitCmsPageContext(pageContext, siteContext).ConfigureAwait(false);
             var viewResult = new ViewResult()
             {
                 Model = null,

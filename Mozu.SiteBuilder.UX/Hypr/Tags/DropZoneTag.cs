@@ -181,7 +181,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (pageContext.CmsContext != null && !pageContext.CmsContext.Initialized)
             {
                 var cmsHelper = context.Resolve<CmsHelper>();
-                cmsHelper.InitCmsPageContext(pageContext).Wait();
+
+                cmsHelper.InitCmsPageContext(pageContext, siteContext).Wait();
             }
 
 

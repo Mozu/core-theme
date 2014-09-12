@@ -19,6 +19,8 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Visit;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -65,6 +67,31 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return sp;
         }
     }
+
+
+    public static class CmsContextExtensions
+    {
+        public static string GetTemplate(this DocumentRequest documentRequest, SiteContext siteContext, string defaultTemplate = null)
+        {
+            if (documentRequest != null &&  documentRequest.Document!= null)
+            {
+                PageTypeDefinition pageDefinition = null;
+                var pageTypeDefinitionKey = documentRequest.Document.Get<string>("page_type_definition");
+                pageTypeDefinitionKey = string.IsNullOrWhiteSpace(pageTypeDefinitionKey) ? defaultTemplate : pageTypeDefinitionKey;
+                if (!string.IsNullOrEmpty(pageTypeDefinitionKey))
+                {
+                    pageDefinition = siteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
+                }
+                if (pageDefinition != null && !string.IsNullOrWhiteSpace(pageDefinition.Template))
+                {
+                    defaultTemplate = pageDefinition.Template;
+                }
+               
+            }
+            return defaultTemplate;
+        }
+    } 
+
 
     public class SortingParamaters
     {
