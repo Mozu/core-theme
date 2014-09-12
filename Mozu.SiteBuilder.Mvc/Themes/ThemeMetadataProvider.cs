@@ -137,7 +137,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 var imageFilePath = Directory.GetFiles(themePath, "*thumb.*").FirstOrDefault();
                 if (imageFilePath != null)
-                    return new Thumbnail(Path.GetFileName(imageFilePath), File.ReadAllBytes(imageFilePath));
+                    return new Thumbnail(Path.GetFileName(imageFilePath), imageFilePath);
             }
 
             return null;
