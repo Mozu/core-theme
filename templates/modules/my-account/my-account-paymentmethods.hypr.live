@@ -14,5 +14,5 @@
     {% endif %}
 </ul>
 {% else %}
-<p class="mz-accountpaymentmethods-empty">{{ labels.noSavedCards }} <a href="javacript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a></p>
+<p class="mz-accountpaymentmethods-empty">{{ labels.noSavedCards }} <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a></p>
 {% endif %}
