@@ -52,7 +52,6 @@
             var self = this;
             this.doModelAction('updateName').otherwise(function() {
                 self.editing.name = true;
-                self.render();
             });
             this.editing.name = false;
         },
