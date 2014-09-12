@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-09-09
+ * Mozu JavaScript SDK - v0.3.0 - 2014-09-10
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3423,6 +3423,9 @@ module.exports=
     },
     "customer": {
         "template": "{+customerService}{id}",
+        "defaults": { 
+            "useIframeTransport": "{+storefrontUserService}../../receiver"
+        },
         "shortcutParam": "id",
         "includeSelf": true,
         "create": {
@@ -3431,19 +3434,16 @@ module.exports=
             "returnType": "login"
         },
         "create-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
             "verb": "POST",
             "template": "{+storefrontUserService}create",
             "returnType": "login"
         },
         "login": {
-            "useIframeTransport": "{+customerService}../../receiver",
             "verb": "POST",
             "template": "{+customerService}../authtickets",
             "returnType": "login"
         },
         "login-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
             "verb": "POST",
             "template": "{+storefrontUserService}login",
             "returnType": "login"
@@ -3459,7 +3459,6 @@ module.exports=
             "returnType": "string"
         },
         "reset-password-storefront": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
             "verb": "POST",
             "template": "{+storefrontUserService}resetpassword",
             "returnType": "string"
