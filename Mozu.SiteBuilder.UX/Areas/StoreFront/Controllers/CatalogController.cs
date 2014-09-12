@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.SEO;
@@ -28,6 +29,7 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient;
 using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
 using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -102,31 +104,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                             DocumentTypeFQN = "productContent@mozu"
                                                         }
                                          };
-            ViewResult result = View("product", product);
 
             await ContextInitilaztionTasks;
 
-            var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
-            if (!string.IsNullOrEmpty(overrideTemplate))
-            {
-                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
-                if (template != null)
-                {
-                    result.ViewName = template.Template ;
-                    PageContext.CmsContext.Template.Path  = overrideTemplate;
-                }
-
-                PageContext.CmsContext.Template = new DocumentRequest()
-                {
-                    Path = overrideTemplate
-                };
-
-                await this.LifetimeScope.Resolve<CmsHelper>().InitCmsPageContext(PageContext);
-                
-            }
+            string template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "product");
+            var  result = View(template, product);
 
            
-            SetCatalogContext(product);
+           
+            
+            SetCatalogContext( product );
+
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
@@ -259,53 +247,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                         }
                                          };
 
-            ;
-
-
-
-
-
-
-            
-
-            ViewResult result = View(cat);
-
-
             await ContextInitilaztionTasks;
-            var overrideTemplate = PageContext.CmsContext.Page.Document.Get<string>("template");
-            if (!string.IsNullOrEmpty(overrideTemplate))
-            {
-                var template = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, overrideTemplate, StringComparison.OrdinalIgnoreCase));
-                if (template != null)
-                {
-                    result.ViewName = template.Template ;
-                    this.PageContext.CmsContext.Template.Path = overrideTemplate;
-                }
+
+            string template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "category");
+            var result = View(template, cat);
+
             
-                PageContext.CmsContext.Template= new DocumentRequest()
-                                                 {
-                                                     Path = overrideTemplate 
-                                                 };
-
-                await this.LifetimeScope.Resolve<CmsHelper>().InitCmsPageContext(PageContext);
-
-            }
-            
-
-
-
-
-
-            await this.ContextInitilaztionTasks;
             SetCatalogContext(cat);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
 
-            //.Result.ReadAsSync();
-            //AutoMapper.Mapper.Map< Category>( cat );
-            //return View();
         }
-
         private bool RedirectToCanonicle(string url, out HttpResponseMessage msg)
         {
             msg = null;

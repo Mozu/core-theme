@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Magnum.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
 {
+
+
     public class DocumentRequest
     {
         public string Id { get; set; }
@@ -29,6 +32,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin.CMS
         public string DocumentTypeFQN { get; set; }
         [System.Runtime.Serialization.IgnoreDataMember()]
         public Mozu.Content.Contracts.Document Document { get; set; }
+
+
+
 
         //public object this[string key]
         //{

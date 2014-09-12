@@ -119,26 +119,27 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
-        [System.Web.Http.HttpGet]
-        public async Task<ActionResult> widgettest()
-        {
-            var pc = this.PageContext;
+        //[System.Web.Http.HttpGet]
+        //public async Task<ActionResult> widgettest()
+        //{
+        //    var pc = this.PageContext;
 
-            pc.CmsContext = new CmsPageContext()
-            {
-                Page = new DocumentRequest()
-                {
-                    Path = "widgettest",
-                    ListFQN = "pages@mozu",
-                    DocumentTypeFQN = "web_page@mozu"
-                }
+        //    pc.CmsContext = new CmsPageContext()
+        //    {
+        //        Page = new DocumentRequest()
+        //        {
+        //            Path = "widgettest",
+        //            ListFQN = "pages@mozu",
+        //            DocumentTypeFQN = "web_page@mozu"
+        //        }
 
-            };
+        //    };
 
-            var helper = new CmsHelper(CmsService);
-            await helper.InitCmsPageContext(PageContext);
-            return this.View("WidgetTEsting/test", this.SiteContext );
-        }
+
+        //    var helper = new CmsHelper(CmsService);
+        //    await helper.InitCmsPageContext(PageContext);
+        //    return this.View("WidgetTEsting/test", this.SiteContext );
+        //}
 
 
 

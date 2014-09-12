@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.UI;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Mongo.JobScheduler;
@@ -43,9 +44,10 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return task != null;
         }
 
-        public async Task<bool> InitCmsPageContext(PageContext  pageContext )
+        public async Task<bool> InitCmsPageContext(PageContext pageContext, SiteContext siteContext)
         {
             CmsPageContext cmsPageContext = pageContext.CmsContext;
+            
             if (cmsPageContext == null)
             {
                 return true;
@@ -95,17 +97,26 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                     if (templateTask == null && cmsPageContext.Page.Document != null && cmsPageContext.Page.Document.Properties != null && cmsPageContext.Page.Document.Properties != null)
                     {
                         string templateName = cmsPageContext.Page.Document.Get<string>("template");
-                        if (templateName != null)
+                        string pageTypeDefinitionKey = cmsPageContext.Page.Document.Get<string>("page_type_definition");
+                        if (!string.IsNullOrWhiteSpace(pageTypeDefinitionKey))
                         {
+                            var ptd  = siteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
+                            templateName = (ptd != null && !string.IsNullOrWhiteSpace(ptd.Template)) ? ptd.Template : templateName;
+                        }
+
+                        
+                        if (!string.IsNullOrWhiteSpace(templateName ))
+                        {
+
                             if (cmsPageContext.Template == null)
                             {
                                 cmsPageContext.Template = new DocumentRequest
                                                               {
                                                                   Path = templateName,
-                                                                  ListFQN = "pageTemplateContent"
+                                                                  ListFQN = "pageTemplateContent@mozu"
                                                               };
                             }
-                            templateTask = _cmsServiceWrapper.GetByPath2("pageTemplateContent", templateName);
+                            templateTask = _cmsServiceWrapper.GetByPath2(cmsPageContext.Template.ListFQN, cmsPageContext.Template.Path );
                             //todo....
                             await templateTask.ConfigureAwait(false);
                            // tasks.Add(templateTask);
