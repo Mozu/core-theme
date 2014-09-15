@@ -660,7 +660,7 @@ Ext.define('Taco.view.attribute.Form', {
             {
                 fieldLabel: 'Attribute Label',
                 name: 'name',
-                allowBlank: false,
+                allowOnlyWhitespace: false,
                 emptyText: 'Enter a label for the attribute',
                 width: 300,
                 maxLength: 30,
@@ -682,7 +682,7 @@ Ext.define('Taco.view.attribute.Form', {
             }, {
                 fieldLabel: 'Administration Name',
                 name: 'adminName',
-                allowBlank: false,
+                allowOnlyWhitespace: false,
                 emptyText: 'Enter an attribute name',
                 width: 300,
                 enableKeyEvents: true,
@@ -695,7 +695,7 @@ Ext.define('Taco.view.attribute.Form', {
             }, {
                 fieldLabel: 'Attribute Code',
                 name: 'code',
-                allowBlank: !this.record.phantom,
+                allowOnlyWhitespace: !this.record.phantom,
                 readOnly:!this.record.phantom,
                 emptyText: 'Enter a unique attribute code',
                 width: 300,
@@ -721,7 +721,7 @@ Ext.define('Taco.view.attribute.Form', {
                 xtype: 'selectfield',
                 fieldLabel: 'Display Group',
                 name: 'displayGroup',
-                allowBlank: !this.record.supportsDisplayGroup(),
+                allowOnlyWhitespace: !this.record.supportsDisplayGroup(),
                 hidden: !this.record.supportsDisplayGroup(),
                 readOnly: this.isEdit(),
                 data: 'Admin',
@@ -794,7 +794,7 @@ Ext.define('Taco.view.attribute.Form', {
 
         if (attributeField) {
             attributeField.setVisible(this.record.supportsAttributeType());
-            attributeField.allowBlank = !this.record.supportsAttributeType();
+            attributeField.allowOnlyWhitespace = !this.record.supportsAttributeType();
         }
 
 
