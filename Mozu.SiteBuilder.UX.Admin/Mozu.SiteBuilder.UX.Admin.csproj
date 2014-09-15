@@ -29,6 +29,7 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>f9f4dea6</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -1990,9 +1991,6 @@
     <Content Include="Scripts\usagereport.js" />
     <Content Include="Scripts\ux\boxselect\form\field\BoxSelect.js" />
     <Content Include="Scripts\ux\boxselect\layout\component\field\BoxSelectField.js" />
-    <Content Include="SetParameters.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Tests\Automation\binary\phantomjs-1.6.0-win32-static\phantomjs.exe" />
     <Content Include="Tests\Automation\binary\phantomjs-1.9.7-windows\phantomjs.exe" />
     <Content Include="Tests\Automation\CIRunner.js" />
@@ -2624,9 +2622,15 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\OctoPack.2.0.52\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.0.52\build\OctoPack.targets')" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
+  <Import Project="..\packages\OctoPack.2.1.3\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OctoPack.2.1.3\build\OctoPack.targets'))" />
+  </Target>
   <!--
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\BuildExtensions\Microsoft.TeamFoundation.Build.Extensions.Ant.targets" />
   -->
