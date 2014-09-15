@@ -32,6 +32,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>a333ec7d</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -208,9 +209,6 @@
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.11.0.1\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask">
-      <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -1454,7 +1452,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\OctoPack.2.0.52\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.0.52\build\OctoPack.targets')" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="AfterCompile">
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core5\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
@@ -1469,5 +1466,12 @@
     <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
+  </Target>
+  <Import Project="..\packages\OctoPack.2.1.3\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OctoPack.2.1.3\build\OctoPack.targets'))" />
   </Target>
 </Project>
