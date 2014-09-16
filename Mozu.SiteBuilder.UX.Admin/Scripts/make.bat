@@ -1,11 +1,9 @@
 
-if not exist C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144 (
-	echo "missing C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144  get from $/Mozu/UI/Dev/LocalDevStuff/ExtVersions/ext-4.2.2.1144"
-	EXIT /B
+if not exist %~dp0..\..\lib\ext-4.2.2.1144 (
+	echo "missing ExtJS, downloading from \\aus01cpfs102.corp.volusion.com\Departments_F\Product\Software\ExtJS\ext-4.2.2.1144"
+	mkdir ..\..\lib
+	xcopy \\aus01cpfs102.corp.volusion.com\Departments_F\Product\Software\ExtJS\ext-4.2.2.1144 ..\..\lib\ext-4.2.2.1144 /i /y /s
 )
-
-
-
 
 if exist .sencha\workspace (
     attrib -r build/*.* /S
@@ -17,8 +15,8 @@ if exist .sencha\workspace (
 	admintests.bat
 	cd ..\Scripts
 ) else (
-   
-	sencha --sdk C:\sitebuilder\devstuff\ExtVersions\ext-4.2.2.1144 generate workspace .
+
+	sencha --sdk %~dp0..\..\lib\ext-4.2.2.1144 generate workspace .
 
 	attrib -r build/*.* /S
 	attrib -r bootstrap.js

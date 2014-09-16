@@ -10,6 +10,7 @@ node_modules/
 *.sublime-project
 *.sublime-workspace
 seismic-audio/
+lib/
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
