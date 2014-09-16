@@ -11,11 +11,16 @@ Ext.define('Taco.view.Header', {
         'Ext.form.action.StandardSubmit'
     ],
 
-    autoEl: { tag: 'header' },
+    autoEl: {
+        tag: 'header'
+    },
     componentCls: Taco.baseCSSPrefix + 'viewport-header',
     height: 85,
     hideMode: 'offsets',
-    layout: { type: 'vbox', align: 'stretch' },
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
 
     initComponent: function () {
         var me = this,
@@ -35,22 +40,24 @@ Ext.define('Taco.view.Header', {
                 }
             }
         });
-        
+
         breadcrumb = Ext.create('Ext.Component', {
             flex: 1,
             cls: Taco.baseCSSPrefix + 'breadcrumb',
             tpl: [
                 '<ul>',
                 '<a href="{address}" class="taco-icon taco-icon-{icon}">{label}</a>',
-                '<tpl for="items">',                    
+                '<tpl for="items">',
+                    '<tpl if="visible !== false">',
                     '<li class="taco-breadcrumb-item{[ values.selected ?"-selected": ""]}"> <a class="{[values.items.length ? "taco-breadcrumb-menubutton" : ""]}" href="{address}" data-nav-id="{id}"><span>{label}</span></a></li>',
+                    '</tpl>',
                 '</tpl></ul>'
             ]
         });
 
-       // contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
+        // contextSwitcherTrigger = Ext.create('Taco.view.navigation.ContextSwitcher');
         this.breadCrumb = breadcrumb;
-        
+
         this.primaryMenu = Ext.create('Taco.view.navigation.PrimaryMenu', {
             trigger: primaryMenuTrigger,
             breadcrumb: breadcrumb
@@ -80,9 +87,9 @@ Ext.define('Taco.view.Header', {
                         element: 'el', //bind to the underlying el property on the panel
                         fn: function (e) {
                             e.preventDefault();
-                           // Taco.app.context.setCurrentContext(Taco.app.context);
+                            // Taco.app.context.setCurrentContext(Taco.app.context);
                             Taco.core.StateManager.attemptNavigate(Taco.app.context.urlToken);
-                            
+
                         }
                     }
                 }
@@ -95,12 +102,14 @@ Ext.define('Taco.view.Header', {
             anchor: '100%',
             height: 40,
             cls: Taco.baseCSSPrefix + 'viewport-nav',
-            autoEl: { tag: 'nav' },
+            autoEl: {
+                tag: 'nav'
+            },
             layout: {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: [primaryMenuTrigger, breadcrumb]//, contextSwitcherTrigger]
+            items: [primaryMenuTrigger, breadcrumb] //, contextSwitcherTrigger]
         }];
 
         this.callParent(arguments);
@@ -156,10 +165,10 @@ Ext.define('Taco.view.Header', {
             cmp.data = user.data;
         });
 
-        
+
     },
     buildFlyoutMenuConfig: function (items, menuCfg) {
-        
+
         var me = this;
         Ext.Array.each(items, function (item) {
             var itemCfg = {
@@ -215,29 +224,30 @@ Ext.define('Taco.view.Header', {
         }
 
 
-
-
         var configIframe = Ext.create('Ext.ux.IFrame', {
             height: '100%',
             src: 'about:blank'
         });
 
-       // var formHtml = "<form id='configPost' method='POST' action='" + extensionLink.address
-       //     + "' target='" + configIframe.frameName + "'>"
-       ////     + "<input type=hidden name='x-vol-tenant-domain' value='" + this.record.get("tenantDomain") + "'/>"
-       //  //   + "<input type=hidden name='x-vol-return-url' value='" + this.record.get("configReturnUrl") + "'/>"
-       //     + "</form>";
+        // var formHtml = "<form id='configPost' method='POST' action='" + extensionLink.address
+        //     + "' target='" + configIframe.frameName + "'>"
+        ////     + "<input type=hidden name='x-vol-tenant-domain' value='" + this.record.get("tenantDomain") + "'/>"
+        //  //   + "<input type=hidden name='x-vol-return-url' value='" + this.record.get("configReturnUrl") + "'/>"
+        //     + "</form>";
 
         var configForm = {
             xtype: 'form',
             url: extensionLink.address,
-            action:'POST',
-            items:[],
-            hidden:true,
+            action: 'POST',
+            items: [],
+            hidden: true,
             listeners: {
                 render: function (cmp) {
-                  //  cmp.getForm().target = configIframe.frameName;
-                    cmp.submit({ standardSubmit: true, target: configIframe.frameName });
+                    //  cmp.getForm().target = configIframe.frameName;
+                    cmp.submit({
+                        standardSubmit: true,
+                        target: configIframe.frameName
+                    });
                 }
             }
         };
@@ -255,20 +265,18 @@ Ext.define('Taco.view.Header', {
         }
 
 
-
-
         var modalConfigWindow = Ext.create('Taco.core.ux.window.Drawer', {
             autoShow: true,
             resizable: true,
             draggable: true,
             layout: 'fit',
-            autoScroll:false,
+            autoScroll: false,
             height: '90%',
             scale: 'large',
-            actions:[],
+            actions: [],
             width: '90%',
             shadow: true,
-            title:extensionLink.metaData.windowTitle,
+            title: extensionLink.metaData.windowTitle,
             items: [
                 configIframe,
                 configForm
