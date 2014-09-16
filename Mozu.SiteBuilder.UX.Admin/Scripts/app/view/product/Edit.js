@@ -264,23 +264,18 @@
     changeProductCode: function () {
         var me = this,
             focusEl = me.down("#moreButton");
-        
-        
 
         var productTypeId = me.record.get('productTypeId'),
             productType = this.productTypeStore.getById(productTypeId);
 
-
         Ext.create("Taco.view.product.widget.productCode.Modal", {
             product: me.record,
-            productType: productType,
-            //productType: me.productType,
+            productType: productType,            
             listeners: {
-                'aftersaveclose': function () {                    
-                    // need to update the view since the product codes have changed;
-                     
-                    // need to pass focus back to the more menu button
-                    focusEl.focus();
+                'aftersaveclose': function (productCode) {
+                    // need to update the view since the product codes have changed;                                        
+                    var contextUrl = Taco.app.context.getCurrentContext().urlToken;
+                    Taco.core.StateManager.attemptNavigate(contextUrl + '/products/edit/' + productCode);
                 },
                 'aftercancelclose': function () {                    
                     // need to pass focus back to the more menu button
