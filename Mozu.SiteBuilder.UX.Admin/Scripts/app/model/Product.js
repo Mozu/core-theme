@@ -668,11 +668,11 @@ Ext.define('Taco.model.Product', {
             model: 'Taco.model.ProductVariation',
             autoLoad: false,
             pageSize: 900,
-                loadFromOptions: function () {
-                    var beforeState =[];
-                    if (me.productVariationStore && me.productVariationStore.data && me.productVariationStore.data.items) {
-                        beforeState = Ext.Array.pluck(me.productVariationStore.data.items, 'internalId')
-                    }
+            loadFromOptions: function () {
+                var beforeState =[];
+                if (me.productVariationStore && me.productVariationStore.data && me.productVariationStore.data.items) {
+                    beforeState = Ext.Array.pluck(me.productVariationStore.data.items, 'internalId')
+                }
                 params.options = [];
                 me.getOptions().each(function (option) {
                     params.options.push({
@@ -736,6 +736,39 @@ Ext.define('Taco.model.Product', {
 
         return this.productVariationStore;
     },
+
+
+
+    /**
+    * service call to update the productCode on a product and/or its variations
+    * @param {Object} config  A configuration object should contain jsonData array
+    * config object:
+    * 
+        {
+            jsonData: [
+                {   
+                    // one of these for the base product and one for each variation that has changed;
+                    existingProductCode: '1234',v
+                    newProductCode: "asdf",
+                }
+            ]
+        }
+    *
+    */
+    renameProductCode: function (config) {
+        var me = this;
+
+        Ext.apply(config, {
+            url: '/admin/app/product/renameproductcode',
+            method: 'POST'
+        });
+
+        config.errorMsg = config.errorMsg || 'Error changing productCode';
+        this.addErrorHandling(config);
+
+        Ext.Ajax.request(config);
+    },
+
 
     idProperty: 'productCode',
     //hasMany: [
