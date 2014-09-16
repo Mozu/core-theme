@@ -315,7 +315,10 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
 
     doSave: function () {
         var me = this,
-            jsonData = me.getJsonData();
+            jsonData = me.getJsonData(),
+            newProductCode = me.down("#newProductCode").getValue(),
+            ProductCode = (newProductCode) ? newProductCode : me.product.get("productCode");
+
 
         // make sure the user has entered some data;
         if (!jsonData.length) {
@@ -342,8 +345,8 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     me.product.renameProductCode({
                         jsonData: jsonData,
                         success: function (response) {
-                            var json = Ext.decode(response.responseText, true);
-                            this.fireEvent('saveSuccess', json);
+                            this.fireEvent('saveSuccess', ProductCode);
+                            this.saveSucces(ProductCode);
                         },
                         callback: function () {
                             me.setLoading(false, me.body);
