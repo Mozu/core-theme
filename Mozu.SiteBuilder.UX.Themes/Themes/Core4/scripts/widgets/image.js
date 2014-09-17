@@ -14,7 +14,9 @@
 
                     $.colorbox({
                         photo: true,
-                        href: imageUrl
+                        href: imageUrl,
+                        maxHeight: $(window).height(),
+                        maxWidth: $(window).width()
                     });
                 });
             }
