@@ -137,9 +137,9 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                     
                    
-                    AddRuntimeData(cmsPageContext.Page.Document, cmsPageContext);
-                    AddRuntimeData(cmsPageContext.Template.Document, cmsPageContext);
-                    AddRuntimeData(cmsPageContext.SiteTemplate.Document, cmsPageContext);
+                    AddRuntimeData(cmsPageContext.Page.Document, cmsPageContext, ZoneScope.Page);
+                    AddRuntimeData(cmsPageContext.Template.Document, cmsPageContext, ZoneScope.Template);
+                    AddRuntimeData(cmsPageContext.SiteTemplate.Document, cmsPageContext, ZoneScope.Site);
                     
 
 
@@ -151,7 +151,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
            
         }
 
-        private void AddRuntimeData(Mozu.Content.Contracts.Document document, CmsPageContext cmsPageContext)
+        private void AddRuntimeData(Mozu.Content.Contracts.Document document, CmsPageContext cmsPageContext, ZoneScope scope)
         {
             if (document == null)
                 return;
@@ -171,7 +171,11 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
             if (zoneData != null)
             {
-                zoneData.ForEach(x => x.Source = src);
+                zoneData.ForEach(x =>
+                {
+                    x.Source = src;
+                    x.Scope = scope;
+                });
                 cmsPageContext.RuntimeData.AddRange(zoneData);
             }
         }

@@ -141,18 +141,19 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             
             var httpContext = context.HttpContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
-            var scope = arguments.GetValueOrDefault<string>("scope", null);
-            if (string.IsNullOrEmpty(scope))
+            var scopeString = arguments.GetValueOrDefault<string>("scope", null);
+            if (string.IsNullOrEmpty(scopeString))
             {
                 if (arguments.Count > 1 && arguments[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
                 {
-                    scope = (string) arguments[1].Value;
+                    scopeString = (string) arguments[1].Value;
                 }
                 else
                 {
-                    scope = "page";
+                    scopeString = "page";
                 }
             }
+
             var zoneSpan = arguments.GetValueOrDefault<int>("span", 12);
             var zoneId = arguments.GetValueOrDefault<string>("zoneId") ?? (string) arguments.First().Value;
             var htmlAttributes = arguments.GetValueOrDefault<IDictionary<string, object>>("htmlAttributes");
@@ -167,12 +168,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
 
 
-            if (!scope.Equals("page", StringComparison.OrdinalIgnoreCase))
+            if (!scopeString.Equals("page", StringComparison.OrdinalIgnoreCase))
             {
-                scope = scope.ToLowerInvariant();
-                if (scope != "template" && scope != "site")
+                scopeString = scopeString.ToLowerInvariant();
+                if (scopeString != "template" && scopeString != "site")
                 {
-                    throw new Exception("invalid scope type " + scope);
+                    throw new Exception("invalid scope type " + scopeString);
                 }
             }
              
@@ -186,13 +187,18 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
 
 
-            scope = scope.ToLowerInvariant();
+
+            ZoneScope zoneScope;
+            if (!Enum.TryParse(scopeString, true, out zoneScope))
+            {
+                zoneScope = ZoneScope.Page;
+            }
+             
 
 
+            isEditmode = isEditmode && string.Equals(scopeString, pageContext.EditMode.GetValueOrDefault(EditModes.page ).ToString(), StringComparison.OrdinalIgnoreCase);
 
-            isEditmode = isEditmode && string.Equals(scope, pageContext.EditMode.GetValueOrDefault(EditModes.page ).ToString(), StringComparison.OrdinalIgnoreCase);
-
-            var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? null : pageContext.CmsContext.RuntimeData.FirstOrDefault(x => string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
+            var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? null : pageContext.CmsContext.RuntimeData.FirstOrDefault(x => zoneScope == x.Scope && string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
@@ -203,7 +209,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     sb.AppendJsonHtmlAttribute(new
                                                {
                                                    id = zoneId,
-                                                   scope = scope,
+                                                   scope = scopeString,
                                                    span = zoneSpan,
                                                    source = zoneRuntimeData == null ? null : zoneRuntimeData.Source
                                                }, "drop-zone");

@@ -20,11 +20,12 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-using System.Runtime.Serialization;
+    using System.Runtime.Serialization;
     using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
-   // using Mozu.SiteBuilder.Mvc.Cms;
 
-    
+    // using Mozu.SiteBuilder.Mvc.Cms;
+
+
     //[DataContract(Name = "widgetLocationContext")]
     //public class WidgetPreviewContext
     //{
@@ -36,13 +37,13 @@ using System.Runtime.Serialization;
 
     //    [DataMember(Name = "definitionId")]
     //    public string DefinitionId { get; set; }
-        
+
     //    [DataMember(Name = "zoneId")]
     //    public string  ZoneId { get; set; }
 
     //    [DataMember(Name = "zoneScope")]
     //    public string ZoneScope { get; set; }
-        
+
 
     //    [DataMember(Name = "output")]
     //    public string Output { get; set; }
@@ -60,29 +61,39 @@ using System.Runtime.Serialization;
     {
         [DataMember(Name = "context")]
         public CmsPageContext Context { get; set; }
+
         [DataMember(Name = "output")]
         public string Output { get; set; }
-     
+
         public WidgetDefinition Definition { get; set; }
 
         public bool IsPreview { get; set; }
 
         [DataMember(Name = "source")]
         public DocumentRequest Source { get; set; }
-         [DataMember(Name = "zoneScope")]
+
+        [DataMember(Name = "zoneScope")]
         public string ZoneScope { get; set; }
 
 
-        
-   
+
+
     }
 
+    public enum ZoneScope
+    {
+        Page,
+        Template,
+        Site
+    };
 
     public class ZoneRuntimeData
     {
         public string Id { get; set; }
         public List<ZoneRowRuntimeData> Rows { get; set; }
         public DocumentRequest Source { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public ZoneScope Scope { get; set; }
     }
 
 
