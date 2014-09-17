@@ -272,7 +272,7 @@
             product: me.record,
             productType: productType,            
             listeners: {
-                'aftersaveclose': function (productCode) {
+                'aftersaveclose': function (win, productCode) {
                     // need to update the view since the product codes have changed;                                        
                     var contextUrl = Taco.app.context.getCurrentContext().urlToken;
                     Taco.core.StateManager.attemptNavigate(contextUrl + '/products/edit/' + productCode);

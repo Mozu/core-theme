@@ -317,8 +317,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         var me = this,
             jsonData = me.getJsonData(),
             newProductCode = me.down("#newProductCode").getValue(),
-            ProductCode = (newProductCode) ? newProductCode : me.product.get("productCode");
-
+            productCode = (newProductCode) ? newProductCode : me.product.get("productCode");
 
         // make sure the user has entered some data;
         if (!jsonData.length) {
@@ -327,7 +326,6 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         }
 
         var msg = "<div style='padding-left:10px;padding-right:10px;'>The product that you are attempting to change the product code on may have existing orders which could be left in an undesirable state. It's linkage to other products and usages, as well as historical reporting could also be effected. <br><br>Are you sure you want to change the product code?</div>"
-
 
         Ext.MessageBox.show({
             title: 'Warning',
@@ -344,13 +342,11 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     me.setLoading(true, me.body);
                     me.product.renameProductCode({
                         jsonData: jsonData,
-                        success: function (response) {
-                            this.fireEvent('saveSuccess', ProductCode);
-                            this.saveSucces(ProductCode);
+                        success: function (response) {                            
+                            me.saveSuccess(productCode);
                         },
                         callback: function () {
-                            me.setLoading(false, me.body);
-                        }
+                            me.setLoading(false, me.body);}
                         // note: default failure handling set in model method
                     })
                 }
