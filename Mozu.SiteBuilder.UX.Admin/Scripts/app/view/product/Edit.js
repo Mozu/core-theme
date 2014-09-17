@@ -274,7 +274,7 @@
             listeners: {
                 'aftersaveclose': function (win, productCode) {
                     // flag product store to be updated                    
-                    var productsStore = Ext.StoreManager.getByKey("Taco.store.Products")
+                    var productsStore = Taco.core.data.StoreManager.getOrCreate("Taco.store.ProductGrid");
                     if (productsStore) {
                         productsStore.needsRefresh = true;
                     }
