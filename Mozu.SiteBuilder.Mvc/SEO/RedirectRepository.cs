@@ -431,11 +431,32 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _logger = logger;
         }
 
+        IDocumentListWebApiClient CloneWithSite(IDocumentListWebApiClient client , int? siteId)
+        {
+            return client.CloneWithApiContext(x =>
+            {
+                if (!x.MasterCatalogId.HasValue)
+                {
+                    x.MasterCatalogId = _siteBuilderApiContext.MasterCatalogId;
+                }
+                if (!x.CatalogId.HasValue)
+                {
+                    x.CatalogId = _siteBuilderApiContext.CatalogId;
+                }
+                if (string.IsNullOrWhiteSpace(x.LocaleCode))
+                {
+                    x.LocaleCode = _siteBuilderApiContext.LocaleCode;
+                }
+                x.SiteId = siteId;
+            });
+        }
+
         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
         {
             if (_redirectEntryListTask == null)
             {
-                IDocumentListWebApiClient client = siteId == null ? _documentListWebApiClient : _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId);
+
+                IDocumentListWebApiClient client = siteId == null ? _documentListWebApiClient : CloneWithSite(_documentListWebApiClient, siteId);
                 return _redirectEntryListTask = client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
                 {
                     Dictionary<string, RedirectEntry> ret = null;
@@ -489,7 +510,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId)
         {
-            IDocumentListWebApiClient client = siteId.HasValue ? _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId) : _documentListWebApiClient;
+            IDocumentListWebApiClient client = siteId.HasValue ? CloneWithSite(_documentListWebApiClient, siteId) : _documentListWebApiClient;
             return client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
             {
                 bool exists = false;

@@ -2,6 +2,7 @@
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
         'Taco.view.product.Form',
+        'Taco.view.product.widget.productCode.Modal',
         'Ext.button.Button'
     ],
     
@@ -83,11 +84,17 @@
                     itemId: 'delete',
                     text: 'Delete',
                     handler: Ext.bind(me.destroyRecord, me)
-                }],
+                }, {
+                    itemId: 'changeProductCode',
+                    text: 'Change Product Code',                    
+                    handler: Ext.bind(me.changeProductCode,me)
+                }
+                ],
                 listeners: {
                     show: function (menu) {
                         var previewItem = menu.items.get('preview'),
                             liveItems = menu.items.get('live'),
+                            changeProductCodeItem = menu.items.get('changeProductCode'),
                             previewMenu,
                             liveMenu,
                             previewSites = [],
@@ -122,6 +129,14 @@
                                 liveMenu.removeAll();
                                 liveMenu.add(liveSites);
                             }
+
+                            // check to see if the product is phantom if so disable the change product code option
+                            if (me.record.phantom || !Ext.Array.contains(Taco.user.behaviors, 220)) {
+                                changeProductCodeItem.hide();
+                            } else {
+                                changeProductCodeItem.show();
+                            }
+
                            
                         }
                     },
@@ -243,5 +258,37 @@
             },
             scope: this
         });
+    },
+
+
+    changeProductCode: function () {
+        var me = this,
+            focusEl = me.down("#moreButton");
+
+        var productTypeId = me.record.get('productTypeId'),
+            productType = this.productTypeStore.getById(productTypeId);
+
+        Ext.create("Taco.view.product.widget.productCode.Modal", {
+            product: me.record,
+            productType: productType,            
+            listeners: {
+                'aftersaveclose': function (win, productCode) {
+                    // flag product store to be updated                    
+                    var productsStore = Ext.StoreManager.getByKey("Taco.store.Products")
+                    if (productsStore) {
+                        productsStore.needsRefresh = true;
+                    }
+                    // need to update the view since the product codes have changed;                                        
+                    var contextUrl = Taco.app.context.getCurrentContext().urlToken;
+                    Taco.core.StateManager.attemptNavigate(contextUrl + '/products/edit/' + productCode);
+                },
+                'aftercancelclose': function () {                    
+                    // need to pass focus back to the more menu button
+                    focusEl.focus();
+                },
+                scope:me
+            }
+        });
+
     }
 });
