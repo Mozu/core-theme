@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.Caching;
+using FSharpx.Collections;
 using Magnum.Extensions;
 using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
