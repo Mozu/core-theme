@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          [HttpGetRoute(UriTemplate = "export")]
          public async Task<HttpResponseMessage> Export(int siteid)
          {
-             InitContextFromSite(siteid);
+             await InitContextFromSite(siteid);
              var ms = new MemoryStream();
              var sw = new StreamWriter(ms);
              var dic = await _redirectRepository.FetchRedirectEntries(siteid);
@@ -198,7 +198,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          public async Task<HttpResponseMessage> Import(int siteId)
          {
 
-             InitContextFromSite(siteId);
+             await InitContextFromSite(siteId);
              MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(System.IO.Path.GetTempPath());
              var  bodyparts = await Request.Content.ReadAsMultipartAsync(streamProvider);
              var fileinfo = new FileInfo(streamProvider.FileData.SingleOrDefault().LocalFileName);
