@@ -1,5 +1,5 @@
 @mixin icons-sprite ($icon) {
-  background-image: url("/admin/Scripts/resources/images/icons/#{$icon}.png");
+  background-image: url("images/icons/#{$icon}.png");
   background-position: 0px 0px;
   background-repeat: no-repeat;
 };
