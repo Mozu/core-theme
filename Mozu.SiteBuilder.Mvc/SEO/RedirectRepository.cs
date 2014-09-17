@@ -435,7 +435,23 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             if (_redirectEntryListTask == null)
             {
-                IDocumentListWebApiClient client = siteId == null ? _documentListWebApiClient : _documentListWebApiClient.CloneWithApiContext(x => x.SiteId = siteId);
+                
+                IDocumentListWebApiClient client = siteId == null ? _documentListWebApiClient : _documentListWebApiClient.CloneWithApiContext(x =>
+                {
+                    if (!x.MasterCatalogId.HasValue)
+                    {
+                        x.MasterCatalogId = _siteBuilderApiContext.MasterCatalogId;
+                    }
+                    if (!x.CatalogId.HasValue)
+                    {
+                        x.CatalogId = _siteBuilderApiContext.CatalogId;
+                    }
+                    if (string.IsNullOrWhiteSpace(x.LocaleCode))
+                    {
+                        x.LocaleCode = _siteBuilderApiContext.LocaleCode;
+                    }
+                    x.SiteId = siteId;
+                });
                 return _redirectEntryListTask = client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
                 {
                     Dictionary<string, RedirectEntry> ret = null;
