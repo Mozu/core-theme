@@ -28,7 +28,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         var me = this;
         me.items = [];
 
-        me.variationsStore = this.getVariationsStore();
+        me.variationsStore = this.getVariationsStore(false);
 
         me.variationsStore.load({
             scope:me,
@@ -62,7 +62,12 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     }
                 ],
                 autoLoad: false,
-                pageSize: 900,
+                pageSize: 1000,
+                filters: [
+                    function (item) {                        
+                        return item.get("productCode");
+                    }
+                ],
                 proxy: {
                     type: 'ajax',
                     api: {
@@ -317,7 +322,8 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         var me = this,
             jsonData = me.getJsonData(),
             newProductCode = me.down("#newProductCode").getValue(),
-            productCode = (newProductCode) ? newProductCode : me.product.get("productCode");
+            productCode = (newProductCode) ? newProductCode : me.product.get("productCode"),
+            saveButton = me.down('#primaryAction');
 
         // make sure the user has entered some data;
         if (!jsonData.length) {
@@ -340,13 +346,16 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                 if (val === 'yes') {
                     // call service to persist the change;
                     me.setLoading(true, me.body);
+                    saveButton.disable();
                     me.product.renameProductCode({
                         jsonData: jsonData,
                         success: function (response) {                            
                             me.saveSuccess(productCode);
                         },
                         callback: function () {
-                            me.setLoading(false, me.body);}
+                            me.setLoading(false, me.body);
+                            saveButton.enable();
+                        }
                         // note: default failure handling set in model method
                     })
                 }
