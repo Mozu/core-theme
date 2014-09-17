@@ -15,11 +15,14 @@ using AutoMapper;
 using FiftyOne.Foundation.Mobile.Detection.Matchers;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
+using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Navigation;
+using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -28,12 +31,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
   
     {
          private readonly IRedirectRepository _redirectRepository;
+         private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
-         public RedirectController(IRedirectRepository redirectRepository)
+         public RedirectController(IRedirectRepository redirectRepository, Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient)
          {
              _redirectRepository = redirectRepository;
+             _tenantsWebApiClient = tenantsWebApiClient;
          }
-        //
+
+         //
         // GET: /Redirect/
 
          [HttpGetRoute(UriTemplate = "list")]
@@ -78,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          [HttpGetRoute(UriTemplate = "export")]
          public async Task<HttpResponseMessage> Export(int siteid)
          {
-             
+             InitContextFromSite(siteid);
              var ms = new MemoryStream();
              var sw = new StreamWriter(ms);
              var dic = await _redirectRepository.FetchRedirectEntries(siteid);
@@ -168,11 +174,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
              }
          }
-    
+
+
+
+        async Task  InitContextFromSite(int siteId)
+         {
+            if (this.SbApiContext.MasterCatalogId.HasValue)
+            {
+                return;
+            }
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId, false)).ReadAsSync();
+            var site = tenant.Sites.First(x => x.Id == siteId);
+            var ctx = (SiteBuilderApiContext) this.SbApiContext;
+
+            ctx.MasterCatalogId = site.MasterCatalogId;
+            ctx.CatalogId = site.CatalogId;
+            ctx.LocaleCode = site.DefaultLocaleCode;
+            ctx.CurrencyCode = site.DefaultCurrencyCode;
+
+         }
+
          [HttpPostRoute(UriTemplate = "import")]
          public async Task<HttpResponseMessage> Import(int siteId)
          {
 
+             InitContextFromSite(siteId);
              MultipartFormDataStreamProvider streamProvider = new MultipartFormDataStreamProvider(System.IO.Path.GetTempPath());
              var  bodyparts = await Request.Content.ReadAsMultipartAsync(streamProvider);
              var fileinfo = new FileInfo(streamProvider.FileData.SingleOrDefault().LocalFileName);
