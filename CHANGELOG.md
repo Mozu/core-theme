@@ -1,5 +1,14 @@
-﻿Core4 Changelog
+Core4 Changelog
 ===============
+
+v4.0.7
+------
+* Fixed an issue where the back-button-cache in Firefox would preserve a product page in a loading state.
+* Fixed an issue with the path to the error icon. in `stylesheets/variables.less`.
+* Replaced `discountedTotal` with `discountedSubtotal` in `templates/modules/common/order-summary.hypr.live` to accurately reflect order totals.
+* Added the updated, simplified `scripts/modules/api.js` wrapper around the Storefront SDK.
+* Added new required low-level editor config to `theme.json` for reference purposes.
+* Added the default admin editors to Core4 for reference purposes.
 
 v4.0.6
 ------

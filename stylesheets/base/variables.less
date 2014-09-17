@@ -1,4 +1,4 @@
-﻿@fontFamily:            "{{ themeSettings.font }}", {{ themeSettings.fallbackFontFamily }};
+@fontFamily:            "{{ themeSettings.font }}", {{ themeSettings.fallbackFontFamily }};
 @fontSize:              {{ themeSettings.fontSize }};
 @fontSizeSmall:         @fontSize - 2px;
 @fontSizeLarger:        @fontSize + 2px;
@@ -24,7 +24,7 @@
 @successBorder:         darken(spin(@successBackground, -10), 3%);
 @warningBorder:         darken(spin(@warningBackground, -10), 3%);
 
-@errorIcon:				"/resources/images/error-exclamation.png";
+@errorIcon:				"../resources/images/error-exclamation.png";
 @columnWidth-2col:		435px;
 @gutter:				{{themeSettings.gutterWidth}};
 @inputBorder:			#a7a7a7;

@@ -1,4 +1,4 @@
-﻿define([
+define([
     "modules/jquery-mozu",
     "shim!vendor/underscore>_",
     "hyprlive",
@@ -189,4 +189,8 @@
             return Backbone.View.extend.call(this, conf, statics)
         }
     });
+
+    // firefox bfcache fix
+    $(window).on('unload', $.noop);
+
 });
