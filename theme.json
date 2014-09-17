@@ -46,8 +46,24 @@
             "pageTemplateContent@mozu"
         ],
         "priority": 0.2
+    },
+    {
+        "id": "productContent@mozu",
+        "path": "productContent.js",
+        "documentTypes": [
+            "productContent@mozu"
+        ],
+        "priority": 0.2
+    },
+    {
+        "id": "categoryContent@mozu",
+        "path": "categoryContent.js",
+        "documentTypes": [
+            "categoryContent@mozu"
+        ],
+        "priority": 0.2
     }
-    ],
+        ],
     "emailTemplates": [{
         "id": "order.shipped",
         "properties": {
@@ -196,13 +212,15 @@
         "id": "parent-category",
         "template": "parent-category",
         "title": "ParentCategory",
-        "userCreatable": false
+        "userCreatable": false,
+        "customEditor": "categoryContent@mozu"
     }, {
         "entityType": "product",
         "id": "product",
         "template": "product",
         "title": "Product",
-        "userCreatable": false
+        "userCreatable": false,
+        "customEditor": "productContent@mozu"
     }, {
         "entityType": "searchresult",
         "id": "no-search-results",

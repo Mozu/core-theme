@@ -1,4 +1,4 @@
-﻿define([
+define([
     "modules/jquery-mozu",
     "underscore",
     "modules/api",
@@ -7,7 +7,8 @@
     "modules/backbone-mozu-validation"], function ($, _, api, Backbone, MessageModels) {
 
 
-        var Model = Backbone.Model,
+        var $window = $(window),
+            Model = Backbone.Model,
            Collection = Backbone.Collection;
 
         // Detects dot notation in named properties and deepens a flat object to respect those property names.
@@ -41,7 +42,7 @@
              * @param {object} json A JSON representation of the model to preload into the MozuModel. If you create a new MozuModel with no arguments, its attributes will be blank.
              * @augments external:Backbone.Model
              */
-            constructor: function (conf) {
+            constructor: function(conf) {
                 this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
                 Backbone.Model.apply(this, arguments);
                 if (this.mozuType) this.initApiModel(conf);
@@ -397,6 +398,15 @@
             isLoading: function (yes, opts) {
                 if (arguments.length === 0) return !!this._isLoading;
                 this._isLoading = yes;
+                // firefox bfcache fix
+                if (yes) {
+                    this._cleanup = this._cleanup || _.bind(this.isLoading, this, false);
+                    this._isWatchingUnload = true;
+                    $window.on('beforeunload', this._cleanup);
+                } else if (this._isWatchingUnload) {
+                    delete this._isWatchingUnload;
+                    $window.off('beforeunload', this._cleanup);
+                }
                 if (!opts || !opts.silent) this.trigger('loadingchange', yes);
             },
             getHelpers: function () {

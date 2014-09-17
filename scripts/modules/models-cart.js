@@ -1,4 +1,4 @@
-﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
+define(['underscore', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
 
     var CartItemProduct = Backbone.MozuModel.extend({
         helpers: ['mainImage'],
@@ -66,10 +66,7 @@
             });
         },
         removeItem: function (id) {
-            var self = this;
-            this.get('items').get(id).apiModel.del().then(function() {
-                return self.fetch();
-            });
+            return this.get('items').get(id).apiModel.del();
         }
     });
 

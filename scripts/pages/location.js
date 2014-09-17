@@ -66,7 +66,10 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
             setProduct: function (product) {
                 var me = this;
                 me.product = product;
-                this.listenTo(me.product, 'addedtocart', function () {
+                this.listenTo(me.product, 'addedtocart', function() {
+                    $(window).on('beforeunload', function() {
+                        me.$('.is-loading').removeClass('is-loading');
+                    });
                     window.location.href = "/cart";
                 });
             }
