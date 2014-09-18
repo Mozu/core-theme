@@ -115,3 +115,17 @@
         background-color: $color-neutral-white;
     }
 }
+
+div.#{$prefix}form-spinner-up, div.#{$prefix}form-spinner-down {
+    background-image: none;
+
+    &::after {
+        height: 15px;
+        padding-top: 0;
+        content: "\E033";
+    }
+}
+
+div.#{$prefix}form-spinner-down::after {
+    content: "\E036";
+}
