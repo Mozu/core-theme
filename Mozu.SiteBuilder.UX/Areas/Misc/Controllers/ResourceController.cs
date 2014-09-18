@@ -472,6 +472,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 public const string RETURN = "\r\n; return ";
                 public const string CLOSE = ";\r\n\r\n});\r\n\r\n//@sourceUrl=";
                 public const string LAST = "\r\n";
+                public const string WARNING = "\r\nwindow.console&&console.error&&console.error(\"The script `{0}` was called with the `shim!` plugin, but it may already contain code that defines it as an AMD module.\\n\\nNested `define()` calls can result in race conditions. Check this file to see if the `shim!` is necessary.\");\r\n";
             }
 
             private static string FormatModule(string deps, string args, string contents, string toExport, string path)
@@ -484,6 +485,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     sb.Append(ModuleParts.FUNCTION);
                     sb.Append(args);
                     sb.Append(ModuleParts.OPEN);
+
+                    if (contents.IndexOf("define.amd") > 0)
+                    {
+                        sb.AppendFormat(ModuleParts.WARNING, path);
+                    }
+
                     sb.AppendLine(contents);
                     sb.Append(ModuleParts.RETURN);
                     sb.Append(toExport);
