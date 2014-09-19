@@ -330,11 +330,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         private static string MakeExtendsPath(string basePath, string themeId)
-        {
+            {
             var interimExtendsPath = string.Format("{0}__{1}", basePath.Replace("\"", String.Empty).Replace("'", String.Empty).Replace("\\", "/"), themeId);
             return ScrubVirtualPath(interimExtendsPath);
         }
-        
+
         private static string CreateFullReplaceString(string content)
         {
             var m = GetExtendsRegex.Match(content);
@@ -343,8 +343,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var filterPart = m.Groups["filter"].Value;
             var all = string.Format("{0}{1}{2}", pathPart, junkPart, filterPart);
             return all;
-        }
-
+            }
+          
         private static readonly Regex GetExtendsRegex = new Regex(@"{%(?:\s*)extends(?:\s*)(?<path>"".*""|'.*')(?<junk>(?:\s*)\|(?:\s*))(?<filter>parent_template)(?:\s*)%}", RegexOptions.Compiled);
 
         /// <summary>
@@ -475,7 +475,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 public const string WARNING = "\r\nwindow.console&&console.error&&console.error(\"The script `{0}` was called with the `shim!` plugin, but it may already contain code that defines it as an AMD module.\\n\\nNested `define()` calls can result in race conditions. Check this file to see if the `shim!` is necessary.\");\r\n";
             }
 
-            private static string FormatModule(string deps, string args, string contents, string toExport, string path)
+            public string FormatModule(string deps, string args, string contents, string toExport, string path, bool debug)
             {
                 using (var container = StringBuilderPool.Default.GetContainer())
                 {
@@ -486,7 +486,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     sb.Append(args);
                     sb.Append(ModuleParts.OPEN);
 
-                    if (contents.IndexOf("define.amd") > 0)
+                    if (debug && contents.IndexOf("define.amd") > 0)
                     {
                         sb.AppendFormat(ModuleParts.WARNING, path);
                     }
@@ -504,10 +504,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
             private string GetScriptFileContents(string pathinfo)
-                {
+            {
                 var file = PathProvider.GetThemeFileInfo("scripts/" + pathinfo);
                 return file == null ? null : System.IO.File.ReadAllText(file.FullPath);
-            }
+                }
 
             private readonly Regex DepNameRE = new Regex("(.+)=([a-zA-Z_$][0-9a-zA-Z_$]*)$");
 
@@ -561,8 +561,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 return new Tuple<string, string>(string.Join(",", namedDeps.ToArray()), string.Join(",", args.ToArray()));
             }
 
-            public HttpResponseMessage CreateModule(HttpRequestMessage req, string pathinfo, string shimRequire,
-                string shimExport)
+            public HttpResponseMessage CreateModule(HttpRequestMessage req, string pathinfo, string shimRequire, string shimExport, bool debug)
             {
                 string contents = GetScriptFileContents(pathinfo);
                 if (contents == null)
@@ -574,7 +573,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     };
                 }
                 Tuple<string, string> deps = GetAMDDeps(shimRequire);
-                string module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo);
+                string module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo, debug);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     RequestMessage = req,
@@ -584,14 +583,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
-        [HttpGet]
-        public HttpResponseMessage Scripts(string pathinfo, string shimRequire = "", string shimExport = "")
+        [System.Web.Http.HttpGet]
+        public HttpResponseMessage Scripts(string pathinfo, string shimRequire = "", string shimExport = "", bool debug = false)
         {
             if (String.IsNullOrEmpty(shimRequire) && String.IsNullOrEmpty(shimExport))
             {
                 return Content("scripts/" + pathinfo, "text/javascript");
             }
-            return _moduleProvider.CreateModule(Request, pathinfo, shimRequire, shimExport);
+            return _moduleProvider.CreateModule(Request, pathinfo, shimRequire, shimExport, debug);
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
@@ -616,7 +615,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
             }
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
-            
+
         }
 
         [ClientCacheHeaders(ConfigKey = "templates")]
@@ -666,12 +665,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         private HttpResponseMessage GetFileResult(string pathinfo, string contentType)
-                {
+        {
             var file = _pathProvider.GetThemeFileInfo(pathinfo);
             return file != null ? 
                 Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever)) : 
                 Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
-}
+                }
 
         private static string GetMimeType(string path)
         {
@@ -847,7 +846,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     sb.Append(VISIBLE_LESS_ERROR_FILE_START);
                     sb.Append(debuggableException.Message.Replace(System.Environment.NewLine, "\\a").Replace("\'", "\\'"));
                     sb.Append(VISIBLE_LESS_ERROR_FILE_END);
-                    }
+                }
                 else
                 {
                     sb = env.Output.Pop();
@@ -911,7 +910,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     font-family: monospace;
                     font-weight: bold;
                     content: 'There was an error parsing your Less stylesheet.'
-            }
+                }
                 body:after { 
                     position: fixed; 
                     top: 50px;
