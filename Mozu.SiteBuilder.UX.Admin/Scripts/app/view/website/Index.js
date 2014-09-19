@@ -512,6 +512,8 @@ Ext.define('Taco.view.website.Index', {
         this.tree.on('pagecreate', this.onPageCreate, this);
         this.tree.on('urlclick', this.onTreeUrlClick, this);
         this.tree.on('contentlistclick', this.onContentListClick, this);
+        this.tree.on('navigationchange', this.reloadPage, this);
+        this.tree.on('navigationchange', this.reloadPage, this);
         this.on('render', function () {
             var header = me.getHeader();
 
