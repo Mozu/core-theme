@@ -17,12 +17,13 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
     height: 300,
     width:800,
     title: 'Change Product Code',
-
     layout: {
         type: 'fit'
     },
 
     defaultFocus: "newProductCode",
+
+    sameCodeErrorTxt : "The new and current product code cannot be the same",
 
     initComponent: function () {
         var me = this;
@@ -138,7 +139,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     msgTarget: "qtip",
                     invalidValue : this.product.get("productCode"),
                     validator: function (value) {
-                        return (value && value == this.invalidValue) ? "The new and current product code cannot be the same" : true
+                        return (value && value == this.invalidValue) ? me.sameCodeErrorTxt : true
                     },
                     listeners: {
                         'dirtychange': function (field, isDirty) {
@@ -325,7 +326,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         if (this.variationsStore.count()) {
         
             this.variationsStore.each(function (record) {
-                if (record.get("newProductCode")) {                    
+                if (record.get("newProductCode")) {
                     jsonData.push({
                         newProductCode: record.data.newProductCode,
                         existingProductCode: record.data.productCode
@@ -338,6 +339,31 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         return jsonData
     },
 
+    isValid: function (jsonData) {
+        var me = this,
+            error = [];
+
+        if (!jsonData.length) {
+            Taco.app.fireEvent('setmessage', "No product code changes found", 'error');
+            return false
+        } else {
+            error = Ext.Array.findBy(jsonData, function (record) {                
+                if (record.newProductCode== record.existingProductCode){
+                    return true
+                }
+                return false;
+            });
+
+            if (error) {
+                Taco.app.fireEvent('setmessage', this.sameCodeErrorTxt, 'error');
+                return false;
+            }
+        }
+
+        return true;
+
+    },
+
     doSave: function () {
         var me = this,
             jsonData = me.getJsonData(),
@@ -345,16 +371,15 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             productCode = (newProductCode) ? newProductCode : me.product.get("productCode"),
             saveButton = me.down('#primaryAction');
 
-        // make sure the user has entered some data;
-        if (!jsonData.length) {
-            Taco.app.fireEvent('setmessage', "No product code changes found", 'error');
+        if (!me.isValid(jsonData)) {
             return;
-        }
+        };
 
         var msg = "<div style='padding-left:10px;padding-right:10px;'>The product that you are attempting to change the product code on may have existing orders which could be left in an undesirable state. It's linkage to other products and usages, as well as historical reporting could also be effected. <br><br>Are you sure you want to change the product code?</div>"
-
+        
         Ext.MessageBox.show({
             title: 'Warning',
+            defaultFocus: Ext.MessageBox.msgButtons[2],
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons

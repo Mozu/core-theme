@@ -80,14 +80,30 @@
                         shadow: false,
                         items: []
                     }
-                }, {
+                },
+                
+                {
+                    xtype: "menuseparator",
+                    style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
+                },
+                {
                     itemId: 'delete',
                     text: 'Delete',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Product',
+                        behavior: 'destroy'
+                    },
                     handler: Ext.bind(me.destroyRecord, me)
-                }, {
+                },
+                {
+                    xtype: "menuseparator",
+                    itemId: "changeProductCodeSeperator",
+                    style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
+                },
+                {
                     itemId: 'changeProductCode',
-                    text: 'Change Product Code',                    
-                    handler: Ext.bind(me.changeProductCode,me)
+                    text: 'Change Product Code',
+                    handler: Ext.bind(me.changeProductCode, me)
                 }
                 ],
                 listeners: {
@@ -95,6 +111,7 @@
                         var previewItem = menu.items.get('preview'),
                             liveItems = menu.items.get('live'),
                             changeProductCodeItem = menu.items.get('changeProductCode'),
+                            changeProductCodeSeperator = menu.items.get('changeProductCodeSeperator'),
                             previewMenu,
                             liveMenu,
                             previewSites = [],
@@ -133,8 +150,10 @@
                             // check to see if the product is phantom if so disable the change product code option
                             if (me.record.phantom || !Ext.Array.contains(Taco.user.behaviors, 220)) {
                                 changeProductCodeItem.hide();
+                                changeProductCodeSeperator.hide()
                             } else {
                                 changeProductCodeItem.show();
+                                changeProductCodeSeperator.show()
                             }
 
                            
@@ -232,6 +251,40 @@
         } else {
             this.doPublish();
         }
+    },
+
+    destroyRecord: function () {
+        var me = this;
+    
+        Ext.MessageBox.show({
+            title: 'Delete',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: "Are you sure you want to delete this",
+            closable: false,
+            buttons: Ext.Msg.YESNO,
+            fn: function (val) {
+                if (val === 'yes') {
+
+                    me.setLoading(true, me.body)
+                    me.record.destroy({
+                        success: function (m) {
+                            var contextUrl = Taco.app.context.getCurrentContext().urlToken;
+                            Taco.core.StateManager.attemptNavigate(contextUrl + '/products');
+                        },
+                        failure: function (m) {
+                            Taco.app.fireEvent('setmessage', text, 'error deleting product');
+                        },
+                        callback: function () {
+                            me.setLoading(true, me.body);
+                        }
+                    })
+                }
+            }
+        });
+
     },
 
     doPublish: function () {
