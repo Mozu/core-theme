@@ -240,6 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                          });
 
                 var etC = this.Request.Resolve<EntityControllerController>();
+                etC.ControllerContext = this.ControllerContext;
                 var etcRet = (await etC.ReadListsTree(pagingParams: new PagingParamaters(), extFilter: null, entityType: "cms"));
                 list.AddRange(etcRet.Items[0].Items
                     .Where(x =>
