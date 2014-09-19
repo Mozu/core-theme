@@ -43,11 +43,6 @@
                 }
             }
         },
-        tfscheckout: {
-            main: {
-                dir: 'compiled'
-            }
-        },
         zubat: {
             main: {
                 dir: '.',
@@ -91,8 +86,6 @@
 
     ['grunt-jsonlint', 'grunt-contrib-jshint', 'grunt-contrib-watch'].forEach(grunt.loadNpmTasks);
     grunt.loadTasks('./tasks/');
-    grunt.registerTask('default', ['jsonlint', 'jshint', 'tfscheckout', 'zubat']);
-    grunt.registerTask('notfs', ['jsonlint', 'jshint', 'zubat']);
-    grunt.registerTask('release', ['jsonlint', 'jshint', 'tfscheckout', 'zubat', 'setver']);
-    grunt.registerTask('releasenotfs', ['jsonlint', 'jshint', 'tfscheckout', 'zubat', 'setver']);
+    grunt.registerTask('default', ['jsonlint', 'jshint', 'zubat']);
+    grunt.registerTask('release', ['jsonlint', 'jshint', 'zubat', 'setver']);
 };

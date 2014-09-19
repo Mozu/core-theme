@@ -503,7 +503,6 @@
     <Content Include="Themes\Core4\scripts\widgets\store-locator.js" />
     <Content Include="Themes\Core4\scripts\widgets\video.js" />
     <Content Include="Themes\Core4\tasks\grunt-setver.js" />
-    <Content Include="Themes\Core4\tasks\grunt-tfscheckout.js" />
     <Content Include="Themes\Core4\tasks\grunt-zubat.js" />
     <Content Include="Themes\Core4\thumb.tpt.png" />
     <Content Include="Themes\Core5\admin\editors\about-us.js" />
@@ -695,7 +694,6 @@
     <Content Include="Themes\Core5\stylesheets\modules\location\location-list.less" />
     <Content Include="Themes\Core5\stylesheets\email.less" />
     <Content Include="Themes\Core5\tasks\grunt-setver.js" />
-    <Content Include="Themes\Core5\tasks\grunt-tfscheckout.js" />
     <Content Include="Themes\Core5\tasks\grunt-zubat.js" />
     <Content Include="Themes\Core5\templates\email\email.hypr" />
     <Content Include="Themes\Core5\templates\email\new-user.hypr" />
@@ -1450,12 +1448,12 @@
     <!-- ugh... the worst -->
     <Exec Command="npm cache clean" WorkingDirectory="$(ProjectDir)Themes\Core5" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core5" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core5" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\Core5" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
     <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="grunt -v notfs" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
