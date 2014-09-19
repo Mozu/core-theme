@@ -53,8 +53,13 @@ Ext.define('Taco.view.order.modal.ApplyCheck', {
             amount: formValues.amount
         };
 
+        me.down('#primaryAction').hide();
+
         this.order.applyCheck({
             jsonData: data,
+            callback: function () {
+                me.down('#primaryAction').show();
+            },
             success: function (response) {
                 var json = Ext.decode(response.responseText, true),
                     data;
