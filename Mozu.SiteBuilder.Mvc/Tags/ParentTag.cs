@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using FSharpx.Collections;
 using Microsoft.FSharp.Core;
 using NDjango;
 using NDjango.Interfaces;
@@ -52,11 +53,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         }
 
 
-        public Tuple<INodeImpl, IParsingContext, Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token>>
+        public Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
             Perform(
             NDjango.Lexer.BlockToken blockToken,
             IParsingContext parsingContext,
-            Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token> tokenList)
+            LazyList<NDjango.Lexer.Token> tokenList)
         {
             var blockTokenArs = PreProcessArguments(blockToken.Args);
             ParamFilters = blockTokenArs.Select(x => new NDjango.Expressions.FilterExpression(parsingContext, x));
@@ -136,9 +137,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public virtual bool is_header_tag { get; set; }
 
-        public class PerformRespnose : Tuple<INodeImpl, IParsingContext, Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token>>
+        public class PerformRespnose : Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
         {
-            public PerformRespnose(INodeImpl nodeImpl, IParsingContext parseContext, Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token> tokenList)
+            public PerformRespnose(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<NDjango.Lexer.Token> tokenList)
                 : base(nodeImpl, parseContext, tokenList)
             {
 

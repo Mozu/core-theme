@@ -19,6 +19,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
         public static string GetAuthCookie(ISettings settings, UserScope userScope, 
             int? siteId, int? masterCatalogId, int? catalogId, string email="mozuqa@volusion.com", string pw = "Volusion1!")
         {
+            //hi taco
             var ticket = GetAuthTicket(settings, userScope, email, pw);
             var sb = new StringBuilder();
             sb.Append(

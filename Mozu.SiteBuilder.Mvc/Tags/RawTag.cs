@@ -1,4 +1,5 @@
-﻿using NDjango.Tags;
+﻿using FSharpx.Collections;
+using NDjango.Tags;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -23,11 +24,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     {
 
 
-        public Tuple<INodeImpl, IParsingContext, Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token>>
+        public Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
             Perform(
             NDjango.Lexer.BlockToken blockToken,
             IParsingContext parsingContext,
-            Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token> tokenList)
+            LazyList<NDjango.Lexer.Token> tokenList)
         {
             
 
@@ -45,7 +46,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 
             }
 
-            tokenList = Microsoft.FSharp.Collections.LazyListModule.skip<NDjango.Lexer.Token>(endPos + 1, tokenList);
+            tokenList = LazyListModule.skip<NDjango.Lexer.Token>(endPos + 1, tokenList);
             var nodeImpl = new TagNodeImpl(parsingContext, blockToken, this, sb.ToString ());
             return   new PerformRespnose(nodeImpl, parsingContext, tokenList);
             
@@ -81,9 +82,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
           
         }
-        public class PerformRespnose : Tuple<INodeImpl, IParsingContext, Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token>>
+        public class PerformRespnose : Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
         {
-            public PerformRespnose(INodeImpl nodeImpl, IParsingContext parseContext, Microsoft.FSharp.Collections.LazyList<NDjango.Lexer.Token> tokenList)
+            public PerformRespnose(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<NDjango.Lexer.Token> tokenList)
                 : base(nodeImpl, parseContext, tokenList)
             {
                 

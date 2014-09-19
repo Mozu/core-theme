@@ -305,30 +305,39 @@ Ext.define('Taco.view.website.Tree', {
         return items;
     },
     showLinkEditor: function (record, parentRecord) {
-        var modal = Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
-            record: record,
-            parentRecord: parentRecord
-        });
+        var me = this,
+            modal = Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
+                record: record,
+                parentRecord: parentRecord,
+                listeners: {
+                    savesuccess: function () {
+                        me.fireEvent('navigationchange', me)
+                    }
+                }
+            });
         //modal.on('close', )
     },
     deleteLink: function (record) {
+        var me = this;
         record.destroy({
             success: function () {
-                console.log('link deleted');
+                me.fireEvent('navigationchange', me)
             },
             scope: this
         });
     },
     deletePage: function (record) {
-        var cmsDoc = Ext.create('Taco.model.CmsDocument', {
-            //uniqueId: record.get('originalDocumentListName') + '_' + record.get('originalId'),
-            id: record.get('originalId'),
-            listFQN: record.get('originalDocumentListName')
-        });
+        var me = this,
+            cmsDoc = Ext.create('Taco.model.CmsDocument', {
+                //uniqueId: record.get('originalDocumentListName') + '_' + record.get('originalId'),
+                id: record.get('originalId'),
+                listFQN: record.get('originalDocumentListName')
+            });
         cmsDoc.destroy({
             success: function () {
                 console.log('link deleted');
                 record.destroy();
+                me.fireEvent('navigationchange', me)
             },
             scope: this
         });

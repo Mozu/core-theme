@@ -6,17 +6,17 @@
  */
 
 Ext.define('Taco.view.generalSettings.subform.Robots', {
-    requires:['Taco.core.ux.form.FileInputButton'],
+    requires: ['Taco.core.ux.form.FileInputButton'],
     extend: 'Taco.core.ux.form.Form',
     requires: [],
     margin: "0 0 20 0",
     ui: "subform",
     width: "100%",
-    
+
     title: 'Robots',
     initComponent: function () {
         var me = this;
-        
+
         this.defaults = {
             labelAlign: 'top',
             labelSeparator: ''
@@ -25,9 +25,9 @@ Ext.define('Taco.view.generalSettings.subform.Robots', {
         this.items = [
             {
                 xtype: "fieldcontainer",
-                fieldLabel: "Upload your robot.txts file",
+                fieldLabel: "Upload your robots.txt file",
                 items: [
-                   
+
                     {
                         xtype: "tacofilefield",
                         buttonOnly: true,
@@ -38,15 +38,19 @@ Ext.define('Taco.view.generalSettings.subform.Robots', {
                         },
                         width: 300,
                         name: "gwtFile",
-                        validate: function () { return true; },
-                        isValid: function () { return true; },
+                        validate: function () {
+                            return true;
+                        },
+                        isValid: function () {
+                            return true;
+                        },
                         labelAlign: "top",
                         allowBlank: false,
                         listeners: {
-                            
+
                             filechange: {
                                 fn: me.onFileUpload,
-                               
+
                                 scope: me
                             }
                         }
@@ -59,9 +63,11 @@ Ext.define('Taco.view.generalSettings.subform.Robots', {
     },
     onFileUpload: function (fileList, e, callback) {
         var me = this,
-             files = [];
+            files = [];
         me.setLoading(true);
-        Ext.each(fileList, function (file) { files.push(file); });
+        Ext.each(fileList, function (file) {
+            files.push(file);
+        });
 
         Ext.each(files, function (file) {
             var reader;
@@ -70,13 +76,15 @@ Ext.define('Taco.view.generalSettings.subform.Robots', {
 
 
             reader.onload = function (e) {
-                
+
 
                 Ext.Ajax.request({
                     url: "/admin/app/webtools/robotsTxt",
-                    method:'post',
-                    jsonData: { content: e.target.result },
-                    success:function () {
+                    method: 'post',
+                    jsonData: {
+                        content: e.target.result
+                    },
+                    success: function () {
                         me.setLoading(false);
                     },
                     failure: function (resp) {
@@ -87,7 +95,6 @@ Ext.define('Taco.view.generalSettings.subform.Robots', {
                         Taco.app.fireEvent('setmessage', msg, 'error');
                     }
                 });
-
 
 
             };

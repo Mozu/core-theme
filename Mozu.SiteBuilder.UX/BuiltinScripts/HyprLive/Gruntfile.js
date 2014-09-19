@@ -53,11 +53,6 @@ module.exports = function(grunt) {
                 src: '<%= concat.debug.dest %>', // <%= concat.dist.dest %> when there's a real min version with compilation
                 dest: '<%= pkg.main %>.min.js'
             }
-        },
-        tfscheckout: {
-            dist: {
-                dir: 'dist'
-            }
         }
         //connect: {
         //    server: {
@@ -93,32 +88,8 @@ module.exports = function(grunt) {
     //grunt.loadNpmTasks('grunt-contrib-connect');
     //grunt.loadNpmTasks('grunt-mocha');
 
-    grunt.registerMultiTask('tfscheckout', 'Using Team Foundation Server, checks out the files that will be modified, so TFS is aware that changes were made.', function() {
-        var done = this.async(),
-            spawn = require('child_process').spawn,
-            child,
-            self = this;
 
-        grunt.log.writeln('Checking directory \'' + this.data.dir + '\' out from tfs');
-
-        child = spawn("C:\\Program Files\ (x86)\\Microsoft\ Visual\ Studio\ 11.0\\Common7\\IDE\\TF.exe", ["checkout", this.data.dir + "\\*"]);
-
-        child.stderr.on('data', function(data) {
-            grunt.log.error(data);
-        });
-
-        child.on('close', function(code) {
-            if (code !== 0) {
-                grunt.log.error("Could not check files out of TFS.") && grunt.fatal("TFS checkout failed.");
-                done(false);
-            } else {
-                grunt.log.ok("Checked out contents of " + self.data.dir);
-                done(true);
-            }
-        });
-    });
-
-    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp', 'tfscheckout' /*, 'connect:server', 'mocha' */];
+    var order = ['bower', 'clean:dist', 'concat', 'uglify', 'clean:tmp' /*, 'connect:server', 'mocha' */];
     // while zetlen swig's bower.json is still mysteriously out of whack, let's just never bower
     //grunt.registerTask('default', order);
     //grunt.registerTask('nobower', order.slice(1));

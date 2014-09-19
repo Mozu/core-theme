@@ -86,7 +86,7 @@
                     handler: Ext.bind(me.destroyRecord, me)
                 }, {
                     itemId: 'changeProductCode',
-                    text: 'Change Product Code',
+                    text: 'Change Product Code',                    
                     handler: Ext.bind(me.changeProductCode,me)
                 }
                 ],
@@ -131,7 +131,7 @@
                             }
 
                             // check to see if the product is phantom if so disable the change product code option
-                            if (me.record.phantom) {
+                            if (me.record.phantom || !Ext.Array.contains(Taco.user.behaviors, 220)) {
                                 changeProductCodeItem.hide();
                             } else {
                                 changeProductCodeItem.show();
@@ -273,6 +273,11 @@
             productType: productType,            
             listeners: {
                 'aftersaveclose': function (win, productCode) {
+                    // flag product store to be updated                    
+                    var productsStore = Taco.core.data.StoreManager.getOrCreate("Taco.store.ProductGrid");
+                    if (productsStore) {
+                        productsStore.needsRefresh = true;
+                    }
                     // need to update the view since the product codes have changed;                                        
                     var contextUrl = Taco.app.context.getCurrentContext().urlToken;
                     Taco.core.StateManager.attemptNavigate(contextUrl + '/products/edit/' + productCode);
