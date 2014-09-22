@@ -14,6 +14,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
     closeAction: 'destroy',    
     //scale: 'large',    
     scale: "",
+    minHeight:300,
     height: 300,
     width:800,
     title: 'Change Product Code',
@@ -30,8 +31,9 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         me.items = [];
 
         me.variationsStore = this.getVariationsStore(false);
-
-        me.mon(me, 'show', function () {            
+        me.mon(me, 'show', function () {
+            var saveButton = me.down('#primaryAction')
+            saveButton.disable();
             me.setLoading(true, this.body);
         }, me)
         
@@ -110,8 +112,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             hasVariations = me.variationsStore.count(),
             saveButton = me.down('#primaryAction')
         
-        // save button is disabled by default and is enabled on change of the form or the grid;
-        saveButton.disable();
+        
 
         this.summaryForm = Ext.create('Ext.form.Panel', {
             layout: 'anchor',
@@ -281,6 +282,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
 
 
         if (hasVariations) {            
+            me.minHeight = 500;
             me.setHeight(600);
         }
     },
