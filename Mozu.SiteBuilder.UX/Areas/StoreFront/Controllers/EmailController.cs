@@ -198,25 +198,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             UX.Models.Customers.User user = null;
             HttpRequestBase request = HttpRequestBase;
 
-            if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId))
-            {
-                try
-                {
-                    var dcUser = (await _customerAccountWebApiClient.GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
-
-                    user = new UX.Models.Customers.User
-                           {
-                               Email = dcUser.EmailAddress,
-                               FirstName = dcUser.FirstName,
-                               LastName = dcUser.LastName,
-                               UserId = dcUser.UserId,
-                               AccountId = dcUser.Id
-                           };
-                }
-                catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException)
-                {
-                }
-            }
+            
 
             //if (topic.StartsWith(EmailNotification.PrimaryTopic))
             //{
@@ -229,10 +211,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (emailTempalte == null)
             {
-                var errMesage = "no templates defined for  topic " + notification.Topic;
-                _logger.Error(errMesage);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, errMesage );
+                var warnMessage = "no templates defined for  topic " + notification.Topic;
+                _logger.Warn(warnMessage);
+                return Request.CreateErrorResponse(HttpStatusCode.Gone, warnMessage);
             }
+
+            if (notification.MessagePublishingContext != null && !string.IsNullOrEmpty(notification.MessagePublishingContext.CustomerId))
+            {
+                try
+                {
+                    var dcUser = (await _customerAccountWebApiClient.GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
+
+                    user = new UX.Models.Customers.User
+                    {
+                        Email = dcUser.EmailAddress,
+                        FirstName = dcUser.FirstName,
+                        LastName = dcUser.LastName,
+                        UserId = dcUser.UserId,
+                        AccountId = dcUser.Id
+                    };
+                }
+                catch (Mozu.Core.Api.Client.Exceptions.ApiWebClientException)
+                {
+                }
+            }
+
 
             var site = (await _sitesWebApiClient.GetSite(this.SbApiContext.SiteId)).ReadAsSync();
             HttpResponseMessage v = await Page("emailTemplateContent@mozu", GetCmsPage(emailTempalte));

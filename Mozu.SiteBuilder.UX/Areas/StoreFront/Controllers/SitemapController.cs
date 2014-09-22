@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Xml.Linq;
 using AutoMapper;
+using Magnum.Extensions;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
 using Mozu.ProductRuntime.Contracts.Clients;
@@ -48,29 +49,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
-           // var primaryNavTask = _gandalf.GetTreeNavigation();
-            //var domainTask = GetSitePrimaryDomain();
+         
             var prods = (await _productSearchWebApiClient.Search(query: "*:*", pageSize: 0)).ReadAsSync();
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
             int pages = (int)Math.Ceiling((decimal)prods.TotalCount/(decimal)PageSize);
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
-           
-           // resp.Content.
+            var domain = GetSitePrimaryDomain();
+         
                this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
             writer.WriteStartElement("sitemapindex", NS);
 
             writer.WriteStartElement("sitemap", NS);
-            writer.WriteElementString("loc", NS,"http:"+ this.SiteContext.CdnPrefix + "/sitemap.xml/categories");
-          //  writer.WriteElementString("lastmod", NS, date);
+            writer.WriteElementString("loc", NS, domain + "/sitemap.xml/categories");
             writer.WriteEndElement();
 
 
             for (int i = 0; i < pages; i++)
             {
                 writer.WriteStartElement("sitemap", NS);
-                writer.WriteElementString("loc", NS, "http:" + this.SiteContext.CdnPrefix + "/sitemap.xml/products/" + i);
-            //    writer.WriteElementString("lastmod", NS, DateTime.UtcNow.AddDays(1).Date.ToString("o"));
+                writer.WriteElementString("loc", NS, domain + "/sitemap.xml/products/" + i);
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
@@ -86,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                var nodes = await _gandalf.GetFlatList();
 
 
-               var domain = await GetSitePrimaryDomain();
+               var domain =  GetSitePrimaryDomain();
                var resp = this.Request.CreateResponse(HttpStatusCode.OK);
 
                var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
@@ -120,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          [System.Web.Http.HttpGet]
            public async Task<HttpResponseMessage> Products(int page)
            {
-               var domain = await GetSitePrimaryDomain();
+               var domain =  GetSitePrimaryDomain();
                
                var resp = this.Request.CreateResponse(HttpStatusCode.OK);
                var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
@@ -132,14 +130,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              var startIndex = page*PageSize;
              while (true)
              {
-                 
-                 var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().Search(query: "*:*", pageSize: PageSize, startIndex: startIndex)).ReadAsSync();
+
+                 var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().Search(query: "*:*", pageSize: PageSize, startIndex: startIndex, responseFields: "items(productCode, content(SEOFriendlyUrl))")).ReadAsSync();
 
                  
 
                  var vm = Mapper.Map<List<Product>>(prods.Items);
                  WriteProducts(vm, writer, domain);
-                 startIndex = page*PageSize + prods.PageSize;
+                 startIndex = startIndex + prods.PageSize;
                  if (startIndex >= (page+1) * PageSize || startIndex >= prods.TotalCount || prods.PageCount == 0 )
                  {
                      break;
@@ -166,27 +164,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        private async Task<string> GetSitePrimaryDomain()
-           {
-               int siteId = SbApiContext.SiteId.GetValueOrDefault(-1);
+        private string GetSitePrimaryDomain()
+        {
 
-               // we have to use the service client to lookup a Site object by id
-              
-               Site site = await _sitesWebApi.CloneWithoutUserClaims().GetSite(siteId).Result.ReadAsAsync();
+            var primary = SiteContext.Domains.Primary;
 
-               if (site != null)
-               {
-                   Domain primary = site.Domains.FirstOrDefault(d => d.IsPrimary) ?? site.Domains.FirstOrDefault();
-                   if (primary != null)
-                       return "http://"+ primary.DomainName;
-                   else
-                       return null;
-               }
-               else
-               {
-                   return null;
-               }
-           }
-       
+            if (primary != null)
+            {
+                return "http://" + primary.DomainName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }
