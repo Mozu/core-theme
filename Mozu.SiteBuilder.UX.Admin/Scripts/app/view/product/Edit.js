@@ -94,12 +94,7 @@
                         behavior: 'destroy'
                     },
                     handler: Ext.bind(me.destroyRecord, me)
-                },
-                {
-                    xtype: "menuseparator",
-                    itemId: "changeProductCodeSeperator",
-                    style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
-                },
+                },                
                 {
                     itemId: 'changeProductCode',
                     text: 'Change Product Code',
@@ -150,10 +145,8 @@
                             // check to see if the product is phantom if so disable the change product code option
                             if (me.record.phantom || !Ext.Array.contains(Taco.user.behaviors, 220)) {
                                 changeProductCodeItem.hide();
-                                changeProductCodeSeperator.hide()
                             } else {
                                 changeProductCodeItem.show();
-                                changeProductCodeSeperator.show()
                             }
 
                            
