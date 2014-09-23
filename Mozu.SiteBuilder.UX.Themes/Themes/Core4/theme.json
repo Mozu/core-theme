@@ -352,7 +352,7 @@
 		"title": "Order Shipped",
 		"template": "email/order-shipped",
 		"properties": {
-          "subject": "Your Order Has Shipped #{model.orderNumber}"
+          "subject": "Your Order Has Shipped"
 		}
 	  },
 	  {
@@ -360,7 +360,7 @@
 		"title": "Order Confirmation",
 		"template": "email/order-confirmation",
 		"properties": {
-		  "subject": "Order Confirmation #{model.orderNumber}"
+		  "subject": "Order Confirmation "
 		}
 	  },
       {
