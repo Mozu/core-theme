@@ -17,7 +17,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class RefreshStoreFrontUserAuthTicketFilter : FilterAttribute, IActionFilter
+    public class RefreshStoreFrontUserAuthTicketFilter : FilterAttribute, IAuthorizationFilter
     {
         private StoreFrontAuthorizeAttribute _storeFrontAuthorizeAttribute = new StoreFrontAuthorizeAttribute();
 
@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
 
 
-        Task<HttpResponseMessage> IActionFilter.ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
             var sbc = actionContext.Request.Resolve<ISiteBuilderApiContext>();
 
@@ -71,48 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
         }
 
-        //public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
-        //{
-            
-           
 
 
-
-        //    var authHelper = actionContext.Request.Resolve<IAuthenticationHelper>();
-        //    var rToken = authHelper.GetStoreFrontRefreshToken();
-        //    if (rToken == null)
-        //    {
-        //        return ;
-        //    }
-
-        //    var authService = actionContext.Request.Resolve<IAuthTicketWebApiClient>();
-        //    var authTicketResult = authService.RefreshUserAuthTicket(rToken).Result;
-
-        //    if (!authTicketResult.ResponseMessage.IsSuccessStatusCode)
-        //    {
-        //        return false;
-        //    }
-
-
-        //    var ticket = authTicketResult.ReadAsSync();
-        //    // authHelper.SaveAuthTicket(ticket);
-        //    Mozu.Core.UserProfile profile = new UserProfile()
-        //    {
-        //        EmailAddress = ticket.User.EmailAddress,
-        //        FirstName = ticket.User.FirstName,
-        //        LastName = ticket.User.LastName,
-        //        UserId = ticket.User.UserId
-        //    };
-        //    authHelper.SaveStoreFrontAccessToken(ticket.AccessToken, profile.ToToken());
-        //    authHelper.SaveStoreFrontRefreshToken(ticket.RefreshToken, ticket.RefreshTokenExpiration);
-        //    sbc.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
-        //    return true;
-
-        //}
-
-        //System.Threading.Tasks.Task<HttpResponseMessage> IActionFilter.ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<System.Threading.Tasks.Task<HttpResponseMessage>> continuation)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }
