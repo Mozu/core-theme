@@ -104,7 +104,7 @@ Ext.define('Taco.view.order.Header', {
             tpl: [
                 '<div class="order-number">', '<span class="label">Order #</span>{orderNumber}', '</div>',
                 '<tpl if="parentOrderId">',
-                    '<div class="parent-order"><span class="label">Ref Order #:</span>{parentOrderId}</div>',
+                    '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderId}</a></div>',
                 '</tpl>',
                 '<div class="create-date">', '<span class="label">Order Date:</span>{createDate:date("m/d/Y h:i a")}', '</div>',
                 '<div class="update-date">', '<span class="label">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</div>',
