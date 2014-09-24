@@ -471,6 +471,16 @@
         },
         "collectionOf": "rma"
     },
+    "shipment": {
+      "defaults": {
+        "template": "{+orderService}{orderId}/fulfillmentinfo",
+        "includeSelf": true
+      },
+      "get-shipping-methods": {
+        "template": "{+orderService}{orderId}/shipments/methods",
+        "returnType": "shippingmethods"
+      }
+    },
     "payment": {
         "create": {
             "template": "{+orderService}{orderId}/payments/actions",

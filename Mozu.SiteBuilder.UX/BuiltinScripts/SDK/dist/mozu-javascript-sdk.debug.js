@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-09-10
+ * Mozu JavaScript SDK - v0.3.0 - 2014-09-15
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3670,6 +3670,16 @@ module.exports=
             "pageSize": 5
         },
         "collectionOf": "rma"
+    },
+    "shipment": {
+      "defaults": {
+        "template": "{+orderService}{orderId}/fulfillmentinfo",
+        "includeSelf": true
+      },
+      "get-shipping-methods": {
+        "template": "{+orderService}{orderId}/shipments/methods",
+        "returnType": "shippingmethods"
+      }
     },
     "payment": {
         "create": {

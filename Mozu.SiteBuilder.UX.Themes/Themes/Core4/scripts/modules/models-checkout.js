@@ -65,7 +65,9 @@
             relations: CustomerModels.Contact.prototype.relations,
             validation: CustomerModels.Contact.prototype.validation,
             dataTypes: {
-                contactId: Backbone.MozuModel.DataTypes.Int
+                contactId: function(val) {
+                    return (val === "new") ? val : Backbone.MozuModel.DataTypes.Int(val);
+                }
             },
             helpers: ['contacts'],
             contacts: function () {
