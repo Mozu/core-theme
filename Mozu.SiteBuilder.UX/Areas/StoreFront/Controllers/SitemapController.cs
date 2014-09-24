@@ -31,12 +31,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         INavigationRepository _nav;
     
         private readonly ISitesWebApiClient _sitesWebApi;
-        private readonly IProductSearchWebApiClient _productSearchWebApiClient;
-        private readonly IProductRuntimeWebApiClient _productRuntimeWebApiClient;
+
+        private readonly IProductRuntimeWebApiClient _productSearchWebApiClient;
         private INavigationGandalf _gandalf;
         private const int PageSize = 2000;
         const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
-        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient)
+        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productSearchWebApiClient)
         {
             _nav = navigationRepository;
             _gandalf = gandalf;
@@ -49,8 +49,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
-         
-            var prods = (await _productSearchWebApiClient.Search(query: "*:*", pageSize: 0)).ReadAsSync();
+
+            var prods = (await _productSearchWebApiClient.GetProducts( pageSize: 0)).ReadAsSync();
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
             int pages = (int)Math.Ceiling((decimal)prods.TotalCount/(decimal)PageSize);
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              while (true)
              {
 
-                 var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().Search(query: "*:*", pageSize: PageSize, startIndex: startIndex, responseFields: "items(productCode, content(SEOFriendlyUrl))")).ReadAsSync();
+                 var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().GetProducts(pageSize: PageSize, startIndex: startIndex, responseGroups:"urlonly",  responseFields: "items(productCode, content(SEOFriendlyUrl))")).ReadAsSync();
 
                  
 
