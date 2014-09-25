@@ -292,7 +292,7 @@ Ext.define('Taco.store.Navigation', {
                         "label": "Site Settings",
                         "visible": false,
                         "address": "generalsettings/site"
-                    }
+                    } 
                     /*, {
                 "id": "fileManager",
                 "label": "File Manager",

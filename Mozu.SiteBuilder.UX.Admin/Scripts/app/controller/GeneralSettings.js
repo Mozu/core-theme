@@ -29,7 +29,7 @@ Ext.define('Taco.controller.GeneralSettings', {
             });
         }
     },
-    site:function () {
-        return this.index.apply(this, arguments);
+    site: function () {
+        Taco.core.StateManager.attemptNavigate('generalsettings');
     }
 });
