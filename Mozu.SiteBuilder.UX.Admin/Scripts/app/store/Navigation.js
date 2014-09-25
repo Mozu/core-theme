@@ -291,7 +291,7 @@ Ext.define('Taco.store.Navigation', {
                         "id": "generalsettings",
                         "label": "Site Settings",
                         "visible": false,
-                        "address": "generalsettings"
+                        "address": "generalsettings/site"
                     }
                     /*, {
                 "id": "fileManager",

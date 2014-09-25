@@ -28,5 +28,8 @@ Ext.define('Taco.controller.GeneralSettings', {
                 }
             });
         }
+    },
+    site:function () {
+        return this.index.apply(this, arguments);
     }
 });
