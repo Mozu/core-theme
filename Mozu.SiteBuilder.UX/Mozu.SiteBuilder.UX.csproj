@@ -527,36 +527,28 @@
     <Content Include="Resources\Cms\layout.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Demo.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.perf.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="BuiltinScripts\SDK\package.json" />
     <Content Include="BuiltinScripts\SDK\docs\getting_started.md" />
@@ -572,7 +564,6 @@
     <Content Include="BuiltinScripts\RequireJS\src\wrap_header.tpl" />
     <Content Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -622,7 +613,6 @@
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\DeveloperDocumentation\list.cshtml" />
   </ItemGroup>

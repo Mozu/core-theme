@@ -2058,7 +2058,6 @@
     <Content Include="Tests\integration\TestRunner.ps1" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\app\mocks\facets.json" />
     <Content Include="Scripts\app\mocks\facetables.json" />
@@ -2100,18 +2099,15 @@
     <Content Include="Scripts\resources\fonts\SourceSansPro-SemiboldIt-webfont.woff" />
     <Content Include="Web.perf.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\resources\fonts\mozicons.eot" />
     <Content Include="Scripts\resources\fonts\mozicons.ttf" />
     <Content Include="Scripts\resources\fonts\mozicons.woff" />
     <Content Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tests\mocha\basic\chutzpah.json" />
     <Content Include="Tests\mocha\requireJs\chutzpah.json">
@@ -2377,15 +2373,12 @@
     <Content Include="Scripts\app\view\Viewport.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -2504,11 +2497,9 @@
     <None Include="Scripts\app\mocks\discounts.json" />
     <Content Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Web.Demo.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Auth\Index.cshtml" />
     <Content Include="Views\Shared\generic.cshtml" />
@@ -2523,7 +2514,6 @@
     <Content Include="Views\Home\AdminInlineJson.cshtml" />
     <Content Include="Web.Dev.config">
       <DependentUpon>Web.config</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Auth\MozuHeader.cshtml" />
     <Content Include="Views\Home\TestHarnes.cshtml" />
