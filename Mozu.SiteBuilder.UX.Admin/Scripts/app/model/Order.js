@@ -47,13 +47,21 @@ Ext.define('Taco.model.Order', {
                 type: 'boolean',
                 defaultValue: false
         },
-
-            {
+        {
+                name: 'parentOrderId',
+                type: 'string',
+                useNull: true
+        },
+        {
+                name: 'parentReturnId',
+                type: 'string',
+                useNull: true
+        },
+        {
                 name: 'tenantId',
                 type: 'int'
         },
-
-            {
+        {
                 name: 'orderType',
                 type: 'string'
         },
