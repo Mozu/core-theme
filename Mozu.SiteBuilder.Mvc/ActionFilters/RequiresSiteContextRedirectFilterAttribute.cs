@@ -19,16 +19,16 @@ using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class RequiresSiteContextRedirectFilterAttribute : FilterAttribute, IActionFilter
+    public class RequiresSiteContextRedirectFilterAttribute : FilterAttribute, IAuthorizationFilter
     {
    
 
         public override bool AllowMultiple { get { return false; } }
 
-      
 
 
-        Task<HttpResponseMessage> IActionFilter.ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+
+        public  Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
             var apiContext = actionContext.Request.Resolve<IApiContext>();
             if (! apiContext.SiteId.HasValue)

@@ -24,6 +24,7 @@
 
     < ... code fragment ... >
  *
+ * test
  */
 
 Ext.define('Taco.core.ux.mixins.NavHeader', {

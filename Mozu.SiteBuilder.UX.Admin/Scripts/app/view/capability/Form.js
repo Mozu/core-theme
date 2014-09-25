@@ -115,16 +115,26 @@ Ext.define('Taco.view.capability.Form', {
             //src: 'http://aus02ncfrnt002.dev.volusion.com:8080/Console/storeprofile/241/en-us'
             src: data.get('uiSupportUrl')
         };
+        
+        var hideConfig = false;
+        if (this.record.get('uiConfigurationUrl') == null || this.record.get('uiConfigurationUrl') == '') {
+            hideConfig = true;
+        }
 
         me.configPanel = Ext.create('Ext.container.Container', {
                 layout: 'hbox',
                 items: [{
                     xtype: 'label',
-                    text: data.get('applicationName') + ' | '
+                    text: data.get('applicationName')
+                }, {
+                    xtype: 'label',
+                    hidden: hideConfig,
+                    text: ' | '
                 }, {
                     xtype: 'button',
                     ui: 'button',
-                    text: 'Configuration',
+                    hidden: hideConfig,
+                    text: '  Configuration',
                     handler: function() {
                         this.record.reload({ callback: me.configureCapability, scope: me });
                     },
