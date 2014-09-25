@@ -1065,12 +1065,8 @@
     <Content Include="Themes\Core5\templates\modules\common\email-item-total.hypr.live" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PostDeploy.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="PreDeploy.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="PostDeploy.ps1" />
+    <Content Include="PreDeploy.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\email\giftcard-created.hypr" />
