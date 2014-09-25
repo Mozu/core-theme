@@ -1,5 +1,4 @@
-;
-(function($, win, doc) {
+!(function ($, win, doc) {
     'use strict';
 
     var $doc = $(doc),
@@ -11,7 +10,6 @@
         Img;
 
 
-
     possibleStates = [
         'default',
         'editing',
@@ -20,12 +18,12 @@
     ];
 
     controller = {
-        init: function() {
+        init: function () {
             $doc.on('click', $.proxy(this._onClick, this));
             this._items = [];
         },
 
-        register: function(element, selector, test, action) {
+        register: function (element, selector, test, action) {
             this._items.push({
                 element: element,
                 selector: selector,
@@ -34,13 +32,13 @@
             });
         },
 
-        _onClick: function(e, ui) {
-            
+        _onClick: function (e, ui) {
+
 
             var $tar;
-            $.each(this._items, function(i, item) {
+            $.each(this._items, function (i, item) {
                 if (!item.test()) return;
-                
+
                 $tar = $(e.target);
                 if ((!$tar.is(item.selector) && !$tar.parents(item.selector).length) || $tar.parents(item.selector)[0] !== item.element[0]) item.action();
             })
@@ -50,7 +48,7 @@
     /**
      * CONTENT Class Definition
      */
-    Content = function(element, options) {
+    Content = function (element, options) {
         this.options = $.extend({}, Content.DEFAULTS, options);
         this.element = $(element);
 
@@ -64,10 +62,10 @@
             .append($('<ul class="mz-cms-tools"><li class="mz-cms-drag-handle"></li><li class="mz-cms-trash"></li></ul>'));
 
         this.$drag = this.element.find('.mz-cms-drag-handle')
-                            .html('<i class="fa fa-arrows fa-lg"></i>')
+            .html('<i class="fa fa-arrows fa-lg"></i>')
         this.$trash = this.element.find('.mz-cms-trash')
-                            .html('<i class="fa fa-trash-o fa-lg"></i>')
-                            .on('click', $.proxy(this.remove, this));
+            .html('<i class="fa fa-trash-o fa-lg"></i>')
+            .on('click', $.proxy(this.remove, this));
     }
 
     Content.DEFAULTS = {};
@@ -82,10 +80,10 @@
      *                  'clickaway .editor': '* > default'
      *              }
      */
-    Content.prototype.on = function(map) {
+    Content.prototype.on = function (map) {
         var me = this;
 
-        $.each(map, function(event, states) {
+        $.each(map, function (event, states) {
             var stateSplit = states.split('>'),
                 from = stateSplit[0].trim(),
                 to = stateSplit[1].trim(),
@@ -94,42 +92,43 @@
                 selector = eventSplit[1],
                 fromAnyEvent = from === '*';
 
-            switch(eventName) {
-                case 'clickaway':
-                    controller.register(me.element, selector, function() {
-                        return (fromAnyEvent || from.indexOf(me.state()) > -1);
-                    }, function() {
-                        me.state(to);
-                    });
-                    break;
+            switch (eventName) {
+            case 'clickaway':
+                controller.register(me.element, selector, function () {
+                    return (fromAnyEvent || from.indexOf(me.state()) > -1);
+                }, function () {
+                    me.state(to);
+                });
+                break;
 
-                default: 
-                    me.element.on(eventName, selector, function() {
-                        if (fromAnyEvent || from.indexOf(me.state()) > -1) me.state(to);
-                    });
-                    break;
+            default:
+                me.element.on(eventName, selector, function () {
+                    if (fromAnyEvent || from.indexOf(me.state()) > -1) me.state(to);
+                });
+                break;
             }
             if (eventName === 'clickaway') {
-                
+
             } else {
-                
+
             }
         });
     }
 
-    Content.prototype.remove = function() {
+    Content.prototype.remove = function () {
         this.element.mzBlock('remove');
+        Chorizo.formatter.hide();
     }
 
-    Content.prototype.state = function(state) {
+    Content.prototype.state = function (state) {
         return (state) ? this._setState(state) : this._getState();
     }
 
-    Content.prototype.lastState = function() {
+    Content.prototype.lastState = function () {
         return this._lastState;
     }
 
-    Content.prototype._getState = function() {
+    Content.prototype._getState = function () {
         var state;
 
         if (this._state) state = this._state;
@@ -143,7 +142,7 @@
         return state;
     }
 
-    Content.prototype._setState = function(state) {
+    Content.prototype._setState = function (state) {
         this._lastState = this.state();
 
         this.element.removeClass(statePrefix + possibleStates.join(' ' + statePrefix));
@@ -160,13 +159,13 @@
     /**
      * TEXT class definition
      */
-    Text = function(element, options) {
+    Text = function (element, options) {
         Content.call(this, element, options);
 
         this.element
             .data('rich-text', true)
             .select($.proxy(this._onSelect, this));
-        
+
         this.element.on({
             mouseup: $.proxy(this._onMouseup, this),
             click: $.proxy(this._onClick, this)
@@ -179,22 +178,22 @@
 
     Text.prototype = new Content();
 
-    Text.prototype.editingUrl = function(val) {
+    Text.prototype.editingUrl = function (val) {
         if (typeof val === 'undefined') return this._editingUrl;
         this._editingUrl = val;
         return this;
     }
 
-    Text.prototype.focus = function() {
+    Text.prototype.focus = function () {
         this.element.find('[contenteditable]').focus();
     }
 
-    Text.prototype._onMouseup = function(e) {
+    Text.prototype._onMouseup = function (e) {
         if (Chorizo.editor.columnResizing()) return;
         if (this.state() === 'default') this.state('editing');
     }
 
-    Text.prototype._onClick = function(e) {
+    Text.prototype._onClick = function (e) {
         var $tar,
             oldUrl;
 
@@ -210,12 +209,12 @@
         Chorizo.formatter.showTooltip(oldUrl, $tar);
     }
 
-    Text.prototype._onBlur = function(e) {
+    Text.prototype._onBlur = function (e) {
         if (this.editingUrl()) return;
         if (this.state() === 'editing') this.state('default');
     }
 
-    Text.prototype._defaultState = function() {
+    Text.prototype._defaultState = function () {
         var widgetData = this.element.data('widget');
 
         Chorizo.formatter.hide();
@@ -233,25 +232,25 @@
     }
 
 
-    Text.prototype._editingState = function() {
+    Text.prototype._editingState = function () {
         Chorizo.formatter.show(this);
         this.$content.attr('contenteditable', 'true');
         this.$content.focus();
     }
 
-    Text.prototype._movingState = function() {
+    Text.prototype._movingState = function () {
 
     }
 
-    Text.prototype._onSelect = function(e) {
-    
+    Text.prototype._onSelect = function (e) {
+
     }
 
 
     /**
      * IMG class definition
      */
-    Img = function(element, options) {
+    Img = function (element, options) {
         Content.call(this, element, options);
 
         this.on({
@@ -266,7 +265,7 @@
 
         this.$bottom = this.$resizer.find('.mz-cms-bottom')
             .draggable({
-                helper: function() {
+                helper: function () {
                     return $('<div>');
                 },
                 start: $.proxy(this._onStart, this),
@@ -280,20 +279,20 @@
 
     Img.prototype = new Content();
 
-    Img.prototype._defaultState = function() {
+    Img.prototype._defaultState = function () {
         console.log('default');
     }
 
-    Img.prototype._editingState = function() {
+    Img.prototype._editingState = function () {
         console.log('editing');
         Chorizo.editor.edit(this.element.data('mozu.mzBlock'));
     }
 
-    Img.prototype._movingState = function() {
+    Img.prototype._movingState = function () {
 
     }
 
-    Img.prototype._onStart = function(e, ui) {
+    Img.prototype._onStart = function (e, ui) {
         this._moveHandler = $.proxy(this._onMousemove, this);
         this.offset = this.$content.children().first().offset();
         this.height = this.$content.children().first().height();
@@ -303,14 +302,14 @@
         Chorizo.editor.cursor('ns-resize');
     }
 
-    Img.prototype._onStop = function(e, ui) {
+    Img.prototype._onStop = function (e, ui) {
         $doc.off('mousemove', this._moveHandler);
         Chorizo.editor.cursor('auto');
         this.widgetData.config.height = this.$content.outerHeight();
         Chorizo.editor.dirtyStateCheck();
     }
 
-    Img.prototype._onMousemove = function(e, ui) {
+    Img.prototype._onMousemove = function (e, ui) {
         var height = $doc.scrollTop() + e.clientY - this.offset.top;
         this.$content.height(height);
     }
@@ -321,7 +320,7 @@
     Chorizo.classFactory(Img, 'mozu.mzImg');
     Chorizo.classFactory(Content, 'mozu.mzContent');
 
-    $doc.ready(function() {
+    $doc.ready(function () {
         controller.init();
     })
 
