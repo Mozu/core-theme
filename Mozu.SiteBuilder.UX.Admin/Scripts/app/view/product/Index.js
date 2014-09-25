@@ -169,14 +169,14 @@ Ext.define('Taco.view.product.Index', {
                                 previewAction.menu.add(Ext.applyIf({
                                     text: site.name,
                                     menuColumnHandler: function (item, eventData) {
-                                        window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/p/' + eventData.record.getId()), 'taco-preview');
+                                        window.open('/_gosite/' + site.id + '?environment=preview&redir=' + encodeURIComponent('/p/' + eventData.record.getId()));
                                     }
                                 }, defaults));
 
                                 liveAction.menu.add(Ext.applyIf({
                                     text: site.name,
                                     menuColumnHandler: function (item, eventData) {
-                                        window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/p/' + eventData.record.getId()), 'taco-preview');
+                                        window.open('/_gosite/' + site.id + '?environment=live&redir=' + encodeURIComponent('/p/' + eventData.record.getId()));
                                     }
                                 }, defaults));
                             }
