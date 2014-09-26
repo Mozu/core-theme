@@ -6,6 +6,7 @@
     var appPath = assetServer + Url.Content("~/Scripts/app");
     var uxPath = assetServer + Url.Content("~/Scripts/ux");
     var extPath = assetServer + Url.Content("~/Scripts/ext/src");
+    var icoPath = assetServer + Url.Content("~/Scripts/resources/favicon.ico");
     var bootStrapPath = assetServer + @Url.Content("~/Scripts/bootstrap.js");
     var appJsPath = assetServer + @Url.Content("~/Scripts/app/app.js");
 
@@ -16,7 +17,9 @@
 <html>
 <head>
     <title>Mozu Admin</title>
-    
+    <link type="image/x-icon" href="@icoPath" rel="icon" />
+    <link type="image/x-icon" href="@icoPath" rel="shortcut icon" />
+
     <link rel="stylesheet" type="text/css" href="@cssPath" />
 
     @Html.Partial("admininlinejson")

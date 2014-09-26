@@ -583,6 +583,7 @@
     <Content Include="Themes\Core5\resources\images\button-loading.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\Core5\resources\images\favicon.ico" />
     <Content Include="Themes\Core5\scripts\modules\backbone-mozu-pagedcollection.js" />
     <Content Include="Themes\Core5\scripts\modules\contextify.js" />
     <Content Include="Themes\Core5\scripts\modules\models-documents.js" />

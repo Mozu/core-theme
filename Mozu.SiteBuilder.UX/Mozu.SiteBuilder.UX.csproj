@@ -508,7 +508,6 @@
     <Content Include="BuiltinScripts\SDK\src\types\shipment.js" />
     <Content Include="BuiltinScripts\SDK\src\types\user.js" />
     <Content Include="BuiltinScripts\SDK\tests\SpecRunner.html" />
-    <Content Include="favicon.ico" />
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

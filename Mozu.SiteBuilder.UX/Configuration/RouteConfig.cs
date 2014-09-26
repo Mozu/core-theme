@@ -12,6 +12,18 @@ namespace Mozu.SiteBuilder.UX.Configuration
     {
         public void Register(HttpRouteCollection routes)
         {
+
+
+
+            routes.MapHttpRoute(
+              "favicon",
+              "favicon.ico",
+                     new {controller = "Resource", action = "misc" , pathinfo="images/favicon.ico" });
+              
+
+
+
+            
             routes.MapHttpRoute(
                 "search",
                 "search",
@@ -243,7 +255,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
   //          Premium-18-Powered-Subwoofer-Cabinets-Pair-p/magma-118s-pw-pair.htm
 
-//http://www.seismicaudiospeakers.com/Subwoofers-s/122.htm
+
 
 
 
@@ -270,6 +282,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { action = "Index", id = RouteParameter.Optional },
                 new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing"}
                 );
+
+
+
+          
+
+
+
 
 
             

@@ -1852,7 +1852,7 @@
     <Content Include="Scripts\resources\images\image-drop.png" />
     <Content Include="Scripts\resources\images\legacy\AddPhotos.png" />
     <Content Include="Scripts\resources\images\legacy\background-alpha.png" />
-    <Content Include="favicon.ico" />
+    <Content Include="Scripts\resources\favicon.ico" />
     <Content Include="Scripts\resources\images\icons\icon-mozulogo-wallis.png" />
     <Content Include="Scripts\resources\images\icons\icon-rowactions.png" />
     <Content Include="Scripts\resources\images\legacy\fabric-2.png" />
