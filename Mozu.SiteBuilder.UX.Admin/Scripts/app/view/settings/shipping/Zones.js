@@ -13,7 +13,12 @@ Ext.define('Taco.view.settings.shipping.Zones', {
     createRoute: 'shipping/zonescreate',
     editorRoute: 'shipping/zonesedit',
    
-    store: { type: 'Taco.store.ShippingZones' }
+    store: { type: 'Taco.store.ShippingZones' },
+
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    }
 });
 
 
