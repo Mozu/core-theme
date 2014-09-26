@@ -220,7 +220,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 try
                 {
-                    var dcUser = (await _customerAccountWebApiClient.GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
+                    var dcUser = (await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccount(int.Parse(notification.MessagePublishingContext.CustomerId))).ReadAsSync();
 
                     user = new UX.Models.Customers.User
                     {
