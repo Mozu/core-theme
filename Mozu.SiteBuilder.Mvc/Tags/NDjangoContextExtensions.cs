@@ -5,7 +5,6 @@ using System.Web;
 
 using Autofac;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -23,27 +22,20 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         public static T GetValueOrDefault<T>(this NDjango.Interfaces.IContext context, string key )
         {
             var entry = context.tryfind("key");
-            if (entry != null)
-            {
-                var value = entry.Value;
-                if (value is T)
-                {
-                    return (T) value;
-                }
-                return (T)Convert.ChangeType(value, typeof(T));
+            if (entry == null) return default(T);
 
+            var value = entry.Value;
+            if (value is T)
+            {
+                return (T) value;
             }
-            return default(T);
+            return (T)Convert.ChangeType(value, typeof(T));
         }
 
         public static object Model(this NDjango.Interfaces.IContext context)
         {
             var ret = context.tryfind("model");
-            if (ret != null)
-            {
-                return ret.Value;
-            }
-            return null;
+            return ret != null ? ret.Value : null;
         }
         public static ISiteBuilderApiContext SiteBuilderApiContext(this NDjango.Interfaces.IContext context)
         {
@@ -67,62 +59,25 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             return context.ViewContext().LifetimeScope.ResolveOptional<T>();
         }
-        public static string Render(this NDjango.Interfaces.IContext context, string viewName, object model)
-        {
-            using (var sbContainer = StringBuilderPool.Default.GetContainer())
-            {
-                var writer = new StringWriter(sbContainer.Item);
-                context.Render(viewName, model, writer);
-                return writer.GetStringBuilder().ToString();
-            }
-           
-        }
 
-        public static Task AsyncRender(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer)
+        public static async Task AsyncRender(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer)
         {
-
             var viewContext = context.ViewContext();
-
             var viewEngine = viewContext.LifetimeScope.Resolve<HyprViewEngine>();
-
-
             var view = viewEngine.FindModuleView(viewName);
-            var viewData = new ViewDataDictionary()
+            var viewData = new ViewDataDictionary
             {
                 Model = model
             };
+
             var hvc = new HyprViewContext(viewContext.RequestMessage, viewData, viewContext);
             if (view == null)
             {
                 writer.Write("view not found: (" + viewName + ")");
+                return;
             }
 
-            return view.AsyncRender(hvc, writer);
-
-
-
-        }
-        public static void Render(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer )
-        {
-          
-            var viewContext = context.ViewContext();
-
-            var viewEngine = viewContext.LifetimeScope.Resolve<HyprViewEngine>();
-
-
-            var view = viewEngine.FindModuleView(viewName);
-            var viewData = new ViewDataDictionary()
-            {
-                Model = model
-            };
-            var hvc = new HyprViewContext(viewContext.RequestMessage , viewData, viewContext);
-            if (view == null)
-            {
-                writer.Write("view not found: (" + viewName + ")");
-            }
-            view.Render(hvc, writer);
-
-           
+            var result = await view.AsyncRender(hvc, writer);
         }
     }
 }

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.UX.Models.Customers;
 using NDjango.Interfaces;
 using NDjango.Misc;
 
@@ -16,47 +15,79 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     {
         private readonly string _mappedPath;
         private readonly string _virtualPath;
-        // private readonly ITemplateManager _templateManager;
-
-
-        public HyprView(string mappedPath, string virtualPath, ITemplateManager templateManager)
+        
+        public HyprView(string mappedPath, string virtualPath)
         {
             _mappedPath = mappedPath;
             _virtualPath = virtualPath;
-            //     _templateManager = templateManager;
         }
-
-
-        private Dictionary<string, object> CreateRequestContext(HyprViewContext viewContext, TextWriter writer)
+        
+        private static Dictionary<string, object> CreateRequestContext(HyprViewContext viewContext, string virtualPath)
         {
             var clientApiContext = viewContext.LifetimeScope.Resolve<ClientApiContext>();
-
-
             var navigationContext = viewContext.LifetimeScope.Resolve<NavigationContext>();
-
             var pageContext = viewContext.LifetimeScope.Resolve<PageContext>();
             var siteContext = viewContext.LifetimeScope.Resolve<SiteContext>();
-
-
             var requestContext = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+            AddConstants(requestContext);
+            AddViewPath(requestContext, virtualPath);
+            AddViewContextData(requestContext, viewContext);
+            AddPageContextData(requestContext, pageContext);
+            AddSiteContextData(requestContext, siteContext);
+            AddNavigationContextData(requestContext, navigationContext);
+            AddClientApiContextData(requestContext, clientApiContext);
+            
+            return requestContext;
+        }
+
+        private static void AddViewPath(Dictionary<string, object> requestContext, string virtualPath)
+        {
+            requestContext["viewPath"] = virtualPath;
+        }
+
+        private static void AddConstants(Dictionary<string, object> requestContext)
+        {
+            requestContext["true"] = true;
+            requestContext["false"] = false;
+         }
+
+        private static void AddClientApiContextData(Dictionary<string, object> requestContext, ClientApiContext clientApiContext)
+        {
+            requestContext["apiContext"] = clientApiContext;
+        }
+
+        private static void AddNavigationContextData(Dictionary<string, object> requestContext, NavigationContext navigationContext)
+        {
+            requestContext["navigation"] = navigationContext;
+        }
+
+        private static void AddSiteContextData(Dictionary<string, object> requestContext, SiteContext siteContext)
+        {
+            requestContext["siteContext"] = siteContext;
+            requestContext["themeSettings"] = siteContext.ThemeSettings;
+            requestContext["labels"] = siteContext.Labels;
+        }
+
+        private static void AddPageContextData(Dictionary<string, object> requestContext, PageContext pageContext)
+        {
+            requestContext["pageContext"] = pageContext;
+            requestContext["user"] = pageContext.User;
+        }
+
+        private static void AddViewContextData(Dictionary<string, object> requestContext, HyprViewContext viewContext)
+        {
+            viewContext.HttpContext.Items["templateVariables"] = viewContext.HttpContext.Items["templateVariables"] ?? new Hashtable(StringComparer.OrdinalIgnoreCase);
 
             foreach (var kvp in viewContext.ViewData)
             {
                 requestContext[kvp.Key] = kvp.Value;
             }
 
-
-            User user = pageContext.User;
-            if (viewContext.HttpContext.Items["templateVariables"] == null)
-            {
-                viewContext.HttpContext.Items["templateVariables"] = new Hashtable(StringComparer.OrdinalIgnoreCase);
-            }
-
-
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"];
             requestContext["_vc"] = viewContext;
-
             requestContext["model"] = viewContext.ViewData.Model;
+            
             if (viewContext.ParentActionViewContext != null)
             {
                 requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
@@ -66,40 +97,24 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 requestContext["pageModel"] = viewContext.ViewData.Model;
             }
 
-
-            requestContext["siteContext"] = siteContext;
-            requestContext["themeSettings"] = siteContext.ThemeSettings;
-            requestContext["labels"] = siteContext.Labels;
-            requestContext["pageContext"] = pageContext;
-            requestContext["navigation"] = navigationContext;
-            requestContext["apiContext"] = clientApiContext;
-            requestContext["user"] = user;
-            requestContext["true"] = true;
-            requestContext["false"] = false;
-            requestContext["viewPath"] = _virtualPath;
             requestContext["ViewData"] = viewContext.ViewData;
-
-
-            return requestContext;
         }
 
         public async Task<bool> AsyncRender(HyprViewContext viewContext, TextWriter writer)
         {
-            Dictionary<string, object> requestContext = CreateRequestContext(viewContext, writer);
+            var requestContext = CreateRequestContext(viewContext, _virtualPath);
+            var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
             try
             {
-                var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
-                ITemplate template = templateManager.GetTemplate(_mappedPath);
+                var template = templateManager.GetTemplate(_mappedPath);
                 var renderer = new TemplateRenderer(templateManager, template, requestContext);
-
                 await renderer.AsyncRender(writer).ConfigureAwait(false);
-                //renderer.Render(writer);
             }
-            catch (NDjango.Interfaces.RenderingException)
+            catch (RenderingException)
             {
                 throw;
             }    
-            catch (NDjango.Interfaces.SyntaxException)
+            catch (SyntaxException)
             {
                 throw;
             }
@@ -109,32 +124,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             writer.Flush();
             return true;
-        }
-
-        public void Render(HyprViewContext viewContext, TextWriter writer)
-        {
-            var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
-            Dictionary<string, object> requestContext = CreateRequestContext(viewContext, writer);
-            try
-            {
-                ITemplate template = templateManager.GetTemplate(_mappedPath);
-                var renderer = new TemplateRenderer(templateManager, template, requestContext);
-
-                renderer.Render(writer);
-                //var reader = templateManager.RenderTemplate(_mappedPath, requestContext);
-            }
-            catch (NDjango.Interfaces.RenderingException)
-            {
-                throw;
-            }
-            catch (NDjango.Interfaces.SyntaxException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new RenderingError(string.Format("error in template [{0}]", _virtualPath), new FSharpOption<Exception>(ex));
-            }
         }
     }
 }
