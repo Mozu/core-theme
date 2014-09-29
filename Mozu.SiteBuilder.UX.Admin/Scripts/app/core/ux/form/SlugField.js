@@ -80,7 +80,7 @@ Ext.define('Taco.core.ux.form.SlugField', {
             if (currentValue === newValue) {
                 return false;
             }
-            return me.callParent([value.replace(/((?!(@|[A-Z]|[a-z]|\d|[%]|[\.])).)+/g, '-').toLowerCase()]);
+            return me.callParent([newValue]);
         }
         return me.callParent(value);
     },
