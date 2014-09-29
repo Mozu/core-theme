@@ -516,10 +516,10 @@
     <Compile Include="Themes\ThemeMetaData.cs" />
     <Compile Include="Themes\ThemeMetadataProvider.cs" />
     <Compile Include="Themes\ThemeRepository.cs" />
-    <Compile Include="ViewEngine\HyperView.cs" />
-    <Compile Include="ViewEngine\HyperViewContext.cs" />
-    <Compile Include="ViewEngine\HyperViewEngine.cs" />
     <Compile Include="ViewEngine\HyprTemplateManager.cs" />
+    <Compile Include="ViewEngine\HyprView.cs" />
+    <Compile Include="ViewEngine\HyprViewContext.cs" />
+    <Compile Include="ViewEngine\HyprViewEngine.cs" />
     <Compile Include="ViewEngine\IHyperController.cs" />
     <Compile Include="Customers\AccountContactRepository.cs" />
     <Compile Include="Customers\CustomerGroupsRepository.cs" />
