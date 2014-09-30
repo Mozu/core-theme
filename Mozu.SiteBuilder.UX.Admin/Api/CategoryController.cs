@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Core.Api.Client;
-//using Volusion.ProductAdmin.Contracts;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
@@ -217,11 +216,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById( category.Id ,force )).ToList();
             await Task.WhenAll(tasks);
+            AnyExceptionsThenThrow(tasks);
 
-            var ret = tasks.Select(res => res.Result.ResponseMessage.IsSuccessStatusCode ).ToList();
-
-
-           
             return EmptyList2<Category>();
         }
 
@@ -239,6 +235,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(Mapper.Map<Category>(newCategory));
         }
 
-        
+        private static void AnyExceptionsThenThrow<T>(IEnumerable<Task<ServiceClientResponse<T>>> taskResults)
+        {
+            foreach (var taskResult in taskResults.Where(taskResult => taskResult.Result.HasException))
+            {
+                throw taskResult.Result.ReadException();
+            }
+        }
+
     }
 }

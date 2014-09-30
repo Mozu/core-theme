@@ -199,8 +199,9 @@ Ext.define('Taco.view.category.Index', {
                             grid.setLoading(false);
                         },
                         failure: function (m) {
-
                             grid.setLoading(false);
+                            grid.getStore().load();
+                            Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', m);
                         }
 
                     });
