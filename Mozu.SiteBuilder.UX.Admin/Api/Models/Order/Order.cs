@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     public class Order
     {
         public string Id { get; set; }
-
+        
         public int? TenantId { get; set; }
 
         public string ChannelCode { get; set; }
