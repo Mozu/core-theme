@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v0.2.0 - 2014-07-09
+ * Mozu Hypr Live - v0.2.0 - 2014-09-30
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -5644,6 +5644,48 @@ HyprLive.engine.setTag('with', WithTag.parse, WithTag.compile, true, false);
             formatted = formatted.split('{' + i + '}').join(otherArgs[i]);
         }
         return formatted;
+    });
+
+    function prop(o, pn, caseSensitive) {
+        if (o) {
+            if (caseSensitive && o.hasOwnProperty(pn)) return o[pn];
+            pn = pn.toLowerCase();
+            for (var k in o) {
+                if (pn === k.toLowerCase()) return o[k];
+            }
+        }
+        return '';
+    }
+
+    function findWhere(list, k, v, caseSensitive) {
+        var length = list.length;
+        var o;
+        for (var i = 0; i < length; i++) {
+            o = prop(list[i], k, caseSensitive);
+            if ((caseSensitive && o === v) || o.toString().toLowerCase() === v.toString().toLowerCase()) return list[i];
+        }
+    }
+
+    function getProductAttribute(product, attributeName) {
+        return findWhere(product.properties.concat(product.options), 'attributeFQN', attributeName);
+    }
+
+    HyprLive.engine.setFilter('findwhere', findWhere);
+
+    HyprLive.engine.setFilter('prop', prop);
+
+    HyprLive.engine.setFilter('get_product_attribute', getProductAttribute);
+
+    HyprLive.engine.setFilter('get_product_attribute_value', function(product, attributeName, attributeValue) {
+        var attr = getProductAttribute(product, attributeName), values, value;
+        if (attr) {
+            values = prop(attr, 'values', true);
+            if (values) {
+                value = values[0];
+                return prop(value, 'stringValue', true) || prop(value, 'value', true)
+            }
+        }
+        return '';
     });
 
 }());
