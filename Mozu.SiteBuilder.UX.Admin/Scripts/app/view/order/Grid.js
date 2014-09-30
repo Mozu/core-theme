@@ -465,8 +465,10 @@ Ext.define('Taco.view.order.Grid', {
                             paymentTypeCanBeCaptured = recordPayment && recordPayment.get('paymentType') !== 'Check', // checks require a 'check number' parameter to capture, so we can't capture from the grid.
                             canCapture = recordPayment && paymentTypeCanBeCaptured && !recordPayment.isCapturePending && (recordPayment.get('availableActions') || []).indexOf('CapturePayment') > -1;
 
-                        /*    Order only has a single payment transaction
-                        Order Payment transaction is in “Authorized State”*/
+                        // can capture if:
+                        // order has exactly one payment
+                        // payment is in "Authorized State" (has 'CapturePayment' as an available action)
+                        // payment is not a check.
 
                         cancelAction.setDisabled(!canCancel);
                         capturePaymentAction.setDisabled(!canCapture);
