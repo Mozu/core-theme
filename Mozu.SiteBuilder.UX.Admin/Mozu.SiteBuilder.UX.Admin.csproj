@@ -1485,6 +1485,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.eot" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.ttf" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.woff" />
+    <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
