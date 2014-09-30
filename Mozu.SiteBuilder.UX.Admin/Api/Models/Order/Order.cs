@@ -27,6 +27,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public int? SiteId { get; set; }
 
+        public string ParentOrderId { get; set; }
+        public string ParentReturnId { get; set; }
 
         public List<InvalidCoupon> InvalidCoupons { get; set; }
 

@@ -1,5 +1,4 @@
-;
-(function($, win, doc) {
+!(function ($, win, doc) {
     'use strict';
 
     var $doc = $(doc),
@@ -22,7 +21,7 @@
     }];
 
     bar = {
-        init: function() {
+        init: function () {
             this.element = $([
                 '<div class="mz-cms-format-bar">',
                     '<ul>',
@@ -59,10 +58,10 @@
             ].join('')).appendTo('body');
 
             this.$urlInput = this.$urlTooltip
-                                    .find('input')
-                                    .on({
-                                        blur: $.proxy(this._onBlurUrl, this)
-                                    });
+                .find('input')
+                .on({
+                    blur: $.proxy(this._onBlurUrl, this)
+                });
 
             this.$styles = this.element.find('[data-role="styles"] ul');
 
@@ -77,7 +76,7 @@
             return this;
         },
 
-        show: function(text) {
+        show: function (text) {
             win.clearTimeout(this._hideTimeout);
             this._text = text;
             this.element
@@ -85,16 +84,16 @@
 
         },
 
-        hide: function() {
-            var proxy = $.proxy(function() {
-                this.element.removeClass('mz-cms-active')
+        hide: function () {
+            var proxy = $.proxy(function () {
+                this.element.removeClass('mz-cms-active');
                 this.$styles.hide();
             }, this);
             if (!this.element.length) return;
             this._hideTimeout = win.setTimeout(proxy, 150);
         },
 
-        _onClick: function(e, ui) {
+        _onClick: function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
             var $item = $(e.target),
@@ -105,35 +104,35 @@
             role = $item.data('role');
 
             switch (role) {
-                case 'createLink':
-                    this.createLink();
-                    break;
-                case 'style':
-                    this.customStyle($item);
-                    break;
-                case 'styles':
-                    this.$styles.toggle();
-                    break;
-                default:
-                    console.log('doing command', role);
-                    doc.execCommand(role, false, null);
-                    break;
+            case 'createLink':
+                this.createLink();
+                break;
+            case 'style':
+                this.customStyle($item);
+                break;
+            case 'styles':
+                this.$styles.toggle();
+                break;
+            default:
+                console.log('doing command', role);
+                doc.execCommand(role, false, null);
+                break;
             }
         },
 
-        _onBlurUrl: function(e, ui) {
+        _onBlurUrl: function () {
             var url = this.$urlInput.val();
             this.$urlTooltip.hide();
             this._text.focus();
             $('[href="#mz-cms-temp-link"]').attr('href', url);
             this._text.editingUrl(false);
-            
+
             if (this._range) this.range(this._range);
-            
+
             delete this._range;
         },
 
-        customStyle: function($item) {
+        customStyle: function ($item) {
             var style = $item.data('style'),
                 element;
 
@@ -154,15 +153,15 @@
             $(element).attr('class', style.className);
         },
 
-        createLink: function() {
+        createLink: function () {
             this._range = this.range();
             this._text.editingUrl(true);
             doc.execCommand('createLink', false, '#mz-cms-temp-link');
             this.showTooltip();
         },
 
-        showTooltip: function(url, posEl) {
-            var $posEl
+        showTooltip: function (url, posEl) {
+            var $posEl;
 
             this._text.editingUrl(true);
 
@@ -170,24 +169,22 @@
 
             $posEl = $(posEl);
 
-            $posEl = $posEl[0].nodeName === '#text' 
-                        ? $posEl.parent()
-                        : $posEl;
+            $posEl = $posEl[0].nodeName === '#text' ? $posEl.parent() : $posEl;
 
             this.$urlInput.val(url || '');
 
             this.$urlTooltip
-                    .show()
-                    .position({
-                        of: $posEl,
-                        my: 'center top',
-                        at: 'center bottom'
-                    });
-            
+                .show()
+                .position({
+                    of: $posEl,
+                    my: 'center top',
+                    at: 'center bottom'
+                });
+
             this.$urlInput.focus();
         },
 
-        range: function(cfg) {
+        range: function (cfg) {
             var range,
                 selection;
 
@@ -216,7 +213,7 @@
             selection.addRange(range);
         },
 
-        _buildStyles: function(styles) {
+        _buildStyles: function (styles) {
             $.each(styles, $.proxy(function (index, style) {
                 $('<li data-role="style"></li>')
                     .text(style.label)
@@ -227,7 +224,7 @@
     };
 
     win.Chorizo.formatter = bar;
-    $doc.ready(function() {
+    $doc.ready(function () {
         bar.init();
     });
 

@@ -14,26 +14,34 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
     closeAction: 'destroy',    
     //scale: 'large',    
     scale: "",
+    minHeight:300,
     height: 300,
     width:800,
     title: 'Change Product Code',
-
     layout: {
         type: 'fit'
     },
 
     defaultFocus: "newProductCode",
 
+    sameCodeErrorTxt : "The new and current product code cannot be the same",
+
     initComponent: function () {
         var me = this;
         me.items = [];
 
         me.variationsStore = this.getVariationsStore(false);
-
+        me.mon(me, 'show', function () {
+            var saveButton = me.down('#primaryAction')
+            saveButton.disable();
+            me.setLoading(true, this.body);
+        }, me)
+        
         me.variationsStore.load({
             scope:me,
-            callback: function (records, operation, success) {
+            callback: function (records, operation, success) {                
                 this.initUI();
+                me.setLoading(false, this.body);
             }
         });
 
@@ -102,47 +110,52 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             optionColumns = [],
             staticColumns,
             hasVariations = me.variationsStore.count(),
-            saveButton = me.down('#primaryAction');
+            saveButton = me.down('#primaryAction')
         
-        // save button is disabled by default and is enabled on change of the form or the grid;
-        saveButton.disable();
+        
 
         this.summaryForm = Ext.create('Ext.form.Panel', {
             layout: 'anchor',
-            items: [{
-                xtype: "textfield",
-                fieldLabel: "Product Name",
-                readOnly: true,
-                tabIndex: -1,
-                anchor: '0',
-                value:this.product.get("productName")
+            items: [{                
+                xtype: "component",
+                tpl: "<span class=''>Product Name: {productName}</span>",
+                data:{
+                    productName: this.product.get("productName")
+                },
+                anchor: '0'
             }, {
                 xtype: "fieldcontainer",
                 anchor: 0,
                 layout:"hbox",
                 items: [{
+                    xtype: "textfield",
+                    readOnly: true,
+                    tabIndex:-1,
+                    fieldLabel: "Current Product Code",
+                    flex: 1,
+                    value: this.product.get("productCode")
+                },{
                     xtype: "textfield",                    
                     fieldLabel: "New Product Code",
                     name: "newProductCode",
                     itemId: "newProductCode",
-                    emptyText: "Enter New Product Code",
+                    margin: "0 0 0 20",
+                    allowBlank: hasVariations,
+                    labelClsExtra: (hasVariations) ? '' : 'x-form-item-required',
+                    emptyText: "Enter New Product Code",                    
+                    invalidValue : this.product.get("productCode"),
+                    validator: function (value) {
+                        return (value && value == this.invalidValue) ? me.sameCodeErrorTxt : true
+                    },
                     listeners: {
                         'dirtychange': function (field, isDirty) {
                             this.updateSaveButton({
-                                fieldDirty:isDirty
+                                fieldDirty: isDirty
                             })
                         },
                         scope:me
                     },
                     flex: 1
-                },{
-                    xtype: "textfield",
-                    readOnly: true,
-                    margin: "0 0 0 4",
-                    tabIndex:-1,
-                    fieldLabel: "Current Product Code",
-                    flex: 1,
-                    value: this.product.get("productCode")
                 }]
             }]
         })
@@ -185,25 +198,22 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
 
 
             staticColumns = [
+                { text: 'Current Product Code', dataIndex: 'productCode', width: 250 },
                 {
                     text: 'New Product Code', dataIndex: 'newProductCode',
                     width: 250,
                     editor: {
-
-                        //onEditorShow: function (field, editor, contex) {
-                        //    if (contex.record.get('exists') === true) {
-                        //        field.disable();
-                        //    } else {
-                        //        field.enable();
-                        //    }
-                        //},
+                        validator: function (value) {                            
+                            return (value && value == this.invalidValue) ? "The new and current product code cannot be the same" : true
+                        },
+                        emptyText: "Enter New Product Code",
                         xtype: 'textfield',
                         showBorder: true,
                         msgTarget: "qtip"
                     }
 
-                },
-                { text: 'Current Product Code', dataIndex: 'productCode', width: 250 }
+                }
+                
             ]
 
             var columns = staticColumns.concat(optionColumns);
@@ -213,6 +223,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                 flex: 1,
                 margin: "20 0 0 0",
                 columns: columns,
+                enableColumnHide:false,
                 viewConfig: {
                     emptyText: '<div class="empty-grid-message">No varients to display</div>',
                     deferEmptyText: false,
@@ -228,6 +239,18 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     })
                 ]
             })
+
+
+
+            me.mon(me.grid, 'beforeedit', function (editorPlugin, e, eOpts) {
+                // disable editing when the grid is not editMode:true                
+                var editor = e.column.getEditor(),
+                    record = e.record;
+                editor.invalidValue = record.get("productCode");
+                return true;
+            }, me);
+
+
 
             me.mon(me.grid, 'edit', function (grid, context) {
                 var gridDirty = false;
@@ -254,7 +277,12 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             items: items
         });
 
+        var newProductCode = me.down("#newProductCode");
+        newProductCode.focus();
+
+
         if (hasVariations) {            
+            me.minHeight = 500;
             me.setHeight(600);
         }
     },
@@ -305,7 +333,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         if (this.variationsStore.count()) {
         
             this.variationsStore.each(function (record) {
-                if (record.get("newProductCode")) {                    
+                if (record.get("newProductCode")) {
                     jsonData.push({
                         newProductCode: record.data.newProductCode,
                         existingProductCode: record.data.productCode
@@ -318,6 +346,31 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         return jsonData
     },
 
+    isValid: function (jsonData) {
+        var me = this,
+            error = [];
+
+        if (!jsonData.length) {
+            Taco.app.fireEvent('setmessage', "No product code changes found", 'error');
+            return false
+        } else {
+            error = Ext.Array.findBy(jsonData, function (record) {                
+                if (record.newProductCode== record.existingProductCode){
+                    return true
+                }
+                return false;
+            });
+
+            if (error) {
+                Taco.app.fireEvent('setmessage', this.sameCodeErrorTxt, 'error');
+                return false;
+            }
+        }
+
+        return true;
+
+    },
+
     doSave: function () {
         var me = this,
             jsonData = me.getJsonData(),
@@ -325,16 +378,15 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             productCode = (newProductCode) ? newProductCode : me.product.get("productCode"),
             saveButton = me.down('#primaryAction');
 
-        // make sure the user has entered some data;
-        if (!jsonData.length) {
-            Taco.app.fireEvent('setmessage', "No product code changes found", 'error');
+        if (!me.isValid(jsonData)) {
             return;
-        }
+        };
 
-        var msg = "<div style='padding-left:10px;padding-right:10px;'>The product that you are attempting to change the product code on may have existing orders which could be left in an undesirable state. It's linkage to other products and usages, as well as historical reporting could also be effected. <br><br>Are you sure you want to change the product code?</div>"
-
+        var msg = "<div style='padding-left:10px;padding-right:10px;'><div>Changing the product code:</div> <ul><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>May leave the existing orders in an undesirable state</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>It's linkage to other products might be affected</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'> Reporting might also be affected</li></ul> <div style='padding-top:10px'>Would you like to proceed?</div></div>"
+        
         Ext.MessageBox.show({
             title: 'Warning',
+            defaultFocus: Ext.MessageBox.msgButtons[2],
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons

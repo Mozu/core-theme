@@ -68,7 +68,7 @@ Ext.define('Taco.view.entityManager.Index', {
                                     siteId = Taco.app.context.getContextAtLevel('s').id;
 
                                 url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
-                                window.open('/_gosite/' + siteId + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
+                                window.open('/_gosite/' + siteId + '?environment=live&redir=' + encodeURIComponent(url));
                             }
                         },
                          {
@@ -81,7 +81,7 @@ Ext.define('Taco.view.entityManager.Index', {
                                      siteId = Taco.app.context.getContextAtLevel('s').id;
 
                                  url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
-                                 window.open('/_gosite/' + siteId + '?environment=staging&redir=' + encodeURIComponent(url), 'taco-preview');
+                                 window.open('/_gosite/' + siteId + '?environment=staging&redir=' + encodeURIComponent(url));
                              }
                          }
                     ]

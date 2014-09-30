@@ -13,7 +13,9 @@ Ext.define('Taco.view.theme.ThemeView', {
     disableSelection: true,
     itemSelector: '.theme-swatch',
     cls: 'taco-theme-selector',
-
+    requires: [
+        'Ext.ux.IFrame'
+    ],
     tpl: [
         '<tpl for="groups">',
             '<h2>',
@@ -67,38 +69,58 @@ Ext.define('Taco.view.theme.ThemeView', {
         '</tpl>'
     ],
 
-    initComponent: function() {
+    initComponent: function () {
         this.listeners = {
-            itemclick: function(view, model, element, idx, eventObj) {
+            itemclick: function (view, model, element, idx, eventObj) {
                 var targetEl = Ext.get(eventObj.target),
-                    width, height, id;
+                    width,
+                    height;
+
 
                 eventObj.preventDefault();
+
 
                 if (targetEl.hasCls('action-preview')) {
                     height = Taco.app.viewPort.getHeight();
                     width = Taco.app.viewPort.getWidth();
 
-                    Ext.util.Cookies.set('SBTHEME', model.getId());
 
                     Ext.create('Ext.window.Window', {
                         title: model.getId() + ' Theme Preview',
                         height: height - 20,
                         width: width - 20,
                         layout: 'fit',
-                        listeners: {
-                            close: function(panel) {
-                                Ext.util.Cookies.clear('SBTHEME');
+
+                        items: [
+                            {
+                                flex: 1,
+                                itemId: 'iframe',
+                                xtype: 'uxiframe',
+                                src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend('/', 'SBTHEME=' + model.getId())),
+                                listeners: {
+                                    load: function (iframe) {
+                                        Ext.EventManager.on(iframe.getDoc(), 'click', function (e, target) {
+                                            var url = target.pathname + target.search;
+                                            if (target.hostname === iframe.getWin().location.hostname && !e.browserEvent.defaultPrevented) {
+
+
+                                                iframe.getWin().location.href = Ext.String.urlAppend(url, 'SBTHEME=' + model.getId());
+
+                                                e.stopEvent();
+                                            }
+                                        }, this, {
+                                            delegate: 'a'
+                                        });
+                                    }
+                                }
                             }
-                        },
-                        items: { // Let's put an empty grid in just to illustrate fit layout
-                            html: '<iframe src="/_gosite/' + Taco.app.context.getSiteId() + '/?environment=preview" width=' + (width - 30) + ' height=' + (height - 30) + ' />'
-                        }
+                        ]
+
                     }).show();
                 }
 
                 if (targetEl.hasCls('action-settings')) {
-                    Ext.defer(function() {
+                    Ext.defer(function () {
                         Taco.core.StateManager.attemptNavigate('themesettings/edit/' + model.getId(), {
                             complexMetaData: {
                                 record: model
@@ -106,7 +128,7 @@ Ext.define('Taco.view.theme.ThemeView', {
                         });
                     }, 1, this);
                     return;
-                    
+
                 }
                 if (targetEl.hasCls('action-addons')) {
                     Ext.defer(function () {
@@ -168,11 +190,11 @@ Ext.define('Taco.view.theme.ThemeView', {
      * @param {String} fieldName
      * @param {Ext.data.Model} model
      */
-    swapSelection: function(fieldName, model) {
+    swapSelection: function (fieldName, model) {
         this.removeSelection(fieldName);
         model.set(fieldName, true);
     },
-    removeSelection: function(fieldName) {
+    removeSelection: function (fieldName) {
         // *** Grab the currently selected record (with matching fieldName) and set to false
         var selectedModel = this.store.findRecord(fieldName, true);
         if (selectedModel) selectedModel.set(fieldName, false);

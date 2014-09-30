@@ -133,13 +133,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("cart", jCart); // Mapper.Map<VMCart>(cart));
         }
 
-        [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Checkout()
-        {
-            return Redirect("/cart");
-        }
+     
 
+        [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
         [System.Web.Http.HttpPost]
+        [System.Web.Http.HttpGet]   
         public async Task<ActionResult> Checkout(string id = null, HttpRequestMessage requestMessage = null)
         {
             Cart cart = null;

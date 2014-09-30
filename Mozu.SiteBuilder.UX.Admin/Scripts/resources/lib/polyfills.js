@@ -51,6 +51,9 @@ document.createElement('nav');
     }
     function addFocusPolyfill(e) {        
         var type = e.type === 'focus' ? 'focusin' : 'focusout';
+
+        if (!window.CustomEvent) return;
+
         var event = new CustomEvent(type, { bubbles: true, cancelable: false });
         event.c1Generated = true;
         e.target.dispatchEvent(event);

@@ -202,9 +202,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.11.0.1\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.11.0.3\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.12.0.1\lib\net45\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -583,6 +583,7 @@
     <Content Include="Themes\Core5\resources\images\button-loading.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\Core5\resources\images\favicon.ico" />
     <Content Include="Themes\Core5\scripts\modules\backbone-mozu-pagedcollection.js" />
     <Content Include="Themes\Core5\scripts\modules\contextify.js" />
     <Content Include="Themes\Core5\scripts\modules\models-documents.js" />
@@ -1065,12 +1066,8 @@
     <Content Include="Themes\Core5\templates\modules\common\email-item-total.hypr.live" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PostDeploy.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="PreDeploy.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="PostDeploy.ps1" />
+    <Content Include="PreDeploy.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\email\giftcard-created.hypr" />

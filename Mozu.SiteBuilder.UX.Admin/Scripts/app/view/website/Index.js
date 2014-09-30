@@ -194,14 +194,14 @@ Ext.define('Taco.view.website.Index', {
                             handler: function (menuItem) {
                                 //scope is set to index on all action buttons by container.
                                 var url = menuItem.up('button').scope.url;
-                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url), 'taco-preview');
+                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=live&redir=' + encodeURIComponent(url));
                             }
                         }, {
                             text: 'Staging Version',
                             handler: function (menuItem) {
                                 //scope is set to index on all action buttons by container.
                                 var url = menuItem.up('button').scope.url;
-                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url), 'taco-preview');
+                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent(url));
                             }
                         }, {
                             text: 'Preview Theme',
@@ -512,6 +512,8 @@ Ext.define('Taco.view.website.Index', {
         this.tree.on('pagecreate', this.onPageCreate, this);
         this.tree.on('urlclick', this.onTreeUrlClick, this);
         this.tree.on('contentlistclick', this.onContentListClick, this);
+        this.tree.on('navigationchange', this.reloadPage, this);
+        this.tree.on('navigationchange', this.reloadPage, this);
         this.on('render', function () {
             var header = me.getHeader();
 

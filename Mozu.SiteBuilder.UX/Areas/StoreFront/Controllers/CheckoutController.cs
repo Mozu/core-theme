@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [SslOnlyActionFilter]
     [ContextInitialization]
-    [NoWarmAuthActionFilter(ReturnUrl = "/cart")]
+    [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
     public class CheckoutController : BaseApiController
     {
        

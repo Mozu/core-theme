@@ -62,18 +62,25 @@ Ext.define('Taco.core.ux.form.SlugField', {
             index = me.getCaretIndex();
         }
 
-        me.setValue(me.getValue());
-
-        if (maintainCaret) {
+        if (me.setValue(me.getValue()) !== false && maintainCaret) {
             me.setCaretIndex(index);
         }
+
+
     },
 
     setValue: function(value) {
-        var me = this;
+        var me = this,
+            newValue,
+            currentValue;
 
         if (typeof value === 'string') {
-            return me.callParent([value.replace(/((?!(@|[A-Z]|[a-z]|\d|[%]|[\.])).)+/g, '-').toLowerCase()]);
+            currentValue = me.getValue();
+            newValue = value.replace(/((?!(@|[A-Z]|[a-z]|\d|[%]|[\.])).)+/g, '-').toLowerCase();
+            if (currentValue === newValue) {
+                return false;
+            }
+            return me.callParent([newValue]);
         }
         return me.callParent(value);
     },

@@ -239,6 +239,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 return List2(res.Items.Select(x =>
                 {
+                    x.ListFQN = x.ListFQN ?? list;
                     JObject j = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
                     j["entityType"] = "mzdb";
                     return j;

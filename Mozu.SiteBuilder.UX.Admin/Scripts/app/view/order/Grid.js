@@ -330,13 +330,14 @@ Ext.define('Taco.view.order.Grid', {
                             menuColumnHandler: function (item, eventData) {
                                 var me = this,
                                     record = eventData.record,
+                                    payment = record.payments().getAt(0),
 
                                     grid = eventData.grid,
                                     index = eventData.rowIndex,
                                     amount = record.get('total') - (((record.get('authorizationInfo') || {}).amountCollected) || 0),
                                     data = {
                                         orderId: record.getId(),
-                                        paymentId: record.payments().getAt(0).getId(),
+                                        paymentId: payment.getId(),
                                         amount: amount
                                     },
                                     ajaxConfig,
@@ -352,7 +353,13 @@ Ext.define('Taco.view.order.Grid', {
                                     scope: this
                                 };
 
-                                record.capturePayment(ajaxConfig);
+                                // prevent double capture attempts. they're really bad.
+                                if (!payment.isCapturePending) {
+                                    record.capturePayment(ajaxConfig);
+                                }
+
+                                payment.isCapturePending = true;
+                                this.disable();
                             }
                         }, {
                             text: 'Cancel Order',
@@ -412,7 +419,10 @@ Ext.define('Taco.view.order.Grid', {
                             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
                             cancelAction = menu.items.get('cancelAction'),
                             capturePaymentAction = menu.items.get('capturePaymentAction'),
-                            canCapture = record.payments().getCount() == 1 && (record.payments().getAt(0).get('availableActions') || []).indexOf('CapturePayment') > -1;
+                            hasExactlyOnePayment = record.payments().getCount() == 1,
+                            recordPayment = hasExactlyOnePayment ? record.payments().getAt(0) : null,
+                            paymentTypeCanBeCaptured = recordPayment.get('paymentType') !== 'Check', // checks require a 'check number' parameter to capture, so we can't capture from the grid.
+                            canCapture = recordPayment && paymentTypeCanBeCaptured && !recordPayment.isCapturePending && (recordPayment.get('availableActions') || []).indexOf('CapturePayment') > -1;
 
                         /*    Order only has a single payment transaction
                         Order Payment transaction is in “Authorized State”*/

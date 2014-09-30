@@ -202,7 +202,7 @@ Ext.define('Taco.view.pendingChange.Cms', {
                             handler: function () {
                                 var r = e.record;
 
-                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent('/pages/' + r.get('name')), 'taco-preview');
+                                window.open('/_gosite/' + Taco.app.context.getSiteId() + '?environment=preview&redir=' + encodeURIComponent('/pages/' + r.get('name')));
                             }
                         });
                     }

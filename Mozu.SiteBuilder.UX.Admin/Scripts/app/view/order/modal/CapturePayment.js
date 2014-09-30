@@ -51,8 +51,13 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
             amount: formValues.amount
         };
 
+        me.down('#primaryAction').hide();
+
         cfg = {
             jsonData: data,
+            callback: function () {
+                me.down('#primaryAction').show();
+            },
             success: function (response) {
                 var json = Ext.decode(response.responseText, true);
 
