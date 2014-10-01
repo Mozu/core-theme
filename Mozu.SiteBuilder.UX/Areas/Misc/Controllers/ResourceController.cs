@@ -815,15 +815,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     tree = parser.Parse(template, _path);
                 }
-                catch(Exception exception)
+                catch(System.IO.FileNotFoundException exception)
+                {
+                    throw new FileNotFoundException(exception.Message + "[" + exception.FileName + "]", exception.InnerException);
+                }
+                catch(Exception ex)
                 {
                     if (_debug && _emitDebugStylesheet)
                     {
-                        debuggableException = exception;
-                    }
-                    else if (exception is System.IO.FileNotFoundException)
-                    {
-                        throw new FileNotFoundException(exception.Message + "[" + ((System.IO.FileNotFoundException)exception).FileName + "]", exception.InnerException);
+                        debuggableException = ex;
                     }
                     else throw;
                 }
