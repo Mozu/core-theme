@@ -198,12 +198,13 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         // add items to the returnable items store
         // generate a full list of items to add to the returnable items store; Expanding list of bundled items;
         Ext.Array.each(this.order.get('items'), function (orderItem) {
+            if (orderItem.productUsage !== "Bundle") {
+                addItem(orderItem, orderItem.id);
+            }
             if (orderItem.bundledProducts && orderItem.bundledProducts.length > 0) {
                 Ext.Array.each(orderItem.bundledProducts, function (item) {
                     addItem(Ext.apply({}, { quantity: item.quantity * orderItem.quantity }, item), orderItem.id, orderItem.productName);
                 });
-            } else {
-                addItem(orderItem, orderItem.id);
             }
         });
 
