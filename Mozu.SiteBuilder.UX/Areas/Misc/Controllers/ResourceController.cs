@@ -250,9 +250,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var res = Content("stylesheets/" + pathinfo, "text/css");
             var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
-            if (oc != null)
+            bool emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
+            if (oc!= null)
             {
-                ((MozuVirtualFileResult) oc.Value).Transform = new LessTransFormer(pathinfo, debug, this, _pathProvider, _contentRetriever).Transform;
+
+                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _themeSettingsRepository, _pathProvider).Transform;
             }
 
             return res;
@@ -771,13 +773,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                                               RegexOptions.IgnorePatternWhitespace);
 
             private readonly bool _debug;
+            private readonly bool _emitDebugStylesheet;
             private readonly IThemeContentRetriever _contentRetriever;
             private readonly string _path;
 
-            public LessTransFormer(string path, bool debug, ResourceController resourceController,
-                IMozuVirtualPathProvider virtualPathProvider, IThemeContentRetriever contentRetriever)
+     
+         
+            private IThemeSettingsRepository _themeSettingsRepository;
+
+            public LessTransFormer(string path, bool debug, bool emitDebugStylesheet, ResourceController resourceController , IThemeSettingsRepository themeSettingsRepository, MozuVirtualPathProvider virtualPathProvider)
             {
                 Controller = resourceController;
+                _emitDebugStylesheet = emitDebugStylesheet;
                 _debug = debug;
                 _contentRetriever = contentRetriever;
                 _path = path;
@@ -808,10 +815,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     tree = parser.Parse(template, _path);
                 }
-                catch (FileNotFoundException exception)
+                catch(Exception exception)
                 {
-                    throw new FileNotFoundException(exception.Message + "[" + exception.FileName + "]",
-                        exception.InnerException);
+                    if (_debug && _emitDebugStylesheet)
+                    {
+                        debuggableException = exception;
+                    }
+                    else if (exception is System.IO.FileNotFoundException)
+                    {
+                        throw new FileNotFoundException(exception.Message + "[" + ((System.IO.FileNotFoundException)exception).FileName + "]", exception.InnerException);
+                    }
+                    else throw;
                 }
                
                 var env = new Env {Compress = !_debug, Debug = _debug};
@@ -823,7 +837,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 catch (Exception ex)
                 {
 
-                    if (_debug)
+                    if (_debug && _emitDebugStylesheet)
                     {
                         debuggableException = ex;
                     }
@@ -838,20 +852,23 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     }
                 }
 
+                MemoryStream ms;
+                using (var container = StringBuilderPool.Default.GetContainer())
+                {
                 StringBuilder sb;
-
                 if (debuggableException != null)
                 {
-                    sb = new StringBuilder();
+                        sb = container.Item;
                     sb.Append(VISIBLE_LESS_ERROR_FILE_START);
-                    sb.Append(debuggableException.Message.Replace(System.Environment.NewLine, "\\a").Replace("\'", "\\'"));
+                        sb.Append(debuggableException.Message.Replace(System.Environment.NewLine, "\\a ").Replace("\'", "\\'"));
                     sb.Append(VISIBLE_LESS_ERROR_FILE_END);
                 }
                 else
                 {
                     sb = env.Output.Pop();
                 }
-                var ms = new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
+                    ms = new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
+                }
                 ms.Position = 0;
                 return ms;
             }
