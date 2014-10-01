@@ -105,9 +105,10 @@ Ext.define('Taco.core.ux.mixins.Searchable', {
         if (!me.hideSearchToolbar) {
             
             conf = {
-                dock: 'top',                
+                dock: 'top',
                 minHeight:30,
                 padding: '0px 0px 10px 0px',
+                cls: 'taco-grid-search-toolbar',
                 items: [
                     /*
                     {

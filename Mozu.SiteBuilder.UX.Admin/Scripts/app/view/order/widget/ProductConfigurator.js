@@ -379,7 +379,7 @@
         this.optionsHeading.show();
         this.optionsContainer.removeAll();
         
-        if (options.length) {
+        if (options && options.length) {
             Ext.each(options, function (option) {                
                 items.push(this.buildOption(option));
             }, this);

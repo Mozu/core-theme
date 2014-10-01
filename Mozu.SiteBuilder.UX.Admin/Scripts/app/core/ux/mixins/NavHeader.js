@@ -24,7 +24,6 @@
 
     < ... code fragment ... >
  *
- * test
  */
 
 Ext.define('Taco.core.ux.mixins.NavHeader', {
@@ -32,7 +31,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         'Ext.toolbar.Fill',
         'Ext.toolbar.Spacer',
         'Taco.core.util.ExceptionWhiner',
-        'Ext.toolbar.Spacer'        
+        'Ext.toolbar.Spacer'
     ],
 
     mixins: {
@@ -41,7 +40,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     init: function () {
         var me = this
-        
         this.mixins.permissions.constructor.apply(this, arguments);
 
         me.addEvents(
@@ -57,7 +55,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             * Fired after the cancel button is clicked, but before the close code executes.
             * @param {Taco.core.ux.window.Modal} this
             */
-           'cancel',       
+           'cancel',
            /**
             * @event
             * Fired before the save event is run.
@@ -81,7 +79,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         );
 
         this.initNavHeader();
-        
+
         me.mon(me, {
             render: {
                 fn: function () {
@@ -99,8 +97,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
         });
     },
-    
-    
+
+
     config: {
         /**
          * @cfg {Object[]}
@@ -109,39 +107,39 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         additionalActions: null,
 
         enableSaveActionToggle: true,
-        createButtonEnabled:false,
+        createButtonEnabled: false,
         createButtonVisible: true,
         createButtonText: "Create",
-        saveButtonEnabled:true,
+        saveButtonEnabled: true,
         saveButtonVisible: true,
         cancelButtonEnabled: true,
         cancelButtonVisible: true,
         cancelText: "Cancel",
         saveText: "Save",
         saveInProgressText: "Saving...",
-        title:null
+        title: null
     },
 
     initNavHeader: function () {
         var me = this;
-        
+
         // need to enable the frame on the panel and exclude the header from it so we can add padding to the panel and let the header have full width;
-        Ext.apply(this,{
+        Ext.apply(this, {
             frameHeader: true,
 
             //style: "padding:0px;",
             frame: true
             //,
             // this will add padding around the panel with this mixin;
-            
+
             //,
             //padding: "20 20 10 20"
         });
 
         //this.bodyStyle = "padding:20px 20px 10px 20px"
 
-        
-        this.cls = this.cls ||  "";
+
+        this.cls = this.cls || "";
         this.cls += " taco-content-navcontainer ";
 
         if (this.addContentViewPadding) {
@@ -163,118 +161,64 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             xtype: "container",
             cls: "taco-navheader",
             // need to set the min height to 
-            style:"height:52px;",
+            style: "height:52px;",
             items: []
         }
 
         this.createNavHeader()
     },
-    
+
     createNavHeader: function () {
         var me = this,
+            hasContextSwitcher = (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)),
             conf;
+
+        me.titleContainer = {
+            xtype: "container",
+            layout: 'hbox',
+            flex: 1,
+            items: []
+        };
 
         if (me.title !== false) {
             // just call view.setTitle("new title here") to update the title;
             me.titleCmp = Ext.create('Ext.Component', {
                 cls: "taco-content-header-title",
-                // flex: 1,
-                // todo: move this to the scss;
-                //style: "font-size: 2rem;font-weight: 300;line-height: 3rem;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;",
-                //html: "Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here Title Here "
                 html: this.getTitle()
             });
+
+            me.titleContainer.items.push(me.titleCmp);
         }
 
         conf = {
             xtype: "toolbar",
-            cls : "taco-navheader-toolbar",
+            cls: "taco-navheader-toolbar",
             dock: 'top',
-            //padding: '10px 20px 10px 20px',
-            //style: "border-bottom: 1px solid #bfbfbf !important",
-            items: [
-               
-            ]
+            items: []
         };
-       
-        if (me.titleCmp) {
-            conf.items.push(me.titleCmp);
-        }
-            
-        
+
+        conf.items.push(me.titleContainer);
 
         if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
-
-            conf.items.push({
+            me.titleContainer.items.push({
                 autoEl: 'h3',
                 itemId: 'forLable',
                 style: {
+                    'line-height': '3rem',
+                    'margin': '0px 10px 0px 10px',
                     'font-weight': 'normal'
                 },
                 xtype: 'component',
-                html: '&nbsp;for&nbsp;'
+                html: 'for'
             });
 
+            me.titleContainer.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
 
-            conf.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
-        }
-        if (conf.items.length) {
-            conf.items.push('->');
-        }
-    
-        
-
-
-        /*
-        from editor wrapper
-
-        if (!this.actions) {
-            this.actions = [{
-                xtype: 'button',
-                itemId: 'cancel',
-                ui: 'action',
-                scale: 'medium',
-                text: this.cancelText,
-                margin: '0 0 0 10',
-                hidden: this.cancelHidden || !this.allowCreate(),
-                scope: this,
-                handler: this.cancel
-            }, {
-                xtype: 'button',
-                itemId: 'save',
-                ui: 'action-primary',
-                scale: 'medium',
-                text: this.saveText,
-                margin: '0 0 0 10',
-                allowDepress: false,
-                enableToggle: this.enableSaveActionToggle,
-                formBind: true,
-                hidden: this.saveHidden || !this.allowCreate(),
-                scope: this,
-                toggleHandler: this.save
-            }];
+        } else {
+            // In order for the title to grow and shrink dynamically and have elipsis we can only do this when there is no trailing "for [ context combo ] "
+            me.titleCmp.flex = 1;
         }
 
-        Ext.each(this.additionalActions, function (additionalAction) {
-            var beforeItemId = additionalAction.beforeItemId,
-                insertIndex;
-
-            if (beforeItemId) {
-                Ext.each(this.actions, function (action, index) {
-                    if (action.itemId !== beforeItemId) return;
-                    insertIndex = index + 1;
-                    return false;
-                });
-            }
-
-            if (insertIndex) {
-                this.actions = Ext.Array.insert(this.actions, insertIndex, [additionalAction]);
-            } else {
-                this.actions.unshift(additionalAction);
-            }
-        }, this);
-        */
-        
         if (!me.actions) {
             me.actions = [];
 
@@ -286,17 +230,16 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     text: me.cancelText,
                     margin: "0 0 0 10",
                     ui: 'action',
-                    scale: 'medium',                    
+                    scale: 'medium',
                     hidden: !me.cancelButtonVisible || this.cancelHidden || !this.allowCreate(),
                     itemId: 'cancelActionButton',
                     handler: me.cancelActionHandler,
-                    scope:me
+                    scope: me
                 }));
             }
 
             if (me.saveButtonEnabled) {
-                
-                
+
                 var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
                     xtype: 'button',
                     text: me.saveText,
@@ -319,7 +262,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.actions.push(me.saveActionButton);
             }
 
-            if (me.createButtonEnabled) {                
+            if (me.createButtonEnabled) {
                 me.actions.push(Ext.apply({}, me.createButtonCfg, {
                     xtype: 'button',
                     text: this.createButtonText,
@@ -335,7 +278,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         }
 
 
-       
+
 
         // Allows class with mixin to insert additional actions. Code copied from EditorWrapper;
         Ext.each(this.additionalActions, function (additionalAction) {
@@ -358,12 +301,19 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         }, this);
 
 
-        Ext.Array.push(conf.items, me.actions);
+        // need to create container for buttons so that they can force the titleCmp to have elipsis
+        Ext.Array.push(conf.items, {
+            xtype: 'container',
+            itemHeader: 'navHeaderActionContainer',
+            items: me.actions
+        });
 
-        me.navHeader = Ext.widget('toolbar', conf);
-        
+        me.navHeader = Ext.widget(conf);
+
+
+
         me.header.items.unshift(me.navHeader);
-    },    
+    },
 
     resetSaveButton: function () {
         var me = this;
@@ -378,7 +328,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
      * @cfg saveActionHandler
      * The function to execute when the primary action button is clicked.
      */
-    saveActionHandler: function (btn) {        
+    saveActionHandler: function (btn) {
         this.save(btn);
     },
 
@@ -405,7 +355,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.saveActionButton.addCls('taco-button-processing');
                 me.saveActionButton.setText(this.saveInProgressText);
             };
-            
+
             me.doSave();
         }
     },
@@ -424,7 +374,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     doSave: function () {
         var me = this,
             data = null;
-        
+
         //console.log("doSave")
         //console.warn("The instances and subclasses of this Modal typically overide the doSave() Method and this modal has not.")
 
@@ -444,11 +394,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     */
     saveSuccess: function (data) {
         var me = this;
-        me.onSaveSuccess(data);        
+        me.onSaveSuccess(data);
         this.resetSaveButton()
 
         me.fireEvent('savesuccess', me, data);
-        
+
     },
 
 
@@ -463,19 +413,19 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     */
     saveFailure: function () {
         var me = this;
-        me.onSaveFailure(arguments);        
+        me.onSaveFailure(arguments);
         this.resetSaveButton();
-        me.fireEvent('savefailure', me,arguments);
+        me.fireEvent('savefailure', me, arguments);
     },
 
-    onSaveFailure : Ext.emptyFn,
+    onSaveFailure: Ext.emptyFn,
 
     /**
      * @cfg cancelActionHandler
      * The function to execute when the cancel action button is clicked.
      */
     cancelActionHandler: function () {
-         this.cancel();
+        this.cancel();
     },
 
     cancel: function () {
@@ -526,13 +476,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     onCreate: Ext.emptyFn,
 
     doCreate: function () {
-        console.log("doCreate")        
+        console.log("doCreate")
     },
 
     bindActionsToForm: function (form) {
         var actions = this.header.query('[formBind]'),
             form = form || this.form;
-        
+
         if (form && form.isComponent) {
             form.getForm().getBoundItems().add(actions);
         }

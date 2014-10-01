@@ -37,7 +37,6 @@ Ext.define('Taco.view.order.Grid', {
     showActionsColumn: true,
 
     hideSearchToolbar: false,
-    selType: 'rowmodel',
     
     title: "Orders",
 
@@ -85,8 +84,50 @@ Ext.define('Taco.view.order.Grid', {
         me.createButtonCfg = me.getCreateButtonConfig();
 
         this.columns = this.getColumnConfig();
+
+        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+            selType: 'checkboxmodel',
+            checkOnly: true,
+            ignoreRightMouseSelection: true,
+            headerWidth: 37,
+            listeners: {
+                selectionchange: {
+                    scope: this,
+                    fn: function (selModel, selected) {
+                        this.searchToolbar.items.get('bulkActions').setVisible(selected.length);
+                    }
+                }
+            }
+        });
         
         me.callParent(arguments);
+
+        this.searchToolbar.insert(0, {
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            itemId: 'bulkActions',
+            text: 'Bulk Actions',
+            cls: 'taco-bulk-actions',
+            margin: '0 10 0 0',
+            hideMode: 'offsets',
+            hidden: true,
+            menu: {
+                items: [{
+                    text: 'one',
+                    scope: this,
+                    handler: function () {
+                        console.log('do stuff', this.getSelectionModel().getSelection());
+                    }
+                }, {
+                    text: 'two',
+                    scope: this,
+                    handler: function () {
+                        console.log('do stuff', this.getSelectionModel().getSelection());
+                    }
+                }]
+            }
+        });
     },
     /*
     launchLoadedEditor: function (record, options) {
@@ -421,11 +462,13 @@ Ext.define('Taco.view.order.Grid', {
                             capturePaymentAction = menu.items.get('capturePaymentAction'),
                             hasExactlyOnePayment = record.payments().getCount() == 1,
                             recordPayment = hasExactlyOnePayment ? record.payments().getAt(0) : null,
-                            paymentTypeCanBeCaptured = recordPayment.get('paymentType') !== 'Check', // checks require a 'check number' parameter to capture, so we can't capture from the grid.
+                            paymentTypeCanBeCaptured = recordPayment && recordPayment.get('paymentType') !== 'Check', // checks require a 'check number' parameter to capture, so we can't capture from the grid.
                             canCapture = recordPayment && paymentTypeCanBeCaptured && !recordPayment.isCapturePending && (recordPayment.get('availableActions') || []).indexOf('CapturePayment') > -1;
 
-                        /*    Order only has a single payment transaction
-                        Order Payment transaction is in “Authorized State”*/
+                        // can capture if:
+                        // order has exactly one payment
+                        // payment is in "Authorized State" (has 'CapturePayment' as an available action)
+                        // payment is not a check.
 
                         cancelAction.setDisabled(!canCancel);
                         capturePaymentAction.setDisabled(!canCapture);
