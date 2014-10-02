@@ -164,7 +164,7 @@
       <HintPath>..\packages\FluentValidation.5.1.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.2\lib\net45\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharpx.Collections">
@@ -341,11 +341,11 @@
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.11.0.2\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.2\lib\net45\NDjango.Core40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.2\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
