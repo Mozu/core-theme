@@ -174,7 +174,7 @@
       <HintPath>..\packages\FluentValidation.5.1.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.2\lib\net45\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharpx.Collections">
@@ -337,11 +337,11 @@
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.11.0.2\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.2\lib\net45\NDjango.Core40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.2\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -477,13 +477,14 @@
     <Compile Include="Extensions\MD5Extensions.cs" />
     <Compile Include="Extensions\ServiceClientResponseExtensions.cs" />
     <Compile Include="Filters\CollectionFilter.cs" />
+    <Compile Include="Filters\GetProductAttributeFilter.cs" />
+    <Compile Include="Filters\GetProductAttributeValueFilter.cs" />
     <Compile Include="Filters\MathFilters.cs" />
     <Compile Include="Filters\NumberFormat.cs" />
     <Compile Include="Filters\ParentTemplate.cs" />
     <Compile Include="Filters\TruncateCharsFilter.cs" />
     <Compile Include="Filters\FindFilter.cs" />
     <Compile Include="Filters\Safe.cs" />
-    <Compile Include="Filters\StringFormatFilter.cs" />
     <Compile Include="Logging\ExceptionContextLogWrapper.cs" />
     <Compile Include="MediaTypeFormatters\HtmlActionResultMediaTypeFormatter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlErrorMediaTypeHyperFormatter.cs" />

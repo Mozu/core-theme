@@ -13,7 +13,7 @@ Ext.define('Taco.view.product.subform.Options', {
     title: 'Options',
 
     initComponent: function () {
-
+        
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
         this.record = this.product;
 
