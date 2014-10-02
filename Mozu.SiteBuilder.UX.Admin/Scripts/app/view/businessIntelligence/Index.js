@@ -2,7 +2,8 @@
 * @class Taco.view.businessIntelligence.Index
 */
 Ext.define('Taco.view.businessIntelligence.Index', {
-    extend: 'Ext.panel.Panel',
+    ///extend: 'Ext.panel.Panel',
+    extend: 'Taco.core.ux.content.Container',
     requires: [
         'Ext.ux.IFrame',
         'Ext.panel.Panel'
@@ -20,12 +21,16 @@ Ext.define('Taco.view.businessIntelligence.Index', {
     },
 
     contextConfig: {
-        supportedLevels: ['t'], //, 's'
+        supportedLevels: ['t', 's'], //, 's'
         requiresContextOfType: ['t', 's']
     },
 
     initComponent: function () {
         var me = this;
+
+        me.header = {
+            title: 'Reports'
+        };
 
         me.layout = 'fit';
 
@@ -47,7 +52,7 @@ Ext.define('Taco.view.businessIntelligence.Index', {
     },
 
     loadDashboard: function () {
-        var me = this;
+        var me = this;   
         Ext.Ajax.request({
             url: '/admin/app/report/dashboard',
             method: 'GET',
@@ -55,6 +60,16 @@ Ext.define('Taco.view.businessIntelligence.Index', {
                 var obj = Ext.JSON.decode(response.responseText);
                 if (!obj || !obj.items) return;
                 var dashboardLocation = obj.items;
+
+
+
+                console.log('Tenant Id: ', Taco.app.context.id);
+                if (Taco.app.context.getSiteId()) {
+                    console.log('siteid: ' + Taco.app.context.getSiteId());
+                }
+                console.log(dashboardLocation);
+
+
                 if (!dashboardLocation) return;
                 var iFrameChild = Ext.create('Ext.ux.IFrame', {
                     itemId: 'dashboardIframe',
@@ -66,5 +81,6 @@ Ext.define('Taco.view.businessIntelligence.Index', {
                 me.dashboardPanel.doLayout();
             }
         });
+        
     }
 })
