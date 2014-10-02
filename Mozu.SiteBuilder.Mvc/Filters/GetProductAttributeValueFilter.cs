@@ -44,7 +44,18 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             // assuming for now that the first value is the one we want.
             // TODO: reevaluate this, but remember to stay in sync with HyprLive changes
             var value = values.First();
-            return value.GetPropValue("stringValue") ?? value.GetPropValue("value");
+            return GetMatchedValue(value);
+        }
+
+        private static object GetMatchedValue(object value)
+        {
+            // evaluate stringValue first, then value
+            if (value.ContainsProperty("stringValue"))
+            {
+                var strValue = value.GetPropValue("stringValue");
+                if (strValue != null) return strValue;
+            }
+            return value.ContainsProperty("value") ? value.GetPropValue("value") : null;
         }
     }
 }
