@@ -14,6 +14,8 @@ lib/
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
+Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.js
+Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.json
 Mozu.SiteBuilder.UX/App_Data/[Ll]og.txt
 Mozu.SiteBuilder.UX.Themes/Themes/**/Resources/Scripts-Built/
 Mozu.SiteBuilder.UX.Admin/App_Data/
