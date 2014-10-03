@@ -483,6 +483,7 @@
     <Compile Include="Filters\TruncateCharsFilter.cs" />
     <Compile Include="Filters\FindFilter.cs" />
     <Compile Include="Filters\Safe.cs" />
+    <Compile Include="Filters\StringFormatFilter.cs" />
     <Compile Include="Logging\ExceptionContextLogWrapper.cs" />
     <Compile Include="MediaTypeFormatters\HtmlActionResultMediaTypeFormatter.cs" />
     <Compile Include="MediaTypeFormatters\HtmlErrorMediaTypeHyperFormatter.cs" />
