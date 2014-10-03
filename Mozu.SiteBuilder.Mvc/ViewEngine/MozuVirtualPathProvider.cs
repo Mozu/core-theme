@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web;
@@ -49,14 +47,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public override VirtualDirectory GetDirectory(string virtualDir)
         {
             var fileInfo = GetThemeFileInfo(virtualDir);
-            if (fileInfo != null)
-            {
-                return new MozuVirtualDirectory(fileInfo.VirtualPath, fileInfo.FullPath, this);
-            }
-            return null;
+            return fileInfo != null ? new MozuVirtualDirectory(fileInfo.VirtualPath, fileInfo.FullPath, this) : null;
         }
 
-       
          public override VirtualFile GetFile(string virtualPath)
          {
              return GetFile(virtualPath, true);
@@ -64,17 +57,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public  VirtualFile GetFile(string virtualPath, bool withExt   )
         {
             var fileInfo = GetThemeFileInfo(virtualPath, withExt);
-            if (fileInfo != null)
-            {
-                return new MozuVirtualFileSystemFile(fileInfo.VirtualPath, fileInfo.FullPath );
-            }
-            return null;
+            return fileInfo != null ? new MozuVirtualFileSystemFile(fileInfo.VirtualPath, fileInfo.FullPath) : null;
         }
 
          public IEnumerable<ThemeFileSystemInfo> GetLveTemplates()
          {
-             return this.ThemeStack.SelectMany(x=> x.FileListing.LiveTemmplates ).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
-            
+             return ThemeStack.SelectMany(x=> x.FileListing.LiveTemmplates ).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
          }
 
          public ThemeFileSystemInfo GetThemeFileInfo(string virtualPath, bool withExt = true  )
@@ -84,42 +72,15 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 virtualPath = virtualPath.GetFilePathNameWithoutExtension();
             }
-            foreach (var theme in this.ThemeStack)
-            {
-                var file = theme.FileListing.GetFileInfo(virtualPath, withExt);
-
-                    if (file != null )
-                    {
-                        return file;
-                    }
-            }
-            return null;
-
+             return ThemeStack.Select(theme => theme.FileListing.GetFileInfo(virtualPath, withExt)).FirstOrDefault(file => file != null);
          }
 
          public ThemeFileSystemInfo GetParentThemeFileInfo(ThemeFileSystemInfo item )
          {
-             var virtualPath = item.VirtualPathNoExt;
-             bool parentOrLower = false;
-             foreach (var theme in this.ThemeStack)
-             {
-                 if (parentOrLower == false)
-                 {
-                     if (theme.Id == item.ThemeId)
-                     {
-                         parentOrLower = true;
-                     }
-                     continue;
-                 }
-                 var file = theme.FileListing.GetFileInfo(virtualPath, false);
-
-                 if (file != null)
-                 {
-                     return file;
-                 }
-             }
-             return null;
-
+             var parentTheme = ThemeStack.FirstOrDefault(theme => theme.Id.EqualsIgnoreCase(item.ThemeId));
+             if (parentTheme == null) return null;
+             
+             return parentTheme.FileListing.GetFileInfo(item.VirtualPathNoExt, false);
          }
 
         static Dictionary<string, MozuVirtualMongoFile> g_fileCache = new Dictionary<string, MozuVirtualMongoFile>();
