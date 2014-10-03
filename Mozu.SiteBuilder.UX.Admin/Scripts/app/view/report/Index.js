@@ -1,5 +1,5 @@
 Ext.define('Taco.view.report.Index', {
-    ///extend: 'Ext.panel.Panel',
+    //extend: 'Ext.panel.Panel',
     extend: 'Taco.core.ux.content.Container',
     requires: [
         'Ext.ux.IFrame',
@@ -8,8 +8,6 @@ Ext.define('Taco.view.report.Index', {
     //mixins: {
     //    navHeader: 'Taco.core.ux.mixins.NavHeader'
     //},
-
-    //title: 'Business Intelligence',
 
     cls: undefined,
 
@@ -29,8 +27,6 @@ Ext.define('Taco.view.report.Index', {
             title: 'Reports'
         };
 
-        me.layout = 'fit';
-
         me.dashboardPanel = Ext.create('Ext.panel.Panel', {
             itemId: 'dashboardPanel',
             flex: 1,
@@ -39,13 +35,13 @@ Ext.define('Taco.view.report.Index', {
             }
         });
 
-        me.items = [
-            me.dashboardPanel
-        ];
+        Ext.apply(me.body, {
+            layout: 'fit',
+            items: [me.dashboardPanel]
+        });
 
         me.callParent(arguments);
         me.loadDashboard();
-
     },
 
     loadDashboard: function () {
@@ -76,6 +72,7 @@ Ext.define('Taco.view.report.Index', {
                 });
                 me.dashboardPanel.add(iFrameChild);
                 me.dashboardPanel.doLayout();
+                console.log('end of things');
             }
         });
 
