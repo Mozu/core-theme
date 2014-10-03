@@ -517,13 +517,13 @@
             "userCreatable": false,
             "template": "product"
         }, {
-            "id": "no-search-results",
+            "id": "search-results",
             "title": "Search Results",
             "entityType": "searchresult",
             "template": "search-results",
             "userCreatable": false
         }, {
-            "id": "no-results",
+            "id": "no-search-results",
             "title": "Empty Search Results",
             "entityType": "nosearchresult",
             "template": "no-search-results",
