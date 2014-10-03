@@ -105,12 +105,16 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
          * Any additional actions you want to add on top of the default Save/Cancel actions
          */
         additionalActions: null,
-
+        
+        //temporary data member that is set when user chooses to save and create new;
+        createOnSaveSuccess : false,
+        
         enableSaveActionToggle: true,
         createButtonEnabled: false,
         createButtonVisible: true,
         createButtonText: "Create",
         saveButtonEnabled: true,
+        saveAndCreateButtonEnabled: false,
         saveButtonVisible: true,
         cancelButtonEnabled: true,
         cancelButtonVisible: true,
@@ -237,7 +241,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     scope: me
                 }));
             }
-
+            
             if (me.saveButtonEnabled) {
 
                 var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
@@ -253,8 +257,17 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     formBind: true,
                     toggleHandler: me.saveActionHandler,
                     scope: me
-
                 })
+
+                if (me.saveAndCreateButtonEnabled) {
+                    saveButtonCfg.xtype = "splitbutton";
+                    saveButtonCfg.menu = [{
+                        text: "Save and Create New",
+                        handler: me.saveAndCreate,
+                        scope:me
+                    }]
+                }
+
 
                 // need to cache a reference to the button since the button is moved outside of the class by the splitEditor
                 me.saveActionButton = Ext.widget(saveButtonCfg);
@@ -323,6 +336,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             me.saveActionButton.setText(this.saveText);
         }
     },
+
+    saveAndCreate: function () {
+        var me = this;
+        me.saveActionButton.pressed = true;
+        me.createOnSaveSuccess = true;
+        me.save(me.saveActionButton);
+
+    },
+    
 
     /**
      * @cfg saveActionHandler
@@ -396,9 +418,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var me = this;
         me.onSaveSuccess(data);
         this.resetSaveButton()
-
         me.fireEvent('savesuccess', me, data);
 
+        if (me.createOnSaveSuccess) {
+            me.createOnSaveSuccess = false;            
+            me.create();
+        }
     },
 
 
@@ -416,6 +441,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         me.onSaveFailure(arguments);
         this.resetSaveButton();
         me.fireEvent('savefailure', me, arguments);
+
+        me.createOnSaveSuccess = false;
+
     },
 
     onSaveFailure: Ext.emptyFn,
@@ -476,7 +504,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     onCreate: Ext.emptyFn,
 
     doCreate: function () {
-        console.log("doCreate")
+        console.log("doCreate is expected to be defined on the class")
     },
 
     bindActionsToForm: function (form) {
