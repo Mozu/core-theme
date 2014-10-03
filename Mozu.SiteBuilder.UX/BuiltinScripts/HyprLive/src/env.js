@@ -8,7 +8,12 @@ function formatString(str, arr) {
     return formatted;
 }
 
-if (!HyprLiveContext) throw new ReferenceError("If no AMD loader is present, there must be a global variable named HyprLiveContext for HyprLive to function.");
+HyprLiveContext = HyprLiveContext || {
+    locals: {},
+    templates: {}
+};
+
+//if (!HyprLiveContext) throw new ReferenceError("If no AMD loader is present, there must be a global variable named HyprLiveContext for HyprLive to function.");
 //HyprLiveContext = JSON.parse(HyprLiveContext);
 
 var locals = HyprLiveContext.locals,
@@ -16,7 +21,7 @@ var locals = HyprLiveContext.locals,
 
 for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
     locals[volatilelocalNames[lni]] = require.mozuData(volatilelocalNames[lni].toLowerCase());
-    if (!locals[volatilelocalNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + volatilelocalNames[lni] + ' global using {% preload_json ' + volatilelocalNames[lni] + ' "' + volatilelocalNames[lni].toLowerCase() + '" %}');
+    //if (!locals[volatilelocalNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + volatilelocalNames[lni] + ' global using {% preload_json ' + volatilelocalNames[lni] + ' "' + volatilelocalNames[lni].toLowerCase() + '" %}');
 }
 
 

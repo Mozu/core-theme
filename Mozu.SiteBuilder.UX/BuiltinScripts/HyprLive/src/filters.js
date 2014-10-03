@@ -29,7 +29,7 @@
                 };
             }
         }
-        return formatMoney(num, currencyInfo.precision, null, null, currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision);
+        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision);
     });
 
 
