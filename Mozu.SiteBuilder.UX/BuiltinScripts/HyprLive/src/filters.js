@@ -88,7 +88,7 @@
 
     function prop(o, pn, caseSensitive) {
         if (o) {
-            if (caseSensitive && o.hasOwnProperty(pn)) return o[pn];
+            if (caseSensitive) return o[pn];
             pn = pn.toLowerCase();
             for (var k in o) {
                 if (pn === k.toLowerCase()) return o[k];
@@ -102,7 +102,7 @@
         var o;
         for (var i = 0; i < length; i++) {
             o = prop(list[i], k, caseSensitive);
-            if ((caseSensitive && o === v) || o.toString().toLowerCase() === v.toString().toLowerCase()) return list[i];
+            if (typeof o !== "undefined" && ((caseSensitive && o === v) || o.toString().toLowerCase() === v.toString().toLowerCase())) return list[i];
         }
     }
 

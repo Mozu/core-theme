@@ -22,7 +22,6 @@
         // Setup chai
         var expect = chai.expect;
     </script>
-    <script src="../node_modules/chai-as-promised/lib/chai-as-promised.js"></script>
 
     <script>
         window.HyprLiveContext = {
@@ -31,6 +30,111 @@
         };
         require = function() { };
         require.mozuData = function() { };
+        MozuProduct = {
+            "properties": [
+              {
+                  "attributeFQN": "Tenant~Manufacturer",
+                  "isHidden": true,
+                  "isMultiValue": false,
+                  "attributeDetail": {
+                      "valueType": "Predefined",
+                      "inputType": "List",
+                      "dataType": "String",
+                      "usageType": "Property",
+                      "dataTypeSequence": 321,
+                      "name": "Manufacturer",
+                      "description": "",
+                      "searchableInStorefront": true
+                  },
+                  "values": [
+                    {
+                        "value": "Seismic-Audio",
+                        "stringValue": "Seismic Audio"
+                    }
+                  ]
+              },
+              {
+                  "attributeFQN": "Tenant~Additional-Handling",
+                  "isHidden": true,
+                  "isMultiValue": false,
+                  "attributeDetail": {
+                      "valueType": "AdminEntered",
+                      "inputType": "YesNo",
+                      "dataType": "Bool",
+                      "usageType": "Property",
+                      "dataTypeSequence": 7,
+                      "name": "Additional Handling",
+                      "description": "",
+                      "searchableInStorefront": true
+                  },
+                  "values": [
+                    {
+                        "value": false
+                    }
+                  ]
+              },
+              {
+                  "attributeFQN": "Tenant~True-Thing",
+                  "isHidden": true,
+                  "isMultiValue": false,
+                  "attributeDetail": {
+                      "valueType": "AdminEntered",
+                      "inputType": "YesNo",
+                      "dataType": "Bool",
+                      "usageType": "Property",
+                      "dataTypeSequence": 7,
+                      "name": "Additional Handling",
+                      "description": "",
+                      "searchableInStorefront": true
+                  },
+                  "values": [
+                    {
+                        "value": true
+                    }
+                  ]
+              },
+              {
+                  "attributeFQN": "tenant~product-crosssell",
+                  "isHidden": false,
+                  "isMultiValue": true,
+                  "attributeDetail": {
+                      "valueType": "AdminEntered",
+                      "inputType": "TextBox",
+                      "dataType": "String",
+                      "usageType": "Property",
+                      "dataTypeSequence": 2,
+                      "name": "Product Cross-Sells"
+                  },
+                  "values": [
+                    {
+                        "value": "Speaker-Stand",
+                        "stringValue": "Speaker-Stand"
+                    },
+                    {
+                        "value": "Enforcer-II",
+                        "stringValue": "Enforcer-II"
+                    },
+                    {
+                        "value": "FL-155P",
+                        "stringValue": "FL-155P"
+                    },
+                    {
+                        "value": "FL-15P",
+                        "stringValue": "FL-15P"
+                    },
+                    {
+                        "value": "TW12S35",
+                        "stringValue": "TW12S35"
+                    },
+                    {
+                        "value": "TW12S75",
+                        "stringValue": "TW12S75"
+                    }
+                  ]
+              }
+            ],
+            "options": []
+        };
     </script>
 
     <!-- Include anything you want to test -->
