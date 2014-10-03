@@ -45,7 +45,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         
         private async Task<string> GenerateToken()
         {
-            var tokenGenUri = FormatBirstTokenGeneratorUri(_apiContext.TenantId);
+            int siteId = 0;
+            if (_apiContext.SiteId != null)
+            {
+                siteId = (int)_apiContext.SiteId;
+            }
+            var tokenGenUri = FormatBirstTokenGeneratorUri(_apiContext.TenantId, siteId);
             var httpClient = new HttpClient(new HttpClientHandler());
             try
             {
@@ -62,15 +67,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new VaeUnexpectedErrorException("Unexpected error with status code");
         }
 
-        private string FormatBirstTokenGeneratorUri(int tenantId)
+        private string FormatBirstTokenGeneratorUri(int tenantId, int siteId)
         {
-            return string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=tenantId%3D{4}",
+            var uri = string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=tenantId%3D{4}",
                 _settings.AppSettings(TOKEN_URL_KEY),
                 _settings.AppSettings(USER_KEY),
                 _settings.AppSettings(PASSWORD_KEY),
                 _settings.AppSettings(SPACE_KEY),
                 tenantId
             );
+            if (siteId > 0)
+            {
+                uri = string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=tenantId%3D{4};siteId%3D{5}",
+                _settings.AppSettings(TOKEN_URL_KEY),
+                _settings.AppSettings(USER_KEY),
+                _settings.AppSettings(PASSWORD_KEY),
+                _settings.AppSettings(SPACE_KEY),
+                tenantId,
+                siteId
+            );
+            }
+            return uri;
+
         }
     }
 }

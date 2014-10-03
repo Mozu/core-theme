@@ -22,7 +22,6 @@ Ext.define('Taco.view.report.Index', {
         me.header = {
             title: 'Reports'
         };
-        me.layout = 'fit';
         me.dashboardPanel = Ext.create('Ext.panel.Panel', {
             itemId: 'dashboardPanel',
             flex: 1,
@@ -31,13 +30,13 @@ Ext.define('Taco.view.report.Index', {
             }
         });
 
-        me.items = [
-            me.dashboardPanel
-        ];
+        Ext.apply(me.body, {
+            layout: 'fit',
+            items: [me.dashboardPanel]
+        });
 
         me.callParent(arguments);
         me.loadDashboard();
-
     },
 
     loadDashboard: function () {
@@ -68,6 +67,7 @@ Ext.define('Taco.view.report.Index', {
                 });
                 me.dashboardPanel.add(iFrameChild);
                 me.dashboardPanel.doLayout();
+                console.log('end of things');
             }
         });
 
