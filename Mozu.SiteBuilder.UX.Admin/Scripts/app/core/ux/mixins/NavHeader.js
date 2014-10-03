@@ -120,6 +120,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         cancelButtonVisible: true,
         cancelText: "Cancel",
         saveText: "Save",
+        // state member that is set when a request to save is active;
+        saveInProgress : false,
         saveInProgressText: "Saving...",
         title: null
     },
@@ -330,15 +332,21 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     resetSaveButton: function () {
         var me = this;
-        if (me.saveActionButton) {
+        if (me.saveActionButton) {            
             me.saveActionButton.toggle(false, true);
             me.saveActionButton.removeCls('taco-button-processing');
             me.saveActionButton.setText(this.saveText);
+            me.saveInProgress = false;
         }
     },
 
     saveAndCreate: function () {
         var me = this;
+        
+        if (me.saveInProgress) {
+            return;
+        }
+
         me.saveActionButton.pressed = true;
         me.createOnSaveSuccess = true;
         me.save(me.saveActionButton);
@@ -364,8 +372,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     save: function (btn) {
         var me = this
 
-        // prevent multiple saves;
-        if (me.saveActionButton && me.saveActionButton.pressed == false) {
+        if (me.saveInProgress) {
             return;
         }
 
@@ -377,6 +384,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.saveActionButton.addCls('taco-button-processing');
                 me.saveActionButton.setText(this.saveInProgressText);
             };
+
+            
+            me.saveInProgress = true;
 
             me.doSave();
         }
