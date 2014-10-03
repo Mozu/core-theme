@@ -28,7 +28,7 @@ Ext.define('Taco.view.product.Form', {
 
         this.siteForms = [];
 
-
+        
         this.createSiteInfoCheck();
 
         this.isSingleSite = this.singleSiteCheck();

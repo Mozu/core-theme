@@ -131,14 +131,30 @@ Ext.define('Taco.view.product.Index', {
                         cls: Taco.baseCSSPrefix + 'grid-row-menu',
                         items: []
                     }
-                    }, {
+                }, {
                     text: 'Delete',
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
                         behavior: 'destroy'
                     },
                     menuColumnHandler: 'destroyMenuColumnHandler'
-                    }, {
+                }, {
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Product',
+                        behavior: 'create'
+                    },                    
+                    menuColumnHandler: function (item, eventData) {
+                        var page = eventData.grid.getParentPage(),
+                            record = eventData.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+                        
+                        var controller = page.getControllerName();
+                        Taco.app.StateManager.attemptNavigate(controller + '/duplicate/' + record.getId(), metaData);
+                    }
+                }, {
                     text: 'Edit',
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
@@ -154,7 +170,7 @@ Ext.define('Taco.view.product.Index', {
                         page.launchEditor(record, metaData);
 
                     }
-                    }],
+                }],
                 onMenuShow: function (menu, eventData) {
                     var previewAction = menu.items.get('preview'),
                         liveAction = menu.items.get('live'),

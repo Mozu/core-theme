@@ -30,6 +30,7 @@ Ext.define('Taco.view.product.variant.Grid', {
                 "name": "Email"
             }];
 
+        
 
         var fulfillmentTypeData = Ext.create('Ext.data.Store', {
             fields: ['id', 'name'],
@@ -244,8 +245,9 @@ Ext.define('Taco.view.product.variant.Grid', {
             });
         }
 
-
-        if (!this.store.hasLoaded()) {
+        
+        // we shouldnt be making the load call if the product is new (not saved yet) since the service returns an error
+        if (!this.store.hasLoaded() && !this.product.phantom) {
             this.store.load();
         }
 

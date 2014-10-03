@@ -37,9 +37,14 @@
     // Todo: figure out why the isDirty is always true and generalize the isDirty Prompt for reuse rathaer than part of the inventory subform.
     requiresSave: false,
 
+    afterDuplicate: function () {
+        Taco.app.fireEvent('setmessage', "Please enter a product code.", 'info');
+
+    },
+
     initComponent: function () {
-        var me = this;
-        
+        var me = this;        
+
         this.additionalActions = [{
             xtype: "button",
             ui: "action-primary",
@@ -85,6 +90,20 @@
                 {
                     xtype: "menuseparator",
                     style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
+                }, {
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Product',
+                        behavior: 'create'
+                    },
+                    handler: function (item) {
+                        var record = me.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+
+                        Taco.app.StateManager.attemptNavigate('products/duplicate/' + record.getId(), metaData);
+                    }
                 },
                 {
                     itemId: 'delete',

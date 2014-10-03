@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Text;
 using AutoMapper;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -16,6 +17,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using StringExtensions = Mozu.Core.Extensions.StringExtensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -67,30 +69,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = filterB.ToString();
             }
 
-            string sort = pagingParams.sort.ToSortString();
-		    string q = extFilter.ToQString();
-            int? qLimit = extFilter.SearchType == "global" ? (int?)3 : (int?)null;
-            // if there is a q AND there is no filter, default qLimit to 50.
-            if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(q) && !qLimit.HasValue)
-                qLimit = pagingParams.pageSize.GetValueOrDefault(50) + 1;
+            var q = extFilter.ToQString();
+            var isGlobalSearchType = extFilter.SearchType.EqualsIgnoreCase("global");
 
-
-
-            ProductCollection res;
-            
-            // qLimit and pageSize do not work together.
-            // if q is specified and we are attempting to page beyond page 1, do not use qLimit.
-            if (!String.IsNullOrWhiteSpace(q) && pagingParams.pageIndex > 1)
-            {
-                res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, responseGroups: responseGroups, filter: filter, q: q)).ReadAsSync();
-            }
-            else
-            {
-                res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
-            }
-
-            var mapped = res.Items.Map<List<Product>>();
-            return List2(mapped, (int)res.TotalCount);
+            return await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType);
         }
 
         /// <summary>
@@ -104,23 +86,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             
             string extraFilter = extFilter.ToFilterString(withVariations: true );
-            string q = extFilter.ToQString(withVariations:true);
-
             string filter = "manageStock eq true and (isVariation eq true or productUsage eq standard or productUsage eq component)";
             if (!string.IsNullOrEmpty(extraFilter))
             {
                 filter += "and (" + extraFilter + ")";
             }
-            int? qLimit = extFilter.SearchType == "global" ? (int?)null : (int?)null;
-            if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(q) && !qLimit.HasValue)
-                qLimit = 50;
-            ProductCollection res = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, responseGroups: responseGroups, filter: filter, q:q )).ReadAsSync();
+            var q = extFilter.ToQString(withVariations: true);
+            var isGlobalSearchType = extFilter.SearchType.EqualsIgnoreCase("global");
 
-            var mapped = res.Items.Map<List<Product>>();
-            return List2(mapped, (int)res.TotalCount);
+            return await SearchProducts(pagingParams, filter, q, responseGroups, isGlobalSearchType);
         }
 
-		[HttpPostRoute(UriTemplate = "create")]
+        [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<Product>>> CreateProduct(List<Product> products)
         {
             if (products == null || !products.Any())
@@ -188,6 +165,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var deletedProducts = await _productMapper.PerformVoidAction(products, p => _productClient.DeleteProduct(p.ProductCode));
             return List2(deletedProducts.ToList());
+        }
+
+        private async Task<Response<List<Product>>> SearchProducts(PagingParamaters pagingParams, string filter, string q,
+            string responseGroups, bool isSearchTypeGlobal)
+        {
+            string sort = pagingParams.sort.ToSortString();
+            int? qLimit = isSearchTypeGlobal ? (int?)3 : (int?)null;
+            // if there is a q AND there is no filter, default qLimit to 50.
+            if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(q) && !qLimit.HasValue)
+                qLimit = pagingParams.pageSize.GetValueOrDefault(50) + 1;
+
+            // qLimit and pageSize do not work together.
+            // if q is specified and we are attempting to page beyond page 1, do not use qLimit.
+            var prodCollection = (!String.IsNullOrWhiteSpace(q) && pagingParams.pageIndex > 1)
+                ? (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q)).ReadAsSync()
+                : (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
+
+            var mapped = prodCollection.Items.Map<List<Product>>();
+            return List2(mapped, (int)prodCollection.TotalCount);
         }
     }
 }
