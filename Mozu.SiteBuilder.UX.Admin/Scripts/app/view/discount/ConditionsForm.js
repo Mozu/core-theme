@@ -22,26 +22,13 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     initComponent: function () {
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumOrderAmount',
-            fieldLabel: "Minimum Order Amount (pre-discount)",
-            //hidden: this.record.get('scope') !== 'Order',
+            fieldLabel: "Minimum Order Amount",
+            hidden: this.record.get('scope') !== 'Order',
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
             currencyCode: Taco.app.context.getCurrent().currencyCode,
-            //emptyText: 'Not Applicable',
-            align: 'right',
-            unitAtEnd: false
-        });
-
-        this.maximumDiscountAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'maximumDiscountAmount',
-            fieldLabel: "Maximum Discount Amount",
-            //hidden: this.record.get('scope') !== 'Order',
-            forcePrecision: true,
-            labelAlign: 'top',
-            width: 600,
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            //emptyText: '',
+            emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
         });
@@ -80,18 +67,52 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.buildSegments();
 
-        this.minimumProductSubtotalBeforeDiscounts = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'minimumProductSubtotalBeforeDiscounts',
-            fieldLabel: 'Minimum Product Product Purchase Amount (pre-discount)',
-            disabled:true,
-            // hidden: this.record.get('scope') !== 'Order',
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            forcePrecision: true,
-            unitAtEnd: false,
+        this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
+            name: 'requiresCoupon',
+            boxLabel: 'Create coupon',
+            labelAlign: 'right',
+            listeners: {
+                change: function (cb, newValue) {
+                    this.couponCodeBox[newValue ? 'show' : 'hide']();
+                },
+                scope: this
+            }
+        });
+        this.couponCodeInput = Ext.create('Ext.form.field.Text', {
+            name: 'couponCode',
+            width: 500
+        });
+        this.couponCodeBox = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            hidden: !(this.record.get('couponCode') || this.record.get('requiresCoupon')),
+            items: [
+                this.couponCodeInput,
+                {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Random',
+                    margin: '0 0 0 10',
+                    handler: function () {
+                        var randomizer = Ext.data.IdGenerator.get('uuid'),
+                            code = randomizer.generate().replace(/[^0-9a-z]/g, "").substr(0, 8).toUpperCase();
+
+                        this.couponCodeInput.setValue(code);
+                    },
+                    scope: this
+                }
+            ]
+        });
+
+        this.redemptionLimits = Ext.create('Ext.form.field.Number', {
+            name: 'maxRedemptionCount',
             hideTrigger: true,
             width: 600,
-            
-            //  emptyText: 'No Customer Value limit',
+            fieldLabel: 'Total Number of Redemptions: ' + (this.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
+            emptyText: 'unlimited',
             minValue: 0
         });
 
@@ -122,6 +143,18 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             minValue: 0
         });
 
+        this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
+            name: 'oneTimeUsePerShopper',
+            boxLabel: 'Discount Can Be Redeemed One Time Per Shopper',
+            checked: this.record.get('maximumUsesPerUser') === 1,
+            listeners: {
+                change: function (cb, newValue) {
+                    this.record.set('maximumUsesPerUser', newValue ? 1 : 0);
+                },
+                scope: this
+            }
+        });
+
         this.items = [
             {
                 xtype: 'component',
@@ -130,7 +163,6 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             },
             this.datesContainer,
             this.minimumOrderAmountInput,
-            this.maximumDiscountAmountInput,
             this.minimumLifetimeValueAmount,
             this.segmentsBox,
             {
@@ -139,14 +171,17 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 cls: 'x-form-item-label x-unselectable x-form-item-label-top'
             },
             this.productsBox,
-            this.minimumProductSubtotalBeforeDiscounts,
             {
                 xtype: 'component',
                 html: 'Shopper must purchase a quantity of any item(s) from the following categories:',
                 cls: 'x-form-item-label x-unselectable x-form-item-label-top'
             },
             this.categoriesBox,
-            this.minimumCategorySubtotalBeforeDiscounts
+            this.minimumCategorySubtotalBeforeDiscounts,
+            this.redemptionLimits,
+            this.requiresCouponInput,
+            this.couponCodeBox,
+            this.oneTimeUsePerShopper
         ];
 
 

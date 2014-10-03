@@ -870,7 +870,6 @@
     <Content Include="Scripts\app\view\customers\segments\AddRemoveModal.js" />
     <Content Include="Scripts\app\view\customers\segments\Index.js" />
     <Content Include="Scripts\app\view\customers\segments\Modal.js" />
-    <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
     <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
