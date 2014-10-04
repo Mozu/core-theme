@@ -53,6 +53,10 @@
             expect(Hypr.engine.render('{% with "foo"|upper as bar %}{{ bar }}{% endwith %}{{ bar }}')).to.equal('FOO');
             expect(Hypr.engine.render('{% with "foo"|upper|first as bar %}{{ bar }}{% endwith %}{{ bar }}')).to.equal('F');
         });
+        it('has a tag {% dropzone %} that produces an empty dropzone div', function() {
+            expect(Hypr.engine.render('{% dropzone "why-not" %}')).to.equal('<div id="mz-drop-zone-why-not" class="mz-drop-zone"></div>');
+            expect(Hypr.engine.render('{% dropzone "why-again" scope="page" %}')).to.equal('<div id="mz-drop-zone-why-again" class="mz-drop-zone"></div>');
+        });
     });
     describe('custom filters', function() {
         it('has a currency filter that formats currency (currently US only)', function() {
@@ -84,8 +88,9 @@
             expect(Hypr.engine.render('{{ url2|add_url_param("sortBy","derp asc") }}', ctx)).to.equal('http://example.com/?one=two&amp;sortBy=derp%20asc');
             expect(Hypr.engine.render('{{ url3|add_url_param("sortBy","flerp asc") }}', ctx)).to.equal('http://example.com/?one=two&amp;three=four&amp;sortBy=flerp%20asc');
         });
-        xit('has a slugify filter that turns strings into url-suitable slugs', function() {
-            // test unimplemented, is this thing even in use?
+        it('has a slugify filter that turns strings into url-suitable slugs', function() {
+            var stpt = '{{ s|slugify }}';
+            expect(Hypr.engine.render(stpt, { locals: { s: 'ábso,lutely!' } })).to.equal('abso-lutely-');
         });
         it('has a truncatewords filter that truncates strings by word count and adds an ellipsis', function() {
             expect(Hypr.engine.render('{{ d|truncatewords(5) }}', { locals: { d: 'One two three four' } })).to.equal('One two three four');

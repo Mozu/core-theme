@@ -61,7 +61,7 @@
                 str = str.replace(accentREs[j], accentTo[j]);
             }
 
-            str = str.replace(invalidCharsRE, '') // remove invalid chars
+            str = str.replace(invalidCharsRE, '-') // remove invalid chars
               .replace(collapseWhitespaceRE, '-') // collapse whitespace and replace by -
               .replace(collapseDashRE, '-'); // collapse dashes
 
