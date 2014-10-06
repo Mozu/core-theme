@@ -1,0 +1,41 @@
+﻿@keyframes errorpop
+{
+    from { background-color: darken(saturate(@errorBackground, 40%),30%); color: saturate(@errorText, 30%); }
+    to { background-color: @errorBackground; color: @errorText; }
+}
+
+@-webkit-keyframes errorpop {
+    from { background-color: darken(saturate(@errorBackground, 40%),30%); color: saturate(@errorText, 30%); }
+    to { background-color: @errorBackground; color: @errorText; }
+}
+
+.mz-notification(@bgColor, @textColor, @borderColor, @iconUri) {
+	background: @bgColor url(@iconUri) no-repeat 10px 10px;
+	border: 1px solid @borderColor;
+	padding: @gutter/3 @gutter/3 @gutter/2 50px;
+
+	.transition(top 1s);
+	li {
+		color: @textColor;
+		font-size: @fontSizeLarger;
+		font-style: italic;
+		list-style: none;
+		margin: 6px 0 0;	
+	}
+}
+.mz-messagebar {
+    .mz-errors {
+        .mz-notification(@errorBackground, @errorText, @errorBorder, @errorIcon);
+
+        &.is-showing {
+            animation: errorpop 0.5s ease-out 1 normal;
+            -webkit-animation: errorpop 0.5s ease-out 1 normal;
+        }
+    }
+}
+
+.validation-summary-errors {
+	ul {
+		.mz-notification(@errorBackground, @errorText, @errorBorder, @errorIcon);
+	}
+}

@@ -98,6 +98,14 @@ Ext.define('Taco.view.order.Split', {
                             this.onSelectRecord(record);
                         }
                     }
+                },
+                // hide the check column if we're in split mode
+                // but wait for boxready because of how the check column is initialized
+                boxready: {
+                    scope: this,
+                    fn: function (cmp) {
+                        if (this.getSplit()) cmp.columnManager.getFirst().hide();
+                    }
                 }
             }
         });
@@ -276,6 +284,16 @@ Ext.define('Taco.view.order.Split', {
         });
     },
 
+    updateSplit: function (nextSplit) {
+        if (nextSplit) {
+            this.orderList.getSelectionModel().deselectAll();
+        }
+
+        if (this.orderList.isVisible(true)) {
+            this.orderList.columnManager.getFirst().setVisible(!nextSplit);
+        }
+    },
+
     updateSplitActions: function () {
         var ids = Ext.Array.pluck(this.editor.additionalActions || [], 'itemId');
         var buttons = this.getAdditionalActions(ids);
@@ -319,6 +337,16 @@ Ext.define('Taco.view.order.Split', {
         this.callParent(arguments);
 
         this.updateSplitTitle();
+
+        if (panel.getItemId() === 'west' && !panel.getCollapsed() && !this.getSplit()) {
+            panel.on({
+                afterlayout: {
+                    scope: this,
+                    single: true,
+                    fn: function () { this.updateSplit(false, false); }
+                }
+            });
+        }
     },
 
     updateSplitTitle: function () {

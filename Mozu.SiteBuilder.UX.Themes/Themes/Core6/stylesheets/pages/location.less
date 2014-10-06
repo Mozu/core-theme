@@ -1,0 +1,82 @@
+﻿.mz-loc {
+    //background-color: rgba(255, 0, 0, 0.1);
+    min-height: 300px;
+    position: relative;
+
+    aside {
+
+        border: 1px solid @inputBorder;
+        left: 0;
+        padding: 8px;
+        position: absolute;
+        top: 40px;
+        width: 240px;
+
+        h3 {
+            background-color: @inputBorder;
+            margin: -8px;
+            padding: 8px;
+        }
+
+        input[type="text"] {
+            margin-right: 5px;
+            width: 80px;
+        }
+    }
+
+    article {
+        margin-left: 280px;
+    }
+}
+
+.mz-loc-name {
+    font-weight: bold;
+}
+
+.mz-loc-table {
+    border: 1px solid @inputBorder;
+
+    min-width: 240px;
+    max-width: 620px;
+    width: 100%;
+
+    th {
+        background-color: @inputBorder;
+        border-bottom: 1px solid @inputBorder;
+        font-size: @fontSizeLarger;
+        padding: 5px;
+        text-align: left;
+    }
+
+    td {
+        border-bottom: 1px solid @inputBorder;
+        padding: 5px;
+    }
+}
+
+.mz-loc-store-hours {
+    margin-top: 16px;
+}
+
+.mz-loc-dialog-cover {
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.5);
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 2000;
+}
+
+.mz-loc-dialog {
+    background-color: @bodyBackgroundColor;
+    height: 300px;
+    left: 50%;
+    margin-left: -200px;
+    margin-top: -150px;
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    width: 400px;
+}

@@ -1,0 +1,67 @@
+﻿<div class="mz-cms-image" style="height: 100%; width: 100%;" data-mz-cms-image="{% json_attribute Model.config|default:"{}" %}">
+{% if not Model.config  %}
+
+    <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
+
+{% endif %}
+{% if Model.config.imageClickAction == 'url' %}
+
+    {% if Model.config.linkSource == 'externalUrl' %}
+
+        {% if Model.config.imageSource == "externalUrl" %}
+        
+            <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkExternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
+        
+        {% endif %}
+        {% if Model.config.imageSource == "file" %}
+        
+            <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkExternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
+        
+        {% endif %}
+
+    {% endif %}
+    {% if Model.config.linkSource == 'internalUrl' %}
+
+        {% if Model.config.imageSource == "externalUrl" %}
+        
+            <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkInternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
+        
+        {% endif %}
+        {% if Model.config.imageSource == "file" %}
+        
+            <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkInternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
+        
+        {% endif %}
+
+    {% endif %}
+    {% if Model.config.linkSource == 'file' %}
+
+        {% if Model.config.imageSource == "externalUrl" %}
+        
+            <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
+        
+        {% endif %}
+        {% if Model.config.imageSource == "file" %}
+        
+            <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
+        
+        {% endif %}
+
+    {% endif %}
+
+{% else %}
+
+    {% if Model.config.imageSource == "externalUrl" %}
+    
+        <div class="mz-cms-image-cover" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></div>
+    
+    {% endif %}
+    {% if Model.config.imageSource == "file" %}
+    
+        <div class="mz-cms-image-cover" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></div>
+    
+    {% endif %}
+
+{% endif %}
+</div>
+{% require_script "widgets/image" %}

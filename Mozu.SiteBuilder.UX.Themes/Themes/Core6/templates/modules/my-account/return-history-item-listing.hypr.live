@@ -1,0 +1,22 @@
+﻿{% extends "modules/common/item-listing" %}
+{% block module-classes %} mz-itemlisting-rmaitem {% endblock module-classes %}
+{% block item-listing-prefix %}
+<h3>{{ labels.returning }}</h3>
+{% endblock item-listing-prefix %}
+{% block item-listing-extras %}
+    <div class="mz-itemlisting-rmaitem-details">
+    <h3>{{ labels.returnDetails }}</h3>
+    <dl class="mz-propertylist">
+        {% for r in model.reasons %}
+        <dt>{{ labels.reasonForReturn }}</dt>
+        <dd>{{ r.reason }}</dd>
+        <dt>{{ labels.quantityToReturn }}</dt>
+        <dd>{{ r.quantity }}</dd>
+        {% endfor %}
+        <dt>{{ labels.optionalComments }}</dt>
+        {% for c in model.notes %}
+        <dd>{{ c.text }}</dd>
+        {% endfor %}
+    </dl>
+    </div>
+{% endblock item-listing-extras %}

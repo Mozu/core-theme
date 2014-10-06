@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Hypr.Tags;
 using NDjango;
 using NDjango.FiltersCS;
 using NDjango.Interfaces;
 using NDjango.Misc;
 using NUnit.Framework;
+
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
 {
@@ -26,10 +29,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
         }
         
         private ITemplateManager _manager;
-
-
-
-        protected ITemplateManager Manager
+        private ITemplateManager Manager
         {
             get
             {
@@ -37,6 +37,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                     .WithLibrary(typeof (AddFilter).Assembly)
                     .WithLibrary(typeof (HyprViewEngine).Assembly)
                     .WithLibrary(typeof (AutofacModule).Assembly)
+                    .WithLibrary(typeof (DropZoneTag2).Assembly)
                     .WithLoader(new TestTemplateLoader())
                     .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager()));
             }
@@ -60,10 +61,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
             var template = manager.GetTemplate(desc.Template);
             var renderer = new TemplateRenderer(manager, template, context);
             var rendered = RenderTemplate(renderer);
-            Assert.AreEqual(desc.Expected, rendered);
+            Assert.AreEqual(desc.Expected, rendered, string.Format("expected was different that actual. expected: {0}. Actual: {1}", desc.Expected, rendered));
         }
 
-        public void RunTemplate(TestDescriptor desc)
+        protected void RunTemplate(TestDescriptor desc)
         {
             RunTemplate(desc, Manager);
         }

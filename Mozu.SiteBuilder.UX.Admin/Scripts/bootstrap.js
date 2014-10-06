@@ -1430,6 +1430,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.discount.Form": [],
   "Taco.view.discount.GeneralForm": [],
   "Taco.view.discount.Index": [],
+  "Taco.view.discount.LimitationsForm": [],
   "Taco.view.entityManager.DynamicFormContainer": [],
   "Taco.view.entityManager.DynamicFormContainer.DefaultEditor": [],
   "Taco.view.entityManager.Grid": [],
@@ -3564,6 +3565,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Taco.view.discount.Index": [
     "widget.discountlist"
+  ],
+  "Taco.view.discount.LimitationsForm": [
+    "widget.taco-discount-limitations"
   ],
   "Taco.view.entityManager.DynamicFormContainer": [],
   "Taco.view.entityManager.DynamicFormContainer.DefaultEditor": [],

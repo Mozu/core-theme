@@ -1,0 +1,33 @@
+﻿.mz-popover-login {
+    @popoverWidth: 200px;
+    width: @popoverWidth;
+
+    .mz-login-form, .mz-forgot-password {
+        min-width: @popoverWidth;
+    }
+
+    .mz-login-form {
+        padding-right: @gutter;
+    }
+
+    a {
+        .permalink(@textColor);
+        font-size: @fontSizeSmall;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        width: 185px;
+    }
+
+    .mz-popover-action {
+        text-align: right;
+        .mz-button {
+            margin-top: 5px;
+        }
+    }
+
+    .mz-validationmessage {
+        display: inline-block;
+        margin: @gutter/4 @gutter/2;
+    }
+}

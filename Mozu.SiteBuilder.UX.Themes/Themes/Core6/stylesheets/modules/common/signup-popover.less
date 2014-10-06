@@ -1,0 +1,30 @@
+﻿.mz-popover-signup {
+    @popoverWidth: 200px;
+    width: @popoverWidth;
+
+    input {
+        float: left;
+        width: @popoverWidth - @gutter/2;
+    }
+
+    .mz-popover-signup-firstname {
+        width: @popoverWidth/2 - @gutter/8;
+        margin-right: @gutter/4;
+        box-sizing: border-box;
+    }
+
+    .mz-popover-signup-lastname {
+        width: @popoverWidth/2 - @gutter/8;
+        box-sizing: border-box;
+    }
+
+    .mz-button {
+        float: right;
+        margin-bottom: @gutter/2;
+    }
+
+    .mz-validationmessage {
+        display: inline-block;
+        margin: @gutter/4 @gutter/2;
+    }
+}

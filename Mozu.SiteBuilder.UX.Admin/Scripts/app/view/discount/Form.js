@@ -12,6 +12,7 @@ Ext.define('Taco.view.discount.Form', {
         'Taco.view.product.Modal',
         'Taco.view.discount.GeneralForm',
         'Taco.view.discount.ConditionsForm',
+        'Taco.view.discount.LimitationsForm',
         'Taco.view.discount.CriteriaForm'
     ],
 
@@ -28,6 +29,12 @@ Ext.define('Taco.view.discount.Form', {
         }, {
             xtype: 'taco-discount-conditions',
             itemId: 'conditions',
+            parentForm: this,
+            record: this.record,
+            manageHeight: true
+        }, {
+            xtype: 'taco-discount-limitations',
+            itemId: 'limitations',
             parentForm: this,
             record: this.record,
             manageHeight: true

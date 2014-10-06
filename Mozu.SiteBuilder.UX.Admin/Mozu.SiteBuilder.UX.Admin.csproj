@@ -158,9 +158,8 @@
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.1.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\FSharp.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.4\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharpx.Collections">
       <HintPath>..\packages\FSharpx.Collections.1.9.3\lib\net35\FSharpx.Collections.dll</HintPath>
@@ -326,13 +325,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.11.0.2\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="NDjango.Core40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\NDjango.Core40.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.4\lib\net45\NDjango.Core40.dll</HintPath>
     </Reference>
-    <Reference Include="NDjangoFilters.NDjangoExtension40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.1-dev1409171146-svr\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.8, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.13.4\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -873,6 +872,7 @@
     <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
+    <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
     <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
     <Content Include="Scripts\app\view\entityManager\Index.js" />
