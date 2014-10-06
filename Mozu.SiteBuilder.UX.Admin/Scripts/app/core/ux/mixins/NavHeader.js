@@ -177,24 +177,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     createNavHeader: function () {
         var me = this,
             hasContextSwitcher = (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)),
-            conf;
+            conf;        
 
-        me.titleContainer = {
-            xtype: "container",
-            layout: 'hbox',
-            flex: 1,
-            items: []
-        };
-
-        if (me.title !== false) {
-            // just call view.setTitle("new title here") to update the title;
-            me.titleCmp = Ext.create('Ext.Component', {
-                cls: "taco-content-header-title",
-                html: this.getTitle()
-            });
-
-            me.titleContainer.items.push(me.titleCmp);
-        }
 
         conf = {
             xtype: "toolbar",
@@ -203,26 +187,45 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             items: []
         };
 
-        conf.items.push(me.titleContainer);
 
-        if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
-            me.titleContainer.items.push({
-                autoEl: 'h3',
-                itemId: 'forLable',
-                style: {
-                    'line-height': '3rem',
-                    'margin': '0px 10px 0px 10px',
-                    'font-weight': 'normal'
-                },
-                xtype: 'component',
-                html: 'for'
+        if (me.title !== false) {
+
+            me.titleContainer = {
+                xtype: "container",
+                layout: 'hbox',
+                flex: 1,
+                items: []
+            };
+
+            // just call view.setTitle("new title here") to update the title;
+            me.titleCmp = Ext.create('Ext.Component', {
+                cls: "taco-content-header-title",
+                html: this.getTitle()
             });
 
-            me.titleContainer.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
+            me.titleContainer.items.push(me.titleCmp);
 
-        } else {
-            // In order for the title to grow and shrink dynamically and have elipsis we can only do this when there is no trailing "for [ context combo ] "
-            me.titleCmp.flex = 1;
+            conf.items.push(me.titleContainer);        
+
+            if (!Ext.isEmpty(this.contextConfig) && !Ext.isEmpty(this.contextConfig.supportedLevels)) {
+                me.titleContainer.items.push({
+                    autoEl: 'h3',
+                    itemId: 'forLable',
+                    style: {
+                        'line-height': '3rem',
+                        'margin': '0px 10px 0px 10px',
+                        'font-weight': 'normal'
+                    },
+                    xtype: 'component',
+                    html: 'for'
+                });
+
+                me.titleContainer.items.push(Ext.create('Taco.core.ux.content.ContextMenu', this.contextConfig));
+
+            } else {
+                // In order for the title to grow and shrink dynamically and have elipsis we can only do this when there is no trailing "for [ context combo ] "
+                me.titleCmp.flex = 1;
+            }
         }
 
         if (!me.actions) {
@@ -317,15 +320,20 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
 
         // need to create container for buttons so that they can force the titleCmp to have elipsis
-        Ext.Array.push(conf.items, {
-            xtype: 'container',
-            itemHeader: 'navHeaderActionContainer',
+        var actionToolbar = {
+            xtype: 'toolbar',
+            itemHeader: 'navHeaderActionContainer',            
             items: me.actions
-        });
+        }
+
+        // if we have no title, the toolbar needs to flex to fill the entire container.
+        if (this.title == false) {
+            actionToolbar.flex = 1;
+        }
+
+        Ext.Array.push(conf.items, actionToolbar);
 
         me.navHeader = Ext.widget(conf);
-
-
 
         me.header.items.unshift(me.navHeader);
     },
