@@ -170,7 +170,7 @@
   "orderConfirmationBlob1": "Thank you for shopping with us at {0}. Your order was received and we are preparing it for shipment.  If you would like to view or manage your orders, please visit <a href=\"http://{1}/myaccount\">My Account</a>.",
   "emailOpening"         : "<p>Hello {0}!</p>",
   "emailOpeningAlternative" : "<p>Hello!</p>",
-  "emailClosing"         : "<p>Sincerely,<br /><br />Customer Service</br>{0}</p>",
+  "emailClosing"         : "<p>Sincerely,<br /><br />Customer Service<br/>{0}</p>",
   "inStockBlob1"         : "<p>Thank you for shopping at {0}!  We have good news for you-- we now have the following item(s) in stock:</p>",
   "inStockBlob2"         : "<p>TO ADD THE ITEMS TO YOUR CART: <a href=\"http://{0}/p/{1}\">CLICK HERE</a>.</p>",
   "orderShipped"         : "Your Order Has Shipped",

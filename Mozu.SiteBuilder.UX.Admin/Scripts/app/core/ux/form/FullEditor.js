@@ -39,6 +39,13 @@
         var model = this.record ? Ext.ModelManager.getModel(this.record.modelName) : null;
         this.initWrapper();
         
+
+        // if the view is loaded after a call to duplicate, this allows for any ui specific behavior to be added;
+        // note that any data manipulation is performmed in the optional record.beforeDuplicate() 
+        if (me.isDuplicate && me.afterDuplicate) {
+            me.afterDuplicate();
+        }
+
         this.callParent(arguments);
         
         if (model && !model.allowUpdate()) {

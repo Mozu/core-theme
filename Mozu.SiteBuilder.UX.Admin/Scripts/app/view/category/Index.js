@@ -76,6 +76,21 @@ Ext.define('Taco.view.category.Index', {
                         }, 1, this);
 
                     }
+                },
+                {
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Category',
+                        behavior: 'create'
+                    },
+                    menuColumnHandler: function (item, eventData) {                        
+                        var record = eventData.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+                        
+                        Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                    }
                 }]
                 
             }],
@@ -199,8 +214,9 @@ Ext.define('Taco.view.category.Index', {
                             grid.setLoading(false);
                         },
                         failure: function (m) {
-
                             grid.setLoading(false);
+                            grid.getStore().load();
+                            Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', m);
                         }
 
                     });

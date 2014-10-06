@@ -37,7 +37,6 @@ Ext.define('Taco.view.order.Grid', {
     showActionsColumn: true,
 
     hideSearchToolbar: false,
-    selType: 'rowmodel',
     
     title: "Orders",
 
@@ -85,8 +84,50 @@ Ext.define('Taco.view.order.Grid', {
         me.createButtonCfg = me.getCreateButtonConfig();
 
         this.columns = this.getColumnConfig();
+
+        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+            selType: 'checkboxmodel',
+            checkOnly: true,
+            ignoreRightMouseSelection: true,
+            headerWidth: 37,
+            listeners: {
+                selectionchange: {
+                    scope: this,
+                    fn: function (selModel, selected) {
+                        this.searchToolbar.items.get('bulkActions').setVisible(selected.length);
+                    }
+                }
+            }
+        });
         
         me.callParent(arguments);
+
+        this.searchToolbar.insert(0, {
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            itemId: 'bulkActions',
+            text: 'Bulk Actions',
+            cls: 'taco-bulk-actions',
+            margin: '0 10 0 0',
+            hideMode: 'offsets',
+            hidden: true,
+            menu: {
+                items: [{
+                    text: 'one',
+                    scope: this,
+                    handler: function () {
+                        console.log('do stuff', this.getSelectionModel().getSelection());
+                    }
+                }, {
+                    text: 'two',
+                    scope: this,
+                    handler: function () {
+                        console.log('do stuff', this.getSelectionModel().getSelection());
+                    }
+                }]
+            }
+        });
     },
     /*
     launchLoadedEditor: function (record, options) {

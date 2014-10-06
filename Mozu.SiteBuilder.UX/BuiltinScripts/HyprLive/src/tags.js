@@ -89,3 +89,27 @@ var WithTag = {
     }
 };
 HyprLive.engine.setTag('with', WithTag.parse, WithTag.compile, true, false);
+
+var DropZoneTag = {
+    format: [
+        "\n_output += \"<div id=\\\"mz-drop-zone-", "\\\" class=\\\"mz-drop-zone\\\"></div>\";"
+    ],
+    parse: function(str, line, parser, types) {
+        var named = false;
+        parser.on(types.STRING, function(token) {
+            if (!named) {
+                this.out.push(token.match);
+                named = true;
+                return true;
+            }
+            return false;
+        });
+        return true;
+    },
+    compile: function(compiler, args, content, parents, options) {
+        var dropzoneName = args.shift();
+        return DropZoneTag.format.join(dropzoneName.substring(1, dropzoneName.length-1));
+    }
+};
+
+HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false, false);

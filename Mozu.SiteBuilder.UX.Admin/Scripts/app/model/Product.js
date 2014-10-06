@@ -663,12 +663,14 @@ Ext.define('Taco.model.Product', {
         if (me.productVariationStore) {
             return me.productVariationStore;
         }
+        
 
         me.productVariationStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.ProductVariation',
             autoLoad: false,
             pageSize: 900,
             loadFromOptions: function () {
+                
                 var beforeState =[];
                 if (me.productVariationStore && me.productVariationStore.data && me.productVariationStore.data.items) {
                     beforeState = Ext.Array.pluck(me.productVariationStore.data.items, 'internalId')
@@ -769,6 +771,13 @@ Ext.define('Taco.model.Product', {
         Ext.Ajax.request(config);
     },
 
+
+    // manipulate a record that is set to be duplicated prior to loading it in the view. Called by app\core\Controller.js
+    beforeDuplicate : function (){
+        this.raw = undefined
+        this.set("productCode", "");
+        this.commit();        
+    },
 
     idProperty: 'productCode',
     //hasMany: [
