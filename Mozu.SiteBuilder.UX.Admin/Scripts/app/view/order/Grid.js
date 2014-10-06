@@ -27,7 +27,7 @@ Ext.define('Taco.view.order.Grid', {
     enableSearch: true,
     enablePaging: true,
     enableRowEditing: false,
-
+    enableAutoSelect: false,
     createButtonEnabled: true,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
@@ -108,36 +108,68 @@ Ext.define('Taco.view.order.Grid', {
             scale: 'medium',
             itemId: 'bulkActions',
             text: 'Bulk Actions',
-            cls: 'taco-bulk-actions',
             margin: '0 10 0 0',
-            hideMode: 'offsets',
             hidden: true,
             menu: {
                 items: [{
                     text: 'one',
                     scope: this,
                     handler: function () {
-                        console.log('do stuff', this.getSelectionModel().getSelection());
+                        this.simulateBulkAction('one');
+                    },
+                    validator: function (record) {
+                        return true;
                     }
                 }, {
                     text: 'two',
                     scope: this,
                     handler: function () {
                         console.log('do stuff', this.getSelectionModel().getSelection());
+                    },
+                    validator: function (record) {
+                        return false;
                     }
-                }]
+                }],
+                listeners: {
+                    show: {
+                        scope: this,
+                        fn: function (menu) {
+                            var records = this.getSelectionModel().getSelection();
+
+                            menu.items.each(function (item, index) {
+                                if (Ext.isFunction(item.validator)) {
+                                    item.setDisabled(!Ext.Array.every(records, item.validator, this));
+                                }
+                            }, this);
+                        }
+                    }
+                }
             }
         });
     },
-    /*
-    launchLoadedEditor: function (record, options) {
-        var site = Taco.app.context.getSite(),
-            infoStore,
-            infoRecord;
+    
+    simulateBulkAction: function (action) {
+        var worked = Math.random() > 0.5;
 
-        this.callParent(arguments);
+        console.log('simulating');
+        Ext.defer((worked ? success : failure), 2000, this);
+
+        function success () {
+            console.log('succeeded');
+            callback.call(this, 'success');
+        }
+
+        function failure () {
+            console.log('failed');
+            callback.call(this, 'error');
+        }
+
+        function callback (type) {
+            var message = type === 'success' ? '3 items succeeded.' : '3 items failed.';
+
+            Taco.app.fireEvent('setmessage', message, type);
+        }
     },
-    */
 
     launchLoadedEditor: function (record, options) {
         var currentSite = Taco.app.context.getSite(),
