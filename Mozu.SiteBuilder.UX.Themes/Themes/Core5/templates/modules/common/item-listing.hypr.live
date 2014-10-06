@@ -1,0 +1,31 @@
+﻿<div class="mz-itemlisting {% block module-classes %}{% endblock module-classes %}">
+  {% block item-listing-prefix %}
+  {% endblock item-listing-prefix %}
+  {% block item-listing-image %}
+  {% if model.product.imageUrl %}
+  <div class="mz-itemlisting-thumb">
+    <img class="mz-itemlisting-thumb-img" src="{{ model.product.imageUrl }}?max=80" />
+  </div>
+  {% endif %}
+  {% endblock item-listing-image %}
+  {% block item-listing-details %}
+  <div class="mz-itemlisting-details">
+    {% block item-name %}
+    <a class="mz-itemlisting-title" href="{{ model.product.url }}">
+      {{ model.product.name }}</a>
+    {% endblock item-name %}
+    {% block item-details %}
+    <div class="mz-itemlisting-description">
+      {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
+    </div>
+    {% endblock item-details %}
+  </div>
+  {% endblock item-listing-details %}
+  <div class="mz-itemlisting-actions">
+  {% block item-listing-actions %}
+    
+  {% endblock item-listing-actions %}
+  </div>
+  {% block item-listing-extras %}
+  {% endblock item-listing-extras %}
+</div>

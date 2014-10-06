@@ -1,0 +1,27 @@
+{
+  "name": "mozu-core-theme",
+  "version": "5.0.3",
+  "devDependencies": {
+    "backbone": "~1.1",
+    "underscore": "~1.6",
+    "bootstrap": "~3.2",
+    "jquery.cookie": "~1.4",
+    "jquery-colorbox": "~1.5",
+    "typeahead.js": "~0"
+  },
+  "ignore": [
+    "/.*",
+    "tasks"
+  ],
+  "main": "*",
+  "exportsOverride": {
+    "bootstrap": {
+      "js": [
+        "js/affix.js",
+        "js/popover.js",
+        "js/tooltip.js",
+        "js/scrollspy.js"
+      ]
+    }
+  }
+}

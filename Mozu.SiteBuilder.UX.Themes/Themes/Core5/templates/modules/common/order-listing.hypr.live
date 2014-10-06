@@ -1,0 +1,26 @@
+﻿<div class="mz-orderlisting" data-mz-id="{{ model.id }}">
+    <div class="mz-orderlisting-detail">
+        <h3 class="mz-orderlisting-date">{{ model.auditInfo.createDate|date("F j, Y") }}</h3>
+        {% block order-details %}
+        <dl class="mz-propertylist">
+            <dt>{{ labels.orderNumber }}</dt>
+            <dd>{{ model.orderNumber }}</dd>
+            <dt>{{ labels.total }}</dt>
+            <dd>{{ model.total|currency }}</dd>
+            {% block order-shipped-to %}
+            {% if model.fulfillmentInfo.fulfillmentContact %}
+            <dt>{{ labels.shippedTo }}</dt>
+            <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
+            {% endif %}
+            {% endblock order-shipped-to %}
+        </dl>
+        {% endblock order-details %}
+    </div>
+    <div class="mz-orderlisting-items">
+    {% block order-items %}
+        {% for item in model.items %}
+        {% include "modules/common/item-listing" with model=item %}
+        {% endfor %}
+    {% endblock order-items %}
+    </div>
+</div>

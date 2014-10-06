@@ -1,0 +1,33 @@
+﻿.mz-myaccount {
+    .mz-myaccount-panels {
+        margin-left: 200px;
+    }
+
+    .mz-myaccount-nav {
+        width: 200px;
+        box-sizing: border-box;
+    }
+
+    .mz-contacttype-isprimary {
+        font-size: @fontSizeSmall;
+        font-style: italic;
+        display: block;
+        margin-top: 3px;
+        text-indent: @gutter;
+    }
+    @media (max-width: 600px) {
+        .mz-myaccount-panels {
+            margin-left: 0;
+        }
+        .mz-myaccount-nav {
+            float: none;
+            width: auto;
+            margin-bottom: @gutter;
+            .clearfix();
+            .mz-scrollnav-item {
+                float: left;
+                margin: @gutter/4;
+            }
+        }
+    }
+}

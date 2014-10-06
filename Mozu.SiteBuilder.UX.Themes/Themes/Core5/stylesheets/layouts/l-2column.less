@@ -1,0 +1,38 @@
+﻿.mz-l-2column {
+    .clearfix();
+    .mz-l-column {
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+
+        + .mz-l-column {
+            padding-left: @gutter;
+        }
+        @media (max-width: 800px) {
+            float: none;
+            width: auto;
+            + .mz-l-column {
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+.mz-l-2column-right {
+    .mz-l-column {
+        float: right;
+
+        + .mz-l-column {
+            padding-left: 0;
+            padding-right: @gutter;
+        }
+
+        @media (max-width: 800px) {
+            float: none;
+            width: auto;
+            + .mz-l-column {
+                padding-right: 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+<div class="mz-categorylist" >
+  {% with  navigation|find:Model.config.mainCategory as navNode %}
+  <div class="mz-categorylist-title-{{Model.config.template}}"><a href="{{navNode.url}}">{{navNode.name}}</a></div>
+  {% for item in navNode.items %}
+  {% if forloop.counter0 < Model.config.numberToDisplay %}
+			<div class="mz-categorylist-list-label{{Model.config.template}}"><a href="{{item.url}}">{{ item.name }}</a></div>
+				  <ul class="mz-categorylist-list-{{Model.config.template}} {% block list-classes %}{% endblock list-classes %}">
+				  {% for subitem in item.items %}
+					<li class="mz-categorylist-item-{{Model.config.template}}"><a href="{{subitem.url}}">{{ subitem.name }}</a></li>
+				  {% endfor %}
+				  </ul>
+			{% endif %}
+	   {% endfor %}
+{% endwith %}
+</div>
