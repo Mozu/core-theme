@@ -505,153 +505,16 @@
     <Content Include="Themes\Core4\tasks\grunt-setver.js" />
     <Content Include="Themes\Core4\tasks\grunt-zubat.js" />
     <Content Include="Themes\Core4\thumb.tpt.png" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\about-us.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\categoryContent.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\email-orderconfirmation.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\email.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\horizontalRule.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\pageTemplateContent.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\productContent.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\snippet.js" />
-    <Content Include="Themes\Core5 - Copy\admin\editors\web_page.js" />
-    <Content Include="Themes\Core5 - Copy\build.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\build.txt" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\modules\common.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\cart.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\category.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\checkout.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\error.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\location.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\myaccount.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\product.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\pages\search.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\bootstrap\js\affix.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\bootstrap\js\popover.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\bootstrap\js\scrollspy.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\bootstrap\js\tooltip.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\jquery.tools.dateinput.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\jquery\jquery.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\modernizr.min.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\vendor\typeahead.js\typeahead.bundle.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\widgets\deal-of-the-day.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\widgets\image.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\widgets\instock-request.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\widgets\related-products.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\widgets\store-locator.js" />
-    <Content Include="Themes\Core5 - Copy\compiled\scripts\widgets\video.js" />
-    <Content Include="Themes\Core5 - Copy\Gruntfile.js" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\00_photo.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\01_photo_text.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\02_photo_gallery.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\03_heading_p.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\04_column_divider.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\05_horizontal_divider.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\06_two_column.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\07_code.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\08_video.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\09_slideshow.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\10_photo_slider.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\11_about_us.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\12_light_box.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\13_social.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\14_delivery_date.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\15_maps.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\16_archives.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\17_comments.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\18_smart_offers.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\19_tags.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\20_recent_posts.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\21_rss.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\22_category_navigation.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\23_cross_sells.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\24_facebook_comments.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\25_instock_requests.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\26_related_products.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\27_up_sells.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\_0004_html.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\_0005_horizontal-divider.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\_0007_featured-products.png" />
-    <Content Include="Themes\Core5 - Copy\resources\admin\widgets\_0008_share.png" />
-    <Content Include="Themes\Core5 - Copy\resources\images\button-loading-small.gif" />
-    <Content Include="Themes\Core5 - Copy\resources\images\button-loading.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\Core5 - Copy\resources\images\error-exclamation.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\Core5 - Copy\resources\images\favicon.ico" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\api.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\backbone-mozu-model.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\backbone-mozu-pagedcollection.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\backbone-mozu-validation.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\backbone-mozu-view.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\backbone-mozu.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\cart-monitor.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\common.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\contextify.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\jquery-dateinput-localized.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\jquery-mozu.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\login-links.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\mixin-paging.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-address.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-cart.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-checkout.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-customer.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-documents.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-faceting.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-location.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-messages.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-orders.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-paymentmethods.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-price.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\models-product.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\scroll-nav.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\search-autocomplete.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\views-collections.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\views-messages.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\views-paging.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\views-productimages.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\modules\views-productlists.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\cart.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\category.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\checkout.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\error.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\location.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\myaccount.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\product.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\pages\search.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\backbone\backbone.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\bootstrap\js\affix.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\bootstrap\js\popover.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\bootstrap\js\scrollspy.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\bootstrap\js\tooltip.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\jquery-scrollto.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\jquery.cookie\jquery.cookie.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\jquery.tools.dateinput.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\jquery\jquery.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\modernizr.min.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\typeahead.js\typeahead.bundle.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\vendor\underscore\underscore.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\widgets\deal-of-the-day.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\widgets\image.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\widgets\instock-request.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\widgets\related-products.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\widgets\store-locator.js" />
-    <Content Include="Themes\Core5 - Copy\scripts\widgets\video.js" />
-    <Content Include="Themes\Core5 - Copy\tasks\grunt-setver.js" />
-    <Content Include="Themes\Core5 - Copy\tasks\grunt-zubat.js" />
-    <Content Include="Themes\Core5 - Copy\thumb.tpt.png" />
     <Content Include="Themes\Core5\admin\editors\about-us.js" />
     <Content Include="Themes\Core5\admin\editors\categoryContent.js" />
     <Content Include="Themes\Core5\admin\editors\email-orderconfirmation.js" />
     <Content Include="Themes\Core5\admin\editors\email.js" />
+    <Content Include="Themes\Core5\admin\editors\horizontalRule.js" />
     <Content Include="Themes\Core5\admin\editors\pageTemplateContent.js" />
     <Content Include="Themes\Core5\admin\editors\productContent.js" />
     <Content Include="Themes\Core5\admin\editors\snippet.js" />
     <Content Include="Themes\Core5\admin\editors\web_page.js" />
-    <Content Include="Themes\Core5\admin\editors\horizontalRule.js" />
+    <Content Include="Themes\Core5\build.js" />
     <Content Include="Themes\Core5\compiled\scripts\build.txt" />
     <Content Include="Themes\Core5\compiled\scripts\modules\common.js" />
     <Content Include="Themes\Core5\compiled\scripts\pages\cart.js" />
@@ -677,17 +540,6 @@
     <Content Include="Themes\Core5\compiled\scripts\widgets\related-products.js" />
     <Content Include="Themes\Core5\compiled\scripts\widgets\store-locator.js" />
     <Content Include="Themes\Core5\compiled\scripts\widgets\video.js" />
-    <Content Include="Docs\externals\backbone.jsdoc.js" />
-    <Content Include="Docs\Mozu_Themeing_Concepts.md" />
-    <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
-    <Content Include="SampleThemes\helloWorld\MetaData\ThemeSettings.xml" />
-    <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\widget_thumb.png" />
-    <Content Include="SampleThemes\helloWorld\Resources\Images\hello_world\hello.png" />
-    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Modules\models-hello-world.js" />
-    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Vendor\jquery.colorbox-min.js" />
-    <Content Include="SampleThemes\helloWorld\theme.xml" />
-    <Content Include="SampleThemes\Test\thumb.jpg" />
-    <Content Include="Scripts\backbone.d.ts" />
     <Content Include="Themes\Core5\Gruntfile.js" />
     <Content Include="Themes\Core5\resources\admin\widgets\00_photo.png" />
     <Content Include="Themes\Core5\resources\admin\widgets\01_photo_text.png" />
@@ -717,25 +569,57 @@
     <Content Include="Themes\Core5\resources\admin\widgets\25_instock_requests.png" />
     <Content Include="Themes\Core5\resources\admin\widgets\26_related_products.png" />
     <Content Include="Themes\Core5\resources\admin\widgets\27_up_sells.png" />
+    <Content Include="Themes\Core5\resources\admin\widgets\_0004_html.png" />
+    <Content Include="Themes\Core5\resources\admin\widgets\_0005_horizontal-divider.png" />
+    <Content Include="Themes\Core5\resources\admin\widgets\_0007_featured-products.png" />
+    <Content Include="Themes\Core5\resources\admin\widgets\_0008_share.png" />
     <Content Include="Themes\Core5\resources\images\button-loading-small.gif" />
     <Content Include="Themes\Core5\resources\images\button-loading.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Themes\Core5\resources\images\error-exclamation.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Themes\Core5\resources\images\favicon.ico" />
+    <Content Include="Themes\Core5\scripts\modules\api.js" />
+    <Content Include="Themes\Core5\scripts\modules\backbone-mozu-model.js" />
     <Content Include="Themes\Core5\scripts\modules\backbone-mozu-pagedcollection.js" />
+    <Content Include="Themes\Core5\scripts\modules\backbone-mozu-validation.js" />
+    <Content Include="Themes\Core5\scripts\modules\backbone-mozu-view.js" />
+    <Content Include="Themes\Core5\scripts\modules\backbone-mozu.js" />
+    <Content Include="Themes\Core5\scripts\modules\cart-monitor.js" />
+    <Content Include="Themes\Core5\scripts\modules\common.js" />
     <Content Include="Themes\Core5\scripts\modules\contextify.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-documents.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-orders.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-location.js" />
     <Content Include="Themes\Core5\scripts\modules\jquery-dateinput-localized.js" />
+    <Content Include="Themes\Core5\scripts\modules\jquery-mozu.js" />
+    <Content Include="Themes\Core5\scripts\modules\login-links.js" />
+    <Content Include="Themes\Core5\scripts\modules\mixin-paging.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-address.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-cart.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-checkout.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-customer.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-documents.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-faceting.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-location.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-messages.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-orders.js" />
     <Content Include="Themes\Core5\scripts\modules\models-paymentmethods.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-price.js" />
+    <Content Include="Themes\Core5\scripts\modules\models-product.js" />
     <Content Include="Themes\Core5\scripts\modules\scroll-nav.js" />
     <Content Include="Themes\Core5\scripts\modules\search-autocomplete.js" />
     <Content Include="Themes\Core5\scripts\modules\views-collections.js" />
-    <Content Include="Themes\Core5\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core5\scripts\modules\views-messages.js" />
+    <Content Include="Themes\Core5\scripts\modules\views-paging.js" />
+    <Content Include="Themes\Core5\scripts\modules\views-productimages.js" />
     <Content Include="Themes\Core5\scripts\modules\views-productlists.js" />
+    <Content Include="Themes\Core5\scripts\pages\cart.js" />
+    <Content Include="Themes\Core5\scripts\pages\category.js" />
+    <Content Include="Themes\Core5\scripts\pages\checkout.js" />
+    <Content Include="Themes\Core5\scripts\pages\error.js" />
     <Content Include="Themes\Core5\scripts\pages\location.js" />
+    <Content Include="Themes\Core5\scripts\pages\myaccount.js" />
+    <Content Include="Themes\Core5\scripts\pages\product.js" />
     <Content Include="Themes\Core5\scripts\pages\search.js" />
     <Content Include="Themes\Core5\scripts\vendor\backbone\backbone.js" />
     <Content Include="Themes\Core5\scripts\vendor\bootstrap\js\affix.js" />
@@ -745,133 +629,165 @@
     <Content Include="Themes\Core5\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
     <Content Include="Themes\Core5\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core5\scripts\vendor\jquery.cookie\jquery.cookie.js" />
+    <Content Include="Themes\Core5\scripts\vendor\jquery.tools.dateinput.js" />
     <Content Include="Themes\Core5\scripts\vendor\jquery\jquery.js" />
+    <Content Include="Themes\Core5\scripts\vendor\modernizr.min.js" />
     <Content Include="Themes\Core5\scripts\vendor\typeahead.js\typeahead.bundle.js" />
     <Content Include="Themes\Core5\scripts\vendor\underscore\underscore.js" />
     <Content Include="Themes\Core5\scripts\widgets\deal-of-the-day.js" />
     <Content Include="Themes\Core5\scripts\widgets\image.js" />
     <Content Include="Themes\Core5\scripts\widgets\instock-request.js" />
     <Content Include="Themes\Core5\scripts\widgets\related-products.js" />
-    <Content Include="Themes\Core5\scripts\widgets\video.js" />
     <Content Include="Themes\Core5\scripts\widgets\store-locator.js" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-container.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-sidebar.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-slidebox.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\address-summary.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\faceting-form.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-tiles.less" />
-    <Content Include="Themes\Core5\stylesheets\base\normalize.less" />
-    <Content Include="Themes\Core5\stylesheets\base\global.less" />
-    <Content Include="Themes\Core5\stylesheets\base\variables.less" />
-    <Content Include="Themes\Core5\stylesheets\base\mixins.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-2column.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\page-numbers.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-pagecontent.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-paginatedlist.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\page-title.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\price.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-stack.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\button.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\cart\cart-table.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\property-list.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\icon.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\message-bar.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-pagewrapper.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\form-step.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-formfieldgroup.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\order-summary.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\error-detail.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\bootstrap-popover.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\login-popover.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\page-header\store-branding.less" />
-    <Content Include="Themes\Core5\scripts\modules\backbone-mozu-validation.js" />
-    <Content Include="Themes\Core5\scripts\modules\backbone-mozu-model.js" />
-    <Content Include="Themes\Core5\scripts\modules\backbone-mozu-view.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-messages.js" />
-    <Content Include="Themes\Core5\scripts\modules\mixin-paging.js" />
-    <Content Include="Themes\Core5\scripts\modules\views-paging.js" />
-    <Content Include="Themes\Core5\build.js" />
-    <Content Include="Themes\Core5\resources\admin\widgets\_0007_featured-products.png" />
-    <Content Include="Themes\Core5\resources\admin\widgets\_0004_html.png" />
-    <Content Include="Themes\Core5\resources\admin\widgets\_0005_horizontal-divider.png" />
-    <Content Include="Themes\Core5\resources\admin\widgets\_0008_share.png" />
-    <Content Include="Themes\Core5\resources\images\error-exclamation.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\Core5\scripts\modules\api.js" />
-    <Content Include="Themes\Core5\scripts\modules\cart-monitor.js" />
-    <Content Include="Themes\Core5\scripts\modules\common.js" />
-    <Content Include="Themes\Core5\scripts\modules\backbone-mozu.js" />
-    <Content Include="Themes\Core5\scripts\modules\jquery-mozu.js" />
-    <Content Include="Themes\Core5\scripts\modules\login-links.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-address.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-cart.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-checkout.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-customer.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-faceting.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-price.js" />
-    <Content Include="Themes\Core5\scripts\modules\models-product.js" />
-    <Content Include="Themes\Core5\scripts\pages\cart.js" />
-    <Content Include="Themes\Core5\scripts\pages\category.js" />
-    <Content Include="Themes\Core5\scripts\pages\checkout.js" />
-    <Content Include="Themes\Core5\scripts\pages\error.js" />
-    <Content Include="Themes\Core5\scripts\pages\myaccount.js" />
-    <Content Include="Themes\Core5\scripts\pages\product.js" />
-    <Content Include="Themes\Core5\scripts\vendor\jquery.tools.dateinput.js" />
-    <Content Include="Themes\Core5\scripts\vendor\modernizr.min.js" />
-    <Content Include="Themes\Core5\stylesheets\modules\page-header\utility-nav.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\page-header\cart-monitor.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\page-header\search-box.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\site-nav.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\breadcrumbs.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\page-header.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\page-footer.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\paging-controls.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\product\product-listing.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\product\price-stack.less" />
-    <Content Include="Themes\Core5\stylesheets\storefront.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\location\location-list.less" />
-    <Content Include="Themes\Core5\stylesheets\email.less" />
+    <Content Include="Themes\Core5\scripts\widgets\video.js" />
     <Content Include="Themes\Core5\tasks\grunt-setver.js" />
     <Content Include="Themes\Core5\tasks\grunt-zubat.js" />
-    <Content Include="Themes\Core5\templates\email\email.hypr" />
-    <Content Include="Themes\Core5\templates\email\new-user.hypr" />
-    <Content Include="Themes\Core5\templates\email\order-confirmation.hypr" />
-    <Content Include="Themes\Core5\templates\email\order-shipped.hypr" />
-    <Content Include="Themes\Core5\templates\email\password-reset.hypr" />
-    <Content Include="Themes\Core5\templates\email\product-instock.hypr" />
-    <Content Include="Themes\Core5\templates\modules\checkout\checkout-payment.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\common\price.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\state\is-crossedout.less" />
-    <Content Include="Themes\Core5\stylesheets\state\is-saleprice.less" />
-    <Content Include="Themes\Core5\stylesheets\state\is-loading.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\product\product-images.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\product\product-detail.less" />
-    <Content Include="Themes\Core5\stylesheets\pages\product.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\product\product-options.less" />
-    <Content Include="Themes\Core5\stylesheets\state\is-required.less" />
-    <Content Include="Themes\Core5\stylesheets\state\is-disabled.less" />
-    <Content Include="Themes\Core5\templates\modules\page-header\store-branding.hypr" />
-    <Content Include="Themes\Core5\stylesheets\state\fades-in.less" />
-    <Content Include="Themes\Core5\templates\modules\common\order-summary.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\pages\checkout.less" />
-    <Content Include="Themes\Core5\templates\modules\web-fonts-loader.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\stylesheets\pages\confirmation.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\validation-message.less" />
-    <Content Include="Themes\Core5\templates\modules\product\faceted-products.hypr" />
-    <Content Include="Themes\Core5\templates\modules\product\product-options.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\billing-address-form.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\paging-controls.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\page-numbers.hypr.live" />
-    <Content Include="Themes\Core5\templates\pages\blank-page.hypr" />
-    <Content Include="Themes\Core5\theme-ui.json" />
     <Content Include="Themes\Core5\thumb.tpt.png" />
+    <Content Include="Docs\externals\backbone.jsdoc.js" />
+    <Content Include="Docs\Mozu_Themeing_Concepts.md" />
+    <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
+    <Content Include="SampleThemes\helloWorld\MetaData\ThemeSettings.xml" />
+    <Content Include="SampleThemes\helloWorld\MetaData\Widgets\cms\hello_world\widget_thumb.png" />
+    <Content Include="SampleThemes\helloWorld\Resources\Images\hello_world\hello.png" />
+    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Modules\models-hello-world.js" />
+    <Content Include="SampleThemes\helloWorld\Resources\Scripts\Vendor\jquery.colorbox-min.js" />
+    <Content Include="SampleThemes\helloWorld\theme.xml" />
+    <Content Include="SampleThemes\Test\thumb.jpg" />
+    <Content Include="Scripts\backbone.d.ts" />
+    <Content Include="Themes\Core6\admin\editors\about-us.js" />
+    <Content Include="Themes\Core6\admin\editors\categoryContent.js" />
+    <Content Include="Themes\Core6\admin\editors\email-orderconfirmation.js" />
+    <Content Include="Themes\Core6\admin\editors\email.js" />
+    <Content Include="Themes\Core6\admin\editors\horizontalRule.js" />
+    <Content Include="Themes\Core6\admin\editors\pageTemplateContent.js" />
+    <Content Include="Themes\Core6\admin\editors\productContent.js" />
+    <Content Include="Themes\Core6\admin\editors\snippet.js" />
+    <Content Include="Themes\Core6\admin\editors\web_page.js" />
+    <Content Include="Themes\Core6\build.js" />
+    <Content Include="Themes\Core6\compiled\scripts\build.txt" />
+    <Content Include="Themes\Core6\compiled\scripts\modules\common.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\cart.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\category.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\checkout.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\error.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\location.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\myaccount.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\product.js" />
+    <Content Include="Themes\Core6\compiled\scripts\pages\search.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\bootstrap\js\affix.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\bootstrap\js\popover.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\bootstrap\js\scrollspy.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\bootstrap\js\tooltip.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\jquery.tools.dateinput.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\jquery\jquery.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\modernizr.min.js" />
+    <Content Include="Themes\Core6\compiled\scripts\vendor\typeahead.js\typeahead.bundle.js" />
+    <Content Include="Themes\Core6\compiled\scripts\widgets\deal-of-the-day.js" />
+    <Content Include="Themes\Core6\compiled\scripts\widgets\image.js" />
+    <Content Include="Themes\Core6\compiled\scripts\widgets\instock-request.js" />
+    <Content Include="Themes\Core6\compiled\scripts\widgets\related-products.js" />
+    <Content Include="Themes\Core6\compiled\scripts\widgets\store-locator.js" />
+    <Content Include="Themes\Core6\compiled\scripts\widgets\video.js" />
+    <Content Include="Themes\Core6\Gruntfile.js" />
+    <Content Include="Themes\Core6\resources\admin\widgets\00_photo.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\01_photo_text.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\02_photo_gallery.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\03_heading_p.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\04_column_divider.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\05_horizontal_divider.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\06_two_column.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\07_code.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\08_video.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\09_slideshow.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\10_photo_slider.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\11_about_us.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\12_light_box.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\13_social.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\14_delivery_date.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\15_maps.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\16_archives.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\17_comments.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\18_smart_offers.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\19_tags.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\20_recent_posts.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\21_rss.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\22_category_navigation.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\23_cross_sells.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\24_facebook_comments.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\25_instock_requests.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\26_related_products.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\27_up_sells.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\_0004_html.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\_0005_horizontal-divider.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\_0007_featured-products.png" />
+    <Content Include="Themes\Core6\resources\admin\widgets\_0008_share.png" />
+    <Content Include="Themes\Core6\resources\images\button-loading-small.gif" />
+    <Content Include="Themes\Core6\resources\images\button-loading.gif" />
+    <Content Include="Themes\Core6\resources\images\error-exclamation.png" />
+    <Content Include="Themes\Core6\resources\images\favicon.ico" />
+    <Content Include="Themes\Core6\scripts\modules\api.js" />
+    <Content Include="Themes\Core6\scripts\modules\backbone-mozu-model.js" />
+    <Content Include="Themes\Core6\scripts\modules\backbone-mozu-pagedcollection.js" />
+    <Content Include="Themes\Core6\scripts\modules\backbone-mozu-validation.js" />
+    <Content Include="Themes\Core6\scripts\modules\backbone-mozu-view.js" />
+    <Content Include="Themes\Core6\scripts\modules\backbone-mozu.js" />
+    <Content Include="Themes\Core6\scripts\modules\cart-monitor.js" />
+    <Content Include="Themes\Core6\scripts\modules\common.js" />
+    <Content Include="Themes\Core6\scripts\modules\contextify.js" />
+    <Content Include="Themes\Core6\scripts\modules\jquery-dateinput-localized.js" />
+    <Content Include="Themes\Core6\scripts\modules\jquery-mozu.js" />
+    <Content Include="Themes\Core6\scripts\modules\login-links.js" />
+    <Content Include="Themes\Core6\scripts\modules\mixin-paging.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-address.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-cart.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-checkout.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-customer.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-documents.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-faceting.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-location.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-messages.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-orders.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-paymentmethods.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-price.js" />
+    <Content Include="Themes\Core6\scripts\modules\models-product.js" />
+    <Content Include="Themes\Core6\scripts\modules\scroll-nav.js" />
+    <Content Include="Themes\Core6\scripts\modules\search-autocomplete.js" />
+    <Content Include="Themes\Core6\scripts\modules\views-collections.js" />
+    <Content Include="Themes\Core6\scripts\modules\views-messages.js" />
+    <Content Include="Themes\Core6\scripts\modules\views-paging.js" />
+    <Content Include="Themes\Core6\scripts\modules\views-productimages.js" />
+    <Content Include="Themes\Core6\scripts\modules\views-productlists.js" />
+    <Content Include="Themes\Core6\scripts\pages\cart.js" />
+    <Content Include="Themes\Core6\scripts\pages\category.js" />
+    <Content Include="Themes\Core6\scripts\pages\checkout.js" />
+    <Content Include="Themes\Core6\scripts\pages\error.js" />
+    <Content Include="Themes\Core6\scripts\pages\location.js" />
+    <Content Include="Themes\Core6\scripts\pages\myaccount.js" />
+    <Content Include="Themes\Core6\scripts\pages\product.js" />
+    <Content Include="Themes\Core6\scripts\pages\search.js" />
+    <Content Include="Themes\Core6\scripts\vendor\backbone\backbone.js" />
+    <Content Include="Themes\Core6\scripts\vendor\bootstrap\js\affix.js" />
+    <Content Include="Themes\Core6\scripts\vendor\bootstrap\js\popover.js" />
+    <Content Include="Themes\Core6\scripts\vendor\bootstrap\js\scrollspy.js" />
+    <Content Include="Themes\Core6\scripts\vendor\bootstrap\js\tooltip.js" />
+    <Content Include="Themes\Core6\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
+    <Content Include="Themes\Core6\scripts\vendor\jquery-scrollto.js" />
+    <Content Include="Themes\Core6\scripts\vendor\jquery.cookie\jquery.cookie.js" />
+    <Content Include="Themes\Core6\scripts\vendor\jquery.tools.dateinput.js" />
+    <Content Include="Themes\Core6\scripts\vendor\jquery\jquery.js" />
+    <Content Include="Themes\Core6\scripts\vendor\modernizr.min.js" />
+    <Content Include="Themes\Core6\scripts\vendor\typeahead.js\typeahead.bundle.js" />
+    <Content Include="Themes\Core6\scripts\vendor\underscore\underscore.js" />
+    <Content Include="Themes\Core6\scripts\widgets\deal-of-the-day.js" />
+    <Content Include="Themes\Core6\scripts\widgets\image.js" />
+    <Content Include="Themes\Core6\scripts\widgets\instock-request.js" />
+    <Content Include="Themes\Core6\scripts\widgets\related-products.js" />
+    <Content Include="Themes\Core6\scripts\widgets\store-locator.js" />
+    <Content Include="Themes\Core6\scripts\widgets\video.js" />
+    <Content Include="Themes\Core6\tasks\grunt-setver.js" />
+    <Content Include="Themes\Core6\tasks\grunt-zubat.js" />
+    <Content Include="Themes\Core6\thumb.tpt.png" />
     <Content Include="Themes\Demo1\admin\editors\pokemon.js" />
     <Content Include="Themes\Demo1\thumb.tpt.png" />
     <Content Include="ThemeTemplates\ExtendsCore4\labels\README.txt" />
@@ -894,155 +810,9 @@
     <Content Include="SampleThemes\helloWorld\Resources\Stylesheets\modules\layout.less" />
     <Content Include="SampleThemes\helloWorld\Templates\Hello_world.vol" />
     <Content Include="SampleThemes\helloWorld\Widgets\hello_world\hello_world_widget.vol" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\datepicker.less" />
-    <Content Include="Themes\Core5\templates\Widgets\social\addthis.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\social\facebookcomments.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\misc\pickels.hypr" />
-    <Content Include="Themes\Core5\templates\pages\404.hypr" />
-    <Content Include="Themes\Core5\templates\pages\about-us.hypr" />
-    <Content Include="Themes\Core5\templates\pages\cart.hypr" />
-    <Content Include="Themes\Core5\templates\pages\category.hypr" />
-    <Content Include="Themes\Core5\templates\pages\checkout.hypr" />
-    <Content Include="Themes\Core5\templates\pages\confirmation.hypr" />
-    <Content Include="Themes\Core5\templates\pages\error.hypr" />
-    <Content Include="Themes\Core5\templates\pages\home.hypr" />
-    <Content Include="Themes\Core5\templates\pages\my-account.hypr" />
-    <Content Include="Themes\Core5\templates\pages\product.hypr" />
-    <Content Include="Themes\Core5\templates\pages\search-results.hypr" />
-    <Content Include="Themes\Core5\templates\pages\login.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\columndivider.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\content.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\content2col.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\horizontalrule.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\image.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\imagesGallery.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\paragraphwithheader.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\catalog\featuredproducts.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\blog\blogarchive.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\blog\blogRss.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\blog\recentposts.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\blog\tagcollection.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\blog\tags.hypr" />
-    <Content Include="Themes\Core5\templates\page.hypr" />
-    <Content Include="Themes\Core5\templates\modules\common\address-form.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\address-summary.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\breadcrumbs.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\checking-account-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\comments-field.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\coupon-code-field.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\checkout-order-summary.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\checkout\step-payment-info.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\step-review.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\step-shipping-address.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\step-shipping-method.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\checkout\billing-credit-card-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\product\faceting-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\analytics\google-analytics-tracking-code.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\common\login-popover.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\common\message-bar.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\page-footer.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\page-header.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\cart\cart-table.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\product\price-stack.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\product\product-detail.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\product\product-images.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\product\product-listing.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\page-header\search-box.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\site-nav.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\trailing-scripts.hypr" />
-    <Content Include="Themes\Core5\templates\modules\page-header\utility-nav.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\theme.json" />
-    <Content Include="Themes\Core5\templates\modules\json-required-for-hyprlive.hypr" />
-    <Content Include="Themes\Core5\templates\modules\analytics\google-analytics-ecommerce-tracking-code.hypr" />
-    <Content Include="Themes\Core5\labels\en-US.json" />
-    <Content Include="Themes\Core5\templates\pages\WidgetTEsting\test.hypr" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-nav.hypr" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-settings.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-wishlist.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\credit-card-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-credit-card-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\common\signup-popover.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\stylesheets\modules\common\placeholder-polyfill.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\signup-popover.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-paymentmethods.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-addressbook.less" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-address-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="SampleThemes\Test\theme.json" />
     <Content Include="SampleThemes\Test\theme-ui.json" />
     <Content Include="SampleThemes\Test\stylesheets\base\global.less" />
-    <Content Include="Themes\Core5\stylesheets\layouts\l-carousel.less" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-orderhistory.hypr" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-paymentmethods.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-addressbook.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-storecredit.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\stylesheets\modules\common\address-form.less" />
-    <Content Include="Themes\Core5\stylesheets\pages\myaccount.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-settings.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\scroll-nav.less" />
-    <Content Include="Themes\Core5\templates\modules\common\item-listing.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\product\product-list.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\product\product-list-tiled.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\order-listing.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\order-listing.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\order-list.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\item-listing.less" />
-    <Content Include="Themes\Core5\stylesheets\pages\category.less" />
-    <Content Include="Themes\Core5\templates\modules\common\order-list.hypr.live" />
-    <Content Include="Themes\Core5\templates\Widgets\catalog\related-products.hypr" />
-    <Content Include="Themes\Core5\templates\modules\product\product-list-carousel.hypr.live" />
-    <Content Include="Themes\Core5\templates\pages\parent-category.hypr" />
     <Content Include="web.CI.config">
       <DependentUpon>web.config</DependentUpon>
     </Content>
@@ -1067,7 +837,6 @@
     <Content Include="web.SI.config">
       <DependentUpon>web.config</DependentUpon>
     </Content>
-    <Content Include="Themes\Core5\templates\pages\product-location.hypr" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.UX\Mozu.SiteBuilder.UX.csproj">
@@ -1084,10 +853,10 @@
     <Folder Include="Themes\Core4\admin\widgets\" />
     <Folder Include="Themes\Core4\templates\layouts\" />
     <Folder Include="Themes\Core4\templates\pages\Documentation\" />
-    <Folder Include="Themes\Core5 - Copy\admin\widgets\" />
-    <Folder Include="Themes\Core5 - Copy\templates\modules\entities\" />
     <Folder Include="Themes\Core5\admin\widgets\" />
     <Folder Include="Themes\Core5\templates\modules\entities\" />
+    <Folder Include="Themes\Core6\admin\widgets\" />
+    <Folder Include="Themes\Core6\templates\modules\entities\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1096,166 +865,20 @@
     <Content Include="Properties\PublishProfiles\demo wp.pubxml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\stylesheets\widgets\instock-request.less" />
-    <Content Include="Themes\Core5\stylesheets\widgets\video.less" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-wishlist-item-listing.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\state\notices.less" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-contact-selector.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-paymentmethod.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\payment-method.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\contact-selector.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\modules\product\product-list.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\contact-selector.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\payment-method.less" />
-    <Content Include="Themes\Core5\templates\modules\checkout\checkout-shipping-contact-selector.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\order-history-item-listing.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\order-history-order-listing.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\order-history-list.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\order-history-paging-controls.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\common\item-return-form.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\modules\my-account\return-form.less" />
-    <Content Include="Themes\Core5\templates\modules\my-account\my-account-returnhistory.hypr" />
-    <Content Include="Themes\Core5\templates\modules\my-account\return-history-list.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\return-history-item-listing.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\my-account\return-history-return-listing.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\modules\my-account\rma-item.less" />
-    <Content Include="Themes\Core5\stylesheets\widgets\image.less" />
-    <Content Include="Themes\Core5\templates\modules\location\location.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\location\store-info.hypr.live" />
-    <Content Include="Themes\Core5\stylesheets\pages\location.less" />
-    <Content Include="Themes\Core5\stylesheets\widgets\category-navigation.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\common\table.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-storecredit.less" />
-    <Content Include="Themes\Core5\templates\modules\checkout\checkout-store-credit.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\stylesheets\modules\checkout\checkout-store-credit.less" />
-    <Content Include="Themes\Core5\stylesheets\modules\checkout\checkout-payment.less" />
-    <Content Include="Themes\Core5\templates\modules\location\location-search.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\location\location-list.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\location\location-list-for-product.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\location\location-listing-for-product.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\location\location-listing.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\location\location-product-listing.hypr.live" />
-    <Content Include="Themes\Core5\templates\modules\location\locations.hypr.live" />
     <Content Include="Docs\jsdoc_conf.json" />
     <Content Include="Docs\package.json" />
     <Content Include="Docs\make.bat" />
     <Content Include="Docs\README.md" />
     <Content Include="Docs\Customization_Layers.md" />
     <Content Include="Docs\Page_Lifecycle.md" />
-    <Content Include="Themes\Core5\templates\modules\product\product-instock-request.hypr.live" />
-    <Content Include="Themes\Core5\templates\Widgets\cms\video.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\location\store-locator.hypr" />
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
-    <Content Include="Themes\Core5\templates\pages\no-search-results.hypr" />
-    <Content Include="Themes\Core5\templates\Widgets\misc\category-navigation.hypr" />
-    <Content Include="Themes\Core5\templates\pages\location.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\misc\instock-request.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\catalog\deal-of-the-day.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\reset-password.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\email\product-return-received.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\email\product-return-authorized.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\email\product-return-rejected.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\package.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\CHANGELOG.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\common\email-order-summary.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\common\email-address-summary.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\email\product-return-changed.hypr" />
-    <Content Include="Themes\Core5\templates\email\product-return-closed.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\common\item-price.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\common\item-total.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\common\email-item-price.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\common\email-item-total.hypr.live" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PostDeploy.ps1" />
     <Content Include="PreDeploy.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\templates\email\giftcard-created.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\checkout\checkout-digital-fulfillment.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\checkout\checkout-digital-credit.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="JSLintNet.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\stylesheets\modules\checkout\checkout-digital-credit.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\labels\de-DE.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\search\autocomplete-listing-product.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Core5\templates\modules\search\autocomplete-page-result.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\post.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\blog.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\document-list.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\content\document-list.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\cms\snippet.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\cms\snippet-render.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Demo1\theme.json" />
@@ -1271,18 +894,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Demo1\templates\pages\pokemon-index.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\modules\common\page-sort.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\stylesheets\modules\common\page-sort.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\bower.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\npm-shrinkwrap.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core4\CHANGELOG.md" />
@@ -1519,7 +1130,811 @@
     <Content Include="Themes\Core4\theme.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Themes\Core5\bower.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\CHANGELOG.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\labels\de-DE.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\labels\en-US.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\npm-shrinkwrap.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\README.md" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Themes\Core5\RELEASE_NOTES.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\base\global.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\base\mixins.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\base\normalize.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\base\variables.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\email.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-2column.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-carousel.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-container.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-formfieldgroup.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-pagecontent.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-pagewrapper.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-paginatedlist.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-sidebar.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-slidebox.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-stack.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\layouts\l-tiles.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\breadcrumbs.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\cart\cart-table.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\checkout\checkout-digital-credit.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\checkout\checkout-payment.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\checkout\checkout-store-credit.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\address-form.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\address-summary.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\bootstrap-popover.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\button.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\contact-selector.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\datepicker.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\form-step.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\icon.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\item-listing.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\login-popover.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\message-bar.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\order-list.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\order-listing.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\order-summary.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\page-numbers.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\page-sort.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\page-title.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\paging-controls.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\payment-method.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\placeholder-polyfill.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\price.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\property-list.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\scroll-nav.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\signup-popover.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\table.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\common\validation-message.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\error-detail.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\faceting-form.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\location\location-list.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-addressbook.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-paymentmethods.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-settings.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\my-account\account-storecredit.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\my-account\return-form.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\my-account\rma-item.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\page-footer.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\page-header\cart-monitor.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\page-header\search-box.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\page-header\store-branding.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\page-header\utility-nav.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\page-header.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\product\price-stack.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\product\product-detail.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\product\product-images.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\product\product-list.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\product\product-listing.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\product\product-options.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\modules\site-nav.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\pages\category.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\pages\checkout.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\pages\confirmation.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\pages\location.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\pages\myaccount.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\pages\product.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\state\fades-in.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\state\is-crossedout.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\state\is-disabled.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\state\is-loading.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\state\is-required.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\state\is-saleprice.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\state\notices.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\storefront.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\widgets\category-navigation.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\widgets\image.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\widgets\instock-request.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\stylesheets\widgets\video.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\email.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\giftcard-created.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\new-user.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\order-confirmation.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\order-shipped.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\password-reset.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\product-instock.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\product-return-authorized.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\product-return-changed.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\product-return-closed.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\product-return-received.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\email\product-return-rejected.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\analytics\google-analytics-ecommerce-tracking-code.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\analytics\google-analytics-tracking-code.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\breadcrumbs.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\cart\cart-table.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\billing-address-form.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\billing-credit-card-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\checking-account-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\checkout-digital-credit.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\checkout-digital-fulfillment.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\checkout-order-summary.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\checkout-payment.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\checkout-shipping-contact-selector.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\checkout-store-credit.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\comments-field.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\coupon-code-field.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\step-payment-info.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\step-review.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\step-shipping-address.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\checkout\step-shipping-method.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\address-form.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\address-summary.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\contact-selector.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\credit-card-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\email-address-summary.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\email-item-price.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\email-item-total.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\email-order-summary.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\item-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\item-price.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\item-return-form.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\item-total.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\login-popover.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\message-bar.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\order-list.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\order-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\order-summary.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\page-numbers.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\page-sort.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\paging-controls.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\payment-method.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\price.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\common\signup-popover.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\content\document-list.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\json-required-for-hyprlive.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\location-list-for-product.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\location-list.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\location-listing-for-product.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\location-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\location-product-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\location-search.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\location.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\locations.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\location\store-info.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-address-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-addressbook.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-contact-selector.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-credit-card-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-nav.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-orderhistory.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-paymentmethod.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-paymentmethods.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-returnhistory.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-settings.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-storecredit.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-wishlist-item-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\my-account-wishlist.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\order-history-item-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\order-history-list.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\order-history-order-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\order-history-paging-controls.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\return-history-item-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\return-history-list.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\my-account\return-history-return-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\page-footer.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\page-header\search-box.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\page-header\store-branding.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\page-header\utility-nav.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\page-header.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\faceted-products.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\faceting-form.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\price-stack.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-detail.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-images.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-instock-request.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-list-carousel.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-list-tiled.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-list.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-listing.hypr.live" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\product\product-options.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\search\autocomplete-listing-product.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\search\autocomplete-page-result.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\site-nav.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\trailing-scripts.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\modules\web-fonts-loader.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\page.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\404.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\about-us.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\blank-page.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\blog.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\cart.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\category.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\checkout.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\confirmation.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\document-list.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\error.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\home.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\location.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\login.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\my-account.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\no-search-results.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\parent-category.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\post.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\product-location.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\product.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\reset-password.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\search-results.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\pages\WidgetTEsting\test.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\blog\blogarchive.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\blog\blogRss.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\blog\recentposts.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\blog\tagcollection.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\blog\tags.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\catalog\deal-of-the-day.hypr">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\catalog\featuredproducts.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\catalog\related-products.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\columndivider.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\content.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\content2col.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\horizontalrule.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\image.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\imagesGallery.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\paragraphwithheader.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\snippet-render.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\snippet.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\cms\video.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\location\store-locator.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\misc\category-navigation.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\misc\instock-request.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\Widgets\misc\nav-subsection.hypr">
@@ -1527,831 +1942,272 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\bower.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\CHANGELOG.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\labels\de-DE.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\labels\en-US.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\npm-shrinkwrap.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\package.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\RELEASE_NOTES.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\base\global.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\base\mixins.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\base\normalize.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\base\variables.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\email.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-2column.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-carousel.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-container.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-formfieldgroup.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-pagecontent.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-pagewrapper.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-paginatedlist.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-sidebar.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-slidebox.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-stack.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\layouts\l-tiles.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\breadcrumbs.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\cart\cart-table.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\checkout\checkout-digital-credit.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\checkout\checkout-payment.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\checkout\checkout-store-credit.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\address-form.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\address-summary.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\bootstrap-popover.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\button.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\contact-selector.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\datepicker.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\form-step.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\icon.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\item-listing.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\login-popover.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\message-bar.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\order-list.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\order-listing.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\order-summary.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\page-numbers.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\page-sort.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\page-title.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\paging-controls.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\payment-method.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\placeholder-polyfill.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\price.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\property-list.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\scroll-nav.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\signup-popover.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\table.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\common\validation-message.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\error-detail.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\faceting-form.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\location\location-list.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\my-account\account-addressbook.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\my-account\account-paymentmethods.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\my-account\account-settings.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\my-account\account-storecredit.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\my-account\return-form.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\my-account\rma-item.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\page-footer.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\page-header\cart-monitor.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\page-header\search-box.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\page-header\store-branding.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\page-header\utility-nav.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\page-header.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\product\price-stack.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\product\product-detail.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\product\product-images.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\product\product-list.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\product\product-listing.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\product\product-options.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\modules\site-nav.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\pages\category.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\pages\checkout.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\pages\confirmation.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\pages\location.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\pages\myaccount.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\pages\product.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\state\fades-in.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\state\is-crossedout.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\state\is-disabled.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\state\is-loading.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\state\is-required.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\state\is-saleprice.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\state\notices.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\storefront.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\widgets\category-navigation.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\widgets\image.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\widgets\instock-request.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\stylesheets\widgets\video.less" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\email.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\giftcard-created.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\new-user.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\order-confirmation.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\order-shipped.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\password-reset.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\product-instock.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\product-return-authorized.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\product-return-changed.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\product-return-closed.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\product-return-received.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\email\product-return-rejected.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\analytics\google-analytics-ecommerce-tracking-code.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\analytics\google-analytics-tracking-code.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\breadcrumbs.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\cart\cart-table.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\billing-address-form.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\billing-credit-card-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\checking-account-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\checkout-digital-credit.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\checkout-digital-fulfillment.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\checkout-order-summary.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\checkout-payment.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\checkout-shipping-contact-selector.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\checkout-store-credit.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\comments-field.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\coupon-code-field.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\step-payment-info.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\step-review.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\step-shipping-address.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\checkout\step-shipping-method.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\address-form.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\address-summary.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\contact-selector.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\credit-card-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\email-address-summary.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\email-item-price.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\email-item-total.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\email-order-summary.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\item-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\item-price.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\item-return-form.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\item-total.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\login-popover.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\message-bar.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\order-list.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\order-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\order-summary.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\page-numbers.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\page-sort.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\paging-controls.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\payment-method.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\price.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\common\signup-popover.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\content\document-list.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\json-required-for-hyprlive.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\location-list-for-product.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\location-list.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\location-listing-for-product.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\location-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\location-product-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\location-search.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\location.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\locations.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\location\store-info.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-address-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-addressbook.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-contact-selector.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-credit-card-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-nav.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-orderhistory.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-paymentmethod.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-paymentmethods.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-returnhistory.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-settings.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-storecredit.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-wishlist-item-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\my-account-wishlist.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\order-history-item-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\order-history-list.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\order-history-order-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\order-history-paging-controls.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\return-history-item-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\return-history-list.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\my-account\return-history-return-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\page-footer.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\page-header\search-box.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\page-header\store-branding.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\page-header\utility-nav.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\page-header.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\faceted-products.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\faceting-form.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\price-stack.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-detail.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-images.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-instock-request.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-list-carousel.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-list-tiled.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-list.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-listing.hypr.live" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\product\product-options.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\search\autocomplete-listing-product.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\search\autocomplete-page-result.hypr.live">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\site-nav.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\trailing-scripts.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\modules\web-fonts-loader.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\page.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\404.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\about-us.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\blank-page.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\blog.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\cart.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\category.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\checkout.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\confirmation.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\document-list.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\error.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\home.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\location.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\login.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\my-account.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\no-search-results.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\parent-category.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\post.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\product-location.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\product.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\reset-password.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\search-results.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\pages\WidgetTEsting\test.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\blog\blogarchive.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\blog\blogRss.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\blog\recentposts.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\blog\tagcollection.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\blog\tags.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\catalog\deal-of-the-day.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\catalog\featuredproducts.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\catalog\related-products.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\columndivider.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\content.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\content2col.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\horizontalrule.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\image.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\imagesGallery.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\paragraphwithheader.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\snippet-render.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\snippet.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\cms\video.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\location\store-locator.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\misc\category-navigation.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\misc\instock-request.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\misc\nav-subsection.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\misc\pickels.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\social\addthis.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\templates\Widgets\social\facebookcomments.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\theme-ui.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5 - Copy\theme.json" />
+    <Content Include="Themes\Core5\templates\Widgets\misc\pickels.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\social\addthis.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\templates\Widgets\social\facebookcomments.hypr" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\theme-ui.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core5\theme.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Core6\bower.json" />
+    <Content Include="Themes\Core6\CHANGELOG.md" />
+    <Content Include="Themes\Core6\labels\de-DE.json" />
+    <Content Include="Themes\Core6\labels\en-US.json" />
+    <Content Include="Themes\Core6\npm-shrinkwrap.json" />
+    <Content Include="Themes\Core6\package.json" />
+    <Content Include="Themes\Core6\README.md" />
+    <Content Include="Themes\Core6\RELEASE_NOTES.md" />
+    <Content Include="Themes\Core6\stylesheets\base\global.less" />
+    <Content Include="Themes\Core6\stylesheets\base\mixins.less" />
+    <Content Include="Themes\Core6\stylesheets\base\normalize.less" />
+    <Content Include="Themes\Core6\stylesheets\base\variables.less" />
+    <Content Include="Themes\Core6\stylesheets\email.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-2column.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-carousel.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-container.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-formfieldgroup.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-pagecontent.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-pagewrapper.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-paginatedlist.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-sidebar.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-slidebox.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-stack.less" />
+    <Content Include="Themes\Core6\stylesheets\layouts\l-tiles.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\breadcrumbs.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\cart\cart-table.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\checkout\checkout-digital-credit.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\checkout\checkout-payment.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\checkout\checkout-store-credit.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\address-form.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\address-summary.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\bootstrap-popover.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\button.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\contact-selector.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\datepicker.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\form-step.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\icon.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\item-listing.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\login-popover.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\message-bar.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\order-list.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\order-listing.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\order-summary.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\page-numbers.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\page-sort.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\page-title.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\paging-controls.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\payment-method.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\placeholder-polyfill.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\price.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\property-list.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\scroll-nav.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\signup-popover.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\table.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\common\validation-message.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\error-detail.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\faceting-form.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\location\location-list.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\my-account\account-addressbook.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\my-account\account-paymentmethods.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\my-account\account-settings.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\my-account\account-storecredit.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\my-account\return-form.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\my-account\rma-item.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\page-footer.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\page-header.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\page-header\cart-monitor.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\page-header\search-box.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\page-header\store-branding.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\page-header\utility-nav.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\product\price-stack.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\product\product-detail.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\product\product-images.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\product\product-list.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\product\product-listing.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\product\product-options.less" />
+    <Content Include="Themes\Core6\stylesheets\modules\site-nav.less" />
+    <Content Include="Themes\Core6\stylesheets\pages\category.less" />
+    <Content Include="Themes\Core6\stylesheets\pages\checkout.less" />
+    <Content Include="Themes\Core6\stylesheets\pages\confirmation.less" />
+    <Content Include="Themes\Core6\stylesheets\pages\location.less" />
+    <Content Include="Themes\Core6\stylesheets\pages\myaccount.less" />
+    <Content Include="Themes\Core6\stylesheets\pages\product.less" />
+    <Content Include="Themes\Core6\stylesheets\state\fades-in.less" />
+    <Content Include="Themes\Core6\stylesheets\state\is-crossedout.less" />
+    <Content Include="Themes\Core6\stylesheets\state\is-disabled.less" />
+    <Content Include="Themes\Core6\stylesheets\state\is-loading.less" />
+    <Content Include="Themes\Core6\stylesheets\state\is-required.less" />
+    <Content Include="Themes\Core6\stylesheets\state\is-saleprice.less" />
+    <Content Include="Themes\Core6\stylesheets\state\notices.less" />
+    <Content Include="Themes\Core6\stylesheets\storefront.less" />
+    <Content Include="Themes\Core6\stylesheets\widgets\category-navigation.less" />
+    <Content Include="Themes\Core6\stylesheets\widgets\image.less" />
+    <Content Include="Themes\Core6\stylesheets\widgets\instock-request.less" />
+    <Content Include="Themes\Core6\stylesheets\widgets\video.less" />
+    <Content Include="Themes\Core6\templates\email\email.hypr" />
+    <Content Include="Themes\Core6\templates\email\giftcard-created.hypr" />
+    <Content Include="Themes\Core6\templates\email\new-user.hypr" />
+    <Content Include="Themes\Core6\templates\email\order-confirmation.hypr" />
+    <Content Include="Themes\Core6\templates\email\order-shipped.hypr" />
+    <Content Include="Themes\Core6\templates\email\password-reset.hypr" />
+    <Content Include="Themes\Core6\templates\email\product-instock.hypr" />
+    <Content Include="Themes\Core6\templates\email\product-return-authorized.hypr" />
+    <Content Include="Themes\Core6\templates\email\product-return-changed.hypr" />
+    <Content Include="Themes\Core6\templates\email\product-return-closed.hypr" />
+    <Content Include="Themes\Core6\templates\email\product-return-received.hypr" />
+    <Content Include="Themes\Core6\templates\email\product-return-rejected.hypr" />
+    <Content Include="Themes\Core6\templates\modules\analytics\google-analytics-ecommerce-tracking-code.hypr" />
+    <Content Include="Themes\Core6\templates\modules\analytics\google-analytics-tracking-code.hypr" />
+    <Content Include="Themes\Core6\templates\modules\breadcrumbs.hypr" />
+    <Content Include="Themes\Core6\templates\modules\cart\cart-table.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\billing-address-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\billing-credit-card-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\checking-account-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\checkout-digital-credit.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\checkout-digital-fulfillment.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\checkout-order-summary.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\checkout-payment.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\checkout-shipping-contact-selector.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\checkout-store-credit.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\comments-field.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\step-payment-info.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\step-review.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\step-shipping-address.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\checkout\step-shipping-method.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\address-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\address-summary.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\contact-selector.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\credit-card-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\email-address-summary.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\email-item-price.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\email-item-total.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\email-order-summary.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\item-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\item-price.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\item-return-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\item-total.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\login-popover.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\message-bar.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\order-list.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\order-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\order-summary.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\page-numbers.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\page-sort.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\paging-controls.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\payment-method.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\price.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\signup-popover.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\content\document-list.hypr" />
+    <Content Include="Themes\Core6\templates\modules\json-required-for-hyprlive.hypr" />
+    <Content Include="Themes\Core6\templates\modules\location\location-list-for-product.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\location-list.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\location-listing-for-product.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\location-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\location-product-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\location-search.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\location.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\locations.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\location\store-info.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-address-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-addressbook.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-contact-selector.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-credit-card-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-nav.hypr" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-orderhistory.hypr" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-paymentmethod.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-paymentmethods.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-returnhistory.hypr" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-settings.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-storecredit.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-wishlist-item-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-wishlist.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\order-history-item-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\order-history-list.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\order-history-order-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\order-history-paging-controls.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\return-history-item-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\return-history-list.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\return-history-return-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\page-footer.hypr" />
+    <Content Include="Themes\Core6\templates\modules\page-header.hypr" />
+    <Content Include="Themes\Core6\templates\modules\page-header\search-box.hypr" />
+    <Content Include="Themes\Core6\templates\modules\page-header\store-branding.hypr" />
+    <Content Include="Themes\Core6\templates\modules\page-header\utility-nav.hypr" />
+    <Content Include="Themes\Core6\templates\modules\product\faceted-products.hypr" />
+    <Content Include="Themes\Core6\templates\modules\product\faceting-form.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\price-stack.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-detail.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-images.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-instock-request.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-list-carousel.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-list-tiled.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-list.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\product\product-options.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\search\autocomplete-listing-product.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\search\autocomplete-page-result.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\site-nav.hypr" />
+    <Content Include="Themes\Core6\templates\modules\trailing-scripts.hypr" />
+    <Content Include="Themes\Core6\templates\modules\web-fonts-loader.hypr" />
+    <Content Include="Themes\Core6\templates\page.hypr" />
+    <Content Include="Themes\Core6\templates\pages\404.hypr" />
+    <Content Include="Themes\Core6\templates\pages\about-us.hypr" />
+    <Content Include="Themes\Core6\templates\pages\blank-page.hypr" />
+    <Content Include="Themes\Core6\templates\pages\blog.hypr" />
+    <Content Include="Themes\Core6\templates\pages\cart.hypr" />
+    <Content Include="Themes\Core6\templates\pages\category.hypr" />
+    <Content Include="Themes\Core6\templates\pages\checkout.hypr" />
+    <Content Include="Themes\Core6\templates\pages\confirmation.hypr" />
+    <Content Include="Themes\Core6\templates\pages\document-list.hypr" />
+    <Content Include="Themes\Core6\templates\pages\error.hypr" />
+    <Content Include="Themes\Core6\templates\pages\home.hypr" />
+    <Content Include="Themes\Core6\templates\pages\location.hypr" />
+    <Content Include="Themes\Core6\templates\pages\login.hypr" />
+    <Content Include="Themes\Core6\templates\pages\my-account.hypr" />
+    <Content Include="Themes\Core6\templates\pages\no-search-results.hypr" />
+    <Content Include="Themes\Core6\templates\pages\parent-category.hypr" />
+    <Content Include="Themes\Core6\templates\pages\post.hypr" />
+    <Content Include="Themes\Core6\templates\pages\product-location.hypr" />
+    <Content Include="Themes\Core6\templates\pages\product.hypr" />
+    <Content Include="Themes\Core6\templates\pages\reset-password.hypr" />
+    <Content Include="Themes\Core6\templates\pages\search-results.hypr" />
+    <Content Include="Themes\Core6\templates\pages\WidgetTEsting\test.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\blog\blogarchive.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\blog\blogRss.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\blog\recentposts.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\blog\tagcollection.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\blog\tags.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\catalog\deal-of-the-day.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\catalog\featuredproducts.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\catalog\related-products.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\columndivider.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\content.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\content2col.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\horizontalrule.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\image.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\imagesGallery.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\paragraphwithheader.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\snippet-render.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\snippet.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\cms\video.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\location\store-locator.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\misc\category-navigation.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\misc\instock-request.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\misc\nav-subsection.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\misc\pickels.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\social\addthis.hypr" />
+    <Content Include="Themes\Core6\templates\Widgets\social\facebookcomments.hypr" />
+    <Content Include="Themes\Core6\theme-ui.json" />
+    <Content Include="Themes\Core6\theme.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
