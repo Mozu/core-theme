@@ -1,0 +1,13 @@
+﻿<h4 class="mz-l-stack-sectiontitle">{{ labels.storePickup }}</h4>
+<div class="mz-locationsearch-list mz-l-paginatedlist">
+    {% if model.items and model.items.length > 0 %}
+    {% if model.positionError %}
+    <p class="mz-locationsearch-positionerror is-warning">{{ model.positionError }}</p>
+    {% endif %}
+    <div class="mz-l-paginatedlist-list">
+      {% include "modules/location/location-list-for-product" with model=model.items %}
+    </div>
+  {% else %}
+    {{ labels.noNearbyLocationsProd }}
+  {% endif %}
+</div>

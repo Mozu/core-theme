@@ -37,6 +37,7 @@ Ext.define('Taco.view.category.Index', {
 
         me.treelist = Ext.create('Taco.core.ux.TreeList', {
             animate: false,
+            enableColumnHide: false,
             store: me.store,
             viewConfig: {
                 animate: false,

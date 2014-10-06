@@ -1,0 +1,13 @@
+﻿<div class="mz-documentlist {% block module-classes %}{% endblock module-classes %}">
+    {% if model.items %}
+    <ul class="mz-documentlist-list {% block list-classes %}{% endblock list-classes %}">
+        {% for document in model.items %}
+            <li class="mz-documentlist-item" >
+              <a href="\cms\{{document.listFQN}}\{{document.name}}">{{document.name}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+

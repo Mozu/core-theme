@@ -1,0 +1,10 @@
+﻿<label class="mz-pagingcontrols-pagesort-label">
+  <span class="mz-paging-sorttitle">{{ labels.sortBy }}:</span>
+  <select data-mz-value="sortBy" class="mz-pagingcontrols-pagesort-dropdown" autocomplete="off">
+    {% block sort-types %}
+    {% for sort in model.sorts %}
+      <option value="{{ sort.value }}"{% if model.currentSort == sort.value %} selected="selected"{% endif %}>{{ sort.text }}</option>
+    {% endfor %}
+    {% endblock sort-types %}
+  </select>
+</label>

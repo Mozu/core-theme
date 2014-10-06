@@ -1,0 +1,41 @@
+﻿.mz-accountaddressbook {
+    .mz-accountaddressbook-list {
+        margin-top: @gutter/2;
+    }
+    .mz-accountaddressbook-contact {
+        border-right: 1px solid #eee;
+        margin: 0 @gutter/2 @gutter/2 0;
+        width: @addressTileWidth;
+        min-height: @addressTileHeight;
+        &:last-child {
+            border-right-width: 0;
+        }
+        .clearfix();
+    }
+
+    .mz-accountaddressbook-form {
+        width: @addressTileWidth - (@gutter/2);
+        float: left;
+        margin: 0 @gutter/2 @gutter/2 0;
+        padding-right: @gutter/2;
+    }
+
+    .mz-accountaddressbook-actions {
+        float: right;
+        margin: 0 @gutter/2;
+        a {
+            .permalink(#666);
+            display: inline-block;
+            padding: 0 @gutter/4;
+            border-right: 1px solid #eee;
+            &:last-child {
+                border-right-width: 0;
+                padding-right: 0;
+            }
+        }
+    }
+    .mz-accountaddressbook-contactdetails {
+        float: left;
+        clear: both;
+    }
+}

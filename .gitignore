@@ -11,6 +11,7 @@ node_modules/
 *.sublime-workspace
 seismic-audio/
 lib/
+*/*.orig
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/

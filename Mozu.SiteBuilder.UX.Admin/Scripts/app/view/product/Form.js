@@ -55,6 +55,13 @@ Ext.define('Taco.view.product.Form', {
             }
         });
 
+        // need to initialize the override code for hidden site tabs        
+        Ext.Array.each(tabItems, function (tab) {
+            if (tab.$className == "Taco.view.product.SiteForm") {
+                tab.handleOverrideChange();
+            }
+        })
+
         this.items = [this.tabPanel];
 
         this.callParent(arguments);
@@ -68,7 +75,7 @@ Ext.define('Taco.view.product.Form', {
             scope: this
         });
 
-        this.tabPanel.on({
+        this.tabPanel.on({            
             tabchange: function (tabPanel, newCard, oldCard, eOpt) {
                 if (oldCard.nav) {
                     oldCard.nav.hide();
