@@ -136,8 +136,81 @@ Ext.define('Taco.core.Controller', {
         });
     },
 
-    edit: function (id, additionalParams, appState) {
+    duplicate: function (id, additionalParams, appState) {
+        return this.doDuplicateModel(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
+    },
+    doDuplicateModel: function (id, additionalParams, appState, viewName) {
+        this.confirmContext(viewName, this.doDuplicateModelInternal, this, arguments);
+    },
 
+    doDuplicateModelInternal: function (id, additionalParams, appState, viewName, model) {
+        var record = appState ? appState.record : null,
+            options = appState ? appState.options : null;
+        if (appState && appState.container) {
+            options = options || {};
+            options.container = appState.container;
+        }
+
+        
+        if (record) {
+            Taco.app.setLoading();
+            record.reload({
+                success: function () {
+                    Taco.app.setLoading(false);
+                    
+                    // do any class specific modifications to the source model that is being cloned
+                    if (record.beforeDuplicate) {
+                        record.beforeDuplicate();
+                    }
+
+                    record.phantom = true;
+                    Ext.data.Model.id(record);
+
+                    this.ensureRequiredStores(function () {
+                        this.createContentView(viewName, {
+                            isDuplicate:true,
+                            record: record,
+                            options: options
+                        });
+                    });
+                },
+                failure: function () {
+                    Taco.app.setLoading(false);
+                },
+                scope: this
+            });
+
+
+        } else {
+            Taco.app.setLoading();
+            model.load(id, {
+                success: function (record) {
+                    Taco.app.setLoading(false);
+                    // do any class specific modifications to the source model that is being cloned                    
+                    if (record.beforeDuplicate) {
+                        record.beforeDuplicate();
+                    }
+
+                    record.phantom = true;
+                    Ext.data.Model.id(record);
+
+                    this.ensureRequiredStores(function () {
+                        this.createContentView(viewName, {
+                            isDuplicate: true,
+                            record: record,
+                            options: options
+                        });
+                    });
+                },
+                failure: function () {
+                    Taco.app.setLoading(false);
+                },
+                scope: this
+            });
+        }
+    },
+
+    edit: function (id, additionalParams, appState) {        
         return this.doEdit(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
     },
     doEdit: function (id, additionalParams, appState, viewName) {
@@ -193,13 +266,11 @@ Ext.define('Taco.core.Controller', {
         }
     },
 
-    create: function (id, additionalParams, appState) {
+    create: function (id, additionalParams, appState) {        
         return this.doCreate(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
-
     },
-    doCreate: function (id, additionalParams, appState, viewName) {
+    doCreate: function (id, additionalParams, appState, viewName) {        
         this.confirmContext(viewName, this.doCreateInternal, this, arguments);
-
     },
     doCreateInternal: function (id, additionalParams, appState, viewName, model) {
         var record = appState ? appState.record : Ext.create(model);

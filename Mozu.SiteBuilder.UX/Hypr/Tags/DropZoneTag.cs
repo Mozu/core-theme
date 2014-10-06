@@ -202,7 +202,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
-                sb.Append("<div class=\"mz-drop-zone");
+                sb.Append("<div id=\"mz-drop-zone-");
+                sb.Append(zoneId);
+                sb.Append("\" class=\"mz-drop-zone");
                 if (isEditmode)
                 {
                     sb.Append(" mz-cms-editing mz-cms-grid\" ");

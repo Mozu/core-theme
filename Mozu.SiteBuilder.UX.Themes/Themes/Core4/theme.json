@@ -352,7 +352,7 @@
 		"title": "Order Shipped",
 		"template": "email/order-shipped",
 		"properties": {
-          "subject": "Your Order Has Shipped"
+          "subject": "Your Order Has Shipped #{model.orderNumber}"
 		}
 	  },
 	  {
@@ -360,7 +360,7 @@
 		"title": "Order Confirmation",
 		"template": "email/order-confirmation",
 		"properties": {
-		  "subject": "Order Confirmation "
+		  "subject": "Order Confirmation #{model.orderNumber}"
 		}
 	  },
       {
@@ -517,13 +517,13 @@
             "userCreatable": false,
             "template": "product"
         }, {
-            "id": "no-search-results",
+            "id": "search-results",
             "title": "Search Results",
             "entityType": "searchresult",
             "template": "search-results",
             "userCreatable": false
         }, {
-            "id": "no-results",
+            "id": "no-search-results",
             "title": "Empty Search Results",
             "entityType": "nosearchresult",
             "template": "no-search-results",

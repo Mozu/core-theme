@@ -874,6 +874,7 @@
     <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
+    <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
     <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
     <Content Include="Scripts\app\view\entityManager\Index.js" />
@@ -1486,6 +1487,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.eot" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.ttf" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.woff" />
+    <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

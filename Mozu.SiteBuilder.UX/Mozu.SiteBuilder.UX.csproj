@@ -482,6 +482,8 @@
     <Content Include="BuiltinScripts\HyprLive\src\tags.js" />
     <Content Include="BuiltinScripts\HyprLive\src\loader.js" />
     <Content Include="BuiltinScripts\HyprLive\src\env.js" />
+    <Content Include="BuiltinScripts\HyprLive\tests\HyprLiveSpec.js" />
+    <Content Include="BuiltinScripts\HyprLive\tests\SpecRunner.html" />
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.compiler.js" />
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.debug.js" />
     <Content Include="BuiltinScripts\RequireJS\dist\mozu-require.min.js" />

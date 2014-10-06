@@ -9,5 +9,10 @@ Ext.define('Taco.view.attribute.Edit', {
     requires: [
         'Taco.view.attribute.Form'
     ],
-    formCls: 'Taco.view.attribute.Form'
+    formCls: 'Taco.view.attribute.Form',
+    saveAndCreateButtonEnabled: true,
+    doCreate: function () {
+        var controller = "attributes"
+        Taco.app.StateManager.attemptNavigate(controller + '/create');
+    }
 });
