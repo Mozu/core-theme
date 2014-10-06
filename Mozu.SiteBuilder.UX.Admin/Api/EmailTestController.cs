@@ -21,8 +21,9 @@ using Mozu.Core.Messaging.Contracts.Product.Commands;
 using Mozu.Core.Messaging.Contracts.User.Commands;
 using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
+using Mozu.ProductRuntime.Contracts;
+using Mozu.SiteBuilder.Mvc.TestData;
 using Mozu.SiteBuilder.UX.Models.Admin.Email;
-using Mozu.SiteBuilder.UX.TestData;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Newtonsoft.Json;
 
@@ -140,7 +141,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private void SendNewUserEmails(string email)
         {
-            var accounts = TestDataBroker.Default.GetFileContents<CustomerAccount>(NewUserCreated);
+            var accounts = TestDataBroker.GetFileContents<CustomerAccount>(NewUserCreated);
             foreach (var account in accounts)
             {
                 PublishUserCreatedEmail(new NewUserEmailMessage()
@@ -153,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private void SendPasswordResets(string email)
         {
-            var accounts = TestDataBroker.Default.GetFileContents<CustomerAccount>(PasswordReset);
+            var accounts = TestDataBroker.GetFileContents<CustomerAccount>(PasswordReset);
             foreach (var account in accounts)
             {
                 PublishPasswordResetEmail(new PasswordResetEmailMessage()
@@ -170,7 +171,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private void SendInStockNotifications(string email)
         {
-            var products = TestDataBroker.Default.GetFileContents<Mozu.ProductRuntime.Contracts.Product>(ProductInStockEmailTopic);
+            var products = TestDataBroker.GetFileContents<Product>(ProductInStockEmailTopic);
             foreach (var prod in products)
             {
                 SendInStockNotification(Guid.NewGuid().ToString(), new InStockNotificationSubscription()
@@ -188,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         void ReturnEmail(string email, string id)
         {
-            var returns = TestDataBroker.Default.GetFileContents<Mozu.CommerceRuntime.Contracts.Returns.Return>(id);
+            var returns = TestDataBroker.GetFileContents<Return>(id);
             foreach (var ret in returns)
             {
               SendReturnEmail(ret,id,email);
@@ -203,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
        void  OrderShipped(string email)
         {
-            var orders = TestDataBroker.Default.GetFileContents<Mozu.CommerceRuntime.Contracts.Orders.Order>("order.shipped");
+            var orders = TestDataBroker.GetFileContents<Order>("order.shipped");
             foreach (var order in orders)
             {
                 var ids = (order.Packages ?? new List<Package>()).Where(x => x.Status == "Fulfilled").Select(x => x.Id).ToList();
@@ -218,7 +219,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         void  GiftCardCreated(string email)
         {
-            var orderCredits = TestDataBroker.Default.GetFileContents<GiftCardEmailOrderCredit>("giftcard.created");
+            var orderCredits = TestDataBroker.GetFileContents<GiftCardEmailOrderCredit>("giftcard.created");
             
             foreach (var orderCredit in orderCredits)
             {
@@ -228,7 +229,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
        void OrderChanged(string email)
         {
-            var orders = TestDataBroker.Default.GetFileContents<Mozu.CommerceRuntime.Contracts.Orders.Order>("order.changed");
+            var orders = TestDataBroker.GetFileContents<Order>("order.changed");
             foreach (var order in orders)
             {
                 

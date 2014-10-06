@@ -1,22 +1,9 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
 using System.Web;
 using System.Web.Http.Controllers;
-using System.Web.Http.Routing;
-using System.Web.Razor;
-using System.Web.Routing;
-using System.Web.WebPages;
 using Autofac;
-using Autofac.Core.Lifetime;
-using Microsoft.CSharp;
-using System.Linq;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
@@ -31,17 +18,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             get
             {
-                object model = null;
+                object model;
                 TryGetValue("Model", out model);
                 return model;
             }
             set { this["Model"] = value; }
         }
     }
-
-    
-   
-
 
     public static class HttpControllerContextExtensions
     {
@@ -76,7 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         private HttpContextBase _httpContext;
         private ILifetimeScope _lifetimeScope;
 
-        public HyprViewContext(HttpRequestMessage   requestMessage  , ViewDataDictionary viewData, HyprViewContext parentActionViewContext = null)
+        public HyprViewContext(HttpRequestMessage requestMessage, ViewDataDictionary viewData, HyprViewContext parentActionViewContext = null)
         {
             RequestMessage = requestMessage;
             ViewData = viewData;
@@ -92,40 +75,30 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             get
             {
-                if (_lifetimeScope == null)
-                {
-                    HyprViewContext ctx = this;
-                    while (ctx != null && _lifetimeScope == null)
-                    {
-                        if (ctx.ParentActionViewContext != null && ctx.ParentActionViewContext.LifetimeScope != null)
-                        {
-                            _lifetimeScope = ctx.ParentActionViewContext.LifetimeScope;
-                        }
-                        if (ctx.RequestMessage  != null)
-                        {
-                            _lifetimeScope = ctx.RequestMessage.LifetimeScope();
-                            
-                        }
-
-                        ctx = ctx.ParentActionViewContext;
-                    }
-                }
+                if (_lifetimeScope != null) return _lifetimeScope;
+                _lifetimeScope = GetRootLifeTimeScope(this);
                 return _lifetimeScope;
             }
             set { _lifetimeScope = value; }
         }
 
+        private static ILifetimeScope GetRootLifeTimeScope(HyprViewContext ctx)
+        {
+            ILifetimeScope scope = null;
+            if (ctx.ParentActionViewContext != null && ctx.ParentActionViewContext.LifetimeScope != null)
+            {
+                scope = GetRootLifeTimeScope(ctx.ParentActionViewContext);
+            }
+            else if (ctx.RequestMessage != null)
+            {
+                scope = ctx.RequestMessage.LifetimeScope();
+            }
+            return scope;
+        }
 
         public virtual HttpContextBase HttpContext
         {
-            get
-            {
-                if (_httpContext == null)
-                {
-                    _httpContext = LifetimeScope.Resolve<HttpContextBase>();
-                }
-                return _httpContext;
-            }
+            get { return _httpContext ?? (_httpContext = LifetimeScope.Resolve<HttpContextBase>()); }
             set { _httpContext = value; }
         }
     }

@@ -1,162 +1,86 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.ProductAdmin.Contracts.Clients;
-using System.Runtime.Serialization;
-
-using Mozu.SiteBuilder.Mvc.Models.CMS;
-using System.Runtime.Serialization.Json;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.Content.Contracts.Clients;
-using System.Text;
 using System.IO;
-using Mozu.Content.Contracts;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
-using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 using Mozu.Core;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     public class WidgetsController : BaseApiController
     {
-        
-
-        
-     //   ICmsTypeHelper _cmsTypeHelper;
         private readonly HyprViewEngine _viewEngine;
-        ICmsServiceWrapper _cmsService;
-        private readonly IThemeEntityDefinitionProvider _themeEntityDefinitionProvider;
 
-
-        public WidgetsController(HyprViewEngine viewEngine, /*ICmsTypeHelper cmsTypeHelper,*/ ICmsServiceWrapper cmsService, IThemeEntityDefinitionProvider themeEntityDefinitionProvider)
+        public WidgetsController(HyprViewEngine viewEngine)
         {
             _viewEngine = viewEngine;
-
-
-            _viewEngine = viewEngine;
-            _cmsService = cmsService;
-            _themeEntityDefinitionProvider = themeEntityDefinitionProvider;
-
-
-            //_cmsTypeHelper = cmsTypeHelper;
         }
 
-
-      
-
-        [HttpPost()]
-        public object  Preview( WidgetPreviewData wrd )
+        [HttpPost]
+        public async Task<object> Preview(WidgetPreviewData wpd)
         {
+            SiteContext.IsEditMode = true;
+            SbApiContext.IsEditMode = true;
+            SbApiContext.SetDataMode(DataViewModeType.Pending);
 
-           
+            var def = SiteContext.Theme.Widgets.First(x => x.Id == wpd.DefinitionId);
 
-            this.SiteContext.IsEditMode = true;
-            this.SbApiContext.IsEditMode  = true;
-            this.SbApiContext.SetDataMode(DataViewModeType.Pending);
+            wpd.Definition = def;
+            wpd.IsPreview = true;
+            wpd.Id = wpd.Id ?? Guid.NewGuid().ToString();
+            wpd.Config = wpd.Config ?? def.DefaultConfig;
+            wpd.Source = wpd.Source ?? GetWidgetSource(wpd);
+            wpd.Output = await RenderTemplate(wpd, def);
 
-
-            var def = SiteContext.Theme.Widgets.First(x => x.Id == wrd.DefinitionId);
-
-            wrd.Definition = def;
-            wrd.IsPreview = true;
-            
-            wrd.Id = wrd.Id ?? Guid.NewGuid().ToString();
-            wrd.Config = wrd.Config ?? def.DefaultConfig;
-
-
-
-            if (wrd.Source == null)
-            {
-                switch (wrd.ZoneScope ?? "page")
-                {
-                    case "site":
-                        {
-                            wrd.Source = wrd.Context.SiteTemplate;
-                            break;
-                        }
-                    case "template":
-                        {
-                            wrd.Source = wrd.Context.Template;
-                            break;
-                        }
-                    default:
-                        {
-                            wrd.Source = wrd.Context.Page;
-                            break;
-                        }
-                }
-            }
-
-           // if (this.HttpContext.Request.ContentType == "application/json")
-            {
-                var tw = new StringWriter();
-               
-                
-                var view = _viewEngine.FindModuleView( "widgets/" + def.DisplayTemplate);
-                if (view != null)
-                {
-                    var viewContext = new HyprViewContext(this.Request  , new ViewDataDictionary() {Model = wrd});
-
-                    view.Render(viewContext, tw);
-
-                    RenderScriptsTag.RenderRequiresForWidgetPreview(tw, this.HttpContext);
-                  
-                }
-                else
-                {
-                    throw new Exception("can't find template " + def.DisplayTemplate);
-                }
-
-                tw.Flush();
-                wrd.Output = tw.GetStringBuilder().ToString();
-
-
-                return wrd;
-
-            }
-            //else
-            //{
-            //    var vr = View(wrd);
-            //    vr.ViewName = def.DisplayTemplate;
-            //    return vr;
-            //}
-
-
+            return wpd;
         }
 
-
-        bool HasVisitedZone(string zoneId)
+        private async Task<string> RenderTemplate(WidgetPreviewData wpd, WidgetDefinition def)
         {
-            string key = "visitedZones";
-            if (ControllerContext == null || HttpContext == null || HttpContext.Items == null)
+            var tw = new StringWriter();
+            var view = _viewEngine.FindModuleView("widgets/" + def.DisplayTemplate);
+            if (view != null)
             {
-                return false;
-            }
-            var hs = (HashSet<string>)HttpContext.Items[key];
-            if (hs == null)
-            {
-                HttpContext.Items[key] = hs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            }
-            if (hs.Contains(zoneId ?? ""))
-            {
-                return true;
+                var viewContext = new HyprViewContext(Request, new ViewDataDictionary {Model = wpd});
+                await view.AsyncRender(viewContext, tw);
+                RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }
             else
             {
-                hs.Add(zoneId ?? "");
-                return false;
+                throw new Exception("can't find template " + def.DisplayTemplate);
             }
+
+            tw.Flush();
+            return tw.ToString();
         }
 
-      
+        private static DocumentRequest GetWidgetSource(WidgetPreviewData wpd)
+        {
+            switch (wpd.ZoneScope ?? "page")
+            {
+                case "site":
+                {
+                    return wpd.Context.SiteTemplate;
+                }
+                case "template":
+                {
+                    return wpd.Context.Template;
+                }
+                case "page":
+                {
+                    return wpd.Context.Page;
+                }
+                default:
+                {
+                    throw new Exception(string.Format("Could not find preview context for zone {0}", wpd.ZoneScope));
+                }
+            }
+        }
     }
 }
