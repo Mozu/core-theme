@@ -398,11 +398,9 @@
     <Compile Include="Admin\Api\SecureCapabilityConfigUrlTest.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
-    <Compile Include="Mvc\Filters\DropZoneTests.cs" />
     <Compile Include="Mvc\Filters\FilterTestBase.cs" />
     <Compile Include="Mvc\Filters\GetProductAttributeTests.cs" />
     <Compile Include="Mvc\Filters\GetProductAttributeValueTests.cs" />
-    <Compile Include="Mvc\Filters\IncludeTagTests.cs" />
     <Compile Include="TestHelpers\ServiceClientResponseExtensions.cs" />
     <Compile Include="Mvc\Navigation\NavigationSetSerializationTest.cs" />
     <Compile Include="Mvc\Navigation\SimpleNavigationNode.cs" />

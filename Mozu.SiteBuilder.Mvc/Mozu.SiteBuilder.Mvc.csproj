@@ -476,6 +476,8 @@
     <Compile Include="Extensions\MD5Extensions.cs" />
     <Compile Include="Extensions\ServiceClientResponseExtensions.cs" />
     <Compile Include="Filters\CollectionFilter.cs" />
+    <Compile Include="Filters\GetProductAttributeFilter.cs" />
+    <Compile Include="Filters\GetProductAttributeValueFilter.cs" />
     <Compile Include="Filters\MathFilters.cs" />
     <Compile Include="Filters\NumberFormat.cs" />
     <Compile Include="Filters\ParentTemplate.cs" />
