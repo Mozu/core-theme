@@ -418,7 +418,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 id => PerformOrderAction(action.ActionName, id))
                         .ToList();
 
-            var result = new Response<List<OrderActionResult>>{Success = true, Total = action.OrderIds.Count};
+            var result = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderIds.Count};
             await Task.WhenAll(orderIdToActionTaskTuples);
             foreach (var orderIdToActionTask in orderIdToActionTaskTuples)
             {
@@ -438,26 +438,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<InternalBulkActionResult> PerformOrderAction(string actionName, string orderId)
         {
-            var actionName_lc = actionName.ToLower();
-            switch (actionName_lc)
+            if (actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER)
+                || actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER))
             {
-                case CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER :
-                case CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER :
-                    return await PerformRootAction(actionName_lc, orderId);
-                case CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP:
-                    return await PerformFulfillmentShipAction(actionName_lc, orderId);
-                case CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT :
-                    return await PerformPaymentCaptureAction(actionName_lc, orderId);
-                default:
-                    throw new VaeMissingOrInvalidParameterException("actionName");
+                return await PerformRootAction(actionName, orderId);
             }
+            if (actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP))
+            {
+                return await PerformFulfillmentShipAction(actionName, orderId);
+            }
+            if(actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT)){
+                return await PerformPaymentCaptureAction(actionName, orderId);
+            }
+            throw new VaeMissingOrInvalidParameterException("actionName");
         }
 
         private static bool IsValidBulkAction(string actionName)
         {
             if (string.IsNullOrEmpty(actionName))
                 return false;
-            return _validBulkOrderActions.Contains(actionName.ToLower());
+            return _validBulkOrderActions.Any(s => s.EqualsIgnoreCase(actionName));
         }
 
         private static readonly List<string> _validBulkOrderActions = new List<string>

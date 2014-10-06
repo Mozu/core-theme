@@ -112,10 +112,10 @@ Ext.define('Taco.view.order.Grid', {
             hidden: true,
             menu: {
                 items: [{
-                    text: 'one',
+                    text: 'Cancel',
                     scope: this,
                     handler: function () {
-                        this.simulateBulkAction('one');
+                        this.simulateBulkAction('CancelOrder');
                     },
                     validator: function (record) {
                         return true;
@@ -149,26 +149,43 @@ Ext.define('Taco.view.order.Grid', {
     },
     
     simulateBulkAction: function (action) {
-        var worked = Math.random() > 0.5;
+        var config = {
+            url: '/admin/app/order/action',
+            method: 'POST',
+            jsonData: {
+                actionName: action,
+                orderIds: Ext.Array.map(this.getSelectionModel().getSelection(), function (item) { return item.get('id'); }, this)
+            },
+            errorMsg: 'hello world',
+            success: function (response) {
+                console.log('succeeded', response);
+            },
+            scope: this
+        };
 
-        console.log('simulating');
-        Ext.defer((worked ? success : failure), 2000, this);
+        console.log(config);
+        Ext.Ajax.request(config);
 
-        function success () {
-            console.log('succeeded');
-            callback.call(this, 'success');
-        }
+        // var worked = Math.random() > 0.5;
 
-        function failure () {
-            console.log('failed');
-            callback.call(this, 'error');
-        }
+        // console.log('simulating');
+        // Ext.defer((worked ? success : failure), 2000, this);
 
-        function callback (type) {
-            var message = type === 'success' ? '3 items succeeded.' : '3 items failed.';
+        // function success () {
+        //     console.log('succeeded');
+        //     callback.call(this, 'success');
+        // }
 
-            Taco.app.fireEvent('setmessage', message, type);
-        }
+        // function failure () {
+        //     console.log('failed');
+        //     callback.call(this, 'error');
+        // }
+
+        // function callback (type) {
+        //     var message = type === 'success' ? '3 items succeeded.' : '3 items failed.';
+
+        //     Taco.app.fireEvent('setmessage', message, type);
+        // }
     },
 
     launchLoadedEditor: function (record, options) {
