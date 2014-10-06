@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NDjango.FiltersCS;
+using Microsoft.FSharp.Core;
 using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
@@ -37,8 +37,10 @@ namespace Mozu.SiteBuilder.Mvc.Filters
         /// <returns></returns>
         private static object GetAttrValue(object attr)
         {
-            if (!attr.ContainsProperty("values")) return null;
-            var values = attr.GetPropValue("values") as IEnumerable<object>;
+            var valuesProp = ResolverConfig.Resolver.ResolveMember(attr, "values");
+            if (FSharpOption<object>.get_IsNone(valuesProp)) return null;
+
+            var values = valuesProp.Value as IEnumerable<object>;
             if (values == null) return null;
 
             // assuming for now that the first value is the one we want.
@@ -49,13 +51,11 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         private static object GetMatchedValue(object value)
         {
-            // evaluate stringValue first, then value
-            if (value.ContainsProperty("stringValue"))
-            {
-                var strValue = value.GetPropValue("stringValue");
-                if (strValue != null) return strValue;
-            }
-            return value.ContainsProperty("value") ? value.GetPropValue("value") : null;
+            var stringValueProp = ResolverConfig.Resolver.ResolveMember(value, "stringValue");
+            if (FSharpOption<object>.get_IsSome(stringValueProp) && stringValueProp.Value != null) return stringValueProp.Value;
+
+            var valueProp = ResolverConfig.Resolver.ResolveMember(value, "value");
+            return FSharpOption<object>.get_IsNone(valueProp) ? null : valueProp.Value;
         }
     }
 }
