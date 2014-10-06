@@ -110,20 +110,30 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 var renderer = new TemplateRenderer(templateManager, template, requestContext);
                 await renderer.AsyncRender(writer).ConfigureAwait(false);
             }
-            catch (RenderingException)
+            catch (AggregateException aex)
             {
-                throw;
-            }    
-            catch (SyntaxException)
-            {
-                throw;
+                // awaited methods wrap single exceptions in aggregates, so you have to unwrap them
+                if (aex.InnerExceptions.Count != 1) throw MakeRenderingException(_virtualPath, aex);
+
+                if (aex.InnerException is SyntaxException || aex.InnerException is RenderingException)
+                {
+                    throw aex.InnerException;
+                }
+                throw MakeRenderingException(_virtualPath, aex.InnerException);
             }
+            catch (SyntaxException) { throw; }
+            catch (RenderingException) { throw; }
             catch (Exception ex)
             {
-                throw new RenderingError(string.Format("error in template [{0}]", _virtualPath), new FSharpOption<Exception>(ex));
+                throw MakeRenderingException(_virtualPath, ex);
             }
-            writer.Flush();
+            await writer.FlushAsync();
             return true;
+        }
+
+        private static RenderingError MakeRenderingException(string path, Exception ex)
+        {
+            return new RenderingError(string.Format("error in template [{0}]", path), new FSharpOption<Exception>(ex));
         }
     }
 }
