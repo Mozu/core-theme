@@ -12,6 +12,7 @@ node_modules/
 seismic-audio/
 lib/
 */*.orig
+*/*/*.orig
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
