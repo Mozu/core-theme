@@ -1,0 +1,50 @@
+<section class="mz-facetingform">
+    {% if model.hasValueFacets %}
+    <div class="mz-l-sidebaritem">
+        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">{{ labels.clearAllFilters }}</button>
+    </div>
+    {% endif %}
+    {% for facet in model.facets %}
+    {% if facet.values and facet.facetType == "Hierarchy" %}
+    <div class="mz-l-sidebaritem">
+        <h4>{{ facet.label }}</h4>
+        <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
+            {% for fval in facet.values %}
+            <li>
+                <a href="#" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ fval.value }}" data-mz-facet-value="{{ fval.filterValue }}" data-mz-facet="{{ facet.field }}">{{ fval.label }}</a>
+                {% if fval.childrenFacetValues.length > 0 or fval.childrenFacetValues.count > 0%}
+                <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
+                {% for child in fval.childrenFacetValues %}
+                <li>
+                    <a href="#" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ child.value }}" data-mz-facet-value="{{ child.filterValue }}" data-mz-facet="{{ facet.field }}">{{ child.label }}</a>
+                </li>
+                {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% for facet in model.facets %}
+    {% if facet.values and facet.facetType != "Hierarchy" %}
+    <div class="mz-l-sidebaritem">
+        <h4>{{ facet.label }}</h4>
+        <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
+            {% for fval in facet.values %}
+            <li>
+                <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}">
+                <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}">{{ fval.label }}</label>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% if model.hasValueFacets %}
+    <div class="mz-l-sidebaritem">
+        <button class="mz-button mz-facetingform-clearall" data-mz-action="clearFacets">{{ labels.clearAllFilters }}</button>
+    </div>
+    {% endif %}
+</section>

@@ -55,15 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 categoryId = filterCatId;
             }
 
-            PageContext.CmsContext = new CmsPageContext()
-            {
-                Template = new DocumentRequest()
-                {
-                    Path = "cart",
-                    DocumentTypeFQN = "pageTemplateContent@mozu"
-                },
-                
-            };
+            
             PageContext.Search  = new SearchContext
             {
                 Query = query
@@ -136,52 +128,64 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // pc.Paging.StartIndex = startIdx;
             pc.UrlBase = "/search?query=" + query;
 
-            ProcessFacetts(pc);
-            ViewResult view = null;
+            //ProcessFacetts(pc);
+            //ViewResult view = null;
 
+            string searchPageType = pc.TotalCount > 0 ? "search-results" : "no-search-results";
 
+            PageContext.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = searchPageType,
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                },
+
+            };
+
+            return View(searchPageType, pc);
             
-            if (pc.TotalCount > 0)
-            {
-                view = View("search-results", pc);
-            }
-            else
-            {
-                view = View("no-search-results", pc);
-            }
-            return view;
+            //if (pc.TotalCount > 0)
+            //{
+            //    view = View("search-results", pc);
+            //}
+            //else
+            //{
+            //    view = View("no-search-results", pc);
+            //}
+            //return view;
         }
 
-        private void ProcessFacetts(ProductSearchResult res)
-        {
-            //while (true)
-            //{
-            //    if ( res.CategoryFacet == null || res.CategoryFacet.Items.Count  == 0 )
-            //    {
-            //        return ;
-            //    }
-            //    if (res.CategoryFacet.Items.Count > 1)
-            //    {
-            //        break;
-            //    }
-            //    res.CategoryFacet.Items = res.CategoryFacet.Items[0].Children;
-            //}
+        //private void ProcessFacetts(ProductSearchResult res)
+        //{
+        //    //while (true)
+        //    //{
+        //    //    if ( res.CategoryFacet == null || res.CategoryFacet.Items.Count  == 0 )
+        //    //    {
+        //    //        return ;
+        //    //    }
+        //    //    if (res.CategoryFacet.Items.Count > 1)
+        //    //    {
+        //    //        break;
+        //    //    }
+        //    //    res.CategoryFacet.Items = res.CategoryFacet.Items[0].Children;
+        //    //}
 
 
-            //var stack = new Stack<CategoryFacetItem>();
+        //    //var stack = new Stack<CategoryFacetItem>();
 
-            //res.CategoryFacet.Items.ForEach(cf => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(cf)));
+        //    //res.CategoryFacet.Items.ForEach(cf => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(cf)));
 
 
-            //while (stack.Count > 0)
-            //{
-            //    var curr = stack.Pop();
+        //    //while (stack.Count > 0)
+        //    //{
+        //    //    var curr = stack.Pop();
 
-            //    curr.Name = this.SiteContext.CatalogContext.AllCategories .Where(_cat => _cat.CategoryId == curr.CategoryId).Select(_cat => _cat.Name).FirstOrDefault();
-            //    curr.Url = string.Format("/search?query={0}&categoryId={1}", res.Query, curr.CategoryId);
+        //    //    curr.Name = this.SiteContext.CatalogContext.AllCategories .Where(_cat => _cat.CategoryId == curr.CategoryId).Select(_cat => _cat.Name).FirstOrDefault();
+        //    //    curr.Url = string.Format("/search?query={0}&categoryId={1}", res.Query, curr.CategoryId);
 
-            //    if (curr.Children != null) curr.Children.ForEach(c => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(c)));
-            //}
-        }
+        //    //    if (curr.Children != null) curr.Children.ForEach(c => stack.Push(AutoMapper.Mapper.Map <CategoryFacetItem >(c)));
+        //    //}
+        //}
     }
 }

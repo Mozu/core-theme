@@ -1,0 +1,51 @@
+﻿@keyframes loadingthrob {
+    from { background-color: #eee; }
+     to { background-color: #e3e3e3; }
+}
+
+@-webkit-keyframes loadingthrob {
+    from { background-color: #eee; }
+     to { background-color: #e3e3e3; }
+}
+
+
+.mz-button {
+    .border-radius(4px);
+    background-color: #eee;
+    background-image: url('../resources/images/button-loading.gif');
+    background-repeat: no-repeat;
+    background-position: -9999px -9999px;
+    padding: @gutter/4 @gutter/2;
+    min-width: 64px;
+    &:hover {
+        background-color: #e3e3e3;
+    }
+    &:active {
+        .box-shadow(~"inset 0 0 4px #999)");
+        .box-shadow(~"inset 0 0 4px rgba(0,0,0,0.3)");
+    }
+    &[disabled], &[disabled]:active {
+        background-color: #eee;
+        border-color: #eee;
+        .box-shadow(none);
+    }
+}
+.mz-button-large {
+    font-size: @fontSizeLarge;
+    padding: @gutter/2 @gutter;
+}
+
+.mz-button-small {
+    font-size: @fontSizeSmall;
+    padding: @gutter/5 @gutter/4;
+    min-width: 40px;
+    background-image: url('../resources/images/button-loading-small.gif');
+}
+
+.is-loading .mz-button, .mz-button.is-loading {
+    background-position: 50% 50%;
+    border-color: #eee;
+    color: transparent;
+    animation: loadingthrob 1s linear 0s alternate infinite;
+    -webkit-animation: loadingthrob 1s linear 0s alternate infinite;
+}

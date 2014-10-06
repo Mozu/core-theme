@@ -1,0 +1,97 @@
+﻿.mz-sitenav {
+    @navHeight: 37px;
+    width: 100%;
+    background: #666;
+    height: @navHeight;
+    overflow: visible;
+    .clearfix();
+
+    > .mz-sitenav-list {
+        display: table-row;
+        > .mz-sitenav-item:first-child {
+            padding-left: @gutter * .75;
+        }
+    } 
+
+    .mz-sitenav-item {
+        display: table-cell;
+        // to remove space gap
+        font-size: 0.1px;
+        z-index: 3;
+
+        .mz-sitenav-item-inner {
+            position: relative;
+        }
+        
+        &:hover .mz-sitenav-sub {
+            visibility: visible;
+            .transition-delay(0s);
+        }
+    }
+
+    .mz-sitenav-sub {
+        background: #666;
+        top: @navHeight - 1;
+        position: absolute;
+        z-index: 1;
+        visibility: hidden;
+        .transition(visibility 0s ease-out .25s);
+
+        > .mz-sitenav-item {
+            display: block;
+            width: 100%;
+
+            .mz-sitenav-link {
+                .transition-property(~"height, padding, opacity");
+                .transition-duration(~".25s, .25s, .08s");
+                .transition-delay(~"0s, 0s, .05s");
+                height: 0px;
+                opacity: 0;
+                padding: 0;
+                display: block;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .mz-sitenav-item:hover > .mz-sitenav-link, .mz-sitenav-link.is-current {
+        background-color: #eee;
+        color: @textColor;
+        &:visited {
+            color: @textColor;
+        }
+    }
+
+    .mz-sitenav-item:hover .mz-sitenav-sub .mz-sitenav-link {
+        height: 20px;
+        padding: 10px @gutter*.75;
+        opacity: 1;
+    }
+
+    .mz-sitenav-link {
+        color: #eeeeee;
+        text-decoration: none;
+        display: inline-block;
+        padding: 10px @gutter*.75;//@gutter*.325;
+        font-size: @fontSize;
+        position: relative;
+        &:visited {
+            color: #eeeeee;
+        }
+    }
+
+    @media only screen {
+        @media (max-width: 800px) {
+            height: auto;
+            > .mz-sitenav-list {
+                display: block;
+            }
+            .mz-sitenav-item {
+                display: inline-block;
+            }
+            .mz-sitenav-sub, .mz-sitenav-item-more {
+                display: none;
+            }
+        }
+    }
+}

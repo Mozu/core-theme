@@ -17,16 +17,16 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     title: 'Discount Limitations',
 
     initComponent: function () {
-        this.maximumValueInput = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'maximumValue',
-            fieldLabel: "Maximum Value",
-            forcePrecision: true,
-            labelAlign: 'top',
-            width: 600,
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            align: 'right',
-            unitAtEnd: false
-        });
+        //this.maximumValueInput = Ext.create('Taco.core.ux.form.CurrencyField', {
+        //    name: 'maximumValue',
+        //    fieldLabel: "Maximum Value",
+        //    forcePrecision: true,
+        //    labelAlign: 'top',
+        //    width: 600,
+        //    currencyCode: Taco.app.context.getCurrent().currencyCode,
+        //    align: 'right',
+        //    unitAtEnd: false
+        //});
 
         this.redemptionLimits = Ext.create('Ext.form.field.Number', {
             name: 'maxRedemptionCount',

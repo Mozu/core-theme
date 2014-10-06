@@ -23,7 +23,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumOrderAmount',
             fieldLabel: "Minimum Order Amount (pre-discount)",
-            //hidden: this.record.get('scope') !== 'Order',
+            hidden: this.record.get('scope') !== 'Order',
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
@@ -36,7 +36,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.maximumDiscountAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'maximumDiscountAmount',
             fieldLabel: "Maximum Discount Amount",
-            //hidden: this.record.get('scope') !== 'Order',
+            disabled: this.record.get('scope') !== 'Order',
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,

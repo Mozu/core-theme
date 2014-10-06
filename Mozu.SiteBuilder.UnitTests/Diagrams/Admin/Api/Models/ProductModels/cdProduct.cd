@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.LocationWithInventory">
+    <Position X="13" Y="7" Width="2" />
+    <Members>
+      <Method Name="LocationWithInventory" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.BundledProduct">
+    <Position X="9.5" Y="7" Width="2.25" />
+    <Members>
+      <Method Name="BundledProduct" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product">
+    <Position X="4.75" Y="1.5" Width="2.75" />
+    <Members>
+      <Method Name="Product" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="StockOnHandAdjustment" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="BundledProducts" />
+      <Property Name="ProductImages" />
+      <Property Name="Properties" />
+      <Property Name="Extras" />
+      <Property Name="Options" />
+      <Property Name="VariationOptions" />
+      <Property Name="ProductInCatalogs" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductExtra">
+    <Position X="8.75" Y="1.25" Width="2.25" />
+    <Members>
+      <Method Name="ProductExtra" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Values" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductProperty">
+    <Position X="8.75" Y="3.75" Width="2.25" />
+    <Members>
+      <Method Name="ProductProperty" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductLocalizedImage">
+    <Position X="2.25" Y="10.5" Width="2" />
+    <Members>
+      <Method Name="ProductLocalizedImage" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductInCatalogInfo">
+    <Position X="0.5" Y="5.5" Width="2.75" />
+    <Members>
+      <Method Name="ProductInCatalogInfo" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="ProductImages" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductVariationOption">
+    <Position X="0.5" Y="3.5" Width="2" />
+    <Members>
+      <Method Name="ProductVariationOption" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.StockOnHandAdjustment">
+    <Position X="0.5" Y="1.75" Width="2" />
+    <Members>
+      <Method Name="StockOnHandAdjustment" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.ProductExtraValue">
+    <Position X="12" Y="1.25" Width="2" />
+    <Members>
+      <Method Name="ProductExtraValue" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="AttributeVocabularyValueDetail" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.AttributeVocabularyValue">
+    <Position X="13.25" Y="3.5" Width="2" />
+    <Members>
+      <Method Name="AttributeVocabularyValue" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Content" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.AttributeVocabularyValueLocalizedContent">
+    <Position X="12" Y="5.25" Width="3" />
+    <Members>
+      <Method Name="AttributeVocabularyValueLocalizedContent" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

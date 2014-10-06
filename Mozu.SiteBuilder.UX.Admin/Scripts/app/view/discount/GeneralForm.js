@@ -121,8 +121,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 data: [
                     ["Percentage", "Percentage"],
                     ["Dollar Amount", "Amount"],
-                    ["Free", "Free"],
-                    ["Fixed Price", "Fixed"] // todo: only if isLineItem - Greg Murray on 2014-09-30 
+                    ["Free", "Free"]
                 ]
             }),
             listeners: {

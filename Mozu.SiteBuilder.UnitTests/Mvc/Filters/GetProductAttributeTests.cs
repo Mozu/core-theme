@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using NUnit.Framework;
+
+namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
+{
+    [TestFixture]
+    public class GetProductAttributeTests : FilterTestBase
+    {
+        [Test, TestCaseSource("GetTests")]
+        public void Run(TestDescriptor desc)
+        {
+            RunTemplate(desc);
+        }
+
+        private const string getavailability = "{{ product | get_product_attribute('availability') }}";
+
+        private static List<TestDescriptor> GetTests()
+        {
+            
+            return new List<TestDescriptor>
+            {
+                new TestDescriptor
+                {
+                    Name = "base case",
+                    Template = getavailability,
+                    Context = new object[] {"product", new {Properties = new[] {new {attributeFQN = "availability", value = "test"}}}},
+                    Expected = "{ attributeFQN = availability, value = test }"
+                },
+                new TestDescriptor
+                {
+                    Name = "no product",
+                    Template = getavailability,
+                    Context = new object[]{"product", null},
+                    Expected = String.Empty
+                },
+                new TestDescriptor
+                {
+                    Name = "no matching property",
+                    Template = getavailability,
+                    Context = new object[] { "product", new{Properties = new object[]{}}},
+                    Expected = String.Empty
+                },
+                new TestDescriptor
+                {
+                    Name = "will match options as well",
+                    Template = getavailability,
+                    Context = new object[]{"product", new{Options = new[]{new {attributeFQN = "availability", value = "test"}}}},
+                    Expected = "{ attributeFQN = availability, value = test }"
+                }
+            };
+        }
+    }
+}

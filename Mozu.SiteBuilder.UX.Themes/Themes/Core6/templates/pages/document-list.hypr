@@ -1,0 +1,9 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-contentindex {% endblock body-tag-classes %}
+{% block body-content %}
+{% include_documents "modules/content/document-list" with listFQN=model.listFQN and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+{{ block.super }}
+{% endblock body-content %}
