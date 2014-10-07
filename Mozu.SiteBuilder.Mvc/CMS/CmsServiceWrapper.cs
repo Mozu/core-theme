@@ -19,7 +19,7 @@ using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.CMS
 {
-    public class CmsServiceWrapper2 : ICmsServiceWrapper
+    public class CmsServiceWrapper : ICmsServiceWrapper
     {
         ISiteBuilderApiContext _apiContext;
         IDocumentListWebApiClient _docRepo;
@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         private readonly ILifetimeScope _lifetimescope;
 
 
-        public CmsServiceWrapper2(IDocumentListWebApiClient docRepo,
+        public CmsServiceWrapper(IDocumentListWebApiClient docRepo,
             ISiteBuilderApiContext apiContext,
             ILifetimeScope lifetimescope
             )

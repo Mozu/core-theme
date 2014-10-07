@@ -33,7 +33,7 @@
 
 //        private CmsServiceWrappe2r GetWrapper()
 //        {
-//            return new CmsServiceWrapper2(_documentWebApiClient, _apiContext, _cmsTypeHelper, null);
+//            return new CmsServiceWrapper(_documentWebApiClient, _apiContext, _cmsTypeHelper, null);
 //        }
 //    }
 //}
