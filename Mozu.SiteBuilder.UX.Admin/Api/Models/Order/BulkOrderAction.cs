@@ -30,7 +30,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public bool Successful { get; set; }
 
         public HttpStatusCode StatusCode { get; set; }
-        public string ErrorMessage { get; set; }
+        public string Message { get; set; }
 //        public Exception Exception { get; set; } //todo: Stewart Noll on 2014-10-02 want this???
+    }
+
+    public class InternalBulkActionResult
+    {
+        public string OrderId { get; set; }
+        public string ActionName { get; set; }
+        public HttpStatusCode StatusCode { get; set; }
+        public string Message { get; set; }
     }
 }

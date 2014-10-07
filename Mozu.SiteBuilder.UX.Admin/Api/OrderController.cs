@@ -419,22 +419,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 ctx => PerformOrderAction(action.ActionName, ctx))
                         .ToList();
 
-            var result = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderContexts.Count};
+            var bulkResult = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderContexts.Count};
             await Task.WhenAll(orderIdToActionTaskTuples);
             foreach (var orderIdToActionTask in orderIdToActionTaskTuples)
             {
                 var actionResult = orderIdToActionTask.Result;
-                var orderActionResult = new OrderActionResult{OrderId = actionResult.OrderId, Successful = true};
-                result.Items.Add(orderActionResult);
+                var orderActionResult = new OrderActionResult { OrderId = actionResult.OrderId, Successful = true, Message = actionResult.Message };
+                bulkResult.Items.Add(orderActionResult);
                 orderActionResult.StatusCode = actionResult.StatusCode;
                 if (orderActionResult.StatusCode != HttpStatusCode.OK)
                 {
-                    result.Success = false;
+                    bulkResult.Success = false;
                     orderActionResult.Successful = false;
-                    orderActionResult.ErrorMessage = actionResult.Message;
                 }
             }
-            return result;
+            return bulkResult;
         }
 
         private async Task<InternalBulkActionResult> PerformOrderAction(string actionName, OrderContext orderContext)
@@ -468,14 +467,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP,
             CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT
         };
-
-        internal class InternalBulkActionResult
-        {
-            public string OrderId { get; set; }
-            public string ActionName { get; set; }
-            public HttpStatusCode StatusCode { get; set; }
-            public string Message { get; set; }
-        }
 
         private async Task<InternalBulkActionResult> PerformRootAction(string actionName, OrderContext orderContext)
         {
