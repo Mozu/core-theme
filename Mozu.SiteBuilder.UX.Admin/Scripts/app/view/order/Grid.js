@@ -115,13 +115,13 @@ Ext.define('Taco.view.order.Grid', {
                     text: 'Cancel',
                     scope: this,
                     handler: function () {
-                        this.simulateBulkAction('CancelOrder');
+                        this.doBulkAction('CancelOrder');
                     },
                     validator: function (record) {
                         return true;
                     }
                 }, {
-                    text: 'two',
+                    text: 'Accept',
                     scope: this,
                     handler: function () {
                         console.log('do stuff', this.getSelectionModel().getSelection());
@@ -148,13 +148,36 @@ Ext.define('Taco.view.order.Grid', {
         });
     },
     
-    simulateBulkAction: function (action) {
-        var config = {
+    doBulkAction: function (action) {
+        var context = Taco.app.context.getCurrent();
+        var orders, config;
+
+        var getMasterCatalogId = function (ctx, siteId) {
+            var mc = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
+                return Ext.Array.some(mc.sites, function (site) {
+                    return site.id === siteId;
+                });
+            });
+
+            return mc.id;
+        };
+
+        orders = Ext.Array.map(this.getSelectionModel().getSelection(), function (item) {
+            var siteId = item.get('siteId');
+            var mcId = context.masterCatalogId || getMasterCatalogId(context, siteId);
+
+            return {
+                orderId: item.get('id'),
+                masterCatalogId: mcId
+            };
+        }, this);
+
+        config = {
             url: '/admin/app/order/action',
             method: 'POST',
             jsonData: {
                 actionName: action,
-                orderIds: Ext.Array.map(this.getSelectionModel().getSelection(), function (item) { return item.get('id'); }, this)
+                orderContexts: orders
             },
             errorMsg: 'hello world',
             success: function (response) {
@@ -165,27 +188,6 @@ Ext.define('Taco.view.order.Grid', {
 
         console.log(config);
         Ext.Ajax.request(config);
-
-        // var worked = Math.random() > 0.5;
-
-        // console.log('simulating');
-        // Ext.defer((worked ? success : failure), 2000, this);
-
-        // function success () {
-        //     console.log('succeeded');
-        //     callback.call(this, 'success');
-        // }
-
-        // function failure () {
-        //     console.log('failed');
-        //     callback.call(this, 'error');
-        // }
-
-        // function callback (type) {
-        //     var message = type === 'success' ? '3 items succeeded.' : '3 items failed.';
-
-        //     Taco.app.fireEvent('setmessage', message, type);
-        // }
     },
 
     launchLoadedEditor: function (record, options) {
