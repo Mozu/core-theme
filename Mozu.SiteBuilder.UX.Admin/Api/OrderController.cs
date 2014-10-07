@@ -38,7 +38,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ICreditWebApiClient _creditWebApiClient;
         private ISiteBuilderApiContext _ctx;
         private readonly CustomerController _customerController;
-        private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
         /*
          * All order item operations have an updateMode attribute.
@@ -51,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings, ISiteBuilderApiContext ctx, CustomerController customerController, ITenantsWebApiClient tenantsWebApiClient)
+        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings, ISiteBuilderApiContext ctx, CustomerController customerController)
         {
             _settings = settings;
             _orderWebApiClient = orderWebApiClient;
@@ -59,7 +58,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _creditWebApiClient = creditWebApiClient;
             _ctx = ctx;
             _customerController = customerController;
-            _tenantsWebApiClient = tenantsWebApiClient;
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
@@ -417,11 +415,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     string.Format("Valid bulk order actions are '{0}'",
                         string.Join("' , '", _validBulkOrderActions)));
             }
-            var orderIdToActionTaskTuples = action.OrderIds.Select(
-                id => PerformOrderAction(action.ActionName, id))
+            var orderIdToActionTaskTuples = action.OrderContexts.Select(
+                ctx => PerformOrderAction(action.ActionName, ctx))
                         .ToList();
 
-            var result = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderIds.Count};
+            var result = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderContexts.Count};
             await Task.WhenAll(orderIdToActionTaskTuples);
             foreach (var orderIdToActionTask in orderIdToActionTaskTuples)
             {
@@ -439,19 +437,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return result;
         }
 
-        private async Task<InternalBulkActionResult> PerformOrderAction(string actionName, string orderId)
+        private async Task<InternalBulkActionResult> PerformOrderAction(string actionName, OrderContext orderContext)
         {
             if (actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER)
                 || actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER))
             {
-                return await PerformRootAction(actionName, orderId);
+                return await PerformRootAction(actionName, orderContext);
             }
             if (actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP))
             {
-                return await PerformFulfillmentShipAction(actionName, orderId);
+                return await PerformFulfillmentShipAction(actionName, orderContext);
             }
             if(actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT)){
-                return await PerformPaymentCaptureAction(actionName, orderId);
+                return await PerformPaymentCaptureAction(actionName, orderContext);
             }
             throw new VaeMissingOrInvalidParameterException("actionName");
         }
@@ -479,23 +477,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string Message { get; set; }
         }
 
-        private async Task<InternalBulkActionResult> PerformRootAction(string actionName, string orderId)
+        private async Task<InternalBulkActionResult> PerformRootAction(string actionName, OrderContext orderContext)
         {
-            var order = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
 
-            var siteRecord = (await _tenantsWebApiClient.GetSite(order.TenantId, order.SiteId)).ReadAsSync();
-
-            var orderWebApiClient = _orderWebApiClient;
-            if (!_ctx.MasterCatalogId.HasValue)
-            {
-                orderWebApiClient = orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = siteRecord.MasterCatalogId);
-            }
-
-            var orderResponse = await orderWebApiClient.PerformOrderAction(orderId, new DCo.OrderAction { ActionName = actionName });
+            var orderResponse = await orderWebApiClient.PerformOrderAction(orderContext.OrderId, new DCo.OrderAction { ActionName = actionName });
             var result = new InternalBulkActionResult
             {
                 ActionName = actionName,
-                OrderId = orderId,
+                OrderId = orderContext.OrderId,
                 StatusCode = orderResponse.ResponseMessage.StatusCode
             };
             if (result.StatusCode != HttpStatusCode.OK)
@@ -508,13 +498,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         // Retrieves the order and performs the action on the underlying packages
-        private async Task<InternalBulkActionResult> PerformFulfillmentShipAction(string actionName, string orderId)
+        private async Task<InternalBulkActionResult> PerformFulfillmentShipAction(string actionName, OrderContext orderContext)
         {
-            var orderResponse = await _orderWebApiClient.GetOrder(orderId);
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var orderResponse = await orderWebApiClient.GetOrder(orderContext.OrderId);
             var result = new InternalBulkActionResult
             {
                 ActionName = actionName,
-                OrderId = orderId,
+                OrderId = orderContext.OrderId,
                 StatusCode = orderResponse.ResponseMessage.StatusCode
             };
             if (result.StatusCode == HttpStatusCode.OK)
@@ -535,7 +526,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
 
                 // happy path, go forth a perform action on orders physical packages
-                var fulfillmentResponse = await _orderWebApiClient.PerformFulfillmentAction(orderId,
+                var fulfillmentResponse = await orderWebApiClient.PerformFulfillmentAction(orderContext.OrderId,
                     new DCs.FulfillmentAction()
                     {
                         ActionName = actionName,
@@ -568,15 +559,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         // Retrieves the order and performs the action on the underlying packages
-        private async Task<InternalBulkActionResult> PerformPaymentCaptureAction(string actionName, string orderId)
+        private async Task<InternalBulkActionResult> PerformPaymentCaptureAction(string actionName, OrderContext orderContext)
         {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
             var result = new InternalBulkActionResult
             {
                 ActionName = actionName,
                 StatusCode = HttpStatusCode.BadRequest, // overwrite in the positive case
-                OrderId = orderId
+                OrderId = orderContext.OrderId
             };
-            var orderResponse = await _orderWebApiClient.GetPayments(orderId);
+            var orderResponse = await orderWebApiClient.GetPayments(orderContext.OrderId);
 
             var payments = orderResponse.ReadAsSync().Items;
 
@@ -604,7 +596,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Amount = payment.AmountRequested - payment.AmountCollected
             };
 
-            var paymentResponse = await _orderWebApiClient.PerformPaymentAction(orderId, payment.Id, action);
+            var paymentResponse = await orderWebApiClient.PerformPaymentAction(orderContext.OrderId, payment.Id, action);
             if (paymentResponse.ResponseMessage.StatusCode != HttpStatusCode.OK)
             {
                 result.Message = orderResponse.HasException
