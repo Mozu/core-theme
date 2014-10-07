@@ -21,6 +21,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
+using Mozu.Tenant.Contracts.Clients;
 using DCcore = Mozu.Core.Api.Contracts;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
@@ -37,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private ICreditWebApiClient _creditWebApiClient;
         private ISiteBuilderApiContext _ctx;
         private readonly CustomerController _customerController;
+        private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
         /*
          * All order item operations have an updateMode attribute.
@@ -49,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings, ISiteBuilderApiContext ctx, CustomerController customerController)
+        public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, ISettings settings, ISiteBuilderApiContext ctx, CustomerController customerController, ITenantsWebApiClient tenantsWebApiClient)
         {
             _settings = settings;
             _orderWebApiClient = orderWebApiClient;
@@ -57,6 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _creditWebApiClient = creditWebApiClient;
             _ctx = ctx;
             _customerController = customerController;
+            _tenantsWebApiClient = tenantsWebApiClient;
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
@@ -478,7 +481,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<InternalBulkActionResult> PerformRootAction(string actionName, string orderId)
         {
-            var orderResponse = await _orderWebApiClient.PerformOrderAction(orderId, new DCo.OrderAction { ActionName = actionName });
+            var order = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+
+            var siteRecord = (await _tenantsWebApiClient.GetSite(order.TenantId, order.SiteId)).ReadAsSync();
+
+            var orderWebApiClient = _orderWebApiClient;
+            if (!_ctx.MasterCatalogId.HasValue)
+            {
+                orderWebApiClient = orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = siteRecord.MasterCatalogId);
+            }
+
+            var orderResponse = await orderWebApiClient.PerformOrderAction(orderId, new DCo.OrderAction { ActionName = actionName });
             var result = new InternalBulkActionResult
             {
                 ActionName = actionName,
