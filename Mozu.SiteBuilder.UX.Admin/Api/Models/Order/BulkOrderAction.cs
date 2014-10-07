@@ -8,7 +8,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     public class BulkOrderAction
     {
         public string ActionName { get; set; }
-        public List<string> OrderIds { get; set; }
+        public List<OrderContext> OrderContexts { get; set; }
+    }
+
+    public class OrderContext
+    {
+        public string OrderId { get; set; }
+        public int MasterCatalogId { get; set; }
     }
 
     public class BulkOrderActionResult
