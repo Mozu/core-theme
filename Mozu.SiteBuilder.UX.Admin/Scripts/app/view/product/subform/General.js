@@ -594,12 +594,12 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.on('afterrender', function () {
 
-
             this.imagesConfig = {
                 fieldLabel: 'Product Image',
                 name: 'productImages',
                 xtype: 'taco.imagefield',
                 width: classDef.getBufferedWidth(),
+                imageMetadata: me.record.get('productImages'),
                 filters: function () {
                     var existingImages = me.record.get('productImages'),
                         result = [];
@@ -607,12 +607,15 @@ Ext.define('Taco.view.product.subform.General', {
                     Ext.Array.each(existingImages, function(img) {
                         result.push({
                             property: 'id',
-                            value: img.cmsId
+                            value: img.cmsId,
+                            alt: img.alt
                         });
                     });
                     return result;
                 }()
             };
+
+            //me.mon(Taco.app, 'image_metadata_updated', me.imageMetadataUpdated, me);
 
             this.priceOverRideConfig = {
                 xtype: 'productoverride',
@@ -1063,7 +1066,20 @@ Ext.define('Taco.view.product.subform.General', {
             end.validate();
         }
         return true;
+    },
+
+    beforeSave: function () {
+        var me = this,
+            form = me.getForm(),
+            productImagesField = form.findField("productImages");
+
+        if (productImagesField) {
+            // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+            me.record.set("productImages", productImagesField.getValue());
+        }
+        return true;
     }
+
 
 });
 

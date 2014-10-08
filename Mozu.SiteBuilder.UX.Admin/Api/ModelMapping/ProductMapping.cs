@@ -473,7 +473,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //todo: confirm 3 new mappings Greg Murray on 2014-01-24 
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.ImageId))
                 .ForMember(dc => dc.LocaleCode, op => op.ResolveUsing(x => x.ISOCultureCode))
-                .ForMember(dc => dc.ImageLabel, op => op.ResolveUsing(x => x.AltText))
+                .ForMember(dc => dc.ImageLabel, op => op.ResolveUsing(x => x.Label))
+                .ForMember(dc => dc.AltText, op => op.ResolveUsing(x => x.Alt))
                 //ignore
                 .ForMember(x => x.Sequence, op => op.Ignore())
                 .ForMember(dc => dc.MediaType, op => op.Ignore())
@@ -485,7 +486,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //todo: confirm 3 new mappings Greg Murray on 2014-01-24
                 .ForMember(x => x.ISOCultureCode, op => op.ResolveUsing(dc => dc.LocaleCode))
                 .ForMember(x => x.ImageId, op => op.ResolveUsing(dc => dc.Id))
-                .ForMember(x => x.AltText, op => op.ResolveUsing(dc => dc.ImageLabel))
+                .ForMember(x => x.Alt, op => op.ResolveUsing(dc => dc.AltText))
+                .ForMember(x => x.Label, op => op.ResolveUsing(dc => dc.ImageLabel))
                 //ignores
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 ;
