@@ -236,7 +236,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         forceSelection: true,
                         value: 'stretch',
                         store: [
-                            ['stretch', 'Stretch']
+                            ['stretch', 'Fill Area'],
+                            ['maintain', 'Maintain Aspect']
                         ],
                         listeners: {
                             change: {
@@ -260,6 +261,10 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         margin: '0 0 0 15',
                         width: 125,
                         hidden: true
+                    }, {
+                        xtype: 'hidden',
+                        name: 'height',
+                        value: 400
                     }]
                 }, {
                     xtype: 'radiogroup',
@@ -464,6 +469,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
     handleImageSizeChange: function (newValue) {
         this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
         this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
+
+        this.down('[name=height]').setValue(newValue === 'fill' ? 400 : 'auto');
     },
 
     handleImageSourceChange: function (newValue) {

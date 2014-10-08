@@ -1,5 +1,4 @@
-;
-(function($, win, doc) {
+!(function($, win, doc) {
     'use strict';
 
     var $doc = $(doc),
