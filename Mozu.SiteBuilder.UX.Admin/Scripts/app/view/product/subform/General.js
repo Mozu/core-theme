@@ -614,7 +614,7 @@ Ext.define('Taco.view.product.subform.General', {
                         result.push({
                             property: 'id',
                             value: img.cmsId,
-                            altText: img.altText
+                            alt: img.alt
                         });
                     });
                     return result;
@@ -1080,30 +1080,7 @@ Ext.define('Taco.view.product.subform.General', {
             return (imgMetadata.get('cmsId') === item.cmsId);
         });
 
-        existingRecord.altText = imgMetadata.get('alt');
-
-        //var updatedImages = Ext.Array.filter(this.record.get('productImages'), function (item) {
-        //    return (imgMetadata.get('cmsId') !== item.cmsId); 
-        //});
-        //updatedImages.push(imgMetadata.data);
-        //this.record.set('productImages', updatedImages);
-
-
-//Ext.Array.each(this.record.get('productImages'), function (item) {
-        //    if (imgMetadata.get('cmsId') === item.cmsId) {
-        //        item.alt = imgMetadata.get('alt');
-        //        return false;
-        //    }
-        //    return true;
-        //});
-
-
-        //this.upsertArray(this.selectedImages, imgMetadata, function(item) {
-        //    return (item.get('cmsId') === imgMetadata.get('cmsId'));
-        //});
-
-
-        //console.log(imgMetadata);
+        existingRecord.alt = imgMetadata.get('alt');
     },
 
     beforeSave: function () {

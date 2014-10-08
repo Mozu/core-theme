@@ -63,6 +63,7 @@ Ext.define('Taco.shared.view.field.Image', {
     filters: null,
     bubbleEvents: ['image_metadata_updated'],
     imageMetadata: null,
+    isMetadataMerged: false,
     
     initComponent: function () {
         
@@ -332,25 +333,18 @@ Ext.define('Taco.shared.view.field.Image', {
         else if (Ext.fly(e.target).hasCls('alt-text')) {
             e.stopPropagation();
             e.preventDefault();
-            var imgMetadataModal = Ext.create('Taco.shared.view.modal.ImageMetadata', {
+            Ext.create('Taco.shared.view.modal.ImageMetadata', {
                 record: record,
                 listeners: {
                     savesuccess: {
                         scope: this,
                         fn: function (imgMetadataModal, imgMetadata) {
-                            //this.onSelectedImagesDataChanged();
+                            this.onSelectedImagesDataChanged();
                             this.fireEvent('image_metadata_updated', imgMetadata);
                         }
                     }
                 }
             });
-
-            //this.mon(imgMetadataModal, {
-            //    savesuccess: {
-            //        scope: this,
-            //        fn: 'onImageMetadataSaved'
-            //    }
-            //});
         }
     },
 
@@ -458,7 +452,6 @@ Ext.define('Taco.shared.view.field.Image', {
     //    return isDirty;
     //},
 
-
     onAssociatorClick: function () {
         
         var associator = Ext.create('Taco.view.fileManager.Associator', {});
@@ -472,68 +465,28 @@ Ext.define('Taco.shared.view.field.Image', {
         
     },
 
-  
     onSelectedImagesDataChanged: function () {
         var value = [];
 
         //merge product/category images metadata with cms file data
-        if (this.imageMetadata) {
+        if (this.imageMetadata && !this.isMetadataMerged) {
             for (var i = 0; i < this.imageMetadata.length; i++) {
                 var imgMeta = this.imageMetadata[i];
                 Ext.Array.every(this.selectedImages.data.items, function(selectImg) {
                     if (imgMeta.cmsId === selectImg.get('cmsId')) {
-                        selectImg.set('alt', imgMeta.altText);
+                        selectImg.set('alt', imgMeta.alt);
                         return false;
                     }
                     return true;
                 });
-
-
-
-                //if (this.imageMetadata[i].cmsId === record.get('cmsId')) {
-                //    record.set('alt', this.imageMetadata[i].alt);
-                //    break;
-                //}
             }
-
-
-            //this.selectedImages.each(function(record) {
-                
-            //});
-
-            //for (var i = 0; i < value.length; i++) {
-            //    for (var j = 0; j < this.imageMetadata.length; j++) {
-            //        if (value[i].cmsId === this.imageMetadata[j].cmsId) {
-            //            value[i].alt = this.imageMetadata[j].alt;
-            //            break;
-            //        }
-            //    }
-            //}
+            this.isMetadataMerged = true;
         }
 
         this.selectedImages.each(function (record) {
 
-            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('altText') });
+            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt') });
         }, this);
-
-        
-
-        //Ext.Array.each(value, function (val, this.imageMetadata) {
-            //    for (var i = 0; i < this.imageMetadata.length; i++) {
-            //        if (val.cmsId === this.imageMetadata[i]) {
-            //            val.alt = this.imageMetadata[i].alt;
-            //            break;
-            //        }
-            //    }
-
-            //    //Ext.Array.findBy(this.imageMetadata, function(item) {
-            //    //    if (item.cmsId === val.cmsId) {
-            //    //        val.alt = item.alt;
-            //    //        return true;
-            //    //    }
-            //    //    return false;
-            //    //});
-            //});
 
         if (value && value.length) {
             this.emptyDropZone.hide();

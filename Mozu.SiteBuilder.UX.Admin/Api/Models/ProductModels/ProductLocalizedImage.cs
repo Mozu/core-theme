@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public string ProductCode { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "alt")]
-        public string AltText { get; set; }
+        public string Alt { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CmsId { get; set; }
