@@ -187,5 +187,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var mapped = prodCollection.Items.Map<List<Product>>();
             return List2(mapped, (int)prodCollection.TotalCount);
         }
+
+        [HttpPostRoute(UriTemplate = "renameproductcode")]
+        public async Task<Response<List<ProductCodeRename>>> RenameProductCodes(List<ProductCodeRename> prodCodeRenames)
+        {
+            var dcProductCodeRenames = Mapper.Map<List<DC.ProductCodeRename>>(prodCodeRenames);
+            var res = (await _productClient.RenameProductCodes(dcProductCodeRenames)).ReadAsSync();
+            return List2(prodCodeRenames);
+        }
     }
 }

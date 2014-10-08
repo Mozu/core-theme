@@ -562,6 +562,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26
                 ;
 
+            Mapper.CreateMap<ProductAdmin.Contracts.ProductCodeRename, ProductCodeRename>();
+            Mapper.CreateMap<ProductCodeRename, ProductAdmin.Contracts.ProductCodeRename>();
+
             Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
                 .ForMember(x => x.Location, op => op.Ignore())
                 .ForMember(x => x.Fulfillment, op => op.Ignore())
