@@ -382,7 +382,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             return;
         };
 
-        var msg = "<div style='padding-left:10px;padding-right:10px;'><div>Changing the product code:</div> <ul><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>May leave the existing orders in an undesirable state</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>It's linkage to other products might be affected</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'> Reporting might also be affected</li></ul> <div style='padding-top:10px'>Would you like to proceed?</div></div>"
+        var msg = "<div style='padding-left:10px;padding-right:10px;'><div>Changing the product code may:</div> <ul><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>Leave existing orders in an undesirable state</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'>Impact linkages with other products</li><li style='margin:0px 10px 0px 20px;list-style-type: disc;'> Affect reporting</li></ul> <div style='padding-top:10px'>Would you like to proceed?</div></div>"
         
         Ext.MessageBox.show({
             title: 'Warning',

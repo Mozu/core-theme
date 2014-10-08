@@ -202,8 +202,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Content.Contracts.1.11.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.Core.1.11.0.12\lib\net45\Mozu.Core.dll</HintPath>
+    <Reference Include="Mozu.Core, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.1.12.0.1\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -266,9 +267,9 @@
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.11.0.3\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.11.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.12.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -409,10 +410,13 @@
     <Compile Include="StoreFront\ModelMapping\MvcMappingTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Admin\Api\cdProductCodeUpdate.cd" />
+    <None Include="Admin\Api\cdProductVariations.cd" />
     <None Include="app.config" />
     <None Include="App1.config" />
     <None Include="Diagrams\Admin\Api\cdCapabilities.cd" />
     <None Include="Diagrams\Admin\Api\cdLocalizedContent.cd" />
+    <None Include="Diagrams\Admin\Api\cdReportController.cd" />
     <None Include="Diagrams\Admin\Api\Models\LocalizedModels\cdLocalizedModels.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdOrderItem.cd" />
     <None Include="Diagrams\Admin\Api\Models\OrderModels\cdReturns.cd" />

@@ -217,9 +217,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Content.Contracts.1.11.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.11.0.12\lib\net45\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.12.0.1\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -280,9 +280,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.11.0.3\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.11.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.12.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -457,7 +457,9 @@
     <Compile Include="Api\Models\Order\OrderNote.cs" />
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
+    <Compile Include="Api\Models\Order\BulkOrderAction.cs" />
     <Compile Include="Api\Models\Order\OrderSummary.cs" />
+    <Compile Include="Api\Models\ProductModels\ProductCodeRename.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />
@@ -874,6 +876,7 @@
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
+    <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
     <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
     <Content Include="Scripts\app\view\entityManager\Index.js" />
@@ -1993,6 +1996,7 @@
     <Content Include="Tests\Automation\launcher-common.js" />
     <Content Include="Tests\Automation\phantomjs-launcher.js" />
     <Content Include="Tests\customunit\core\ux\form\field\BaseImageField.t.js" />
+    <Content Include="Tests\customunit\view\product\subforms\allow-changing-product-code.t.js" />
     <Content Include="Tests\customunit\view\settings\shipping\Zones-t.js" />
     <Content Include="Tests\Functional\product\product-basic-edit-save.js" />
     <Content Include="Tests\helpers\Core.js" />

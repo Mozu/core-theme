@@ -16,6 +16,8 @@ lib/
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
+Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.js
+Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.json
 Mozu.SiteBuilder.UX/App_Data/[Ll]og.txt
 Mozu.SiteBuilder.UX.Admin/App_Data/
 
@@ -46,3 +48,4 @@ Mozu.SiteBuilder.UX.Admin/ext-*
 TestResult.xml
 Mozu.SiteBuilder.UX.Themes/Themes/Core4/compiled/scripts/build.txt
 Mozu.SiteBuilder.UX.Themes/Themes/Core5/compiled/scripts/build.txt
+Mozu.SiteBuilder.UX.Themes/Themes/Core6/compiled/scripts/build.txt
