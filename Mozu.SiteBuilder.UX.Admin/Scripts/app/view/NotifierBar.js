@@ -1,52 +1,56 @@
 /**
  * @class Taco.view.NotifierBar
  */
-    Ext.define('Taco.view.NotifierBar', {
-        extend: 'Taco.core.ux.window.Window',
-        alias: 'widget.notifierbar',
+Ext.define('Taco.view.NotifierBar', {
+    extend: 'Taco.core.ux.window.Modal',
+    alias: 'widget.notifierbar',
 
-        bodyPadding: '9 10 9 10',
-        closeAction: 'destroy',
-        header: false,
-        height: 'auto',
-        minHeight: 40,
-        overflowY: 'hidden',
-        ui: 'modal',
-        width: '96%',
-        y: 126,
+    scale: 'small',
 
-        layout: {
-            type: 'fit'
-        },
+    closable: false,
 
-        initComponent: function () {
-            var tpl;
+    actions: [{
+        xtype: 'button',
+        ui: 'action',
+        itemId: 'primaryAction',
+        text: 'OK'
+    }],
 
-            this.cls = 'taco-notifierbar taco-notifierbar-' + this.messageType;
+    layout: {
+        type: 'fit'
+    },
 
-            tpl = new Ext.XTemplate('<span class="status-icon"></span><span class="message">{message}</span><span class="close-icon"></span>');
+    config: {
+        autoClose: false,
+        message: '',
+        messageType: 'info'
+    },
 
-            this.items = [{
-                xtype: 'component',
-                padding: '0 30 0 30',
-                tpl: tpl,
-                data: {
-                    message: this.message
-                },
-                listeners: {
-                    click: {
-                        scope: this,
-                        element: 'el',
-                        fn: function (e, t) {
-                            if (e.getTarget('.close-icon', 10)) {
-                                this.close();
-                            }
-                        }
-                    }
+    initComponent: function () {
+        var type = this.getMessageType();
+        var autoClose = this.getAutoClose();
+
+        // this.cls = 'taco-notifierbar taco-notifierbar-' + type;
+        this.setTitle(Ext.String.capitalize(type));
+
+        this.items = [{
+            xtype: 'component',
+            html: this.getMessage()
+        }];
+
+        this.callParent(arguments);
+
+        if (autoClose !== false) {
+            this.on({
+                show: {
+                    delay: Ext.isNumber(autoClose) ? autoClose : 3000,
+                    fn: function (dialog) { dialog.close(); }
                 }
-            }];
-
-            this.callParent(arguments);
+            });
         }
-    });
+    },
 
+    doSave: function () {
+        this.saveSuccess(null);
+    }
+});

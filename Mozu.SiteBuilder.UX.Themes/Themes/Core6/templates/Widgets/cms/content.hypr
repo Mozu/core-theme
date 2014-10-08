@@ -1,0 +1,5 @@
+﻿<div class="mz-content-widget-wrap" >
+    <div class="mz-content-widget-inner-wrap" >
+            {{Model.config.body|default_edit:'add content here'|safe}}
+    </div>
+</div>

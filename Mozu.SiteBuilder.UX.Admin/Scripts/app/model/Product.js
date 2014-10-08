@@ -668,7 +668,7 @@ Ext.define('Taco.model.Product', {
         me.productVariationStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.ProductVariation',
             autoLoad: false,
-            pageSize: 900,
+            pageSize: 1000,
             loadFromOptions: function () {
                 
                 var beforeState =[];

@@ -22,29 +22,29 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     initComponent: function () {
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumOrderAmount',
-            fieldLabel: "Minimum Order Amount (pre-discount)",
+            fieldLabel: "Minimum Order Amount",  //(pre-discount)
             hidden: this.record.get('scope') !== 'Order',
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
             currencyCode: Taco.app.context.getCurrent().currencyCode,
-            //emptyText: 'Not Applicable',
+            emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
         });
 
-        this.maximumDiscountAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'maximumDiscountAmount',
-            fieldLabel: "Maximum Discount Amount",
-            disabled: this.record.get('scope') !== 'Order',
-            forcePrecision: true,
-            labelAlign: 'top',
-            width: 600,
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            //emptyText: '',
-            align: 'right',
-            unitAtEnd: false
-        });
+        //this.maximumDiscountAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
+        //    name: 'maximumDiscountAmount',
+        //    fieldLabel: "Maximum Discount Amount",
+        //    disabled: this.record.get('scope') !== 'Order',
+        //    forcePrecision: true,
+        //    labelAlign: 'top',
+        //    width: 600,
+        //    currencyCode: Taco.app.context.getCurrent().currencyCode,
+        //    //emptyText: '',
+        //    align: 'right',
+        //    unitAtEnd: false
+        //});
 
         this.datesContainer = Ext.create('Ext.container.Container', {
             layout: {
@@ -130,7 +130,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             },
             this.datesContainer,
             this.minimumOrderAmountInput,
-            this.maximumDiscountAmountInput,
+            //this.maximumDiscountAmountInput,
             this.minimumLifetimeValueAmount,
             this.segmentsBox,
             {

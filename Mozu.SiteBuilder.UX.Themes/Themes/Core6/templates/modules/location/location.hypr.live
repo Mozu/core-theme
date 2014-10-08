@@ -1,0 +1,21 @@
+<thead>
+    <tr>
+        <th>Stores</th>
+    </tr>
+</thead>
+
+<tbody>
+{% for location in model.items %}
+    <tr>
+        <td>
+            <div class="mz-loc-name">{{location.name}}</div>
+            <div>{{location.address.address1}}</div>
+            <div>
+                {{location.address.cityOrTown}},
+                {{location.address.stateOrProvince}}
+            </div>
+            <a href="#" data-mz-loc-code="{{location.code}}">Store Details</a>
+        </td>
+    </tr>
+{% endfor %}
+</tbody>
