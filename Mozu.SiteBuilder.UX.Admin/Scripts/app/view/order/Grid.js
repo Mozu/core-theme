@@ -23,7 +23,6 @@ Ext.define('Taco.view.order.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-
     enableSearch: true,
     enablePaging: true,
     enableRowEditing: false,
@@ -40,20 +39,10 @@ Ext.define('Taco.view.order.Grid', {
     
     title: "Orders",
 
-    //bodyPadding:"10px 20px;",
-    //bodyStyle: "margin:10px 20px;",
-    //width: "100%",
-
-    //style: "margin:20px 20px 10px",
-
     store: { type: 'Taco.store.Orders' },  
 
     autoScroll: true,
 
-    // note: if you don't include this in a grid going into the contentView there will be no scrolling and no headers.
-    //region: "center",
-
-    
     enableQuickFilters:true,
 
     advancedSearchConfig : {
@@ -68,14 +57,17 @@ Ext.define('Taco.view.order.Grid', {
         ]
     },
 
-
-    onCreate: function () {
-
-    },
+    onCreate: Ext.emptyFn,
 
     stateful: true,
-
     stateId: 'statefulOrderGrid',
+
+    statics: {
+        bulkActionResponses: {
+            'CancelOrder': '<ul class="message-list"><li class="message-item">{0} payments were captured successfully</li><li class="message-item">{1} payments were not captured{2}</li></ul>',
+            'AcceptOrder': ''
+        }
+    },
         
     initComponent: function () {
         var me = this;
@@ -152,6 +144,7 @@ Ext.define('Taco.view.order.Grid', {
         var context = Taco.app.context.getCurrent();
         var orders, config;
 
+        // if the current context is the tenant, find the master catalog that contains the given site
         var getMasterCatalogId = function (ctx, siteId) {
             var mc = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
                 return Ext.Array.some(mc.sites, function (site) {
@@ -162,6 +155,7 @@ Ext.define('Taco.view.order.Grid', {
             return mc.id;
         };
 
+        // translate selected rows into objects with orderId and masterCatalogId
         orders = Ext.Array.map(this.getSelectionModel().getSelection(), function (item) {
             var siteId = item.get('siteId');
             var mcId = context.masterCatalogId || getMasterCatalogId(context, siteId);
@@ -179,15 +173,26 @@ Ext.define('Taco.view.order.Grid', {
                 actionName: action,
                 orderContexts: orders
             },
-            errorMsg: 'hello world',
-            success: function (response) {
-                console.log('succeeded', response);
-            },
-            scope: this
+            success: Ext.Function.bind(this.onBulkActionSuccess, this, [action], 0)
         };
 
         console.log(config);
         Ext.Ajax.request(config);
+    },
+
+    onBulkActionSuccess: function (action, response) {
+        var parse = Ext.JSON.decode(response.responseText);
+        var messageType = parse.success ? 'success' : 'error';
+        var summaryTpl = this.statics().bulkActionResponses[action];
+        var failedItemsTpl = new Ext.XTemplate('<ul class="message-list"><tpl for="."><li class="message-item">Order {orderId}</li></tpl></ul>');
+        var failedItems = Ext.Array.filter(parse.items, function (item) {
+            return !item.successful;
+        });
+        var message;
+
+        message = Ext.String.format(summaryTpl, parse.items.length - failedItems.length, failedItems.length, failedItemsTpl.apply(failedItems));
+
+        Taco.app.fireEvent('setmessage', message, messageType);
     },
 
     launchLoadedEditor: function (record, options) {
