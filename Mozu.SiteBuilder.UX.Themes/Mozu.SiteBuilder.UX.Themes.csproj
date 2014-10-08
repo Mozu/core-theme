@@ -206,9 +206,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Content.Contracts.1.11.0.1\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.1.11.0.12\lib\net45\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.1.12.0.1\lib\net45\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -262,9 +262,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.11.0.3\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.11.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.12.0.1\lib\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.11.0.2\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
@@ -581,7 +581,6 @@
     <Content Include="Themes\Core5\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core5\scripts\modules\jquery-mozu.js" />
     <Content Include="Themes\Core5\scripts\modules\login-links.js" />
-    <Content Include="Themes\Core5\scripts\modules\mixin-paging.js" />
     <Content Include="Themes\Core5\scripts\modules\models-address.js" />
     <Content Include="Themes\Core5\scripts\modules\models-cart.js" />
     <Content Include="Themes\Core5\scripts\modules\models-checkout.js" />
@@ -726,7 +725,6 @@
     <Content Include="Themes\Core6\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core6\scripts\modules\jquery-mozu.js" />
     <Content Include="Themes\Core6\scripts\modules\login-links.js" />
-    <Content Include="Themes\Core6\scripts\modules\mixin-paging.js" />
     <Content Include="Themes\Core6\scripts\modules\models-address.js" />
     <Content Include="Themes\Core6\scripts\modules\models-cart.js" />
     <Content Include="Themes\Core6\scripts\modules\models-checkout.js" />
@@ -2251,19 +2249,19 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="BuildThemes">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core6;" Targets="BuildThemeWithGrunt" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core5;" Targets="BuildThemeWithGrunt" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core4;" Targets="BuildThemeWithGrunt" />
+  </Target>
+  <Target Name="BuildThemeWithGrunt">
+    <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
+    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+  </Target>
   <Target Name="AfterCompile">
-    <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core5\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <!-- ugh... the worst -->
-    <Exec Command="npm cache clean" WorkingDirectory="$(ProjectDir)Themes\Core5" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core5" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\Core5" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
-      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
-    </Exec>
-    <Exec Command="attrib -r &quot;$(ProjectDir)Themes\Core4\compiled\*.*&quot; /S" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\Core4" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
-    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\Core4" ConsoleToMSBuild="true" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
-      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
-    </Exec>
+    <CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Import Project="..\packages\OctoPack.2.1.3\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

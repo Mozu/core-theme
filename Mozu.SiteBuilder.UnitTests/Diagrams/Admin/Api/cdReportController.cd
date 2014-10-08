@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="&lt;&lt;controller&gt;&gt;&#xD;&#xA;Taco.controller.BusinessIntelligence">
+    <Position X="1.958" Y="2.323" Height="0.75" Width="2.638" />
+  </Comment>
+  <Comment CommentText="&lt;&lt;view&gt;&gt;&#xD;&#xA;Taco.view.businessIntelligence.Index&#xD;&#xA;_______________________________________&#xD;&#xA;+ loadDashboard()">
+    <Position X="2.615" Y="3.333" Height="0.75" Width="3.367" />
+  </Comment>
+  <Comment CommentText="Posts to Birst Token generator page">
+    <Position X="9.854" Y="1.271" Height="0.5" Width="1.7" />
+  </Comment>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.ReportController">
+    <Position X="0.5" Y="0.75" Width="5.25" />
+    <Members>
+      <Method Name="Download" Hidden="true" />
+      <Method Name="List" Hidden="true" />
+      <Method Name="ListDefinitions" Hidden="true" />
+      <Method Name="Read" Hidden="true" />
+      <Method Name="ReportController" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UX.Admin.Api.BirstTokenGenerator">
+    <Position X="6.5" Y="1" Width="3" />
+    <Members>
+      <Method Name="BirstTokenGenerator" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
