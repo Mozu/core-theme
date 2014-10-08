@@ -3,16 +3,12 @@
  */
 Ext.define('Taco.shared.view.modal.ImageMetadata', {
     extend: 'Taco.core.ux.window.Modal',
-    requires: [
-
-    ],
 
     closeAction: 'destroy',
     autoShow: true,
-    scale: 'medium',
+    scale: 'small',
     title: 'Image Alternative Text',
-
-    //modelName: 'Taco.model.CustomShippingRate',
+    primaryText: 'OK',
 
     initComponent: function () {
         var me = this;
@@ -52,14 +48,12 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
         });
     },
 
-
     doSave: function () {
         var me = this,
             data = me.form.getValues();
 
         me.record.set(data);
         me.saveSuccess(me.record);
-        //me.fireEvent('image_metadata_updated', me.record);
     }
 
 });

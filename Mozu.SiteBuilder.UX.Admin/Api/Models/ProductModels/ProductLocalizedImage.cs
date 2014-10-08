@@ -11,6 +11,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "alt")]
         public string Alt { get; set; }
+        
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Label { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CmsId { get; set; }
