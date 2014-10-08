@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var token = await GenerateToken();
 
             return string.Format(
-                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dashboard&birst.page=Page&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
+                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dev%2520Dashboard&birst.page=Secure%2520Log-In%2520Test&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
                     _settings.AppSettings(SSO_URL_KEY),
                     token
                 );
