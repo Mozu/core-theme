@@ -23,7 +23,6 @@ Ext.define('Taco.view.order.Grid', {
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
     addContentViewPadding: true,
 
-
     enableSearch: true,
     enablePaging: true,
     enableRowEditing: false,
@@ -40,20 +39,10 @@ Ext.define('Taco.view.order.Grid', {
     
     title: "Orders",
 
-    //bodyPadding:"10px 20px;",
-    //bodyStyle: "margin:10px 20px;",
-    //width: "100%",
-
-    //style: "margin:20px 20px 10px",
-
     store: { type: 'Taco.store.Orders' },  
 
     autoScroll: true,
 
-    // note: if you don't include this in a grid going into the contentView there will be no scrolling and no headers.
-    //region: "center",
-
-    
     enableQuickFilters:true,
 
     advancedSearchConfig : {
@@ -68,14 +57,17 @@ Ext.define('Taco.view.order.Grid', {
         ]
     },
 
-
-    onCreate: function () {
-
-    },
+    onCreate: Ext.emptyFn,
 
     stateful: true,
-
     stateId: 'statefulOrderGrid',
+
+    statics: {
+        bulkActionResponses: {
+            'CancelOrder': '<ul class="message-list"><li class="message-item">{0} payments were captured successfully</li><li class="message-item">{1} payments were not captured{2}</li></ul>',
+            'AcceptOrder': ''
+        }
+    },
         
     initComponent: function () {
         var me = this;
@@ -112,16 +104,16 @@ Ext.define('Taco.view.order.Grid', {
             hidden: true,
             menu: {
                 items: [{
-                    text: 'one',
+                    text: 'Cancel',
                     scope: this,
                     handler: function () {
-                        this.simulateBulkAction('one');
+                        this.doBulkAction('CancelOrder');
                     },
                     validator: function (record) {
                         return true;
                     }
                 }, {
-                    text: 'two',
+                    text: 'Accept',
                     scope: this,
                     handler: function () {
                         console.log('do stuff', this.getSelectionModel().getSelection());
@@ -148,27 +140,59 @@ Ext.define('Taco.view.order.Grid', {
         });
     },
     
-    simulateBulkAction: function (action) {
-        var worked = Math.random() > 0.5;
+    doBulkAction: function (action) {
+        var context = Taco.app.context.getCurrent();
+        var orders, config;
 
-        console.log('simulating');
-        Ext.defer((worked ? success : failure), 2000, this);
+        // if the current context is the tenant, find the master catalog that contains the given site
+        var getMasterCatalogId = function (ctx, siteId) {
+            var mc = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
+                return Ext.Array.some(mc.sites, function (site) {
+                    return site.id === siteId;
+                });
+            });
 
-        function success () {
-            console.log('succeeded');
-            callback.call(this, 'success');
-        }
+            return mc.id;
+        };
 
-        function failure () {
-            console.log('failed');
-            callback.call(this, 'error');
-        }
+        // translate selected rows into objects with orderId and masterCatalogId
+        orders = Ext.Array.map(this.getSelectionModel().getSelection(), function (item) {
+            var siteId = item.get('siteId');
+            var mcId = context.masterCatalogId || getMasterCatalogId(context, siteId);
 
-        function callback (type) {
-            var message = type === 'success' ? '3 items succeeded.' : '3 items failed.';
+            return {
+                orderId: item.get('id'),
+                masterCatalogId: mcId
+            };
+        }, this);
 
-            Taco.app.fireEvent('setmessage', message, type);
-        }
+        config = {
+            url: '/admin/app/order/action',
+            method: 'POST',
+            jsonData: {
+                actionName: action,
+                orderContexts: orders
+            },
+            success: Ext.Function.bind(this.onBulkActionSuccess, this, [action], 0)
+        };
+
+        console.log(config);
+        Ext.Ajax.request(config);
+    },
+
+    onBulkActionSuccess: function (action, response) {
+        var parse = Ext.JSON.decode(response.responseText);
+        var messageType = parse.success ? 'success' : 'error';
+        var summaryTpl = this.statics().bulkActionResponses[action];
+        var failedItemsTpl = new Ext.XTemplate('<ul class="message-list"><tpl for="."><li class="message-item">Order {orderId}</li></tpl></ul>');
+        var failedItems = Ext.Array.filter(parse.items, function (item) {
+            return !item.successful;
+        });
+        var message;
+
+        message = Ext.String.format(summaryTpl, parse.items.length - failedItems.length, failedItems.length, failedItemsTpl.apply(failedItems));
+
+        Taco.app.fireEvent('setmessage', message, messageType);
     },
 
     launchLoadedEditor: function (record, options) {
