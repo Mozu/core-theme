@@ -13,7 +13,7 @@ Ext.define('Taco.view.NotifierBar', {
         xtype: 'button',
         ui: 'action',
         itemId: 'primaryAction',
-        text: 'OK'
+        text: 'Dismiss'
     }],
 
     layout: {
@@ -30,7 +30,7 @@ Ext.define('Taco.view.NotifierBar', {
         var type = this.getMessageType();
         var autoClose = this.getAutoClose();
 
-        // this.cls = 'taco-notifierbar taco-notifierbar-' + type;
+        this.cls = 'taco-notifierbar taco-notifierbar-' + type;
         this.setTitle(Ext.String.capitalize(type));
 
         this.items = [{
