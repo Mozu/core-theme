@@ -594,12 +594,17 @@ Ext.define('Taco.view.product.subform.General', {
 
         this.on('afterrender', function () {
 
-
             this.imagesConfig = {
                 fieldLabel: 'Product Image',
                 name: 'productImages',
                 xtype: 'taco.imagefield',
                 width: classDef.getBufferedWidth(),
+                listeners: {
+                    image_metadata_updated: {
+                        scope: this,
+                        fn: this.onImageMetadataUpdated
+                    }
+                },
                 filters: function () {
                     var existingImages = me.record.get('productImages'),
                         result = [];
@@ -613,6 +618,8 @@ Ext.define('Taco.view.product.subform.General', {
                     return result;
                 }()
             };
+
+            //me.mon(Taco.app, 'image_metadata_updated', me.imageMetadataUpdated, me);
 
             this.priceOverRideConfig = {
                 xtype: 'productoverride',
@@ -1063,6 +1070,27 @@ Ext.define('Taco.view.product.subform.General', {
             end.validate();
         }
         return true;
+    },
+
+    onImageMetadataUpdated: function (imgMetadata) {
+
+
+
+        Ext.Array.each(this.record.get('productImages'), function (item) {
+            if (imgMetadata.get('cmsId') === item.cmsId) {
+                item.alt = imgMetadata.get('alt');
+                return false;
+            }
+            return true;
+        });
+
+
+        //this.upsertArray(this.selectedImages, imgMetadata, function(item) {
+        //    return (item.get('cmsId') === imgMetadata.get('cmsId'));
+        //});
+
+
+        console.log(imgMetadata);
     }
 
 });
