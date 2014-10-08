@@ -61,6 +61,7 @@ Ext.define('Taco.shared.view.field.Image', {
     allowMulti: true,
     thumbnailSize: 150,
     filters: null,
+    bubbleEvents: ['image_metadata_updated'],
     
     initComponent: function () {
         
@@ -114,6 +115,7 @@ Ext.define('Taco.shared.view.field.Image', {
                                 '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')">',
                                     '<ul class="toolbar">',
                                         '<li class="drag-handle">Drag</li>',
+                                        '<li class="alt-text">Alt Text</li>',
                                         '<li class="remove">Remove</li>',
                                     '</ul>',
                                 '</div>',
@@ -326,6 +328,28 @@ Ext.define('Taco.shared.view.field.Image', {
             e.preventDefault();
             this.selectedImages.remove(record);
         }
+        else if (Ext.fly(e.target).hasCls('alt-text')) {
+            e.stopPropagation();
+            e.preventDefault();
+            var imgMetadataModal = Ext.create('Taco.shared.view.modal.ImageMetadata', {
+                record: record,
+                listeners: {
+                    savesuccess: {
+                        scope: this,
+                        fn: function(imgMetadataModal, imgMetadata) {
+                            this.fireEvent('image_metadata_updated', imgMetadata);
+                        }
+                    }
+                }
+            });
+
+            //this.mon(imgMetadataModal, {
+            //    savesuccess: {
+            //        scope: this,
+            //        fn: 'onImageMetadataSaved'
+            //    }
+            //});
+        }
     },
 
     bindImageUpload: function () {
@@ -511,6 +535,42 @@ Ext.define('Taco.shared.view.field.Image', {
 
     onAssociatorSave: function (associator, selectedRecords) {
         this.selectedImages.add(selectedRecords);
+    },
+
+    onImageMetadataSaved: function (imgMetadataModal, imgMetadata) {
+
+
+
+        Ext.Array.each(this.selectedImages.data.items, function(item) {
+            if (imgMetadata.get('cmsId') === item.get('cmsId')) {
+                item.set('alt', imgMetadata.get('cmsId'));
+                return false;
+            }
+            return true;
+        });
+        
+
+        //this.upsertArray(this.selectedImages, imgMetadata, function(item) {
+        //    return (item.get('cmsId') === imgMetadata.get('cmsId'));
+        //});
+
+        
+        console.log(imgMetadata);
+    },
+
+    upsertArray: function(extCollection, updatedItem, funSearch) {
+        var i, found = false;
+        for (i = 0; i < extCollection.data.items.length; i++) {
+            if (funSearch(extCollection.data.items[i])) {
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            Ext.Array.replace(extCollection.data.items, i, 1, updatedItem);
+        } else {
+            Ext.Array.push(extCollection, updatedItem);
+        }
     },
 
     onDestroy: function () {
