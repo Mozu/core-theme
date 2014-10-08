@@ -28,7 +28,8 @@ namespace Mozu.SiteBuilder.Mvc.Filters
                  }
                  else
                  {
-                     throw new Exception("parent template of " + themeFile.VirtualPath + " not found");
+                     return htm.GetTemplate(themeFile.FullPath);
+                     
                  }
              }
              throw new Exception("origional template not found "+ value);

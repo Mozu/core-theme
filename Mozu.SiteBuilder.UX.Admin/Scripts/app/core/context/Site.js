@@ -55,7 +55,7 @@
         return this.contentPublishingEnabled;
     },
     updateContentPublishingMode: function (value) {
-        this.publishingEnabled = value == 'Pending';
+        this.publishingEnabled = value === 'Pending';
 
         Ext.Ajax.request({
             url: '/admin/app/cmspublishing/enablePublishing',

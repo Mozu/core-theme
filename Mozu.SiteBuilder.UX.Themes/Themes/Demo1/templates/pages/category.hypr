@@ -1,0 +1,9 @@
+{% extends "pages\category"|parent_template %}
+
+
+
+{% block body-content %}
+<b style="font-size:30px;color:red">stuff above</b>
+ {% parent %}
+<b style="font-size:30px;color:red">stuff below</b>
+{% endblock body-content %}
