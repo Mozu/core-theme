@@ -45,7 +45,7 @@
     },
 
     initComponent: function () {
-        var me = this;        
+        var me = this;
 
         this.additionalActions = [{
             xtype: "button",
@@ -144,7 +144,7 @@
                                             itemId: site.id,
                                             text: site.name,
                                             handler: Ext.bind(me.viewInSite, me, [site, 'preview'])
-                                        });
+            });
                                         liveSites.push({
                                             itemId: site.id,
                                             text: site.name,
@@ -153,8 +153,8 @@
                                     }
                                 });
                             });
-                            
-                           
+
+
 
                             if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
                                 previewMenu.removeAll();
@@ -171,13 +171,13 @@
                             }
 
                            
-                        }
-                    },
-                    scope: this
-                }
+                            }
+                        },
+                        scope: this
+                    }
             }
         }];
-        
+                
         this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options });
 
         
@@ -218,7 +218,7 @@
         
 
 
-        
+    
 
             this.on({
                 render: function() {
@@ -354,13 +354,12 @@
                     focusEl.focus();
                 },
                 scope:me
-            }
+    }
         });
-
+    
     },
     doCreate : function (){
         var controller = "products"
         Taco.app.StateManager.attemptNavigate(controller + '/create');
     }
-    
 });
