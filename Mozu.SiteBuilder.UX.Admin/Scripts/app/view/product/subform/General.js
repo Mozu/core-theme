@@ -599,6 +599,7 @@ Ext.define('Taco.view.product.subform.General', {
                 name: 'productImages',
                 xtype: 'taco.imagefield',
                 width: classDef.getBufferedWidth(),
+                imageMetadata: me.record.get('productImages'),
                 listeners: {
                     image_metadata_updated: {
                         scope: this,
@@ -612,7 +613,8 @@ Ext.define('Taco.view.product.subform.General', {
                     Ext.Array.each(existingImages, function(img) {
                         result.push({
                             property: 'id',
-                            value: img.cmsId
+                            value: img.cmsId,
+                            altText: img.altText
                         });
                     });
                     return result;
@@ -1074,15 +1076,26 @@ Ext.define('Taco.view.product.subform.General', {
 
     onImageMetadataUpdated: function (imgMetadata) {
 
-
-
-        Ext.Array.each(this.record.get('productImages'), function (item) {
-            if (imgMetadata.get('cmsId') === item.cmsId) {
-                item.alt = imgMetadata.get('alt');
-                return false;
-            }
-            return true;
+        var existingRecord = Ext.Array.findBy(this.record.get('productImages'), function(item) {
+            return (imgMetadata.get('cmsId') === item.cmsId);
         });
+
+        existingRecord.altText = imgMetadata.get('alt');
+
+        //var updatedImages = Ext.Array.filter(this.record.get('productImages'), function (item) {
+        //    return (imgMetadata.get('cmsId') !== item.cmsId); 
+        //});
+        //updatedImages.push(imgMetadata.data);
+        //this.record.set('productImages', updatedImages);
+
+
+//Ext.Array.each(this.record.get('productImages'), function (item) {
+        //    if (imgMetadata.get('cmsId') === item.cmsId) {
+        //        item.alt = imgMetadata.get('alt');
+        //        return false;
+        //    }
+        //    return true;
+        //});
 
 
         //this.upsertArray(this.selectedImages, imgMetadata, function(item) {
@@ -1090,8 +1103,22 @@ Ext.define('Taco.view.product.subform.General', {
         //});
 
 
-        console.log(imgMetadata);
+        //console.log(imgMetadata);
+    },
+
+    beforeSave: function () {
+        var me = this,
+            form = me.getForm(),
+            productImagesField = form.findField("productImages");
+
+        if (productImagesField) {
+            // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+            //me.record.set("productImages", productImagesField.getValue());
+            console.log(me.record.get('productImages'));
+        }
+        return true;
     }
+
 
 });
 
