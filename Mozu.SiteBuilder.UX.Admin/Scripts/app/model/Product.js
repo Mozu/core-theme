@@ -776,6 +776,7 @@ Ext.define('Taco.model.Product', {
     beforeDuplicate : function (){
         this.raw = undefined
         this.set("productCode", "");
+        this.data.productName = this.data.productName + " - copy";
         this.commit();        
     },
 
