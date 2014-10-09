@@ -164,7 +164,8 @@ Ext.define('Taco.core.Controller', {
                     }
 
                     record.phantom = true;
-                    Ext.data.Model.id(record);
+                    Ext.data.Model.id(record);                    
+                    record.data.productName = record.data.productName + " - copy";
 
                     this.ensureRequiredStores(function () {
                         this.createContentView(viewName, {
@@ -193,6 +194,7 @@ Ext.define('Taco.core.Controller', {
 
                     record.phantom = true;
                     Ext.data.Model.id(record);
+                    record.data.productName = record.data.productName + " - copy";
 
                     this.ensureRequiredStores(function () {
                         this.createContentView(viewName, {
