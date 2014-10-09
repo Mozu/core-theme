@@ -475,7 +475,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (this.SbApiContext.SiteId.HasValue)
             {
                 var siteContext = this.Request.Resolve<SiteContext>();
-                var vpp =this.Request.Resolve<MozuVirtualPathProvider>(); 
+                var vpp =this.Request.Resolve<IMozuVirtualPathProvider>(); 
                 await siteContext.Init();
                 var theme = this.Request.Resolve<SiteContext>().Theme;
                 if (theme.Editors != null && theme.Editors.Count > 0)

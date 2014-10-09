@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Microsoft.Win32;
+using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -215,13 +216,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {"zip", "application/zip"}
         };
 
-        private readonly MozuVirtualPathProvider _pathProvider;
+        private readonly IMozuVirtualPathProvider _pathProvider;
         
         private readonly INavigationGandalf _navGandalf;
-
+        
         private readonly AMDModuleProvider _moduleProvider;
 
-        public ResourceController(MozuVirtualPathProvider pathProvider, INavigationGandalf gandalf)
+        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf)
         {
             _navGandalf = gandalf;
             _pathProvider = pathProvider;
@@ -254,19 +255,106 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return res;
         }
 
+        public struct TemplateInfo
+        {
+            public string key { get; set; }
+            public string content { get; set; }
+        }
+
         [ClientCacheHeaders(ConfigKey = "livetemplates")]
         [HttpGet]
         public JObject LiveTemplates(bool? debug = false)
         {
-            var templatesByAdjustedNames =
-                _pathProvider.GetLiveTemplates()
-                    .Select(x => new {ThemeFileSystemInfo = x, Content = System.IO.File.ReadAllText(x.FileSystemInfo.FullPath)})
-                    .Select(x => new {x.ThemeFileSystemInfo, Content = ScrubComments(x.Content)})
-                    .Select(x => new JProperty(MakeName(x.ThemeFileSystemInfo), x.Content));
+            var templateContents =
+                    _pathProvider.GetLiveTemplates()
+                    .Select(x => new {
+                            VirtualPath = x.VirtualPathNoExt, 
+                            Content = System.IO.File.ReadAllText(x.FullPath)
+                    }).ToList();
 
+            // find guys that extend something, with parent_template filter
+            var templatesThatExtendAndParent =
+                    templateContents
+                    .Select(x => new
+                    {
+                        x.VirtualPath, 
+                        x.Content, 
+                        InitialExtendsPath = GetExtendsPath(x.Content)
+                    })
+                    .Where(x => !x.InitialExtendsPath.IsNullOrEmpty())
+                    .Select(x => new
+                    {
+                        Base = x, 
+                        Parent = GetParentInfo(_pathProvider, x.VirtualPath)
+                    }).ToList();
+
+            var templatesWithoutExtends = templateContents.Where(x => GetExtendsPath(x.Content).IsNullOrEmpty());
+
+            // for those guys, change the extends tag in place to point to a parent theme's template that's being referred to by the extends url
+            var mutatedTemplatesThatExtend =
+                    templatesThatExtendAndParent
+                    .Select(x => new
+                    {
+                        x.Base.VirtualPath,
+                        Content = x.Base.Content.Replace(CreateFullReplaceString(x.Base.Content), string.Format("\"{0}\"", MakeExtendsPath(x.Base.InitialExtendsPath, x.Parent.ThemeId))), 
+                    });
+
+            // add the base template at that location to the overall collection of templates
+            var parentTemplatesToAdd =
+                    templatesThatExtendAndParent
+                    .Select(x => new {
+                                VirtualPath = MakeExtendsPath(x.Parent.VirtualPathNoExt, x.Parent.ThemeId),
+                                Content = System.IO.File.ReadAllText(x.Parent.FullPath)
+                    });
+
+            var finalTemplates =
+                templatesWithoutExtends
+                .Concat(mutatedTemplatesThatExtend)
+                .Concat(parentTemplatesToAdd);
+            
             var jobj = new JObject();
-            jobj.AddRange(templatesByAdjustedNames);
+            jobj.AddRange(finalTemplates.Select(x => new JProperty(SanitizeTemplatePath(x.VirtualPath), ScrubCommentsFromTemplate(x.Content))));
             return jobj;
+        }
+
+        #region helpers for live templates
+        private static string MakeExtendsPath(string basePath, string themeId)
+        {
+            return string.Format("{0}__{1}", basePath.Replace("\"", String.Empty).Replace("'", String.Empty), themeId);
+        }
+        
+        private static string CreateFullReplaceString(string content)
+        {
+            var m = GetExtendsRegex.Match(content);
+            var pathPart = m.Groups["path"].Value;
+            var junkPart = m.Groups["junk"].Value;
+            var filterPart = m.Groups["filter"].Value;
+            var all = string.Format("{0}{1}{2}", pathPart, junkPart, filterPart);
+            return all;
+        }
+
+        private static readonly Regex GetExtendsRegex = new Regex(@"{%(?:\s*)extends(?:\s*)(?<path>"".*""|'.*')(?<junk>(?:\s*)\|(?:\s*))(?<filter>parent_template)(?:\s*)%}", RegexOptions.Compiled);
+        private static string GetExtendsPath(string templateContent)
+        {
+            return GetExtendsRegex.IsMatch(templateContent)
+                ? GetExtendsRegex.Match(templateContent).Groups["path"].Value
+                : String.Empty;
+        }
+
+        private static string SanitizeTemplatePath(string path)
+        {
+            return path.Replace('\\', '/').Replace("templates/", "");
+        }
+
+        private static ThemeFileSystemInfo GetParentInfo(IMozuVirtualPathProvider vpp, string virtualPath)
+        {
+            var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}",virtualPath));
+            if (theme == null) // oops
+            {
+                return null;
+            }
+            var parent = vpp.GetParentThemeFileInfo(theme);
+            return parent ?? theme;
         }
 
         private static readonly Regex HtmlCommentRegex = new Regex("<!--.*-->", RegexOptions.Compiled); // removes everything from <!-- through -->
@@ -277,30 +365,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             HyprCommentRegex,
         };
 
-        /// <summary>
-        /// Removes HTML comments and 
-        /// </summary>
-        private static string ScrubComments(string template)
+        private static string ScrubCommentsFromTemplate(string template)
         {
             return TemplateScrubbers.Aggregate(template, (s, regex) => regex.Replace(s, String.Empty));
         }
-
-        /// <summary>
-        /// Hypr.Live is given a flat dictionary of all templates, where the key is the path of the template, assuming a starting root path of "templates"
-        /// For templates that extend a parent template by use of the parent_template filter, we need to ensure the parent template is added to the dictionary 
-        /// at some known munged path. Eg.
-        ///     <code>{% extends "pages\category" | parent_template %}</code>
-        /// should result in the parent template's "pages/category" template put into the dictionary with a key of "pages\category<PARENT_TEMPLATE_IDENTIFIER>", where
-        /// PARENT_TEMPLATE_IDENTIFIER is some secret formulation that is shared between Hypr.Live and us right here.
-        /// </summary>
-        private static string MakeName(ThemeFileSystemInfoWrapper themeInfoWrapper)
-        {
-            var anchoredPath = themeInfoWrapper.FileSystemInfo.VirtualPathNoExt.Replace('\\', '/').Replace("templates/", "");
-            return themeInfoWrapper.IsParentTheme
-                ? string.Format("{0}__{1}", anchoredPath, themeInfoWrapper.FileSystemInfo.ThemeId)
-                : anchoredPath;
-        }
-
+        #endregion
 
         [HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
@@ -372,7 +441,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         private class AMDModuleProvider
         {
-            public MozuVirtualPathProvider PathProvider;
+            public IMozuVirtualPathProvider PathProvider;
 
             private static class ModuleParts
             {
@@ -678,7 +747,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             private readonly string _path;
 
             public LessTransFormer(string path, bool debug, ResourceController resourceController,
-                MozuVirtualPathProvider virtualPathProvider)
+                IMozuVirtualPathProvider virtualPathProvider)
             {
                 Controller = resourceController;
                 _debug = debug;
@@ -688,7 +757,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
             public ResourceController Controller { get; set; }
-            public MozuVirtualPathProvider PathProvider { get; set; }
+            public IMozuVirtualPathProvider PathProvider { get; set; }
 
             public Stream Transform(Stream str, string stem)
             {

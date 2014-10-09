@@ -136,12 +136,6 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public bool? AllowProduction { get; set; }
     }
 
-    public struct ThemeFileSystemInfoWrapper
-    {
-        public ThemeFileSystemInfo FileSystemInfo { get; set; }
-        public bool IsParentTheme { get; set; }
-    }
-
     public class ThemeFileSystemInfo
     {
         public string Name { get; set; }

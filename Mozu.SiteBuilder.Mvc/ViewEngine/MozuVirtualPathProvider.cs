@@ -11,7 +11,17 @@ using Mozu.SiteBuilder.Mvc.Themes;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
-     public class MozuVirtualPathProvider : VirtualPathProvider
+    public interface IMozuVirtualPathProvider
+    {
+        string MapLocalPath(string VirtualPathProvider, Theme theme);
+        ICollection<Theme> ThemeStack { get; }
+        IEnumerable<ThemeFileSystemInfo> GetLiveTemplates();
+        ThemeFileSystemInfo GetThemeFileInfo(string virtualPath, bool withExt = true);
+        ThemeFileSystemInfo GetParentThemeFileInfo(ThemeFileSystemInfo item);
+        VirtualFile GetFile(string virtualPath);
+    }
+
+     public class MozuVirtualPathProvider : VirtualPathProvider, IMozuVirtualPathProvider
     {
          private readonly SiteContext _siteContext;
          
@@ -56,16 +66,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return fileInfo != null ? new MozuVirtualFileSystemFile(fileInfo.VirtualPath, fileInfo.FullPath) : null;
         }
 
-         public IEnumerable<ThemeFileSystemInfoWrapper> GetLiveTemplates()
+         public IEnumerable<ThemeFileSystemInfo> GetLiveTemplates()
          {
              return
                  ThemeStack
-                     .SelectMany((x, i) => x.FileListing.LiveTemplates.Select(lt => new {LiveTemplate = lt, IsParentTemplate = i > 0})) // parent themes are not the first element of the theme stack
-                     .Where(x => GetThemeFileInfo(x.LiveTemplate.VirtualPathNoExt, false) == x.LiveTemplate)
-                     .Select(x => new ThemeFileSystemInfoWrapper{
-                                 FileSystemInfo = x.LiveTemplate,
-                                 IsParentTheme = x.IsParentTemplate
-                             });
+                     .SelectMany(x => x.FileListing.LiveTemplates)
+                     .Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
          }
 
          public ThemeFileSystemInfo GetThemeFileInfo(string virtualPath, bool withExt = true  )
@@ -93,12 +99,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
              return FileExists(virtualPath, true);
          }
 
-         public  bool FileExists(string virtualPath, bool withExt )
+         private bool FileExists(string virtualPath, bool withExt)
          {
              return GetThemeFileInfo(virtualPath, withExt) != null;
-
          }
-          
+
 
          private const string HTTP_ITEMS_KEY = "MOZUVIRPATPROV";
 
@@ -115,9 +120,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     {
         private string _virtualDir;
         private string _mapPath;
-        private MozuVirtualPathProvider _mozuVirtualPathProvider;
+        private IMozuVirtualPathProvider _mozuVirtualPathProvider;
 
-        public MozuVirtualDirectory(string virtualDir, string mapPath, MozuVirtualPathProvider mozuVirtualPathProvider)
+        public MozuVirtualDirectory(string virtualDir, string mapPath, IMozuVirtualPathProvider mozuVirtualPathProvider)
             : base(virtualDir)
         {
             // TODO: Complete member initialization

@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(IShippingWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
              
-            builder.RegisterType<MozuVirtualPathProvider>().InstancePerRequest();
+            builder.RegisterType<MozuVirtualPathProvider>().As<IMozuVirtualPathProvider>().InstancePerRequest();
             
             //contexts
             builder.RegisterType<Contexts.ClientApiContext>().InstancePerRequest();
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             EscaperConfig.Escaper = new SafeEscaper();
             var tm = tmp.GetNewManager();
 
-            builder.Register(c => new HyprTemplateManager(tm, c.Resolve<MozuVirtualPathProvider>()))
+            builder.Register(c => new HyprTemplateManager(tm, c.Resolve<IMozuVirtualPathProvider>()))
                 .As<ITemplateManager>()
                 .InstancePerLifetimeScope();
         }

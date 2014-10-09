@@ -11,17 +11,18 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     {
          object IFilterWithContext.PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
          {
-             var vpp = context.Resolve<MozuVirtualPathProvider>();
+             var vpp = context.Resolve<IMozuVirtualPathProvider>();
+             var htm = context.Resolve<ITemplateManager>();
+
              var valueString = (string) value;
              var themeFile = vpp.GetThemeFileInfo(string.Format("templates/{0}", valueString), false);
-
              if (themeFile == null) throw GetNotFound(valueString);
 
              var parentFile = vpp.GetParentThemeFileInfo(themeFile);
-             if (parentFile == null) throw GetNotFound(themeFile.VirtualPath);
-             
-             var htm = context.Resolve<ITemplateManager>();
-             return htm.GetTemplate(parentFile.FullPath);
+             var pathToGet = parentFile != null ? 
+                    parentFile.FullPath : 
+                    themeFile.FullPath;
+             return htm.GetTemplate(pathToGet);
          }
 
          object IFilter.DefaultValue
