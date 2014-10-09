@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return fileInfo != null ? new MozuVirtualFileSystemFile(fileInfo.VirtualPath, fileInfo.FullPath) : null;
         }
 
-         public IEnumerable<ThemeFileSystemInfo> GetLveTemplates()
+         public IEnumerable<ThemeFileSystemInfo> GetLiveTemplates()
          {
              return ThemeStack.SelectMany(x=> x.FileListing.LiveTemmplates ).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
          }

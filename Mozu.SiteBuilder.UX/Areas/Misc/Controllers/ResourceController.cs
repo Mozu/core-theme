@@ -276,7 +276,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public JObject LiveTemplates(bool? debug = false)
         {
             JObject jobj = new JObject();
-            foreach (var template in _pathProvider.GetLveTemplates())
+            foreach (var template in _pathProvider.GetLiveTemplates())
             {
                 jobj.Add(new JProperty(
                                            template.VirtualPathNoExt.Replace('\\', '/').Replace("templates/", ""),
