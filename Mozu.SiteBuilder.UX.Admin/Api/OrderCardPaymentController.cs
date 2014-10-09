@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "CapturePayment",
-                CurrencyCode = "USD",
+//                CurrencyCode = "USD",  if not provided, commerceruntime defers to what's provisioned for the tenant
                 Amount = args.Amount,
                 ReferenceSourcePaymentId = null
             };

@@ -2,7 +2,7 @@
     "about": {
         "author": "Volusion",
         "defaultLanguage": "en-US",
-        "extends": "core5",
+        "extends": "core6",
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,

@@ -26,6 +26,7 @@ using Proto = Mozu.Content.Contracts.Prototype;
 using DC = Mozu.Content.Contracts;
 using CMS = Mozu.Content.Contracts;
 using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
+using Constants = Mozu.Core.Messaging.Contracts.Constants;
 
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -116,7 +117,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<EntityContainer>();
-                    return _entityListsWebApiClient.InsertEntity(entityListFullName: entity.ListFQN, item: entity.Item);
+                    var fullName = entity.ListFullName ?? (string) doc.Value<string>("listFQN");
+                    return _entityListsWebApiClient.InsertEntity(entityListFullName: fullName, item: entity.Item);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -147,10 +149,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else if (documents.First().Value<string>("entityType") == "mzdb")
             {
+              
                 List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
+                    
                     var entity = doc.ToObject<EntityContainer>();
-                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.ListFQN, item: entity.Item, id: entity.Id);
+                    var listFqn = entity.ListFullName ?? doc.Value<string>("listFQN");
+                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: listFqn, item: entity.Item, id: entity.Id);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -239,8 +244,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 return List2(res.Items.Select(x =>
                 {
-                    x.ListFQN = x.ListFQN ?? list;
+              
                     JObject j = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+
+                    j["listFQN"] = x.ListFullName;
                     j["entityType"] = "mzdb";
                     return j;
                 }).ToList(), res.TotalCount);

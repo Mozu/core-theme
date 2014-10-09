@@ -11,13 +11,17 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Exceptions;
+using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
+using Mozu.Tenant.Contracts.Clients;
 using DCcore = Mozu.Core.Api.Contracts;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
@@ -400,6 +404,197 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
 
             return Single2( Mapper.Map<Order>(dcOrder) );
+        }
+
+        [HttpPostRoute(UriTemplate = "action")]
+        public async Task<Response<List<OrderActionResult>>> PerformOrdersAction(BulkOrderAction action)
+        {
+            if (!IsValidBulkAction(action.ActionName))
+            {
+                throw new VaeMissingOrInvalidParameterException("ActionName",
+                    string.Format("Valid bulk order actions are '{0}'",
+                        string.Join("' , '", _validBulkOrderActions)));
+            }
+            var orderIdToActionTaskTuples = action.OrderContexts.Select(
+                ctx => PerformOrderAction(action.ActionName, ctx))
+                        .ToList();
+
+            var bulkResult = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderContexts.Count};
+            await Task.WhenAll(orderIdToActionTaskTuples);
+            foreach (var orderIdToActionTask in orderIdToActionTaskTuples)
+            {
+                var actionResult = orderIdToActionTask.Result;
+                var orderActionResult = new OrderActionResult { OrderId = actionResult.OrderId, Successful = true, Message = actionResult.Message };
+                bulkResult.Items.Add(orderActionResult);
+                orderActionResult.StatusCode = actionResult.StatusCode;
+                if (orderActionResult.StatusCode != HttpStatusCode.OK)
+                {
+                    bulkResult.Success = false;
+                    orderActionResult.Successful = false;
+                }
+            }
+            return bulkResult;
+        }
+
+        private async Task<InternalBulkActionResult> PerformOrderAction(string actionName, OrderContext orderContext)
+        {
+            if (actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER)
+                || actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER))
+            {
+                return await PerformRootAction(actionName, orderContext);
+            }
+            if (actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP))
+            {
+                return await PerformFulfillmentShipAction(actionName, orderContext);
+            }
+            if(actionName.EqualsIgnoreCase(CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT)){
+                return await PerformPaymentCaptureAction(actionName, orderContext);
+            }
+            throw new VaeMissingOrInvalidParameterException("actionName");
+        }
+
+        private static bool IsValidBulkAction(string actionName)
+        {
+            if (string.IsNullOrEmpty(actionName))
+                return false;
+            return _validBulkOrderActions.Any(s => s.EqualsIgnoreCase(actionName));
+        }
+
+        private static readonly List<string> _validBulkOrderActions = new List<string>
+        {
+            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER,
+            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER,
+            CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP,
+            CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT
+        };
+
+        private async Task<InternalBulkActionResult> PerformRootAction(string actionName, OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+
+            var orderResponse = await orderWebApiClient.PerformOrderAction(orderContext.OrderId, new DCo.OrderAction { ActionName = actionName });
+            var result = new InternalBulkActionResult
+            {
+                ActionName = actionName,
+                OrderId = orderContext.OrderId,
+                StatusCode = orderResponse.ResponseMessage.StatusCode
+            };
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                result.Message = orderResponse.HasException
+                    ? orderResponse.ReadException().Message
+                    : string.Format("Unknown Error performing the root action '{0}'", actionName);
+            }
+            return result;
+        }
+
+        // Retrieves the order and performs the action on the underlying packages
+        private async Task<InternalBulkActionResult> PerformFulfillmentShipAction(string actionName, OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var orderResponse = await orderWebApiClient.GetOrder(orderContext.OrderId);
+            var result = new InternalBulkActionResult
+            {
+                ActionName = actionName,
+                OrderId = orderContext.OrderId,
+                StatusCode = orderResponse.ResponseMessage.StatusCode
+            };
+            if (result.StatusCode == HttpStatusCode.OK)
+            {
+                var packages = orderResponse.ReadAsSync().Packages;
+                //todo: Stewart Noll on 2014-10-06 perform validation on the packages
+                var digitalPackages = packages.Where(
+                    p => p.PackagingType != CommerceRuntime.Contracts.Fulfillment.FulfillmentItemTypeConst.PHYSICAL).ToList();
+                var physicalPackages = packages.Where(
+                    p => p.PackagingType == CommerceRuntime.Contracts.Fulfillment.FulfillmentItemTypeConst.PHYSICAL).ToList();
+
+                if (digitalPackages.Any() && !physicalPackages.Any())
+                {
+                    // only digital packages in this order
+                    result.StatusCode = HttpStatusCode.BadRequest;
+                    result.Message = string.Format("No physical packages on the order to mark as shipped");
+                    return result;
+                }
+
+                // happy path, go forth a perform action on orders physical packages
+                var fulfillmentResponse = await orderWebApiClient.PerformFulfillmentAction(orderContext.OrderId,
+                    new DCs.FulfillmentAction()
+                    {
+                        ActionName = actionName,
+                        PackageIds = physicalPackages.Select(p => p.Id).ToList()
+                    });
+                // overwrite the status code of the order result with that of the fulfillment result
+                result.StatusCode = fulfillmentResponse.ResponseMessage.StatusCode;
+                if (result.StatusCode != HttpStatusCode.OK)
+                {
+                    result.Message = fulfillmentResponse.HasException
+                        ? fulfillmentResponse.ReadException().Message
+                        : string.Format("Unknown Error performing fulfillment action '{0}'", actionName);
+                }
+                else
+                {
+                    if (digitalPackages.Any())
+                    {
+                        // successfully marked physical packages as shipped but need to inform the user that there were digital packages
+                        result.Message = string.Format("Order contains {0} digital packages which were not altered", digitalPackages.Count);
+                    }
+                }
+            }
+            else
+            {
+                result.Message = orderResponse.HasException
+                        ? orderResponse.ReadException().Message
+                        : string.Format("Unknown Error performing fulfillment action '{0}'", actionName);
+            }
+            return result;
+        }
+
+        // Retrieves the order and performs the action on the underlying packages
+        private async Task<InternalBulkActionResult> PerformPaymentCaptureAction(string actionName, OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var result = new InternalBulkActionResult
+            {
+                ActionName = actionName,
+                StatusCode = HttpStatusCode.BadRequest, // overwrite in the positive case
+                OrderId = orderContext.OrderId
+            };
+            var orderResponse = await orderWebApiClient.GetPayments(orderContext.OrderId);
+
+            var payments = orderResponse.ReadAsSync().Items;
+
+            // perform validation on the payments
+            if (payments.IsNullOrEmpty())
+            {
+                result.Message = "No payments on the order";
+                return result;
+            }
+            if (payments.Count > 1)
+            {
+                result.Message = "There may only be one payment on the order to perform capture as a bulk action";
+                return result;
+            }
+            var payment = payments.First();
+            if (payment.PaymentType == Mozu.CommerceRuntime.Contracts.Payments.PaymentTypeConst.CHECK)
+            {
+                result.Message = string.Format("'{0}' is not a valid paymenttype for a bulk capture action",
+                    CommerceRuntime.Contracts.Payments.PaymentTypeConst.CHECK);
+                return result;
+            }
+            var action = new DCp.PaymentAction
+            {
+                ActionName = actionName,
+                Amount = payment.AmountRequested - payment.AmountCollected
+            };
+
+            var paymentResponse = await orderWebApiClient.PerformPaymentAction(orderContext.OrderId, payment.Id, action);
+            if (paymentResponse.ResponseMessage.StatusCode != HttpStatusCode.OK)
+            {
+                result.Message = orderResponse.HasException
+                    ? orderResponse.ReadException().Message
+                    : string.Format("Unknown Error performing the root action '{0}'", actionName);
+            }
+            return result;
         }
     }
 }

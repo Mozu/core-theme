@@ -77,8 +77,15 @@ namespace Mozu.SiteBuilder.Mvc.Users
             var mapped = Mapper.Map<Core.Api.Contracts.Role>(role);
             var response = _rolesWebApiClient.UpdateRole(mapped, role.Id, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result;
 
-            if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
+            if (response.HasException)
+            {
+                throw response.ReadException();
+            }
+
+            if (!response.ResponseMessage.IsSuccessStatusCode)
+            {
                 return null;
+            }
 
             var updatedRole = response.ReadAsAsync().Result;
 

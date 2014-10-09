@@ -58,5 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
     public class CategoryImage
     {
         public string Url { get; set; }
+
+        public string Alt { get; set; }
     }
 }

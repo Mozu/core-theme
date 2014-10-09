@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
 using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.Tenant.Contracts.Clients;
 using DC = Mozu.SiteSettings.Order.Contracts;
-using Mozu.Core.Api.Contracts.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -17,13 +18,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CheckoutSettingsController : BaseController
     {
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
+        private readonly IApiContext _context;
+        private readonly ITenantsWebApiClient _tenantClient;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient)
+        public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ITenantsWebApiClient tenantClient, IApiContext context)
         {
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
+            _context = context;
+            _tenantClient = tenantClient.CloneWithoutUserClaims();
         }
 
         /// <summary>
@@ -34,10 +39,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<CheckoutSettings>> GetSettings()
         {
             var dcSettings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
-
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
-
-            return Single2(ret); 
+            return Single2(ret);
         }
 
         /// <summary>
@@ -45,20 +48,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns></returns>
         [HttpGetRoute(UriTemplate = "cards/list")]
-        public async Task<Response<List<KeyValuePair<string,string>>>> GetCards()
+        public async Task<Response<List<KeyValuePair<string, string>>>> GetCards()
         {
             var dcSettings = (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsSync();
-
-            var ret = Mapper.Map<CheckoutSettings>(dcSettings).Gateway.SupportedCards.Select(x => new KeyValuePair<string, string>(x, x)).ToList();
-
-
+            var ret = Mapper.Map<CheckoutSettings>(dcSettings).Gateway.SupportedCards.Select(x => new KeyValuePair<string, string>(x, x)) .ToList();
             return List2(ret);
         }
 
         /// <summary>
         /// Updates the active checkout settings
         /// </summary>
-        /// <param name="setting">The checkout settings</param>
+        /// <param name="settingReq">The checkout settings</param>
         /// <returns>The active checkout settings</returns>
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<CheckoutSettings>> UpdateSettings(CheckoutSettings settingReq)
@@ -67,21 +67,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcCheckoutSettings = Mapper.Map<DC.CustomerCheckoutSettings>(settingReq);
             var dcOrderProcessingSettings = Mapper.Map<DC.OrderProcessingSettings>(settingReq);
 
-            DC.Gateway gateway = null;
-
-
-            
-            //todo find out if this is site country or locale contry
-
-
-            var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry("us"));
-            if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
-            {
-                gateway = currentGatewayRes.ReadAsSync();
-            }
+            var currCountryCode = await GetCountryCodeForSite();
+            var gateway = await GetGatewayForCountry(currCountryCode);
 
             var posted = dcPaymentSettings.Gateways.First();
-            List<Task> tasks = new List<Task>();
+            posted.GatewayAccount.CountryCode = currCountryCode; // 2014-10-7 chusk: according to Wallis, we are fine with locking down gateways to Site Country codes
+
+            await UpdateSettings(gateway, posted, dcPaymentSettings, dcOrderProcessingSettings, dcCheckoutSettings);
+
+            var newSettings = await GetSettings();
+            return newSettings;
+        }
+
+        private async Task UpdateSettings(DC.Gateway gateway, DC.Gateway posted, DC.PaymentSettings dcPaymentSettings, DC.OrderProcessingSettings dcOrderProcessingSettings, DC.CustomerCheckoutSettings dcCheckoutSettings)
+        {
+            var tasks = new List<Task>();
             if (gateway != null && gateway.GatewayAccount.GatewayDefinitionId == posted.GatewayAccount.GatewayDefinitionId)
             {
                 tasks.Add(_checkoutSettingsWebApiClient.UpdateGateway(gateway.GatewayAccount.Id, posted));
@@ -94,9 +94,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             tasks.Add(_checkoutSettingsWebApiClient.UpdatePaymentSettings(dcPaymentSettings));
             tasks.Add(_checkoutSettingsWebApiClient.UpdateOrderProcessingSettings(dcOrderProcessingSettings));
             tasks.Add(_checkoutSettingsWebApiClient.UpdateCustomerCheckoutSettings(dcCheckoutSettings));
-
-
-
             await Task.WhenAll(tasks);
 
             tasks.ForEach(x =>
@@ -109,16 +106,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (serviceClientResponse.HasException)
                 {
-                    throw (Exception )serviceClientResponse.ReadException();
+                    throw (Exception) serviceClientResponse.ReadException();
                 }
-
             });
-
-            var newSettings = await GetSettings();
-
-            return newSettings;
         }
 
+        private async Task<string> GetCountryCodeForSite()
+        {
+            var currsite =
+                (await _tenantClient.GetSite(_context.TenantId, _context.SiteId, false, string.Empty)).ReadAsSync();
+            var currCountryCode = currsite.CountryCode;
+            return currCountryCode;
+        }
+
+        private async Task<DC.Gateway> GetGatewayForCountry(string currCountryCode)
+        {
+            DC.Gateway gateway = null;
+
+            var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry(currCountryCode));
+            if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
+            {
+                gateway = currentGatewayRes.ReadAsSync();
+            }
+            return gateway;
+        }
 
 
         /// <summary>
@@ -132,19 +143,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var mapped = Mapper.Map<List<GatewayDefinition>>(gateways).OrderBy(x => x.Name).ToList();
             mapped.ForEach(x =>
+            {
+
+                if (x.SupportedCards == null || x.SupportedCards.Count == 0)
                 {
-                    
-                    if (x.SupportedCards == null || x.SupportedCards.Count == 0)
+                    x.SupportedCards = new List<KeyValuePair<string, string>>
                     {
-                        x.SupportedCards = new List<KeyValuePair<string, string>>()
-                                               {
-                                                   new KeyValuePair<string, string>("VISA", "VISA"),
-                                                   new KeyValuePair<string, string>("AMEX", "American Express"),
-                                                   new KeyValuePair<string, string>("MC", "MasterCard"),
-                                                   new KeyValuePair<string, string>("DISCOVER", "Discover"),
-                                               };
-                    }
-                });
+                        new KeyValuePair<string, string>("VISA", "VISA"),
+                        new KeyValuePair<string, string>("AMEX", "American Express"),
+                        new KeyValuePair<string, string>("MC", "MasterCard"),
+                        new KeyValuePair<string, string>("DISCOVER", "Discover"),
+                    };
+                }
+            });
 
             return List2(mapped);
         }
@@ -160,5 +171,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(workflows);
         }
-}
+    }
 }
