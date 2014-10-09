@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var files = lst.Where(x => x.IsFile).ToList();
             _allFiles = files.ToDictionary(x => x.VirtualPath, StringComparer.OrdinalIgnoreCase);
             _allFilesNoExt = files.GroupBy(x => x.VirtualPathNoExt).ToDictionary(x => x.Key, y => y.ToArray(), StringComparer.OrdinalIgnoreCase);
-            LiveTemmplates = files.Where(x => x.FullPath.EndsWith(".live", StringComparison.OrdinalIgnoreCase)).ToArray();
+            LiveTemplates = files.Where(x => x.FullPath.EndsWith(".live", StringComparison.OrdinalIgnoreCase)).ToArray();
             TimeStamp = files.Count == 0 ? DateTime.MaxValue : files.Max(x => x.TimsStamp);
         }
 
@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return GetFileInfo(p, true) != null;
         }
 
-        public IEnumerable<ThemeFileSystemInfo> LiveTemmplates
+        public IEnumerable<ThemeFileSystemInfo> LiveTemplates
         {
             //.Values ).Where(x => x.FullPath.EndsWith(".live")
             get;

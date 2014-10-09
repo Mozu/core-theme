@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
          public IEnumerable<ThemeFileSystemInfo> GetLiveTemplates()
          {
-             return ThemeStack.SelectMany(x=> x.FileListing.LiveTemmplates ).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
+             return ThemeStack.SelectMany(x=> x.FileListing.LiveTemplates ).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
          }
 
          public ThemeFileSystemInfo GetThemeFileInfo(string virtualPath, bool withExt = true  )
