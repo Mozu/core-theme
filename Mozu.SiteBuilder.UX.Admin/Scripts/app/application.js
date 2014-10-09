@@ -316,7 +316,7 @@ Ext.define('Taco.Application', {
                     records = me.getRecordsForValue(me.value);
                     if (records.length) {
                         ++me.ignoreSelectChange;
-                        me.boundList.getSelectionModel().select(records);
+                        me.boundList.getSelectionModel().select(records,false, true);
                         --me.ignoreSelectChange;
                     }
                     delete me.toSelect;
