@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-09-15
+ * Mozu JavaScript SDK - v0.3.0 - 2014-10-09
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -4443,6 +4443,7 @@ module.exports = (function () {
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.COMPLETED] = true;
 
     var OrderStatus2IsReady = {};
     OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER] = true;
