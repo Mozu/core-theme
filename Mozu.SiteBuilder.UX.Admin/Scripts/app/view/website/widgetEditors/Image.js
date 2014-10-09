@@ -470,7 +470,12 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
         this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
 
-        this.down('[name=height]').setValue(newValue === 'fill' ? 400 : 'auto');
+        if (newValue === 'fill') {
+            this.widgetData.heightResizable = true;
+        }
+
+        this.widgetData.heightResizable = newValue === 'fill';
+        this.widgetData.height = newValue === 'fill' ? 400 : 'auto';
     },
 
     handleImageSourceChange: function (newValue) {

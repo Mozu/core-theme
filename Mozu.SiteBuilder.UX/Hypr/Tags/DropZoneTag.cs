@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using AutoMapper;
+using Magnum.Extensions;
 using Microsoft.FSharp.Collections;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -61,14 +62,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [NDjango.Interfaces.Name("cms_resources")]
     public class EditResourcesTag : SimpleTagBase
     {
-        const string Format = "\t\t<script type=\"text/javascript\" src=\"{1}/admin/scripts/chorizo/{0}.js\"></script>\r\n";
+        const string  Format = "\t\t<script type=\"text/javascript\" src=\"{1}/admin/scripts/chorizo/{0}.js\"></script>\r\n";
         protected override void ProcessTag(Mvc.Tags.ArgumentCollection arguments, ref IContext context, out string buffer, out string templateName)
         {
             buffer = templateName = null;
             var pageContext = context.PageContext();
             var cdnHost = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
             var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
-
+            
             var isEditmode = pageContext.IsEditMode;
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
@@ -123,7 +124,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// 
     /// <code>{%dropzone zoneId="bodybottom" scope="template" %}</code>
     /// </summary>
-
+   
     [NDjango.Interfaces.Name("dropzone")]
     public class DropZoneTag2 : SimpleTagBaseAsync
     {
@@ -138,7 +139,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         protected override async System.Threading.Tasks.Task<Mvc.Tags.SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, IContext context)
         {
             var processResult = new Mvc.Tags.SimpleTagBaseAsync.ProcessTagResult(context);
-
+            
             var httpContext = context.HttpContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
             var scopeString = arguments.GetValueOrDefault<string>("scope", null);
@@ -146,7 +147,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 if (arguments.Count > 1 && arguments[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
                 {
-                    scopeString = (string)arguments[1].Value;
+                    scopeString = (string) arguments[1].Value;
                 }
                 else
                 {
@@ -155,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
 
             var zoneSpan = arguments.GetValueOrDefault<int>("span", 12);
-            var zoneId = arguments.GetValueOrDefault<string>("zoneId") ?? (string)arguments.First().Value;
+            var zoneId = arguments.GetValueOrDefault<string>("zoneId") ?? (string) arguments.First().Value;
             var htmlAttributes = arguments.GetValueOrDefault<IDictionary<string, object>>("htmlAttributes");
             var siteContext = context.SiteContext();
             var pageContext = context.PageContext();
@@ -176,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     throw new Exception("invalid scope type " + scopeString);
                 }
             }
-
+             
 
 
             if (pageContext.CmsContext != null && !pageContext.CmsContext.Initialized)
@@ -193,10 +194,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 zoneScope = ZoneScope.Page;
             }
+             
 
 
-
-            isEditmode = isEditmode && string.Equals(scopeString, pageContext.EditMode.GetValueOrDefault(EditModes.page).ToString(), StringComparison.OrdinalIgnoreCase);
+            isEditmode = isEditmode && string.Equals(scopeString, pageContext.EditMode.GetValueOrDefault(EditModes.page ).ToString(), StringComparison.OrdinalIgnoreCase);
 
             var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? null : pageContext.CmsContext.RuntimeData.FirstOrDefault(x => zoneScope == x.Scope && string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
@@ -209,12 +210,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     sb.Append(" mz-cms-editing mz-cms-grid\" ");
                     sb.AppendJsonHtmlAttribute(new
-                    {
-                        id = zoneId,
-                        scope = scopeString,
-                        span = zoneSpan,
-                        source = zoneRuntimeData == null ? null : zoneRuntimeData.Source
-                    }, "drop-zone");
+                                               {
+                                                   id = zoneId,
+                                                   scope = scopeString,
+                                                   span = zoneSpan,
+                                                   source = zoneRuntimeData == null ? null : zoneRuntimeData.Source
+                                               }, "drop-zone");
 
 
                 }
@@ -251,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                             foreach (var widget in column.Widgets)
                             {
-                                widget.Config = widget.Config as JObject ?? new JObject();
+                                widget.Config = widget.Config  as JObject ?? new JObject();
                                 bool isContent = widget.DefinitionId == "content";
                                 widget.isRichText = isContent;
 
@@ -291,15 +292,26 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                                 var widgetConfig = widget.Config;
 
-                                if (widgetConfig["imageSize"] != null && widgetConfig["imageSize"].ToString() != "maintain")
+                                var height = widgetConfig["height"] as JValue;
+                                if (height != null && height.Value!= null )
                                 {
-                                    var height = widgetConfig["height"];
-                                    if (height != null && height.ToString() != "auto")
+                                    var heightStr = height.Value.ToString();
+                                    if (!string.IsNullOrWhiteSpace(heightStr))
                                     {
                                         sb.Append(" style=\"height:");
-                                        sb.Append(height);
-                                        sb.Append("px;\"");
+                                        int heightInt;
+                                        if (int.TryParse(heightStr, out heightInt))
+                                        {
+                                            sb.Append(heightInt);
+                                            sb.Append("px;\"");
+                                        }
+                                        else
+                                        {
+                                            sb.Append(heightStr);
+                                            sb.Append(";\"");
+                                        }
                                     }
+                                   
                                 }
 
                                 sb.Append(">");
@@ -384,7 +396,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 return false;
             }
-            var hs = (System.Collections.Generic.HashSet<string>)httpContext.Items[HTTPCONTEXTKEY];
+            var hs = (System.Collections.Generic.HashSet<string>) httpContext.Items[HTTPCONTEXTKEY];
             if (hs == null)
             {
                 httpContext.Items[HTTPCONTEXTKEY] = hs = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -401,6 +413,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
         }
 
-
+        
     }
 }
