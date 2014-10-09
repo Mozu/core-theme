@@ -30,15 +30,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             var t = theme;
             return t.ThemePath +"\\"  + virtualPath;
         }
-
-
-        
-
+         
         public ICollection<Theme> ThemeStack
         {
             get
             {
-
 #pragma warning disable 612
                 return (_siteContext).Theme.Stack;
             }
@@ -60,9 +56,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return fileInfo != null ? new MozuVirtualFileSystemFile(fileInfo.VirtualPath, fileInfo.FullPath) : null;
         }
 
-         public IEnumerable<ThemeFileSystemInfo> GetLiveTemplates()
+         public IEnumerable<ThemeFileSystemInfoWrapper> GetLiveTemplates()
          {
-             return ThemeStack.SelectMany(x=> x.FileListing.LiveTemplates ).Where(x => GetThemeFileInfo(x.VirtualPathNoExt, false) == x);
+             return
+                 ThemeStack
+                     .SelectMany((x, i) => x.FileListing.LiveTemplates.Select(lt => new {LiveTemplate = lt, IsParentTemplate = i > 0})) // parent themes are not the first element of the theme stack
+                     .Where(x => GetThemeFileInfo(x.LiveTemplate.VirtualPathNoExt, false) == x.LiveTemplate)
+                     .Select(x => new ThemeFileSystemInfoWrapper{
+                                 FileSystemInfo = x.LiveTemplate,
+                                 IsParentTheme = x.IsParentTemplate
+                             });
          }
 
          public ThemeFileSystemInfo GetThemeFileInfo(string virtualPath, bool withExt = true  )
@@ -78,9 +81,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
          public ThemeFileSystemInfo GetParentThemeFileInfo(ThemeFileSystemInfo item )
          {
              var parentTheme = ThemeStack.FirstOrDefault(theme => theme.Id.EqualsIgnoreCase(item.ThemeId));
-             if (parentTheme == null) return null;
-             
-             return parentTheme.FileListing.GetFileInfo(item.VirtualPathNoExt, false);
+             return parentTheme == null ? 
+                        null : 
+                        parentTheme.FileListing.GetFileInfo(item.VirtualPathNoExt, false);
          }
 
         static Dictionary<string, MozuVirtualMongoFile> g_fileCache = new Dictionary<string, MozuVirtualMongoFile>();
