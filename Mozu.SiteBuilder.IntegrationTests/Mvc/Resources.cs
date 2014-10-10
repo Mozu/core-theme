@@ -4,9 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Magnum.Collections;
-using Microsoft.FSharp.Core;
-using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
@@ -15,9 +12,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Themes;
-using Mozu.SiteBuilder.Mvc.Themes.Factories;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Admin;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts.Clients;
@@ -35,13 +30,13 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
         [Test]
         public async Task Live_Templates_Handle_Parent_Theme()
         {
-            var fileToContentMap = new Dictionary<string, string>
+            var fileToContentMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                {@"C:/temp/grandparent/pages/category.hypr.live", @"{% extends ""pages\category"" %}"},
-                {@"C:/temp/parent/pages/category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
-                {@"C:/temp/child/pages/category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
-                {@"C:/temp/child/pages/extends.hypr.live", @"{% extends ""pages\extends"" %}"},
-                {@"C:/temp/child/pages/noextends.hypr.live", @"wut"},
+                {"C:\\temp\\grandparent\\pages\\category.hypr.live", @"{% extends ""pages\category"" %}"},
+                {"C:\\temp\\parent\\pages\\category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
+                {"C:\\temp\\child\\pages\\category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
+                {"C:\\temp\\child\\pages\\extends.hypr.live", @"{% extends ""pages\extends"" %}"},
+                {"C:\\temp\\child\\pages\\noextends.hypr.live", @"wut"},
             };
 
             // setup file structure
@@ -136,18 +131,46 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var httprequest = new HttpRequestMessage(HttpMethod.Get, "http://sb.volusion.com/admin/resources/livetemplates");
             var cookieprovider = Substitute.For<ICookieProvider>();
 
-            var scontext = new SiteContext(new GeneralSettingsWebApiClient(scmh)
-                , null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
+            var scontext = new SiteContext(new GeneralSettingsWebApiClient(scmh), null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
             {
                 Theme = childTheme
             };
 
             var vpp = new MozuVirtualPathProvider(scontext);
             var nav = Substitute.For<INavigationGandalf>();
-            
-            var resourceController = new ResourceController(vpp, nav);
+            var contentRetriever = new TestFileContentRetriver(fileToContentMap);
+
+            var resourceController = new ResourceController(vpp, nav, contentRetriever);
             var results = await resourceController.LiveTemplates();
             results.Count.ShouldEqual(5);
+            
+        }
+
+        public class TestFileContentRetriver : IThemeContentRetriever
+        {
+            private readonly Dictionary<string, string> _fileToContentMap;
+
+            public TestFileContentRetriver(Dictionary<string, string> fileToContentMap)
+            {
+                _fileToContentMap = fileToContentMap;
+            }
+
+            public string GetContent(ThemeFileSystemInfo info)
+            {
+                return _fileToContentMap[info.FullPath];
+            }
+
+            public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
+            {
+                return _fileToContentMap[info.FullPath];
+            }
+
+            public Stream GetStream(ThemeFileSystemInfo info)
+            {
+                var text = _fileToContentMap[info.FullPath];
+                var bytes = Encoding.UTF8.GetBytes(text);
+                return new MemoryStream(bytes);
+            }
         }
     }
 }

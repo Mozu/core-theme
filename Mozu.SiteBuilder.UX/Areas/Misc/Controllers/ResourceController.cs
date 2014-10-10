@@ -220,12 +220,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private readonly IMozuVirtualPathProvider _pathProvider;
         
         private readonly INavigationGandalf _navGandalf;
-        
+        private readonly IThemeContentRetriever _contentRetriever;
+
         private readonly AMDModuleProvider _moduleProvider;
 
-        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf)
+        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever)
         {
             _navGandalf = gandalf;
+            _contentRetriever = contentRetriever;
             _pathProvider = pathProvider;
             _moduleProvider = new AMDModuleProvider
             {
@@ -250,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
             if (oc != null)
             {
-                ((MozuVirtualFileResult) oc.Value).Transform = new LessTransFormer(pathinfo, debug, this, _pathProvider).Transform;
+                ((MozuVirtualFileResult) oc.Value).Transform = new LessTransFormer(pathinfo, debug, this, _pathProvider, _contentRetriever).Transform;
             }
 
             return res;
@@ -270,7 +272,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var templateContentsTasks =
                     _pathProvider.GetLiveTemplates().Select(async x => new TemplateInfo{
                             key = ScrubVirtualPath(x.VirtualPathNoExt), 
-                            content = await x.ReadAllTextAsync(),
+                            content = await _contentRetriever.GetContentAsync(x),
                             themeId = x.ThemeId
                     });
 
@@ -280,7 +282,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var expansionTasks = templateContents.Select(async x =>
             {
                 if (!GetExtendsRegex.IsMatch(x.content)) return new List<TemplateInfo> { x }; // base case
-                var allTemplateInfos = new List<TemplateInfo> { x }.Concat(await GetParentInfos(_pathProvider, x.key));
+                var allTemplateInfos = new List<TemplateInfo> { x }.Concat(await GetParentInfos(_pathProvider, x.key, _contentRetriever));
                 return TransformAndMapTemplates(allTemplateInfos); // else have to fetch and merge in all the parents
             });
 
@@ -350,7 +352,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// <param name="vpp"></param>
         /// <param name="virtualPath"></param>
         /// <returns></returns>
-        private static async Task<IEnumerable<TemplateInfo>> GetParentInfos(IMozuVirtualPathProvider vpp, string virtualPath)
+        private static async Task<IEnumerable<TemplateInfo>> GetParentInfos(IMozuVirtualPathProvider vpp, string virtualPath, IThemeContentRetriever contentRetriever)
         {
             var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}",virtualPath), false);
             if (theme == null) return Enumerable.Empty<TemplateInfo>();
@@ -367,7 +369,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 key = ScrubVirtualPath(x.VirtualPathNoExt),
                 themeId = x.ThemeId,
-                content = await x.ReadAllTextAsync()
+                content = await contentRetriever.GetContentAsync(x)
             });
 
             await Task.WhenAll(getContentTasks);
@@ -659,7 +661,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var file = _pathProvider.GetThemeFileInfo(pathinfo);
             return file != null ? 
-                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file)) : 
+                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever)) : 
                 Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
         }
 
@@ -762,13 +764,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     RegexOptions.IgnorePatternWhitespace);
 
             private readonly bool _debug;
+            private readonly IThemeContentRetriever _contentRetriever;
             private readonly string _path;
 
             public LessTransFormer(string path, bool debug, ResourceController resourceController,
-                IMozuVirtualPathProvider virtualPathProvider)
+                IMozuVirtualPathProvider virtualPathProvider, IThemeContentRetriever contentRetriever)
             {
                 Controller = resourceController;
                 _debug = debug;
+                _contentRetriever = contentRetriever;
                 _path = path;
                 PathProvider = virtualPathProvider;
             }
@@ -783,7 +787,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 string template = sr.ReadToEnd();
 
                 template = ProcessSettingsVariables(template, stem);
-                var reader = new MyLessFileReader(this);
+                var reader = new MyLessFileReader(this, _contentRetriever);
 
                 var parser = new Parser
                 {
@@ -864,11 +868,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public class MozuVirtualFileResult : FileResult
         {
             private readonly ThemeFileSystemInfo _file;
+            private readonly IThemeContentRetriever _contentRetriever;
 
-            public MozuVirtualFileResult(string path, string contentType, ThemeFileSystemInfo file)
+            public MozuVirtualFileResult(string path, string contentType, ThemeFileSystemInfo file, IThemeContentRetriever contentRetriever)
                 : base(contentType)
             {
                 _file = file;
+                _contentRetriever = contentRetriever;
             }
 
             public Func<Stream, string, Stream> Transform { get; set; }
@@ -880,7 +886,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public void WriteFile(Stream outputStream)
             {
-                using (var stream = _file.OpenRead())
+                using (var stream = _contentRetriever.GetStream(_file))
                 {
                     var source = stream;
                     if (Transform != null)
@@ -893,7 +899,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             protected override async Task WriteFileAsync(HttpResponseBase response)
             {
-                using (var stream = _file.OpenRead())
+                using (var stream = _contentRetriever.GetStream(_file))
                 {
                     var source = stream;
                     if (Transform != null)
@@ -908,10 +914,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private class MyLessFileReader : IFileReader
         {
             private readonly LessTransFormer _lessTransFormer;
+            private readonly IThemeContentRetriever _contentRetriever;
 
-            public MyLessFileReader(LessTransFormer lessTransFormer)
+            public MyLessFileReader(LessTransFormer lessTransFormer, IThemeContentRetriever contentRetriever)
             {
                 _lessTransFormer = lessTransFormer;
+                _contentRetriever = contentRetriever;
                 Controller = lessTransFormer.Controller;
             }
 
@@ -926,11 +934,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
                     if (file != null)
                     {
-                        using (var sr = file.OpenText())
-                        {
-                            var ret = sr.ReadToEnd();
-                            transFormedContent = _lessTransFormer.ProcessSettingsVariables(ret, file.VirtualPath);
-                        }
+                        transFormedContent = _lessTransFormer.ProcessSettingsVariables(_contentRetriever.GetContent(file), file.VirtualPath);
                     }
                 }
                 return string.IsNullOrWhiteSpace(transFormedContent) ? g_content : transFormedContent;
@@ -952,7 +956,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
                     if (file != null)
                     {
-                        using (Stream stream = file.OpenRead())
+                        using (Stream stream = _contentRetriever.GetStream(file))
                         {
                             var data = new byte[stream.Length];
                             stream.Read(data, 0, data.Length);

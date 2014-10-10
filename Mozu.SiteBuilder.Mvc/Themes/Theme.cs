@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
@@ -148,30 +150,33 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public DateTime TimsStamp { get; set; }
 
         public string ThemeId { get; set; }
+    }
 
-        public System.IO.Stream  OpenRead()
+    public interface IThemeContentRetriever
+    {
+        string GetContent(ThemeFileSystemInfo info);
+        Task<string> GetContentAsync(ThemeFileSystemInfo info);
+        Stream GetStream(ThemeFileSystemInfo info);
+    }
+
+    public class FileSystemContentRetriever : IThemeContentRetriever
+    {
+        public string GetContent(ThemeFileSystemInfo info)
         {
-            return System.IO.File.OpenRead(FullPath);
+            return File.ReadAllText(info.FullPath);
         }
 
-        public virtual async Task<string> ReadAllTextAsync()
+        public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
         {
-            using (var s = OpenText())
+            using (var r = new StreamReader(GetStream(info)))
             {
-                return await s.ReadToEndAsync();
+                return await r.ReadToEndAsync();
             }
         }
 
-        public virtual string ReadAllText()
+        public Stream GetStream(ThemeFileSystemInfo info)
         {
-            using (var x = OpenText())
-            {
-                return x.ReadToEnd();
-            }
-        }
-        public System.IO.TextReader OpenText()
-        {
-            return System.IO.File.OpenText(FullPath);
+            return File.OpenRead(info.FullPath);
         }
     }
 }
