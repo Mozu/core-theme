@@ -1289,6 +1289,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.shared.view.form.Address": [],
   "Taco.shared.view.form.ExtensibleAttribute": [],
   "Taco.shared.view.modal.Address": [],
+  "Taco.shared.view.modal.ImageMetadata": [],
   "Taco.shared.view.modal.StoreCredit": [],
   "Taco.shared.view.modal.Wishlist": [],
   "Taco.store.AccountUsers": [],
@@ -3397,6 +3398,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.shared.view.modal.Address": [
     "widget.taco-address-modal"
   ],
+  "Taco.shared.view.modal.ImageMetadata": [],
   "Taco.shared.view.modal.StoreCredit": [],
   "Taco.shared.view.modal.Wishlist": [],
   "Taco.store.AccountUsers": [],
