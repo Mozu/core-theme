@@ -1,14 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Magnum.Collections;
+using Microsoft.FSharp.Core;
+using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
+using Mozu.Core.Settings;
+using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Themes.Factories;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Admin;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
+using Mozu.SiteSettings.General.Contracts.Clients;
+using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.Tenant.Contracts.Clients;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
@@ -20,21 +33,19 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
     public class Resources
     {
         [Test]
-        public void Live_Templates_Handle_Parent_Theme()
+        public async Task Live_Templates_Handle_Parent_Theme()
         {
-            var vpp = Substitute.For<IMozuVirtualPathProvider>();
-            var nav = Substitute.For<INavigationGandalf>();
-
             var fileToContentMap = new Dictionary<string, string>
             {
-                {@"C:\temp\parent\pages\category.hypr.live", @"I am a template, for reals"},
-                {@"C:\temp\child\pages\category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
-                {@"C:\temp\child\pages\extends.hypr.live", @"{% extends ""pages\extends"" %}"},
-                {@"C:\temp\child\pages\noextends.hypr.live", @"wut"},
+                {@"C:/temp/grandparent/pages/category.hypr.live", @"{% extends ""pages\category"" %}"},
+                {@"C:/temp/parent/pages/category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
+                {@"C:/temp/child/pages/category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
+                {@"C:/temp/child/pages/extends.hypr.live", @"{% extends ""pages\extends"" %}"},
+                {@"C:/temp/child/pages/noextends.hypr.live", @"wut"},
             };
 
             // setup file structure
-            var dirs = new List<string>{"c:/temp", "c:/temp/parent", "c:/temp/parent/pages", "c:/temp/child", "c:/temp/child/pages"};
+            var dirs = new List<string>{"c:/temp", "c:/temp/parent", "c:/temp/parent/pages", "c:/temp/child", "c:/temp/child/pages", "c:/temp/grandparent", "c:/temp/grandparent/pages"};
             foreach (var dir in dirs.Where(x => !Directory.Exists(x)))
             {
                 Directory.CreateDirectory(dir);
@@ -46,18 +57,35 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             }
 
             // setup theme
+            var grandparentTheme = new Theme
+            {
+                ThemePath = @"c:\temp\grandparent",
+                Id = "grandparent",
+                FileListing = new ThemeFileSystemInfoCollection(new List<ThemeFileSystemInfo>
+                {
+                    new ThemeFileSystemInfo
+                    {
+                        ThemeId = "grandparent",
+                        VirtualPathNoExt = "templates\\pages\\category",
+                        VirtualPath = "templates\\pages\\category.hypr.live",
+                        FullPath = @"c:\temp\parent\pages\category.hypr.live",
+                        IsFile = true
+                    }
+                })
+            };
 
             var parentTheme = new Theme
             {
                 ThemePath = @"c:\temp\parent",
                 Id = "parent",
+                Parent = grandparentTheme,
                 FileListing = new ThemeFileSystemInfoCollection(new List<ThemeFileSystemInfo>
                 {
                     new ThemeFileSystemInfo
                     {
                         ThemeId = "parent",
-                        VirtualPathNoExt = "pages/category",
-                        VirtualPath = "pages/category.hypr.live",
+                        VirtualPathNoExt = "templates\\pages\\category",
+                        VirtualPath = "templates\\pages\\category.hypr.live",
                         FullPath = @"c:\temp\parent\pages\category.hypr.live",
                         IsFile = true,
                     }
@@ -73,24 +101,24 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                     new ThemeFileSystemInfo // refers to parent
                     {
                         ThemeId = "child",
-                        VirtualPathNoExt = "pages/category",
-                        VirtualPath = "pages/category.hypr.live",
+                        VirtualPathNoExt = "templates\\pages\\category",
+                        VirtualPath = "templates\\pages\\category.hypr.live",
                         FullPath = @"C:\temp\child\pages\category.hypr.live",
                         IsFile = true,
                     },
                     new ThemeFileSystemInfo // has extends tag, but no parent_template
                     {
                         ThemeId = "child",
-                        VirtualPathNoExt = "pages/extends",
-                        VirtualPath = "pages/extends.hypr.live",
+                        VirtualPathNoExt = "templates\\pages\\extends",
+                        VirtualPath = "templates\\pages\\extends.hypr.live",
                         FullPath = @"C:\temp\child\pages\extends.hypr.live",
                         IsFile = true,
                     },
                     new ThemeFileSystemInfo // has no extends tag
                     {
                         ThemeId = "child",
-                        VirtualPathNoExt = "pages/noextends",
-                        VirtualPath = "pages/noextends.hypr.live",
+                        VirtualPathNoExt = "templates\\pages\\noextends",
+                        VirtualPath = "templates\\pages\\noextends.hypr.live",
                         FullPath = @"C:\temp\child\pages\noextends.hypr.live",
                         IsFile = true,
                     },
@@ -99,21 +127,27 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
 
             var virtToFSIMap = new Dictionary<string, ThemeFileSystemInfo>();
             virtToFSIMap.AddRange(childTheme.FileListing.LiveTemplates.Select(x => new KeyValuePair<string, ThemeFileSystemInfo>(string.Format("templates/{0}",x.VirtualPathNoExt), x)));
-            var templates = childTheme.FileListing.LiveTemplates;
-            vpp.GetLiveTemplates().Returns(templates);
-            vpp.GetThemeFileInfo(Arg.Any<string>(), Arg.Any<bool>()).Returns(ctx => virtToFSIMap[ctx.Arg<string>()]);
-            vpp.GetParentThemeFileInfo(Arg.Any<ThemeFileSystemInfo>()).Returns(ctx =>
-            {
-                var arg = ctx.Arg<ThemeFileSystemInfo>();
-                if (arg.ThemeId.EqualsIgnoreCase(childTheme.Id) &&
-                    arg.VirtualPathNoExt.EqualsIgnoreCase("pages/category"))
-                    return parentTheme.FileListing.LiveTemplates.First();
-                return null;
-            });
+            var context = Substitute.For<ISiteBuilderApiContext>();
+            var settings = Substitute.For<ISettings>();
+            settings.AppSettings("SSLValidationEnabled").Returns("true");
+            settings.AppSettings("disableCDN").Returns("true");
+            settings.CoreSettings.Returns(new CoreMozuApplicationSettings(settings));
+            var scmh = new ServiceClientMessageHandler(context, settings);
+            var httprequest = new HttpRequestMessage(HttpMethod.Get, "http://sb.volusion.com/admin/resources/livetemplates");
+            var cookieprovider = Substitute.For<ICookieProvider>();
 
+            var scontext = new SiteContext(new GeneralSettingsWebApiClient(scmh)
+                , null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
+            {
+                Theme = childTheme
+            };
+
+            var vpp = new MozuVirtualPathProvider(scontext);
+            var nav = Substitute.For<INavigationGandalf>();
+            
             var resourceController = new ResourceController(vpp, nav);
-            var results = resourceController.LiveTemplates();
-            results.Count.ShouldEqual(4);
+            var results = await resourceController.LiveTemplates();
+            results.Count.ShouldEqual(5);
         }
     }
 }

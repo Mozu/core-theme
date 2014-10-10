@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
@@ -153,7 +154,15 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return System.IO.File.OpenRead(FullPath);
         }
 
-        public string  ReadAllText()
+        public virtual async Task<string> ReadAllTextAsync()
+        {
+            using (var s = OpenText())
+            {
+                return await s.ReadToEndAsync();
+            }
+        }
+
+        public virtual string ReadAllText()
         {
             using (var x = OpenText())
             {

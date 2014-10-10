@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using FSharpx.Collections;
 using Microsoft.Win32;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
@@ -259,65 +260,73 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             public string key { get; set; }
             public string content { get; set; }
+            public string themeId { get; set; }
         }
 
         [ClientCacheHeaders(ConfigKey = "livetemplates")]
         [HttpGet]
-        public JObject LiveTemplates(bool? debug = false)
+        public async Task<JObject> LiveTemplates(bool? debug = false)
         {
-            var templateContents =
-                    _pathProvider.GetLiveTemplates()
-                    .Select(x => new {
-                            VirtualPath = x.VirtualPathNoExt, 
-                            Content = System.IO.File.ReadAllText(x.FullPath)
-                    }).ToList();
-
-            // find guys that extend something, with parent_template filter
-            var templatesThatExtendAndParent =
-                    templateContents
-                    .Select(x => new
-                    {
-                        x.VirtualPath, 
-                        x.Content, 
-                        InitialExtendsPath = GetExtendsPath(x.Content)
-                    })
-                    .Where(x => !x.InitialExtendsPath.IsNullOrEmpty())
-                    .Select(x => new
-                    {
-                        Base = x, 
-                        Parent = GetParentInfo(_pathProvider, x.VirtualPath)
-                    }).ToList();
-
-            var templatesWithoutExtends = templateContents.Where(x => GetExtendsPath(x.Content).IsNullOrEmpty());
-
-            // for those guys, change the extends tag in place to point to a parent theme's template that's being referred to by the extends url
-            var mutatedTemplatesThatExtend =
-                    templatesThatExtendAndParent
-                    .Select(x => new
-                    {
-                        x.Base.VirtualPath,
-                        Content = x.Base.Content.Replace(CreateFullReplaceString(x.Base.Content), string.Format("\"{0}\"", MakeExtendsPath(x.Base.InitialExtendsPath, x.Parent.ThemeId))), 
+            var templateContentsTasks =
+                    _pathProvider.GetLiveTemplates().Select(async x => new TemplateInfo{
+                            key = ScrubVirtualPath(x.VirtualPathNoExt), 
+                            content = await x.ReadAllTextAsync(),
+                            themeId = x.ThemeId
                     });
 
-            // add the base template at that location to the overall collection of templates
-            var parentTemplatesToAdd =
-                    templatesThatExtendAndParent
-                    .Select(x => new {
-                                VirtualPath = MakeExtendsPath(x.Parent.VirtualPathNoExt, x.Parent.ThemeId),
-                                Content = System.IO.File.ReadAllText(x.Parent.FullPath)
-                    });
+            var templateContents = await Task.WhenAll(templateContentsTasks);
 
-            var finalTemplates =
-                templatesWithoutExtends
-                .Concat(mutatedTemplatesThatExtend)
-                .Concat(parentTemplatesToAdd);
             
+            var expansionTasks = templateContents.Select(async x =>
+            {
+                if (!GetExtendsRegex.IsMatch(x.content)) return new List<TemplateInfo> { x }; // base case
+                var allTemplateInfos = new List<TemplateInfo> { x }.Concat(await GetParentInfos(_pathProvider, x.key));
+                return TransformAndMapTemplates(allTemplateInfos); // else have to fetch and merge in all the parents
+            });
+
+            var expandedInfos = (await Task.WhenAll(expansionTasks)).SelectMany(x => x);
+
             var jobj = new JObject();
-            jobj.AddRange(finalTemplates.Select(x => new JProperty(SanitizeTemplatePath(x.VirtualPath), ScrubCommentsFromTemplate(x.Content))));
+            jobj.AddRange(expandedInfos.Select(x =>
+            {
+                var sanitizedKey = x.key;
+                var contentMinusComments = ScrubCommentsFromTemplate(x.content);
+                return new JProperty(sanitizedKey, contentMinusComments);
+            }));
             return jobj;
         }
 
         #region helpers for live templates
+
+        private static IEnumerable<TemplateInfo> TransformAndMapTemplates(IEnumerable<TemplateInfo> allTemplateInfos)
+        {
+            var head = allTemplateInfos.First();
+            var next = allTemplateInfos.Skip(1).First();
+            var newExtendsPath = MakeExtendsPath(GetExtendsRegex.Match(head.content).Groups["path"].Value, next.themeId);
+            head.content = TransformContent(head.content, newExtendsPath);
+            next.key = newExtendsPath;
+
+            if (allTemplateInfos.Count() == 2) // base case
+            {
+                return new List<TemplateInfo> { head, next };
+            }
+
+            var others = new List<TemplateInfo> { next }.Concat(allTemplateInfos.Skip(2)); // mutated 'next' plus remainder of list
+            return new List<TemplateInfo> { head }.Concat(TransformAndMapTemplates(others));
+        }
+
+        private static string TransformContent(string content, string newExtendsPath)
+        {
+            var replaceString = CreateFullReplaceString(content);
+            var newString = string.Format("\"{0}\"", newExtendsPath);
+            return content.Replace(replaceString, newString);
+        }
+
+        private static string ScrubVirtualPath(string vp)
+        {
+            return vp.Replace('\\', '/').Replace("templates/", "");
+        }
+
         private static string MakeExtendsPath(string basePath, string themeId)
         {
             return string.Format("{0}__{1}", basePath.Replace("\"", String.Empty).Replace("'", String.Empty), themeId);
@@ -334,27 +343,36 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         private static readonly Regex GetExtendsRegex = new Regex(@"{%(?:\s*)extends(?:\s*)(?<path>"".*""|'.*')(?<junk>(?:\s*)\|(?:\s*))(?<filter>parent_template)(?:\s*)%}", RegexOptions.Compiled);
-        private static string GetExtendsPath(string templateContent)
-        {
-            return GetExtendsRegex.IsMatch(templateContent)
-                ? GetExtendsRegex.Match(templateContent).Groups["path"].Value
-                : String.Empty;
-        }
 
-        private static string SanitizeTemplatePath(string path)
+        /// <summary>
+        /// Walks the inheritance tree for a virtual path and returns an ordered list of the parent theme files for the same virtual path.
+        /// </summary>
+        /// <param name="vpp"></param>
+        /// <param name="virtualPath"></param>
+        /// <returns></returns>
+        private static async Task<IEnumerable<TemplateInfo>> GetParentInfos(IMozuVirtualPathProvider vpp, string virtualPath)
         {
-            return path.Replace('\\', '/').Replace("templates/", "");
-        }
+            var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}",virtualPath), false);
+            if (theme == null) return Enumerable.Empty<TemplateInfo>();
 
-        private static ThemeFileSystemInfo GetParentInfo(IMozuVirtualPathProvider vpp, string virtualPath)
-        {
-            var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}",virtualPath));
-            if (theme == null) // oops
-            {
-                return null;
-            }
+            var parents = new List<ThemeFileSystemInfo>();
             var parent = vpp.GetParentThemeFileInfo(theme);
-            return parent ?? theme;
+            while (parent != null)
+            {
+                parents.Add(parent);
+                parent = vpp.GetParentThemeFileInfo(parent);
+            }
+
+            var getContentTasks = parents.Select(async x => new TemplateInfo
+            {
+                key = ScrubVirtualPath(x.VirtualPathNoExt),
+                themeId = x.ThemeId,
+                content = await x.ReadAllTextAsync()
+            });
+
+            await Task.WhenAll(getContentTasks);
+
+            return getContentTasks.Select(x => x.Result);
         }
 
         private static readonly Regex HtmlCommentRegex = new Regex("<!--.*-->", RegexOptions.Compiled); // removes everything from <!-- through -->
