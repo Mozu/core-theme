@@ -64,8 +64,10 @@ Ext.define('Taco.view.order.Grid', {
 
     statics: {
         bulkActionResponses: {
-            'CancelOrder': '<ul class="message-list"><li class="message-item">{0} payments were captured successfully</li><li class="message-item">{1} payments were not captured{2}</li></ul>',
-            'AcceptOrder': ''
+            'AcceptOrder': '<ul class="message-list"><li class="message-item">{0} orders were accepted successfully.</li><li class="message-item">{1} orders were not accepted.{2}</li></ul>',
+            'CancelOrder': '<ul class="message-list"><li class="message-item">{0} orders were cancelled successfully.</li><li class="message-item">{1} orders were not cancelled.{2}</li></ul>',
+            'CapturePayment': '<ul class="message-list"><li class="message-item">{0} payments were captured successfully.</li><li class="message-item">{1} payments were not captured.{2}</li></ul>',
+            'Ship': '<ul class="message-list"><li class="message-item">{0} packages were shipped successfully.</li><li class="message-item">{1} packages were not shipped.{2}</li></ul>'
         }
     },
         
@@ -104,6 +106,15 @@ Ext.define('Taco.view.order.Grid', {
             hidden: true,
             menu: {
                 items: [{
+                    text: 'Accept',
+                    scope: this,
+                    handler: function () {
+                        this.doBulkAction('AcceptOrder');
+                    },
+                    validator: function (record) {
+                        return true;
+                    }
+                }, {
                     text: 'Cancel',
                     scope: this,
                     handler: function () {
@@ -113,13 +124,22 @@ Ext.define('Taco.view.order.Grid', {
                         return true;
                     }
                 }, {
-                    text: 'Accept',
+                    text: 'Ship',
                     scope: this,
                     handler: function () {
-                        console.log('do stuff', this.getSelectionModel().getSelection());
+                        this.doBulkAction('Ship');
                     },
                     validator: function (record) {
-                        return false;
+                        return true;
+                    }
+                }, {
+                    text: 'Capture',
+                    scope: this,
+                    handler: function () {
+                        this.doBulkAction('CapturePayment');
+                    },
+                    validator: function (record) {
+                        return true;
                     }
                 }],
                 listeners: {
@@ -144,17 +164,6 @@ Ext.define('Taco.view.order.Grid', {
         var context = Taco.app.context.getCurrent();
         var orders, config;
 
-        // if the current context is the tenant, find the master catalog that contains the given site
-        var getMasterCatalogId = function (ctx, siteId) {
-            var mc = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
-                return Ext.Array.some(mc.sites, function (site) {
-                    return site.id === siteId;
-                });
-            });
-
-            return mc.id;
-        };
-
         // translate selected rows into objects with orderId and masterCatalogId
         orders = Ext.Array.map(this.getSelectionModel().getSelection(), function (item) {
             var siteId = item.get('siteId');
@@ -176,8 +185,18 @@ Ext.define('Taco.view.order.Grid', {
             success: Ext.Function.bind(this.onBulkActionSuccess, this, [action], 0)
         };
 
-        console.log(config);
         Ext.Ajax.request(config);
+
+        // if the current context is the tenant, find the master catalog that contains the given site
+        function getMasterCatalogId (ctx, siteId) {
+            var mc = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
+                return Ext.Array.some(mc.sites, function (site) {
+                    return site.id === siteId;
+                });
+            });
+
+            return mc.id;
+        }
     },
 
     onBulkActionSuccess: function (action, response) {
@@ -192,7 +211,22 @@ Ext.define('Taco.view.order.Grid', {
 
         message = Ext.String.format(summaryTpl, parse.items.length - failedItems.length, failedItems.length, failedItemsTpl.apply(failedItems));
 
-        Taco.app.fireEvent('setmessage', message, messageType);
+        Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            scale: 'small',
+            title: 'Bulk Actions',
+            layout: 'fit',
+            items: [{
+                xtype: 'component',
+                html: message
+            }],
+            actions: [{
+                ui: 'action',
+                itemId: 'primaryAction',
+                text: 'Dismiss'
+            }],
+            doSave: function () { this.saveSuccess(); }
+        });
     },
 
     launchLoadedEditor: function (record, options) {

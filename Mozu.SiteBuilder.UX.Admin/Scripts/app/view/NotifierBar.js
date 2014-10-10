@@ -2,55 +2,50 @@
  * @class Taco.view.NotifierBar
  */
 Ext.define('Taco.view.NotifierBar', {
-    extend: 'Taco.core.ux.window.Modal',
+    extend: 'Taco.core.ux.window.Window',
     alias: 'widget.notifierbar',
 
-    scale: 'small',
-
-    closable: false,
-
-    actions: [{
-        xtype: 'button',
-        ui: 'action',
-        itemId: 'primaryAction',
-        text: 'Dismiss'
-    }],
+    bodyPadding: '9 10 9 10',
+    closeAction: 'destroy',
+    header: false,
+    height: 'auto',
+    minHeight: 40,
+    overflowY: 'hidden',
+    ui: 'modal',
+    width: '96%',
+    y: 126,
 
     layout: {
         type: 'fit'
     },
 
-    config: {
-        autoClose: false,
-        message: '',
-        messageType: 'info'
-    },
-
     initComponent: function () {
-        var type = this.getMessageType();
-        var autoClose = this.getAutoClose();
+        var tpl;
 
-        this.cls = 'taco-notifierbar taco-notifierbar-' + type;
-        this.setTitle(Ext.String.capitalize(type));
+        this.cls = 'taco-notifierbar taco-notifierbar-' + this.messageType;
+
+        tpl = new Ext.XTemplate('<span class="status-icon"></span><span class="message">{message}</span><span class="close-icon"></span>');
 
         this.items = [{
             xtype: 'component',
-            html: this.getMessage()
+            padding: '0 30 0 30',
+            tpl: tpl,
+            data: {
+                message: this.message
+            },
+            listeners: {
+                click: {
+                    scope: this,
+                    element: 'el',
+                    fn: function (e, t) {
+                        if (e.getTarget('.close-icon', 10)) {
+                            this.close();
+                        }
+                    }
+                }
+            }
         }];
 
         this.callParent(arguments);
-
-        if (autoClose !== false) {
-            this.on({
-                show: {
-                    delay: Ext.isNumber(autoClose) ? autoClose : 3000,
-                    fn: function (dialog) { dialog.close(); }
-                }
-            });
-        }
-    },
-
-    doSave: function () {
-        this.saveSuccess(null);
     }
 });
