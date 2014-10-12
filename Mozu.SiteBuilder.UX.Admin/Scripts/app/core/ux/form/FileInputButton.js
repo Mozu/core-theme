@@ -26,6 +26,11 @@ Ext.define('Taco.core.ux.form.FileInputButton', {
                     me.fireEvent('filechange', el.files);
                 },
                 element: 'el'
+            },
+            boxready: {
+                fn: function (cmp) {
+                    cmp.fileInputEl.set({ multiple: 'multiple' });
+                }
             }
         });
     }
