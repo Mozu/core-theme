@@ -407,7 +407,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2( Mapper.Map<Order>(dcOrder) );
         }
 
-        [HttpGetRoute(UriTemplate = "availableactions")]
+        [HttpPostRoute(UriTemplate = "availableactions")]
         public async Task<Response<List<string>>> GetAvailableActions(BulkOrderRequest request)
         {
             var getOrderActionsTasks = request.OrderContexts.Select(GetOrderActions).ToList();
