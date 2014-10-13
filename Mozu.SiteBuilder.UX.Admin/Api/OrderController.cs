@@ -502,17 +502,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (result.StatusCode == HttpStatusCode.OK)
             {
                 var packages = orderResponse.ReadAsSync().Packages;
-                //todo: Stewart Noll on 2014-10-06 perform validation on the packages
-                var digitalPackages = packages.Where(
-                    p => p.PackagingType != CommerceRuntime.Contracts.Fulfillment.FulfillmentItemTypeConst.PHYSICAL).ToList();
-                var physicalPackages = packages.Where(
-                    p => p.PackagingType == CommerceRuntime.Contracts.Fulfillment.FulfillmentItemTypeConst.PHYSICAL).ToList();
-
-                if (digitalPackages.Any() && !physicalPackages.Any())
+                if (packages.IsNullOrEmpty())
                 {
-                    // only digital packages in this order
-                    result.StatusCode = HttpStatusCode.BadRequest;
-                    result.Message = string.Format("No physical packages on the order to mark as shipped");
+                    result.StatusCode = HttpStatusCode.NotFound;
+                    result.Message = "No packages found on the order";
                     return result;
                 }
 
@@ -521,7 +514,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     new DCs.FulfillmentAction()
                     {
                         ActionName = actionName,
-                        PackageIds = physicalPackages.Select(p => p.Id).ToList()
+                        PackageIds = packages.Select(p => p.Id).ToList()
                     });
                 // overwrite the status code of the order result with that of the fulfillment result
                 result.StatusCode = fulfillmentResponse.ResponseMessage.StatusCode;
@@ -533,11 +526,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 else
                 {
-                    if (digitalPackages.Any())
-                    {
-                        // successfully marked physical packages as shipped but need to inform the user that there were digital packages
-                        result.Message = string.Format("Order contains {0} digital packages which were not altered", digitalPackages.Count);
-                    }
+//                    if (digitalPackages.Any())
+//                    {
+//                        // successfully marked physical packages as shipped but need to inform the user that there were digital packages
+//                        result.Message = string.Format("Order contains {0} digital packages which were not altered", digitalPackages.Count);
+//                    }
                 }
             }
             else
