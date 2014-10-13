@@ -152,6 +152,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string ThemeId { get; set; }
     }
 
+    /// <summary>
+    /// This interface serves as a way to abstract getting the content of a theme from the ThemeFileSystemInfo instance associated with that content.
+    /// So far, it's just necessary to enable unit tests.
+    /// </summary>
     public interface IThemeContentRetriever
     {
         string GetContent(ThemeFileSystemInfo info);
