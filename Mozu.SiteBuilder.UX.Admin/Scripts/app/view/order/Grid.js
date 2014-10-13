@@ -106,66 +106,91 @@ Ext.define('Taco.view.order.Grid', {
             hidden: true,
             menu: {
                 items: [{
+                    itemId: 'AcceptOrder',
                     text: 'Accept',
                     scope: this,
                     handler: function () {
                         this.doBulkAction('AcceptOrder');
-                    },
-                    validator: function (record) {
-                        return true;
                     }
                 }, {
+                    itemId: 'CancelOrder',
                     text: 'Cancel',
                     scope: this,
                     handler: function () {
                         this.doBulkAction('CancelOrder');
-                    },
-                    validator: function (record) {
-                        return true;
                     }
                 }, {
+                    itemId: 'Ship',
                     text: 'Ship',
                     scope: this,
                     handler: function () {
                         this.doBulkAction('Ship');
-                    },
-                    validator: function (record) {
-                        return true;
                     }
                 }, {
+                    itemId: 'CapturePayment',
                     text: 'Capture',
                     scope: this,
                     handler: function () {
                         this.doBulkAction('CapturePayment');
-                    },
-                    validator: function (record) {
-                        return true;
                     }
                 }],
                 listeners: {
                     show: {
                         scope: this,
-                        fn: function (menu) {
-                            var records = this.getSelectionModel().getSelection();
-
-                            menu.items.each(function (item, index) {
-                                if (Ext.isFunction(item.validator)) {
-                                    item.setDisabled(!Ext.Array.every(records, item.validator, this));
-                                }
-                            }, this);
-                        }
+                        fn: 'getBulkActions'
                     }
                 }
             }
         });
     },
+
+    getBulkActions: function (menu) {
+        var selection = this.getSelectionModel().getSelection();
+        var context = Taco.app.context.getCurrent();
+        var orders, config;
+
+        orders = Ext.Array.map(selection, function (item) {
+            var siteId = item.get('siteId');
+            var mcId = context.masterCatalogId || getMasterCatalogId(context, siteId);
+
+            return {
+                orderId: item.get('id'),
+                masterCatalogId: mcId
+            };
+        }, this);
+
+        config = {
+            url: '/admin/app/order/availableactions',
+            method: 'POST',
+            jsonData: {
+                orderContexts: orders
+            },
+            callback: Ext.Function.bind(this.onGetBulkActions, this, [menu], 0)
+        };
+
+        menu.setLoading(true);
+        Ext.Ajax.request(config);
+    },
+
+    onGetBulkActions: function (menu, operation, succeeded, response) {
+        var parse = Ext.JSON.decode(response.responseText);
+
+        if (menu && menu.rendered) {
+            menu.items.each(function (item) {
+                item.setDisabled(!succeeded || !Ext.Array.contains(parse.items, item.getItemId()));
+            });
+
+            menu.setLoading(false);
+        }
+    },
     
     doBulkAction: function (action) {
+        var selection = this.getSelectionModel().getSelection();
         var context = Taco.app.context.getCurrent();
         var orders, config;
 
         // translate selected rows into objects with orderId and masterCatalogId
-        orders = Ext.Array.map(this.getSelectionModel().getSelection(), function (item) {
+        orders = Ext.Array.map(selection, function (item) {
             var siteId = item.get('siteId');
             var mcId = context.masterCatalogId || getMasterCatalogId(context, siteId);
 
@@ -182,7 +207,7 @@ Ext.define('Taco.view.order.Grid', {
                 actionName: action,
                 orderContexts: orders
             },
-            success: Ext.Function.bind(this.onBulkActionSuccess, this, [action], 0)
+            success: Ext.Function.bind(this.onBulkActionSuccess, this, [action, selection], 0)
         };
 
         Ext.Ajax.request(config);
@@ -199,17 +224,27 @@ Ext.define('Taco.view.order.Grid', {
         }
     },
 
-    onBulkActionSuccess: function (action, response) {
+    onBulkActionSuccess: function (action, records, response) {
         var parse = Ext.JSON.decode(response.responseText);
         var messageType = parse.success ? 'success' : 'error';
         var summaryTpl = this.statics().bulkActionResponses[action];
-        var failedItemsTpl = new Ext.XTemplate('<ul class="message-list"><tpl for="."><li class="message-item">Order {orderId}</li></tpl></ul>');
-        var failedItems = Ext.Array.filter(parse.items, function (item) {
-            return !item.successful;
-        });
+        var failedItemsTpl = new Ext.XTemplate('<ul class="message-list"><tpl for="."><li class="message-item">Order #{orderNumber}</li></tpl></ul>');
+        var failedItems = [];
         var message;
 
-        message = Ext.String.format(summaryTpl, parse.items.length - failedItems.length, failedItems.length, failedItemsTpl.apply(failedItems));
+        // translate failed items into their corresponding records
+        Ext.Array.each(parse.items, function (item) {
+            if (!item.successful) failedItems.push(Ext.Array.findBy(records, function (record) {
+                return record.get('id') === item.orderId;
+            }));
+        });
+
+        // then sort by order number
+        Ext.Array.sort(failedItems, function (a, b) {
+            return a.get('orderNumber') - b.get('orderNumber');
+        });
+
+        message = Ext.String.format(summaryTpl, parse.items.length - failedItems.length, failedItems.length, failedItemsTpl.apply(Ext.Array.pluck(failedItems, 'data')));
 
         Ext.create('Taco.core.ux.window.Modal', {
             autoShow: true,
