@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -406,22 +407,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2( Mapper.Map<Order>(dcOrder) );
         }
 
-        [HttpPostRoute(UriTemplate = "action")]
-        public async Task<Response<List<OrderActionResult>>> PerformOrdersAction(BulkOrderAction action)
+        [HttpGetRoute(UriTemplate = "availableactions")]
+        public async Task<Response<List<string>>> GetAvailableActions(BulkOrderRequest request)
         {
-            if (!IsValidBulkAction(action.ActionName))
+            var getOrderActionsTasks = request.OrderContexts.Select(GetOrderActions).ToList();
+            await Task.WhenAll(getOrderActionsTasks);
+            IEnumerable<string> result = _validBulkOrderActions;
+            foreach (var orderActionsTask in getOrderActionsTasks)
+            {
+                result = result.Intersect(orderActionsTask.Result);
+            }
+            var list = result.ToList();
+            return new Response<List<string>> {Items = list, Total = list.Count};
+        }
+
+        private async Task<List<string>> GetOrderActions(OrderContext orderContext)
+        {
+            var tasks = new List<Task<List<string>>>();
+            tasks.Add(GetRootActions(orderContext));
+            tasks.Add(GetFulfillmentActions(orderContext));
+            tasks.Add(GetPaymentActions(orderContext));
+            await Task.WhenAll(tasks);
+            return tasks.SelectMany(t => t.Result).ToList();
+        }
+
+        [HttpPostRoute(UriTemplate = "action")]
+        public async Task<Response<List<OrderActionResult>>> PerformOrdersAction(BulkOrderRequest request)
+        {
+            if (!IsValidBulkAction(request.ActionName))
             {
                 throw new VaeMissingOrInvalidParameterException("ActionName",
                     string.Format("Valid bulk order actions are '{0}'",
                         string.Join("' , '", _validBulkOrderActions)));
             }
-            var orderIdToActionTaskTuples = action.OrderContexts.Select(
-                ctx => PerformOrderAction(action.ActionName, ctx))
+            var performOrderActionTasks = request.OrderContexts.Select(
+                ctx => PerformOrderAction(request.ActionName, ctx))
                         .ToList();
 
-            var bulkResult = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderContexts.Count};
-            await Task.WhenAll(orderIdToActionTaskTuples);
-            foreach (var orderIdToActionTask in orderIdToActionTaskTuples)
+            var bulkResult = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = request.OrderContexts.Count};
+            await Task.WhenAll(performOrderActionTasks);
+            foreach (var orderIdToActionTask in performOrderActionTasks)
             {
                 var actionResult = orderIdToActionTask.Result;
                 var orderActionResult = new OrderActionResult { OrderId = actionResult.OrderId, Successful = true, Message = actionResult.Message };
@@ -462,11 +487,71 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private static readonly List<string> _validBulkOrderActions = new List<string>
         {
-            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER,
-            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER,
-            CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP,
-            CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT
+            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER.ToLower(),
+            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER.ToLower(),
+            CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP.ToLower(),
+            CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT.ToLower()
         };
+
+        public async Task<List<string>> GetRootActions(OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var availableActionsResult = await orderWebApiClient.GetAvailableActions(orderContext.OrderId);
+            return availableActionsResult.ReadAsSync();
+        } 
+
+        public async Task<List<string>> GetFulfillmentActions(OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var orderResponse = await orderWebApiClient.GetOrder(orderContext.OrderId);
+            if (orderResponse.ResponseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                var packages = orderResponse.ReadAsSync().Packages;
+                if (packages.IsNullOrEmpty())
+                {
+                    return new List<string>();
+                }
+                var getPackageActionsTasks = packages.Select(
+                    p => _orderWebApiClient.GetAvailablePackageFulfillmentActions(orderContext.OrderId, p.Id));
+                await Task.WhenAll(getPackageActionsTasks);
+
+                IEnumerable<string> result = new List<string>
+                {
+                    CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP.ToLower()
+                };
+                foreach (var packageActionsTask in getPackageActionsTasks)
+                {
+                    var actions = packageActionsTask.Result.ReadAsSync();
+                    result = result.Intersect(actions);
+                }
+
+                return result.ToList();
+            }
+            throw new VaeUnexpectedErrorException(string.Format("Retrieving the fulfillment actions for order {0}", orderContext.OrderId));
+        } 
+
+        public async Task<List<string>> GetPaymentActions(OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var paymentsResponse = await orderWebApiClient.GetPayments(orderContext.OrderId);
+            if (paymentsResponse.ResponseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                var response = paymentsResponse.ReadAsSync();
+                if (response.Items.IsNullOrEmpty() || response.Items.Count > 1)
+                {
+                    // only orders with a single payment will support bulk order actions
+                    return new List<string>();
+                }
+                var getPaymentActionsResult = await _orderWebApiClient.GetAvailablePaymentActions(orderContext.OrderId, response.Items[0].Id);
+                IEnumerable<string> paymentActions = getPaymentActionsResult.ReadAsSync();
+                IEnumerable<string> result = new List<string>
+                {
+                    CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT.ToLower()
+                };
+                return result.Intersect(paymentActions).ToList();
+            }
+            throw new VaeUnexpectedErrorException(string.Format("Retrieving the fulfillment actions for order {0}", orderContext.OrderId));
+        } 
 
         private async Task<InternalBulkActionResult> PerformRootAction(string actionName, OrderContext orderContext)
         {
