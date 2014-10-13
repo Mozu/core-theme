@@ -32,10 +32,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
         {
             var fileToContentMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                {"C:\\temp\\grandparent\\pages\\category.hypr.live", @"{% extends ""pages\category"" %}"},
-                {"C:\\temp\\parent\\pages\\category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
-                {"C:\\temp\\child\\pages\\category.hypr.live", @"{% extends ""pages\category""|parent_template %}"},
-                {"C:\\temp\\child\\pages\\extends.hypr.live", @"{% extends ""pages\extends"" %}"},
+                {"C:\\temp\\grandparent\\pages\\category.hypr.live", @"{% extends ""pages/category"" %}"},
+                {"C:\\temp\\parent\\pages\\category.hypr.live", @"{% extends ""pages/category""|parent_template %}"},
+                {"C:\\temp\\child\\pages\\category.hypr.live", @"{% extends ""pages/category""|parent_template %}"},
+                {"C:\\temp\\child\\pages\\extends.hypr.live", @"{% extends ""pages/extends"" %}"},
                 {"C:\\temp\\child\\pages\\noextends.hypr.live", @"wut"},
             };
 
@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         ThemeId = "grandparent",
                         VirtualPathNoExt = "templates\\pages\\category",
                         VirtualPath = "templates\\pages\\category.hypr.live",
-                        FullPath = @"c:\temp\parent\pages\category.hypr.live",
+                        FullPath = @"c:\temp\grandparent\pages\category.hypr.live",
                         IsFile = true
                     }
                 })

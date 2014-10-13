@@ -331,7 +331,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         private static string MakeExtendsPath(string basePath, string themeId)
         {
-            return string.Format("{0}__{1}", basePath.Replace("\"", String.Empty).Replace("'", String.Empty), themeId);
+            var interimExtendsPath = string.Format("{0}__{1}", basePath.Replace("\"", String.Empty).Replace("'", String.Empty).Replace("\\", "/"), themeId);
+            return ScrubVirtualPath(interimExtendsPath);
         }
         
         private static string CreateFullReplaceString(string content)
