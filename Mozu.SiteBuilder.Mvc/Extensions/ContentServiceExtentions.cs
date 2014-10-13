@@ -34,6 +34,12 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             }
             return val;
         }
+
+        private static readonly string[] SpecialCharacters = { "^", "'", "\"", "{", "}", "(", ")", "[", "]" };
+        public static string ToFilterSafeString(this string inputString)
+        {
+            return SpecialCharacters.Aggregate(inputString, (s, spec) => s.Replace(spec, "^" + spec));
+        }
     }
 
     /// <summary>

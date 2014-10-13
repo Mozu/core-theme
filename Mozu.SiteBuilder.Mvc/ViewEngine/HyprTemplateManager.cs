@@ -10,11 +10,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     {
         private readonly ITemplateManager _innerTemplateManager;
      
-        private readonly MozuVirtualPathProvider _virtualPathProvider;
+        private readonly IMozuVirtualPathProvider _virtualPathProvider;
     //    private readonly ISiteBuilderContext _siteBuilderContext;
      //   private readonly string _themeId;
 
-        public HyprTemplateManager(ITemplateManager innerTemplateManager, MozuVirtualPathProvider virtualPathProvider )
+        public HyprTemplateManager(ITemplateManager innerTemplateManager, IMozuVirtualPathProvider virtualPathProvider )
         {
           //  _themeId = "food"; //siteBuilderContext.Theme.Id;
             _innerTemplateManager = innerTemplateManager;// ((TemplateManagerProvider)templateManagerProvider).GetNewManager();

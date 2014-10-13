@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
@@ -35,98 +34,5 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         Task<ServiceClientResponse<DC.Document>> Update2(DC.Document document);
    
         IDocumentListWebApiClient DocumentListWebApiClient { get; set; }
-    }
-
-    [Obsolete]
-    public class CmsListRequest
-    {
-        public class CmsListRequestFilterItem
-        {
-            public string Name { get; set; }
-            public object Value { get; set; }
-            public string Operator { get; set; }
-        }
-        List<KeyValuePair<string, bool>> _sort;
-        List<string> _filters;
-        public string Collection{get;set;}
-        public string DocumentTypeFQN { get; set; }
-        public bool HasFilters
-        {
-            get { return _filters != null && _filters.Count > 0; }
-        }
-        public bool HasSort
-        {
-            get { return _sort != null && _sort.Count > 0; }
-        }
-
-
-        public List<string> Filters
-        {
-            get
-            {
-                if (_filters == null)
-                {
-                    _filters = new List<string>();
-                }
-                return _filters;
-            }
-            set
-            {
-                _filters = value;
-            }
-        }
-        public List<KeyValuePair<string, bool>> Sort
-        {
-            get
-            {
-                if (_sort == null)
-                {
-                    _sort = new List<KeyValuePair<string, bool>>();
-                }
-                return _sort;
-            }
-            set
-            {
-                _sort = value;
-            }
-        }
-
-        public string FolderId { get; set; }
-        public string FolderPath { get; set; }
-           
-        public string ToFilterString ()
-        {
-            if (!string.IsNullOrEmpty(FolderId))
-            {
-                this.Filters.Add("FolderId eq " + FolderId);
-            }
-            if (!string.IsNullOrEmpty(FolderPath))
-            {
-                this.Filters.Add(string.Format("Path eq \"{0}\"", FolderPath));
-            }
-            if (!string.IsNullOrEmpty(DocumentTypeFQN))
-            {
-                this.Filters.Add("DocumentTypeFQN eq " + DocumentTypeFQN);
-            }
-            if (this.HasFilters)
-            {
-                return string.Join(" and ", this.Filters);
-            }
-            return null;
-        }
-        public int? PageSize{get;set;}
-        public int? StartIndex{get;set;}
-        public bool? Recurse { get; set; }
-
-        internal string ToSortString()
-        {
-            if (this.HasFilters)
-            {
-               return string.Join(" and " , this.Sort.Select (x=> x.Key + " " + ( (x.Value )? "asc" :"desc")));
-            }
-            return null;
-        }
-
-        public string DocumentStatus { get; set; }
     }
 }

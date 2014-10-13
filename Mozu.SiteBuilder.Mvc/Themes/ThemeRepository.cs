@@ -43,9 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         Theme ApplyAddons(Theme Theme, string[] addonsIds);
     }
-
-
-
+    
     /// <summary>
     /// A repository and factory for <code>ITheme</code>
     /// At startup, traverses the local 'Themes' directory and 
@@ -56,26 +54,23 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// </summary>
      class ThemeRepository : IThemeRepository
     {
-        private readonly ThemeFactory _themeFactory;
         private readonly IThemeMetaDataProvider _themeMetaDataProvider;
-         const string DEFAULT_THEME = "Core5";
-        private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-        private static System.Collections.Concurrent.ConcurrentDictionary<string, Theme> _addons = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-        private static List<System.IO.FileSystemWatcher> _watchers = null;
-        public bool IsInitialized { get; private set; }
-
+        const string DefaultTheme = "Core5";
+        private static ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+        private static ConcurrentDictionary<string, Theme> _addons = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+        private static List<FileSystemWatcher> _watchers;
+        
         public static readonly  ThemeSelection DefaultThemeSelection = new ThemeSelection()
                                                              {
-                                                                 Id = DEFAULT_THEME
+                                                                 Id = DefaultTheme
                                                              };
         
         /// <summary>
         /// Public constructor.
         /// </summary>
         /// <param name="themeProvider"></param>
-        public ThemeRepository(ThemeFactory themeFactory , IThemeMetaDataProvider themeMetaDataProvider)
+        public ThemeRepository(IThemeMetaDataProvider themeMetaDataProvider)
         {
-            _themeFactory = themeFactory;
             _themeMetaDataProvider = themeMetaDataProvider;
         }
 
@@ -91,7 +86,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public Theme GetAddon(string name)
         {
-            return _addons.GetOrAdd(name, _themeFactory.Build(_themeMetaDataProvider.GetAddon(name), null));
+            return _addons.GetOrAdd(name, ThemeFactory.Build(_themeMetaDataProvider.GetAddon(name), null));
            
         }
 
@@ -105,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 var addon = GetAddon(addonsIds[i]);
                 if (addon != null)
                 {
-                    outTheme = _themeFactory.Build(addon.Source , outTheme);
+                    outTheme = ThemeFactory.Build(addon.Source , outTheme);
                 }
                  
                 
@@ -157,7 +152,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 inheritChain.Pop();
             }
 
-            return _themeFactory.Build(tmd, parent);
+            return ThemeFactory.Build(tmd, parent);
         }
 
         /// <summary>
@@ -245,7 +240,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         public Theme GetDefaultTheme()
         {
-            return GetTheme(new ThemeSelection() {Id = DEFAULT_THEME});
+            return GetTheme(new ThemeSelection() {Id = DefaultTheme});
         }
 
         public string GetLocalThemePath()

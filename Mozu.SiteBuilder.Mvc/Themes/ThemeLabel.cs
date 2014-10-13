@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using AutoMapper;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -12,58 +8,5 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public ThemeLabelCollection() : base(StringComparer.OrdinalIgnoreCase)
         {
         }
-        public ThemeLabelCollection(ThemeLabelCollection col )
-            : base(col,StringComparer.OrdinalIgnoreCase)
-        {
-        }
-
-    }
-    //public class ThemeLabelCollection : IEnumerable<ThemeLabel>
-    //{
-    //    private Dictionary<string, string> _labels = new Dictionary<string, ThemeLabel>(StringComparer.OrdinalIgnoreCase);
-
-    //    public bool Contains(string labelId)
-    //    {
-    //        return _labels.ContainsKey(labelId);
-    //    }
-
-    //    public void Add(ThemeLabel label)
-    //    {
-    //        if (Contains(label.Id))
-    //            throw new InvalidOperationException("Key already exists: " + label.Id);
-    //        _labels.Add(label.Id, label);
-    //    }
-
-    //    public ThemeLabel this[string labelId] { get { return _labels[labelId]; } }
-
-    //    public IEnumerator<ThemeLabel> GetEnumerator()
-    //    {
-    //        return _labels.Values.GetEnumerator();
-    //    }
-
-    //    IEnumerator IEnumerable.GetEnumerator()
-    //    {
-    //        return _labels.Values.GetEnumerator();
-    //    }
-
-    //    public void AddRange(IEnumerable<ThemeLabel> labels)
-    //    {
-    //        foreach (var label in labels)
-    //            this.Add(label);
-    //    }
-
-    //    public Dictionary<string,string> ToDictionary()
-    //    {
-    //        return new Dictionary<string, string>(_labels,StringComparer.OrdinalIgnoreCase);
-    //        _labels.Values.Each(l => ret.Add(l.Id, l.Value));
-    //        return ret;
-    //    }
-    //}
-
-
-    public class ThemeLabel
-    {
-        public string Id { get; set; }
-        public string Value { get; set; }
     }
 }
