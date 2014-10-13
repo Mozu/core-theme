@@ -236,18 +236,18 @@ Ext.define('Taco.view.product.Form', {
      * Shows the global tab when in multisite mode
      * @private
      */
-    goGoMultiSite: function (leaveTabs) {
+    goGoMultiSite: function () {
         var me = this;
         
-        if (!leaveTabs) {
-            this.rebuildTabs();
-        }
+
         
         this.globalForm.isSingleSite = false;
         this.globalForm.buildForm();
+        this.tabPanel.showTabAt(0);
+
         //this.globalForm.loadForm(undefined, true);
         this.rebuildTabs();
-        this.tabPanel.showTabAt(0);
+        
         
         // START HACK
         this.tabPanel.getLayout().activeItem = null;
@@ -258,33 +258,37 @@ Ext.define('Taco.view.product.Form', {
         //I am defaulting this to the first tab to get around a werid validation issue
         //Note: this is kinda parta Thoms voodo stuff so yea............................
         this.tabPanel.setActiveItemAt(0);
+        this.tabPanel.getActiveItem().nav.show();
     },
     
     savableStateCheck: function () {
         throw 'deprecated function: savableStateCheck';
     },
 
-    goGoCatalogSwitch: function () {
+    goGoCatalogSwitch: function (isRemovingActiveTab) {
         var wasSingleSite = this.isSingleSite;
 
         this.isSingleSite = this.singleSiteCheck();
 
         var isOnlyGlobal = this.inSitesStore.count() === 0;
 
-        //  State unchanged, gfto
-        if (wasSingleSite === this.isSingleSite && !isOnlyGlobal) {
+        if (isOnlyGlobal || isRemovingActiveTab) {
+            this.goGoMultiSite();
             return;
         }
 
-        
+        //  State unchanged, gfto
+        if (wasSingleSite === this.isSingleSite) {
+            return;
+        }
+
         //  Must rebuild tabs now since stateOrProvince switched
-        if (this.isSingleSite && !isOnlyGlobal) {
+        if (this.isSingleSite) {
             this.goGoSingleSite();
         } else {
             this.goGoMultiSite();
         }
-        
-        
+
     },
     
     /**
@@ -310,7 +314,7 @@ Ext.define('Taco.view.product.Form', {
      */
     singleSiteCheck: function () {
         //changing to only run this mode if the user has only one catalogs off of the current master catalog
-        return Taco.app.context.getMasterCatalog().catalogs.length < 2;
+        return Taco.app.context.getMasterCatalog().catalogs.length < 2 || this.inSitesStore.count() === 1;
         //return this.inSitesStore.count() === 1;
     },
 
@@ -417,6 +421,8 @@ Ext.define('Taco.view.product.Form', {
             return;
         }
 
+        var isRemovingActiveTab = this.tabPanel.getActiveItem() === form;
+
         this.tabPanel.remove(form);
 
         this.inSitesStore.remove(catRecord);
@@ -425,7 +431,7 @@ Ext.define('Taco.view.product.Form', {
             return;
         }
 
-        this.goGoCatalogSwitch();
+        this.goGoCatalogSwitch(isRemovingActiveTab);
     },
 
     onTabClose: function (tab, catalogId) {
