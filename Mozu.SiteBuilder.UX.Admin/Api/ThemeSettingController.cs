@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Routing;
-using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Settings;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -24,8 +20,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         
         private readonly IThemeSettingsRepository _themeSettingsRepository;
         private readonly IThemeRepository _themeRepository;
+        private readonly IThemeContentRetriever _contentRetriever;
 
-        public ThemeSettingController( IThemeSettingsRepository themeSettingsRepository, IThemeRepository themeRepository)
+        public ThemeSettingController( IThemeSettingsRepository themeSettingsRepository, IThemeRepository themeRepository, IThemeContentRetriever contentRetriever)
         {
             if(themeSettingsRepository == null)
             {
@@ -35,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             
             _themeSettingsRepository = themeSettingsRepository;
             _themeRepository = themeRepository;
+            _contentRetriever = contentRetriever;
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 {
                     var response = this.Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StreamContent(file.OpenRead());
+                    response.Content = new StreamContent(_contentRetriever.GetStream(file));
                     response.Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("text/json");
                     return response;
                     
@@ -99,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
         [HttpPostRoute(UriTemplate = "instance/save/{themeId}")]
-        public async Task<Response<JObject>> SaveInstance(string themeId, Newtonsoft.Json.Linq.JObject values)
+        public async Task<Response<JObject>> SaveInstance(string themeId, JObject values)
         {
             var existingValues = (IDictionary<string, JToken>) await _themeSettingsRepository.GetInstanceValues(themeId);
             var valueDic = (IDictionary<string, JToken>) values;

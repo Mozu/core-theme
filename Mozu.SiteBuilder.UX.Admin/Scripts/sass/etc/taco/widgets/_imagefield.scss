@@ -102,9 +102,12 @@
                     cursor: pointer;
                     display: inline-block;
                     vertical-align: top;
-                    width: 18px;
-                    height: 18px;
+                    width: 16px;
+                    height: 16px;
+                    position:absolute;
+                    margin:1px -50px;
                     @include icon-font($glyph-pencil, 16px, $color-neutral-white);
+
                 }
                 
                 .remove {

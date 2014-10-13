@@ -18,6 +18,7 @@ using Mozu.MZDB.Contracts;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Newtonsoft.Json;
@@ -41,13 +42,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
         private readonly IDocumentTypeWebApiClient _documentTypeWebApiClient;
+        private readonly IThemeContentRetriever _contentRetriever;
         //   private const string TBD = "duno";
-        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient)
+        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever)
 
         {
             _documentListWebApiClient = documentListWebApiClient;
             _entityListsWebApiClient = entityListsWebApiClient;
             _documentTypeWebApiClient = documentTypeWebApiClient;
+            _contentRetriever = contentRetriever;
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
@@ -475,7 +478,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (this.SbApiContext.SiteId.HasValue)
             {
                 var siteContext = this.Request.Resolve<SiteContext>();
-                var vpp =this.Request.Resolve<MozuVirtualPathProvider>(); 
+                var vpp =this.Request.Resolve<IMozuVirtualPathProvider>(); 
                 await siteContext.Init();
                 var theme = this.Request.Resolve<SiteContext>().Theme;
                 if (theme.Editors != null && theme.Editors.Count > 0)
@@ -493,7 +496,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                        EntityLists = x.EntityLists,
                                        DocumentTypes = x.DocumentTypes,
                                        Priority = x.Priority,
-                                       Code = jsFile.ReadAllText()
+                                       Code = _contentRetriever.GetContent(jsFile)
                                    };
                         }
                         return null;

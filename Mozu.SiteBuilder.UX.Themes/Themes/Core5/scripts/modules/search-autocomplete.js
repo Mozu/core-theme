@@ -96,10 +96,10 @@
                 suggestion: makeTemplateFn('modules/search/autocomplete-page-result')
             },
             source: AutocompleteManager.datasets.pages.ttAdapter()
-        }).data('ttTypeahead');
-        $field.on('typeahead:autocompleted', function(e, suggestion, set) {
-            console.log(suggestion);
-            if (suggestion.productCode) window.location = "/p/" + suggestion.productCode;
+        }).data('ttTypeahead');        
+        // user hits enter key while menu item is selected;
+        $field.on('typeahead:selected', function (e, data, set) {
+            if (data.suggestion.productCode) window.location = "/p/" + data.suggestion.productCode;
         });
     });
 

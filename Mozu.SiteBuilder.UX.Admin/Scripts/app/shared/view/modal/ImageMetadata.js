@@ -6,7 +6,7 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
 
     closeAction: 'destroy',
     autoShow: true,
-    scale: 'small',
+    scale: 'medium',
     title: 'Image Alternative Text',
     primaryText: 'OK',
 
@@ -25,6 +25,11 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
                 allowBlank: true,
                 selectOnFocus: true,
                 maxLength: 150,
+                validateOnChange: true,
+                validator: function (val) {
+                    if (!val || val.search(/['"=<>`]+|(&\s)+/) === -1) return true;
+                    return 'Disallowed characters in HTML attributes: \' " = < > ` &. You may HTML escape them.';
+                },
                 width: "100%"
             }]
         });

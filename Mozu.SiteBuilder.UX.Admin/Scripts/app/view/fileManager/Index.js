@@ -139,6 +139,7 @@ Ext.define('Taco.view.fileManager.Index', {
 
     initComponent: function () {
         var editor;
+
         this.header = {
             actions: [
                 {
@@ -155,6 +156,17 @@ Ext.define('Taco.view.fileManager.Index', {
 
         this.mon(this.store, 'beforesync', this.onBeforeSyncStore, this);
 
+        this.on({
+            boxready: {
+                scope: this,
+                fn: 'initFileDrop'
+            },
+            filedrop: {
+                scope: this,
+                fn: 'onUploadFile'
+            }
+        });
+
         editor = this.down('grid').plugins[0];
 
         //hack to properlty align the stoopid save cancel buttons next under the editors.
@@ -163,7 +175,6 @@ Ext.define('Taco.view.fileManager.Index', {
                 editor.getEditor().layout.align = 'top';
             }
         });
-
 
         editor.on('validateedit', function (ed, context) {
 
@@ -185,11 +196,49 @@ Ext.define('Taco.view.fileManager.Index', {
         });
 
     },
-   
+
+    initFileDrop: function (cmp) {
+        var bodyEl = cmp.body.el;
+
+        bodyEl.on({
+            scope: this,
+            dragenter: function (e) { Taco.app.DragDropZone.allowDrop(); },
+            dragleave: function (e) { Taco.app.DragDropZone.disallowDrop(); },
+            drop: function (e) {
+                var files = e.browserEvent.dataTransfer.files;
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                this.fireEvent('filedrop', files, e);
+                Taco.app.DragDropZone.disallowDrop();
+            }
+        });
+    },
+
     //removes create operations and returns false if 
     onBeforeSyncStore: function (operations) {
         delete operations.create;
         return operations.update || operations.destroy;
 
+    },
+
+    validateFiles: function (fileList) {
+        var allowedMediaTypes = ['image', 'video'];
+        var invalidFiles = [];
+
+        Ext.each(fileList, function (file) {
+            var mediaType = file.type.split('/')[0];
+            if (allowedMediaTypes.indexOf(mediaType) === -1) {
+                invalidFiles.push(file.name);
+            }
+        });
+
+        if (invalidFiles.length > 0) {
+            Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
+            return false;
+        }
+
+        return true;
     }
 });
