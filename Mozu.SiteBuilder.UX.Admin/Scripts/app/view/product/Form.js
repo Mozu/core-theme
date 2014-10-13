@@ -269,14 +269,16 @@ Ext.define('Taco.view.product.Form', {
 
         this.isSingleSite = this.singleSiteCheck();
 
+        var isOnlyGlobal = this.inSitesStore.count() === 0;
+
         //  State unchanged, gfto
-        if (wasSingleSite === this.isSingleSite) {
+        if (wasSingleSite === this.isSingleSite && !isOnlyGlobal) {
             return;
         }
 
         
         //  Must rebuild tabs now since stateOrProvince switched
-        if (this.isSingleSite) {
+        if (this.isSingleSite && !isOnlyGlobal) {
             this.goGoSingleSite();
         } else {
             this.goGoMultiSite();
@@ -396,15 +398,15 @@ Ext.define('Taco.view.product.Form', {
      * @param  {String} siteId The ID of the site to remove the product from
      */
     removeCatalog: function (catalogId, suspendSwitch) {
-        var record = this.inSitesStore.findRecord('catalogId', catalogId),
+        var catRecord = this.inSitesStore.findRecord('catalogId', catalogId),
             wasSingleSite, form;
 
-        if (!record) {
+        if (!catRecord) {
             return;
         }
 
         Ext.each(this.siteForms, function (f) {
-            if (record !== f.productInCatalogInfo) {
+            if (catRecord !== f.productInCatalogInfo) {
                 return;
             }
             form = f;
@@ -417,8 +419,8 @@ Ext.define('Taco.view.product.Form', {
 
         this.tabPanel.remove(form);
 
-        this.inSitesStore.remove(record);
-        
+        this.inSitesStore.remove(catRecord);
+       
         if (suspendSwitch) {
             return;
         }
