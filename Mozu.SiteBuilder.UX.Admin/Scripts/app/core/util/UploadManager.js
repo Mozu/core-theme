@@ -262,7 +262,14 @@ Ext.define('Taco.core.util.UploadManager', function () {
         */
         onComplete: function (e, eventData) {
             var me = this;
-            eventData.document.set('isUploaded', true);
+
+            function updateDoc (doc) {
+                doc.set('isUploaded', true);
+                doc.set('fileSize', doc.raw.file.size);
+                doc.commit();
+            };
+
+            updateDoc(eventData.document);
             me.fireEvent('complete', Ext.apply(Ext.create('Taco.core.util.FileUploadEvent'), Ext.apply(eventData, {
                 type: 'complete',
                 timeStamp: e.timeStamp
