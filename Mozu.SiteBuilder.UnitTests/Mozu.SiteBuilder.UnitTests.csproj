@@ -402,6 +402,7 @@
     <Compile Include="Mvc\Filters\FilterTestBase.cs" />
     <Compile Include="Mvc\Filters\GetProductAttributeTests.cs" />
     <Compile Include="Mvc\Filters\GetProductAttributeValueTests.cs" />
+    <Compile Include="Mvc\Themes\ThemeFactoryTests.cs" />
     <Compile Include="TestHelpers\ServiceClientResponseExtensions.cs" />
     <Compile Include="Mvc\Navigation\NavigationSetSerializationTest.cs" />
     <Compile Include="Mvc\Navigation\SimpleNavigationNode.cs" />

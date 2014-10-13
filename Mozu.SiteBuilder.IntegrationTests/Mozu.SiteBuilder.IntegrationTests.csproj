@@ -455,6 +455,7 @@
     <Compile Include="Mvc\Customers\CustomerGroupsRepositoryTests.cs" />
     <Compile Include="Mvc\Orders\OrderServiceTests.cs" />
     <Compile Include="Mvc\Orders\OrderStatusProviderTests.cs" />
+    <Compile Include="Mvc\Resources.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Siesta\SiestaRunner.cs" />
     <Compile Include="TestResponse.cs" />

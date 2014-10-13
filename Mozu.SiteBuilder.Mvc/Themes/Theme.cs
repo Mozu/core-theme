@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading.Tasks;
+using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
@@ -147,22 +150,37 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public DateTime TimsStamp { get; set; }
 
         public string ThemeId { get; set; }
+    }
 
-        public System.IO.Stream  OpenRead()
+    /// <summary>
+    /// This interface serves as a way to abstract getting the content of a theme from the ThemeFileSystemInfo instance associated with that content.
+    /// So far, it's just necessary to enable unit tests.
+    /// </summary>
+    public interface IThemeContentRetriever
+    {
+        string GetContent(ThemeFileSystemInfo info);
+        Task<string> GetContentAsync(ThemeFileSystemInfo info);
+        Stream GetStream(ThemeFileSystemInfo info);
+    }
+
+    public class FileSystemContentRetriever : IThemeContentRetriever
+    {
+        public string GetContent(ThemeFileSystemInfo info)
         {
-            return System.IO.File.OpenRead(FullPath);
+            return File.ReadAllText(info.FullPath);
         }
 
-        public string  ReadAllText()
+        public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
         {
-            using (var x = OpenText())
+            using (var r = new StreamReader(GetStream(info)))
             {
-                return x.ReadToEnd();
+                return await r.ReadToEndAsync();
             }
         }
-        public System.IO.TextReader OpenText()
+
+        public Stream GetStream(ThemeFileSystemInfo info)
         {
-            return System.IO.File.OpenText(FullPath);
+            return File.OpenRead(info.FullPath);
         }
     }
 }
