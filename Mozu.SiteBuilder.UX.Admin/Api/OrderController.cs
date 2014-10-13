@@ -415,7 +415,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IEnumerable<string> result = _validBulkOrderActions;
             foreach (var orderActionsTask in getOrderActionsTasks)
             {
-                result = result.Intersect(orderActionsTask.Result);
+                result = result.Intersect(orderActionsTask.Result, new OrderActionComparer());
             }
             var list = result.ToList();
             return new Response<List<string>> {Items = list, Total = list.Count};
@@ -482,15 +482,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (string.IsNullOrEmpty(actionName))
                 return false;
-            return _validBulkOrderActions.Any(s => s.EqualsIgnoreCase(actionName));
+            return _validBulkOrderActions.Contains(actionName, new OrderActionComparer());
         }
 
         private static readonly List<string> _validBulkOrderActions = new List<string>
         {
-            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER.ToLower(),
-            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER.ToLower(),
-            CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP.ToLower(),
-            CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT.ToLower()
+            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER,
+            CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER,
+            CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP,
+            CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT
         };
 
         public async Task<List<string>> GetRootActions(OrderContext orderContext)
@@ -673,6 +673,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     : string.Format("Unknown Error performing the root action '{0}'", actionName);
             }
             return result;
+        }
+    }
+
+    public class OrderActionComparer : IEqualityComparer<string>
+    {
+        public bool Equals(string x, string y)
+        {
+            return x.ToLower().CompareTo(y.ToLower()) == 0;
+        }
+
+        public int GetHashCode(string obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }
