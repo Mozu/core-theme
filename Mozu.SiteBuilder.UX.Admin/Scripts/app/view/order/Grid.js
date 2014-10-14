@@ -151,7 +151,7 @@ Ext.define('Taco.view.order.Grid', {
 
         orders = Ext.Array.map(selection, function (item) {
             var siteId = item.get('siteId');
-            var mcId = context.masterCatalogId || getMasterCatalogId(context, siteId);
+            var mcId = context.masterCatalogId || context.getMasterCatalogId(context, siteId);
 
             return {
                 orderId: item.get('id'),
@@ -192,7 +192,7 @@ Ext.define('Taco.view.order.Grid', {
         // translate selected rows into objects with orderId and masterCatalogId
         orders = Ext.Array.map(selection, function (item) {
             var siteId = item.get('siteId');
-            var mcId = context.masterCatalogId || getMasterCatalogId(context, siteId);
+            var mcId = context.masterCatalogId || context.getMasterCatalogId(context, siteId);
 
             return {
                 orderId: item.get('id'),
@@ -211,17 +211,15 @@ Ext.define('Taco.view.order.Grid', {
         };
 
         Ext.Ajax.request(config);
-
-        // if the current context is the tenant, find the master catalog that contains the given site
-        function getMasterCatalogId (ctx, siteId) {
-            var mc = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
-                return Ext.Array.some(mc.sites, function (site) {
-                    return site.id === siteId;
-                });
+    },
+    getMasterCatalogId: function(ctx, siteId) {
+        var masterCatalog = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
+            return Ext.Array.some(mc.sites, function (site) {
+                return site.id === siteId;
             });
+        });
 
-            return mc.id;
-        }
+        return masterCatalog.id;
     },
 
     onBulkActionSuccess: function (action, records, response) {
