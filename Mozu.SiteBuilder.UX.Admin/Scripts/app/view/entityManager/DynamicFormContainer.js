@@ -146,8 +146,19 @@
 
         data = data || (this.record.get('entityType') === 'mzdb' ? containerData.item : containerData.properties);
 
-        //this.record.data.properties = this.data;
-        //this.record.data.item = this.data;
+
+        //clean bad fields out.
+        if (Ext.isObject(data)) {
+            for (name in data) {
+                if (data.hasOwnProperty(name)) {
+                    if (name.indexOf('-inputEl') != -1) {
+                        delete data[name];
+                    }
+                }
+            }
+        }
+
+       
         if (this.record.get('entityType') === 'mzdb') {
             this.record.set('item', data);
         } else {
