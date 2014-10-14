@@ -150,6 +150,12 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 }
             }
         });
+
+        this.mon(Taco.app.context, {
+            contextchange: this.onGlobalContextChange,
+            scope: this
+        });
+
     },
 
     onBeforeSelect:function (combo, record) {
@@ -197,7 +203,10 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      */
     doFilter: function (value) {
         var existingFilter = this.getAdvancedSearchFromStore();
-        if (existingFilter && Ext.Object.equals(existingFilter, value)) {
+        if (this.hasContextChanged) {
+            this.hasContextChanged = false;
+        }
+        else if (existingFilter && Ext.Object.equals(existingFilter, value)) {
             return;
         }
         var filterString = Ext.JSON.encodeValue(value);
@@ -546,6 +555,15 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         if (modal && button && !this.isDestroyed && !modal.isDestroyed && !e.within(modal.el, false, true) && !e.within(button.el) && !e.getTarget('.x-layer', 10)) {
             modal.close();
         }
+    },
+
+    onGlobalContextChange: function (context) {
+        if (context.urlToken === this.urlToken) {
+            return;
+        }
+        this.hasContextChanged = true;
+        this.urlToken = context.urlToken;
+        this.syncAndFilter(this.getAdvancedSearchFromStore());
     },
 
     onDestroy: function () {
