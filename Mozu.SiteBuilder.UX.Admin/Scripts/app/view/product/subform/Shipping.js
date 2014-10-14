@@ -95,32 +95,34 @@ Ext.define('Taco.view.product.subform.Shipping', {
             allowBlank: false
         });
 
+
         field = {
             xtype: 'container',
             width: '100%',
             items: [
-                fulfillmentContainer,
-                {
-                    xtype: 'checkboxfield',
-                    name: 'isPackagedStandAlone',
-                    width: 120,
-                    boxLabel: 'Ships by itself',
-                    inputValue: true,
-                    checked: record.get("isPackagedStandAlone")
-                    //checked: 
-
-                    //fieldLabel: 'Weight',
-                    //value: (isPhysical ? record.get('packageWeight') : '0 lbs'),
-
-                },
-                {
-                    xtype: 'container',
-                    width: '100%',
-                    layout: 'hbox',
-                    items: packageFields
-                }
+                fulfillmentContainer
             ]
         };
+
+        var isBundle = this.record.productUsage == "Bundle";
+        if (!isBundle) {
+            field.items.push({
+                xtype: 'checkboxfield',
+                name: 'isPackagedStandAlone',
+                width: 120,
+                margin:"10 0 0 0",
+                boxLabel: 'Ships by itself',
+                inputValue: true,
+                checked: record.get("isPackagedStandAlone")
+            })
+        }
+
+        field.items.push({
+            xtype: 'container',
+            width: '100%',
+            layout: 'hbox',
+            items: packageFields
+        })
         
 
         // remove the productNameField if its null;

@@ -66,7 +66,7 @@ Ext.define('Taco.view.product.variant.Options', {
     onBeforeSave: function () {
         var options = this.product.getOptions();
 
-        debugger
+        
         this.form.getForm().getFields().each(function (field) {
             var record = options.getById(field.option.getId());
 

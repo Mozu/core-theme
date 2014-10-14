@@ -2,7 +2,8 @@
  * @class Taco.view.product.widget.ProductBundleGrid
  */
 Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
-    extend: 'Ext.form.CheckboxGroup',
+    //extend: 'Ext.form.CheckboxGroup',
+    extend: 'Ext.container.Container',
     alias: 'widget.productfulfillmenttypes',
     requires: [
         'Ext.data.Store',
@@ -14,7 +15,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
     layout: {
         type: "hbox"
     },
-    bodyPadding: 10,
+    //bodyPadding: 0,
     hidden: false,
     //columns: 3,
     product: null,

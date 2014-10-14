@@ -60,7 +60,7 @@ Ext.define('Taco.view.product.subform.General', {
 
 
         me.mon(me, 'boxready', function (view, width, height, eOpts) {
-            //debugger;
+            
             //classDef.sizes.lastWidth = width;
             //classDef.sizes.lastHeight = height;
         });
