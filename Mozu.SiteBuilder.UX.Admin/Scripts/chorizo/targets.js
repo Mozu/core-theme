@@ -89,6 +89,17 @@
         this.element.append(row.element);
     }
 
+    Grid.prototype.snapHeights = function() {
+        return this.element
+                    .find('.mz-cms-content')
+                    .map(function (i, el) {
+                        var $el = $(el);
+
+                        return $el.offset().top + $el.height();
+                    })
+                    .sort();
+    }
+
 
     //  TARGET base class
 
@@ -375,7 +386,7 @@
         Chorizo.editor.columnResizing(true);
         this.$resizer.addClass('active');
         this._moveHander = $.proxy(this._onMousemove, this);
-        this.offset = this.element.offset();
+        this._offset = this.element.offset();
         this.height = this.element.width();
         this.gridWidth = this.parent.element.width() / 12;
         this.size = this.span();
@@ -393,7 +404,7 @@
     }
 
     Col.prototype._onMousemove = function(e, ui) {
-        var newWidth = $doc.scrollLeft() + e.clientX - this.offset.left,
+        var newWidth = $doc.scrollLeft() + e.clientX - this._offset.left,
             newSize = Math.round(newWidth / this.gridWidth),
             delta = newSize - this.size,
             gridSpan = this.parent.parent.span,
