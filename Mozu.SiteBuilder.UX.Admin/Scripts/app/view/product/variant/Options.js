@@ -66,20 +66,30 @@ Ext.define('Taco.view.product.variant.Options', {
     onBeforeSave: function () {
         var options = this.product.getOptions();
 
+        debugger
         this.form.getForm().getFields().each(function (field) {
             var record = options.getById(field.option.getId());
 
-            if (record && !field.getValue().length) {
-                options.remove(record);
-            } else if (!field.getValue().length) {
+            // need to see if there is a value change; this will always be the case si
+            if (!field.isDirty()) {
                 return;
             }
 
-            if (!record) {
-                record = options.add({
-                    attributeFQN: field.option.get('attributeFQN')
-                })[0];
-            }
+            options.remove(record);
+
+            //if (record && !field.getValue().length) {
+            //    options.remove(record);
+            //} else if (!field.getValue().length) {
+            //    return;
+            //}
+
+            //if (!record) {
+
+            record = options.add({
+                attributeFQN: field.option.get('attributeFQN')
+            })[0];
+
+            //}
 
             record.set('values', field.getValue());
         }, this);
