@@ -74,6 +74,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                 ]
             }]
         });
+        
 
         this.items.push(this.infoContainer);
     },

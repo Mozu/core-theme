@@ -53,6 +53,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 type: 'float',
                 defaultValue: 0
             }, {
+                name: 'isPackagedStandAlone',
+                type: 'boolean'
+            },            {
                 name: 'fulfillmentMethod',
                 type: 'string',
                 useNull: true,
@@ -142,11 +145,18 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
         if (!this.packageData) {
             columns.push({
                 text: 'Method',
+                xtype: 'templatecolumn',
                 draggable: false,
-                width: 100,
+                width: 115,
                 sortable: false,
                 menuDisabled: true,
                 align: 'left',
+                tpl: [
+                '{fulfillmentMethod}',                
+                '<tpl if="values.isPackagedStandAlone">',
+                ' (Seperately)',
+                '</tpl>'                
+                ],
                 dataIndex: 'fulfillmentMethod'
             });
         }

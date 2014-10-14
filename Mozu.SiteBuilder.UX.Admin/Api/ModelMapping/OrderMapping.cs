@@ -288,7 +288,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                         var bundleItem = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(bi => bi.ProductCode == productCode);
                         return bundleItem.Name;
-                    });
+                    });                    
 
                     var GetUnitWeight = new Func<string, decimal?>(productCode => {
                         var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
@@ -346,6 +346,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+                        var isPackagedStandAlone = order.Items.FirstOrDefault(i => i.ProductCode == productCode).IsPackagedStandAlone;
+                    
 
                         // if there are more desired products than created packages contain, add this product to unpackagedItems.
                         if (desiredPackageQuantity > packagedQuantity)
@@ -367,7 +369,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     Weight = GetUnitWeight(productCode) * remainingQuantity,
                                     Quantity = remainingQuantity,
                                     FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
-                                    FulfillmentLocationCode = fulfillmentLocationForThisProduct
+                                    FulfillmentLocationCode = fulfillmentLocationForThisProduct,
+                                    IsPackagedStandAlone = isPackagedStandAlone
                                 });
                             }
                         }
