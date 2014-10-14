@@ -517,12 +517,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 IEnumerable<string> result = new List<string>
                 {
-                    CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP.ToLower()
+                    CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP
                 };
                 foreach (var packageActionsTask in getPackageActionsTasks)
                 {
                     var actions = packageActionsTask.Result.ReadAsSync();
-                    result = result.Intersect(actions);
+                    result = result.Intersect(actions, new OrderActionComparer());
                 }
 
                 return result.ToList();
@@ -548,7 +548,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT.ToLower()
                 };
-                return result.Intersect(paymentActions).ToList();
+                return result.Intersect(paymentActions, new OrderActionComparer()).ToList();
             }
             throw new VaeUnexpectedErrorException(string.Format("Retrieving the fulfillment actions for order {0}", orderContext.OrderId));
         } 
@@ -680,7 +680,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         public bool Equals(string x, string y)
         {
-            return x.ToLower().CompareTo(y.ToLower()) == 0;
+            return string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
         }
 
         public int GetHashCode(string obj)
