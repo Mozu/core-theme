@@ -26,22 +26,30 @@
       margin-top: 30px;
       position: relative;
 
-      & .#{$prefix}container {
-        border: 1px dashed border-for($color-neutral-white);
-        padding: 0px 20px 20px;
-      }
+	  .#{$vprefix}override-form-inner {
+		border: 1px dashed border-for($color-neutral-white);
+		padding: 20px 20px 20px;
+
+
+		> .#{$prefix}mask {
+		  background-color: transparent;
+		  background-image: -webkit-repeating-linear-gradient(-45deg, $color-neutral-white 0%, $color-neutral-white 25.5%, $color-neutral-black 25.5%, $color-neutral-black 51%, $color-neutral-white 51%, $color-neutral-white 76.5%, $color-neutral-black 76.5%, $color-neutral-black 100%);
+		  background-size: 6px 6px;
+		  opacity: 0.06;
+		}
+		
+		.x-html-editor-wrap {
+			.x-mask{			    
+				opacity:0;
+			}
+		}
+	  }
 
       .#{$vprefix}override-checkbox {
         display: block;
       }
     }
 
-    .#{$prefix}mask {
-      background-color: transparent;
-      background-image: -webkit-repeating-linear-gradient(-45deg, $color-neutral-white 0%, $color-neutral-white 25.5%, $color-neutral-black 25.5%, $color-neutral-black 51%, $color-neutral-white 51%, $color-neutral-white 76.5%, $color-neutral-black 76.5%, $color-neutral-black 100%);
-      background-size: 6px 6px;
-      opacity: 0.06;
-    }
 
     .#{$vprefix}override-checkbox {
       display: none;

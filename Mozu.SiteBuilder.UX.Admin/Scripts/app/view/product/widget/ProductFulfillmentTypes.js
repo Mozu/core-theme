@@ -9,10 +9,14 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
         'Taco.store.Products'
     ],
     fieldLabel: 'Fulfillment Types',
-    flex: 2,
+    //flex: 2,
+    width: "100%",
+    layout: {
+        type: "hbox"
+    },
     bodyPadding: 10,
     hidden: false,
-    columns: 3,
+    //columns: 3,
     product: null,
     isPhysical: true,
     isReadOnly: false,
@@ -41,6 +45,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             xtype: 'checkboxfield',
             boxLabel: 'In Store Pickup',
             name: 'inStoreCb',
+            margin:"0 0 0 50",
             inputValue: 'InStorePickup',
             checked: ((this.fulfillmentTypes.indexOf('InStorePickup') != -1) && this.isPhysical),
             readOnly: this.isReadOnly,
@@ -54,6 +59,7 @@ Ext.define('Taco.view.product.widget.ProductFulfillmentTypes', {
             xtype: 'checkboxfield',
             boxLabel: 'Email',
             name: 'digitalCreditCb',
+            margin: "0 0 0 50",
             inputValue: 'Digital',
             checked: ((this.fulfillmentTypes.indexOf('Digital') != -1) || !this.isPhysical),
             readOnly: true,
