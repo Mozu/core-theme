@@ -254,7 +254,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (oc!= null)
             {
 
-                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _themeSettingsRepository, _pathProvider).Transform;
+                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _pathProvider, _contentRetriever).Transform;
             }
 
             return res;
@@ -777,11 +777,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             private readonly IThemeContentRetriever _contentRetriever;
             private readonly string _path;
 
-     
-         
-            private IThemeSettingsRepository _themeSettingsRepository;
-
-            public LessTransFormer(string path, bool debug, bool emitDebugStylesheet, ResourceController resourceController , IThemeSettingsRepository themeSettingsRepository, MozuVirtualPathProvider virtualPathProvider)
+            public LessTransFormer(string path, bool debug, bool emitDebugStylesheet, ResourceController resourceController,
+                IMozuVirtualPathProvider virtualPathProvider, IThemeContentRetriever contentRetriever)
             {
                 Controller = resourceController;
                 _emitDebugStylesheet = emitDebugStylesheet;
@@ -810,7 +807,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                  };
                 
 
-                Ruleset tree;
+                Ruleset tree = null;
                 try
                 {
                     tree = parser.Parse(template, _path);
@@ -844,7 +841,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                     else if (ex.GetType().FullName.Contains("dotless"))
                     {
-                        throw ex;
+                        throw;
                     }
                     else
                     {
