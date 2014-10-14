@@ -457,7 +457,7 @@
     <Compile Include="Api\Models\Order\OrderNote.cs" />
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
-    <Compile Include="Api\Models\Order\BulkOrderAction.cs" />
+    <Compile Include="Api\Models\Order\BulkOrderRequest.cs" />
     <Compile Include="Api\Models\Order\OrderSummary.cs" />
     <Compile Include="Api\Models\ProductModels\ProductCodeRename.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />

@@ -9,3 +9,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.13192.2")]
 
 [assembly: InternalsVisibleTo("Mozu.SiteBuilder.UnitTests")]
+[assembly: InternalsVisibleTo("Mozu.SiteBuilder.IntegrationTests")]

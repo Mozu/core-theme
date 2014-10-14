@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
-    public class BulkOrderAction
+    public class BulkOrderRequest
     {
         public string ActionName { get; set; }
         public List<OrderContext> OrderContexts { get; set; }
@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public int MasterCatalogId { get; set; }
     }
 
-    public class BulkOrderActionResult
+    public class BulkOrderResult
     {
         public bool ContainsErrors { get; set; }
         public List<OrderActionResult> OrderActionResults { get; set; }

@@ -22,12 +22,46 @@ Ext.define('Taco.controller.Message', {
         });
 
         me.displayMessages = Ext.Function.createBuffered(function() {
+            var header = me.getHeader();
+
+            if (header && header.isComponent) {
+                header.addCls('taco-has-message');
+                header.updateLayout();
+            }
+
             me.messages.each(function (item, index) {
-                item.show();
+                var prevMessage;
+
+                if (index === 0) {
+                    item.show();
+                } else {
+                    prevMessage = me.messages.getAt(index - 1);
+
+                    if (prevMessage && prevMessage.rendered && !prevMessage.isHidden()) {
+                        item.y = prevMessage.getRegion().bottom + 25;
+                        item.show();
+                    }
+                }
             }, me);
         }, 300, me);
 
         me.callParent(arguments);
+
+        me.messages.on({
+            remove: {
+                scope: me,
+                fn: function () {
+                    if (me.messages.getCount() < 1) {
+                        var header = me.getHeader();
+
+                        if (header && header.isComponent) {
+                            header.removeCls('taco-has-message');
+                            header.updateLayout();
+                        }
+                    }
+                }
+            }
+        });
 
         Taco.core.StateManager.on({
             navigate: {
@@ -63,7 +97,6 @@ Ext.define('Taco.controller.Message', {
         dialog = Ext.create(this.getTacoViewNotifierBarView(), {
             message: message,
             messageType: type,
-            autoClose: type === 'success',
             listeners: {
                 beforehide: {
                     scope: this,

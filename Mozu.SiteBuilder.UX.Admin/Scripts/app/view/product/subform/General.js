@@ -1100,6 +1100,8 @@ Ext.define('Taco.view.product.subform.General', {
         if (productImagesField) {
             // need to update the record manually. form.Form does not extract the value from the imageField automatically.
             me.record.set("productImages", productImagesField.getValue());
+        } else {
+            me.record.set("productImages", []);
         }
         return true;
     }
