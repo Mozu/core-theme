@@ -521,6 +521,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
                       ? dc.HandlingAmount : null))
 
+
+                      .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
+                  
+
+
                   // handled by after mapper
                   .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                   

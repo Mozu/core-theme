@@ -80,7 +80,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
 
     buildPendingPackages: function () {
         var items = this.record.get('unpackagedItems');
-
+        
         if (!items.length) return;
 
         this.pendingGrid = Ext.create('Taco.view.order.subform.fulfillment.Grid', {
