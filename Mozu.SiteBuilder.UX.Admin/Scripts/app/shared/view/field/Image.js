@@ -61,6 +61,8 @@ Ext.define('Taco.shared.view.field.Image', {
     allowMulti: true,
     thumbnailSize: 150,
     filters: null,
+    imageMetadata: null,
+    isMetadataMerged: false,
     
     initComponent: function () {
         
@@ -103,7 +105,7 @@ Ext.define('Taco.shared.view.field.Image', {
             hidden: true,
             selectedItemCls: 'selected',
             store: this.selectedImages,
-            tpl :[
+            tpl :[ 
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
                             '<li class="item uploading">',
@@ -111,10 +113,11 @@ Ext.define('Taco.shared.view.field.Image', {
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
-                                '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')">',
+                                '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt}">',
                                     '<ul class="toolbar">',
-                                        '<li class="drag-handle">Drag</li>',
-                                        '<li class="remove">Remove</li>',
+                                        '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
+                                        '<li class="remove" title="Remove">Remove</li>',
+                                        '<li class="alt-text" title="Edit Properties">Alt Text</li>',
                                     '</ul>',
                                 '</div>',
                             '</li>',
@@ -326,6 +329,21 @@ Ext.define('Taco.shared.view.field.Image', {
             e.preventDefault();
             this.selectedImages.remove(record);
         }
+        else if (Ext.fly(e.target).hasCls('alt-text')) {
+            e.stopPropagation();
+            e.preventDefault();
+            Ext.create('Taco.shared.view.modal.ImageMetadata', {
+                record: record,
+                listeners: {
+                    savesuccess: {
+                        scope: this,
+                        fn: function (imgMetadataModal, imgMetadata) {
+                            this.onSelectedImagesDataChanged();
+                        }
+                    }
+                }
+            });
+        }
     },
 
     bindImageUpload: function () {
@@ -432,7 +450,6 @@ Ext.define('Taco.shared.view.field.Image', {
     //    return isDirty;
     //},
 
-
     onAssociatorClick: function () {
         
         var associator = Ext.create('Taco.view.fileManager.Associator', {});
@@ -446,13 +463,39 @@ Ext.define('Taco.shared.view.field.Image', {
         
     },
 
-  
     onSelectedImagesDataChanged: function () {
         var value = [];
+
+        //merge product/category images metadata with cms file data
+        if (this.imageMetadata && !this.isMetadataMerged) {
+            var clonedMetadata = Ext.Array.clone(this.imageMetadata);
+            var warningMsgs = [];
+            for (var i = 0; i < clonedMetadata.length; i++) {
+                var imgMeta = clonedMetadata[i];
+                imgMeta.isMatched = false;
+
+                Ext.Array.every(this.selectedImages.data.items, function(selectImg) {
+                    if (imgMeta.cmsId === selectImg.get('cmsId')) {
+                        selectImg.set('alt', imgMeta.alt);
+                        imgMeta.isMatched = true;
+                        return false;
+                    }
+                    return true;
+                });
+                if (!imgMeta.isMatched) {
+                    warningMsgs.push(imgMeta.cmsId);
+                }
+            }
+            if (warningMsgs.length > 0) {
+                Taco.app.fireEvent('setmessage', 'The following image files are no longer available ' + warningMsgs.join(', '), 'warning');
+            }
+            this.isMetadataMerged = true;
+        }
+
         this.selectedImages.each(function (record) {
-            value.push({ url: record.get('url') , cmsId: record.get('cmsId') });
+            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt') });
         }, this);
-        
+
         if (value && value.length) {
             this.emptyDropZone.hide();
             this.imageView.show();
@@ -464,12 +507,6 @@ Ext.define('Taco.shared.view.field.Image', {
         return this.mixins.field.setValue.call(this, value);
     },
     
-
-   
-    
-
-
-
     setValue: function (value) {
        
         if (!value ) {
@@ -479,7 +516,6 @@ Ext.define('Taco.shared.view.field.Image', {
             value = [value];
         }
             
-
         Ext.each(value, function (val) {
             if (val.isModel) {
                 return;

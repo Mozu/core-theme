@@ -18,6 +18,7 @@ using Mozu.MZDB.Contracts;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Newtonsoft.Json;
@@ -26,6 +27,7 @@ using Proto = Mozu.Content.Contracts.Prototype;
 using DC = Mozu.Content.Contracts;
 using CMS = Mozu.Content.Contracts;
 using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
+using Constants = Mozu.Core.Messaging.Contracts.Constants;
 
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -40,13 +42,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IDocumentListWebApiClient _documentListWebApiClient;
         private readonly IEntityListsWebApiClient _entityListsWebApiClient;
         private readonly IDocumentTypeWebApiClient _documentTypeWebApiClient;
+        private readonly IThemeContentRetriever _contentRetriever;
         //   private const string TBD = "duno";
-        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient)
+        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever)
 
         {
             _documentListWebApiClient = documentListWebApiClient;
             _entityListsWebApiClient = entityListsWebApiClient;
             _documentTypeWebApiClient = documentTypeWebApiClient;
+            _contentRetriever = contentRetriever;
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
@@ -116,7 +120,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
                     var entity = doc.ToObject<EntityContainer>();
-                    return _entityListsWebApiClient.InsertEntity(entityListFullName: entity.ListFQN, item: entity.Item);
+                    var fullName = entity.ListFullName ?? (string) doc.Value<string>("listFQN");
+                    return _entityListsWebApiClient.InsertEntity(entityListFullName: fullName, item: entity.Item);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -147,10 +152,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else if (documents.First().Value<string>("entityType") == "mzdb")
             {
+              
                 List<Task<ServiceClientResponse<JObject>>> tasks = documents.Select(doc =>
                 {
+                    
                     var entity = doc.ToObject<EntityContainer>();
-                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: entity.ListFQN, item: entity.Item, id: entity.Id);
+                    var listFqn = entity.ListFullName ?? doc.Value<string>("listFQN");
+                    return _entityListsWebApiClient.UpdateEntity(entityListFullName: listFqn, item: entity.Item, id: entity.Id);
                 }).ToList();
 
                 await Task.WhenAll(tasks);
@@ -239,8 +247,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 return List2(res.Items.Select(x =>
                 {
-                    x.ListFQN = x.ListFQN ?? list;
+              
                     JObject j = JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings()));
+
+                    j["listFQN"] = x.ListFullName;
                     j["entityType"] = "mzdb";
                     return j;
                 }).ToList(), res.TotalCount);
@@ -468,7 +478,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (this.SbApiContext.SiteId.HasValue)
             {
                 var siteContext = this.Request.Resolve<SiteContext>();
-                var vpp =this.Request.Resolve<MozuVirtualPathProvider>(); 
+                var vpp =this.Request.Resolve<IMozuVirtualPathProvider>(); 
                 await siteContext.Init();
                 var theme = this.Request.Resolve<SiteContext>().Theme;
                 if (theme.Editors != null && theme.Editors.Count > 0)
@@ -486,7 +496,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                        EntityLists = x.EntityLists,
                                        DocumentTypes = x.DocumentTypes,
                                        Priority = x.Priority,
-                                       Code = jsFile.ReadAllText()
+                                       Code = _contentRetriever.GetContent(jsFile)
                                    };
                         }
                         return null;

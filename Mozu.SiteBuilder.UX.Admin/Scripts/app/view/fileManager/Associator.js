@@ -35,8 +35,6 @@ Ext.define('Taco.view.fileManager.Associator', {
             autoSync: true
         });
 
-
-
         this.grid = Ext.create('Ext.grid.Panel', {
             selModel: selModel,
             store: this.store,
@@ -126,6 +124,36 @@ Ext.define('Taco.view.fileManager.Associator', {
                 fn: 'onBeforeSyncStore'
             }
         });
+
+        this.on({
+            boxready: {
+                scope: this,
+                fn: 'initFileDrop'
+            },
+            filedrop: {
+                scope: this,
+                fn: 'onUploadFile'
+            }
+        });
+    },
+
+    initFileDrop: function (cmp) {
+        var bodyEl = cmp.body.el;
+
+        bodyEl.on({
+            scope: this,
+            dragenter: function (e) { Taco.app.DragDropZone.allowDrop(); },
+            dragleave: function (e) { Taco.app.DragDropZone.disallowDrop(); },
+            drop: function (e) {
+                var files = e.browserEvent.dataTransfer.files;
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                this.fireEvent('filedrop', files, e);
+                Taco.app.DragDropZone.disallowDrop();
+            }
+        });
     },
 
     /**
@@ -136,6 +164,25 @@ Ext.define('Taco.view.fileManager.Associator', {
     onBeforeSyncStore: function (operations) {
         delete operations.create;
         return operations.update || operations.destroy;
+    },
+
+    validateFiles: function (fileList) {
+        var allowedMediaTypes = ['image', 'video'];
+        var invalidFiles = [];
+
+        Ext.each(fileList, function (file) {
+            var mediaType = file.type.split('/')[0];
+            if (allowedMediaTypes.indexOf(mediaType) === -1) {
+                invalidFiles.push(file.name);
+            }
+        });
+
+        if (invalidFiles.length > 0) {
+            Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
+            return false;
+        }
+
+        return true;
     },
 
     doSave: function () {

@@ -15,13 +15,13 @@ namespace Mozu.SiteBuilder.Mvc.Localization
 {
     public class LocalizationRepository : ILocalizationRepository
     {
-        private readonly MozuVirtualPathProvider _mozuVirtualPathProvider;
+        private readonly IMozuVirtualPathProvider _mozuVirtualPathProvider;
         private readonly SiteContext _siteContext;
         
         private readonly ISiteBuilderApiContext _builderApiContext;
         private static readonly ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>> _tableCache = new ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>>();
         
-        public LocalizationRepository(MozuVirtualPathProvider mozuVirtualPathProvider , SiteContext siteContext, ISiteBuilderApiContext builderApiContext)
+        public LocalizationRepository(IMozuVirtualPathProvider mozuVirtualPathProvider , SiteContext siteContext, ISiteBuilderApiContext builderApiContext)
         {
             _mozuVirtualPathProvider = mozuVirtualPathProvider;
             _siteContext = siteContext;

@@ -98,6 +98,18 @@
                     @include icon-font($glyph-knurling, 16px, $color-neutral-white);
                 }
 
+                .alt-text {
+                    cursor: pointer;
+                    display: inline-block;
+                    vertical-align: top;
+                    width: 16px;
+                    height: 16px;
+                    position:absolute;
+                    margin:1px -50px;
+                    @include icon-font($glyph-pencil, 16px, $color-neutral-white);
+
+                }
+                
                 .remove {
                     cursor: pointer;
                     display: inline-block;

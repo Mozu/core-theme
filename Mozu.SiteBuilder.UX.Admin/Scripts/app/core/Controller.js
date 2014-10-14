@@ -164,8 +164,7 @@ Ext.define('Taco.core.Controller', {
                     }
 
                     record.phantom = true;
-                    Ext.data.Model.id(record);
-
+                    Ext.data.Model.id(record);                    
                     this.ensureRequiredStores(function () {
                         this.createContentView(viewName, {
                             isDuplicate:true,

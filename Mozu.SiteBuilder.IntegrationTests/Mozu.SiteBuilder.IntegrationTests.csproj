@@ -290,9 +290,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Location.Contracts.1.11.0.2\lib\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.MZDB.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.MZDB.Contracts, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.11.0.3\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.12.0.2\lib\net45\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts">
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.8.0.1\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
@@ -455,6 +455,7 @@
     <Compile Include="Mvc\Customers\CustomerGroupsRepositoryTests.cs" />
     <Compile Include="Mvc\Orders\OrderServiceTests.cs" />
     <Compile Include="Mvc\Orders\OrderStatusProviderTests.cs" />
+    <Compile Include="Mvc\Resources.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Siesta\SiestaRunner.cs" />
     <Compile Include="TestResponse.cs" />

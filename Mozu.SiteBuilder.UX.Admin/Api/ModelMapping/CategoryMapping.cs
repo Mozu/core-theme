@@ -78,11 +78,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<CategoryImage, DC.CategoryLocalizedImage>()
                 .ForMember(dc => dc.ImageUrl, op => op.ResolveUsing(x => x.Url))
+                .ForMember(dc => dc.AltText, op => op.ResolveUsing(x => x.Alt))
                 //ignores
                 .ForMember(dc => dc.Id, op => op.Ignore())
                 .ForMember(dc => dc.LocaleCode, op => op.Ignore())
                 .ForMember(dc => dc.ImageLabel, op => op.Ignore())
-                .ForMember(dc => dc.AltText, op => op.Ignore())
                 .ForMember(dc => dc.CmsId, op => op.Ignore())
                 .ForMember(dc => dc.VideoUrl, op => op.Ignore())
                 .ForMember(dc => dc.MediaType, op => op.Ignore())
@@ -91,6 +91,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.CategoryLocalizedImage, CategoryImage>()
                 .ForMember(x => x.Url, op => op.ResolveUsing(x => x.ImageUrl))
+                .ForMember(x => x.Alt, op => op.ResolveUsing(x => x.AltText))
                 ;
         }
     }
