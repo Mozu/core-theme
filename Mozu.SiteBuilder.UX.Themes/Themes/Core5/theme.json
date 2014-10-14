@@ -6,7 +6,8 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core5"
+        "name": "Core5",
+        "allowProduction": false
     },
     "editors": [ {
         "documentTypes": [
