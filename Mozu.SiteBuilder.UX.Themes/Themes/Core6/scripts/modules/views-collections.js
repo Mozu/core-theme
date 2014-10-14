@@ -5,11 +5,16 @@ define(['modules/jquery-mozu', 'underscore', 'hyprlive', 'modules/backbone-mozu'
 
     function factory(conf) {
         var views = {},
-            model = new FacetingModels.FacetedProductCollection(conf.data),
+            model,
             categoryId = conf.$body.data('mz-category'),
             searchQuery = conf.$body.data('mz-search');
 
-        if (searchQuery) model.setQuery(searchQuery);
+        if (searchQuery) {
+            model = new FacetingModels.SearchResult(conf.data);
+            model.setQuery(searchQuery);
+        } else {
+            model = new FacetingModels.Category(conf.data);
+        }
         if (categoryId) model.setHierarchy('categoryId', categoryId);
 
         _.extend(views, {
