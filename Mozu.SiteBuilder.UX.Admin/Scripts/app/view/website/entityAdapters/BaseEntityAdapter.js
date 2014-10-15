@@ -13,22 +13,22 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         more: false
     },
 
-    constructor: function (config) {
+    constructor: function () {
         this.callParent(arguments);
         this.manager.entitypeTypeHandler = this;
         this.load();
-    
+
         this.mon(this.manager, 'activecardchanged', this.onManagerActiveItemChange, this);
     },
 
     onManagerActiveItemChange: function (manager, activeItem) {
-        if (activeItem.itemId == 'pageEditor' && this.webPageNeedsRefresh) {
+        if (activeItem.itemId === 'pageEditor' && this.webPageNeedsRefresh) {
             this.webPageNeedsRefresh = false;
             this.manager.reloadPage();
         }
     },
 
-    getDocument:function () {
+    getDocument: function () {
         return this.get();
     },
 
@@ -70,7 +70,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             }
         }
     },
-    
+
     getId: function () {
         if (this.record) {
             return this.record.getLoadParams();
@@ -88,15 +88,17 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         var me = this,
             tasks = Ext.create('Taco.core.ux.form.Tasks'),
             zoneData = [],
-            source,
-            json;
+            properties,
+            document,
+            editListener,
+            source;
 
         if (me.editor) {
             me.editor.dirtyStateCheck();
             if (me.editor.isDirty()) {
-                if ((me.pageContext.editMode || "").toLowerCase() == 'template') {
+                if ((me.pageContext.editMode || "").toLowerCase() === 'template') {
                     source = me.pageContext.cmsContext.template;
-                } else if ((me.pageContext.editMode || "").toLowerCase() == 'site') {
+                } else if ((me.pageContext.editMode || "").toLowerCase() === 'site') {
                     source = me.pageContext.cmsContext.site;
                 } else {
                     source = me.pageContext.cmsContext.page;
@@ -110,33 +112,53 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                     //}
                 });
 
+               
+
+                document = me.getDocument();
+
+                if (document) {
+                   
+                    editListener = function (item) {
+                        var props;
+                        props = Ext.apply({}, item.get('properties'));
+                        props.dropzones = zoneData;
+                        item.suspendEvent('afteredit');
+                        item.set('properties', props);
+                        item.resumeEvent('afteredit');
+                    };
+                    editListener(document);
+                    document.on('afteredit', editListener);
+
+                } else {
+                    tasks.add({
+                        fn: function (t) {
+
+                            Ext.Ajax.request({
+                                url: '/admin/app/cmsdocument/widgetdata/update',
+                                method: 'post',
+                                jsonData: {
+                                    zones: zoneData,
+                                    source: source
+                                },
+                                success: function () {
+                                    t.callback();
+
+                                }
+                            });
+
+
+                        }
+                    });
+                }
+
                 tasks.on('complete', function (endTasks) {
                     if (Ext.isEmpty(endTasks.errors)) {
                         this.editor.resetDirtyState();
-                       // this.manager.setPublishable(true);
                     }
-
+                    if (editListener) {
+                        document.removeListener('afteredit', editListener);
+                    }
                 }, this);
-
-                tasks.add({
-                    fn: function (t) {
-
-                        Ext.Ajax.request({
-                            url: '/admin/app/cmsdocument/widgetdata/update',
-                            method: 'post',
-                            jsonData: {
-                                zones: zoneData,
-                                source: source
-                            },
-                            success: function (response) {
-                                t.callback();
-
-                            }
-                        });
-
-
-                    }
-                });
             }
         }
 
@@ -160,7 +182,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }
         var store = Ext.create('Taco.store.CmsDocumentDrafts');
 
-        Ext.Object.each(this.pageContext.cmsContext, function (key, value, myself) {
+        Ext.Object.each(this.pageContext.cmsContext, function (key, value) {
             if (value.id) {
                 var doc = store.add({ id: value.id })[0];
                 doc.set('isPublished', true);
@@ -195,7 +217,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
 
         Taco.model.Entity.load(this.getId(), {
             scope: this,
-            success: function (record, operation) {
+            success: function (record) {
                 this.set(record);
             }
         });
@@ -236,7 +258,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     },
 
     setPubState: function () {
-        if (this.record && this.record.get('publishState') == 'draft') {
+        if (this.record && this.record.get('publishState') === 'draft') {
             this.manager.showHideButtons(['isPublishable'], true);
             this.manager.setPublishable(true);
         }
@@ -244,8 +266,8 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         if (!this.pageContext || !this.pageContext.cmsContext) {
             return;
         }
-        Ext.Object.each(this.pageContext.cmsContext, function (key, value, myself) {
-            if (value && value.publishState == 'draft') {
+        Ext.Object.each(this.pageContext.cmsContext, function (key, value) {
+            if (value && value.publishState === 'draft') {
                 this.manager.setPublishable(true);
             }
         }, this);

@@ -117,5 +117,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         #endregion
 
         public string ParentProductCode { get; set; }
+
+
+        
+        public bool? IsPackagedStandAlone { get; set; }
     }
 }

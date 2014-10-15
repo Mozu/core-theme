@@ -12,5 +12,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public decimal UnitPrice { get; set; }
         public decimal Total { get; set; }
+
+        
     }
 }

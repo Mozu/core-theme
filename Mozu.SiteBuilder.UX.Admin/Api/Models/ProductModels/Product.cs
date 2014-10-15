@@ -338,6 +338,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] FulfillmentTypesSupported { get; set; }
 
+        [JsonProperty(PropertyName = "isPackagedStandAlone")]
+        public bool? IsPackagedStandAlone { get; set; }
+
+
+        [JsonProperty(PropertyName = "standAlonePackageType")]
+        public string StandAlonePackageType{ get; set; }
+
+
         #endregion
 
         #region SEO

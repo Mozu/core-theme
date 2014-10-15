@@ -74,13 +74,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
                 ]
             }]
         });
+        
 
         this.items.push(this.infoContainer);
     },
 
     buildPendingPackages: function () {
         var items = this.record.get('unpackagedItems');
-
+        
         if (!items.length) return;
 
         this.pendingGrid = Ext.create('Taco.view.order.subform.fulfillment.Grid', {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -406,22 +407,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2( Mapper.Map<Order>(dcOrder) );
         }
 
-        [HttpPostRoute(UriTemplate = "action")]
-        public async Task<Response<List<OrderActionResult>>> PerformOrdersAction(BulkOrderAction action)
+        [HttpPostRoute(UriTemplate = "availableactions")]
+        public async Task<Response<List<string>>> GetAvailableActions(BulkOrderRequest request)
         {
-            if (!IsValidBulkAction(action.ActionName))
+            var getOrderActionsTasks = request.OrderContexts.Select(GetOrderActions).ToList();
+            await Task.WhenAll(getOrderActionsTasks);
+            IEnumerable<string> result = _validBulkOrderActions;
+            foreach (var orderActionsTask in getOrderActionsTasks)
+            {
+                result = result.Intersect(orderActionsTask.Result, new OrderActionComparer());
+            }
+            var list = result.ToList();
+            return new Response<List<string>> {Items = list, Total = list.Count};
+        }
+
+        private async Task<List<string>> GetOrderActions(OrderContext orderContext)
+        {
+            var tasks = new List<Task<List<string>>>();
+            tasks.Add(GetRootActions(orderContext));
+            tasks.Add(GetFulfillmentActions(orderContext));
+            tasks.Add(GetPaymentActions(orderContext));
+            await Task.WhenAll(tasks);
+            return tasks.SelectMany(t => t.Result).ToList();
+        }
+
+        [HttpPostRoute(UriTemplate = "action")]
+        public async Task<Response<List<OrderActionResult>>> PerformOrdersAction(BulkOrderRequest request)
+        {
+            if (!IsValidBulkAction(request.ActionName))
             {
                 throw new VaeMissingOrInvalidParameterException("ActionName",
                     string.Format("Valid bulk order actions are '{0}'",
                         string.Join("' , '", _validBulkOrderActions)));
             }
-            var orderIdToActionTaskTuples = action.OrderContexts.Select(
-                ctx => PerformOrderAction(action.ActionName, ctx))
+            var performOrderActionTasks = request.OrderContexts.Select(
+                ctx => PerformOrderAction(request.ActionName, ctx))
                         .ToList();
 
-            var bulkResult = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = action.OrderContexts.Count};
-            await Task.WhenAll(orderIdToActionTaskTuples);
-            foreach (var orderIdToActionTask in orderIdToActionTaskTuples)
+            var bulkResult = new Response<List<OrderActionResult>>{Success = true, Items = new List<OrderActionResult>(), Total = request.OrderContexts.Count};
+            await Task.WhenAll(performOrderActionTasks);
+            foreach (var orderIdToActionTask in performOrderActionTasks)
             {
                 var actionResult = orderIdToActionTask.Result;
                 var orderActionResult = new OrderActionResult { OrderId = actionResult.OrderId, Successful = true, Message = actionResult.Message };
@@ -457,7 +482,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (string.IsNullOrEmpty(actionName))
                 return false;
-            return _validBulkOrderActions.Any(s => s.EqualsIgnoreCase(actionName));
+            return _validBulkOrderActions.Contains(actionName, new OrderActionComparer());
         }
 
         private static readonly List<string> _validBulkOrderActions = new List<string>
@@ -467,6 +492,66 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP,
             CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT
         };
+
+        public async Task<List<string>> GetRootActions(OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var availableActionsResult = await orderWebApiClient.GetAvailableActions(orderContext.OrderId);
+            return availableActionsResult.ReadAsSync();
+        } 
+
+        public async Task<List<string>> GetFulfillmentActions(OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var orderResponse = await orderWebApiClient.GetOrder(orderContext.OrderId);
+            if (orderResponse.ResponseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                var packages = orderResponse.ReadAsSync().Packages;
+                if (packages.IsNullOrEmpty())
+                {
+                    return new List<string>();
+                }
+                var getPackageActionsTasks = packages.Select(
+                    p => _orderWebApiClient.GetAvailablePackageFulfillmentActions(orderContext.OrderId, p.Id));
+                await Task.WhenAll(getPackageActionsTasks);
+
+                IEnumerable<string> result = new List<string>
+                {
+                    CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP
+                };
+                foreach (var packageActionsTask in getPackageActionsTasks)
+                {
+                    var actions = packageActionsTask.Result.ReadAsSync();
+                    result = result.Intersect(actions, new OrderActionComparer());
+                }
+
+                return result.ToList();
+            }
+            throw new VaeUnexpectedErrorException(string.Format("Retrieving the fulfillment actions for order {0}", orderContext.OrderId));
+        } 
+
+        public async Task<List<string>> GetPaymentActions(OrderContext orderContext)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(context => context.MasterCatalogId = orderContext.MasterCatalogId);
+            var paymentsResponse = await orderWebApiClient.GetPayments(orderContext.OrderId);
+            if (paymentsResponse.ResponseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                var response = paymentsResponse.ReadAsSync();
+                if (response.Items.IsNullOrEmpty() || response.Items.Count > 1)
+                {
+                    // only orders with a single payment will support bulk order actions
+                    return new List<string>();
+                }
+                var getPaymentActionsResult = await _orderWebApiClient.GetAvailablePaymentActions(orderContext.OrderId, response.Items[0].Id);
+                IEnumerable<string> paymentActions = getPaymentActionsResult.ReadAsSync();
+                IEnumerable<string> result = new List<string>
+                {
+                    CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT.ToLower()
+                };
+                return result.Intersect(paymentActions, new OrderActionComparer()).ToList();
+            }
+            throw new VaeUnexpectedErrorException(string.Format("Retrieving the fulfillment actions for order {0}", orderContext.OrderId));
+        } 
 
         private async Task<InternalBulkActionResult> PerformRootAction(string actionName, OrderContext orderContext)
         {
@@ -502,17 +587,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (result.StatusCode == HttpStatusCode.OK)
             {
                 var packages = orderResponse.ReadAsSync().Packages;
-                //todo: Stewart Noll on 2014-10-06 perform validation on the packages
-                var digitalPackages = packages.Where(
-                    p => p.PackagingType != CommerceRuntime.Contracts.Fulfillment.FulfillmentItemTypeConst.PHYSICAL).ToList();
-                var physicalPackages = packages.Where(
-                    p => p.PackagingType == CommerceRuntime.Contracts.Fulfillment.FulfillmentItemTypeConst.PHYSICAL).ToList();
-
-                if (digitalPackages.Any() && !physicalPackages.Any())
+                if (packages.IsNullOrEmpty())
                 {
-                    // only digital packages in this order
-                    result.StatusCode = HttpStatusCode.BadRequest;
-                    result.Message = string.Format("No physical packages on the order to mark as shipped");
+                    result.StatusCode = HttpStatusCode.NotFound;
+                    result.Message = "No packages found on the order";
                     return result;
                 }
 
@@ -521,7 +599,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     new DCs.FulfillmentAction()
                     {
                         ActionName = actionName,
-                        PackageIds = physicalPackages.Select(p => p.Id).ToList()
+                        PackageIds = packages.Select(p => p.Id).ToList()
                     });
                 // overwrite the status code of the order result with that of the fulfillment result
                 result.StatusCode = fulfillmentResponse.ResponseMessage.StatusCode;
@@ -533,11 +611,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 else
                 {
-                    if (digitalPackages.Any())
-                    {
-                        // successfully marked physical packages as shipped but need to inform the user that there were digital packages
-                        result.Message = string.Format("Order contains {0} digital packages which were not altered", digitalPackages.Count);
-                    }
+//                    if (digitalPackages.Any())
+//                    {
+//                        // successfully marked physical packages as shipped but need to inform the user that there were digital packages
+//                        result.Message = string.Format("Order contains {0} digital packages which were not altered", digitalPackages.Count);
+//                    }
                 }
             }
             else
@@ -595,6 +673,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     : string.Format("Unknown Error performing the root action '{0}'", actionName);
             }
             return result;
+        }
+    }
+
+    public class OrderActionComparer : IEqualityComparer<string>
+    {
+        public bool Equals(string x, string y)
+        {
+            return string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public int GetHashCode(string obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }

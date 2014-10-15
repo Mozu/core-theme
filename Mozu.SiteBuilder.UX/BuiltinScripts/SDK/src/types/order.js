@@ -19,6 +19,7 @@ module.exports = (function () {
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.COMPLETED] = true;
 
     var OrderStatus2IsReady = {};
     OrderStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_ORDER] = true;

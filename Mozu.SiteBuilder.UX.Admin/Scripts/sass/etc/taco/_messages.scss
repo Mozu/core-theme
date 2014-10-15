@@ -1,133 +1,86 @@
 @mixin taco-messages {
-    .#{$vprefix}notifierbar {
-        .#{$prefix}window-header {
-            border-top: 8px solid $color-neutral-white;
-            padding-top: 12px;
-        }
 
-        .#{$prefix}window-header-text-container {
-            font-size: 20px;
-        }
+    .#{$vprefix}notifierbar {
+        background-color: $color-status-info;
+        font-size: 14px;
+        line-height: 20px;
+        padding-bottom: 0px;
 
         .#{$prefix}window-body {
-            .message-list {
-                list-style-type: disc;
-                padding-left: 1em;
+            background-color: transparent;
+            border-color: $color-status-info;
+            color: $color-neutral-white;
+        }
 
-                .message-list {
-                    list-style-type: none;
-                    margin-top: 0.5em;
-                    padding-left: 0px;
-                }
-            }
+        .message {
+            display: inline-block;
+        }
 
-            .message-item {
-                list-style-type: inherit;
+        .status-icon {
+            display: inline-block;
+            left: 0px;
+            top: 0px;
+            @include icon-font($glyph-info);
+            position: absolute;
 
-                &:first-child {
-                    margin-bottom: 1em;
-                }
-
-                .message-item {
-                    margin-bottom: 0.25em;
-                }
+            &::after {
+                color: $color-neutral-white;
             }
         }
-    }
 
-    .#{$vprefix}notifierbar-error {
-        .#{$prefix}window-header {
-            background-color: #fcc;
+        .close-icon {
+            cursor: pointer;
+            display: inline-block;
+            right: 0px;
+            top: 0px;
+            @include icon-font($glyph-close);
+            position: absolute;
+
+            &::after {
+                color: $color-neutral-white;
+            }
+        }
+
+        &.#{$vprefix}notifierbar-success {
+            background-color: $color-status-success;
+
+            .#{$prefix}window-body {
+                border-color: $color-status-success;
+            }
+
+            .status-icon {
+                &::after {
+                    content: $glyph-success;
+                }
+            }
+        }
+
+        &.#{$vprefix}notifierbar-warning {
+            background-color: $color-status-warning;
+
+            .#{$prefix}window-body {
+                border-color: $color-status-warning;
+            }
+
+            .status-icon {
+                &::after {
+                    content: $glyph-warning;
+                }
+            }
+        }
+
+        &.#{$vprefix}notifierbar-error {
+            background-color: $color-status-error;
+
+            .#{$prefix}window-body {
+                border-color: $color-status-error;
+            }
+
+            .status-icon {
+                &::after {
+                    content: $glyph-error;
+                }
+            }
         }
     }
-
-    .#{$vprefix}notifierbar-success {
-        .#{$prefix}window-header {
-            background-color: #cfc;
-        }
-    }
-
-    // .#{$vprefix}notifierbar {
-    //     background-color: $color-status-info;
-    //     font-size: 14px;
-    //     line-height: 20px;
-    //     padding-bottom: 0px;
-
-    //     .#{$prefix}window-body {
-    //         background-color: transparent;
-    //         border-color: $color-status-info;
-    //         color: $color-neutral-white;
-    //     }
-
-    //     .message {
-    //         display: inline-block;
-    //     }
-
-    //     .status-icon {
-    //         display: inline-block;
-    //         left: 0px;
-    //         top: 0px;
-    //         @include icon-font($glyph-info);
-    //         position: absolute;
-
-    //         &::after {
-    //             color: $color-neutral-white;
-    //         }
-    //     }
-
-    //     .close-icon {
-    //         cursor: pointer;
-    //         display: inline-block;
-    //         right: 0px;
-    //         top: 0px;
-    //         @include icon-font($glyph-close);
-    //         position: absolute;
-
-    //         &::after {
-    //             color: $color-neutral-white;
-    //         }
-    //     }
-
-    //     &.#{$vprefix}notifierbar-success {
-    //         background-color: $color-status-success;
-
-    //         .#{$prefix}window-body {
-    //             border-color: $color-status-success;
-    //         }
-
-    //         .status-icon {
-    //             &::after {
-    //                 content: $glyph-success;
-    //             }
-    //         }
-    //     }
-
-    //     &.#{$vprefix}notifierbar-warning {
-    //         background-color: $color-status-warning;
-
-    //         .#{$prefix}window-body {
-    //             border-color: $color-status-warning;
-    //         }
-
-    //         .status-icon {
-    //             &::after {
-    //                 content: $glyph-warning;
-    //             }
-    //         }
-    //     }
-
-    //     &.#{$vprefix}notifierbar-error {
-    //         background-color: $color-status-error;
-
-    //         .#{$prefix}window-body {
-    //             border-color: $color-status-error;
-    //         }
-
-    //         .status-icon {
-    //             &::after {
-    //                 content: $glyph-error;
-    //             }
-    //         }
-    //     }
-    // }
 }

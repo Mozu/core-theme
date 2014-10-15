@@ -61,6 +61,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
 
         this.formContainer = Ext.widget({
             xtype: 'container',
+            cls: Taco.baseCSSPrefix + 'override-form-inner',
             width: "100%",
             items: this.subitems,
             defaults: this.defaults
