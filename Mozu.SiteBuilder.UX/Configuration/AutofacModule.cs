@@ -88,7 +88,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
             // TODO: this is an old cache implementation that needs to be deleted
           //builder.RegisterType<DefaultStorefrontCache>().As<Mozu.SiteBuilder.Mvc.IStorefrontCache>().InstancePerRequest();
             builder.RegisterType<ServiceClientMessageHandler>().InstancePerRequest();
-            builder.RegisterType<FileSystemContentRetriever>().As<IThemeContentRetriever>();
             //builder.Register(c => new GeneralSettingsWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IGeneralSettingsWebApiClient>().InstancePerLifetimeScope();
             //builder.Register(c => new DocumentWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IDocumentListWebApiClient>().InstancePerLifetimeScope();
             //builder.Register(c => new ProductCategoryRuntimeWebApiClient(c.Resolve<ServiceClientMessageHandler>())).As<IProductCategoryRuntimeWebApiClient>().InstancePerLifetimeScope();

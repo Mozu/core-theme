@@ -430,7 +430,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var locals = new Dictionary<string, object>();
             var siteContext = new Dictionary<string, object>();
 
-            ctx.Add("templates", LiveTemplates());
+            ctx.Add("templates", LiveTemplates().Result);
             ctx.Add("locals", locals);
 
             locals.Add("themeSettings", SiteContext.ThemeSettings);

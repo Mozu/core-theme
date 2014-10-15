@@ -95,19 +95,34 @@ Ext.define('Taco.view.product.subform.Shipping', {
             allowBlank: false
         });
 
+
         field = {
             xtype: 'container',
             width: '100%',
             items: [
-                fulfillmentContainer,
-                {
-                    xtype: 'container',
-                    width: '100%',
-                    layout: 'hbox',
-                    items: packageFields
-                }
+                fulfillmentContainer
             ]
         };
+
+        var isBundle = this.record.productUsage == "Bundle";
+        if (!isBundle) {
+            field.items.push({
+                xtype: 'checkboxfield',
+                name: 'isPackagedStandAlone',
+                width: 120,
+                margin:"10 0 0 0",
+                boxLabel: 'Ships by itself',
+                inputValue: true,
+                checked: record.get("isPackagedStandAlone")
+            })
+        }
+
+        field.items.push({
+            xtype: 'container',
+            width: '100%',
+            layout: 'hbox',
+            items: packageFields
+        })
         
 
         // remove the productNameField if its null;
@@ -137,7 +152,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
         var productNameField = Ext.widget({
             xtype: 'editabledisplayfield',
-            width: 200,
+            width: 240,            
             border: false,
             value: productName,
             style: {
@@ -170,7 +185,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
             {
                 xtype: 'unitfield',
                 name: (isBundle) ? "" : 'packageWeight',
-                width: 200,
+                width: 120,
                 fieldLabel: 'Weight',
                 selectOnFocus: true,
                 emptyText: 'lbs',
@@ -181,7 +196,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
                 hideTrigger: true,
                 value: (isPhysical ? record.get('packageWeight') : '0 lbs'),
                 keyNavEnabled: false,
-                disabled: ! isPhysical,
+                disabled: !isPhysical,
                 readOnly: (isBundle),
                 allowBlank: (isBundle),
                 mouseWheelEnabled: false,
@@ -281,12 +296,12 @@ Ext.define('Taco.view.product.subform.Shipping', {
 
             bundleContainer.items.push({
                 xtype: 'unitfield',
-                width:200,
+                width:120,
                 unitString: ' lbs',
                 unitAtEnd: true,
                 hideTrigger: true,
                 readOnly: true,
-                margin: "0 0 0 205",
+                margin: "0 0 0 245",
                 fieldLabel: "Total Weight",
                 value: totalWeight
             });

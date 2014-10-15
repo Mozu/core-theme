@@ -11,6 +11,9 @@ Ext.define('Taco.view.product.variant.Grid', {
 
     disableSelection: true,
 
+    // optional data from grid's store that can be passed in when creating this grid to reload unpersisted data. This occurs when user updates records in the store and then updates the options. the update options use case blows the grid and store away and starts from scratch. 
+    redrawData : null,
+
     initComponent: function () {
         var optionColumns = [],
             staticColumns,
@@ -193,7 +196,6 @@ Ext.define('Taco.view.product.variant.Grid', {
                 attributeValues = attribute.get('selectedValues'),
                 attributeId = attribute.getId();
 
-
             optionColumns.push({
                 flex: 1,
                 text: attributeText,
@@ -230,8 +232,8 @@ Ext.define('Taco.view.product.variant.Grid', {
             }
         });
 
-        this.columns = optionColumns.concat(staticColumns);
-
+        this.columns = optionColumns.concat(staticColumns);        
+        
         this.store = this.product.getVariations();
 
         this.plugins = [this.rowEditor];
@@ -249,8 +251,9 @@ Ext.define('Taco.view.product.variant.Grid', {
         // we shouldnt be making the load call if the product is new (not saved yet) since the service returns an error
         if (!this.store.hasLoaded() && !this.product.phantom) {
             this.store.load();
+        } else if (!this.store.count()){
+            this.store.loadFromOptions();
         }
-
 
         this.callParent(arguments);
 

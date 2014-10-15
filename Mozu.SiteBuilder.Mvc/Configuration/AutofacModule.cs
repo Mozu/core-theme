@@ -57,6 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<CmsServiceWrapper>().As<ICmsServiceWrapper>().InstancePerDependency();
             builder.RegisterType<ThemeEntityDefinitionProvider>().As<IThemeEntityDefinitionProvider>().InstancePerDependency();
+            builder.RegisterType<FileSystemContentRetriever>().As<IThemeContentRetriever>();
 
             builder.RegisterType<ExceptionContextLogWrapper>();
         }

@@ -100,6 +100,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageHeight, op => op.ResolveUsing(dc => dc.PackageHeight == null ? null : dc.PackageHeight.Value))
                 .ForMember(x => x.PackageLength, op => op.ResolveUsing(dc => dc.PackageLength == null ? null : dc.PackageLength.Value))
                 .ForMember(x => x.PackageWidth, op => op.ResolveUsing(dc => dc.PackageWidth == null ? null : dc.PackageWidth.Value))
+
+                .ForMember(x => x.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone == null ? null : dc.IsPackagedStandAlone))
+                .ForMember(x => x.StandAlonePackageType, op => op.ResolveUsing(dc => dc.StandAlonePackageType == null ? null : dc.StandAlonePackageType))
+
+
                 .ForMember(x => x.MetaTagTitle, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagTitle))
                 .ForMember(x => x.MetaTagDescription, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagDescription))
                 .ForMember(x => x.MetaTagKeywords, op => op.ResolveUsing(dc => dc.SEOContent == null ? null : dc.SEOContent.MetaTagKeywords))
@@ -156,6 +161,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.BaseProductCode, op => op.ResolveUsing(p => p.BaseProductCode))
                 .ForMember(dc => dc.ProductTypeId, op => op.ResolveUsing(dc => dc.ProductTypeId))
                 .ForMember(dc => dc.UPC, op => op.ResolveUsing(x => x.UPC))
+                .ForMember(dc => dc.IsPackagedStandAlone, op => op.ResolveUsing(x => x.IsPackagedStandAlone))
+                .ForMember(dc => dc.StandAlonePackageType, op => op.ResolveUsing(x => x.StandAlonePackageType))                
+
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(p =>
                 {
                     var images = Mapper.Map<List<DC.ProductLocalizedImage>>(p.ProductImages );
@@ -217,8 +225,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsValidForProductType, op => op.Ignore())
                 .ForMember(dc => dc.ShippingClassId, op => op.Ignore())
                 .ForMember(dc => dc.IsRecurring, op => op.Ignore())
-                .ForMember(dc => dc.IsPackagedStandAlone, op => op.Ignore())
-                .ForMember(dc => dc.StandAlonePackageType, op => op.Ignore())
+                
+                
                 .ForMember(dc => dc.ApplicableDiscounts, op => op.Ignore())
                 .ForMember(dc => dc.IsVariation, op => op.Ignore())
                 .ForMember(dc => dc.VariationKey, op => op.Ignore())
