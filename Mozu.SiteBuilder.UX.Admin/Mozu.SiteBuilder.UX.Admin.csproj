@@ -877,6 +877,7 @@
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
+    <Content Include="Scripts\app\view\order\modal\BulkActionMessage.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
     <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
