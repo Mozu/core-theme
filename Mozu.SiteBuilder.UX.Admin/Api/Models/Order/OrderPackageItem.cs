@@ -6,5 +6,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     {
         public string FulfillmentMethod { get; set; }
         public string FulfillmentLocationCode { get; set; }
+        public bool? IsPackagedStandAlone { get; set; }
     }
 }

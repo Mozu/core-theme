@@ -150,6 +150,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UndeliveredDigitalItems, op => op.Ignore())
                 .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
+
+                
                 
                 .AfterMap((dc, order) =>
                 {
@@ -580,6 +582,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductUsage, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                 .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
 
+                
+
 //                             ProductCode = orderItem.ProductCode,
 //                             ProductName = orderItem.ProductName,
 //                             Weight = orderItem.UnitWeight * remainingQuantity,
@@ -777,6 +781,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                
+                
                 //ignores, handled in Order mapping or FillPackageItemDetails.
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -784,6 +790,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Weight, op => op.Ignore())
                 .ForMember(x => x.UnitPrice, op => op.Ignore())
                 .ForMember(x => x.Total, op => op.Ignore())
+                .ForMember(x => x.IsPackagedStandAlone, op => op.Ignore())
                 ;
         }
 
@@ -956,7 +963,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
-            
+                  
+
                   ;
         }
 
