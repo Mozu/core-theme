@@ -397,7 +397,7 @@
     <Compile Include="Admin\Api\ModelMapping\Perf\PerfUtil.cs" />
     <Compile Include="Admin\Api\Models\PagingParametersTests.cs" />
     <Compile Include="Admin\Api\SecureCapabilityConfigUrlTest.cs" />
-    <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs" />
+    <Compile Include="Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
     <Compile Include="Mvc\Filters\FilterTestBase.cs" />

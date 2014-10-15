@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoViewProductIndex" Collapsed="true">
-    <Position X="1.25" Y="3.25" Width="2" />
+    <Position X="1" Y="3.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs</FileName>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoCoreUxBrowserBrowserPage">
     <Position X="1" Y="2" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs</FileName>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="mixin" />
@@ -21,24 +21,27 @@
     <Position X="4.75" Y="2" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs</FileName>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="itemBrowser" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoCoreUxMixinsSearchable" Collapsed="true">
-    <Position X="10" Y="3.75" Width="2.5" />
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoCoreUxMixinsSearchable">
+    <Position X="8.25" Y="7" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="searchBox" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoCoreUxBrowserSearchList">
-    <Position X="6.5" Y="3.75" Width="2.5" />
+    <Position X="5" Y="7" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs</FileName>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="mixin" />
@@ -48,15 +51,35 @@
     <Position X="1.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs</FileName>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoCoreUxBrowserItemBrowser">
-    <Position X="8.5" Y="2" Width="2.5" />
+    <Position X="8.5" Y="2" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="searchBox" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoCoreUxFormFilterContainer">
+    <Position X="8.5" Y="4" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Diagrams\Admin\Scripts\app\view\product\DiagramProductSearch.cs</FileName>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product.cdTacoViewProductModal">
+    <Position X="4.25" Y="4.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="searchBox" />
+    </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -24,12 +24,12 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product
 
     class cdTacoCoreUxBrowserItemBrowser
     {
-        
+        public cdTacoCoreUxFormFilterContainer searchBox;
     }
 
     class cdTacoCoreUxMixinsSearchable
     {
-        
+        public cdTacoCoreUxFormFilterContainer searchBox;
     }
 
     class cdTacoCoreUxBrowserSearchList
@@ -41,5 +41,14 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product
     {
         
     }
-    
+
+    class cdTacoCoreUxFormFilterContainer
+    {
+        
+    }
+
+    class cdTacoViewProductModal
+    {
+        public cdTacoCoreUxFormFilterContainer searchBox;
+    }
 }
