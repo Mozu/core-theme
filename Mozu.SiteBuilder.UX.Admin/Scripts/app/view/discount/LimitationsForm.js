@@ -82,7 +82,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             checked: this.record.get('maximumUsesPerUser') === 1,
             listeners: {
                 change: function (cb, newValue) {
-                    this.record.set('maximumUsesPerUser', newValue ? 1 : 0);
+                    this.record.set('maximumUsesPerUser', newValue ? 1 : null);
                 },
                 scope: this
             }
