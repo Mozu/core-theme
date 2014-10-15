@@ -83,4 +83,41 @@
             }
         }
     }
+
+    .#{$vprefix}bulk-actions-message {
+        text-align: center;
+        @include icon-font($glyph-info, 84px, transparentize(rgb(0, 0, 255), 0.75));
+        height: auto;
+        width: auto;
+
+        .message-heading {
+            font-size: 24px;
+            padding: 124px 0px 16px;
+        }
+
+        .show-link {
+            color: $color-framework-blue-dark;
+            cursor: pointer;
+            padding-left: 4px;
+        }
+
+        &::after {
+            left: 137px;
+            top: 10px;
+        }
+
+        &.success {
+            &::after {
+                color: transparentize(rgb(0, 255, 0), 0.75);
+                content: $glyph-success;
+            }
+        }
+
+        &.error {
+            &::after {
+                color: transparentize(rgb(255, 0, 0), 0.75);
+                content: $glyph-error;
+            }
+        }
+    }
 }
