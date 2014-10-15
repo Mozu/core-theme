@@ -151,8 +151,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UndeliveredDigitalItems, op => op.Ignore())
                 .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
-
-                
                 
                 .AfterMap((dc, order) =>
                 {
@@ -265,102 +263,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.UnpickedupItems = new List<OrderPickupItem>();
                     order.UndeliveredDigitalItems = new List<OrderDigitalPackageItem>();
 
-                    var GetDesiredQuantityByFulfillmentMethod = new Func<string, string, int>((productCode, fulfillmentMethod) => {
-                        int unbundledQuantity =
-                            (from orderItem in order.Items
-                             where orderItem.ProductCode == productCode
-                             where orderItem.FulfillmentMethod == fulfillmentMethod
-                             select orderItem.Quantity
-                            ).Sum();
-
-                        int bundledQuantity = 
-                            (from parentItem in order.Items
-                             from bundleItem in parentItem.BundledProducts
-                             where bundleItem.ProductCode == productCode
-                             where parentItem.FulfillmentMethod == fulfillmentMethod
-                             select parentItem.Quantity * bundleItem.Quantity
-                            ).Sum();
-
-                        return unbundledQuantity + bundledQuantity;
-                    });
-
-                    var GetProductName = new Func<string, string>(productCode => {
-                        var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
-                        if (item != null)
-                            return item.ProductName;
-
-                        var bundleItem = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(bi => bi.ProductCode == productCode);
-                        return bundleItem.Name;
-                    });                    
-
-                    var GetUnitWeight = new Func<string, decimal?>(productCode => {
-                        var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
-                        if (item != null)
-                            return item.UnitWeight;
-
-                        var bundleItem = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(bi => bi.ProductCode == productCode);
-                        return bundleItem.UnitWeight;
-                    });
-
-                    // get a single location code by fulfillment type. This is handy for fulfillmentType = DirectShip, which can only originate from one location.
-                    var GetAFulfillmentLocationCodeByFulfillmentMethod = new Func<string, string, string>((productCode, fulfillmentMethod) =>
-                    {
-                        return
-                            (from i in order.Items
-                             where (i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bp => bp.ProductCode == productCode)))
-                             where i.FulfillmentMethod == fulfillmentMethod
-                             select i.FulfillmentLocationCode
-                            ).FirstOrDefault();
-                        //return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
-                    });
-
-                    // get all fulfillment locations for a fulfillment method. This applies to in-store pickup, which can have multiple locations.
-                    var GetAllFulfillmentLocationCodeByFulfillmentMethod = new Func<string, string, IDictionary<string, int>>((productCode, fulfillmentMethod) => {
-                        return
-                            (from i in order.Items
-                             where (i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bp => bp.ProductCode == productCode)))
-                             where i.FulfillmentMethod == fulfillmentMethod
-                             group i by i.FulfillmentLocationCode into g
-                             select g
-                            ).ToDictionary(g => g.Key, g => g.Sum(i => i.Quantity));
-                        //return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).FulfillmentLocationCode;
-                    });
-
-                    var GetNumberOfPickedUpItemsByProductCodeAndLocationCode = new Func<string, string, int>((productCode, locationCode) => {
-                        return
-                            (from p in order.Pickups
-                             from i in p.Items
-                             where p.FulfillmentLocationCode == locationCode
-                             where i.ProductCode == productCode
-                             select i.Quantity
-                            ).Sum();
-                    });
-
-                    var GetUnitPrice = new Func<string, decimal>(productCode => {
-                        return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).UnitPrice;
-                    });
-
-                    var IsProductPackagedStandAlone = new Func<string, bool>(productCode =>
-                    {
-                        var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
-                        if (item != null)
-                            return item.IsPackagedStandAlone;
-
-                        var bundleItem = order.Items.SelectMany(i => i.BundledProducts).First(bi => bi.ProductCode == productCode);
-                        return bundleItem.IsPackagedStandAlone;
-                    });
-
                     foreach (var productCode in productCodes)
                     {
-                        var productName = GetProductName(productCode);
-                        var desiredPackageQuantity = GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
-                        var desiredPickupQuantity = GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
-                        var desiredDigitalQuantity = GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.DIGITAL);
+                        var productName = order.GetProductName(productCode);
+                        var desiredPackageQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
+                        var desiredPickupQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
+                        var desiredDigitalQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.DIGITAL);
                         var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var isPackagedStandAlone = IsProductPackagedStandAlone(productCode);
-                    
+                        var isPackagedStandAlone = order.IsProductPackagedStandAlone(productCode);
 
                         // if there are more desired products than created packages contain, add this product to unpackagedItems.
                         if (desiredPackageQuantity > packagedQuantity)
@@ -373,13 +285,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                             if (remainingQuantity > 0)
                             {
-                                var fulfillmentLocationForThisProduct = GetAFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
+                                var fulfillmentLocationForThisProduct = order.GetAFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
 
                                 order.UnpackagedItems.Add(new OrderPackageItem
                                 {
                                     ProductCode = productCode,
-                                    ProductName = GetProductName(productCode),
-                                    Weight = GetUnitWeight(productCode) * remainingQuantity,
+                                    ProductName = order.GetProductName(productCode),
+                                    Weight = order.GetUnitWeight(productCode) * remainingQuantity,
                                     Quantity = remainingQuantity,
                                     FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
                                     FulfillmentLocationCode = fulfillmentLocationForThisProduct,
@@ -400,18 +312,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             if (remainingQuantity > 0)
                             {
                                 // Dictionary that is fullfilmentLocationCode : quantity
-                                var fulfillmentLocationsForThisProduct = GetAllFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
+                                var fulfillmentLocationsForThisProduct = order.GetAllFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
 
                                 foreach (var f in fulfillmentLocationsForThisProduct)
                                 {
-                                    var quantityAtThisLocation = Math.Min(remainingQuantity, f.Value - GetNumberOfPickedUpItemsByProductCodeAndLocationCode(productCode, f.Key));
+                                    var quantityAtThisLocation = Math.Min(remainingQuantity, f.Value - order.GetNumberOfPickedUpItemsByProductCodeAndLocationCode(productCode, f.Key));
 
                                     if (quantityAtThisLocation <= 0)
                                         continue;
 
                                     order.UnpickedupItems.Add(new OrderPickupItem {
                                         ProductCode = productCode,
-                                        ProductName = GetProductName(productCode),
+                                        ProductName = order.GetProductName(productCode),
                                         Quantity = quantityAtThisLocation,
                                         FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
                                         FulfillmentLocationCode = f.Key
@@ -428,13 +340,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             int remainingQuantity = desiredDigitalQuantity - digitallyFulfilled;
                             order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem {
                                 ProductCode = productCode,
-                                ProductName = GetProductName(productCode),
+                                ProductName = order.GetProductName(productCode),
                                 Quantity = remainingQuantity,
                                 GiftCardCode = null,
 
                                 // TODO: are these accurate in the case of a bundle? should they even be included?
-                                UnitPrice = GetUnitPrice(productCode),
-                                Total = GetUnitPrice(productCode) * remainingQuantity,
+                                UnitPrice = order.GetUnitPrice(productCode),
+                                Total = order.GetUnitPrice(productCode) * remainingQuantity,
                             });
                         }
 
@@ -453,14 +365,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.ItemsPickedup = order.OrderSummary.PickedupItemCount;
                     order.ItemsDigitallyFulfilled = order.DigitalPackages == null || order.DigitalPackages.Count == 0 ? 0 : order.DigitalPackages.SelectMany(p => p.Items).Sum(i => i.Quantity);
                 })
-                 .AfterMap((dc, order) =>
-                 {
-                     if (order.InternalNotes != null)
-                     {
-                         order.InternalNotes.ForEach(x=> x.OrderId = order.Id);
-                     }
-
-                 });
+                .AfterMap((dc, order) =>
+                {
+                    if (order.InternalNotes != null)
+                    {
+                        order.InternalNotes.ForEach(x=> x.OrderId = order.Id);
+                    }
+                })
+                .AfterMap((dc, order) =>
+                {
+                    // create returnable items list.
+                    // we do four sexy O(n^2) operations here.
+                    order.ReturnableItems =
+                       (from productCode in order.GetAllProductsOrdered()
+                        select new OrderReturnableItem {
+                            ProductCode = productCode,
+                            ProductName = order.GetProductName(productCode),
+                            QuantityOrdered = order.GetItemCount(productCode),
+                            QuantityFulfilled = order.GetFulfilledItemCount(productCode),
+                            UnitPrice = order.GetUnitPrice(productCode)
+                        }
+                        ).ToList();
+                });
         }
 
         private void Map_DcOrderItem_to_OrderItem()
@@ -537,11 +463,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
                       ? dc.HandlingAmount : null))
 
-
                   .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
-                  
-
-
                   // handled by after mapper
                   .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                   
@@ -593,8 +515,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductUsage, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                 .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
             
-                
-
 //                             ProductCode = orderItem.ProductCode,
 //                             ProductName = orderItem.ProductName,
 //                             Weight = orderItem.UnitWeight * remainingQuantity,
@@ -792,8 +712,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
-                
-                
                 //ignores, handled in Order mapping or FillPackageItemDetails.
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -801,7 +719,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Weight, op => op.Ignore())
                 .ForMember(x => x.UnitPrice, op => op.Ignore())
                 .ForMember(x => x.Total, op => op.Ignore())
-                .ForMember(x => x.IsPackagedStandAlone, op => op.Ignore())
                 ;
         }
 
@@ -974,8 +891,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
-                  
-
+            
                   ;
         }
 
