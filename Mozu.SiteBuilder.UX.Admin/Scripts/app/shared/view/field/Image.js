@@ -105,7 +105,7 @@ Ext.define('Taco.shared.view.field.Image', {
             hidden: true,
             selectedItemCls: 'selected',
             store: this.selectedImages,
-            tpl :[
+            tpl :[ 
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
                             '<li class="item uploading">',
@@ -113,11 +113,11 @@ Ext.define('Taco.shared.view.field.Image', {
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
-                                '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')">',
+                                '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt}">',
                                     '<ul class="toolbar">',
-                                        '<li class="drag-handle">Drag</li>',
-                                        '<li class="alt-text">Alt Text</li>',
-                                        '<li class="remove">Remove</li>',
+                                        '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
+                                        '<li class="remove" title="Remove">Remove</li>',
+                                        '<li class="alt-text" title="Edit Properties">Alt Text</li>',
                                     '</ul>',
                                 '</div>',
                             '</li>',
@@ -468,21 +468,31 @@ Ext.define('Taco.shared.view.field.Image', {
 
         //merge product/category images metadata with cms file data
         if (this.imageMetadata && !this.isMetadataMerged) {
-            for (var i = 0; i < this.imageMetadata.length; i++) {
-                var imgMeta = this.imageMetadata[i];
+            var clonedMetadata = Ext.Array.clone(this.imageMetadata);
+            var warningMsgs = [];
+            for (var i = 0; i < clonedMetadata.length; i++) {
+                var imgMeta = clonedMetadata[i];
+                imgMeta.isMatched = false;
+
                 Ext.Array.every(this.selectedImages.data.items, function(selectImg) {
                     if (imgMeta.cmsId === selectImg.get('cmsId')) {
                         selectImg.set('alt', imgMeta.alt);
+                        imgMeta.isMatched = true;
                         return false;
                     }
                     return true;
                 });
+                if (!imgMeta.isMatched) {
+                    warningMsgs.push(imgMeta.cmsId);
+                }
+            }
+            if (warningMsgs.length > 0) {
+                Taco.app.fireEvent('setmessage', 'The following image files are no longer available ' + warningMsgs.join(', '), 'warning');
             }
             this.isMetadataMerged = true;
         }
 
         this.selectedImages.each(function (record) {
-
             value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt') });
         }, this);
 

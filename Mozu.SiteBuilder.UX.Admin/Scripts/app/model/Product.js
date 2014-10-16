@@ -465,7 +465,17 @@ Ext.define('Taco.model.Product', {
             type: 'int',
             useNull: true,
             persist: false
+        }, {
+            name: "isPackagedStandAlone",
+            type: "boolean",
+            defaultValue: false,
+            persist: true
+        }, {
+            name: "standAlonePackageType",
+            type: "string",
+            defaultValue: "CUSTOM"
         }
+        
     ],
     loadRuntimeProduct: function (cfg) {
 
@@ -689,8 +699,15 @@ Ext.define('Taco.model.Product', {
                     params: params,
                     callback: function (records) {
                         Ext.Array.each(records, function (newRecord) {
-                            if (Ext.Array.indexOf(beforeState, newRecord.internalId) == -1) {
+                            
+                            // if this is a new product, default the enabled option on for all new options
+                            if (me.phantom) {
                                 newRecord.set('isActive', true);
+                            } else {
+                                // only mark old values as active;
+                                if (Ext.Array.indexOf(beforeState, newRecord.internalId) == -1) {
+                                    newRecord.set('isActive', true);
+                                }
                             }
                         });
                     }
@@ -712,7 +729,6 @@ Ext.define('Taco.model.Product', {
                 me.productVariationStore.loadFromOptions();
             } else {
                 this.productVariationStore.load();
-
             }
         }
 
@@ -776,6 +792,7 @@ Ext.define('Taco.model.Product', {
     beforeDuplicate : function (){
         this.raw = undefined
         this.set("productCode", "");
+        this.data.productName = this.data.productName + " - copy";
         this.commit();        
     },
 

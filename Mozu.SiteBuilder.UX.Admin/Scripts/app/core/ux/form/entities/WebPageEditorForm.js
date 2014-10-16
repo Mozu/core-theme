@@ -64,11 +64,8 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
                     name: 'hide_in_nav',
                     boxLabel: 'Hide in Navigation'
                 }, {
-                    xtype: 'checkboxfield',
-                    name: '',
-                    boxLabel: 'Redirect page to'
-                }, {
                     xtype: 'textfield',
+                    fieldLabel:'Redirect page to',
                     name: 'redirect_url',
                     emptyText: '[none]'
                 }, {

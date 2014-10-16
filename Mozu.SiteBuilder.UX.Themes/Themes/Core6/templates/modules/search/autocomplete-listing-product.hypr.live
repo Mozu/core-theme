@@ -6,7 +6,7 @@
 <div class="mz-itemlisting-thumb">
     {% with model.content.productImages|first as image %}
     {% if image.imageUrl %}
-    <img class="mz-itemlisting-thumb-img" src="{{ image.imageUrl }}?max=80" />
+    <img class="mz-itemlisting-thumb-img" src="{{ image.imageUrl }}?max=80" {% if image.altText %}alt="{{ image.altText }}"{% endif %} />
     {% endif %}
     {% endwith %}
 </div>
@@ -16,6 +16,6 @@
 {% endblock item-name %}
 {% block item-details %}
 <div class="mz-itemlisting-description">
-    {{ model.content.productShortDescription|truncatewords(20) }}
+    {{ model.content.productShortDescription|truncatewords(20)|safe }}
 </div>
 {% endblock %}

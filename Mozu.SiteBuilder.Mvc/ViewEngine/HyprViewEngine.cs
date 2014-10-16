@@ -8,10 +8,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         private static readonly string[] g_formats = { "templates\\modules\\{0}", "templates\\{0}" };
         private static readonly string[] g_page_formats = { "templates\\pages\\{0}", "templates\\{0}" };
         private static readonly string[] g_widget_formats = { "widgets\\{0}" };
-        private readonly MozuVirtualPathProvider _mozuVirtualPathProvider;
+        private readonly IMozuVirtualPathProvider _mozuVirtualPathProvider;
         
 
-        public HyprViewEngine(MozuVirtualPathProvider mozuVirtualPathProvider)
+        public HyprViewEngine(IMozuVirtualPathProvider mozuVirtualPathProvider)
         {
             _mozuVirtualPathProvider = mozuVirtualPathProvider;
         }

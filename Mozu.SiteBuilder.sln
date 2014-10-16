@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UX.Models"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{16F8C4B3-4E6C-4E3F-B622-A005349EC397}"
 	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
+		build.fsx = build.fsx
+		build.sh = build.sh
+		user.app.config = user.app.config
 		WE-Markdown.css = WE-Markdown.css
 		WE-settings.xml = WE-settings.xml
 	EndProjectSection
@@ -29,33 +33,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UnitTests", "Mozu.SiteBuilder.UnitTests\Mozu.SiteBuilder.UnitTests.csproj", "{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs.corp.volusion.com:8080/tfs/vnext
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Mozu.SiteBuilder.UX.Models\\Mozu.SiteBuilder.UX.Models.csproj
-		SccProjectName1 = Mozu.SiteBuilder.UX.Models
-		SccLocalPath1 = Mozu.SiteBuilder.UX.Models
-		SccProjectUniqueName2 = Mozu.SiteBuilder.Mvc\\Mozu.SiteBuilder.Mvc.csproj
-		SccProjectName2 = Mozu.SiteBuilder.Mvc
-		SccLocalPath2 = Mozu.SiteBuilder.Mvc
-		SccProjectUniqueName3 = Mozu.SiteBuilder.UX\\Mozu.SiteBuilder.UX.csproj
-		SccProjectName3 = Mozu.SiteBuilder.UX
-		SccLocalPath3 = Mozu.SiteBuilder.UX
-		SccProjectUniqueName4 = Mozu.SiteBuilder.UX.Themes\\Mozu.SiteBuilder.UX.Themes.csproj
-		SccProjectName4 = Mozu.SiteBuilder.UX.Themes
-		SccLocalPath4 = Mozu.SiteBuilder.UX.Themes
-		SccProjectUniqueName5 = Mozu.SiteBuilder.UX.Admin\\Mozu.SiteBuilder.UX.Admin.csproj
-		SccProjectName5 = Mozu.SiteBuilder.UX.Admin
-		SccLocalPath5 = Mozu.SiteBuilder.UX.Admin
-		SccProjectUniqueName6 = Mozu.SiteBuilder.IntegrationTests\\Mozu.SiteBuilder.IntegrationTests.csproj
-		SccProjectName6 = Mozu.SiteBuilder.IntegrationTests
-		SccLocalPath6 = Mozu.SiteBuilder.IntegrationTests
-		SccProjectUniqueName7 = Mozu.SiteBuilder.UnitTests\\Mozu.SiteBuilder.UnitTests.csproj
-		SccProjectName7 = Mozu.SiteBuilder.UnitTests
-		SccLocalPath7 = Mozu.SiteBuilder.UnitTests
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CI|Any CPU = CI|Any CPU
 		Debug|Any CPU = Debug|Any CPU

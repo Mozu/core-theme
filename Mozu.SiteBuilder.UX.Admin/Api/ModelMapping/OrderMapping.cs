@@ -150,6 +150,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UndeliveredDigitalItems, op => op.Ignore())
                 .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
+
+                
                 
                 .AfterMap((dc, order) =>
                 {
@@ -288,7 +290,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                         var bundleItem = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(bi => bi.ProductCode == productCode);
                         return bundleItem.Name;
-                    });
+                    });                    
 
                     var GetUnitWeight = new Func<string, decimal?>(productCode => {
                         var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
@@ -346,6 +348,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+                        var isPackagedStandAlone = order.Items.FirstOrDefault(i => i.ProductCode == productCode).IsPackagedStandAlone;
+                    
 
                         // if there are more desired products than created packages contain, add this product to unpackagedItems.
                         if (desiredPackageQuantity > packagedQuantity)
@@ -367,7 +371,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     Weight = GetUnitWeight(productCode) * remainingQuantity,
                                     Quantity = remainingQuantity,
                                     FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
-                                    FulfillmentLocationCode = fulfillmentLocationForThisProduct
+                                    FulfillmentLocationCode = fulfillmentLocationForThisProduct,
+                                    IsPackagedStandAlone = isPackagedStandAlone
                                 });
                             }
                         }
@@ -521,6 +526,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
                       ? dc.HandlingAmount : null))
 
+
+                      .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
+                  
+
+
                   // handled by after mapper
                   .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                   
@@ -571,6 +581,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductDiscount, op => op.Ignore())
                 .ForMember(dc => dc.ProductUsage, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                 .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+
+                
 
 //                             ProductCode = orderItem.ProductCode,
 //                             ProductName = orderItem.ProductName,
@@ -769,6 +781,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                
+                
                 //ignores, handled in Order mapping or FillPackageItemDetails.
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -776,6 +790,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Weight, op => op.Ignore())
                 .ForMember(x => x.UnitPrice, op => op.Ignore())
                 .ForMember(x => x.Total, op => op.Ignore())
+                .ForMember(x => x.IsPackagedStandAlone, op => op.Ignore())
                 ;
         }
 
@@ -948,7 +963,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
-            
+                  
+
                   ;
         }
 

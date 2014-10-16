@@ -4,6 +4,7 @@ _ReSharper.*
 packages/
 *.suo
 *.user
+user.app.config
 .sass-cache/
 .DS_Store
 node_modules/
