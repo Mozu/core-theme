@@ -102,7 +102,7 @@ Ext.define('Taco.view.product.Form', {
         var selectedTabIndex = 0,
             initCatalogId = (this.options && this.options.catalogId) ? this.options.catalogId : Taco.app.context.getCatalogId();
             
-        if (initCatalogId) {
+        if (initCatalogId && !this.isDuplicate) {
             Ext.each(tabItems, function(x, index) {
                 if (x.catalogId == initCatalogId) {
                     selectedTabIndex = index;
