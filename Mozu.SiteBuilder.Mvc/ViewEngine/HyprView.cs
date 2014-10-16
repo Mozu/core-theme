@@ -50,7 +50,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             requestContext["true"] = true;
             requestContext["false"] = false;
-         }
+            requestContext["now"] = DateTime.UtcNow;
+        }
 
         private static void AddClientApiContextData(Dictionary<string, object> requestContext, ClientApiContext clientApiContext)
         {
