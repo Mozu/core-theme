@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var query = arguments.GetValueOrDefault<string>("query");
             var sortBy = arguments.GetValueOrDefault<string>("sort");
             var list = arguments.GetValueOrDefault<string>("listFQN");
-            var view = arguments.GetValueOrDefault<string>("view");
+            var view = arguments.GetValueOrDefault<string>("view") ?? "default";
 
             var tempCol = arguments.GetValueOrDefault<IEnumerable>("ids");
             var id = arguments.GetValueOrDefault<string>("id");
@@ -124,11 +124,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (docIds != null && docIds.Count==0)
             {
-                res = (dynamic)(await service.GetDocument(documentListName: list, documentId: docIds[0]));
+            
+                //res = (dynamic)(await service.GetViewDocument(documentListName: list, viewName:view, documentId: docIds[0]));
             }
             else
             {
-                res = (dynamic)(await service.GetDocuments(documentListName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));    
+                res = (dynamic)(await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));    
             }
             
 
