@@ -30,6 +30,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ParentOrderId { get; set; }
         public string ParentReturnId { get; set; }
 
+        /// <summary>
+        /// An order number to link this order to an external system
+        /// </summary>
+        public string ExternalId { get; set; }
+
         public List<InvalidCoupon> InvalidCoupons { get; set; }
 
         /// <summary>
