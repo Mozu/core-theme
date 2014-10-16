@@ -18,7 +18,6 @@
     };
 
 
-
     //  GRID class
 
     Grid = function(element, options) {
