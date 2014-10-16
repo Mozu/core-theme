@@ -803,7 +803,7 @@
         },
         "displayName": "Image",
         "displayTemplate": "cms/image",
-        "editView": "taco-image-widgeteditor",
+        "customEditor": "image",
         "icon": "/resources/admin/widgets/00_photo.png",
         "id": "cms-image",
         "validPageTypes": [
