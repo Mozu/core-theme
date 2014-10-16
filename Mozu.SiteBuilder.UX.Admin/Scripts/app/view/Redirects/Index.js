@@ -120,6 +120,7 @@ Ext.define('Taco.view.redirects.Index', {
                 scale: 'medium',
                 ui: 'action',
                 hidden: !this.allowCreate(),
+                margin: '0 0 0 15',
                 handler: function () {
                     this.uploadButton.fileInputEl.set({ accept: '.csv' });
                     this.uploadButton.fileInputEl.dom.click();
@@ -132,6 +133,7 @@ Ext.define('Taco.view.redirects.Index', {
                 ui: 'action',
                 hidden: !this.allowCreate(),
                 handler: this.onExport,
+                margin: '0 0 0 15',
                 scope: this
             }, {
                 xtype: 'button',
@@ -140,6 +142,7 @@ Ext.define('Taco.view.redirects.Index', {
                 text: 'Add Redirect',
                 itemId: 'createActionButton',
                 hidden: !this.allowCreate(),
+                margin: '0 0 0 15',
                 handler: this.onRowEditorCreate,
                 scope: this
             }

@@ -10,6 +10,7 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
@@ -150,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-            ViewData["rmaLocation"] = (await _locationRuntimeWebApiClient.GetDirectShipLocation()).ReadAsSync();
+            ViewData["rmaLocation"] = await GetDirectShipLocationOrDefault();
 
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTemplate.Template, model));
         }
@@ -242,19 +243,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var errMesage = string.Format("no template found for view:{0} topic{1}", emailTemplate.Template,
                     notification.Topic);
-                _logger.Error(errMesage);
+                _logger.Warn(errMesage);
                 return String.Empty;
             }
+
+            
 
             var vdd = new ViewDataDictionary();
             vdd["model"] = model;
             vdd["content"] = cmdContent;
             vdd["User"] = user;
-            vdd["rmaLocation"] = _locationRuntimeWebApiClient.GetDirectShipLocation().Result.ReadAsSync();
+            vdd["rmaLocation"] = await GetDirectShipLocationOrDefault();
             vdd["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
 
             var context = new HyprViewContext(Request, vdd);
             return await Render(view, context);
+        }
+
+        private async Task<Mozu.Location.Contracts.Location> GetDirectShipLocationOrDefault()
+        {
+            var locations = await _locationRuntimeWebApiClient.GetDirectShipLocation();
+            return locations.ResponseMessage.IsSuccessStatusCode ? locations.ReadAsSync() : null;
         }
 
         private static async Task<string> Render(HyprView view, HyprViewContext context)
