@@ -34,6 +34,11 @@
         }
     }
 
+    .related-orders {
+        border-top: 1px solid $color-standard-border;
+        padding: 7px 19px 3px;
+    }
+
     table.order-header-status {
         tr td:nth-child(2) {
             padding-left: 16px;
