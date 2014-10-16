@@ -36,6 +36,9 @@
         ],
         "priority": 0.2
     }, {
+        "id": "image",
+        "path": "image.js"
+    }, {
       "id": "horizontalrule",
       "path" : "horizontalRule.js" 
     },
