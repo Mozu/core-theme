@@ -374,18 +374,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 .AfterMap((dc, order) =>
                 {
-                    // create returnable items list.
-                    // we do four sexy O(n^2) operations here.
+                    // 1. create returnable items list.
+
                     order.ReturnableItems =
-                       (from productCode in order.GetAllProductsOrdered()
-                        select new OrderReturnableItem {
-                            ProductCode = productCode,
-                            ProductName = order.GetProductName(productCode),
-                            QuantityOrdered = order.GetItemCount(productCode),
-                            QuantityFulfilled = order.GetFulfilledItemCount(productCode),
-                            UnitPrice = order.GetUnitPrice(productCode)
-                        }
-                        ).ToList();
+                        (   
+                            from item in order.Items
+                            where item.ProductUsage != "Bundle"
+                            select new OrderReturnableItem {
+                                OrderItemId = item.Id,
+                                ProductCode = item.ProductCode,
+                                ProductName = item.ProductName,
+                                QuantityOrdered = item.Quantity,
+                                UnitPrice = item.UnitPrice,
+                                Key = item.Id
+                            }
+                        )
+                        .Union
+                        (
+                            from item in order.Items
+                            from bp in item.BundledProducts
+                            select new OrderReturnableItem {
+                                OrderItemId = null,
+                                ProductCode = bp.ProductCode,
+                                ProductName = bp.Name,
+                                QuantityOrdered = item.Quantity * bp.Quantity,
+                                UnitPrice = null,
+                                ParentItemId = item.Id,
+                                ParentProductCode = item.ProductCode,
+                                ParentProductName = item.ProductName,
+                                Key = item.Id + "-" + bp.ProductCode
+                            }
+                        )
+                        .ToList();
+
+                    // 2. Count the number of items already fulfilled.
+                    // we have to do some backflips in case line items were split:
+                    // we don't want to count one item being fulfilled as 
+                    // one fulfilled in each line item.
+                    order.ReturnableItems.GroupBy(ri => ri.ProductCode).Each(group => {
+                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key);
+                        group.Each(returnItem => {
+                            int numToMarkFulfilled = Math.Min(returnItem.QuantityOrdered, totalQuantityFulfilled);
+                            returnItem.QuantityFulfilled = numToMarkFulfilled;
+                            totalQuantityFulfilled -= numToMarkFulfilled;
+                        });
+                    });
                 });
         }
 

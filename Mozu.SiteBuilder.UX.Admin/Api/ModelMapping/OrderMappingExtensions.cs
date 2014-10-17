@@ -39,6 +39,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var bundleItem = order.Items.SelectMany(i => i.BundledProducts).First(bi => bi.ProductCode == productCode);
             return bundleItem.Name;
         }
+        
+        public static string GetParentBundleName(this Order order, string productCode) 
+        {
+            if (order.Items.Any(i => i.ProductCode == productCode))
+                return null;
+
+            return order.Items.First(i => i.BundledProducts != null && i.BundledProducts.Any(bp => bp.ProductCode == productCode)).ProductName;
+        }
 
         public static bool IsProductPackagedStandAlone(this Order order, string productCode)
         {
@@ -140,9 +148,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         public static int GetFulfilledItemCount(this Order order, string productCode)
         {
-            int packageCount = order.Packages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Count(i => i.ProductCode == productCode);
-            int pickupCount = order.Pickups.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Count(i => i.ProductCode == productCode);
-            int digitalCount = order.DigitalPackages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Count(i => i.ProductCode == productCode);
+            int packageCount = order.Packages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+            int pickupCount = order.Pickups.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+            int digitalCount = order.DigitalPackages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
 
             return packageCount + pickupCount + digitalCount;
         }

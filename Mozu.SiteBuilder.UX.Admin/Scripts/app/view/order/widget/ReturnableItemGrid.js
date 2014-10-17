@@ -72,6 +72,14 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         menuDisabled: true,
         width:100
     }, {
+        dataIndex: 'quantityFulfilled',
+        text: 'Qty Fulfilled',
+        draggable: false,
+        sortable: false,
+        resizable: false,
+        menuDisabled: true,
+        width: 100
+    }, {
         dataIndex: 'quantityReturned',
         text: 'Qty Returned',
         draggable: false,
@@ -166,14 +174,10 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             Taco.model.Return.constants.statuses.REJECTED
         ];
 
-
-
+        var returnableItems = this.order.get('returnableItems');
 
         // list of items and their qty currently added to active returns
         var returnedItemQuantities = {};
-
-        //list of items availabie in the returnable item grid
-        var eligibleItems = [];
         
         // track the returned quantities of each item in the order
 
@@ -195,45 +199,17 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             }
         }, this);
 
-        // add items to the returnable items store
-        // generate a full list of items to add to the returnable items store; Expanding list of bundled items;
-        Ext.Array.each(this.order.get('items'), function (orderItem) {
-            if (orderItem.productUsage !== "Bundle") {
-                addItem(orderItem, orderItem.id);
-            }
-            if (orderItem.bundledProducts && orderItem.bundledProducts.length > 0) {
-                Ext.Array.each(orderItem.bundledProducts, function (item) {
-                    addItem(Ext.apply({}, { quantity: item.quantity * orderItem.quantity }, item), orderItem.id, orderItem.productName);
-                });
-            }
+        // add quantity already returned to each returnable item.
+        Ext.Array.each(returnableItems, function (returnableItem) {
+            returnableItem.quantityReturned = 0 // returnedItemQuantities[returnableItem.orderItemId];
         });
 
 
-        // add configured item to the store;        
-        //this.store.add(eligibleItems);
-        this.store.loadData(eligibleItems);
-
-
-        // adds an item unless it has been fully returned
-        function addItem (item, orderItemId, parentBundleName) {
-            if (!allReturned(item)) {
-                eligibleItems.push({
-                    orderItemId: parentBundleName ? null : orderItemId,
-                    productCode: item.productCode,
-                    productName: item.productName || item.name,
-                    quantity: 0,
-                    quantityOrdered: item.quantity,
-                    quantityReturned: returnedItemQuantities[orderItemId],
-                    parentBundleName: parentBundleName,
-                    parentItemId: parentBundleName && orderItemId
-                });
-            }
-        }
-
-        // checks if an item has been fully returned
-        function allReturned (orderItem) {
-            return orderItem.id in returnedItemQuantities && returnedItemQuantities[orderItem.id] >= orderItem.quantity;
-        }
+        // filter out items which are already fully returned.
+        var returnableItemsFiltered = Ext.Array.filter(returnableItems, function (returnableItem) {
+            return returnableItem.quantityOrdered > returnableItem.quantityReturned;
+        });
+        this.store.loadData(returnableItemsFiltered);
     },
 
     getReturnableItemsStore: function () {
@@ -247,6 +223,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'string',  name: 'reason', defaultValue: 'Damaged' },
                 { type: 'number',  name: 'quantity', defaultValue: 0 },
                 { type: 'number',  name: 'quantityOrdered' },
+                { type: 'number',  name: 'quantityFulfilled' },
                 { type: 'number',  name: 'quantityReturned', defaultValue: 0 },
                 { type: 'string', name: 'orderItemId' },
                 { type: 'string', name: 'parentItemId'}
