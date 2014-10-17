@@ -298,11 +298,14 @@
 
     Img.prototype._onStart = function (e, ui) {
         if (this.moveColumns) {
-            this.col = this.$content.parents('[class*=mz-cms-col]');
-            this.colWidth = this.col.outerWidth() / this.col.mzCol('span');
-            this.ratio = this.$content.outerHeight() / this.$content.outerWidth();
-
-            console.log(this.col, this.col.mzCol('span'), this.colWidth);
+            this.colData = {
+                col: this.$content.parents('[class*=mz-cms-col]'),
+                ratio: this.$content.outerHeight() / this.$content.outerWidth(),
+                offset: this.$content.offset(),
+                width: this.$content.width()
+            }
+            this.colData.colWidth = this.colData.col.outerWidth() / this.colData.col.mzCol('span');
+            this.colData.col.mzCol('initResize');
         } else {
             this.snapHeights = this.$content.parents('.mz-cms-grid').mzGrid('snapHeights');
         }
@@ -330,13 +333,21 @@
 
     Img.prototype._moveColumns = function (e, ui) {
         var height = $doc.scrollTop() + e.clientY - this.offset.top,
-            newSpan = Math.round(height / this.ratio / this.colWidth);
+            width = $doc.scrollLeft() + e.clientX - this.colData.offset.left,
+            resizeRight = width >= this.colData.width / 2,
+            newSpan = Math.round(height / this.colData.ratio / this.colData.colWidth);
 
-        if (this.col.mzCol('span') === newSpan || newSpan < 1 || newSpan > 12) return;
+        if (this.colData.col.mzCol('span') === newSpan || newSpan < 1) return;
 
+        if (this.colData.col.mzCol('span') > newSpan) resizeRight = !resizeRight;
 
-        console.log('span', newSpan);
-        this.col.mzCol('changeSize', newSpan);
+        this.colData.col.mzCol(resizeRight ? 'resize' : 'resizeLeft', newSpan, true);
+        
+        win.setTimeout((function() {
+            this.colData.ratio = this.$content.outerHeight() / this.$content.outerWidth();
+            this.colData.offset = this.$content.offset();
+            this.colData.width = this.$content.width();
+        }).bind(this), 300);
     }
 
     Img.prototype._changeHeight = function (e, ui) {

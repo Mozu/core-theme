@@ -385,11 +385,7 @@
         Chorizo.editor.columnResizing(true);
         this.$resizer.addClass('active');
         this._moveHander = $.proxy(this._onMousemove, this);
-        this._offset = this.element.offset();
-        this.height = this.element.width();
-        this.gridWidth = this.parent.element.width() / 12;
-        this.size = this.span();
-
+        this.initResize();
         $doc.on('mousemove', this._moveHander);
         Chorizo.editor.stopDrag();
         Chorizo.editor.cursor('ew-resize');
@@ -406,11 +402,17 @@
         var newWidth = $doc.scrollLeft() + e.clientX - this._offset.left,
             newSize = Math.round(newWidth / this.gridWidth);
 
-        this.changeSize(newSize);
+        this.resize(newSize);
     }
 
-    Col.prototype.changeSize = function(newSize) {
-        console.log('newSize', newSize);
+    Col.prototype.initResize = function() {
+        this._offset = this.element.offset();
+        this.height = this.element.width();
+        this.gridWidth = this.parent.element.width() / 12;
+        this.size = this.span();
+    }
+
+    Col.prototype.resize = function(newSize, resizeLeft) {
         var delta = newSize - this.size,
             gridSpan = this.parent.parent.span,
             $next,
@@ -420,7 +422,10 @@
 
         $next = this.element.next();
 
-        if ($next.length !== 1) return;
+        if ($next.length !== 1) {
+            if (resizeLeft) this.resizeLeft(newSize);
+            return;
+        }
 
         nextSize = Col.span($next);
 
@@ -428,6 +433,28 @@
 
         this.element.attr('class', 'mz-cms-col-' + newSize + '-' + gridSpan);
         $next.attr('class', 'mz-cms-col-' + (nextSize - delta) + '-' + gridSpan);
+
+        this.size = newSize;
+        Chorizo.editor.dirtyStateCheck();
+    }
+
+    Col.prototype.resizeLeft = function(newSize, resizeRight) {
+        var delta = newSize - this.size,
+            gridSpan = this.parent.parent.span,
+            $prev = this.element.prev(),
+            prevSize;
+
+        if ($prev.length !== 1) {
+            if (resizeRight) this.resize(newSize);
+            return;
+        }
+
+        prevSize = Col.span($prev);
+
+        if (prevSize - delta < 1) return;
+
+        this.element.attr('class', 'mz-cms-col-' + newSize + '-' + gridSpan);
+        $prev.attr('class', 'mz-cms-col-' + (prevSize - delta) + '-' + gridSpan);
 
         this.size = newSize;
         Chorizo.editor.dirtyStateCheck();
@@ -474,17 +501,6 @@
         } else {
             this.element.mzImg({isRichText: false});
         }
-
-        // if (this.widgetData.isRichText) {
-        //     this.element.mzText()
-        // } else if (this.$content.hasClass('mz-cms-image')) {
-        //     this.element
-        //         .mzImg()
-        //         .addClass('mz-cms-drag-handle');
-        // } else {
-        //     this.element.mzContent()
-        //         .addClass('mz-cms-drag-handle');
-        // }
     }
 
     Block.create = function(widgetCfg) {
