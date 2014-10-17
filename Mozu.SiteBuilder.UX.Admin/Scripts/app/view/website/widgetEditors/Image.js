@@ -236,8 +236,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         forceSelection: true,
                         value: 'stretch',
                         store: [
-                            ['stretch', 'Fill Area'],
-                            ['maintain', 'Maintain Aspect']
+                            ['stretch', 'Stretch']
                         ],
                         listeners: {
                             change: {
@@ -261,10 +260,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         margin: '0 0 0 15',
                         width: 125,
                         hidden: true
-                    }, {
-                        xtype: 'hidden',
-                        name: 'height',
-                        value: 400
                     }]
                 }, {
                     xtype: 'radiogroup',
@@ -468,10 +463,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
 
     handleImageSizeChange: function (newValue) {
         this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
-        this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');;
-
-        this.widgetData.heightResizable = newValue === 'fill';
-        this.widgetData.height = newValue === 'fill' ? 400 : 'auto';
+        this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
     },
 
     handleImageSourceChange: function (newValue) {
@@ -564,6 +556,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
      * @private
      */
     beforeDestroy: function () {
-        //Ext.destroy(this.associator, this.imageStore, this.linkStore); // since this store persists between instances, don't delete it
+        Ext.destroy(this.associator, this.imageStore, this.linkStore);
     }
 });
