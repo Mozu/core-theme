@@ -404,8 +404,14 @@
 
     Col.prototype._onMousemove = function(e, ui) {
         var newWidth = $doc.scrollLeft() + e.clientX - this._offset.left,
-            newSize = Math.round(newWidth / this.gridWidth),
-            delta = newSize - this.size,
+            newSize = Math.round(newWidth / this.gridWidth);
+
+        this.changeSize(newSize);
+    }
+
+    Col.prototype.changeSize = function(newSize) {
+        console.log('newSize', newSize);
+        var delta = newSize - this.size,
             gridSpan = this.parent.parent.span,
             $next,
             nextSize;

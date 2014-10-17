@@ -276,7 +276,9 @@
 
         this.snapHeights = [];
 
-        if (this.widgetData.config.heightResizable === false) this.$bottom.hide();
+        this.moveColumns = this.widgetData.config.imageSize === 'maintain';
+
+        //if (this.widgetData.config.heightResizable === false) this.$bottom.hide();
     }
 
     Img.prototype = new Content();
@@ -295,7 +297,15 @@
     }
 
     Img.prototype._onStart = function (e, ui) {
-        this.snapHeights = this.$content.parents('.mz-cms-grid').mzGrid('snapHeights');
+        if (this.moveColumns) {
+            this.col = this.$content.parents('[class*=mz-cms-col]');
+            this.colWidth = this.col.outerWidth() / this.col.mzCol('span');
+            this.ratio = this.$content.outerHeight() / this.$content.outerWidth();
+
+            console.log(this.col, this.col.mzCol('span'), this.colWidth);
+        } else {
+            this.snapHeights = this.$content.parents('.mz-cms-grid').mzGrid('snapHeights');
+        }
 
         this._moveHandler = $.proxy(this._onMousemove, this);
         this.offset = this.$content.children().first().offset();
@@ -309,12 +319,27 @@
     Img.prototype._onStop = function (e, ui) {
         $doc.off('mousemove', this._moveHandler);
         Chorizo.editor.cursor('auto');
-        this.widgetData.config.height = this.$content.outerHeight();
+        //this.widgetData.config.height = this.$content.outerHeight();
         Chorizo.editor.dirtyStateCheck();
         this.snapHeights = [];
     }
 
     Img.prototype._onMousemove = function (e, ui) {
+        this[this.moveColumns ? '_moveColumns' : '_changeHeight'](e, ui);
+    }
+
+    Img.prototype._moveColumns = function (e, ui) {
+        var height = $doc.scrollTop() + e.clientY - this.offset.top,
+            newSpan = Math.round(height / this.ratio / this.colWidth);
+
+        if (this.col.mzCol('span') === newSpan || newSpan < 1 || newSpan > 12) return;
+
+
+        console.log('span', newSpan);
+        this.col.mzCol('changeSize', newSpan);
+    }
+
+    Img.prototype._changeHeight = function (e, ui) {
         var mouseY = $doc.scrollTop() + e.clientY,
             height = mouseY - this.offset.top,
             variance = 30,
