@@ -1,11 +1,11 @@
 /**
- * @class Taco.view.website.widgetEditors.Image
- * @author Jimmy Sanford
+ * @class Taco.view.website.widgetEditors.v2.Image
+ * @author Taco the Taco
  *
  * An image widget.
  */
 
-Ext.define('Taco.view.website.widgetEditors.Image', {
+Ext.define('Taco.view.website.widgetEditors.v2.Image', {
     extend: 'Taco.view.website.WidgetEditor',
     alias: 'widget.taco-image-widgeteditor',
     requires: [

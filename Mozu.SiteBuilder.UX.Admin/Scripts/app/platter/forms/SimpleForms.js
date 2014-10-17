@@ -1,4 +1,4 @@
-﻿/**
+/**
 * The Discount list (grid) view
 */
 Ext.define('Taco.platter.forms.SimpleForms', {
@@ -51,4 +51,7 @@ Ext.define('Taco.platter.forms.WidgetForm', {
     alias: 'widget.mz-form-widget'
 });
 
-
+Ext.define('Taco.platter.forms.WidgetImageEditor', {
+    extend: 'Taco.view.website.widgetEditors.v2.Image',
+    alias: 'widget.mz-form-imagewidget'
+});
