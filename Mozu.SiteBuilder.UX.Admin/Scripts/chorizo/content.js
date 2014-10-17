@@ -276,7 +276,7 @@
 
         this.snapHeights = [];
 
-        //if (!this.widgetData.config.heightResizable) this.$bottom.hide();
+        if (this.widgetData.config.heightResizable === false) this.$bottom.hide();
     }
 
     Img.prototype = new Content();

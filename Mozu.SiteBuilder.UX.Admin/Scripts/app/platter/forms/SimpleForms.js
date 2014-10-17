@@ -8,7 +8,8 @@ Ext.define('Taco.platter.forms.SimpleForms', {
        'Taco.core.ux.form.entities.WebPageEditorForm',
        'Taco.core.ux.form.entities.ProductEditorForm',
        'Taco.core.ux.form.entities.EntityEditorForm',
-       'Taco.core.ux.form.entities.CategoryEditorForm'
+       'Taco.core.ux.form.entities.CategoryEditorForm',
+       'Taco.view.website.widgetEditors.v2.Image'
     ],
     constructor: function () {
 

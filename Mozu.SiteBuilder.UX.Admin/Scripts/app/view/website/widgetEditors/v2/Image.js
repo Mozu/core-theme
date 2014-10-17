@@ -6,7 +6,7 @@
  */
 
 Ext.define('Taco.view.website.widgetEditors.v2.Image', {
-    extend: 'Taco.view.website.WidgetEditor',
+    extend: 'Ext.form.Panel',
     alias: 'widget.taco-image-widgeteditor',
     requires: [
         'Taco.core.ux.form.FileInputButton',
@@ -52,7 +52,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                 borderRadius: '2px 0px 0px 2px'
             },
             handler: function () {
-                this.getForm().getLayout().setActiveItem(0);
+                this.cards.getLayout().setActiveItem(0);
             }
         }, {
             xtype: 'button',
@@ -67,11 +67,11 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                 borderRadius: '0px 2px 2px 0px'
             },
             handler: function () {
-                this.getForm().getLayout().setActiveItem(1);
+                this.cards.getLayout().setActiveItem(1);
             }
         }];
 
-        this.form = Ext.create('Taco.core.ux.form.Form', {
+        this.cards = Ext.create('Ext.Panel', {
             layout: {
                 type: 'card'
             },
@@ -254,17 +254,6 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         margin: '0 0 0 15',
                         width: 125,
                         hidden: true
-                    }, {
-                        xtype: 'textfield',
-                        name: 'imageHeight',
-                        fieldLabel: 'Height',
-                        margin: '0 0 0 15',
-                        width: 125,
-                        hidden: true
-                    }, {
-                        xtype: 'hidden',
-                        name: 'height',
-                        value: 400
                     }]
                 }, {
                     xtype: 'radiogroup',
@@ -431,6 +420,8 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
             }]
         });
 
+        this.items = [this.cards];
+
         this.callParent(arguments);
 
         this.mon(this.imageStore, {
@@ -462,16 +453,16 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
         var isUrl = newValue.imageClickAction === 'url';
 
         console.log(isUrl ? 'url' : 'not url');
-        this.down('#linkFields').setVisible(isUrl);
+        this.down('#linkFields').setVisible(isUrl); 
         this.down('#linkSelectors').setVisible(isUrl);
     },
 
     handleImageSizeChange: function (newValue) {
         this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
-        this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');;
 
-        this.widgetData.heightResizable = newValue === 'fill';
-        this.widgetData.height = newValue === 'fill' ? 400 : 'auto';
+        this.up().widgetData.heightResizable = newValue === 'stretch';
+        this.up().widgetData.height = newValue === 'stretch' ? 400 : 'auto';
+        this.up().widgetData.imageHeight = newValue === 'stretch' ? 400 : 'auto';
     },
 
     handleImageSourceChange: function (newValue) {
@@ -543,7 +534,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
 
         this.callParent(arguments);
 
-        data = this.widgetData;
+        data = this.up().widgetData;
 
         if (data.imageSource === 'file' && data.imageFileId) {
             this.imageStore.add({
