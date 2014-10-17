@@ -114,12 +114,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string FulfillmentMethod { get; set; }
 
         public string FulfillmentStatus { get; set; }
+
+        public bool IsPackagedStandAlone { get; set; }
         #endregion
 
         public string ParentProductCode { get; set; }
-
-
-        
-        public bool? IsPackagedStandAlone { get; set; }
     }
 }

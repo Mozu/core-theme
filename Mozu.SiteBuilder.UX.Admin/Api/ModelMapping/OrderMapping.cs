@@ -65,6 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CouponCodes, op => op.ResolveUsing(dc => dc.CouponCodes))
                 .ForMember(x => x.ParentOrderId, op => op.ResolveUsing(dc => dc.ParentOrderId))
                 .ForMember(x => x.ParentReturnId, op => op.ResolveUsing(dc => dc.ParentReturnId))
+                .ForMember(x => x.ExternalId, op => op.ResolveUsing(dc => dc.ExternalId))
 
                 .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
@@ -339,6 +340,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         return order.Items.First(i => i.ProductCode == productCode || (i.BundledProducts != null && i.BundledProducts.Any(bi => bi.ProductCode == productCode))).UnitPrice;
                     });
 
+                    var IsProductPackagedStandAlone = new Func<string, bool>(productCode =>
+                    {
+                        var item = order.Items.FirstOrDefault(i => i.ProductCode == productCode);
+                        if (item != null)
+                            return item.IsPackagedStandAlone;
+
+                        var bundleItem = order.Items.SelectMany(i => i.BundledProducts).First(bi => bi.ProductCode == productCode);
+                        return bundleItem.IsPackagedStandAlone;
+                    });
+
                     foreach (var productCode in productCodes)
                     {
                         var productName = GetProductName(productCode);
@@ -348,7 +359,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
                         var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var isPackagedStandAlone = order.Items.FirstOrDefault(i => i.ProductCode == productCode).IsPackagedStandAlone;
+                        var isPackagedStandAlone = IsProductPackagedStandAlone(productCode);
                     
 
                         // if there are more desired products than created packages contain, add this product to unpackagedItems.
@@ -527,7 +538,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       ? dc.HandlingAmount : null))
 
 
-                      .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
+                  .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
                   
 
 

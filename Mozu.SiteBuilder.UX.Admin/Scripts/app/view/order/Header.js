@@ -95,6 +95,21 @@ Ext.define('Taco.view.order.Header', {
             data: this.record.getCustomer() ? this.record.getCustomer().getData() : {}
         });
 
+        this.relatedCmp = Ext.widget({
+            xtype: 'component',
+            itemId: 'relatedCmp',
+            cls: 'related-orders',
+            hidden: !(this.record.get('parentOrderId') || this.record.get('externalId')),
+            tpl: [
+                '<tpl if="parentOrderId">',
+                    '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderId}</a></div>',
+                '</tpl>',
+                '<tpl if="externalId">',
+                    '<div class="external-order"><span class="label">External Order #:</span>{externalId}</div>',
+                '</tpl>'
+            ],
+            data: this.record.getData()
+        });
 
         this.detailCmp = Ext.widget({
             xtype: 'component',
@@ -103,9 +118,6 @@ Ext.define('Taco.view.order.Header', {
             flex: 27,
             tpl: [
                 '<div class="order-number">', '<span class="label">Order #</span>{orderNumber}', '</div>',
-                '<tpl if="parentOrderId">',
-                    '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderId}</a></div>',
-                '</tpl>',
                 '<div class="create-date">', '<span class="label">Order Date:</span>{createDate:date("m/d/Y h:i a")}', '</div>',
                 '<div class="update-date">', '<span class="label">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</div>',
                 '<div class="site">', '<span class="label">Site:</span><a href="/_gosite/{siteId}" target="_blank">{siteName}</a>', '</div>',
@@ -344,7 +356,8 @@ Ext.define('Taco.view.order.Header', {
 
         this.add([
             this.customerCmp,
-            this.dataContainer
+            this.dataContainer,
+            this.relatedCmp
         ]);
 
         //set the default focus 
@@ -395,15 +408,17 @@ Ext.define('Taco.view.order.Header', {
     },
 
     updateHeader: function () {
+        var data = this.record.getData();
+        
         Ext.suspendLayouts();
 
         this.customerCmp.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
-        this.detailCmp.update( Ext.apply( { channelName: this.record.getChannelName() }, this.record.getData()));
-        this.statusCmp.update(Ext.apply(this.record.getData(), {
-            orderRecord: this.record
-        }));
-        this.addressesCmp.update(this.record.getData());
+        this.detailCmp.update( Ext.apply({ channelName: this.record.getChannelName() }, data));
+        this.statusCmp.update(Ext.apply({}, { orderRecord: this.record }, data));
+        this.addressesCmp.update(data);
+        this.relatedCmp.update(data);
 
+        this.relatedCmp[(data.externalId || data.parentOrderId) ? 'show' : 'hide']();
         this.addressesContainer[this.record.getCustomer() ? 'show' : 'hide']();
         this.customerSelectionContainer[this.record.getCustomer() ? 'hide' : 'show']();
 

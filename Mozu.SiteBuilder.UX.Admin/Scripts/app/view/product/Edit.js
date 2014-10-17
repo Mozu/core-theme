@@ -178,7 +178,7 @@
             }
         }];
                 
-        this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options });
+        this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options, isDuplicate:this.isDuplicate });
 
         
         this.callParent(arguments);
