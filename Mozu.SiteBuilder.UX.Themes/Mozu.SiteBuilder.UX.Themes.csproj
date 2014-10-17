@@ -646,6 +646,7 @@
     <Content Include="Themes\Core6\admin\editors\email-orderconfirmation.js" />
     <Content Include="Themes\Core6\admin\editors\email.js" />
     <Content Include="Themes\Core6\admin\editors\horizontalRule.js" />
+    <Content Include="Themes\Core6\admin\editors\image.js" />
     <Content Include="Themes\Core6\admin\editors\pageTemplateContent.js" />
     <Content Include="Themes\Core6\admin\editors\productContent.js" />
     <Content Include="Themes\Core6\admin\editors\snippet.js" />
