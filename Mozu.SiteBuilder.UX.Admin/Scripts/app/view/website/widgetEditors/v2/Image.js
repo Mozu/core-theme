@@ -15,8 +15,6 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
         'Taco.view.fileManager.Associator'
     ],
 
-    title: 'Image',
-
     autoShow: false,
     width: 580,
     height: 600,
@@ -256,6 +254,39 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         hidden: true
                     }]
                 }, {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    items: [{
+                        xtype: 'combobox',
+                        name: 'positionHorizontal',
+                        fieldLabel: 'Horizontal Position',
+                        width: 260,
+                        editable: false,
+                        forceSelection: true,
+                        value: 'center',
+                        store: [
+                            ['left', 'Left'],
+                            ['center', 'Center'],
+                            ['right', 'Right']
+                        ]
+                    }, {
+                        xtype: 'combobox',
+                        name: 'positionVertical',
+                        fieldLabel: 'Vertical Position',
+                        width: 260,
+                        editable: false,
+                        forceSelection: true,
+                        margin: '0 0 0 12',
+                        value: 'center',
+                        store: [
+                            ['top', 'Top'],
+                            ['center', 'Center'],
+                            ['bottom', 'Bottom']
+                        ]
+                    }]
+                }, {
                     xtype: 'radiogroup',
                     fieldLabel: 'Choose one of the following:',
                     columns: 2,
@@ -459,6 +490,8 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
 
     handleImageSizeChange: function (newValue) {
         this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
+        this.down('[name=positionHorizontal]').setVisible(newValue === 'stretch');
+        this.down('[name=positionVertical]').setVisible(newValue === 'stretch');
 
         this.up().widgetData.heightResizable = newValue === 'stretch';
         this.up().widgetData.height = newValue === 'stretch' ? 400 : 'auto';

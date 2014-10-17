@@ -70,14 +70,17 @@
             {% endif %}
         {% endif %}
 
-        {% if Model.config.imageSource == 'externalUrl' %}
-            style="background-image: url('{{Model.config.imageExternalUrl}}');"
-        {% endif %}
-        {% if Model.config.imageSource == 'file' %}
-            {% if Model.config.imageFileId %}
-                style="background-image: url('{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.imageFileId}}');"
+        style="background-image: url(
+            {% if Model.config.imageSource == 'externalUrl' %}
+                '{{Model.config.imageExternalUrl}}'
             {% endif %}
-        {% endif %}
+            {% if Model.config.imageSource == 'file' %}
+                {% if Model.config.imageFileId %}
+                    style="background-image: url('{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.imageFileId}}');"
+                {% endif %}
+            {% endif %}
+        );
+        background-position: {{Model.config.positionHorizontal}} {{Model.config.positionVertical}};"
         >
         </{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}>
 
