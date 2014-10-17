@@ -556,6 +556,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
      * @private
      */
     beforeDestroy: function () {
-        Ext.destroy(this.associator, this.imageStore, this.linkStore);
+        //Ext.destroy(this.associator, this.imageStore, this.linkStore); // since this store persists between instances, don't delete it
     }
 });
