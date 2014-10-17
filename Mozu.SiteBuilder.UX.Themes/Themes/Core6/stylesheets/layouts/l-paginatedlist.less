@@ -2,32 +2,35 @@
     overflow: auto;
     position: relative;
     .mz-sortby {
-        position: absolute;
-        left: 0;
-        bottom: 1em;
+        display: inline-block;
+        text-align: left;
+        margin-right: @gutter*2;
     }
     .mz-pagingcontrols {
-        position: absolute;
-        right: 0;
-        bottom: 1em;
+        display: inline-block;
         text-align: right;
+        margin-right: @gutter*2;
     } 
     .mz-pagenumbers {
-        position: absolute;
-        right: 0;
-        top: 0;
+        display: inline-block;
         text-align: right;
+        float: right;
     }
     .mz-l-tiles {
         clear: both;
     }
     .mz-l-paginatedlist-header {
         .clearfix();
-        height: 9em;
+        margin-bottom: @gutter/2;
         position: relative;
     }
     .mz-l-paginatedlist-footer {
         .clearfix();
+        .mz-pagenumbers {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
     }
     .mz-l-paginatedlist-list {
         clear: both;

@@ -1,4 +1,4 @@
-﻿<label class="mz-pagingcontrols-pagestate-label">
+﻿<span class="mz-pagingcontrols-pagestate-label">
 {% if model.totalCount %}
   {% if model.totalCount != 1 %}
     {{ labels.pageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
@@ -6,7 +6,7 @@
     {{ labels.pageStateSingular }}
   {% endif %}
 {% endif %}
-</label>
+</span>
 
 <label class="mz-pagingcontrols-pagesize-label">
   <span class="mz-paging-title">{{ labels.show }}:</span>
