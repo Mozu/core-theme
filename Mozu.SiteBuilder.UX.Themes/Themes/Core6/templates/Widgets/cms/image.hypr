@@ -34,11 +34,11 @@
         alt="{{Model.config.imageAltText}}"
          
         {% if Model.config.imageSource == 'externalUrl' %}
-            href="{{Model.config.imageExternalUrl}}"
+            src="{{Model.config.imageExternalUrl}}"
         {% endif %}
         {% if Model.config.imageSource == 'file' %}
             {% if Model.config.imageFileId %}
-                href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.imageFileId}}"
+                src="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.imageFileId}}"
             {% endif %}
         {% endif %}
          >
