@@ -222,10 +222,11 @@ Ext.define('Taco.core.ux.form.Form', {
         field, data, val, bucket, name;
 
         for (f = 0; f < fLen; f++) {
-            field = fields[f];
-
+            field = fields[f];            
+            
             if (!dirtyOnly || field.isDirty()) {
                 data = field[useDataValues ? 'getModelData' : 'getSubmitData'](includeEmptyText);
+
 
                 if (Ext.isObject(data)) {
                     for (name in data) {
@@ -411,7 +412,7 @@ Ext.define('Taco.core.ux.form.Form', {
         //todo ? clear save tasks?
         if (this.beforeSave() !== false) {
             this.addSaveTasks(this.saveTasks);            
-            this.fireEvent('beforesaveexecute', this);
+            this.fireEvent('beforesaveexecute', this);            
             this.saveTasks.execute();
         }
     },

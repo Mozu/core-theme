@@ -566,7 +566,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     //todo: gm split prodCat containter into include and exclude. On includeAll checked, then only show exclude.
     setProductCategoryContainerVisibility: function (isLineItem) {
-        this.productCategoryContainer.setVisible(isLineItem);
+        this.productCategoryContainer.setVisible(isLineItem);        
         if (!isLineItem) {
             this.includeSpecificProductsInput.setValue(true);
             this.categoryList.setValue('');
