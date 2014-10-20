@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using AutoMapper;
+using Magnum.Extensions;
 using Microsoft.FSharp.Collections;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -291,12 +292,26 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                                 var widgetConfig = widget.Config;
 
-                                var height = widgetConfig["height"];
-                                if (height != null)
+                                var height = widgetConfig["height"] as JValue;
+                                if (height != null && height.Value!= null )
                                 {
-                                    sb.Append(" style=\"height:");
-                                    sb.Append(height);
-                                    sb.Append("px;\"");
+                                    var heightStr = height.Value.ToString();
+                                    if (!string.IsNullOrWhiteSpace(heightStr))
+                                    {
+                                        sb.Append(" style=\"height:");
+                                        int heightInt;
+                                        if (int.TryParse(heightStr, out heightInt))
+                                        {
+                                            sb.Append(heightInt);
+                                            sb.Append("px;\"");
+                                        }
+                                        else
+                                        {
+                                            sb.Append(heightStr);
+                                            sb.Append(";\"");
+                                        }
+                                    }
+                                   
                                 }
 
                                 sb.Append(">");

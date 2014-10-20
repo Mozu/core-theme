@@ -1,12 +1,12 @@
 /**
- * @class Taco.view.website.widgetEditors.Image
- * @author Jimmy Sanford
+ * @class Taco.view.website.widgetEditors.v2.Image
+ * @author Taco the Taco
  *
  * An image widget.
  */
 
-Ext.define('Taco.view.website.widgetEditors.Image', {
-    extend: 'Taco.view.website.WidgetEditor',
+Ext.define('Taco.view.website.widgetEditors.v2.Image', {
+    extend: 'Ext.form.Panel',
     alias: 'widget.taco-image-widgeteditor',
     requires: [
         'Taco.core.ux.form.FileInputButton',
@@ -14,8 +14,6 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         'Taco.store.NavigationTreeNodes',
         'Taco.view.fileManager.Associator'
     ],
-
-    title: 'Image',
 
     autoShow: false,
     width: 580,
@@ -52,7 +50,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                 borderRadius: '2px 0px 0px 2px'
             },
             handler: function () {
-                this.getForm().getLayout().setActiveItem(0);
+                this.cards.getLayout().setActiveItem(0);
             }
         }, {
             xtype: 'button',
@@ -67,11 +65,11 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                 borderRadius: '0px 2px 2px 0px'
             },
             handler: function () {
-                this.getForm().getLayout().setActiveItem(1);
+                this.cards.getLayout().setActiveItem(1);
             }
         }];
 
-        this.form = Ext.create('Taco.core.ux.form.Form', {
+        this.cards = Ext.create('Ext.Panel', {
             layout: {
                 type: 'card'
             },
@@ -236,7 +234,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         forceSelection: true,
                         value: 'stretch',
                         store: [
-                            ['stretch', 'Stretch']
+                            ['stretch', 'Fill Area'],
+                            ['maintain', 'Maintain Aspect']
                         ],
                         listeners: {
                             change: {
@@ -253,13 +252,39 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
                         margin: '0 0 0 15',
                         width: 125,
                         hidden: true
+                    }]
+                }, {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    items: [{
+                        xtype: 'combobox',
+                        name: 'positionHorizontal',
+                        fieldLabel: 'Horizontal Position',
+                        width: 260,
+                        editable: false,
+                        forceSelection: true,
+                        value: 'center',
+                        store: [
+                            ['left', 'Left'],
+                            ['center', 'Center'],
+                            ['right', 'Right']
+                        ]
                     }, {
-                        xtype: 'textfield',
-                        name: 'imageHeight',
-                        fieldLabel: 'Height',
-                        margin: '0 0 0 15',
-                        width: 125,
-                        hidden: true
+                        xtype: 'combobox',
+                        name: 'positionVertical',
+                        fieldLabel: 'Vertical Position',
+                        width: 260,
+                        editable: false,
+                        forceSelection: true,
+                        margin: '0 0 0 12',
+                        value: 'center',
+                        store: [
+                            ['top', 'Top'],
+                            ['center', 'Center'],
+                            ['bottom', 'Bottom']
+                        ]
                     }]
                 }, {
                     xtype: 'radiogroup',
@@ -426,6 +451,8 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
             }]
         });
 
+        this.items = [this.cards];
+
         this.callParent(arguments);
 
         this.mon(this.imageStore, {
@@ -457,13 +484,18 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
         var isUrl = newValue.imageClickAction === 'url';
 
         console.log(isUrl ? 'url' : 'not url');
-        this.down('#linkFields').setVisible(isUrl);
+        this.down('#linkFields').setVisible(isUrl); 
         this.down('#linkSelectors').setVisible(isUrl);
     },
 
     handleImageSizeChange: function (newValue) {
         this.down('[name=imageWidth]').setVisible(newValue === 'specificSize');
-        this.down('[name=imageHeight]').setVisible(newValue === 'specificSize');
+        this.down('[name=positionHorizontal]').setVisible(newValue === 'stretch');
+        this.down('[name=positionVertical]').setVisible(newValue === 'stretch');
+
+        this.up().widgetData.heightResizable = newValue === 'stretch';
+        this.up().widgetData.height = newValue === 'stretch' ? 400 : 'auto';
+        this.up().widgetData.imageHeight = newValue === 'stretch' ? 400 : 'auto';
     },
 
     handleImageSourceChange: function (newValue) {
@@ -535,7 +567,7 @@ Ext.define('Taco.view.website.widgetEditors.Image', {
 
         this.callParent(arguments);
 
-        data = this.widgetData;
+        data = this.up().widgetData;
 
         if (data.imageSource === 'file' && data.imageFileId) {
             this.imageStore.add({

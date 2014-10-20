@@ -274,7 +274,11 @@
 
         this.widgetData = this.element.data('widget');
 
-        if (!this.widgetData.config.heightResizable) this.$bottom.hide();
+        this.snapHeights = [];
+
+        this.moveColumns = this.widgetData.config.imageSize === 'maintain';
+
+        //if (this.widgetData.config.heightResizable === false) this.$bottom.hide();
     }
 
     Img.prototype = new Content();
@@ -293,6 +297,19 @@
     }
 
     Img.prototype._onStart = function (e, ui) {
+        if (this.moveColumns) {
+            this.colData = {
+                col: this.$content.parents('[class*=mz-cms-col]'),
+                ratio: this.$content.outerHeight() / this.$content.outerWidth(),
+                offset: this.$content.offset(),
+                width: this.$content.width()
+            }
+            this.colData.colWidth = this.colData.col.outerWidth() / this.colData.col.mzCol('span');
+            this.colData.col.mzCol('initResize');
+        } else {
+            this.snapHeights = this.$content.parents('.mz-cms-grid').mzGrid('snapHeights');
+        }
+
         this._moveHandler = $.proxy(this._onMousemove, this);
         this.offset = this.$content.children().first().offset();
         this.height = this.$content.children().first().height();
@@ -305,13 +322,63 @@
     Img.prototype._onStop = function (e, ui) {
         $doc.off('mousemove', this._moveHandler);
         Chorizo.editor.cursor('auto');
-        this.widgetData.config.height = this.$content.outerHeight();
+        //this.widgetData.config.height = this.$content.outerHeight();
         Chorizo.editor.dirtyStateCheck();
+        this.snapHeights = [];
     }
 
     Img.prototype._onMousemove = function (e, ui) {
-        var height = $doc.scrollTop() + e.clientY - this.offset.top;
+        this[this.moveColumns ? '_moveColumns' : '_changeHeight'](e, ui);
+    }
+
+    Img.prototype._moveColumns = function (e, ui) {
+        var height = $doc.scrollTop() + e.clientY - this.offset.top,
+            width = $doc.scrollLeft() + e.clientX - this.colData.offset.left,
+            resizeRight = width >= this.colData.width / 2,
+            newSpan = Math.round(height / this.colData.ratio / this.colData.colWidth);
+
+        if (this.colData.col.mzCol('span') === newSpan || newSpan < 1) return;
+
+        if (this.colData.col.mzCol('span') > newSpan) resizeRight = !resizeRight;
+
+        this.colData.col.mzCol(resizeRight ? 'resize' : 'resizeLeft', newSpan, true);
+        
+        win.setTimeout((function() {
+            this.colData.ratio = this.$content.outerHeight() / this.$content.outerWidth();
+            this.colData.offset = this.$content.offset();
+            this.colData.width = this.$content.width();
+        }).bind(this), 300);
+    }
+
+    Img.prototype._changeHeight = function (e, ui) {
+        var mouseY = $doc.scrollTop() + e.clientY,
+            height = mouseY - this.offset.top,
+            variance = 30,
+            delta = false,
+            inRange = false,
+            snap;
+
         this.$content.height(height);
+
+        //console.log(mouseY);
+
+        [].forEach.call(this.snapHeights, function (y) {
+            //console.log(mouseY, y, variance, y - variance, y + variance, mouseY > y - variance, mouseY < y + variance);
+            if (mouseY > y - variance && mouseY < y + variance) {
+                inRange = true;
+                if (delta === false || y - mouseY < Math.abs(delta)) {
+                    delta = mouseY - y;
+                    snap = y
+                }
+            } else if (inRange) {
+                return false;
+            }
+        }, this);
+
+        if (delta !== false) {
+            this.$content.height(height - delta + 10);
+            //console.log(height, delta, height - delta);
+        }
     }
 
 

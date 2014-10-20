@@ -245,8 +245,8 @@ Ext.define('Taco.view.order.Grid', {
             return Ext.apply({}, { orderNumber: record.get('orderNumber') }, item);
         });
 
-        Ext.Array.sort(items, function (a, b) {
-            return a.orderNumber - b.orderNumber;
+        items = Ext.Array.sort(items, function (a, b) {
+            return b.orderNumber - a.orderNumber;
         });
 
         message = Ext.String.format(summaryTpl, successCount, items.length);

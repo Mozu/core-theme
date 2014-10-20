@@ -1018,6 +1018,7 @@
     <Content Include="Scripts\app\view\website\widgetEditors\Image.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
+    <Content Include="Scripts\app\view\website\widgetEditors\v2\Image.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\chorizo\Build\layout.css" />
     <Content Include="Scripts\chorizo\Build\chorizo.css" />
