@@ -412,13 +412,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var getOrderActionsTasks = request.OrderContexts.Select(GetOrderActions).ToList();
             await Task.WhenAll(getOrderActionsTasks);
-            IEnumerable<string> result = _validBulkOrderActions;
+            IEnumerable<string> result = new List<string>();
             foreach (var orderActionsTask in getOrderActionsTasks)
             {
-                result = result.Intersect(orderActionsTask.Result, new OrderActionComparer());
+                result = result.Union(orderActionsTask.Result, new OrderActionComparer());
             }
-            var list = result.ToList();
-            return new Response<List<string>> {Items = list, Total = list.Count};
+            // only show the valid actions for bulk requests
+            var validActions = result.Intersect(_validBulkOrderActions, new OrderActionComparer()).ToList();
+            return new Response<List<string>> {Items = validActions, Total = validActions.Count};
         }
 
         private async Task<List<string>> GetOrderActions(OrderContext orderContext)
