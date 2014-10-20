@@ -2200,7 +2200,7 @@
     <Content Include="Themes\Demo1\templates\pages\category.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Demo1\templates\modules\billing-address-form.hypr.live" />
+    <Content Include="Themes\Demo1\templates\modules\checkout\billing-address-form.hypr.live" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
