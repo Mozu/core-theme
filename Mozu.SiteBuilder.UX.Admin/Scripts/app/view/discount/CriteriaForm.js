@@ -18,19 +18,32 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             shippingStore,
             me = this;
 
+        
         this.includeAllProductsInput = Ext.widget({
-            xtype: 'checkbox',
+            xtype: 'radio',
             name: 'includeAllProducts',
+            persistSelectedValueOnly: true,
             boxLabel: 'Applies to All Products',
-            width: 300,
-            value: this.record.get('includeAllProducts'),
+            inputValue:true,
+            width: 300,            
+            checked: this.record.get('includeAllProducts'),
             listeners: {
-                change: function() {
+                change: function (radio, newValue, oldValue, eOpts) {
                     this.parentForm.setFieldVisibility();
                     enableDisableCriteriaQuantities();
                 },
                 scope: this
             }
+        });
+
+        this.includeSpecificProductsInput = Ext.widget({
+            xtype: 'radio',
+            name: 'includeAllProducts',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Applies to Specific Products',
+            inputValue: false,
+            width: 300,
+            checked: !this.record.get('includeAllProducts')
         });
 
         this.appliesToSaleProducts = Ext.widget({
@@ -82,9 +95,17 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         function disableCmp(cmp) { cmp.disable(); }
         function enableCmp(cmp) { cmp.enable(); }
         function enableDisableCriteriaQuantities() {
-            var fn = me.includeAllProductsInput.getValue() ? disableCmp : enableCmp;
-            var box = me.productsBox.down('radio').getValue() ? me.productsBox : me.categoriesBox;
-            Ext.Array.each(box.query('[isFormField]'), fn);
+            //var fn = me.includeAllProductsInput.getValue() ? disableCmp : enableCmp;
+            var isVisible = me.includeAllProductsInput.getValue() ? false : true;
+
+            me.productsBox.setVisible(isVisible)
+            me.categoriesBox.setVisible(isVisible)
+
+
+            //var box = me.productsBox.down('radio').getValue() ? me.productsBox : me.categoriesBox;
+            //Ext.Array.each(box.query('[isFormField]'), fn);
+
+            
         }
 
         function toggleEnabledCriteriaQuantities(toEnable) {
@@ -108,9 +129,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             toEnable.down('button').enable();
         }
 
-        this.categoriesBox = Ext.create('Ext.container.Container', {
+        this.categoriesBox = Ext.create('Ext.form.FieldContainer', {
             layout: 'hbox',
-            //width: 600,
+            width: 600,
+            fieldLabel: "Select the quantity of products from the categories that the shopper will receive the discount on:",
             items: [
                 {
                     xtype: 'radio',
@@ -237,9 +259,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
 
-        this.productsBox = Ext.create('Ext.container.Container', {
+        this.productsBox = Ext.create('Ext.form.FieldContainer', {
             layout: 'hbox',
             width: 600,
+            fieldLabel: 'Select the quantity of products that the shopper will receive the discount on:',
             items: [
                 {
                     xtype: 'radio',
@@ -355,18 +378,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                         this.includeAllProductsInput,
                         this.appliesToSaleProducts
                     ]
-            },
-            {
-                xtype: 'component',
-                html: 'Select the quantity of products that the shopper will receive the discount on:',
-                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
-            },
-                this.productsBox,
-            {
-                xtype: 'component',
-                html: 'Select the quantity of products from the categories that the shopper will receive the discount on:',
-                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
-            },
+                },
+                this.includeSpecificProductsInput,            
+                this.productsBox,            
                 this.categoriesBox,
                 {
                     xtype: 'component',
@@ -552,7 +566,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     //todo: gm split prodCat containter into include and exclude. On includeAll checked, then only show exclude.
     setProductCategoryContainerVisibility: function (isLineItem) {
-        this.productCategoryContainer.setVisible(isLineItem);
+        this.productCategoryContainer.setVisible(isLineItem);        
         if (!isLineItem) {
             this.includeAllProductsInput.setValue(false);
             this.categoryList.setValue('');
@@ -567,5 +581,4 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.setProductCategoryContainerVisibility(isLineItem);
         this.setShippingListVisibility(appliesToShipping);
     }
-
 });

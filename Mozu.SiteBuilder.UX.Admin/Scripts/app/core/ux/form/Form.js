@@ -222,10 +222,11 @@ Ext.define('Taco.core.ux.form.Form', {
         field, data, val, bucket, name;
 
         for (f = 0; f < fLen; f++) {
-            field = fields[f];
-
+            field = fields[f];            
+            
             if (!dirtyOnly || field.isDirty()) {
                 data = field[useDataValues ? 'getModelData' : 'getSubmitData'](includeEmptyText);
+
 
                 if (Ext.isObject(data)) {
                     for (name in data) {
@@ -236,7 +237,15 @@ Ext.define('Taco.core.ux.form.Form', {
                                 val = field.emptyText || '';
                             }
 
-                            if (values.hasOwnProperty(name)) {
+                            //this is a check for an extention of radio which lets you save the value on the selected radio button instead of passing an array of values for each button with the same name;
+                            // this is to support the use case where you have multiple radio buttons that share a common name;. Only the selected radio will return its inputValue; The default behavior returns an array of values for all buttons;
+                            if (field.xtype == "radio" && field.persistSelectedValueOnly) {                                
+                                // only persist if the radio button is selected;
+                                if (field.checked) {
+                                    values[name] = val;
+                                }
+
+                            } else if (values.hasOwnProperty(name)) {
                                 bucket = values[name];
 
                                 if (!isArray(bucket)) {
@@ -403,7 +412,7 @@ Ext.define('Taco.core.ux.form.Form', {
         //todo ? clear save tasks?
         if (this.beforeSave() !== false) {
             this.addSaveTasks(this.saveTasks);            
-            this.fireEvent('beforesaveexecute', this);
+            this.fireEvent('beforesaveexecute', this);            
             this.saveTasks.execute();
         }
     },
