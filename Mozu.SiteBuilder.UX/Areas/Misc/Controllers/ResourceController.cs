@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using FSharpx.Collections;
+using Microsoft.Server.Common;
 using Microsoft.Win32;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
@@ -218,16 +220,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         };
 
         private readonly IMozuVirtualPathProvider _pathProvider;
-        
         private readonly INavigationGandalf _navGandalf;
         private readonly IThemeContentRetriever _contentRetriever;
-
+        private readonly Core.Logging.ILogger _logger;
         private readonly AMDModuleProvider _moduleProvider;
 
-        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever)
+        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger)
         {
             _navGandalf = gandalf;
             _contentRetriever = contentRetriever;
+            _logger = logger;
             _pathProvider = pathProvider;
             _moduleProvider = new AMDModuleProvider
             {
@@ -260,12 +262,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         public struct TemplateInfo
         {
-            private static string format = "{0} - {1}";
+            private const string format = "{0} - {1}";
             public string key { get; set; }
             public string content { get; set; }
             public string themeId { get; set; }
 
-            public string ToString()
+            public new string ToString()
             {
                 return string.Format(format, themeId, key);
             }
@@ -284,11 +286,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             var templateContents = await Task.WhenAll(templateContentsTasks);
 
-            
             var expansionTasks = templateContents.Select(async x =>
             {
                 if (!GetExtendsRegex.IsMatch(x.content)) return new List<TemplateInfo> { x }; // base case
+
                 var allTemplateInfos = new List<TemplateInfo> { x }.Concat(await GetParentInfos(_pathProvider, x.key, _contentRetriever));
+                _logger.Info(string.Format("inheritance chain for {0}: {1}", x.ToString(), string.Join(", ", allTemplateInfos.Select(y => y.ToString()))));
+
                 return TransformAndMapTemplates(allTemplateInfos); // else have to fetch and merge in all the parents
             });
 
@@ -308,6 +312,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         private static IEnumerable<TemplateInfo> TransformAndMapTemplates(IEnumerable<TemplateInfo> allTemplateInfos)
         {
+            // because every list that is passed into here should have a parent.
+            Debug.Assert(allTemplateInfos.Count() > 1);
+
             var head = allTemplateInfos.First();
             var next = allTemplateInfos.Skip(1).First();
             var newExtendsPath = MakeExtendsPath(GetExtendsRegex.Match(head.content).Groups["path"].Value, next.themeId);
@@ -361,6 +368,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// <returns></returns>
         private static async Task<IEnumerable<TemplateInfo>> GetParentInfos(IMozuVirtualPathProvider vpp, string virtualPath, IThemeContentRetriever contentRetriever)
         {
+            
             var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}",virtualPath), false);
             if (theme == null) return Enumerable.Empty<TemplateInfo>();
 
