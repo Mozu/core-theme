@@ -260,9 +260,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         public struct TemplateInfo
         {
+            private static string format = "{0} - {1}";
             public string key { get; set; }
             public string content { get; set; }
             public string themeId { get; set; }
+
+            public string ToString()
+            {
+                return string.Format(format, themeId, key);
+            }
         }
 
         [ClientCacheHeaders(ConfigKey = "livetemplates")]
