@@ -1,4 +1,4 @@
-{% extends "modules/common/address-form"|parent_template %}
+{% extends "modules/checkout/billing_address_form"|parent_template %}
 
 {% block address-form %}
 <b style="font-size:30px;color:red">stuff above</b>
