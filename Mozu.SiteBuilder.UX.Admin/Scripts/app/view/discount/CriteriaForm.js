@@ -568,7 +568,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     setProductCategoryContainerVisibility: function (isLineItem) {
         this.productCategoryContainer.setVisible(isLineItem);        
         if (!isLineItem) {
-            this.includeAllProductsInput.setValue(false);
+            this.includeSpecificProductsInput.setValue(true);
             this.categoryList.setValue('');
             this.productList.setValue('');
             this.excludeCategoryList.setValue('');
@@ -576,7 +576,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
     },
 
-    setFieldVisibility: function (isLineItem, appliesToShipping) {
+    setFieldVisibility: function (isLineItem, appliesToShipping) {        
         this.setVisible(isLineItem || appliesToShipping);
         this.setProductCategoryContainerVisibility(isLineItem);
         this.setShippingListVisibility(appliesToShipping);
