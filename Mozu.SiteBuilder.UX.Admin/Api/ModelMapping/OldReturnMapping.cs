@@ -16,7 +16,7 @@ using ShippingDC = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
-    public class ReturnMapping : Profile
+    public class OldReturnMapping : Profile
     {
         public override string ProfileName
         {
@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<ReturnsDC.Return, Return>()
+            Mapper.CreateMap<ReturnsDC.Return, OldReturn>()
                   .ForMember(x => x.CreateDate, opt => opt.ResolveUsing(x => (x.AuditInfo != null) 
                       ? x.AuditInfo.CreateDate : null))
                   .ForMember(x => x.UpdateDate, opt => opt.ResolveUsing(x =>(x.AuditInfo != null) 
@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.MasterCatalogId, op => op.Ignore())
                   ;
          
-            Mapper.CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
+            Mapper.CreateMap<ReturnsDC.ReturnItem, OldReturnItem>()
                   .ForMember(x => x.Reason, opt => opt.ResolveUsing(x => x.Reasons == null 
                       ? null : x.Reasons.Select(_ => _.Reason).FirstOrDefault()))                
                   //todo: confirm new ProductCode mapping Greg Murray on 2014-01-24 
@@ -64,9 +64,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            Mapper.CreateMap<ReturnAction, ReturnsDC.ReturnAction>();
+            Mapper.CreateMap<OldReturnAction, ReturnsDC.ReturnAction>();
 
-            Mapper.CreateMap<Return, ReturnsDC.Return>()
+            Mapper.CreateMap<OldReturn, ReturnsDC.Return>()
                   .ForMember(dc => dc.Items, op => op.ResolveUsing(retur => {
                       var returnBundles = 
                           from r in retur.Items
@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       var returnVanillaProducts =
                           from r in retur.Items
                           where String.IsNullOrEmpty(r.ParentItemId)
-                          select Mapper.Map<ReturnItem, ReturnsDC.ReturnItem>(r, new ReturnsDC.ReturnItem {
+                          select Mapper.Map<OldReturnItem, ReturnsDC.ReturnItem>(r, new ReturnsDC.ReturnItem {
                               OrderItemId = r.OrderItemId,
                               Reasons = new List<ReturnsDC.ReturnReason> {
                                   new ReturnsDC.ReturnReason { Reason = r.Reason, Quantity = r.Quantity } 
@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ChangeMessages, op => op.Ignore())
                   ;
 
-            Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
+            Mapper.CreateMap<OldReturnItem, ReturnsDC.ReturnItem>()
                   // TODO: not sure why the ReturnItem model on our side doesn't have an id..
                   .ForMember(dc => dc.Id, opt => opt.Ignore())
                   .ForMember(x => x.Reasons, opt => opt.ResolveUsing(x => x.Reason == null 

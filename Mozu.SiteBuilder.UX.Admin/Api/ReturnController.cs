@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Return>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft=false)
+        public async Task<Response<List<OldReturn>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft=false)
 		{
 		    string originalOrderId;
             if (extFilter.TryGetValue("originalOrderId", out originalOrderId))
@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 try
                 {
                     var returns = (await _returnWebApiClient.GetReturns(filter: string.Format("OriginalOrderId eq \"{0}\"", originalOrderId))).ReadAsSync();
-                    return List2(Mapper.Map<List<Return>>(returns.Items));
+                    return List2(Mapper.Map<List<OldReturn>>(returns.Items));
                 }
                 catch
                 {
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 var returns3 = (await _returnWebApiClient.GetReturns(startIndex: 0, pageSize: 1000)).ReadAsSync();
 
-                return List2(Mapper.Map<List<Return>>(returns3.Items.Where(x => x.OriginalOrderId == originalOrderId).ToList() ));
+                return List2(Mapper.Map<List<OldReturn>>(returns3.Items.Where(x => x.OriginalOrderId == originalOrderId).ToList() ));
             }
             
 
@@ -64,9 +64,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<List<Return>>> Create(List<Return > returns )
+        public async Task<Response<List<OldReturn>>> Create(List<OldReturn > returns )
 		{
-		    var retList = new List<Return>();
+		    var retList = new List<OldReturn>();
             foreach (var rma in returns)
             {
                 var dcRma = Mapper.Map<DCr.Return>(rma);
@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     
                     
                 }
-                retList.Add(Mapper.Map<Return>(dcRma));
+                retList.Add(Mapper.Map<OldReturn>(dcRma));
             }
 
             return List2(retList);
@@ -90,13 +90,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
        
 
         [HttpPostRoute(UriTemplate = "action")]
-        public async Task<Response<List<Return>>> PerformReturnActions(ReturnAction action)
+        public async Task<Response<List<OldReturn>>> PerformReturnActions(OldReturnAction action)
         {
             var dcRetAction = Mapper.Map<DCr.ReturnAction>(action);
             var dcRma = (await _returnWebApiClient.PerformReturnActions(dcRetAction)).ReadAsSync().Items;
 
             
-            return List2(Mapper.Map<List<Return>>(dcRma));
+            return List2(Mapper.Map<List<OldReturn>>(dcRma));
         }
         public class PaymentAction
         {
@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public decimal  amount { get; set; }
         }
         [HttpPostRoute(UriTemplate = "paymentAction")]
-        public async Task<Response<List<Return>>> CreatePaymentActionForReturn(PaymentAction action)
+        public async Task<Response<List<OldReturn>>> CreatePaymentActionForReturn(PaymentAction action)
         {
             var dcPaymentAction = new CommerceRuntime.Contracts.Payments.PaymentAction()
                                   {
@@ -127,7 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             dcRma.RefundAmount = dcRma.Payments.Sum(x => x.AmountCredited);
             dcRma = (await _returnWebApiClient.UpdateReturn(dcRma.Id, dcRma)).ReadAsSync();
-            return List2(Mapper.Map<List<Return>>(new List<DCr.Return>() {dcRma}));
+            return List2(Mapper.Map<List<OldReturn>>(new List<DCr.Return>() {dcRma}));
         }
 
 
@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "refundPayments")]
-        public async Task<Response<Return>> RefundPayments(RefundPaymentsArgs args)
+        public async Task<Response<OldReturn>> RefundPayments(RefundPaymentsArgs args)
         {
             var existingPayments = (await _returnWebApiClient.GetPayments(args.ReturnId)).ReadAsSync();
 
@@ -171,7 +171,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var dcReturn = (await _returnWebApiClient.GetReturn(args.ReturnId)).ReadAsSync();
 
-            return Single2(Mapper.Map<Return>(dcReturn));
+            return Single2(Mapper.Map<OldReturn>(dcReturn));
         }
 
 
@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "createStoreCredit")]
-        public async Task<Response<Return>> CreateStoreCredit(CreateStoreCreditArgs args) {
+        public async Task<Response<OldReturn>> CreateStoreCredit(CreateStoreCreditArgs args) {
             var dcPaymentAction = new DCp.PaymentAction {
                 ActionName = DCp.PaymentAction.PaymentActionNameConst.CREDIT_PAYMENT,
                 Amount = args.Amount,
@@ -192,19 +192,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             var dcReturn = (await _returnWebApiClient.CreatePaymentActionForReturn(args.ReturnId, dcPaymentAction)).ReadAsSync();
-            return Single2(Mapper.Map<Return>(dcReturn));
+            return Single2(Mapper.Map<OldReturn>(dcReturn));
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<Response<List<Return>>> Edit(List<Return> returns)
+        public async Task<Response<List<OldReturn>>> Edit(List<OldReturn> returns)
         {
-            var retList = new List<Return>();
+            var retList = new List<OldReturn>();
             foreach (var rma in returns)
             {
                 var dcRma = Mapper.Map<DCr.Return>(rma);
                 dcRma = (await _returnWebApiClient.UpdateReturn( dcRma.Id ,dcRma)).ReadAsSync();
                 
-                retList.Add(Mapper.Map<Return>(dcRma));
+                retList.Add(Mapper.Map<OldReturn>(dcRma));
             }
 
             return List2(retList);

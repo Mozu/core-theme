@@ -6,8 +6,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 {
-    //[DataContract(Namespace = "Mozu.services.contracts")]
-    public class Return
+    public class OldReturn
     {
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Id { get; set; }
@@ -28,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public string Status { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ReturnItem> Items { get; set; }
+        public List<OldReturnItem> Items { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OrderNote> Notes { get; set; }
@@ -72,8 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public DateTime? UpdateDate { get; set; }
     }
 
-    [DataContract(Namespace = "Mozu.services.contracts")]
-    public class ReturnItem
+    public class OldReturnItem
     {
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Decimal? ProductLossAmount { get; set; }
@@ -119,10 +117,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public string ParentItemId { get; set; }
 
         public string ProductCode { get; set; }
+
+        /// <summary>
+        /// A totally made up thing to help the UI count returned inventory.
+        /// </summary>
+        public string Key { get; set; }
     }
 
-    [DataContract(Namespace = "Mozu.services.contracts")]
-    public class ReturnAction
+    public class OldReturnAction
     {
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ActionName { get; set; }
@@ -131,19 +133,4 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public List<string> ReturnIds { get; set; }
     }
 
-    //[DataContract(Namespace = "Mozu.services.contracts")]
-    //public class ReturnUnitPrice
-    //{
-	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-    //    public Decimal? TaxableAmount { get; set; }
-
-	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-    //    public Decimal? ShippingAmount { get; set; }
-
-	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-    //    public Decimal? ItemTaxAmount { get; set; }
-
-	//	[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-    //    public Decimal? ShippingTaxAmount { get; set; }
-    //}
 }
