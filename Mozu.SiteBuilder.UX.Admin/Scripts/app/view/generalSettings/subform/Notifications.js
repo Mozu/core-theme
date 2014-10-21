@@ -17,7 +17,8 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
     initComponent: function () {
         var me = this;
         this.defaults = {
-            width: 200,
+            // width: 200,
+            width: "100%",
             product: this.product,
             productInCatalogInfo: this.productInCatalogInfo,
             labelAlign: 'top',
