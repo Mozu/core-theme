@@ -127,6 +127,7 @@
                         var previewItem = menu.items.get('preview'),
                             liveItems = menu.items.get('live'),
                             changeProductCodeItem = menu.items.get('changeProductCode'),
+                            deleteButtonItem = menu.items.get('delete'),
                             previewMenu,
                             liveMenu,
                             previewSites = [],
@@ -143,7 +144,8 @@
                                             itemId: site.id,
                                             text: site.name,
                                             handler: Ext.bind(me.viewInSite, me, [site, 'preview'])
-            });
+                                        });
+
                                         liveSites.push({
                                             itemId: site.id,
                                             text: site.name,
@@ -169,11 +171,16 @@
                                 changeProductCodeItem.show();
                             }
 
-                           
+                            // check to see if the product is phantom if so hide the delete button
+                            if (me.record.phantom) {
+                                deleteButtonItem.hide();
+                            } else {
+                                deleteButtonItem.show();
                             }
-                        },
-                        scope: this
-                    }
+                        }
+                    },
+                    scope: this
+                }
             }
         }];
                 
