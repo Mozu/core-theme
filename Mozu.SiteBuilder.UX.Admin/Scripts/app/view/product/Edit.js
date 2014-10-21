@@ -170,13 +170,6 @@
                             } else {
                                 changeProductCodeItem.show();
                             }
-
-                            // check to see if the product is phantom if so hide the delete button
-                            if (me.record.phantom) {
-                                deleteButtonItem.hide();
-                            } else {
-                                deleteButtonItem.show();
-                            }
                         }
                     },
                     scope: this
@@ -286,12 +279,17 @@
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
-                if (val === 'yes') {
-
+                if (val === 'yes') {                    
                     me.setLoading(true, me.body)
                     me.record.destroy({
                         success: function (m) {
-                            var contextUrl = Taco.app.context.getCurrentContext().urlToken;
+                            var productsStore = Taco.core.data.StoreManager.getOrCreate("Taco.store.ProductGrid");
+                            if (productsStore) {
+                                productsStore.needsRefresh = true;
+                            }
+
+                            var contextUrl = Taco.app.context.getCurrentContext().urlToken;                            
+                            // need to invalidate the grid store so that the record is removed;
                             Taco.core.StateManager.attemptNavigate(contextUrl + '/products');
                         },
                         failure: function (m) {
