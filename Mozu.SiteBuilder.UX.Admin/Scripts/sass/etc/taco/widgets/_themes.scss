@@ -50,8 +50,9 @@
             opacity: 0;
             position: absolute;
             top: 0px;
+            width: 100%;
             @include transition(opacity 0.3s);
-
+            
             .title {
                 a {
                     margin-right: 4px;
@@ -79,6 +80,7 @@
             height: 72px;
             line-height: 70px;
             padding: 0px !important;
+            width: 100%;
 
             div {
             display: inline-block;
@@ -120,21 +122,12 @@
             }
         }
 
+        .thumbnail {
+            width: 100%;
+        }
+
         .group-applied {
-            .menu {
-                width: $applied-size;
-            }
-
-            .modes {
-                width: $applied-size;
-            }
-
             .theme-swatch {
-                width: $applied-size;
-            }
-
-            .thumbnail {
-                height: $applied-size;
                 width: $applied-size;
             }
 
@@ -144,21 +137,8 @@
         }
 
         .group-purchased {
-            .menu {
-                width: $purchased-size;
-            }
-
-            .modes {
-                width: $purchased-size;
-            }
-
             .theme-swatch {
                 width: $purchased-size;
-            }
-
-            .thumbnail {
-                width: $purchased-size;
-                height: $purchased-size;
             }
         }
     }
