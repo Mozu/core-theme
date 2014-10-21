@@ -27,7 +27,7 @@ Ext.define('Taco.view.role.Form', {
         this.items = [{
             xtype: 'textfield',
             labelAlign: 'top',
-            labelSeperator: '',
+            labelSeparator: '',
             width: 250,
             allowOnlyWhitespace: false,
             name: 'name',

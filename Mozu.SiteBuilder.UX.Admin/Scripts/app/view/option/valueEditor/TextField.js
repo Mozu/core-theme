@@ -14,7 +14,7 @@
         defaults: {
             xtype: 'textfield',
             labelAlign: 'top',
-            labelSeperator: '',
+            labelSeparator: '',
             name: 'valueDescription',
             enableKeyEvents: true
         },
