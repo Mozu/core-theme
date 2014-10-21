@@ -127,7 +127,6 @@
                         var previewItem = menu.items.get('preview'),
                             liveItems = menu.items.get('live'),
                             changeProductCodeItem = menu.items.get('changeProductCode'),
-                            changeProductCodeSeperator = menu.items.get('changeProductCodeSeperator'),
                             previewMenu,
                             liveMenu,
                             previewSites = [],

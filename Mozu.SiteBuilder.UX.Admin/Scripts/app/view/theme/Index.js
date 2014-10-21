@@ -39,7 +39,7 @@ Ext.define('Taco.view.theme.Index', {
                         var rs = operation.resultSet;
                         Ext.each(operation.resultSet.records, function(serverRecord, index, array) {
                             var shouldProcess = Ext.Array.filter(operation.records, function(item) {
-                                item.getId() == serverRecord.getId()
+                                return item.getId() == serverRecord.getId();
                             }).length == 0;
 
                             if (shouldProcess) {
@@ -53,7 +53,7 @@ Ext.define('Taco.view.theme.Index', {
                     }
                     store.resumeAutoSync();
                     Ext.defer(function() {
-                        store.sync()
+                        store.sync();
                     }, 10);
                 },
                 scope: this

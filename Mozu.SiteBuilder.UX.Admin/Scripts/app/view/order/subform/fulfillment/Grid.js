@@ -154,7 +154,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 tpl: [
                 '{fulfillmentMethod}',                
                 '<tpl if="values.isPackagedStandAlone">',
-                ' (Seperately)',
+                ' (Separately)',
                 '</tpl>'                
                 ],
                 dataIndex: 'fulfillmentMethod'
