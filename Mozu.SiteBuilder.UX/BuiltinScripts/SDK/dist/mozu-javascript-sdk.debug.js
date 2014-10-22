@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-10-09
+ * Mozu JavaScript SDK - v0.3.0 - 2014-10-22
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3348,16 +3348,6 @@ module.exports=
         },
         "add-to-cart": {
             "verb": "POST",
-            "includeSelf": {
-                "asProperty": "product"
-            },
-            "overridePostData": [
-                "product",
-                "quantity",
-                "fulfillmentLocationCode",
-                "fulfillmentMethod"
-            ],
-            "shortcutParam": "quantity",
             "returnType": "cartitem",
             "template": "{+cartService}current/items/"
         },
@@ -4594,6 +4584,23 @@ var errors = require('../errors');
 var utils = require('../utils');
 var CONSTANTS = require('../constants/default');
 module.exports = {
+    addToCart: function(payload) {
+        // expect payload to have only "options" and "quantity"
+        if (!payload) {
+            payload = {};
+        }
+        
+        return this.api.action(this, 'addToCart', {
+            product: {
+                productCode: this.data.productCode,
+                variationProductCode: this.data.variationProductCode,
+                options: payload.options
+            },
+            quantity: payload.quantity || 1,
+            fulfillmentLocationCode: payload.fulfillmentLocationCode,
+            fulfillmentMethod: payload.fulfillmentMethod || "Ship"
+        });
+    },
     addToWishlist: function (payload) {
         var self = this;
         var list = this.api.createSync('wishlist', { customerAccountId: payload.customerAccountId });

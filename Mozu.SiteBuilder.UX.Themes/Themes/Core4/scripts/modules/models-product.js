@@ -198,10 +198,15 @@
             var me = this;
             this.whenReady(function() {
                 if (!me.validate()) {
-                    me.apiAddToCart(me.get("quantity")).then(function(item) {
+                    me.apiAddToCart({
+                        options: me.getConfiguredOptions(),                       
+                        quantity: me.get("quantity")
+                    }).then(function (item) {
                         me.trigger('addedtocart', item);
                     });
                 }
+
+
             });
         },
         addToWishlist: function() {
