@@ -17,6 +17,7 @@ Ext.define('Taco.view.generalSettings.subform.Analytics', {
         var me = this;
         
         this.defaults = {
+            width: "100%",
             labelAlign: 'top',
             labelSeparator: ''
         };

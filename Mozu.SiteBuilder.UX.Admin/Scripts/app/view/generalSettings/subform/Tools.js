@@ -43,7 +43,7 @@ Ext.define('Taco.view.generalSettings.subform.Tools', {
                             text: 'Upload file',
                             scale: 'medium'
                         },
-                        width: 300,
+                   //     width: 300,
                         name: "gwtFile",
                         validate: function () { return true; },
                         isValid: function () { return true; },
