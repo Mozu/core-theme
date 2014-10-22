@@ -75,7 +75,9 @@ Ext.define('Taco.view.product.variant.Options', {
                 return;
             }
 
-            options.remove(record);
+            if (record) {
+                options.remove(record);
+            }
 
             //if (record && !field.getValue().length) {
             //    options.remove(record);
