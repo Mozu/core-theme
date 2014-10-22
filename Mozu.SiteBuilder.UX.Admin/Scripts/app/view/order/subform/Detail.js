@@ -478,6 +478,7 @@ Ext.define('Taco.view.order.subform.Detail', {
 
     openPrintWindow: function () {
         var me = this;
+        var attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
         var printWindow = window.open();
         var doc = printWindow.document;
         var styleEl = doc.createElement('style');
@@ -544,7 +545,19 @@ Ext.define('Taco.view.order.subform.Detail', {
                         '<tbody><tpl for="items">',
                             '<tr>',
                                 '<td>{productCode}</td>',
-                                '<td>{productName}</td>',
+                                '<td>',
+                                    '<div class="product-name">{productName}</div>',
+                                    '<tpl for="options">',
+                                        '<div class="product-option">',
+                                            '<em class="product-option-label">[option]</em>{[this.getAttributeName(values)]}: {value}',
+                                        '</div>',
+                                    '</tpl>',
+                                    '<tpl for="bundledProducts">',
+                                        '<div class="bundled-product">',
+                                            '<em class="product-option-label">[includes]</em>{productCode} - {name} (Qty. {quantity})',
+                                        '</div>',
+                                    '</tpl>',
+                                '</td>',
                                 '<td><tpl if="fulfillmentLocationCode">{fulfillmentMethod} ({fulfillmentLocationCode})</tpl></td>',
                                 '<td>{[parent.orderRecord.formatCurrency(values.unitPrice)]}</td>',
                                 '<td>{quantity}</td>',
@@ -680,10 +693,16 @@ Ext.define('Taco.view.order.subform.Detail', {
                     '</div></tpl>',
                 '</div>',
             '</td></tr></tbody>',
-            '</table>'
+            '</table>',
+            {
+                getAttributeName: function (val) {
+                    var rec = attributeStore.getById(val.attributeFQN)
+                    return (rec) ? rec.get("name") :  "";
+                }
+            }
         );
 
-        cssText = 'body{font-family:"Source Sans Pro",tahoma,sans-serif;font-size:14px;line-height:1;margin:0;padding:0}h1,h2,h3{font-weight:600;margin:0}table{border-collapse:collapse;font-size:inherit;line-height:inherit}.section{border-bottom:1px solid #b3b3b3;padding-bottom:10px}.section>h2{border-bottom:1px solid #bfbfbf;font-size:17px;line-height:1;margin:0 2%;padding:17px 1% 16px}.subsection-wrapper{margin:10px 2%}.subsection-wrapper>h3{padding:7px 2%}.subsection-wrapper .grid{margin-left:0;margin-right:0;width:100%}.subsection{margin:0 2%;width:96%}.subsection .label{font-weight:600;margin:14px 0 7px}.subsection .label:nth-of-type(1){margin-top:0}.subsection td{padding:7px 7px 0 0;vertical-align:top}.grid{border:1px solid #bfbfbf;margin:10px 2%;width:96%}.grid th{background-color:#e5e5e5;font-weight:600;padding:8px 14px;text-align:left;white-space:nowrap}.grid td{border-top:1px solid #bfbfbf;padding:8px 14px;text-align:left}.grid tr:nth-of-type(1) td{border-top-width:0}.panes{margin:10px 2%;width:96%}.panes td{border-left:1px solid #bfbfbf;padding:2px 14px 8px;vertical-align:top;width:33%}.panes td:nth-of-type(1){border-left-width:0}.panes .label{color:#b3b3b3;font-size:13px;margin-bottom:7px}.panes .price-total{font-size:24px;margin-bottom:7px}.panes .item-total{font-size:16px}.print-order-page{width:100%}.header th{border-bottom:1px solid #b3b3b3;font-weight:400;padding:14px 2%;text-align:left;vertical-align:top;width:33%}.header .company-info h1{font-size:24px}.header .company-contacts{text-align:center;vertical-align:middle}.header .order-essentials{text-align:right}.header .order-essentials .order-number{font-size:17px;font-weight:600;margin-bottom:3px}.header .order-essentials .order-number .label{color:#b3b3b3;font-weight:400}.header .order-essentials .order-date .label{font-weight:600}.footer td{padding:14px 3%}.section-attributes .attribute{margin:10px 4%}.section-attributes .attribute span{font-style:italic;margin-right:10px}.section-attributes .attribute .label{font-style:normal;font-weight:600}';
+        cssText = 'body{font-family:"Source Sans Pro",tahoma,sans-serif;font-size:14px;line-height:1;margin:0;padding:0}h1,h2,h3{font-weight:600;margin:0}table{border-collapse:collapse;font-size:inherit;line-height:inherit}.section{border-bottom:1px solid #b3b3b3;padding-bottom:10px}.section>h2{border-bottom:1px solid #bfbfbf;font-size:17px;line-height:1;margin:0 2%;padding:17px 1% 16px}.subsection-wrapper{margin:10px 2%}.subsection-wrapper>h3{padding:7px 2%}.subsection-wrapper .grid{margin-left:0;margin-right:0;width:100%}.subsection{margin:0 2%;width:96%}.subsection .label{font-weight:600;margin:14px 0 7px}.subsection .label:nth-of-type(1){margin-top:0}.subsection td{padding:7px 7px 0 0;vertical-align:top}.grid{border:1px solid #bfbfbf;margin:10px 2%;width:96%}.grid th{background-color:#e5e5e5;font-weight:600;padding:8px 14px;text-align:left;white-space:nowrap}.grid td{border-top:1px solid #bfbfbf;padding:8px 14px;text-align:left}.grid tr:nth-of-type(1) td{border-top-width:0}.panes{margin:10px 2%;width:96%}.panes td{border-left:1px solid #bfbfbf;padding:2px 14px 8px;vertical-align:top;width:33%}.panes td:nth-of-type(1){border-left-width:0}.panes .label{color:#b3b3b3;font-size:13px;margin-bottom:7px}.panes .price-total{font-size:24px;margin-bottom:7px}.panes .item-total{font-size:16px}.print-order-page{width:100%}.header th{border-bottom:1px solid #b3b3b3;font-weight:400;padding:14px 2%;text-align:left;vertical-align:top;width:33%}.header .company-info h1{font-size:24px}.header .company-contacts{text-align:center;vertical-align:middle}.header .order-essentials{text-align:right}.header .order-essentials .order-number{font-size:17px;font-weight:600;margin-bottom:3px}.header .order-essentials .order-number .label{color:#b3b3b3;font-weight:400}.header .order-essentials .order-date .label{font-weight:600}.footer td{padding:14px 3%}.section-attributes .attribute{margin:10px 4%}.section-attributes .attribute span{font-style:italic;margin-right:10px}.section-attributes .attribute .label{font-style:normal;font-weight:600}.section-orderitems .product-name{margin-bottom:4px;}.section-orderitems .bundled-product,.section-orderitems .product-option{border-left:2px solid #ddd;line-height:1.2;margin-left:4px;padding-left:6px;}.section-orderitems .product-option-label{color:#b3b3b3;font-size:12px;font-style:normal;margin-right:8px;text-transform:uppercase;}';
 
         styleEl.setAttribute('type', 'text/css');
 
