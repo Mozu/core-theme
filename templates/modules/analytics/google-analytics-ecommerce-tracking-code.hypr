@@ -16,7 +16,7 @@
   '{{ item.product.productCode }}',
   '{{ item.product.name }}',
   '',
-  '{{ item.price.price }}',
+  '{{ item.product.price.price }}',
   '{{ item.quantity }}'
 
   ]);
