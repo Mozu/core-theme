@@ -14,12 +14,14 @@ Ext.define('Taco.overrides.form.field.Base', {
         this.allowBlank = (allowBlank);
         if (this.rendered) {            
             var labelEl = this.labelEl;
-            // need to find the label and add/remove the css cls
-            if (allowBlank === false) {
-                //   this.labelClsExtra = 'x-form-item-required';
-                labelEl.addCls(requiredCls)
-            } else {
-                labelEl.removeCls(requiredCls)
+            if (labelEl) {
+                // need to find the label and add/remove the css cls
+                if (allowBlank === false) {
+                    //   this.labelClsExtra = 'x-form-item-required';
+                    labelEl.addCls(requiredCls)
+                } else {
+                    labelEl.removeCls(requiredCls)
+                }
             }
         } else {
             if (allowBlank === false) {
