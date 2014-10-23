@@ -47,7 +47,7 @@ Ext.define('Taco.shared.view.form.Address', {
             this.record.set("countryCode", this.defaultCountryCode);
             countryCode = this.defaultCountryCode;
         }
-        var isUnitedStates = (!countryCode || countryCode === 'US');
+        var isUsaOrCanada = (!countryCode || countryCode === 'US' || countryCode === 'CA');
 
         var nameFieldContainer = {
             xtype: "fieldcontainer",
@@ -135,16 +135,16 @@ Ext.define('Taco.shared.view.form.Address', {
             name: 'stateOrProvince',
             fieldStyle: 'text-transform:uppercase',
             flex: 1,
-            fieldLabel: isUnitedStates ? 'State' : 'Region',
-            minLength: isUnitedStates ? 2 : 0,
+            fieldLabel: isUsaOrCanada ? 'State' : 'Region',
+            minLength: isUsaOrCanada ? 2 : 0,
             margin: '0 15 0 0',
-            allowBlank: !isUnitedStates
+            allowBlank: !isUsaOrCanada
         });
         me.postalCode = Ext.create('Taco.core.ux.form.TextField', {
             flex: 1,
             name: 'postalOrZipCode',
-            fieldLabel: isUnitedStates ? 'ZIP' : 'Postal Code',
-            allowBlank: !isUnitedStates
+            fieldLabel: isUsaOrCanada ? 'ZIP' : 'Postal Code',
+            allowBlank: !isUsaOrCanada
         });
 
         me.postalFieldContainer = Ext.create('Ext.form.FieldContainer', {
@@ -343,9 +343,9 @@ Ext.define('Taco.shared.view.form.Address', {
     },
 
     onCountryChange: function (scope, newVal, oldVal, eOpts) {
-        var isUnitedStates = (!newVal || newVal === 'US');
+        var isUsaOrCanada = (!newVal || newVal === 'US' || newVal === 'CA');
         
-        if (isUnitedStates) {
+        if (isUsaOrCanada) {
             this.postalRegion.setFieldLabel('State');
             this.postalCode.setFieldLabel('Zip');
             this.postalCode.minLength = 2;
@@ -354,7 +354,7 @@ Ext.define('Taco.shared.view.form.Address', {
             this.postalCode.setFieldLabel('Postal Code');
             this.postalCode.minLength = 0;
         }
-        this.postalRegion.setAllowBlank(!isUnitedStates);
-        this.postalCode.setAllowBlank(!isUnitedStates);
+        this.postalRegion.setAllowBlank(!isUsaOrCanada);
+        this.postalCode.setAllowBlank(!isUsaOrCanada);
     }
 });
