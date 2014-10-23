@@ -128,8 +128,34 @@ Ext.define('Taco.shared.view.form.Address', {
                     fieldLabel: 'Address 4'
                 }
             ]
-        })
+        });
+        //'Taco.core.ux.form.TextField'  Ext.form.field.Text
+        me.postalRegion = Ext.create('Taco.core.ux.form.TextField', {
+            name: 'stateOrProvince',
+            fieldStyle: 'text-transform:uppercase',
+            flex: 1,
+            fieldLabel: (countryCode === 'US') ? 'State' : 'Region',
+            minLength: (countryCode === 'US') ? 2 : 0,
+            margin: '0 15 0 0',
+            allowBlank: (countryCode !== 'US')
+        });
+        me.postalCode = Ext.create('Taco.core.ux.form.TextField', {
+            flex: 1,
+            name: 'postalOrZipCode',
+            fieldLabel: (countryCode === 'US') ? 'ZIP' : 'Postal Code',
+            allowBlank: (countryCode !== 'US')
+        });
 
+        me.postalFieldContainer = Ext.create('Ext.form.FieldContainer', {
+            xtype: "fieldcontainer",
+            layout: "hbox",
+            flex: 1,
+            margin: '0 15 0 0',
+            items: [
+                me.postalRegion,
+                me.postalCode
+            ]
+        });
 
         fields.push({
             xtype: "fieldcontainer",
@@ -143,30 +169,17 @@ Ext.define('Taco.shared.view.form.Address', {
                     margin: '0 15 0 0',
                     allowBlank: false
                 },
-                {
-                    xtype: "fieldcontainer",
-                    layout: "hbox",
-                    flex: 1,
-                    margin: '0 15 0 0',
-                    items: [
-                        {
-                            xtype: 'textfield',
-                            name: 'stateOrProvince',
-                            fieldStyle: 'text-transform:uppercase',
-                            flex: 1,
-                            fieldLabel: 'State',
-                            minLength: 2,
-                            margin: '0 15 0 0',
-                            allowBlank: false
-                        }, {
-                            xtype: 'textfield',
-                            flex: 1,
-                            name: 'postalOrZipCode',
-                            fieldLabel: 'ZIP',
-                            allowBlank: false
-                        }
-                    ]
-                },
+                me.postalFieldContainer,
+                //{
+                //    xtype: "fieldcontainer",
+                //    layout: "hbox",
+                //    flex: 1,
+                //    margin: '0 15 0 0',
+                //    items: [
+                //        me.postalRegion,
+                //        me.postalCode
+                //    ]
+                //},
 
                 {
                     xtype: 'combobox',
@@ -182,7 +195,13 @@ Ext.define('Taco.shared.view.form.Address', {
                         type: 'Taco.store.Countries'
                     },
                     emptyText: "Country",
-                    selectOnFocus: true
+                    selectOnFocus: true,
+                    listeners: {
+                        change: {
+                            fn: me.onCountryChange,
+                            scope: me
+                        }
+                    }
                 }
             ]
         })
@@ -320,5 +339,25 @@ Ext.define('Taco.shared.view.form.Address', {
             updateRecord: this.record,
             updateForm: this
         });
+    },
+
+    onCountryChange: function (scope, newVal, oldVal, eOpts) {
+        var isRequired = (newVal === 'US');
+        this.postalRegion.setAllowBlank(!isRequired);
+        this.postalCode.setAllowBlank(!isRequired);
+        if (newVal === 'US') {
+            this.postalRegion.setFieldLabel('State');
+            this.postalCode.setFieldLabel('Zip');
+            this.postalCode.minLength = 2;
+        } else {
+            this.postalRegion.setFieldLabel('Region');
+            this.postalCode.setFieldLabel('Postal Code');
+            this.postalCode.minLength = 0;
+        }
+        //this.postalRegion.validate();
+        //this.postalCode.validate();
+        ////this.postalFieldContainer.doLayout();
+        
+        //console.log(newVal);
     }
 });
