@@ -45,8 +45,9 @@ Ext.define('Taco.shared.view.form.Address', {
         var countryCode = this.record.get("countryCode");
         if (!countryCode && this.useDefaultCountryCode) {
             this.record.set("countryCode", this.defaultCountryCode);
+            countryCode = this.defaultCountryCode;
         }
-
+        var isUnitedStates = (!countryCode || countryCode === 'US');
 
         var nameFieldContainer = {
             xtype: "fieldcontainer",
@@ -129,21 +130,21 @@ Ext.define('Taco.shared.view.form.Address', {
                 }
             ]
         });
-        //'Taco.core.ux.form.TextField'  Ext.form.field.Text
+
         me.postalRegion = Ext.create('Taco.core.ux.form.TextField', {
             name: 'stateOrProvince',
             fieldStyle: 'text-transform:uppercase',
             flex: 1,
-            fieldLabel: (countryCode === 'US') ? 'State' : 'Region',
-            minLength: (countryCode === 'US') ? 2 : 0,
+            fieldLabel: isUnitedStates ? 'State' : 'Region',
+            minLength: isUnitedStates ? 2 : 0,
             margin: '0 15 0 0',
-            allowBlank: (countryCode !== 'US')
+            allowBlank: !isUnitedStates
         });
         me.postalCode = Ext.create('Taco.core.ux.form.TextField', {
             flex: 1,
             name: 'postalOrZipCode',
-            fieldLabel: (countryCode === 'US') ? 'ZIP' : 'Postal Code',
-            allowBlank: (countryCode !== 'US')
+            fieldLabel: isUnitedStates ? 'ZIP' : 'Postal Code',
+            allowBlank: !isUnitedStates
         });
 
         me.postalFieldContainer = Ext.create('Ext.form.FieldContainer', {
@@ -342,10 +343,9 @@ Ext.define('Taco.shared.view.form.Address', {
     },
 
     onCountryChange: function (scope, newVal, oldVal, eOpts) {
-        var isRequired = (newVal === 'US');
-        this.postalRegion.setAllowBlank(!isRequired);
-        this.postalCode.setAllowBlank(!isRequired);
-        if (newVal === 'US') {
+        var isUnitedStates = (!newVal || newVal === 'US');
+        
+        if (isUnitedStates) {
             this.postalRegion.setFieldLabel('State');
             this.postalCode.setFieldLabel('Zip');
             this.postalCode.minLength = 2;
@@ -354,10 +354,7 @@ Ext.define('Taco.shared.view.form.Address', {
             this.postalCode.setFieldLabel('Postal Code');
             this.postalCode.minLength = 0;
         }
-        //this.postalRegion.validate();
-        //this.postalCode.validate();
-        ////this.postalFieldContainer.doLayout();
-        
-        //console.log(newVal);
+        this.postalRegion.setAllowBlank(!isUnitedStates);
+        this.postalCode.setAllowBlank(!isUnitedStates);
     }
 });
