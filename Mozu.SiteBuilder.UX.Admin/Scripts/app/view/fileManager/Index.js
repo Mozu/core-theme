@@ -132,7 +132,13 @@ Ext.define('Taco.view.fileManager.Index', {
                             behavior: 'destroy'
                         },
                         menuColumnHandler: 'destroyMenuColumnHandler'
+                },
+                {
+                    text: 'Get Url',
+                    menuColumnHandler: function () {
+                        window.prompt('Copy to clipboard: Ctrl+C, Enter', 'http://' + window.Taco.cdnPrefix + '/'+ Taco.app.context.getTenantId() +'-m'+Taco.app.context.getMasterCatalogId() + '/cms/files/f2d7bf5a-b0ec-4e33-8713-eb5b792bcceb');
                     }
+                }
                 ]
             }]
     },
