@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             
             Mapper.AddProfile<OrderMapping>();
             Mapper.AddProfile<ProductMapping>();
-            Mapper.AddProfile<OldReturnMapping>();
+            Mapper.AddProfile<ReturnMapping>();
             Mapper.AddProfile<RuntimeProductMapping>();
             Mapper.AddProfile<ShippingMapping>();
             Mapper.AddProfile<TaxMapping>();

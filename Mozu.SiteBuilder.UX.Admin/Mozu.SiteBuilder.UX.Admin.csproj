@@ -449,6 +449,7 @@
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />
     <Compile Include="Api\ModelMapping\OrderMappingExtensions.cs" />
+    <Compile Include="Api\ModelMapping\ReturnMapping.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\Entities\TenantAdminGlobalSettings.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
@@ -468,6 +469,8 @@
     <Compile Include="Api\Models\Order\OrderReturnItem.cs" />
     <Compile Include="Api\Models\Order\OrderSummary.cs" />
     <Compile Include="Api\Models\ProductModels\ProductCodeRename.cs" />
+    <Compile Include="Api\Models\Returns\Return.cs" />
+    <Compile Include="Api\Models\Returns\ReturnItem.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />
