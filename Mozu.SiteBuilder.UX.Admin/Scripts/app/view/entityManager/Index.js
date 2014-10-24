@@ -333,6 +333,10 @@ Ext.define('Taco.view.entityManager.Index', {
                 me.grid = null;
                 me.form = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
                     record: record,
+                    ui: 'subform-section',
+                    defaults: {
+                        margin: '10 10 10 10',   
+                    },
                     bubbleEvents: ['savesuccess', 'saveSuccess', 'savefailure'],
                     editor: me.editors.findEditor(record)
                 });

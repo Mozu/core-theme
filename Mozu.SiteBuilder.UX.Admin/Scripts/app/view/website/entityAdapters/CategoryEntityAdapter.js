@@ -9,7 +9,7 @@ Ext.define('Taco.view.website.entityAdapters.CategoryEntityAdapter', {
         'Taco.view.website.settings.facets.Facets',
         'Taco.view.website.settings.CatalogSeo'
     ],
-
+    showNameEditor: false,
     modelName: 'Taco.model.Category',
     showNameEditor:false,
     allowedActions: {

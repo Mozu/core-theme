@@ -37,7 +37,15 @@
     initComponent: function () {
     
 
-        this.data = Ext.clone(this.record.get('fields'));
+        var data = this.data = Ext.clone(this.record.get('fields'));
+
+        for (name in this.record.data) {
+            if (this.record.data.hasOwnProperty(name)&& name !='properties' && name !='item' ) {
+                this.data['document.' + name] = this.record.data[name];
+            //    this.data['container.' + name] = this.record.data[name];
+            }
+        }
+
         if (this.editor) {
 
             try {
@@ -58,7 +66,8 @@
        
 
         this.dynamicForm.data = this.data;
-        this.dynamicForm.ui = 'subform';
+        //this makes cms ugly
+        //this.dynamicForm.ui = 'subform';
 
 
         if (this.dynamicForm.initForm) {
@@ -92,7 +101,10 @@
         //     this.title = this.dynamicForm.getTitle();
         // }
         this.items = [];
-        if (this.record.get('entityType') === 'cms' && this.showNameEditor ) {
+        if (this.record.get('entityType') === 'cms' &&
+            this.showNameEditor &&
+            this.dynamicForm.getForm &&
+            !this.dynamicForm.getForm().findField('document.name')) {
             this.items.push({
                 xtype: 'taco-slugfield',
                 itemId:'cms_entity_name',
@@ -143,9 +155,11 @@
         if (me.dynamicForm.getData) {
             data = me.dynamicForm.getData();
         }
+        
 
         data = data || (this.record.get('entityType') === 'mzdb' ? containerData.item : containerData.properties);
 
+        containerData = containerData || {};
 
         //clean bad fields out.
         if (Ext.isObject(data)) {
@@ -154,19 +168,30 @@
                     if (name.indexOf('-inputEl') != -1) {
                         delete data[name];
                     }
+                    if (name.indexOf('document.') != -1) {
+                        containerData[name.substring('document.'.length)] = data[name];
+                        delete data[name];
+                    }
+                    if (name.indexOf('container.') != -1) {
+                        containerData[name.substring('container.'.length)] = data[name];
+                        delete data[name];
+                    }
                 }
             }
         }
 
-       
+        
+
+
+
         if (this.record.get('entityType') === 'mzdb') {
             this.record.set('item', data);
         } else {
             this.record.set('properties', data);
-            if (this.showNameEditor) {
+            if (this.showNameEditor && this.down('#cms_entity_name')) {
                 this.record.set('name', this.down('#cms_entity_name').getValue());
             }
-            
+           
         }
         if (containerData) {
             delete containerData.item;

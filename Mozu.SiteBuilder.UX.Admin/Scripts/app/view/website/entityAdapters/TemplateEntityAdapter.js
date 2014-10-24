@@ -6,7 +6,7 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
    
     modelName: 'Taco.model.CmsDocument',
-
+    showNameEditor: false,
     allowedActions: {
         copy: true,
         preview: true,
@@ -49,7 +49,7 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
                 entityType:'cms',
                 listFQN: templReq.listFQN,
                 properties: {
-                    page_type_definition: templReq.path
+                  //  page_type_definition: templReq.path
                 }
             });
             me.set(cmsDoc);

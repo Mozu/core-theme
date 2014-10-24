@@ -51,3 +51,5 @@ TestResult.xml
 Mozu.SiteBuilder.UX.Themes/Themes/Core4/compiled/scripts/build.txt
 Mozu.SiteBuilder.UX.Themes/Themes/Core5/compiled/scripts/build.txt
 Mozu.SiteBuilder.UX.Themes/Themes/Core6/compiled/scripts/build.txt
+*.log
+Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js

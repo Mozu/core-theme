@@ -6,7 +6,7 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
 
     modelName: 'Taco.model.CmsDocument',
-
+    showNameEditor: false,
     allowedActions: {
         copy: true,
         preview: true,
