@@ -45,8 +45,9 @@ Ext.define('Taco.shared.view.form.Address', {
         var countryCode = this.record.get("countryCode");
         if (!countryCode && this.useDefaultCountryCode) {
             this.record.set("countryCode", this.defaultCountryCode);
+            countryCode = this.defaultCountryCode;
         }
-
+        var isUsaOrCanada = (!countryCode || countryCode === 'US' || countryCode === 'CA');
 
         var nameFieldContainer = {
             xtype: "fieldcontainer",
@@ -128,8 +129,34 @@ Ext.define('Taco.shared.view.form.Address', {
                     fieldLabel: 'Address 4'
                 }
             ]
-        })
+        });
 
+        me.postalRegion = Ext.create('Taco.core.ux.form.TextField', {
+            name: 'stateOrProvince',
+            fieldStyle: isUsaOrCanada ? 'text-transform:uppercase' : '',
+            flex: 1,
+            fieldLabel: isUsaOrCanada ? 'State' : 'Region',
+            minLength: isUsaOrCanada ? 2 : 0,
+            margin: '0 15 0 0',
+            allowBlank: !isUsaOrCanada
+        });
+        me.postalCode = Ext.create('Taco.core.ux.form.TextField', {
+            flex: 1,
+            name: 'postalOrZipCode',
+            fieldLabel: isUsaOrCanada ? 'ZIP' : 'Postal Code',
+            allowBlank: !isUsaOrCanada
+        });
+
+        me.postalFieldContainer = Ext.create('Ext.form.FieldContainer', {
+            xtype: "fieldcontainer",
+            layout: "hbox",
+            flex: 1,
+            margin: '0 15 0 0',
+            items: [
+                me.postalRegion,
+                me.postalCode
+            ]
+        });
 
         fields.push({
             xtype: "fieldcontainer",
@@ -143,30 +170,17 @@ Ext.define('Taco.shared.view.form.Address', {
                     margin: '0 15 0 0',
                     allowBlank: false
                 },
-                {
-                    xtype: "fieldcontainer",
-                    layout: "hbox",
-                    flex: 1,
-                    margin: '0 15 0 0',
-                    items: [
-                        {
-                            xtype: 'textfield',
-                            name: 'stateOrProvince',
-                            fieldStyle: 'text-transform:uppercase',
-                            flex: 1,
-                            fieldLabel: 'State',
-                            minLength: 2,
-                            margin: '0 15 0 0',
-                            allowBlank: false
-                        }, {
-                            xtype: 'textfield',
-                            flex: 1,
-                            name: 'postalOrZipCode',
-                            fieldLabel: 'ZIP',
-                            allowBlank: false
-                        }
-                    ]
-                },
+                me.postalFieldContainer,
+                //{
+                //    xtype: "fieldcontainer",
+                //    layout: "hbox",
+                //    flex: 1,
+                //    margin: '0 15 0 0',
+                //    items: [
+                //        me.postalRegion,
+                //        me.postalCode
+                //    ]
+                //},
 
                 {
                     xtype: 'combobox',
@@ -182,7 +196,13 @@ Ext.define('Taco.shared.view.form.Address', {
                         type: 'Taco.store.Countries'
                     },
                     emptyText: "Country",
-                    selectOnFocus: true
+                    selectOnFocus: true,
+                    listeners: {
+                        change: {
+                            fn: me.onCountryChange,
+                            scope: me
+                        }
+                    }
                 }
             ]
         })
@@ -320,5 +340,24 @@ Ext.define('Taco.shared.view.form.Address', {
             updateRecord: this.record,
             updateForm: this
         });
+    },
+
+    onCountryChange: function (scope, newVal, oldVal, eOpts) {
+        var isUsaOrCanada = (!newVal || newVal === 'US' || newVal === 'CA');
+        
+        if (isUsaOrCanada) {
+            this.postalRegion.setFieldLabel('State');
+            //this.postalRegion.setFieldStyle('text-transform:uppercase');
+            this.postalCode.setFieldLabel('Zip');
+            this.postalCode.minLength = 2;
+        } else {
+            this.postalRegion.setFieldLabel('Region');
+            // todo: field style not refreshing DOM - Greg Murray on 2014-10-24
+            //this.postalRegion.setFieldStyle(''); 
+            this.postalCode.setFieldLabel('Postal Code');
+            this.postalCode.minLength = 0;
+        }
+        this.postalRegion.setAllowBlank(!isUsaOrCanada);
+        this.postalCode.setAllowBlank(!isUsaOrCanada);
     }
 });
