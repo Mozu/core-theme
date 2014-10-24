@@ -449,7 +449,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var message = new SendCreditEmail
                           {
                               CreditCode = orderCredit.Credit.Code,
-                              CreditMessage = orderCredit.Credit.CurrentBalance.ToString("C"),
+                              CreditMessage = orderCredit.Credit.CurrentBalance.GetValueOrDefault(0).ToString("C"),
                               MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(_apiContext.UserClaims.UserId, orderCredit.Order.CustomerAccountId),
                               EmailData = new EmailData
                                           {

@@ -23,7 +23,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Proto = Mozu.Content.Contracts.Prototype;
+
 using DC = Mozu.Content.Contracts;
 using CMS = Mozu.Content.Contracts;
 using AVM = Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
