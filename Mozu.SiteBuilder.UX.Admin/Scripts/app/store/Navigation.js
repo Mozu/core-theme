@@ -469,7 +469,7 @@ Ext.define('Taco.store.Navigation', {
                         "address": "locationInventory"
                     }
                 ]
-            } , {
+            }, {
                 "id": "reports",
                 "label": "Reporting",
                 "address": "reports",
