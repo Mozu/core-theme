@@ -63,7 +63,7 @@
       "items": [
         {
           "xtype": "combo",
-          "name": "font",
+          "name": "fonts",
           "fieldLabel": "Font",
           "allowBlank": false,
           "editable": false,
