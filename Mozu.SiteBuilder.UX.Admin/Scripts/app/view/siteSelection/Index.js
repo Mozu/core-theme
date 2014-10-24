@@ -33,7 +33,7 @@ Ext.define('Taco.view.siteSelection.Index', {
                     '<ul class="group">',
                     '<tpl for="site">',
                                 '<li class="theme-swatch">',
-                                    '<ul class="menu" style="width: 200px;">',
+                                    '<ul class="menu" >', //style="width: 300px;"
                                         '<li class="title-large">',
                                             '<span>{[values.name]}</span>',
                                         '</li>',

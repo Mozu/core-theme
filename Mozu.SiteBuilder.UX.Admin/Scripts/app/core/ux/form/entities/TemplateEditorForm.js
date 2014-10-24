@@ -27,7 +27,10 @@ Ext.define('Taco.core.ux.form.entities.TemplateEditorForm', {
             items: [
                
                  {
-                    xtype: 'textareafield',
+                     xtype: 'taco-codefield',
+                     minHeight: 200,
+                     maxHeight: 400,
+                     mode: 'html',
                     name: 'extended_header_content',
                     fieldLabel: 'Additional Header Tags',
                     emptyText: '[none]'
