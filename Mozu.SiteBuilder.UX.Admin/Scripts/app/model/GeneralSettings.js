@@ -29,7 +29,7 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "senderEmailName", "type": "string", "useNull": true },
         { "name": "isAddressValidationEnabled", "type": "boolean", "useNull": true },
         { "name": "allowInvalidAddresses", "type": "boolean", "useNull": true },
-        { "name": "wishlistEnabled", "type": "boolean", "useNull": true },
+        { "name": "isWishlistCreationEnabled", "type": "boolean", "useNull": true },
         // customer experience template
         { "name": "templateSiteId", "type": "integer", "useNull": true },
         { "name": "timeFormat", "type": "string", "useNull": true },

@@ -883,6 +883,7 @@
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
+    <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
     <Content Include="Scripts\app\view\order\modal\BulkActionMessage.js" />
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
