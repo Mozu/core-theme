@@ -54,15 +54,12 @@ Ext.define('Taco.view.report.Index', {
                 if (!obj || !obj.items) return;
                 var dashboardLocation = obj.items;
 
-
-
-                console.log('Tenant Id: ', Taco.app.context.id);
                 if (Taco.app.context.getSiteId()) {
-                    console.log('siteid: ' + Taco.app.context.getSiteId());
+                    dashboardLocation = dashboardLocation + '&SiteId=' + Taco.app.context.getSiteId();
+                } else {
+                    dashboardLocation += '&SiteId=all';
                 }
-                console.log(dashboardLocation);
-
-
+                //2168, 2169
                 if (!dashboardLocation) return;
                 var iFrameChild = Ext.create('Ext.ux.IFrame', {
                     itemId: 'dashboardIframe',
@@ -72,7 +69,8 @@ Ext.define('Taco.view.report.Index', {
                 });
                 me.dashboardPanel.add(iFrameChild);
                 me.dashboardPanel.doLayout();
-                console.log('end of things');
+
+                //console.log(dashboardLocation);
             }
         });
 

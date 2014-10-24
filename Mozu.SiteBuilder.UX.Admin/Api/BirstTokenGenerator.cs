@@ -37,20 +37,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var token = await GenerateToken();
 
             return string.Format(
-                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dashboard&birst.page=Page&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
+                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dev%2520Dashboard&birst.page=Secure%2520Log-In%2520Test&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
                     _settings.AppSettings(SSO_URL_KEY),
                     token
                 );
         }
-        
+
         private async Task<string> GenerateToken()
         {
-            int siteId = 0;
-            if (_apiContext.SiteId != null)
-            {
-                siteId = (int)_apiContext.SiteId;
-            }
-            var tokenGenUri = FormatBirstTokenGeneratorUri(_apiContext.TenantId, siteId);
+            var tokenGenUri = FormatBirstTokenGeneratorUri(_apiContext.TenantId);
             var httpClient = new HttpClient(new HttpClientHandler());
             try
             {
@@ -67,28 +62,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             throw new VaeUnexpectedErrorException("Unexpected error with status code");
         }
 
-        private string FormatBirstTokenGeneratorUri(int tenantId, int siteId)
+        private string FormatBirstTokenGeneratorUri(int tenantId)
         {
-            var uri = string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=tenantId%3D{4}",
+            // tenantId = 2106;
+            return string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=TenantId%3D{4}",
                 _settings.AppSettings(TOKEN_URL_KEY),
                 _settings.AppSettings(USER_KEY),
                 _settings.AppSettings(PASSWORD_KEY),
                 _settings.AppSettings(SPACE_KEY),
                 tenantId
             );
-            if (siteId > 0)
-            {
-                uri = string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=tenantId%3D{4};siteId%3D{5}",
-                _settings.AppSettings(TOKEN_URL_KEY),
-                _settings.AppSettings(USER_KEY),
-                _settings.AppSettings(PASSWORD_KEY),
-                _settings.AppSettings(SPACE_KEY),
-                tenantId,
-                siteId
-            );
-            }
-            return uri;
-
         }
     }
 }
