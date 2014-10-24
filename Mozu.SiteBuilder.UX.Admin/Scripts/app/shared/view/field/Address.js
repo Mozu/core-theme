@@ -93,17 +93,17 @@ Ext.define('Taco.shared.view.field.Address', {
                     // requires a valid address (uses editors validation methodology
                     if (value && this.addressValidationRequired) {
                         if (value.addressIsValidated) {
-                    return true;
-                } else {
-                            return "Address requires validation. Click the \"Edit address\" button and then click the \"Validate\" button"
-                        }
-                    } else {
-                        // check for values on required fields
-                        if (value.address1 && value.cityOrTown && value.stateOrProvince && value.countryCode && value.postalOrZipCode) {                            
                             return true;
                         } else {
+                            return "Address requires validation. Click the \"Edit address\" button and then click the \"Validate\" button";
+                        }
+                    } else {
+                        var isUsaOrCanada = (! value || value.countryCode === 'US' || value.countryCode === 'CA');
+                        if ((!value || !value.address1 || !value.cityOrTown || !value.countryCode)
+                            || (isUsaOrCanada && (!value.stateOrProvince || !value.postalOrZipCode))) {
                             return "Address is required";
                         }
+                        return true;
                     }
                 }
 
