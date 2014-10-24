@@ -86,7 +86,13 @@
         server.respondWith('GET', new RegExp(Fixtures.SampleProductUrl + "\\?.*"), JSON.stringify(Fixtures.SampleProduct));
         server.respondWith('GET', ServiceUrls.cartService + "current", JSON.stringify(Fixtures.SampleCart));
         server.respondWith('DELETE', ServiceUrls.cartService + "current/items/", JSON.stringify(Fixtures.EmptyCart));
-        server.respondWith('POST', ServiceUrls.cartService + "current/items/", JSON.stringify(Fixtures.SampleCartItem));
+        server.respondWith('POST', ServiceUrls.cartService + "current/items/", function (xhr, id) {
+            if (xhr.requestHeaders['X-HTTP-Method-Override'] === 'DELETE') {
+                xhr.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify(Fixtures.EmptyCart));
+            } else {
+                xhr.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify(Fixtures.SampleCartItem));
+            }
+        });
         server.respondWith('GET', new RegExp(ServiceUrls.BadUrl), [404, {}, ""]);
 
         server.autoRespond = true; 
