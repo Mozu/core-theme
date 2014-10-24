@@ -133,7 +133,7 @@ Ext.define('Taco.shared.view.form.Address', {
 
         me.postalRegion = Ext.create('Taco.core.ux.form.TextField', {
             name: 'stateOrProvince',
-            fieldStyle: 'text-transform:uppercase',
+            fieldStyle: isUsaOrCanada ? 'text-transform:uppercase' : '',
             flex: 1,
             fieldLabel: isUsaOrCanada ? 'State' : 'Region',
             minLength: isUsaOrCanada ? 2 : 0,
@@ -347,10 +347,13 @@ Ext.define('Taco.shared.view.form.Address', {
         
         if (isUsaOrCanada) {
             this.postalRegion.setFieldLabel('State');
+            //this.postalRegion.setFieldStyle('text-transform:uppercase');
             this.postalCode.setFieldLabel('Zip');
             this.postalCode.minLength = 2;
         } else {
             this.postalRegion.setFieldLabel('Region');
+            // todo: field style not refreshing DOM - Greg Murray on 2014-10-24
+            //this.postalRegion.setFieldStyle(''); 
             this.postalCode.setFieldLabel('Postal Code');
             this.postalCode.minLength = 0;
         }
