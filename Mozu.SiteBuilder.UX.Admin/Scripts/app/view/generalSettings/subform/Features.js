@@ -23,8 +23,7 @@ Ext.define('Taco.view.generalSettings.subform.Features', {
 
         this.items = [{
             xtype: 'checkbox',
-            name: 'wishlistEnabled',
-            itemId: 'wishlistEnabled',
+            name: 'isWishlistCreationEnabled',
             boxLabel: 'Customer Wishlist Enabled',
             boxLabelAlign: 'after',
             inputValue: true,
