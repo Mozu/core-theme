@@ -2839,9 +2839,10 @@ module.exports = (function (window, document, undefined) {
                 this.messageListener = function (e) {
                     if (!e) e = window.event;
                     if (e && e.data === "process-tick") return; // browserify clogs up this channel
+                    if (e.data.indexOf(self.uid) !== 0) return;
                     if (!validateOrigin(self, e.origin)) throw new Error("Origin " + e.origin + " does not match required origin " + self.frameOrigin);
-                    if (e.data === "ready") return self.postMessage();
-                    self.update(e.data);
+                    if (e.data === self.uid + " ready") return self.postMessage();
+                    self.update(e.data.substring(self.uid.length));
                 };
                 window.addEventListener('message', this.messageListener, false);
             },
@@ -2859,11 +2860,11 @@ module.exports = (function (window, document, undefined) {
                     self.hash = document.location.hash;
                     data = self.hash.replace(hashRE, '');
                     if (self.hash !== self.lastHash) {
-                        if (data === "ready") return self.postMessage();
+                        if (data === self.uid + "ready") return self.postMessage();
 
                         if (hashRE.test(self.hash)) {
                             self.lastHash = self.hash;
-                            self.update(data);
+                            self.update(data.substring(self.uid.length));
                         }
                     }
                 }, 100);
@@ -2877,13 +2878,18 @@ module.exports = (function (window, document, undefined) {
             }
         };
 
+
+    var uids = 0;
     var IframeXMLHttpRequest = function (frameUrl) {
         var frameMatch = frameUrl.match(originRE);
         if (!frameMatch || !frameMatch[0]) throw new Error(frameUrl + " does not seem to have a valid origin.");
         this.frameOrigin = frameMatch[0].toLowerCase();
-        this.frameUrl = frameUrl + "?&parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + '//' + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter);
+        this.uid = "xhr_" + (++uids);
+        this.frameUrl = frameUrl + (frameUrl.indexOf('?') === -1 ? '?' : '&') + "parenturl=" + encodeURIComponent(location.href) + "&parentdomain=" + encodeURIComponent(location.protocol + '//' + location.host) + "&messagedelimiter=" + encodeURIComponent(messageDelimiter) + "&uid=" + this.uid;
         this.headers = {};
     };
+
+    IframeXMLHttpRequest.version = 2;
 
     utils.extend(IframeXMLHttpRequest.prototype, messageMethods, {
         readyState: 0,
@@ -3201,7 +3207,7 @@ module.exports=
 {
     "document": {
         "template": "{+documentListService}{listName}/documents/{id}{?_*}",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "documentList": {
         "template": "{+documentListService}{listName}/documents{?_*}",
@@ -3211,7 +3217,7 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "documentView": {
         "template": "{+documentListService}{listName}/views/{viewName}/documents{?_*}",
@@ -3222,7 +3228,7 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityList": {
         "template": "{+entityListService}{listName}/entities{?_*}",
@@ -3232,7 +3238,7 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "entity",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityView": {
         "template": "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
@@ -3243,16 +3249,16 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "entity",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entity": {
         "template": "{+entityListService}{listName}/entities/{id}{?_*}",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityContainer": {
         "template": "{+entityListService}{listName}/entityContainers/{id}{?_*}",
         "shortcutParam": "listName",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityContainerList": {
         "template": "{+entityListService}{listName}/entityContainers{?_*}",
@@ -3262,7 +3268,7 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "entityContainer",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityContainerView": {
         "template": "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
@@ -3273,7 +3279,7 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "entityContainer",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "products": {
         "template": "{+productService}{?_*}",
@@ -3414,7 +3420,7 @@ module.exports=
     "customer": {
         "template": "{+customerService}{id}",
         "defaults": { 
-            "useIframeTransport": "{+storefrontUserService}../../receiver"
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
         },
         "shortcutParam": "id",
         "includeSelf": true,
@@ -3685,7 +3691,7 @@ module.exports=
     },
     "creditcard": {
         "defaults": {
-            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver.html"
+            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver_v2.html"
         },
         "save": {
             "verb": "POST",
@@ -3771,7 +3777,7 @@ module.exports=
     },
     "instockrequest": {
         "create": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}",
             "verb": "POST",
             "template": "{+inStockNotificationService}"
         }
@@ -3882,6 +3888,7 @@ var errors = require('./errors');
 var ApiCollection;
 var ApiObject = require('./object');
 var objectTypes = require('./methods.json');
+var IframeXHR;
 
 errors.register({
     'NO_REQUEST_CONFIG_FOUND': 'No request configuration was found for {0}.{1}',
@@ -3969,7 +3976,11 @@ var ApiReference = {
         if (!oType.template) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, operation);
 
         returnObj = {};
-        tptData = {};
+
+        IframeXHR = IframeXHR || require('./iframexhr');
+        tptData = {
+            receiverVersion: IframeXHR.version
+        };
 
         // cache templates lazily
         if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
@@ -4036,7 +4047,7 @@ module.exports = ApiReference;
 // END REFERENCE
 
 /***********/
-},{"./collection":13,"./errors":16,"./methods.json":21,"./object":22,"./utils":35}],24:[function(require,module,exports){
+},{"./collection":13,"./errors":16,"./iframexhr":17,"./methods.json":21,"./object":22,"./utils":35}],24:[function(require,module,exports){
 
 
 //# sourceUrl=src/types/cart.js

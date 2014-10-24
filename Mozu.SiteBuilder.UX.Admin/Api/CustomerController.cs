@@ -7,9 +7,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.UI;
 using AutoMapper;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Exceptions;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Customer.Contracts.Credit;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -408,7 +410,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "credits/list")]
-        public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]FilterCollection extFilter = null, [FromUri]int? customerId = null)
+        public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]FilterCollection extFilter = null, [FromUri]PagingParamaters pagingParams = null, [FromUri]int? customerId = null)
         {
             string filter = null;
 
@@ -421,7 +423,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (customerId != null)
                 filter = string.Format("CustomerId eq {0}", customerId);
 
-            var dcitemTask = (await _creditWebApiClient.GetCredits(0, 600, filter: filter));
+            int? startIndex = pagingParams.startIndex;
+            int? pageSize = pagingParams.pageSize ?? 20;
+
+            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, filter: filter));
 
             if (dcitemTask.HasException)
             {
@@ -454,7 +459,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             }
 
-            return List2(vmitem);
+            return List2(vmitem, dcitem.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "credits/create")]

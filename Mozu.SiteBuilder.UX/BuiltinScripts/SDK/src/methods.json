@@ -1,7 +1,7 @@
 {
     "document": {
         "template": "{+documentListService}{listName}/documents/{id}{?_*}",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "documentList": {
         "template": "{+documentListService}{listName}/documents{?_*}",
@@ -11,7 +11,7 @@
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "documentView": {
         "template": "{+documentListService}{listName}/views/{viewName}/documents{?_*}",
@@ -22,7 +22,7 @@
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityList": {
         "template": "{+entityListService}{listName}/entities{?_*}",
@@ -32,7 +32,7 @@
             "pageSize": 15
         },
         "collectionOf": "entity",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityView": {
         "template": "{+entityListService}{listName}/views/{viewName}/entities{?_*}",
@@ -43,16 +43,16 @@
             "pageSize": 15
         },
         "collectionOf": "entity",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entity": {
         "template": "{+entityListService}{listName}/entities/{id}{?_*}",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityContainer": {
         "template": "{+entityListService}{listName}/entityContainers/{id}{?_*}",
         "shortcutParam": "listName",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityContainerList": {
         "template": "{+entityListService}{listName}/entityContainers{?_*}",
@@ -62,7 +62,7 @@
             "pageSize": 15
         },
         "collectionOf": "entityContainer",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityContainerView": {
         "template": "{+entityListService}{listName}/views/{viewName}/entityContainers{?_*}",
@@ -73,7 +73,7 @@
             "pageSize": 15
         },
         "collectionOf": "entityContainer",
-        "useIframeTransport": "{+storefrontUserService}../../receiver"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "products": {
         "template": "{+productService}{?_*}",
@@ -214,7 +214,7 @@
     "customer": {
         "template": "{+customerService}{id}",
         "defaults": { 
-            "useIframeTransport": "{+storefrontUserService}../../receiver"
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
         },
         "shortcutParam": "id",
         "includeSelf": true,
@@ -485,7 +485,7 @@
     },
     "creditcard": {
         "defaults": {
-            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver.html"
+            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver_v2.html"
         },
         "save": {
             "verb": "POST",
@@ -571,7 +571,7 @@
     },
     "instockrequest": {
         "create": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver",
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}",
             "verb": "POST",
             "template": "{+inStockNotificationService}"
         }

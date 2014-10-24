@@ -4,6 +4,7 @@ var errors = require('./errors');
 var ApiCollection;
 var ApiObject = require('./object');
 var objectTypes = require('./methods.json');
+var IframeXHR;
 
 errors.register({
     'NO_REQUEST_CONFIG_FOUND': 'No request configuration was found for {0}.{1}',
@@ -91,7 +92,11 @@ var ApiReference = {
         if (!oType.template) errors.throwOnObject(obj, 'NO_REQUEST_CONFIG_FOUND', typeName, operation);
 
         returnObj = {};
-        tptData = {};
+
+        IframeXHR = IframeXHR || require('./iframexhr');
+        tptData = {
+            receiverVersion: IframeXHR.version
+        };
 
         // cache templates lazily
         if (typeof oType.template === "string") oType.template = utils.uritemplate.parse(oType.template);
