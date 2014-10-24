@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-10-22
+ * Mozu JavaScript SDK - v0.3.0 - 2014-10-23
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -4954,12 +4954,21 @@ var process=require("__browserify_process");
                     }
                 }
             };
-            xhr.open(method || 'GET', url);
+
+            var tunnelMethod = (method === "DELETE");
+
+            xhr.open(tunnelMethod ? "POST" : (method || 'GET'), url);
             if (headers) {
                 for (var h in headers) {
                     if (headers[h]) xhr.setRequestHeader(h, headers[h]);
                 }
             }
+
+            if (tunnelMethod) {
+                xhr.setRequestHeader('X-HTTP-Method-Override', method);
+            }
+
+
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.setRequestHeader('Accept', 'application/json');
             if (data && method !== 'GET') {
