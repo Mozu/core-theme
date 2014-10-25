@@ -28,11 +28,11 @@
         <div data-mz-pagesort class="mz-sortby">
             {% include "modules/common/page-sort" %}
         </div>
-        <div data-mz-pagingcontrols class="mz-pagingcontrols">
-            {% include "modules/common/paging-controls" %}
-        </div>
         <div data-mz-pagenumbers class="mz-pagenumbers">
             {% include "modules/common/page-numbers" %}
+        </div>
+        <div data-mz-pagingcontrols class="mz-pagingcontrols">
+            {% include "modules/common/paging-controls" %}
         </div>
     </div>
     <div data-mz-productlist class="mz-l-paginatedlist-list">
@@ -41,6 +41,9 @@
     <div class="mz-l-paginatedlist-footer">
         <div data-mz-pagenumbers class="mz-pagenumbers">
             {% include "modules/common/page-numbers" %}
+        </div>
+        <div data-mz-pagingcontrols class="mz-pagingcontrols">
+            {% include "modules/common/paging-controls" %}
         </div>
     </div>
 </div>
