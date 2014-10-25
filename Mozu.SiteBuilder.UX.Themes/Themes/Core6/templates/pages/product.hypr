@@ -19,6 +19,12 @@
     </div>
 
     <div class="mz-productdetail-wrap">
+
+		{% dump siteContext.generalSettings.allowInvalidAddresses %}
+		{% if siteContext.generalSettings.allowInvalidAddresses %}
+		yauygtkyuasd
+		{% endif %}
+
         {% include "modules/common/message-bar" %}
         <div id="product-detail" class="mz-productdetail mz-l-stack">
             {% include "modules/product/product-detail" %}

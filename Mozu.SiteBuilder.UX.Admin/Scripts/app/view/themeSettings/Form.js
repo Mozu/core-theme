@@ -11,7 +11,8 @@ Ext.define('Taco.view.themesettings.Form', {
         'Taco.model.ProductTypeAttribute',
         'Taco.model.ProductType',
         'Taco.view.productType.AttributeGroup',
-        'Taco.core.ux.form.ColorField'
+        'Taco.core.ux.form.ColorField',
+        'Taco.platter.fields.SimpleFields'
     ],
     
     title: 'Theme Settings',

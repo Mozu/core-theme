@@ -63,6 +63,19 @@ Ext.define('Taco.platter.fields.DropDown', {
 
 });
 
+Ext.define('Taco.platter.fields.MultiSelect', {
+    extend: 'Ext.ux.form.field.BoxSelect',
+    alias: ['widget.mz-input-selectmulti'],
+    multiSelect: true,
+    margin: 0,
+    triggerOnClick: false,
+    typeAhead: true,
+    style: {
+        display: 'inline-table',
+        verticalAlign: 'bottom'
+    }
+})
+
 Ext.define('Taco.platter.fields.Checkbox', {
     extend: 'Ext.form.field.Checkbox',
     alias: ['widget.mz-input-checkbox']
