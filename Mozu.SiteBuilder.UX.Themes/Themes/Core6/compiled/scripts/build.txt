@@ -33,8 +33,9 @@ shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]
 modules/scroll-nav.js
 shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery
 modules/search-autocomplete.js
-modules/views-paging.js
 modules/views-productlists.js
+modules/views-paging.js
+modules/views-collections.js
 
 pages/cart.js
 ----------------
@@ -43,7 +44,6 @@ pages/cart.js
 
 pages/category.js
 ----------------
-modules/views-collections.js
 pages/category.js
 
 pages/checkout.js
@@ -70,3 +70,7 @@ modules/views-productimages.js
 shim!vendor/jquery.tools.dateinput[jquery=jQuery]>jQuery
 modules/jquery-dateinput-localized.js
 pages/product.js
+
+pages/search.js
+----------------
+pages/search.js

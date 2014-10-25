@@ -1,1 +1,1 @@
-define(["modules/jquery-mozu","modules/views-collections"],function(e,a){e(document).ready(function(){window.facetingViews=a.createFacetedCollectionViews({$body:e("[data-mz-search]"),$facets:e("[data-mz-facets]"),data:require.mozuData("facetedproducts")})})});
+define("pages/search",["modules/jquery-mozu","modules/views-collections"],function(e,a){e(document).ready(function(){window.facetingViews=a.createFacetedCollectionViews({$body:e("[data-mz-search]"),$facets:e("[data-mz-facets]"),data:require.mozuData("facetedproducts")})})});
