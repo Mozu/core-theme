@@ -10,11 +10,6 @@
           "name": "allowWishlist",
           "fieldLabel": "Allow Wishlist"
         },
-        {
-          "xtype": "checkbox",
-          "name": "useAnimatedProductLists",
-          "fieldLabel": "Use Animated Product Lists"
-        },
        {
           "xtype": "checkbox",
           "name": "enablePartialCaching",
@@ -62,20 +57,16 @@
       "collapsed": false,
       "items": [
         {
-          "xtype": "combo",
+          "xtype": "mz-input-selectmulti",
           "name": "fonts",
-          "fieldLabel": "Font",
-          "allowBlank": false,
-          "editable": false,
-          "forceSelection": true,
+          "fieldLabel": "Use Google Web Fonts",
           "store": [
-            "Source Sans Pro",
-            "Open Sans",
-            "Raleway",
-            "Lora",
-            "Rokkitt"
-          ],
-          "queryMode": "local"
+            [ "Source Sans Pro:regular,italic,bold,bolditalic", "Source Sans Pro" ],
+            [ "Open Sane:regular,italic,bold,bolditalic", "Open Sans" ],
+            [ "Raleway:regular,italic,bold,bolditalic", "Raleway" ],
+            [ "Lora:regular,italic,bold,bolditalic", "Lora" ],
+            [ "Rokkitt:regular,italic,bold,bolditalic", "Rokkitt" ]
+          ]
         },
         {
           "xtype": "combo",

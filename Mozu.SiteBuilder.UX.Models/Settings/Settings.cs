@@ -201,8 +201,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember(Name = "googleAnalyticsEcomEnabled")]
         public bool? IsGoogleAnalyticsEcommerceEnabled { get; set; }
 
-        [DataMember(Name = "isWishlistCreationEnabled")]
-        public bool? IsWishlistCreationEnabled { get; set; }
+        [DataMember(Name = "wishlistEnabled")]
+        public bool IsWishlistCreationEnabled { get; set; }
 
         [DataMember(Name = "allowInvalidAddresses")]
         public bool? AllowInvalidAddresses { get; set; }
