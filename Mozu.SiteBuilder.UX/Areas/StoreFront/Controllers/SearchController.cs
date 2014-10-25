@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly Regex categoryIdRE = new Regex("categoryId:(?<categoryId>\\w+)");
 
         [HttpGet]
-        public async Task<ActionResult> Index(string query, int? categoryId = null, string sortBy = null, int? page = null, int? pageSize = null, string facetValueFilter = null)
+        public async Task<ActionResult> Index(string query, int? categoryId = null, string sortBy = null, int? startIndex = null, int? page = null, int? pageSize = null, string facetValueFilter = null)
         {
           
             int filterCatId = 0;
@@ -68,7 +68,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             page = page.GetValueOrDefault(1);
 
-
             // ProductRuntime.Contracts.ProductSearchResult ret = _searchClient.Search(query, sortBy: sortBy, startIndex: startIdx, pageSize: itemsPerPage).Result.ReadAsAsync().Result;
             //start paste
 
@@ -96,7 +95,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
 
-            int startIndex = (page.Value - 1)*pageSize.Value;
+            if (startIndex == null && page != null)
+            {
+                startIndex = (page.Value - 1) * pageSize.Value;
+            }
+
+            startIndex = startIndex.GetValueOrDefault(0);
 
 
             if (includeFacets.GetValueOrDefault(true) )
