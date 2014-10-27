@@ -19,6 +19,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.DocumentEntityAdapter',
         'Taco.view.website.entityAdapters.CategoryEntityAdapter',
         'Taco.view.website.entityAdapters.ProductEntityAdapter',
+        'Taco.core.ux.form.field.QuickFilter',
         'Taco.view.website.WidgetEditor',
         'Taco.view.website.widgetEditors.HorizontalRule',
         'Taco.view.website.widgetEditors.Image',
@@ -455,22 +456,24 @@ Ext.define('Taco.view.website.Index', {
                         ],
                         dockedItems: [
                             {
-                                xtype: 'container',
-                                dock: 'top',
-                                padding: '14 20 0 14',
-                                height: 60,
-                                items: [
-                                    {
-                                        xtype: 'textfield',
+                              //  xtype: 'container',
+                              //  dock: 'top',
+                              ////  padding: '14 20 0 14',
+                              //  height: 60,
+                              //  items: [
+                              //      {
+                                        xtype: 'taco-quickfilter',
                                         emptyText: 'Search',
+                                        triggerCls: 'x-form-search-trigger',
+                                        flex:1,
                                         width: '100%',
                                         listeners: {
                                             change: this.onSearchTextChange,
                                             scope: this,
                                             buffer: 505
                                         }
-                                    }
-                                ]
+                                //    }
+                                //]
                             }
                         ]
                     }

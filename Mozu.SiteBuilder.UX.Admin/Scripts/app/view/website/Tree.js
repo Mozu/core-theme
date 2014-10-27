@@ -21,7 +21,7 @@ Ext.define('Taco.view.website.Tree', {
     useArrows: true,
 
     viewConfig: {
-        stripeRows: true,
+        stripeRows: false,
         plugins: {
             ptype: 'treeviewdragdrop'
         }
