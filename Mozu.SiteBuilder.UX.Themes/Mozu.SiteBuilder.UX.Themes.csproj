@@ -519,7 +519,7 @@
     <Content Include="Themes\Core4\scripts\widgets\video.js" />
     <Content Include="Themes\Core4\tasks\grunt-setver.js" />
     <Content Include="Themes\Core4\tasks\grunt-zubat.js" />
-    <Content Include="Themes\Core4\thumb.tpt.png" />
+    <Content Include="Themes\Core4\core-thumb.png" />
     <Content Include="Themes\Core5\admin\editors\about-us.js" />
     <Content Include="Themes\Core5\admin\editors\categoryContent.js" />
     <Content Include="Themes\Core5\admin\editors\email-orderconfirmation.js" />
@@ -656,7 +656,7 @@
     <Content Include="Themes\Core5\scripts\widgets\video.js" />
     <Content Include="Themes\Core5\tasks\grunt-setver.js" />
     <Content Include="Themes\Core5\tasks\grunt-zubat.js" />
-    <Content Include="Themes\Core5\thumb.tpt.png" />
+    <Content Include="Themes\Core5\core-thumb.png" />
     <Content Include="Docs\externals\backbone.jsdoc.js" />
     <Content Include="Docs\Mozu_Themeing_Concepts.md" />
     <Content Include="SampleThemes\helloWorld\MetaData\thumb.png" />
@@ -801,7 +801,7 @@
     <Content Include="Themes\Core6\scripts\widgets\video.js" />
     <Content Include="Themes\Core6\tasks\grunt-setver.js" />
     <Content Include="Themes\Core6\tasks\grunt-zubat.js" />
-    <Content Include="Themes\Core6\thumb.tpt.png" />
+    <Content Include="Themes\Core6\core-thumb.png" />
     <Content Include="Themes\Demo1\admin\editors\pokemon.js" />
     <Content Include="Themes\Demo1\thumb.tpt.png" />
     <Content Include="ThemeTemplates\ExtendsCore4\labels\README.txt" />
@@ -2298,6 +2298,11 @@
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
+    <ItemGroup>
+       <Content Include="Themes\$(ThemeName)\**\*.*" 
+                Exclude="Themes\$(ThemeName)\node_modules"
+        />
+    </ItemGroup>
   </Target>
   <Target Name="AfterCompile">
     <CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />

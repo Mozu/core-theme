@@ -236,7 +236,15 @@ Ext.define('Taco.core.ux.form.Form', {
                                 val = field.emptyText || '';
                             }
 
-                            if (values.hasOwnProperty(name)) {
+                            //this is a check for an extention of radio which lets you save the value on the selected radio button instead of passing an array of values for each button with the same name;
+                            // this is to support the use case where you have multiple radio buttons that share a common name;. Only the selected radio will return its inputValue; The default behavior returns an array of values for all buttons;
+                            if (field.xtype == "radio" && field.persistSelectedValueOnly) {
+                                // only persist if the radio button is selected;
+                                if (field.checked) {
+                                    values[name] = val;
+                                }
+
+                            } else if (values.hasOwnProperty(name)) {
                                 bucket = values[name];
 
                                 if (!isArray(bucket)) {
