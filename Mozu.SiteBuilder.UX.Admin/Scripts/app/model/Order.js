@@ -1584,6 +1584,15 @@ Ext.define('Taco.model.Order', {
             Ext.Ajax.request(config);
         },
 
+        changePackageWeight: function (config) {
+            Ext.apply(config, {
+                url: '/admin/app/order/shipping/package/edit',
+                method: 'POST'
+            });
+
+            Ext.Ajax.request(config);
+        },
+
 
         /**
     * service call to change the packagomg type

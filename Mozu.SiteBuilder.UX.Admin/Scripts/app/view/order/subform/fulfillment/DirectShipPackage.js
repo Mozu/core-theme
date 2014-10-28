@@ -2,7 +2,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
     extend: 'Taco.view.order.subform.fulfillment.Package',
 
     requires: [
-        'Taco.view.order.subform.fulfillment.Grid'
+        'Taco.view.order.subform.fulfillment.Grid',
+        'Taco.view.order.modal.OverrideTotalWeight'
     ],
 
     initComponent: function () {
@@ -100,9 +101,27 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 }, {
                     margin: '8 0 0 0',
                     tpl: [
-                        '<span class="label">Total Weight:</span><br>{weight} lbs'
+                        '<span class="label">Total Weight:</span>'
                     ],
                     data: this.packageData
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        margin: '0 5 0 0',
+                        xtype: 'component',
+                        tpl: [
+                            '{weight} lbs'
+                        ],
+                        data: this.packageData
+                    }, {
+                        xtype: 'button',
+                        text: '(Edit)',
+                        ui: 'link',
+                        hidden: !!this.packageData.shipmentId,
+                        handler: this.handleOverrideWeight,
+                        scope: this
+                    }]
                 }]
             }, {
                 xtype: 'container',
@@ -305,6 +324,25 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         Ext.fly(win.document.body).setHTML(html);
     },
 
+    handleOverrideWeight: function () {
+
+        Ext.create('Taco.view.order.modal.OverrideTotalWeight', {
+            record: this.packageData,
+            listeners: {
+                scope: this,
+                aftersaveclose: function (dialog, data) {
+                    this.packageData.weight = data.weight;
+
+                    this.updateOrder({
+                        methodName: 'changePackageWeight',
+                        errorMsg: 'Error changing package weight',
+                        data: [this.packageData]
+                    });
+                }
+            }
+        });
+    },
+
     handleViewShippingLabel: function () {
         window.open(
             '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageData.id,
@@ -358,7 +396,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
     handleShippingMethod: function (menu, item) {
         this.packageData.shippingMethodCode = item.methodCode;
         this.packageData.shippingMethodName = item.methodName;
-
+        
         this.updateOrder({
             methodName: 'changeShippingMethod',
             errorMsg: 'Error changing shipping method on package',
