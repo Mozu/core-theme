@@ -30,7 +30,7 @@
             {% include "modules/my-account/my-account-settings" %}
         </div>
 
-        {% if siteContext.generalSettings.wishlistEnabled %}
+        {% if siteContext.generalSettings.isWishlistCreationEnabled %}
         <a id="wishlist"></a>
         <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">
             {% include "modules/my-account/my-account-wishlist" with model=model.wishlist %}

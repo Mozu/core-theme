@@ -32,7 +32,7 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
             validator: 'email',
             required: true,
             allowBlank:false,
-            name: 'senderEmail'/*,
+            name: 'senderEmailAddress'/*,
             value: me.settings.senderEmail*/
         }, {
             xtype: 'textfield',
@@ -41,7 +41,7 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
             allowBlank: false,
             minLength: 3,
             fieldLabel: 'Reply-to e-mail',
-            name: 'replyToEmail'/*,
+            name: 'replyToEmailAddress'/*,
             
             value: me.settings.replyToEmail*/
         }];

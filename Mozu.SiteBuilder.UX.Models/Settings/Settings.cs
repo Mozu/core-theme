@@ -102,61 +102,61 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         //[DataMember(Name = "isMozuWebSite")]
         //public bool IsMozuWebSite { get; set; }
 
-        [DataMember(Name = "templateSiteId")]
+        [DataMember/*(Name = "templateSiteId")*/]
         public int? TemplateSiteId { get; set; }
 
-        [DataMember(Name = "websiteName")]
+        [DataMember/*(Name = "websiteName")*/]
         public string WebsiteName { get; set; }
 
-        [DataMember(Name = "timeZone")]
+        [DataMember/*(Name = "timeZone")*/]
         public string SiteTimeZone { get; set; }
 
-        [DataMember(Name = "timeFormat")]
+        [DataMember/*(Name = "timeFormat")*/]
         public string SiteTimeFormat { get; set; }
 
-        [DataMember(Name = "daylightSaving")]
+        [DataMember/*(Name = "daylightSaving")*/]
         public bool AdjustForDaylightSavingTime { get; set; }
 
-        [DataMember(Name = "allowAllIps")]
+        [DataMember/*(Name = "allowAllIps")*/]
         public bool AllowAllIPs { get; set; }
 
 
-        [DataMember(Name = "senderEmail")]
+        [DataMember/*(Name = "senderEmail")*/]
         public string SenderEmailAddress { get; set; }
 
-        [DataMember(Name = "senderEmailName")]
+        [DataMember/*(Name = "senderEmailName")*/]
         public string SenderEmailAddressName
         {
-            get { return "Mr. Not Inservicesyet"; }
+            get { return SenderEmailAddress; }
             set { }
         }
 
 
-        [DataMember(Name = "channelId")]
+        [DataMember/*(Name = "channelId")*/]
         public string ChannelId { get; set; }
 
 
-        [DataMember(Name = "replyToEmail")]
+        [DataMember/*(Name = "replyToEmail")*/]
         public string ReplyToEmailAddress { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false, Name = "logoPath")]
+        [DataMember(EmitDefaultValue = false/*, Name = "logoPath"*/)]
         public string LogoPath { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "logoText")]
+        [DataMember(EmitDefaultValue = false/*, Name = "logoText"*/)]
         public string LogoText { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "favIconMobilePath")]
+        [DataMember(EmitDefaultValue = false/*, Name = "favIconMobilePath"*/)]
         public string FavIconMobilePath { get; set; }
 
-        [DataMember(EmitDefaultValue = false, Name = "favIconPath")]
+        [DataMember(EmitDefaultValue = false/*, Name = "favIconPath"*/)]
         public string FavIconPath { get; set; }
 
 
 
         
 
-        [DataMember(Name = "themeStr")]
+        //[DataMember(Name = "themeStr")]
        // [Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
         public string ThemeStr
         {
@@ -167,7 +167,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
      
             
-        [DataMember(Name = "mobileThemeStr")]
+        [DataMember/*(Name = "mobileThemeStr")*/]
         public string MobileThemeStr
         {
             get; set;
@@ -178,36 +178,36 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         {
             get; set;
         }
-        [DataMember(Name = "desktopTheme")]
+        [DataMember/*(Name = "desktopTheme")*/]
         public ThemeSelection DesktopTheme
         {
             get;
             set;
         }
         
-        [DataMember(Name = "tabletTheme")]
+        [DataMember/*(Name = "tabletTheme")*/]
         public ThemeSelection TabletTheme
         {
             get;
             set;
         }
 
-        [DataMember(Name = "googleAnalyticsId")]
+        [DataMember/*(Name = "googleAnalyticsId")*/]
         public string GoogleAnalyticsCode { get; set; }
 
-        [DataMember(Name = "googleAnalyticsEnabled")]
+        [DataMember/*(Name = "googleAnalyticsEnabled")*/]
         public bool? IsGoogleAnalyticsEnabled { get; set; }
 
-        [DataMember(Name = "googleAnalyticsEcomEnabled")]
+        [DataMember/*(Name = "googleAnalyticsEcomEnabled")*/]
         public bool? IsGoogleAnalyticsEcommerceEnabled { get; set; }
 
-        [DataMember(Name = "wishlistEnabled")]
-        public bool IsWishlistCreationEnabled { get; set; }
+        [DataMember/*(Name = "isWishlistCreationEnabled")*/]
+        public bool? IsWishlistCreationEnabled { get; set; }
 
-        [DataMember(Name = "allowInvalidAddresses")]
+        [DataMember/*(Name = "allowInvalidAddresses")*/]
         public bool? AllowInvalidAddresses { get; set; }
 
-        [DataMember(Name = "isAddressValidationEnabled")]
+        [DataMember/*(Name = "isAddressValidationEnabled")*/]
         public bool? IsAddressValidationEnabled { get; set; }
 
          
