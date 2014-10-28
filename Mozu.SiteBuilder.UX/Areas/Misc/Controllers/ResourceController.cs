@@ -396,10 +396,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [ClientCacheHeaders(ConfigKey = "receiver")]
         public ActionResult MozuReceiver(string receiverVersion)
         {
-            if (!String.IsNullOrWhiteSpace(receiverVersion))
-            {
-                return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
-            }
+            return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
+        }
+
+        [HttpGet]
+        [ClientCacheHeaders(ConfigKey = "receiver")]
+        public ActionResult MozuReceiver()
+        {
             return File("/Assets/mozu_receiver.html", "text/html");
         }
 
