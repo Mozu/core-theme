@@ -2062,6 +2062,7 @@
     <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
     <Content Include="Tests\unit\view\customers\subform\information.t.js" />
     <Content Include="Tests\customunit\view\order\header.t.js" />
+    <Content Include="Tests\unit\view\location\subform\location.t.js" />
     <Content Include="Tests\unit\view\order\modal\AddGiftCard.t.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.t.js" />
     <Content Include="Tests\unit\view\order\widget\GiftCardGrid.t.js" />
