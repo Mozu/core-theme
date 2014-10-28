@@ -160,9 +160,7 @@
                     order.syncApiModel();
                     me.isLoading(true);
                     order.apiModel.getShippingMethodsFromContact().then(function (methods) {
-                        return parent.set({
-                            availableShippingMethods: methods
-                        });
+                        return parent.refreshShippingMethods(methods);
                     }).ensure(function () {
                         addr.set('candidateValidatedAddresses', null);
                         me.isLoading(false);
@@ -228,6 +226,14 @@
                     required: true,
                     msg: Hypr.getLabel('chooseShippingMethod')
                 }
+            },
+            refreshShippingMethods: function (methods) {
+                this.set({
+                    availableShippingMethods: methods
+                });
+
+                // always make them choose again
+                _.each(['shippingMethodCode', 'shippingMethodName'], this.unset, this);
             },
             calculateStepStatus: function () {
                 var st = "new", available;
