@@ -320,7 +320,6 @@
         }
     ],
     "settings":{
-        "allowWishlist":false,
         "autocompleteProducts":true,
         "bannerImage":"/resources/images/banner.jpg",
         "bannerImageEnabled":false,
