@@ -424,7 +424,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                                 selectionchange: {
                                     scope: this,
                                     fn: function (selModel, records) {
-                                        var field = this.getForm().getForm().findField('linkInternalUrl'),
+                                        var field = this.getForm().findField('linkInternalUrl'),
                                             urls;
 
                                         urls = Ext.Array.map(records, function (record) {
@@ -462,7 +462,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                     var record = store.first(),
                         value = record ? record.getId() : null;
 
-                    this.getForm().getForm().findField('imageFileId').setValue(value);
+                    this.getForm().findField('imageFileId').setValue(value);
                 }
             }
         });
@@ -474,7 +474,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                     var record = store.first(),
                         value = record ? record.getId() : null;
 
-                    this.getForm().getForm().findField('linkFileId').setValue(value);
+                    this.getForm().findField('linkFileId').setValue(value);
                 }
             }
         });
