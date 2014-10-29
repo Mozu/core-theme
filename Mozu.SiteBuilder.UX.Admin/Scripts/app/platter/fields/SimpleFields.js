@@ -17,10 +17,40 @@ Ext.define('Taco.platter.fields.SimpleFields', {
     }
 });
 
+Ext.define('Taco.platter.fields.DateTime', {
+    extend: 'Taco.core.ux.picker.DateTime',
+    format:'c',
+    alias: ['widget.mz-input-date']
+});
+
 Ext.define('Taco.platter.fields.Text', {
     extend: 'Ext.form.field.Text',
     alias: ['widget.mz-input-text']
 });
+
+
+Ext.define('Taco.platter.fields.Code', {
+    extend: 'Taco.core.ux.form.field.Code',
+    alias: ['widget.mz-input-code'],
+    mode: 'html',
+});
+
+Ext.define('Taco.platter.fields.HtmlEditor', {
+    extend: 'Ext.form.HtmlEditor',
+    alias: ['widget.mz-input-richtext'],
+    enableAlignments: false,
+    enableColors:false,
+    enableFont: false,
+    enableFontSize:false,
+});
+
+Ext.define('Taco.platter.fields.Texa', {
+    extend: 'Ext.form.field.TextArea',
+    alias: ['widget.mz-input-richtext']
+    
+
+});
+
 
 
 Ext.define('Taco.platter.fields.DropDown', {

@@ -69,6 +69,28 @@ StartTest(function (t) {
                  name: 'text',
                  fieldLabel: 'text',
                  allowBlank: false,
+                 width:600
+             });
+             m.form.add({
+                 xtype: 'mz-input-code',
+                 name: 'text',
+                 fieldLabel: 'mz-input-code',
+                 allowBlank: false,
+                 width: 600
+             });
+             m.form.add({
+                 xtype: 'mz-input-date',
+                 name: 'text',
+                 fieldLabel: 'mz-input-date',
+                 allowBlank: false,
+                 width: 600
+             });
+             m.form.add({
+                 xtype: 'mz-input-richtext',
+                 name: 'text',
+                 fieldLabel: 'mz-input-richtext',
+                 allowBlank: false,
+                 width: 600
              });
              m.form.add({
                  xtype: 'mz-input-number',
