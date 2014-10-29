@@ -20,9 +20,11 @@ Ext.define('Taco.view.order.modal.OverrideTotalWeight', {
             items: [{
                 xtype: 'numberfield',
                 name: 'weight',
-                allowDecimals: false,
+                allowDecimals: true,
                 allowExponential: false,
                 hideTrigger: true,
+                minValue: 0,
+                decimalPrecision: 4,
                 fieldLabel: 'Weight',
                 value: this.record.weight
             }]
