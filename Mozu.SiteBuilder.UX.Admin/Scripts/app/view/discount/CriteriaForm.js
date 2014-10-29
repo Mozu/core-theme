@@ -268,6 +268,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     xtype: 'radio',
                     name: 'typeOfMinimumToEnforce',
                     value: 'product',
+                    checked:true,
                     padding: '0 10px 0 0'
                 },
                 {
@@ -481,7 +482,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.on('boxready', function () {
             var products = this.record.get('products');
-            var activeQuantityMeasure = (products && products.length) ? this.productsBox : this.categoriesBox;
+            var categories = this.record.get('categories');
+            var activeQuantityMeasure = (categories && categories.length) ? this.categoriesBox : this.productsBox;            
+            
             activeQuantityMeasure.down('radio').setValue(true);
             toggleEnabledCriteriaQuantities(activeQuantityMeasure);
             enableDisableCriteriaQuantities();
