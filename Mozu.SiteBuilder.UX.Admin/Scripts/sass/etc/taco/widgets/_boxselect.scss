@@ -69,6 +69,16 @@
         display: none;
     }
 
+    .mz-input-selectmulti {
+        display: inline-table;
+        vertical-align: bottom;
+        .#{$prefix}boxselect-item-text {
+            white-space: pre;
+        }
+    }
+
+
+
   // $boxselect-item-font-size: px-to-rem(14);
 
   // .#{$prefix}boxselect {

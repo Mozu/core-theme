@@ -9,6 +9,7 @@ Ext.define('Taco.platter.fields.SimpleFields', {
         'Ext.form.field.Checkbox',
         'Ext.form.field.Number',
         'Ext.form.field.ComboBox',
+        'Taco.core.ux.form.ColorField',
         'Taco.shared.view.field.Product',
         'Taco.shared.view.field.Category'
     ],
@@ -66,20 +67,21 @@ Ext.define('Taco.platter.fields.DropDown', {
 Ext.define('Taco.platter.fields.MultiSelect', {
     extend: 'Ext.ux.form.field.BoxSelect',
     alias: ['widget.mz-input-selectmulti'],
+    cls: 'mz-input-selectmulti',
     multiSelect: true,
     margin: 0,
     triggerOnClick: false,
-    typeAhead: true,
-    style: {
-        display: 'inline-table',
-        verticalAlign: 'bottom'
-    }
+    typeAhead: true
 })
 
 Ext.define('Taco.platter.fields.Checkbox', {
     extend: 'Ext.form.field.Checkbox',
-    alias: ['widget.mz-input-checkbox']
-    
+    alias: ['widget.mz-input-checkbox'],
+    initComponent: function() {
+        this.boxLabel = this.boxLabel || this.fieldLabel;
+        delete this.fieldLabel;
+        this.callParent(arguments);
+    }
 });
 
 Ext.define('Taco.platter.fields.Number', {
@@ -160,4 +162,9 @@ Ext.define('Taco.platter.fields.MultiNavNode', {
     alias: ['widget.mz-input-navnodemulti'],
     emptyText: 'Select Navigation Nodes',
     multiSelect: true
+});
+
+Ext.define('Taco.platter.fields.Color', {
+    extend: 'Taco.core.ux.form.ColorField',
+    alias: ['widget.mz-input-color']
 });
