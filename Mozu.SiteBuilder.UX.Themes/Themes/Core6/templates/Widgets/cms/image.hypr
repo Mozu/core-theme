@@ -32,6 +32,13 @@
     <img 
         class="mz-cms-image-maintain"
         alt="{{Model.config.imageAltText}}"
+        
+        style="
+          border-width: {{Model.config.borderWidth}}; 
+          border-style: {{Model.config.borderStyle}};
+          border-color: {{Model.config.borderColor}};
+          box-sizing: border-box;
+        "
          
         {% if Model.config.imageSource == 'externalUrl' %}
             src="{{Model.config.imageExternalUrl}}"
@@ -79,6 +86,10 @@
                 {% endif %}
             {% endif %}
         );
+        border-width: {{Model.config.borderWidth}}; 
+        border-style: {{Model.config.borderStyle}};
+        border-color: {{Model.config.borderColor}};
+        box-sizing: border-box;
         background-position: {{Model.config.positionHorizontal}} {{Model.config.positionVertical}};"
         >
         </{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}>
