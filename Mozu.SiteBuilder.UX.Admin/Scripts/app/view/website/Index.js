@@ -677,11 +677,21 @@ Ext.define('Taco.view.website.Index', {
     },
 
     navigate: function (config) {
+        var parser = document.createElement('a');
+        parser.href = config.url;
+
+        if ((parser.hostname ||'').toLowerCase() !== ( window.location.hostname || '').toLowerCase()) {
+            Ext.Msg.alert('Attention', 'editing of url [<b><a href="' + parser.href + '" target="_blank">' + parser.href + '</a></b>] not supported');
+            
+            return;
+        }
+
+        config.url = parser.pathname + parser.search
 
         this.fireEvent('navigatestart', this, config);
         //  this.showHideButtons([]);
         this.url = config.url;
-        console.log(config.url);
+  
         this.pageSettings.removeAll(true);
         this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme);
         Taco.core.StateManager.addState('website/page' + config.url);
@@ -740,13 +750,14 @@ Ext.define('Taco.view.website.Index', {
                 e.stopEvent();
                 return;
             }
-            if (target.hostname === this.iframe.getWin().location.hostname && !e.browserEvent.defaultPrevented) {
+            if (!e.browserEvent.defaultPrevented) {
                 me.fireEvent('beforeIframeClickNavigate', {
-                    url: target.pathname + target.search
+                    url: target.pathname + target.search,
+                    fullUrl:target.href
                 });
 
                 this.navigate({
-                    url: target.pathname + target.search
+                    url: target.href
                 });
 
                 e.stopEvent();

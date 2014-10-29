@@ -52,7 +52,7 @@ StartTest(function (t) {
                 title: 'Contact Info',
                 width: 950,
                 height:740,
-                bodyPadding: 10,
+                bodyPadding: 10, 
                 margin:10,
                 renderTo: Ext.getBody(),
                 overflowY: 'scroll',
