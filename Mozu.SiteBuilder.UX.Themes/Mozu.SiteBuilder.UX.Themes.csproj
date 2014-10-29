@@ -2280,7 +2280,7 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>True</UseCustomServer>
+          <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://food.com</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
@@ -2299,9 +2299,7 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
     <ItemGroup>
-       <Content Include="Themes\$(ThemeName)\**\*.*" 
-                Exclude="Themes\$(ThemeName)\node_modules"
-        />
+      <Content Include="Themes\$(ThemeName)\**\*.*" Exclude="Themes\$(ThemeName)\node_modules" />
     </ItemGroup>
   </Target>
   <Target Name="AfterCompile">

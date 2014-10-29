@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
          object IFilter.DefaultValue
         {
-            get { return null; }
+            get { return new object(); }
         }
 
         object IFilter.PerformWithParam(object value, object parameter)
