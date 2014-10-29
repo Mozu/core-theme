@@ -24,6 +24,7 @@ Ext.define('Taco.view.attribute.Form', {
             attributeType: {
                 xtype: 'selectfield',
                 fieldLabel: 'Attribute Type',
+                allowBlank: true,
                 name: 'attributeType',
                 isDirty: function () {
                     return false;

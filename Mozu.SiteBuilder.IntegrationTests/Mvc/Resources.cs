@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
+using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -139,8 +140,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var vpp = new MozuVirtualPathProvider(scontext);
             var nav = Substitute.For<INavigationGandalf>();
             var contentRetriever = new TestFileContentRetriver(fileToContentMap);
+            var logger = Substitute.For<ILogger>();
 
-            var resourceController = new ResourceController(vpp, nav, contentRetriever);
+            var resourceController = new ResourceController(vpp, nav, contentRetriever, logger);
             var results = await resourceController.LiveTemplates();
             results.Count.ShouldEqual(5);
             

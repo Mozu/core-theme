@@ -12,6 +12,8 @@ Ext.define('Taco.view.location.Form', {
     ],
 
     model: 'Taco.model.Location',
+    createTitle: 'Create New Location',
+    editTitle: 'Edit Location',
 
     config: {
         customer: null

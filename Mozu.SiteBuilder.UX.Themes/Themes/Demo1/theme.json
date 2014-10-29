@@ -1,40 +1,156 @@
 {
-    "about": {
-        "author": "Volusion",
-        "defaultLanguage": "en-US",
-        "extends": "core6",
-        "isDesktop": true,
-        "isMobile": false,
-        "isTablet": false,
-        "name": "Demo1",
-        "allowProduction": false
+  "about": {
+    "author": "Volusion",
+    "defaultLanguage": "en-US",
+    "extends": "core6",
+    "isDesktop": true,
+    "isMobile": false,
+    "isTablet": false,
+    "name": "Demo1",
+    "allowProduction": false
+  },
+  "editors": [
+    {
+      "id": "pokemon@gcta",
+      "path": "pokemon.js",
+      "documentLists": [
+        "pokemon@gcta"
+      ],
+      "priority": 5
+    }
+  ],
+  "pageTypes": [
+    {
+      "documentType": "web_page@mozu",
+      "entityType": "webpage",
+      "id": "pokemon",
+      "template": "pokemon",
+      "customEditor": "pokemon@gcta",
+      "title": "About Us",
+      "userCreatable": true,
+      "documentListName": "pokemon@gcta"
     },
-    "editors": [{
-        "id": "pokemon@gcta",
-        "path": "pokemon.js",
-        "documentLists": [
-            "pokemon@gcta"
-        ],
-
-        "priority": 5
-    }], 
-    "pageTypes": [{
-        "documentType": "web_page@mozu",
-        "entityType": "webpage",
-        "id": "pokemon",
-        "template": "pokemon",
-        "customEditor": "pokemon@gcta",
-        "title": "About Us",
-        "userCreatable": true,
-        "documentListName": "pokemon@gcta"
+    {
+      "documentType": "web_page@mozu",
+      "entityType": "webpage",
+      "id": "pokemon-index",
+      "template": "pokemon-index",
+      "title": "Pokenmon Index",
+      "userCreatable": true
+    }
+  ],
+  "widgets": [
+    {
+      "displayName": "a",
+      "displayTemplate": "cms/faq",
+      "id": "a",
+      "validPageTypes": [
+        "*"
+      ]
     },
-       { 
-        "documentType": "web_page@mozu",
-        "entityType": "webpage",
-        "id": "pokemon-index",
-        "template": "pokemon-index",
-        "title": "Pokenmon Index",
-        "userCreatable": true
+    {
+      "displayName": "b",
+      "displayTemplate": "cms/faq",
+      "id": "b",
+      "validPageTypes": [
+        "*"
+      ]
     },
-    ]
+    {
+      "displayName": "c",
+      "displayTemplate": "cms/faq",
+      "id": "c",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "e",
+      "displayTemplate": "cms/faq",
+      "id": "e",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "f",
+      "displayTemplate": "cms/faq",
+      "id": "f",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "g",
+      "displayTemplate": "cms/faq",
+      "id": "g",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "h",
+      "displayTemplate": "cms/faq",
+      "id": "h",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "ha",
+      "displayTemplate": "cms/faq",
+      "id": "ha",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "h",
+      "displayTemplate": "cms/faq",
+      "id": "hg",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "h",
+      "displayTemplate": "cms/faq",
+      "id": "h3g",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "h",
+      "displayTemplate": "cms/faq",
+      "id": "h44g",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "h",
+      "displayTemplate": "cms/faq",
+      "id": "h556g",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "h",
+      "displayTemplate": "cms/faq",
+      "id": "h678g",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "h",
+      "displayTemplate": "cms/faq",
+      "id": "h5678g",
+      "validPageTypes": [
+        "*"
+      ]
+    }
+  ]
 }
