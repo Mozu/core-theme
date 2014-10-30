@@ -86,7 +86,8 @@ Ext.define('Taco.view.customers.Index', {
                     text: 'Lifetime Value',
                     width: 100,
                     renderer: function (value) {
-                        return value;
+                        return Ext.util.Format.currency(value, '$', 2);
+
                         //todo localization
                     }
                 }, {
