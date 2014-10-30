@@ -51,33 +51,27 @@
                 startIndex: Backbone.MozuModel.DataTypes.Int,
                 totalCount: Backbone.MozuModel.DataTypes.Int,
             },
-            defaultSort: defaultSort,
 
             _isPaged: true,
 
-            getQueryParams: function() {
+            getQueryString: function() {
                 var self = this, lrClone = _.clone(this.lastRequest);
                 _.each(lrClone, function(v, p) {
                     if (self.baseRequestParams && (p in self.baseRequestParams)) delete lrClone[p];
                 });
                 if (parseInt(lrClone.pageSize, 10) === defaultPageSize) delete lrClone.pageSize;
-
+                
+                if (this.query) lrClone.query = this.query;
                 var startIndex = this.get('startIndex');
                 if (startIndex) lrClone.startIndex = startIndex;
-                return lrClone;
-            },
-
-            getQueryString: function() {
-                var params = this.getQueryParams();
-                if (!params || _.isEmpty(params)) return "";
-                return "?" + $.param(params);
+                return _.isEmpty(lrClone) ? "" : "?" + $.param(lrClone);
             },
 
             buildRequest: function() {
                 var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                     pageSize = this.get("pageSize"),
                     startIndex = this.get("startIndex"),
-                    sortBy = $.deparam().sortBy || this.currentSort() || this.defaultSort;
+                    sortBy = $.deparam().sortBy || this.currentSort();
                 conf.pageSize = pageSize;
                 if (startIndex) conf.startIndex = startIndex;
                 if (sortBy) conf.sortBy = sortBy;
@@ -142,7 +136,7 @@
             },
 
             currentSort: function() {
-                return (this.lastRequest && this.lastRequest.sortBy && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g, ' ')) || '';
+                return (this.lastRequest && this.lastRequest.sortBy && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g, ' '));
             },
 
             sortBy: function(sortString) {
