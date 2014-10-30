@@ -501,7 +501,7 @@
         "displayTemplate": "catalog/featuredproducts",
         "editViewFields": [{
             "anchor": "100%",
-            "fieldLabel": "products",
+            "fieldLabel": "Products",
             "name": "productCodes",
             "xtype": "taco-productfield"
         }, {
@@ -642,7 +642,7 @@
         "displayTemplate": "catalog/related-products",
         "editViewFields": [{
             "anchor": "100%",
-            "fieldLabel": "title",
+            "fieldLabel": "Title",
             "name": "title",
             "xtype": "textfield"
         }, {
@@ -666,7 +666,7 @@
             "xtype": "combo"
         }, {
             "anchor": "100%",
-            "fieldLabel": "count",
+            "fieldLabel": "Count",
             "name": "count",
             "xtype": "spinnerfield"
         }],
@@ -687,7 +687,7 @@
         "displayTemplate": "catalog/related-products",
         "editViewFields": [{
             "anchor": "100%",
-            "fieldLabel": "title",
+            "fieldLabel": "Title",
             "name": "title",
             "xtype": "textfield"
         }, {
@@ -711,7 +711,7 @@
             "xtype": "combo"
         }, {
             "anchor": "100%",
-            "fieldLabel": "count",
+            "fieldLabel": "Count",
             "name": "count",
             "xtype": "spinnerfield"
         }],
@@ -732,7 +732,7 @@
         "displayTemplate": "catalog/related-products",
         "editViewFields": [{
             "anchor": "100%",
-            "fieldLabel": "title",
+            "fieldLabel": "Title",
             "name": "title",
             "xtype": "textfield"
         }, {
@@ -756,7 +756,7 @@
             "xtype": "combo"
         }, {
             "anchor": "100%",
-            "fieldLabel": "count",
+            "fieldLabel": "Count",
             "name": "count",
             "xtype": "spinnerfield"
         }],
@@ -774,7 +774,7 @@
         "displayTemplate": "misc/instock-request",
         "editViewFields": [{
             "anchor": "100%",
-            "fieldLabel": "title",
+            "fieldLabel": "Title",
             "xtype": "textfield"
         }],
         "icon": "/resources/admin/widgets/25_instock_requests.png",
