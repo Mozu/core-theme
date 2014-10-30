@@ -23,7 +23,7 @@ Ext.define('Taco.view.order.modal.OverrideTotalWeight', {
                 allowDecimals: true,
                 allowExponential: false,
                 hideTrigger: true,
-                minValue: 0,
+                minValue: 0.0001,
                 decimalPrecision: 4,
                 fieldLabel: 'Weight',
                 value: this.record.weight
@@ -39,7 +39,7 @@ Ext.define('Taco.view.order.modal.OverrideTotalWeight', {
         var me = this,
             formValues = this.form.getValues(),
             data;
-        
+
         data = {
             weight: formValues.weight
         };
