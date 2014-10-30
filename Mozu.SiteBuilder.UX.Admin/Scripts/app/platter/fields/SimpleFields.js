@@ -172,7 +172,7 @@ Ext.define('Taco.platter.fields.Number', mix({
     extend: 'Ext.form.field.Number',
     alias: ['widget.mz-input-number'],
     mixins: ['Taco.platter.SimpleField'],
-
+    allowDecimals: false,
     hideTrigger: true,
     mouseWheelEnabled: false
 
