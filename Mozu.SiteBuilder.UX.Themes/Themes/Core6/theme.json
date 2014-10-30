@@ -343,10 +343,10 @@
         "defaultPageSize":15,
         "defaultSort":"createDate asc",
         "enablePartialCaching":true,
-        "fallbackFontFamily":"sans-serif",
-        "fonts":[
-            "Source Sans Pro:regular,italic,bold,bolditalic"
+        "loadGoogleFonts": [
+            "Source Sans Pro"
         ],
+        "primaryFont": "Source Sans Pro",
         "fontSize":"14px",
         "gutterWidth":"25px",
         "internal-themeAddons":[
