@@ -20,6 +20,7 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
             record: this.record,
             items: [{
                     xtype: 'textfield',
+                    fieldLabel: 'Navigation Link Name',
                     name: 'name',
                     emptyText: 'Label',
                     allowBlank: false,
@@ -27,9 +28,9 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
                     flex: 1
                 }, {
                     xtype: 'textfield',
+                    fieldLabel: 'URL',
                     name: 'url',
-                    emptyText: 'URL',
-                    inputType:'url',
+                    emptyText: 'http://',
                     allowBlank: false,
                     width: '100%',
                     flex: 1
