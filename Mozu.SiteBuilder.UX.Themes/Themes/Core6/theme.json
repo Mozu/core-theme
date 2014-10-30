@@ -678,7 +678,8 @@
                 {
                     "anchor": "100%",
                     "fieldLabel": "Video URL",
-                    "name": "url"
+                    "name": "url",
+                    "xtype": "mz-input-text"
                 }
             ],
             "icon": "/resources/admin/widgets/08_video.png",

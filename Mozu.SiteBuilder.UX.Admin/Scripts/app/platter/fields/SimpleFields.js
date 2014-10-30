@@ -77,6 +77,8 @@ Ext.define('Taco.platter.SimpleField', {
 });
 
 function mix(cfg) {
+    cfg.mixins = cfg.mixins || [];
+    Ext.Array.include(cfg.mixins, 'Taco.platter.SimpleField');
     if (!cfg.initComponent) cfg.initComponent = function commonConstructor() {
         this.initDeps();
         this.callParent(arguments);
@@ -88,9 +90,6 @@ Ext.define('Taco.platter.fields.DateTime', mix({
     format:'c',
     alias: ['widget.mz-input-date']
 }));
-
-
-
 
 Ext.define('Taco.platter.fields.Code', mix({
     extend: 'Taco.core.ux.form.field.Code',
@@ -110,28 +109,17 @@ Ext.define('Taco.platter.fields.HtmlEditor', mix({
 Ext.define('Taco.platter.fields.TextArea', mix({
     extend: 'Ext.form.field.TextArea',
     alias: ['widget.mz-input-richtext']
-    
-
 }));
-
-
-
-
 
 Ext.define('Taco.platter.fields.Text', mix({
     extend: 'Ext.form.field.Text',
     alias: ['widget.mz-input-text'],
-    mixins: ['Taco.platter.SimpleField'],
-
     width: 220
 }));
-
 
 Ext.define('Taco.platter.fields.DropDown', mix({
     extend: 'Ext.form.field.ComboBox',
     alias: ['widget.mz-input-dropdown'],
-    mixins: ['Taco.platter.SimpleField'],
-
     queryMode: 'local',
     editable: false,
     triggerAction: 'all',
@@ -145,8 +133,6 @@ Ext.define('Taco.platter.fields.DropDown', mix({
 Ext.define('Taco.platter.fields.MultiSelect', mix({
     extend: 'Ext.ux.form.field.BoxSelect',
     alias: ['widget.mz-input-selectmulti'],
-    mixins: ['Taco.platter.SimpleField'],
-
     cls: 'mz-input-selectmulti',
     multiSelect: true,
     margin: 0,
@@ -159,7 +145,6 @@ Ext.define('Taco.platter.fields.MultiSelect', mix({
 Ext.define('Taco.platter.fields.Checkbox', {
     extend: 'Ext.form.field.Checkbox',
     alias: ['widget.mz-input-checkbox'],
-    mixins: ['Taco.platter.SimpleField'],
     initComponent: function() {
         this.boxLabel = this.boxLabel || this.fieldLabel;
         delete this.fieldLabel;
@@ -171,32 +156,26 @@ Ext.define('Taco.platter.fields.Checkbox', {
 Ext.define('Taco.platter.fields.Number', mix({
     extend: 'Ext.form.field.Number',
     alias: ['widget.mz-input-number'],
-    mixins: ['Taco.platter.SimpleField'],
     allowDecimals: false,
     hideTrigger: true,
     mouseWheelEnabled: false
 
 }));
 
-
 Ext.define('Taco.platter.fields.Image', mix({
     extend: 'Taco.core.ux.form.field.BaseImageField',
-    alias: ['widget.mz-input-image'],
-    mixins: ['Taco.platter.SimpleField'],
-   
+    alias: ['widget.mz-input-image'],   
 }));
+
 Ext.define('Taco.platter.fields.ImageSimple', mix({
     extend: 'Taco.core.ux.form.field.BaseImageField',
     alias: ['widget.mz-input-image-nostyle'],
-    mixins: ['Taco.platter.SimpleField'],
-
     allowStyles: false
 }));
+
 Ext.define('Taco.platter.fields.ImageUrl', mix({
     extend: 'Taco.core.ux.form.field.BaseImageField',
     alias: ['widget.mz-input-imageurl'],
-    mixins: ['Taco.platter.SimpleField'],
-
     allowStyles: false,
     dataFormat: 'urlOnly',
     allowAltText: false
@@ -206,8 +185,6 @@ Ext.define('Taco.platter.fields.Product', mix({
     extend: 'Taco.shared.view.field.Product',
     emptyText: 'Select Product',
     alias: ['widget.mz-input-product'],
-    mixins: ['Taco.platter.SimpleField'],
-
     multiSelect: false
 }));
 
@@ -215,31 +192,22 @@ Ext.define('Taco.platter.fields.MultiProduct', mix({
     extend: 'Taco.shared.view.field.Product',
     emptyText: 'Select Products',
     alias: ['widget.mz-input-productmulti'],
-    mixins: ['Taco.platter.SimpleField'],
-
-
 }));
 
 Ext.define('Taco.platter.fields.Category', mix({
     extend: 'Taco.shared.view.field.Category',
     alias: ['widget.mz-input-category'],
-    mixins: ['Taco.platter.SimpleField'],
-
     multiSelect: false
 }));
 
 Ext.define('Taco.platter.fields.MultiCategory', mix({
     extend: 'Taco.shared.view.field.Category',
     alias: ['widget.mz-input-categorymulti'],
-    mixins: ['Taco.platter.SimpleField'],
-
 }));
 
 Ext.define('Taco.platter.fields.Discount', mix({
     extend: 'Taco.shared.view.field.Discount',
     alias: ['widget.mz-input-discount'],
-    mixins: ['Taco.platter.SimpleField'],
-
     emptyText: 'Select Discount',
     multiSelect: false
 }));
@@ -247,8 +215,6 @@ Ext.define('Taco.platter.fields.Discount', mix({
 Ext.define('Taco.platter.fields.MultiDiscount', mix({
     extend: 'Taco.shared.view.field.Discount',
     alias: ['widget.mz-input-discountmulti'],
-    mixins: ['Taco.platter.SimpleField'],
-
     emptyText: 'Select Discounts',
     multiSelect: true
 }));
@@ -256,8 +222,6 @@ Ext.define('Taco.platter.fields.MultiDiscount', mix({
 Ext.define('Taco.platter.fields.NavNode', mix({
     extend: 'Taco.shared.view.field.NavNode',
     alias: ['widget.mz-input-navnode'],
-    mixins: ['Taco.platter.SimpleField'],
-
     emptyText: 'Select Navigation Nodes',
     multiSelect: false
 }));
@@ -265,8 +229,6 @@ Ext.define('Taco.platter.fields.NavNode', mix({
 Ext.define('Taco.platter.fields.MultiNavNode', mix({
     extend: 'Taco.shared.view.field.NavNode',
     alias: ['widget.mz-input-navnodemulti'],
-    mixins: ['Taco.platter.SimpleField'],
-
     emptyText: 'Select Navigation Nodes',
     multiSelect: true
 }));
@@ -274,7 +236,5 @@ Ext.define('Taco.platter.fields.MultiNavNode', mix({
 Ext.define('Taco.platter.fields.Color', mix({
     extend: 'Taco.core.ux.form.ColorField',
     alias: ['widget.mz-input-color'],
-    mixins: ['Taco.platter.SimpleField'],
-
     width: 220
 }));
