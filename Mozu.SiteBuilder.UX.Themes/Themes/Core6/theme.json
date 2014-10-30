@@ -637,7 +637,7 @@
             "editViewFields":[
                 {
                     "anchor":"100%",
-                    "fieldLabel":"products",
+                    "fieldLabel":"Products",
                     "name":"productCodes",
                     "xtype":"taco-productfield"
                 },
@@ -724,7 +724,7 @@
                 },
                 {
                     "anchor":"100%",
-                    "fieldLabel":"Count",
+                    "fieldLabel": "Count",
                     "name":"numberToDisplay",
                     "xtype":"numberfield"
                 }
@@ -772,7 +772,7 @@
                 },
                 {
                     "anchor":"100%",
-                    "fieldLabel":"Count",
+                    "fieldLabel": "Count",
                     "name":"numberToDisplay",
                     "xtype":"mz-input-number"
                 }
@@ -795,7 +795,7 @@
             "editViewFields":[
                 {
                     "anchor":"100%",
-                    "fieldLabel":"title",
+                    "fieldLabel": "Title",
                     "name":"title",
                     "xtype":"textfield"
                 },
@@ -821,7 +821,7 @@
                 },
                 {
                     "anchor":"100%",
-                    "fieldLabel":"count",
+                    "fieldLabel": "Count",
                     "name":"count",
                     "xtype":"spinnerfield"
                 }
@@ -845,7 +845,7 @@
             "editViewFields":[
                 {
                     "anchor":"100%",
-                    "fieldLabel":"title",
+                    "fieldLabel": "Title",
                     "name":"title",
                     "xtype":"textfield"
                 },
@@ -871,7 +871,7 @@
                 },
                 {
                     "anchor":"100%",
-                    "fieldLabel":"count",
+                    "fieldLabel": "Count",
                     "name":"count",
                     "xtype":"spinnerfield"
                 }
@@ -895,7 +895,7 @@
             "editViewFields":[
                 {
                     "anchor":"100%",
-                    "fieldLabel":"title",
+                    "fieldLabel": "Title",
                     "name":"title",
                     "xtype":"textfield"
                 },
@@ -921,7 +921,7 @@
                 },
                 {
                     "anchor":"100%",
-                    "fieldLabel":"count",
+                    "fieldLabel": "Count",
                     "name":"count",
                     "xtype":"spinnerfield"
                 }
@@ -942,7 +942,7 @@
             "editViewFields":[
                 {
                     "anchor":"100%",
-                    "fieldLabel":"title",
+                    "fieldLabel": "Title",
                     "xtype":"textfield"
                 }
             ],
