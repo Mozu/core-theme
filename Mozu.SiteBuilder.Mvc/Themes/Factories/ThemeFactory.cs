@@ -54,11 +54,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 }
                 else
                 {
-                    theme.MergedSettings = Merge(tmd.Configuration.Settings, parent.MergedSettings, setting => setting.Id);
-                    theme.PageTypes = Merge(tmd.Configuration.PageTypes, parent.PageTypes, pt => pt.Id);
-                    theme.EmailTemplates = Merge(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id);
-                    theme.Editors = Merge(tmd.Configuration.Editors, parent.Editors, pt => pt.Id);
-                    theme.Widgets = Merge(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id);                   
+                    theme.MergedSettings = Merge(tmd.Configuration.Settings, parent.MergedSettings, setting => setting.Id).ToList();
+                    theme.PageTypes = Merge(tmd.Configuration.PageTypes, parent.PageTypes, pt => pt.Id).ToList();
+                    theme.EmailTemplates = Merge(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id).ToList();
+                    theme.Editors = Merge(tmd.Configuration.Editors, parent.Editors, pt => pt.Id).ToList();
+                    theme.Widgets = Merge(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id).ToList();                   
                 }
             }
             
@@ -85,19 +85,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             t.MergedLabels[t.DefaultLanguage] = new ThemeLabelCollection();
         }
 
-        private static List<TOut> Merge<TOut>(IEnumerable<TOut> themeValues, IEnumerable<TOut> parentValues, Func<TOut, string> identifierMember)
+        private static IEnumerable<TOut> Merge<TOut>(IEnumerable<TOut> themeValues, IEnumerable<TOut> parentValues, Func<TOut, string> identifierMember)
         {
-            IEnumerable<KeyValuePair<string, TOut>> output = new Dictionary<string, TOut>();
+            var p = (parentValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x);
+            var t = (themeValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x);
 
-            // start with all the parent settings in a list.
-            if (parentValues != null)
-                output = output.Concat(parentValues.ToDictionary(identifierMember.Invoke, x => x));
-
-            // overwrite any parent settings with settings defined in this theme.
-            if (themeValues != null)
-                output = output.Concat(themeValues.ToDictionary(identifierMember.Invoke, x => x));
-
-            return output.Select(x => x.Value).ToList();
+            var output = MergeValuesPreferChild(p, t);
+            
+            return output.Select(x => x.Value);
         }
 
         private static Dictionary<string, ThemeLabelCollection> MergeLabels(Dictionary<string, ThemeLabelCollection> themeValues, Dictionary<string, ThemeLabelCollection> parentValues)
@@ -111,17 +106,24 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             foreach (var localeCode in themeValues.Keys.Concat(parentValues.Keys).Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 mergedDictionary[localeCode] = new ThemeLabelCollection();
-                if (parentValues.ContainsKey(localeCode))
-                {
-                    mergedDictionary[localeCode].AddRange(parentValues[localeCode]);
-                }
-                if (themeValues.ContainsKey(localeCode)) // allow new theme values to overwrite the parent values
-                {
-                    mergedDictionary[localeCode].AddRange(themeValues[localeCode]);
-                }
+                
+                var p = parentValues.ContainsKey(localeCode) ? parentValues[localeCode] : new ThemeLabelCollection();
+                var c = themeValues.ContainsKey(localeCode) ? themeValues[localeCode] : new ThemeLabelCollection();
+                var coll = new ThemeLabelCollection();
+                coll.AddRange(Merge(c, p, x => x.Key));
+                mergedDictionary[localeCode] = coll;
             }
 
             return mergedDictionary;
+        }
+
+        private static Dictionary<TKey,TValue> MergeValuesPreferChild<TKey, TValue>(Dictionary<TKey, TValue> parentThemeValues, Dictionary<TKey, TValue> childThemeValues)
+        {
+            var uniqueValues =  childThemeValues.Concat(parentThemeValues.Where(x => !childThemeValues.ContainsKey(x.Key)));
+
+            var converted = new Dictionary<TKey, TValue>();
+            converted.AddRange(uniqueValues);
+            return converted;
         }
     }
 }
