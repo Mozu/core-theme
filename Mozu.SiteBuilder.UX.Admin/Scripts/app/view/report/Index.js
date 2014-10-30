@@ -20,8 +20,6 @@ Ext.define('Taco.view.report.Index', {
     //just for old reporting, not birst
     sidebar: null,
     grid: null,
-    //This is the var that switches between bist/old reporting
-    isNonProd: Taco.showBirstReport,
 
     constructor: function (conf) {
         this.callParent(arguments);
@@ -41,7 +39,8 @@ Ext.define('Taco.view.report.Index', {
             title: 'Reports'
         };
 
-        if (me.isNonProd) {
+        //Have to do this bc the var is being rendered as a string and not a bool 
+        if (Taco.showBirstReport == 'true') {
             //BIRST STUFF
             me.dashboardPanel = Ext.create('Ext.panel.Panel', {
                 itemId: 'dashboardPanel',
