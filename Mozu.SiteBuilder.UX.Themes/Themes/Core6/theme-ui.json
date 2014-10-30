@@ -2,7 +2,7 @@
     "items": [
         {
             "xtype": "panel",
-            "title": "Features",
+            "title": "General",
             "collapsed": false,
             "items": [
                 {
@@ -12,13 +12,49 @@
                 },
                 {
                     "xtype": "mz-input-checkbox",
-                    "name": "autocompleteProducts",
-                    "fieldLabel": "Show product details in search suggestions"
+                    "name": "enablePartialCaching",
+                    "fieldLabel": "Enable partial caching using the Hypr {% partial_cache %} tag"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Product Lists",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "listProductCode",
+                    "fieldLabel": "Show product code in product lists"
                 },
                 {
                     "xtype": "mz-input-checkbox",
-                    "name": "enablePartialCaching",
-                    "fieldLabel": "Enable partial caching using the Hypr {% partial_cache %} tag"
+                    "name": "listProductShortDesc",
+                    "fieldLabel": "Show product short description in product lists"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Search Suggestions",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "useSearchAutocomplete",
+                    "fieldLabel": "Show search suggestions"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "searchExpandOnFocus",
+                    "fieldLabel": "Expand search input field when focused",
+                    "enableIf": "useSearchAutocomplete"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "autocompleteProducts",
+                    "fieldLabel": "Show product details in search suggestions",
+                    "enableIf": "useSearchAutocomplete"
                 }
             ]
         },
@@ -32,7 +68,6 @@
                     "name": "gutterWidth",
                     "fieldLabel": "Base Margin Width",
                     "allowBlank": false,
-                    "editable": false,
                     "forceSelection": true,
                     "store": [
                         "15px",
@@ -40,8 +75,7 @@
                         "25px",
                         "30px",
                         "35px"
-                    ],
-                    "queryMode": "local"
+                    ]
                 }
             ]
         },
@@ -52,28 +86,25 @@
             "items": [
                 {
                     "xtype": "mz-input-selectmulti",
-                    "name": "fonts",
-                    "fieldLabel": "Use Google Web Fonts",
+                    "name": "loadGoogleFonts",
+                    "fieldLabel": "Load Google Fonts",
+                    "allowBlank": false,
+                    "forceSelection": true,
                     "store": [
-                        [ "Source Sans Pro:regular,italic,bold,bolditalic", "Source Sans Pro" ],
-                        [ "Open Sans:regular,italic,bold,bolditalic", "Open Sans" ],
-                        [ "Raleway:regular,italic,bold,bolditalic", "Raleway" ],
-                        [ "Lora:regular,italic,bold,bolditalic", "Lora" ],
-                        [ "Rokkitt:regular,italic,bold,bolditalic", "Rokkitt" ]
+                       "Source Sans Pro",
+                       "Open Sans",
+                       "Raleway",
+                       "Lora",
+                       "Rokkitt"
                     ]
                 },
                 {
                     "xtype": "mz-input-dropdown",
-                    "name": "fallbackFontFamily",
-                    "fieldLabel": "Fallback Font Family (if Googld fonts don't load)",
+                    "name": "primaryFont",
+                    "fieldLabel": "Primary Font",
                     "allowBlank": false,
-                    "editable": false,
-                    "forceSelection": true,
-                    "store": [
-                        "sans-serif",
-                        "serif"
-                    ],
-                    "queryMode": "local"
+                    "storeFrom": "loadGoogleFonts",
+                    "forceSelection": true
                 },
                 {
                     "xtype": "mz-input-dropdown",
@@ -88,8 +119,7 @@
                         "16px",
                         "18px",
                         "20px"
-                    ],
-                    "queryMode": "local"
+                    ]
                 },
                 {
                     "xtype": "mz-input-color",
@@ -103,19 +133,28 @@
             "title": "Paging",
             "collapsed": false,
             "items": [
+
                 {
-                    "fieldLabel": "Default Items Per Page",
-                    "xtype": "mz-input-dropdown",
-                    "name": "defaultPageSize",
+                    "fieldLabel": "Show these options for \"Items per page\"",
+                    "xtype": "mz-input-selectmulti",
+                    "name": "pageSizeOptions",
                     "allowBlank": false,
-                    "editable": false,
                     "forceSelection": true,
                     "store": [
                         15,
                         25,
-                        50
-                    ],
-                    "queryMode": "local"
+                        50,
+                        100,
+                        500
+                    ]
+                },
+                {
+                    "fieldLabel": "Default items per page",
+                    "xtype": "mz-input-dropdown",
+                    "name": "defaultPageSize",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "storeFrom": "pageSizeOptions"
                 }
             ]
         },
