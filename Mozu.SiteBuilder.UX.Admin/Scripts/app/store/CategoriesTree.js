@@ -16,6 +16,9 @@ Ext.define('Taco.store.CategoriesTree', {
         isLoaded:false,
         id:-1
     },
+    nodeSorter: function(a, b) {
+        return (a.get('sequence') !== null ? a.get('sequence') : 9999) - (b.get('sequence') !== null ? b.get('sequence') : 9999);
+    },
     storeManagerConfig: {},
     load: function (options) {
         var me = this;
@@ -45,7 +48,6 @@ Ext.define('Taco.store.CategoriesTree', {
                 callback: options
             };
         }
-
 
         options = Ext.apply({
             catalogId: catalogId

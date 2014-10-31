@@ -424,6 +424,7 @@
     <Compile Include="Admin\Api\ModelMapping\Perf\PerfUtil.cs" />
     <Compile Include="Admin\Api\Models\PagingParametersTests.cs" />
     <Compile Include="Admin\Api\SecureCapabilityConfigUrlTest.cs" />
+    <Compile Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
@@ -453,6 +454,7 @@
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdLocation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProductVariation.cd" />
     <None Include="Diagrams\Admin\Api\Models\ProductModels\cdProduct.cd" />
+    <None Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProduct-View-Js.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProductImages.cd" />
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProductSearchJs.cd" />
