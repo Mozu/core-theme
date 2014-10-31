@@ -319,6 +319,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             ViewData["useGoogleAnalytics"] = ConfigurationManager.AppSettings["useGoogleAnalytics"];
             ViewData["googleAnalyticsAccount"] = ConfigurationManager.AppSettings["googleAnalyticsAccount"];
             ViewData["siteUsers"] = siteUsers.Items;
+            ViewData["showBristReport"] = _settings.AppSettings("showBirstReport"); 
 
             try
             {
