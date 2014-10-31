@@ -57,7 +57,6 @@ Ext.define('Taco.platter.SimpleField', {
         });
     },
     initDeps: function() {
-        var self = this;
         if (this.storeFrom) {
             this.bindStoreFrom();
         }
@@ -76,75 +75,104 @@ Ext.define('Taco.platter.SimpleField', {
     }
 });
 
-function mix(cfg) {
-    cfg.mixins = cfg.mixins || [];
-    Ext.Array.include(cfg.mixins, 'Taco.platter.SimpleField');
-    if (!cfg.initComponent) cfg.initComponent = function commonConstructor() {
-        this.initDeps();
-        this.callParent(arguments);
-    };
-    return cfg;
-}
-Ext.define('Taco.platter.fields.DateTime', mix({
+Ext.define('Taco.platter.fields.DateTime', {
     extend: 'Taco.core.ux.picker.DateTime',
     format:'c',
-    alias: ['widget.mz-input-date']
-}));
+    alias: ['widget.mz-input-date'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    }
+});
 
-Ext.define('Taco.platter.fields.Code', mix({
+Ext.define('Taco.platter.fields.Code', {
     extend: 'Taco.core.ux.form.field.Code',
     alias: ['widget.mz-input-code'],
-    mode: 'html'
-}));
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
+    mode: 'html',
+    width: 360
+});
 
-Ext.define('Taco.platter.fields.HtmlEditor', mix({
+Ext.define('Taco.platter.fields.HtmlEditor', {
     extend: 'Ext.form.HtmlEditor',
     alias: ['widget.mz-input-richtext'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     enableAlignments: false,
     enableColors:false,
     enableFont: false,
-    enableFontSize:false
-}));
+    enableFontSize: false,
+    width: 360
+});
 
-Ext.define('Taco.platter.fields.TextArea', mix({
+Ext.define('Taco.platter.fields.TextArea', {
     extend: 'Ext.form.field.TextArea',
-    alias: ['widget.mz-input-richtext']
-}));
+    alias: ['widget.mz-input-richtext'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
+    width: 360
+});
 
-Ext.define('Taco.platter.fields.Text', mix({
+Ext.define('Taco.platter.fields.Text', {
     extend: 'Ext.form.field.Text',
     alias: ['widget.mz-input-text'],
-    width: 220
-}));
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
+    width: 260
+});
 
-Ext.define('Taco.platter.fields.DropDown', mix({
+Ext.define('Taco.platter.fields.DropDown', {
     extend: 'Ext.form.field.ComboBox',
     alias: ['widget.mz-input-dropdown'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     queryMode: 'local',
     editable: false,
     triggerAction: 'all',
     typeAhead: false,
     queryMode: 'local',
     editable: false,
-    width: 220
+    width: 260
+});
 
-}));
-
-Ext.define('Taco.platter.fields.MultiSelect', mix({
+Ext.define('Taco.platter.fields.MultiSelect', {
     extend: 'Ext.ux.form.field.BoxSelect',
     alias: ['widget.mz-input-selectmulti'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     cls: 'mz-input-selectmulti',
     multiSelect: true,
     margin: 0,
     triggerOnClick: false,
     typeAhead: true,
-    width: 220
+    width: 260
 
-}))
+});
 
 Ext.define('Taco.platter.fields.Checkbox', {
     extend: 'Ext.form.field.Checkbox',
     alias: ['widget.mz-input-checkbox'],
+    mixins: ['Taco.platter.SimpleField'],
     initComponent: function() {
         this.boxLabel = this.boxLabel || this.fieldLabel;
         delete this.fieldLabel;
@@ -153,88 +181,154 @@ Ext.define('Taco.platter.fields.Checkbox', {
     }
 });
 
-Ext.define('Taco.platter.fields.Number', mix({
+Ext.define('Taco.platter.fields.Number', {
     extend: 'Ext.form.field.Number',
     alias: ['widget.mz-input-number'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     allowDecimals: false,
     hideTrigger: true,
-    mouseWheelEnabled: false
+    mouseWheelEnabled: false,
+    width: 260
 
-}));
+});
 
-Ext.define('Taco.platter.fields.Image', mix({
+Ext.define('Taco.platter.fields.Image', {
     extend: 'Taco.core.ux.form.field.BaseImageField',
-    alias: ['widget.mz-input-image'],   
-}));
+    alias: ['widget.mz-input-image'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    }
+});
 
-Ext.define('Taco.platter.fields.ImageSimple', mix({
+Ext.define('Taco.platter.fields.ImageSimple', {
     extend: 'Taco.core.ux.form.field.BaseImageField',
     alias: ['widget.mz-input-image-nostyle'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     allowStyles: false
-}));
+});
 
-Ext.define('Taco.platter.fields.ImageUrl', mix({
+Ext.define('Taco.platter.fields.ImageUrl', {
     extend: 'Taco.core.ux.form.field.BaseImageField',
     alias: ['widget.mz-input-imageurl'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     allowStyles: false,
     dataFormat: 'urlOnly',
     allowAltText: false
-}));
+});
 
-Ext.define('Taco.platter.fields.Product', mix({
+Ext.define('Taco.platter.fields.Product', {
     extend: 'Taco.shared.view.field.Product',
     emptyText: 'Select Product',
     alias: ['widget.mz-input-product'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     multiSelect: false
-}));
+});
 
-Ext.define('Taco.platter.fields.MultiProduct', mix({
+Ext.define('Taco.platter.fields.MultiProduct', {
     extend: 'Taco.shared.view.field.Product',
     emptyText: 'Select Products',
     alias: ['widget.mz-input-productmulti'],
-}));
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    }
+});
 
-Ext.define('Taco.platter.fields.Category', mix({
+Ext.define('Taco.platter.fields.Category', {
     extend: 'Taco.shared.view.field.Category',
     alias: ['widget.mz-input-category'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     multiSelect: false
-}));
+});
 
-Ext.define('Taco.platter.fields.MultiCategory', mix({
+Ext.define('Taco.platter.fields.MultiCategory', {
     extend: 'Taco.shared.view.field.Category',
     alias: ['widget.mz-input-categorymulti'],
-}));
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    }
+});
 
-Ext.define('Taco.platter.fields.Discount', mix({
+Ext.define('Taco.platter.fields.Discount', {
     extend: 'Taco.shared.view.field.Discount',
     alias: ['widget.mz-input-discount'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     emptyText: 'Select Discount',
     multiSelect: false
-}));
+});
 
-Ext.define('Taco.platter.fields.MultiDiscount', mix({
+Ext.define('Taco.platter.fields.MultiDiscount', {
     extend: 'Taco.shared.view.field.Discount',
     alias: ['widget.mz-input-discountmulti'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     emptyText: 'Select Discounts',
     multiSelect: true
-}));
+});
 
-Ext.define('Taco.platter.fields.NavNode', mix({
+Ext.define('Taco.platter.fields.NavNode', {
     extend: 'Taco.shared.view.field.NavNode',
     alias: ['widget.mz-input-navnode'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     emptyText: 'Select Navigation Nodes',
     multiSelect: false
-}));
+});
 
-Ext.define('Taco.platter.fields.MultiNavNode', mix({
+Ext.define('Taco.platter.fields.MultiNavNode', {
     extend: 'Taco.shared.view.field.NavNode',
     alias: ['widget.mz-input-navnodemulti'],
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
     emptyText: 'Select Navigation Nodes',
     multiSelect: true
-}));
+});
 
-Ext.define('Taco.platter.fields.Color', mix({
+Ext.define('Taco.platter.fields.Color', {
     extend: 'Taco.core.ux.form.ColorField',
     alias: ['widget.mz-input-color'],
-    width: 220
-}));
+    mixins: ['Taco.platter.SimpleField'],
+    initComponent: function() {
+        this.initDeps();
+        this.callParent(arguments);
+    },
+    width: 260
+});

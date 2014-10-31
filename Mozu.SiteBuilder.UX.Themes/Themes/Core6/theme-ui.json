@@ -36,7 +36,7 @@
         },
         {
             "xtype": "panel",
-            "title": "Search Suggestions",
+            "title": "Search",
             "collapsed": false,
             "items": [
                 {
@@ -46,14 +46,8 @@
                 },
                 {
                     "xtype": "mz-input-checkbox",
-                    "name": "searchExpandOnFocus",
-                    "fieldLabel": "Expand search input field when focused",
-                    "enableIf": "useSearchAutocomplete"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "autocompleteProducts",
-                    "fieldLabel": "Show product details in search suggestions",
+                    "name": "suggestPriorSearchTerms",
+                    "fieldLabel": "Show search terms others used on this site in search suggestions",
                     "enableIf": "useSearchAutocomplete"
                 }
             ]
@@ -91,11 +85,11 @@
                     "allowBlank": false,
                     "forceSelection": true,
                     "store": [
-                       "Source Sans Pro",
-                       "Open Sans",
-                       "Raleway",
-                       "Lora",
-                       "Rokkitt"
+                        "Source Sans Pro",
+                        "Open Sans",
+                        "Raleway",
+                        "Lora",
+                        "Rokkitt"
                     ]
                 },
                 {
@@ -135,7 +129,7 @@
             "items": [
 
                 {
-                    "fieldLabel": "Show these options for \"Items per page\"",
+                    "fieldLabel": "Show these page size options",
                     "xtype": "mz-input-selectmulti",
                     "name": "pageSizeOptions",
                     "allowBlank": false,
