@@ -9,7 +9,7 @@ Ext.define('Taco.controller.Categories', {
     editorView: 'Taco.view.category.Edit',
     listView: null,
     models: ['Category'],
-    views: ['category.Index', 'category.Index'],
+    views: ['category.Index'],
     stores: ['Categories'],
     modelName: 'Category',
 
