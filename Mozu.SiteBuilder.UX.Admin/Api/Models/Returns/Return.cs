@@ -23,6 +23,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         public int SiteId { get; set; }
 
+        /// <summary>
+        /// ???
+        /// </summary>
         public string UserId { get; set; }
         #endregion
 

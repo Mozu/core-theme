@@ -9,20 +9,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
     {
         public string Id { get; set; }
 
-        public List<Mozu.CommerceRuntime.Contracts.Orders.OrderNote> Notes { get; set; }
+        public string RmaNote { get; set; }
 
+        /// <summary>
+        /// Need OrderItemId or ProductCode.
+        /// </summary>
         public string OrderItemId { get; set; }
 
         /// <summary>
-        /// The quantity of this item that the shopper wants to return.
-        ///</summary>
-        public int Quantity { get; set; }
+        /// Need ProductCode or OrderItemId.
+        /// </summary>
+        public string ProductCode { get; set; }
 
         /// <summary>
         /// Damaged, Defective, MissingParts, DifferentExpectations, Late, NoLongerWanted, Other
         /// This value is provided by the Shopper when they request a Return.
         ///</summary>
         public string ReturnReason { get; set; }
+
+        /// <summary>
+        /// The quantity of this item that the shopper wants to return.
+        ///</summary>
+        public int Quantity { get; set; }
 
         /// <summary>
         /// The amount of this item actually received from the shopper. It may differ

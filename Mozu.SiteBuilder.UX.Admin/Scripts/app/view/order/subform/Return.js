@@ -184,42 +184,17 @@ Ext.define('Taco.view.order.subform.Return', {
     */
 
     createReturn: function (type, items) {
-
-        var parentBundles = {},
-            newItems = [];
-
-        Ext.Array.each(items, function (item) {
-            if (item.parentItemId) {
-                if (item.parentItemId in parentBundles) {
-                    parentBundles[item.parentItemId].bundledProducts.push(item);
-                } else {
-                    parentBundles[item.parentItemId] = {
-                        orderItemId: item.parentItemId,
-                        quantity: 1,
-                        reason: item.reason,
-                        bundledProducts: [item]
-                    };
-                }
-            } else {
-                newItems.push(item);
-            }
-        });
-
-        console.log(type, items);
-
         return this.getReturnsStore().add({
             originalOrderId: this.record.getId(),
-            type: type,
-            items: Ext.Array.map(newItems.concat(Ext.Object.getValues(parentBundles)), function (item) {
-                if (item.reason === 'Other') {
-                    item.rmaNote = 'Other';
-                }
-
-                item.reasons = [{
-                    reason: item.reason,
-                    quantity: item.quantity
-                }];
-                return item;
+            returnType: type,
+            items: Ext.Array.map(items, function (item) {
+                return {
+                    orderItemId: item.data.orderItemId,
+                    productCode: item.data.orderItemId ? null : item.data.productCode, // only provide product code when there is no orderItemId
+                    returnReason: item.data.reason,
+                    quantity: item.data.quantity,
+                    rmaNote: item.data.returnReason === 'Other' ? 'Other' : null
+                };
             })
         })[0];
     },
@@ -237,12 +212,12 @@ Ext.define('Taco.view.order.subform.Return', {
 
             selected = this.returnableItems.getSelectionModel().getSelection();
 
-
         if (selected.length === 0) {
             this.returnableItemsErrorEl.setError('Please select items to return.');
             return false;
         }
 
+        // if any items are checked for return, but have quantity == 0, reject this call.
         if (Ext.Array.some(selected, function (item) {
             return !item.get('quantity');
         })) {
@@ -250,11 +225,8 @@ Ext.define('Taco.view.order.subform.Return', {
             return false;
         }
 
-        Ext.Array.each(this.returnableItems.getSelectionModel().getSelection(), function (item) {
-            var returnType = item.get('returnType');
-            if (returnType === "Replace") replaceItems.push(item.getData());
-            if (returnType === "Refund") refundItems.push(item.getData());
-        }, this);
+        replaceItems = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Replace' } );
+        refundItems  = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Refund' } );
 
         if (refundItems.length > 0) records.push(this.createReturn("Refund", refundItems));
         if (replaceItems.length > 0) records.push(this.createReturn("Replace", replaceItems));
@@ -271,6 +243,7 @@ Ext.define('Taco.view.order.subform.Return', {
                 this.createButton.setDisabled(false);
             },
             success: function () {
+                debugger;
                 Ext.Array.each(records, this.addProcessReturnPanel, this, true);
                 //after we add the new return we need to reload the returnable items grid data;
                 me.refreshReturnableItemsGrid();

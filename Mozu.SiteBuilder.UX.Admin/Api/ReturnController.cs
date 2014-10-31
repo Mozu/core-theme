@@ -64,9 +64,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 		[HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<List<OldReturn>>> Create(List<OldReturn > returns )
+        public async Task<Response<List<Return>>> Create(List<Return> returns )
 		{
-		    var retList = new List<OldReturn>();
+		    var retList = new List<Return>();
             foreach (var rma in returns)
             {
                 var dcRma = Mapper.Map<DCr.Return>(rma);
@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     
                     
                 }
-                retList.Add(Mapper.Map<OldReturn>(dcRma));
+                retList.Add(Mapper.Map<Return>(dcRma));
             }
 
             return List2(retList);
@@ -196,15 +196,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<Response<List<OldReturn>>> Edit(List<OldReturn> returns)
+        public async Task<Response<List<Return>>> Edit(List<Return> returns)
         {
-            var retList = new List<OldReturn>();
+            var retList = new List<Return>();
             foreach (var rma in returns)
             {
                 var dcRma = Mapper.Map<DCr.Return>(rma);
                 dcRma = (await _returnWebApiClient.UpdateReturn( dcRma.Id ,dcRma)).ReadAsSync();
                 
-                retList.Add(Mapper.Map<OldReturn>(dcRma));
+                retList.Add(Mapper.Map<Return>(dcRma));
             }
 
             return List2(retList);
