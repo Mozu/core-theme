@@ -103,9 +103,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
             .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
-            .ForMember(dc => dc.OrderItemId, op => op.ResolveUsing(x => x.OrderItemId))
+            .ForMember(dc => dc.OrderItemId, op => op.ResolveUsing(x => String.IsNullOrEmpty(x.OrderItemId) ? null : x.OrderItemId))
             .ForMember(dc => dc.Product, op => op.ResolveUsing(x => x.ProductCode == null ? null : new ProductsDC.Product { ProductCode = x.ProductCode }))
-            .ForMember(dc => dc.OrderItemId, op => op.ResolveUsing(x => x.OrderItemId))
             .ForMember(dc => dc.Reasons, op => op.ResolveUsing(x => new List<ReturnsDC.ReturnReason> { new ReturnsDC.ReturnReason { Quantity = x.Quantity, Reason = x.ReturnReason } }))
             .ForMember(dc => dc.Notes, op => op.ResolveUsing(x => !String.IsNullOrEmpty(x.RmaNote) ? new List<OrdersDC.OrderNote> { new OrdersDC.OrderNote { Text = x.RmaNote } } : null))
             .ForMember(dc => dc.QuantityReceived, op => op.ResolveUsing(x => x.QuantityReceived))
