@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private static List<string> CompletedOrderStates = new List<string>{
             Order.OrderStatusConst.SUBMITTED,
             Order.OrderStatusConst.ACCEPTED,
-            Order.OrderStatusConst.PENDING_REVIEW,
+            Order.OrderStatusConst.PENDING_REVIEW, 
             Order.OrderStatusConst.COMPLETED
         };
 

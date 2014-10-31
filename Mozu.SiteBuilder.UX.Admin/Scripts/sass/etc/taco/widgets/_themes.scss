@@ -27,7 +27,7 @@
         }
 
         .title {
-            font-size: 13px;
+            font-size: 17px;
             height: 30px;
             padding: 8px 0px 0px 20px;
         }
@@ -89,11 +89,12 @@
         }
 
         .icon {
-            margin: 0px 12px 22px 20px;
+            margin: 0px 0px 22px 20px;
         }
 
         .text {
             margin-bottom: 24px;
+            font-size: 15px;
         }
 
         .actions {
@@ -101,7 +102,7 @@
 
             a {
                 display: inline-block;
-                font-size: 10px;
+                font-size: 13px;
                 padding: 8px 20px;
                 vertical-align: baseline;
             }

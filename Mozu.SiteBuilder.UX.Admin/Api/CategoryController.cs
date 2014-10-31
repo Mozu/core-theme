@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 });
                 while (true)
                 {
-                    var cats = (await client.GetCategories(startIndex: start, pageSize: 600)).ReadAsSync();
+                    var cats = (await client.GetCategories(startIndex: start, pageSize: 600, sortBy:"sequence asc")).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
                     start = cats.PageSize + cats.StartIndex;
                     if (cats.TotalCount <= start )

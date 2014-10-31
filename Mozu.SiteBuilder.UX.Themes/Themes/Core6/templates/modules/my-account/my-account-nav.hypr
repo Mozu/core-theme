@@ -5,7 +5,7 @@
                 {{ labels.accountSettings }}
             </a>
         </li>
-        {% if themeSettings.allowWishlist %}
+        {% if siteContext.generalSettings.isWishlistCreationEnabled %}
         <li class="mz-scrollnav-item">
             <a class="mz-scrollnav-link" href="#wishlist">
                 {{ labels.accountMyWishlist }}

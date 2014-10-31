@@ -2,11 +2,10 @@
  * @class Taco.store.shared.TreeStore
  */
 
-
-
 Ext.define('Taco.store.shared.TreeStore', {
     extend: 'Ext.data.TreeStore',
     folderSort: false,
+    nodeSorter: null,
    
     onItemInsert: function (thisNode, newChildNode) {
         newChildNode.set('icon', Ext.BLANK_IMAGE_URL);
@@ -56,7 +55,11 @@ Ext.define('Taco.store.shared.TreeStore', {
         Ext.each(newNodes, function (newNode) {
             lookup[newNode.getId()] = newNode;
         }, this);
-        
+
+        if (this.nodeSorter) {
+            newNodes = Ext.Array.sort(newNodes, this.nodeSorter);
+        }
+
         Ext.each(newNodes, function (newNode) {
             var parent = lookup[newNode.get('parentId') || 666];
             if (parent) {
@@ -66,8 +69,8 @@ Ext.define('Taco.store.shared.TreeStore', {
             }
         }, this);
         
-        //appendChild (node, suppressEvents, commit) 
-        this.callParent([node, fillNodes]);
+        // todo: had to move call to end, else child nodes do not get registered - Greg Murray on 2014-10-31 
+        //this.callParent([node, fillNodes]);
         
         Ext.each(newNodes, function (newNode) {
             var parent = lookup[newNode.get('parentId') || 666];
@@ -78,5 +81,6 @@ Ext.define('Taco.store.shared.TreeStore', {
             }
         }, this);
         
+        this.callParent([node, fillNodes]);
     }
 });

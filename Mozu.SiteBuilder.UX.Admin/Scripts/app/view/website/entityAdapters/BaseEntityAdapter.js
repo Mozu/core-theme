@@ -95,7 +95,11 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
 
         if (me.editor) {
             me.editor.dirtyStateCheck();
+            
             if (me.editor.isDirty()) {
+                if (me.getDocument()) {
+                    me.getDocument().setDirty();
+                }
                 if ((me.pageContext.editMode || "").toLowerCase() === 'template') {
                     source = me.pageContext.cmsContext.template;
                 } else if ((me.pageContext.editMode || "").toLowerCase() === 'site') {
@@ -112,7 +116,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                     //}
                 });
 
-               
+                zoneData = Ext.clone(zoneData);
 
                 document = me.getDocument();
 
@@ -120,7 +124,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                    
                     editListener = function (item) {
                         var props;
-                        props = Ext.apply({}, item.get('properties'));
+                        props =  Ext.clone(item.get('properties'));
                         props.dropzones = zoneData;
                         item.suspendEvent('afteredit');
                         item.set('properties', props);

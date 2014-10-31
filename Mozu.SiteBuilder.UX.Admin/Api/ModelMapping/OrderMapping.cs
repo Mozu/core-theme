@@ -569,7 +569,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.UnitWeight))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
-
+            
                 //ignores
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
                 .ForMember(x => x.Id, op => op.Ignore())
@@ -592,7 +592,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductDiscount, op => op.Ignore())
                 .ForMember(dc => dc.ProductUsage, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                 .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
-
+            
                 
 
 //                             ProductCode = orderItem.ProductCode,

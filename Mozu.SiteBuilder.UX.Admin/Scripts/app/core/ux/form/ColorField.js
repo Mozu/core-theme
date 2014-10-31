@@ -24,6 +24,25 @@ Ext.define('Taco.core.ux.form.ColorField', {
         });
     },
 
+    getChannelValues: function(value) {
+        if (value.indexOf('rgb') === 0) return value.match(/\d+/g).map(Number);
+        var hex = value.match(/0-9a-fA-F+/g);
+        if (!hex) return [0, 0, 0];
+        return hex.match(new RegExp('.{' + (hex.length / 3) + '}', 'g')).map(function(v) { return parseInt(v, 16); });
+    },
+
+    getLuminance: function(value) {
+        var channelValues = this.getChannelValues(value),
+            red = channelValues[0],
+            green = channelValues[1],
+            blue = channelValues[2];
+        return 0.299 * red + 0.587 * green + 0.114 * blue;
+    },
+
+    getContrastColor: function(color) {
+        return this.getLuminance(color) > 128 ? '#000000' : '#FFFFFF';
+    },
+
     initColors: function () {
         this.on({
             focus: {
@@ -56,7 +75,7 @@ Ext.define('Taco.core.ux.form.ColorField', {
 
         this.inputEl.setStyle({
             backgroundColor: this.value,
-            color: this.value
+            color: this.getContrastColor(this.value)
         });
     },
 
@@ -64,7 +83,7 @@ Ext.define('Taco.core.ux.form.ColorField', {
         if (this.inputEl && this.inputEl.setStyle) {
             this.inputEl.setStyle({
                 backgroundColor: value,
-                color: value
+                color: this.getContrastColor(value)
             });
         }
         this.callParent(arguments);
