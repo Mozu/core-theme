@@ -1,5 +1,5 @@
 /*! 
- * mozu-require - v2.1.10 - 2014-03-12
+ * Mozu Require - v0.2.0 - 2014-09-18
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2644,7 +2644,9 @@ define('shim', function () {
                 deps = name.substring(firstBr + 1, lastBr);
             }
             var sep = modulePath.indexOf('?') === -1 ? '?' : '&';
-            req([modulePath + sep + 'shimRequire=' + encodeURIComponent(deps).replace(/!/g, "%21") + '&shimExport=' + exportValue], onLoad);
+            var url = modulePath + sep + 'shimRequire=' + encodeURIComponent(deps).replace(/!/g, "%21") + '&shimExport=' + exportValue;
+            if (storeMode === "debug") url += "&debug=true";
+            req([url], onLoad);
         }
     }
 

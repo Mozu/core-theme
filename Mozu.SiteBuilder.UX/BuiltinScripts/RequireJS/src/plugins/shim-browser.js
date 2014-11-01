@@ -25,7 +25,9 @@ define('shim', function () {
                 deps = name.substring(firstBr + 1, lastBr);
             }
             var sep = modulePath.indexOf('?') === -1 ? '?' : '&';
-            req([modulePath + sep + 'shimRequire=' + encodeURIComponent(deps).replace(/!/g, "%21") + '&shimExport=' + exportValue], onLoad);
+            var url = modulePath + sep + 'shimRequire=' + encodeURIComponent(deps).replace(/!/g, "%21") + '&shimExport=' + exportValue;
+            if (storeMode === "debug") url += "&debug=true";
+            req([url], onLoad);
         }
     }
 
