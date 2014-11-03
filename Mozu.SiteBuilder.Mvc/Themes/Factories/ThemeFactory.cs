@@ -87,11 +87,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 
         private static IEnumerable<TOut> Merge<TOut>(IEnumerable<TOut> themeValues, IEnumerable<TOut> parentValues, Func<TOut, string> identifierMember)
         {
-            var p = (parentValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x);
-            var t = (themeValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x);
+            var p = (parentValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x, StringComparer.OrdinalIgnoreCase);
+            var t = (themeValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x, StringComparer.OrdinalIgnoreCase);
 
-            var output = MergeValuesPreferChild(p, t);
-            
+            var output = MergeValuesPreferChild(p, t, StringComparer.OrdinalIgnoreCase);
             return output.Select(x => x.Value);
         }
 
@@ -117,13 +116,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             return mergedDictionary;
         }
 
-        private static Dictionary<TKey,TValue> MergeValuesPreferChild<TKey, TValue>(Dictionary<TKey, TValue> parentThemeValues, Dictionary<TKey, TValue> childThemeValues)
+        private static IEnumerable<KeyValuePair<TKey,TValue>> MergeValuesPreferChild<TKey, TValue>(Dictionary<TKey, TValue> parentThemeValues, Dictionary<TKey, TValue> childThemeValues, IEqualityComparer<TKey> comparer)
         {
-            var uniqueValues =  childThemeValues.Concat(parentThemeValues.Where(x => !childThemeValues.ContainsKey(x.Key)));
-
-            var converted = new Dictionary<TKey, TValue>();
-            converted.AddRange(uniqueValues);
-            return converted;
+            var uniqueValues =  childThemeValues.Concat(parentThemeValues.Where(x => !childThemeValues.Keys.Contains(x.Key, comparer)));
+            return uniqueValues;
         }
     }
 }

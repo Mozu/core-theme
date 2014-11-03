@@ -10,3 +10,6 @@
     {% dropzone "notfound" scope="template" %}
 </div>
 {% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

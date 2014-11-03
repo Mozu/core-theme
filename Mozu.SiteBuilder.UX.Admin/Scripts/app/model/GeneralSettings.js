@@ -16,23 +16,24 @@ Ext.define('Taco.model.GeneralSettings', {
     
     fields: [
         { "name": "allowAllIps", "type": "boolean", "useNull": true },
-        { "name": "daylightSaving", "type": "boolean", "useNull": true },
+        { "name": "adjustForDaylightSavingTime", "type": "boolean", "useNull": true },
         { "name": "favIconMobilePath", "type": "string", "useNull": true },
         { "name": "favIconPath", "type": "string", "useNull": true },
-        { "name": "googleAnalyticsEcomEnabled", "type": "boolean", "useNull": true },
-        { "name": "googleAnalyticsEnabled", "type": "boolean", "useNull": true },
-        { "name": "googleAnalyticsId", "type": "string", "useNull": true },
+        { "name": "isGoogleAnalyticsEcommerceEnabled", "type": "boolean", "useNull": true },
+        { "name": "isGoogleAnalyticsEnabled", "type": "boolean", "useNull": true },
+        { "name": "googleAnalyticsCode", "type": "string", "useNull": true },
         { "name": "logoPath", "type": "string", "useNull": true },
         { "name": "logoText", "type": "string", "useNull": true },
-        { "name": "replyToEmail", "type": "string", "useNull": true },
-        { "name": "senderEmail", "type": "string", "useNull": true },
-        { "name": "senderEmailName", "type": "string", "useNull": true },
+        { "name": "replyToEmailAddress", "type": "string", "useNull": true },
+        { "name": "senderEmailAddress", "type": "string", "useNull": true },
+        { "name": "senderEmailAddressName", "type": "string", "useNull": true },
         { "name": "isAddressValidationEnabled", "type": "boolean", "useNull": true },
         { "name": "allowInvalidAddresses", "type": "boolean", "useNull": true },
+        { "name": "isWishlistCreationEnabled", "type": "boolean", "useNull": true },
         // customer experience template
         { "name": "templateSiteId", "type": "integer", "useNull": true },
-        { "name": "timeFormat", "type": "string", "useNull": true },
-        { "name": "timeZone", "type": "string", "useNull": true },
+        { "name": "siteTimeFormat", "type": "string", "useNull": true },
+        { "name": "siteTimeZone", "type": "string", "useNull": true },
         { "name": "websiteName", "type": "string", "useNull": true },        
 
 

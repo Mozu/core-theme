@@ -20,7 +20,7 @@ Ext.define('Taco.controller.GeneralSettings', {
                 success: function (record) {
                     Taco.app.setLoading(false);
                     me.createContentView('Taco.view.generalSettings.Index', {
-                        record: record
+                        record: record      
                     });
                 },
                 failure: function () {
