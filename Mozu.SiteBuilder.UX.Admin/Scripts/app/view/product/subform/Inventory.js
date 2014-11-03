@@ -11,6 +11,8 @@ Ext.define('Taco.view.product.subform.Inventory', {
     
     // enables the manage button; This is part of future work;
     manageEnabled: true,
+
+    bodyPadding:"10 0 0 0",
     
     initComponent: function () {
         var me = this,
@@ -27,7 +29,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 ui: "action",
                 hidden: this.product.get("productUsage") == "Bundle",
                 scale: "medium",
-                margin: "0 0 20, 0",
+                margin: "0 0 0, 0",
                 text: "Manage Inventory",
                 handler: me.manageInventory,
                 scope: me

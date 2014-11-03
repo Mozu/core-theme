@@ -13,6 +13,8 @@ Ext.define('Taco.view.product.subform.Shipping', {
     alias: 'widget.productshippingsubform',
     title: 'Shipping',
     
+    bodyPadding:"19 0 0 0",
+
     initComponent: function () {
         var me = this;
         

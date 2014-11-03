@@ -10,6 +10,8 @@ Ext.define('Taco.view.product.subform.SEO', {
     alias: 'widget.productseosubform',
     title: 'SEO',
 
+    bodyPadding: '0 0 0 0',
+
     initComponent: function () {
      
 
