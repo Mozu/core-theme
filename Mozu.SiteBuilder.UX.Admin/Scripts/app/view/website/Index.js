@@ -349,10 +349,8 @@ Ext.define('Taco.view.website.Index', {
                                         itemId: 'iframe',
                                         xtype: 'uxiframe',
                                         src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend(this.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme))
-                                    }, {
-                                        xtype: 'splitter'
-
-                                    }, {
+                                    },
+                                    {
                                         xtype: 'component',
                                         itemId: 'iframeOffset',
                                         width: 0
@@ -405,7 +403,7 @@ Ext.define('Taco.view.website.Index', {
                             overflow: 'visible'
                         },
                         split: {
-                            canResize: false,
+                            canResize: true,
                             size: 10
                         },
                         layout: {

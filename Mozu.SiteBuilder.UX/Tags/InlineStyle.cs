@@ -21,7 +21,10 @@ namespace Mozu.SiteBuilder.UX.Tags
             try
             {
                 var controller = context.Resolve<ResourceController>();
-                controller.Request = context.Resolve<HttpRequestMessage>();
+
+              
+                controller.RequestContext = context.ViewContext().RequestMessage.GetRequestContext();
+                controller.Request = context.ViewContext().RequestMessage;
                 var path = (string)arguments[0].Value;
 
                 var result = controller.Stylesheets(path);
