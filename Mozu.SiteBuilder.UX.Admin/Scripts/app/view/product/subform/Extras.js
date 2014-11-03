@@ -18,6 +18,9 @@ Ext.define('Taco.view.product.subform.Extras', {
         type: 'vbox',
         align: 'stretch'
     },
+
+    bodyPadding: '19 0 0 0',
+
     statics: {
         editors: {
             'List': function (ptAttribute, values) {
@@ -245,46 +248,43 @@ Ext.define('Taco.view.product.subform.Extras', {
         extra.checkbox = checkbox;
         extra.isMultiSelect = isMultiSelect;
 
+        
+
         items = [
-            {
-                xtype: 'container',
-                cls: 'extra-header',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch'
-                },
-                items: [
-                    {
-                        xtype: 'component',
-                        cls: 'extra-attribute',
-                        html: ptAttribute.get('attributeName'),
-                        flex: 1
-                    },
-                    {
-                        xtype: 'tool',
-                        type: 'delete',
-                        hidden: ptAttribute.get('isRequired'),
-                        scope: this,
-                        handler: function () {
-                            console.log('delete');
-                            me.product.getExtras().remove(pExtra);
-                            me.availableAttributes.filter();
-                            editor.up().remove(editor);
-                        }
-                    }
-                ]
-            },
             editorCfg, {
                 xtype: 'container',
-                cls: 'extra-required',
+                //cls: 'extra-required',
                 items: [checkbox, isMultiSelect]
             }
         ];
 
-
+        var requiredCls = "";
+        if (ptAttribute.data.isRequired) {
+            requiredCls = " taco-attribute-form-required";
+        }
         return editor = Ext.widget({
-            xtype: 'container',
-            cls: 'taco-attribute-form',
+            xtype: 'panel',
+            cls: 'taco-attribute-form' + requiredCls,
+            ui: 'subform-section-child',
+            title: ptAttribute.get('attributeName'),
+            margin: '10 0 10 0',
+            bodyPadding: '0 10 10 10',            
+            tools: [
+                {
+                    xtype: "button",
+                    text: "Delete",
+                    ui: "action",
+                    scale: "medium",
+                    hidden: ptAttribute.get('isRequired'),
+                    scope: this,
+                    handler: function () {
+                        me.product.getExtras().remove(pExtra);
+                        me.availableAttributes.filter();
+                        editor.up().remove(editor);
+                        me.adderCombo.focus();
+                    }
+                }
+            ],
             items: items
         });
     },
@@ -324,15 +324,16 @@ Ext.define('Taco.view.product.subform.Extras', {
             ]);
         }
 
+        
         return {
             xtype: 'container',
             justify: false,
             items: [
+                //{
+                //    xtype: "component",
+                //    html: "<b>Store Front Label:</b> " + ptAttribute.data.attributeName
+                //},
                 {
-                    xtype: 'component',
-                    html: 'Store Label',
-                    width: 300
-                }, {
                     xtype: 'currencyfield',
                     currencyCode: Taco.app.context.getCurrent().currencyCode,
                     emptyText: '0',
@@ -340,6 +341,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                     unitAtEnd: false,
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: 'Extra Cost',
+                    labelStyle:"padding-top:0px",
                     value: pExtra ? pExtra.get('values')[0].deltaPrice : null,
                     listeners: {
                         change: function (field, value) {

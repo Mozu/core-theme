@@ -10,7 +10,7 @@ Ext.define('Taco.view.product.subform.Bundle', {
     ],
     itemId: 'bundleSubForm',
     title: 'Bundle Items',
-    margin: '20 0',
+    margin: '20 0',    
     initComponent: function () {
         var me = this,
             readOnly,
@@ -21,7 +21,7 @@ Ext.define('Taco.view.product.subform.Bundle', {
             xtype: 'button',
             ui: "action-primary",
             scale: "medium",
-            margin: "0 0 20, 0",
+            margin: "0 0 0, 0",
             text: "Add",
             handler: function() {
                 this.productBundleGrid.addItem();
