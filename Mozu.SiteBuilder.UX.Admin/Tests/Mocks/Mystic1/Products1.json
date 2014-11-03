@@ -10,26 +10,10 @@
       "manageStock": true,
       "productShortDescription": "With up to 1080p HD video, the smaller and lighter GoPro HERO3+ Silver Edition helmet cam is more powerful than ever, making it the most advanced Silver Edition camera yet.",
       "productFullDescription": "With up to 1080p HD video, the smaller and lighter GoPro HERO3+ Silver Edition helmet cam is more powerful than ever, making it the most advanced Silver Edition camera yet. &nbsp;<div><br></div><div><ul><li><span style=\"font-family: undefined; font-size: 12px;\">Wearable, gear-mountable and waterproof to 131 ft. (40m), it captures professional-quality video at resolutions up to 1080p and 10MP photos at up to 10 frames per second&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">With faster built-in Wi-Fi, enhanced low-light performance and 30% longer battery life, the HERO3+ Silver Edition makes capturing and sharing your life easier than ever&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">Faster built-in Wi-Fi for enhanced connectivity to the Wi-Fi remote and GoPro app&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">Enjoy improved image sharpness, reduced distortion, upgraded audio performance and 30% longer battery life&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">Video modes include professional 1080p60, 960p60, 720p at 120 fps; take 10MP still photos at up to 10 frames per second&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">Built-in Wi-Fi supports optional Wi-Fi remote, plus content preview, playback and sharing via the GoPro App; wireless camera software updates via the GoPro app&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">The GoPro HERO3+ Silver Edition features a 15% smaller and lighter housing that is waterproof to 131 ft. (40m)&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">Wearable, mountable design allows you to capture fast-action footage of yourself and your favorite activities&nbsp;</span><br></li><li><span style=\"font-family: undefined; font-size: 12px;\">Compatible with LCD Touch BacPac, Battery BacPac and all GoPro mounts for attaching to your body, gear, vehicles and more</span><br></li></ul></div>",
+        
       "productImages": [
-        {
-          "imageUrl": "https://pbs.twimg.com/profile_images/2690175609/82ae810934993ace212ea54e844815b7.jpeg",
-          "isoCultureCode": "en-US",
-          "sequence": 1,
-          "id": 7629
-        },
-        {
-         "imageUrl": "https://pbs.twimg.com/profile_images/2690175609/82ae810934993ace212ea54e844815b7.jpeg",
-          "isoCultureCode": "en-US",
-          "sequence": 2,
-          "id": 7630
-        },
-        {
-           "imageUrl": "https://pbs.twimg.com/profile_images/2690175609/82ae810934993ace212ea54e844815b7.jpeg",
-          "isoCultureCode": "en-US",
-          "sequence": 3,
-          "id": 7631
-        }
-      ],
+            
+        ],
       "isTaxable": true,
       "price": 299.99,
       "costCurrencyCode": "USD",
