@@ -40,17 +40,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string tmp;
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
-                
-                var ret = (await _documentWebApiClient.GetDocument(
-                    documentListName: MozuFilesDocList, 
-                    documentId :pagingParams.id
-                    )).ReadAsSync();
+                var ret = IsCmsId(pagingParams.id)
+                    ? (await _documentWebApiClient.GetDocument(documentListName: MozuFilesDocList, documentId :pagingParams.id)).ReadAsSync()
+                    : (await _documentWebApiClient.GetTreeDocument(documentListName: MozuFilesDocList, documentName :pagingParams.id)).ReadAsSync();
                 vm = new List<FileManagementFile>() { Mapper.Map<FileManagementFile>(ret) };
                 totalCount = 1;
             }
             else if (extFilter.TryGetValue("id", out tmp))
             {
-                var tasks = extFilter.Where(x => x.field == "id").Select(extF => _documentWebApiClient.GetDocument(MozuFilesDocList, documentId: (string)extF.value)).ToArray();
+                var tasks = extFilter.Where(x => x.field == "id").Select(extF => (IsCmsId(extF.value)) 
+                    ?  _documentWebApiClient.GetDocument(MozuFilesDocList, documentId: (string)extF.value)
+                    : _documentWebApiClient.GetTreeDocument(MozuFilesDocList, documentName: (string)extF.value)).ToArray();
                 await Task.WhenAll(tasks);
                 vm = tasks.Where(x => !x.Result.HasException).Select(x => x.Result.ReadAsSync()).Select(Mapper.Map<FileManagementFile>).ToList();
                 totalCount = vm.Count;
@@ -64,6 +64,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 totalCount = ret.TotalCount;
             }
             return List2(vm, totalCount);
+        }
+
+        private bool IsCmsId(object fileId)
+        {
+            Guid discard;
+            return Guid.TryParse((string)fileId, out discard);
         }
 
         [HttpPostRoute(UriTemplate = "file/create")]
