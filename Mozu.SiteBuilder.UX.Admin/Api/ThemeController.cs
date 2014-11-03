@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "thumNamil/{themeId}")]
         public async Task<HttpResponseMessage> GetThumbByTheme(string themeId)
         {
-            var theme = _themeRepository.GetTheme(new ThemeSelection() {Id = themeId});
+            var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = themeId });
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
             response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
@@ -159,13 +159,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Theme theme = null;
             try
             {
-                theme =_themeRepository.GetTheme(settings.DesktopTheme);
+                theme = _themeRepository.GetThemeSlim(settings.DesktopTheme);
             }
-            catch
+            catch (Exception ex)
             {
-                theme = _themeRepository.GetTheme(new ThemeSelection() {Id = "core5"});
+               _logger.Warn("error sitethumbNail", ex);
             }
-
+            theme =theme ?? _themeRepository.GetThemeSlim(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme });
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
@@ -205,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     try
                     {
-                        var ret= _themeRepository.GetTheme(new ThemeSelection(){Id=x});
+                        var ret = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = x });
                         if (ret != null && !ret.AllowProduction.GetValueOrDefault(true) && !allowNonProductionThemes)
                         {
                             ret = null;
@@ -231,8 +231,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<ThemeDTO>>> GetAddons(string themeId)
         {
             var localAddonDir = _themeRepository.GetLocalAddonPath();
-            
-            var theme = _themeRepository.GetTheme( new ThemeSelection() { Id=themeId});
+
+            var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = themeId });
 
             var themeSettings = (await _themeSettingsRepository.GetInstanceValues(themeId)) ?? new JObject();
 
@@ -301,7 +301,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 settings.DesktopTheme = new ThemeSelection()
                 {
-                    Id = "Core5"
+                    Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme 
                 };
             }
 
@@ -337,7 +337,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id ))
                 let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && settings.MobileTheme != null && t.Equals(settings.MobileTheme.Id))
                 let isSelectedTablet = (newTablet != null && newTablet.Equals(t)) || (newTablet == null && settings.TabletTheme != null && t.Equals(settings.TabletTheme.Id))
-                let fullTheme = _themeRepository.GetTheme( new ThemeSelection(){ Id=t.Id} )
+                let fullTheme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = t.Id })
                 select new ThemeDTO(settings , fullTheme, isSelectedDesktop, isSelectedMobile, isSelectedTablet);
 
             return List2(returnedThemesList.ToList());

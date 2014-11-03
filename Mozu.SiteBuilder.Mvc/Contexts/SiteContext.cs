@@ -85,7 +85,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             string url = requestMessage.RequestUri.ToString();
             
             IEnumerable<string> values;
-            if (requestMessage.Headers.TryGetValues(Constants.Headers.ORIGINAL_URL, out values))
+            if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
                 url = values.FirstOrDefault();
             }
