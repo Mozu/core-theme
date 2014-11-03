@@ -67,11 +67,10 @@ Ext.define('Taco.core.ux.tab.Picker', {
             var isChecked = Ext.Array.contains(checkedItems, recordId);
             var cb = Ext.widget({
                 xtype: 'checkbox',
-                value: recordId,
+                value: isChecked,
                 boxLabel: this.displayTpl.apply(record),  
                 data: record
             });
-            cb.setValue(isChecked);
             checkboxes.push(cb);
         }, this);
 
