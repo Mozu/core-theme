@@ -9,7 +9,7 @@
             if (config && config.imageClickAction === 'lightbox') {
                 imageUrl = config.imageSource === 'file' ? '/cms/files/' + config.imageFileId : config.imageExternalUrl;
 
-                ci.click(function (event) {
+                ci.on('click', function (event) {
                     event.preventDefault();
 
                     $.colorbox({
@@ -21,7 +21,7 @@
                         opacity: '0.7',
                         scalePhotos: true,
                         transition: 'none',
-                        onComplete: function(e) {
+                        onComplete: function() {
                             $('#cboxClose').html('X');
                         }
                     });
