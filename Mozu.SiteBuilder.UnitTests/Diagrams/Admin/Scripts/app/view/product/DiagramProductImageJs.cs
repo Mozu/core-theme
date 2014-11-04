@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product
 
     class cdExtFormFieldField
     {
-        public void setValue();
+        public void setValue() { }
 
         public void load(object[] filters) { }
     }
