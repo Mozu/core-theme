@@ -467,29 +467,18 @@ Ext.define('Taco.shared.view.field.Image', {
 
         //merge product/category images metadata with cms file data
         if (this.imageMetadata) {
-            var clonedMetadata = Ext.Array.clone(this.imageMetadata);
-            var warningMsgs = [];
-            for (var i = 0; i < clonedMetadata.length; i++) {
-                var imgMeta = clonedMetadata[i];
-                imgMeta.isMatched = false;
-
+            for (var i = 0; i < this.imageMetadata.length; i++) {
+                var imgMeta = this.imageMetadata[i];
                 Ext.Array.every(this.selectedImages.data.items, function(selectImg) {
                     if (imgMeta.cmsId === selectImg.get('cmsId') || imgMeta.cmsId === selectImg.get('name')) {
                         if (!selectImg.get('isMerged')) {
                             selectImg.set('alt', imgMeta.alt);
                             selectImg.set('isMerged', true);
                         }
-                        imgMeta.isMatched = true;
                         return false;
                     }
                     return true;
                 });
-                if (!imgMeta.isMatched) {
-                    warningMsgs.push(imgMeta.cmsId);
-                }
-            }
-            if (warningMsgs.length > 0) {
-                Taco.app.fireEvent('setmessage', 'The following image files are no longer available.  Saving will remove their association to this product and will need to be re-added. ' + warningMsgs.join(', '), 'warning');
             }
         }
 
@@ -497,7 +486,7 @@ Ext.define('Taco.shared.view.field.Image', {
             value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
         }, this);
 
-        if (value && value.length) {
+        if (value.length > 0) {
             this.emptyDropZone.hide();
             this.imageView.show();
         } else {
