@@ -24,7 +24,9 @@
 
     .thumb {
         background-position: 50% 50%;
-        background-size: cover;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: black;
         height: 140px;
         left: 50%;
         margin-left: -70px;
