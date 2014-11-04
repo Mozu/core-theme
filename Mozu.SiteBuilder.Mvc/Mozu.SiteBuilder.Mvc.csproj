@@ -224,9 +224,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.13.3\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.13.4\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -320,13 +320,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.1\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants">
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
