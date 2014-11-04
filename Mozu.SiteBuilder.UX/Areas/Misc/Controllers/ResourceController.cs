@@ -919,14 +919,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     throw new ParsingException("missing template setting '" + varName + "'",
                         new NodeLocation(match.Index, "", ""));
                 }
-                var str = obj.ToString();
-                if (string.IsNullOrEmpty(str))
-                {
-                    throw new ParsingException("empty template setting '" + varName + "'",
-                        new NodeLocation(match.Index, "", ""));
-                }
-                return str;
+                //var str = obj.ToString();
+                //if (string.IsNullOrEmpty(str))
+                //{
+                //    throw new ParsingException("empty template setting '" + varName + "'",
+                //        new NodeLocation(match.Index, "", ""));
+                //}
+                //return str;
 
+                return obj.ToString() ?? string.Empty;
             }
 
             public const string VISIBLE_LESS_ERROR_FILE_START = @"
