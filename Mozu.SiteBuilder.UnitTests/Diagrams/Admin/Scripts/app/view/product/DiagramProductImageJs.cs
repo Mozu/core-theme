@@ -9,12 +9,36 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product
 
     class cdTacoSharedViewFieldImage : cdExtFormFieldContainer
     {
+        public object[] filters;
+
         public cdTacoSharedViewModalImageMetadata modal;
 
         public cdExtFormFieldField mixinsField;
 
+        public cdSharedStoreFiles[] selectedImages;
+
         public void onItemClick() { }
+
+        public void setValue(object value) { }
+
+        public void onSelectedImagesDataChanged() { }
         
+    }
+
+    class cdSharedStoreFiles
+    {
+        public SharedModelFile model;
+    }
+
+    class SharedModelFile
+    {
+        public string cmsId;
+        public string name;
+        public string alt;
+        public bool isUploaded;
+        public string url;
+
+        public object proxy;
     }
 
     class cdTacoViewProductSubformGeneral
@@ -46,6 +70,8 @@ namespace Mozu.SiteBuilder.UnitTests.Diagrams.Admin.Scripts.app.view.product
 
     class cdExtFormFieldField
     {
-        
+        public void setValue();
+
+        public void load(object[] filters) { }
     }
 }
