@@ -171,12 +171,22 @@ Ext.define('Taco.view.category.Index', {
 
     onItemMove: function (node, oldParent, newParent, index, options) {
         var me = this,
-            store = me.store;
+            store = me.store,
+            i;
+
+        if (newParent && newParent.childNodes) {
+            //resequence nodes if needed
+            for (i = 0; i < newParent.childNodes.length; i++) {
+                if (newParent.childNodes[i].get('sequence') !== i) {
+                    newParent.childNodes[i].set('sequence', i);
+                }
+            }
+        }
 
         if (store.isDirty()) {
             me.setLoading(true);
         }
-        
+
         store.sync({
             success: function (m) {
                 me.setLoading(false);

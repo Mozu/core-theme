@@ -34,7 +34,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
         
         me.timeFormatSelect = {
             xtype: 'selectfield',
-            name: 'timeFormat',
+            name: 'siteTimeFormat',
             fieldLabel: 'Time format',
             valueField: 'value',            
             displayField: 'display',
@@ -59,7 +59,7 @@ Ext.define('Taco.view.generalSettings.subform.About', {
 
         me.timeZoneSelect = {
             xtype: 'selectfield',
-            name: 'timeZone',
+            name: 'siteTimeZone',
             fieldLabel: 'Time zone',
             valueField: 'name',
             displayField: 'name',
@@ -144,8 +144,8 @@ Ext.define('Taco.view.generalSettings.subform.About', {
             me.timeSettings,
             {
                 xtype: 'checkbox',
-                name: 'daylightSaving',
-                checked: this.record.get('daylightSaving'),
+                name: 'adjustForDaylightSavingTime',
+                checked: this.record.get('adjustForDaylightSavingTime'),
                 uncheckedValue: false,
                 inputValue:true,
                 hidden: true,

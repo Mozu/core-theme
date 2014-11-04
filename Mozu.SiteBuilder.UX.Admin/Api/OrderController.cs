@@ -547,8 +547,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 IEnumerable<string> paymentActions = getPaymentActionsResult.ReadAsSync();
                 IEnumerable<string> result = new List<string>
                 {
-                    CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT.ToLower()
+                    CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT
                 };
+
                 return result.Intersect(paymentActions, new OrderActionComparer()).ToList();
             }
             throw new VaeUnexpectedErrorException(string.Format("Retrieving the fulfillment actions for order {0}", orderContext.OrderId));

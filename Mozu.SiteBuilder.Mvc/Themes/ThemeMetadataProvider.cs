@@ -26,6 +26,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         ThemeMetaData GetTheme(string theme);
 
+        ThemeMetaData GetThemeSlim(string theme);
+
         ThemeMetaData GetAddon(string id);
 
         IEnumerable<string> ThemePaths { get; }
@@ -86,6 +88,29 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             tmd.Labels = LoadThemeLabels(tmd.ThemePath);
             tmd.TimeStamp = tmd.FileListing.TimeStamp;
 
+            if (tmd.Configuration == null)
+                return null;
+
+            return tmd;
+
+        }
+
+
+        public ThemeMetaData GetThemeSlim(string id)
+        {
+            if (String.IsNullOrWhiteSpace(id))
+                return null;
+            id = EscapeThemeId(id);
+            var tmd = new ThemeMetaData { Id = id };
+
+            tmd.ThemePath = ThemePaths.Select(p => Path.GetFullPath(p + "//" + UnEscapeThemeId(id))).FirstOrDefault(p => Directory.Exists(p));
+
+            if (!Directory.Exists(tmd.ThemePath))
+                return null;
+
+            tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath, METADATA_THEME_FILE_NAME);
+            tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
+           
             if (tmd.Configuration == null)
                 return null;
 

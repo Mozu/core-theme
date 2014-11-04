@@ -245,8 +245,8 @@ namespace Mozu.SiteBuilder.Mvc
             }
             else
             {
-                
-                if (_httpRequestMessage.Headers.TryGetValues(Constants.Headers.DATA_VIEW_MODE, out values))
+
+                if (_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE, out values))
                 {
                     this.DataViewMode = (DataViewModeType)Enum.Parse(typeof(DataViewModeType), values.First());
                 }
@@ -420,5 +420,10 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.DataViewMode = dataViewMode;
         }
+    }
+
+    public static class Constants
+    {
+        public  const string DefaultTheme = "Core6";
     }
 }

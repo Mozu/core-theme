@@ -12,13 +12,16 @@ Ext.define('Taco.view.product.subform.Options', {
 
     title: 'Options',
 
+    cls:"taco-product-subform-option",
+
     initComponent: function () {
         
         this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
         this.record = this.product;
 
         this.items = [{
-                xtype: 'component',
+            xtype: 'component',
+                flex:1,
                 itemId: 'list',
                 html: ''
             }, {
@@ -76,6 +79,7 @@ Ext.define('Taco.view.product.subform.Options', {
                 return;
             }
 
+            ret.push("<div class='option-item' style='padding-bottom:10px;'>");
             ret.push(attribute.get('attributeName') + ' - ');
 
             Ext.each(option.get('values'), function (val, i) {
@@ -90,7 +94,8 @@ Ext.define('Taco.view.product.subform.Options', {
                 ret.push(value.value);
             }, this);
 
-            ret.push('<br>');
+            ret.push("</div>");
+            
         }, this);
 
         return ret.join('');

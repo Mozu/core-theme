@@ -299,13 +299,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     */
     subTpl_3: new Ext.XTemplate(
         // only show the shipping total if there is an adjustment or discount
-        '<tpl if="shippingAdjustment.amount !==0 || shippingDiscounts.length">',
-            '<tr>',
-                '<td class="{tdCls}"><div class="{tdInnerCls}">Shipping Total</div></td>',
-                '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingTotal)]}</div></td>',
-            '</tr>',
-        '</tpl>',
-
+        // '<tpl if="shippingAdjustment.amount !==0 || shippingDiscounts.length">',
+        //     '<tr>',
+        //         '<td class="{tdCls}"><div class="{tdInnerCls}">Shipping Total</div></td>',
+        //         '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingTotal)]}</div></td>',
+        //     '</tr>',
+        // '</tpl>',
         '<tpl if="adjustmentTotal">',
             '<tr>',
                 '<td class="{tdCls}"><div class="{tdInnerCls}">{adjustmentDescription}</div></td>',
