@@ -434,13 +434,23 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     */
     saveSuccess: function (data) {
         var me = this;
+
         me.onSaveSuccess(data);
         this.resetSaveButton()
         me.fireEvent('savesuccess', me, data);
-
+        
         if (me.createOnSaveSuccess) {
-            me.createOnSaveSuccess = false;            
+            me.createOnSaveSuccess = false;
+            // push the edit url in to history so we can go back to the editor using history. This is not going to navigate though since we are skipping it and going to the create url
+            Taco.core.StateManager.addState(me.getEditRoute() + '/' + me.record.getId(), { id: me.record.getId() });
+            // go to create view;
             me.create();
+        } else {
+            // go to the editor view if this is an inital save
+            // moved from EditorWrapper.js
+            if (me.record && me.record.getId() != me.originalId) {
+                this.fireEvent('idchange', me, me.record, me.originalId);
+            }
         }
     },
 
