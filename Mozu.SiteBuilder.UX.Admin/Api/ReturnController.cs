@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (extFilter.TryGetValue("originalOrderId", out originalOrderId))
 		    {
-		        filter = string.Format("originalorderid eq \"{0}\"", originalOrderId);
+		        filter = string.Format("originalorderid eq \"{0}\" and status ne \"{1}\"", originalOrderId, "null");
 		    }
 		    var returns = (await _returnWebApiClient.GetReturns(filter: filter)).ReadAsSync();
             return List2(Mapper.Map<List<Return>>(returns.Items));

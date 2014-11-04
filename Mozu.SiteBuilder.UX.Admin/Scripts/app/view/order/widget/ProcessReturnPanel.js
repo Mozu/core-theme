@@ -220,8 +220,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 menuDisabled: true,
                 flex: 1,
                 renderer: function (value, meta, record) {
-                    var oItem = me.orderItemsStore.getById(record.getId());
+                    var productCode = record.get('productCode'),
+                        oItem = productCode ? me.orderItemsStore.getById(record.get('orderItemId')) : null;
 
+                    if (productCode) return productCode;
                     return oItem ? oItem.get('productCode') : '--';
                 }
             }, {

@@ -375,7 +375,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .AfterMap((dc, order) =>
                 {
                     // 1. create returnable items list.
-
                     order.ReturnableItems =
                         (   
                             from item in order.Items

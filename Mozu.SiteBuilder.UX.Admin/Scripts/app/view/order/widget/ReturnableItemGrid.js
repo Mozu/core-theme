@@ -168,7 +168,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         returnsStore.load();
     },
 
-    addReturnableItems: function (store, records) {
+    addReturnableItems: function (store, returns) {
         var ineligibleStatuses = [
             Taco.model.Return.constants.statuses.CANCELLED,
             Taco.model.Return.constants.statuses.REJECTED
@@ -181,29 +181,23 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         
         // track the returned quantities of each item in the order
 
-        // build a list of items already added to a return and determine the qty of each that has already been added;
-        Ext.Array.each(records, function (record) {
-            // ignore any records that have been cancelled or rejected;
-            if (!Ext.Array.contains(ineligibleStatuses, record.get('status'))) {
-
-                // for each item in the return add it
-                Ext.Array.each(record.get('items'), function (item) {
-
-                    // initialize the item in the list if its not already in the list
-                    if (!(item.orderItemId in returnedItemQuantities)) {
-                        returnedItemQuantities[item.orderItemId] = 0;
-                    }
-                    // increment the quantity for the current item;
-                    returnedItemQuantities[item.orderItemId] += item.quantity;
-                });
-            }
-        }, this);
-
-        // add quantity already returned to each returnable item.
+        // initialize quantity already returned for each returnable item.
         Ext.Array.each(returnableItems, function (returnableItem) {
             returnableItem.quantityReturned = 0 // returnedItemQuantities[returnableItem.orderItemId];
         });
 
+        // build a list of items already added to a return and determine the qty of each that has already been added;
+        Ext.Array.each(returns, function (ret) {
+            // ignore any records that have been cancelled or rejected;
+            if (!Ext.Array.contains(ineligibleStatuses, ret.get('status'))) {
+
+                // for each item in the return, find the returnable item and update its returnedQuantity.
+                Ext.Array.each(ret.get('items'), function (item) {
+                    var returnableItem = Ext.Array.filter(returnableItems, function (ri) { return ri.productCode === item.productCode })[0];
+                    returnableItem.quantityReturned += item.quantity;
+                });
+            }
+        });
 
         // filter out items which are already fully returned.
         var returnableItemsFiltered = Ext.Array.filter(returnableItems, function (returnableItem) {

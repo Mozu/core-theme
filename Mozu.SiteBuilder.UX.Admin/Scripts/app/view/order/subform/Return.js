@@ -243,7 +243,6 @@ Ext.define('Taco.view.order.subform.Return', {
                 this.createButton.setDisabled(false);
             },
             success: function () {
-                debugger;
                 Ext.Array.each(records, this.addProcessReturnPanel, this, true);
                 //after we add the new return we need to reload the returnable items grid data;
                 me.refreshReturnableItemsGrid();
