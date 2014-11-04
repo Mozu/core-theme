@@ -494,7 +494,7 @@ Ext.define('Taco.shared.view.field.Image', {
         }
 
         this.selectedImages.each(function (record) {
-            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isMerged: record.get('isMerged') });
+            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
         }, this);
 
         if (value && value.length) {
