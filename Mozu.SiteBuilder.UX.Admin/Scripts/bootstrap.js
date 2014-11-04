@@ -18,9 +18,11 @@ Ext.Loader.addClassPathMappings({
   "Taco.core.ux.form.field.Code": "app/core/ux/form/field/code.js",
   "Taco.core.ux.form.field.CodeLayout": "app/core/ux/form/field/code.js",
   "Taco.model.DocumentTypeFQN": "app/model/DocumentType.js",
+  "Taco.platter.SimpleField": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.Category": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.Checkbox": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.Code": "app/platter/fields/SimpleFields.js",
+  "Taco.platter.fields.Color": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.DateTime": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.Discount": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.DropDown": "app/platter/fields/SimpleFields.js",
@@ -32,11 +34,12 @@ Ext.Loader.addClassPathMappings({
   "Taco.platter.fields.MultiDiscount": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.MultiNavNode": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.MultiProduct": "app/platter/fields/SimpleFields.js",
+  "Taco.platter.fields.MultiSelect": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.NavNode": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.Number": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.Product": "app/platter/fields/SimpleFields.js",
-  "Taco.platter.fields.Texa": "app/platter/fields/SimpleFields.js",
   "Taco.platter.fields.Text": "app/platter/fields/SimpleFields.js",
+  "Taco.platter.fields.TextArea": "app/platter/fields/SimpleFields.js",
   "Taco.platter.forms.CategoryEditorForm": "app/platter/forms/SimpleForms.js",
   "Taco.platter.forms.EntityEditorForm": "app/platter/forms/SimpleForms.js",
   "Taco.platter.forms.ProductEditorForm": "app/platter/forms/SimpleForms.js",
@@ -1247,9 +1250,11 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.overrides.view.AbstractView": [],
   "Taco.overrides.window.MessageBox": [],
   "Taco.overrides.window.Window": [],
+  "Taco.platter.SimpleField": [],
   "Taco.platter.fields.Category": [],
   "Taco.platter.fields.Checkbox": [],
   "Taco.platter.fields.Code": [],
+  "Taco.platter.fields.Color": [],
   "Taco.platter.fields.DateTime": [],
   "Taco.platter.fields.Discount": [],
   "Taco.platter.fields.DropDown": [],
@@ -1261,12 +1266,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.platter.fields.MultiDiscount": [],
   "Taco.platter.fields.MultiNavNode": [],
   "Taco.platter.fields.MultiProduct": [],
+  "Taco.platter.fields.MultiSelect": [],
   "Taco.platter.fields.NavNode": [],
   "Taco.platter.fields.Number": [],
   "Taco.platter.fields.Product": [],
   "Taco.platter.fields.SimpleFields": [],
-  "Taco.platter.fields.Texa": [],
   "Taco.platter.fields.Text": [],
+  "Taco.platter.fields.TextArea": [],
   "Taco.platter.forms.CategoryEditorForm": [],
   "Taco.platter.forms.EntityEditorForm": [],
   "Taco.platter.forms.ProductEditorForm": [],
@@ -1452,6 +1458,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.generalSettings.subform.About": [],
   "Taco.view.generalSettings.subform.AddressValidation": [],
   "Taco.view.generalSettings.subform.Analytics": [],
+  "Taco.view.generalSettings.subform.Features": [],
   "Taco.view.generalSettings.subform.Maintenance": [],
   "Taco.view.generalSettings.subform.Notifications": [],
   "Taco.view.generalSettings.subform.Robots": [],
@@ -3295,6 +3302,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.overrides.view.AbstractView": [],
   "Taco.overrides.window.MessageBox": [],
   "Taco.overrides.window.Window": [],
+  "Taco.platter.SimpleField": [],
   "Taco.platter.fields.Category": [
     "widget.mz-input-category"
   ],
@@ -3303,6 +3311,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Taco.platter.fields.Code": [
     "widget.mz-input-code"
+  ],
+  "Taco.platter.fields.Color": [
+    "widget.mz-input-color"
   ],
   "Taco.platter.fields.DateTime": [
     "widget.mz-input-date"
@@ -3337,6 +3348,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.platter.fields.MultiProduct": [
     "widget.mz-input-productmulti"
   ],
+  "Taco.platter.fields.MultiSelect": [
+    "widget.mz-input-selectmulti"
+  ],
   "Taco.platter.fields.NavNode": [
     "widget.mz-input-navnode"
   ],
@@ -3347,11 +3361,11 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.mz-input-product"
   ],
   "Taco.platter.fields.SimpleFields": [],
-  "Taco.platter.fields.Texa": [
-    "widget.mz-input-richtext"
-  ],
   "Taco.platter.fields.Text": [
     "widget.mz-input-text"
+  ],
+  "Taco.platter.fields.TextArea": [
+    "widget.mz-input-richtext"
   ],
   "Taco.platter.forms.CategoryEditorForm": [
     "widget.mz-form-category",
@@ -3615,6 +3629,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.generalSettings.subform.About": [],
   "Taco.view.generalSettings.subform.AddressValidation": [],
   "Taco.view.generalSettings.subform.Analytics": [],
+  "Taco.view.generalSettings.subform.Features": [],
   "Taco.view.generalSettings.subform.Maintenance": [],
   "Taco.view.generalSettings.subform.Notifications": [],
   "Taco.view.generalSettings.subform.Robots": [],
