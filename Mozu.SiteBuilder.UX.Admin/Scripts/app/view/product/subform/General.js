@@ -151,7 +151,7 @@ Ext.define('Taco.view.product.subform.General', {
                 fieldLabel: 'Code',
                 name: 'productCode',
                 emptyText: '#######',
-                width: fullFieldWidth,
+                width: twoColumnFieldWidth,
                 margin: '0 50 0 0',
                 readOnly: !this.product.phantom,
                 required: true,
@@ -545,7 +545,7 @@ Ext.define('Taco.view.product.subform.General', {
                         persistChangesToModel: true,
                         record: this.productInCatalogInfo,
                         hidden: this.isGlobal,
-                        width: '300',
+                        width: twoColumnFieldWidth,
                         header: false,
                         items: [
                             {
@@ -558,7 +558,7 @@ Ext.define('Taco.view.product.subform.General', {
                                 editable: false,
                                 forceSelection: true,
                                 listConfig: { shadow: false },                                
-                                width:180,
+                                width: twoColumnFieldWidth,
                                 store: [[false, 'Disable'], [true, 'Active']],
                                 value: this.productInCatalogInfo ? this.productInCatalogInfo.get('isActive') : false
                             }
