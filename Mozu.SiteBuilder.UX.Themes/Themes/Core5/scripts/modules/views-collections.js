@@ -60,6 +60,10 @@ define(['modules/jquery-mozu', 'underscore', 'hyprlive', 'modules/backbone-mozu'
                 options = {},
                 req = model.lastRequest;
             if (!urlParams.startIndex) options.resetIndex = true;
+            if (model.hierarchyField && (urlParams[model.hierarchyField] !== model.hierarchyValue)) {
+                model.setHierarchy(model.hierarchyField, urlParams[model.hierarchyField] || categoryId);
+                options.force = true;
+            }
             model.set(_.pick(urlParams, 'pageSize', 'startIndex', 'facetValueFilter', 'sortBy'), { silent: true });
             navigating = true;
             model.updateFacets(options);

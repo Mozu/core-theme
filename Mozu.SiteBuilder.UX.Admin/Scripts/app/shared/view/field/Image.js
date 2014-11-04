@@ -65,7 +65,6 @@ Ext.define('Taco.shared.view.field.Image', {
     isMetadataMerged: false,
     
     initComponent: function () {
-        
         this.selectedImages = Ext.create('Taco.shared.store.Files', {
 
             listeners: {
@@ -489,7 +488,6 @@ Ext.define('Taco.shared.view.field.Image', {
             if (warningMsgs.length > 0) {
                 Taco.app.fireEvent('setmessage', 'The following image files are no longer available.  Saving will remove their association to this product and will need to be re-added. ' + warningMsgs.join(', '), 'warning');
             }
-            this.isMetadataMerged = true;
         }
 
         this.selectedImages.each(function (record) {
@@ -503,7 +501,10 @@ Ext.define('Taco.shared.view.field.Image', {
             this.emptyDropZone.show();
             this.imageView.hide();
         }
-        
+        if (!this.isMetadataMerged) {
+            this.originalValue = value;
+            this.isMetadataMerged = true;
+        }
         return this.mixins.field.setValue.call(this, value);
     },
     

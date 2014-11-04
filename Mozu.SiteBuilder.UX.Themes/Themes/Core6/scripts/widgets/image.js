@@ -9,15 +9,23 @@
             if (config && config.imageClickAction === 'lightbox') {
                 imageUrl = config.imageSource === 'file' ? '/cms/files/' + config.imageFileId : config.imageExternalUrl;
 
-                ci.click(function (event) {
+                ci.on('click', function (event) {
                     event.preventDefault();
 
                     $.colorbox({
                         photo: true,
                         href: imageUrl,
-                        maxHeight: $(window).height(),
-                        maxWidth: $(window).width()
+                        maxHeight: $(window).height() - 200,
+                        maxWidth: $(window).width() - 200,
+                        scrolling: false,
+                        opacity: '0.7',
+                        scalePhotos: true,
+                        transition: 'none',
+                        onComplete: function() {
+                            $('#cboxClose').html('X');
+                        }
                     });
+
                 });
             }
         });

@@ -14,7 +14,16 @@ Ext.define('Taco.model.AccountUser', {
                 return Ext.Array.pluck(record.raw.roles || [], 'id');
             }
         },
-        { name: 'activity', type: 'string' },
+        {
+            name: 'activity', type: 'string', convert: function (value, record) {
+                var date = new Date(value);
+                if (date instanceof Date && !isNaN(date.valueOf())) {
+                    console.log(date);
+                    return 'Last Login ' + date.toLocaleString();
+                }
+                return value;
+            }
+        },
         { name: 'type',     type: 'string' },
         { name: 'email',    type: 'string' }
     ],

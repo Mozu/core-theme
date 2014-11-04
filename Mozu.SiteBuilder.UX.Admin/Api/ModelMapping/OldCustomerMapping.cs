@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     var data = x.SystemData;
                     if (data != null && data.LastLoginOn.HasValue)
-                        return "Last Login " + data.LastLoginOn.ToString();
+                        return data.LastLoginOn.Value;
                     return "";
                 }))
                 .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress));

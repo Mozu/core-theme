@@ -21,6 +21,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         Theme GetTheme(ThemeSelection name);
 
 
+
+        Theme GetThemeSlim(ThemeSelection name);
+
+
         /// <summary>
         /// Finds an addon by name.
         /// </summary>
@@ -55,14 +59,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
      class ThemeRepository : IThemeRepository
     {
         private readonly IThemeMetaDataProvider _themeMetaDataProvider;
-        const string DefaultTheme = "Core5";
+        
         private static ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+        private static ConcurrentDictionary<string, Theme> _themeSlims = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+
         private static ConcurrentDictionary<string, Theme> _addons = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
         private static List<FileSystemWatcher> _watchers;
         
         public static readonly  ThemeSelection DefaultThemeSelection = new ThemeSelection()
                                                              {
-                                                                 Id = DefaultTheme
+                                                                 Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme 
                                                              };
         
         /// <summary>
@@ -84,9 +90,27 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return GetThemeInternal(selection.Id , new Stack<string>());
         }
 
+        public Theme GetThemeSlim(ThemeSelection selection)
+        {
+            return _themeSlims.GetOrAdd(selection.Id, (s) =>
+            {
+                var tmd=_themeMetaDataProvider.GetThemeSlim(s);
+                if (tmd == null)
+                {
+                    return null;
+                    
+                }
+                return ThemeFactory.Build(tmd, null);
+            });
+
+
+
+
+            // food//GetThemeSlim
+        }
         public Theme GetAddon(string name)
         {
-            return _addons.GetOrAdd(name, ThemeFactory.Build(_themeMetaDataProvider.GetAddon(name), null));
+            return _addons.GetOrAdd(name ?? Mozu.SiteBuilder.Mvc.Constants.DefaultTheme, ThemeFactory.Build(_themeMetaDataProvider.GetAddon(name), null));
            
         }
 
@@ -118,7 +142,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         private Theme GetThemeInternal(string name, Stack<string> inheritChain)
         {
-            var t = _themes.GetOrAdd(name, themeName => CreateTheme(themeName, inheritChain));
+            var t = _themes.GetOrAdd(name??Mozu.SiteBuilder.Mvc.Constants.DefaultTheme , themeName => CreateTheme(themeName, inheritChain));
             
             if (t == null)
                 throw new ThemeNotFoundException("Requested theme was not found: " + name);
@@ -197,6 +221,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             // replace _themes object instead of .Clear() to prevent the case of another thread Add()ing to the stale object right after clear.
             _themes = new ConcurrentDictionary<string, Theme>();
+            _themeSlims = new ConcurrentDictionary<string, Theme>();
+
             _addons = new ConcurrentDictionary<string, Theme>();
         }
 
@@ -240,7 +266,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         public Theme GetDefaultTheme()
         {
-            return GetTheme(new ThemeSelection() {Id = DefaultTheme});
+            return GetTheme(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme });
         }
 
         public string GetLocalThemePath()
