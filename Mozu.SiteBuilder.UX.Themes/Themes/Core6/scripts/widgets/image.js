@@ -18,6 +18,9 @@
                         maxHeight: $(window).height() - 200,
                         maxWidth: $(window).width() - 200,
                         scrolling: false,
+                        opacity: '0.7',
+                        scalePhotos: true,
+                        transition: 'none',
                         onComplete: function(e) {
                             $('#cboxClose').html('X');
                         }
