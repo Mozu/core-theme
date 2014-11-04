@@ -15,9 +15,14 @@
                     $.colorbox({
                         photo: true,
                         href: imageUrl,
-                        maxHeight: $(window).height(),
-                        maxWidth: $(window).width()
+                        maxHeight: $(window).height() - 200,
+                        maxWidth: $(window).width() - 200,
+                        scrolling: false,
+                        onComplete: function(e) {
+                            $('#cboxClose').html('X');
+                        }
                     });
+
                 });
             }
         });
