@@ -232,9 +232,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.13.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.13.4\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.13.6\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -319,13 +319,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.13.1\lib\net451\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reference.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.13.1\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Reference.Contracts">
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.13.2\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.1\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ShippingAdmin.Contracts">
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
