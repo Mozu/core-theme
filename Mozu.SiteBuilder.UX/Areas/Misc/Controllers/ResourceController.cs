@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using FSharpx.Collections;
+using Magnum.Extensions;
 using Microsoft.Server.Common;
 using Microsoft.Win32;
 using Mozu.Core.Exceptions;
@@ -822,12 +823,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 template = ProcessSettingsVariables(template, stem);
                 var reader = new MyLessFileReader(this, _contentRetriever);
 
+
                 var parser = new Parser
                                  {
                     Importer = new Importer(reader, true, false, false)
                                  };
-                
+           
 
+                
                 Ruleset tree = null;
                 try
                 {
@@ -845,8 +848,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     }
                     else throw;
                 }
-               
+
+                //quickly adding themesettings vars into less scope
+                var nodes = new  List<Node>();
+                foreach (var setting in Controller.SiteContext.ThemeSettings.InnerDictionary)
+                {
+                    nodes.Add(new Rule("@themeSettings_" + setting.Key, new TextNode(setting.Value.Value == null ? null : setting.Value.Value.ToString())));
+                }
+                tree.Rules.InsertRange(0, nodes);
+
+
                 var env = new Env {Compress = !_debug, Debug = _debug};
+                
+               // env.AddPlugin(new MyLessPlugin());
                 
                 try
                 {
@@ -1084,22 +1098,31 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public override Node Execute(Node node, out bool visitDeeper)
             {
-                visitDeeper = true;
-                if (node is Value)
+                Root rootNode = node as Root;
+                if (rootNode != null)
                 {
-                    // do nothing
+                    var thom = new MyVariable("@thom");
+                 
+                    rootNode.Rules.Insert(0, thom);
                 }
-                if (node is Variable)
-                {
-                    var inNode = (Variable) node;
-                    if (inNode.Name == "@headingsColor")
-                    {
-                        Rule rule = Env.FindVariable(inNode.Name);
-                        var parser = new Parser();
-                        //  var resRs = parser.Parse("lighten(@orange, 15%)", "xxx");
-                    }
-                    node = new MyVariable(inNode.Name);
-                }
+                visitDeeper = false;
+                //node.AppendCSS();
+                //visitDeeper = true;
+                //if (node is Value)
+                //{
+                //    // do nothing
+                //}
+                //if (node is Variable)
+                //{
+                //    var inNode = (Variable) node;
+                //    if (inNode.Name == "@headingsColor")
+                //    {
+                //        Rule rule = Env.FindVariable(inNode.Name);
+                //        var parser = new Parser();
+                //        //  var resRs = parser.Parse("lighten(@orange, 15%)", "xxx");
+                //    }
+                //    node = new MyVariable(inNode.Name);
+                //}
                 return node;
             }
         }
@@ -1113,25 +1136,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public override Node Evaluate(Env env)
             {
-                string name = Name;
-                if (name.StartsWith("@@"))
-                {
-                    Node node = new MyVariable(name.Substring(1)).Evaluate(env);
-                    name = '@' + ((node is TextNode) ? (node as TextNode).Value : node.ToCSS(env));
-                }
 
-                var rule = env.FindVariable(name);
-                if (Name == "headingsColor" || Name == "@headingsColor")
-                {
-                    // do nothing
-                }
+                var tn = new TextNode("red");
+                return tn;
 
-                if (rule == null)
-                {
-                    throw new ParsingException("variable " + name + " is undefined", base.Location);
-                }
-                return rule.Value.Evaluate(env);
             }
-                }
+        }
+
     }
 }

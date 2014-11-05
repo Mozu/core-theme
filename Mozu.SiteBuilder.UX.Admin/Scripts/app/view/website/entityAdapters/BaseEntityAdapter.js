@@ -42,13 +42,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
             customerEditor = me.manager.entityEditors.findEditor(doc);
         }
         if (customerEditor) {
-
-
-            if (customerEditor) {
-                me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: customerEditor, record: doc, showNameEditor: me.showNameEditor });
-                ret.push(me.dynamicFormContainer);
-            }
-
+            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: customerEditor, record: doc, showNameEditor: me.showNameEditor });
+            ret.push(me.dynamicFormContainer);
+        } else {
+            ret.push(Ext.create('Taco.core.ux.form.Form', { record: doc }));
         }
 
 
