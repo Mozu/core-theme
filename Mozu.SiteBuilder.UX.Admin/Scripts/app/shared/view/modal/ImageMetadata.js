@@ -23,14 +23,16 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
                 name: 'alt',
                 fieldLabel: 'Enter Alt Text for this Image',
                 allowBlank: true,
-                selectOnFocus: true,
-                maxLength: 150,
+                selectOnFocus: true,            
+                width: "100%",
                 validateOnChange: true,
                 validator: function (val) {
-                    if (!val || val.search(/['"=<>`]+|(&\s)+/) === -1) return true;
-                    return 'Disallowed characters in HTML attributes: \' " = < > ` &. You may HTML escape them.';
+                    var maxLen = 150,
+                        encodedLength = (!val) ? 0 : Ext.util.Format.htmlEncode(val).length;
+                    if (encodedLength <= maxLen)
+                        return true;
+                    return 'The maximum number of characters is ' + maxLen + ', including characters escaped into HTML, such as "&". Please reduce text by ' + (encodedLength - 150) + ' character' + ((encodedLength - 150 > 1) ? 's.' : '.');
                 },
-                width: "100%"
             }]
         });
 
