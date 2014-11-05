@@ -18,59 +18,79 @@ Ext.define('Taco.model.ReturnItem', {
     },
     fields: [
         {
+            "name": "id",
+            "type": "string",
+            "useNull": true
+        },
+        {
             "name": "orderItemId",
             "type": "string",
             "useNull": true
         },
         {
-            "name": "reason",
+            "name": "productCode",
+            "type": "string",
+            "useNull": true
+        },
+        {
+            "name": "rmaNote",
             "type": "string",
             "useNull": true,
             defaultValue: null
+        },
+        {
+            "name": "returnReason",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "quantity",
+            "type": "number",
+            "useNull": true,
+            defaultValue: 0
         },
         {
             "name": "quantityReceived",
             "type": "number",
             "useNull": true,
             defaultValue: 0
-        }, {
-            "name": "quantityShipped",
-            "type": "number",
-            "useNull": true,
-            defaultValue: 0
-        }, {
+        },
+        {
             "name": "quantityRestockable",
             "type": "number",
             "useNull": true,
             defaultValue: 0
-        }, {
+        },
+        {
+            "name": "quantityShipped",
+            "type": "number",
+            "useNull": true,
+            defaultValue: 0
+        },
+        {
             "name": "productLossAmount",
             "type": "number",
             "useNull": false,
             defaultValue: 0
-        }, {
+        },
+        {
+            "name": "productLossTaxAmount",
+            "type": "number",
+            "useNull": false,
+            defaultValue: 0
+        },
+        {
             "name": "shippingLossAmount",
             "type": "number",
             "useNull": false,
             defaultValue: 0
-        }, {
-            "name": "notes",
-            "type": "auto",
-            "useNull": true,
-            defaultValue: null
-        }, {
-            "name": "rmaNote",
-            "type": "string",
-            "useNull": true,
-            defaultValue: null
-        }, {
-            "name": "quantity",
+        },
+        {
+            "name": "shippingLossTaxAmount",
             "type": "number",
-            "useNull": true,
+            "useNull": false,
             defaultValue: 0
         }
-    ],
-    idProperty: 'orderItemId'
-
-
+    ]
 });

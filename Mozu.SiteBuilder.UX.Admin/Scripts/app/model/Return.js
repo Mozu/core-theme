@@ -50,56 +50,85 @@ Ext.define('Taco.model.Return', {
             "useNull": true
         },
         {
-            "name": "availableActions",
-            "type": "auto",
-            "useNull": true,
-            defaultValue: []
-
-        },
-        {
             "name": "returnNumber",
             "type": "int",
             "useNull": true,
             defaultValue: null
-        }, {
+        },
+        {
+            "name": "returnType",
+            "type": "string",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
             "name": "originalOrderId",
             "type": "string",
             "useNull": true,
             defaultValue: null
-        }, {
+        },
+        {
             "name": "returnOrderId",
             "type": "string",
             "useNull": true,
             defaultValue: null
-        }, {
+        },
+        {
+            "name": "availableActions",
+            "type": "auto",
+            "useNull": true,
+            defaultValue: []
+        },
+        {
             "name": "status",
             "type": "string",
             "useNull": true,
             defaultValue: null
-        }, {
+        },
+        {
             "name": "items",
             "type": "auto",
             "useNull": true,
-            defaultValue: null
-        }, {
-            "name": "notes",
-            "type": "auto",
-            "useNull": true,
-            defaultValue: null
-        }, {
+            defaultValue: []
+        },
+        {
             "name": "rmaNote",
             "type": "string",
             "useNull": true,
             defaultValue: null
-        }, {
-            "name": "rmaDeadline",
-            "type": "date",
-            "useNull": true,
-            defaultValue: null,
-            dateFormat: 'c'
-         },
+        },
         {
-            "name": "updateDate",
+            "name": "payments",
+            "type": "auto",
+            "useNull": true,
+            defaultValue: []
+        },
+        {
+            "name": "refundAmount",
+            "type": "number",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "productLossAmount",
+            "type": "number",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "shippingLossAmount",
+            "type": "number",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "totalLossAmount",
+            "type": "number",
+            "useNull": true,
+            defaultValue: null
+        },
+        {
+            "name": "rmaDeadline",
             "type": "date",
             "useNull": true,
             defaultValue: null,
@@ -112,25 +141,13 @@ Ext.define('Taco.model.Return', {
             defaultValue: null,
             dateFormat: 'c'
         },
-
         {
-            "name": "type",
-            "type": "string",
+            "name": "updateDate",
+            "type": "date",
             "useNull": true,
-            defaultValue: null
-         },
-        {
-            "name": "payments",
-            "type": "auto",
-            "useNull": true,
-            defaultValue: []
-         },
-        {
-            "name": "totalLossAmount",
-            "type": "number",
-            "useNull": true,
-            defaultValue: null
-         }
+            defaultValue: null,
+            dateFormat: 'c'
+        }
     ],
 
     getItems: function () {
@@ -141,11 +158,17 @@ Ext.define('Taco.model.Return', {
         });
     },
     getPayments: function () {
-        return this.getOrCreateHasManyStore({
+        var store = this.getOrCreateHasManyStore({
             model: 'Taco.model.OrderPayment',
             associationKey: 'payments',
-            foreignProperty: 'return'
+            foreignProperty: 'return',
         });
+        store.filter({
+            filterFn: function (payment) {
+                return 'New' !== payment.get("status");
+            }
+        });
+        return store;
     },
 
 
@@ -284,6 +307,4 @@ Ext.define('Taco.model.Return', {
             scope: this
         });
     }
-
-
 });
