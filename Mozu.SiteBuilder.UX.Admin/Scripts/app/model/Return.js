@@ -158,11 +158,17 @@ Ext.define('Taco.model.Return', {
         });
     },
     getPayments: function () {
-        return this.getOrCreateHasManyStore({
+        var store = this.getOrCreateHasManyStore({
             model: 'Taco.model.OrderPayment',
             associationKey: 'payments',
-            foreignProperty: 'return'
+            foreignProperty: 'return',
         });
+        store.filter({
+            filterFn: function (payment) {
+                return 'New' !== payment.get("status");
+            }
+        });
+        return store;
     },
 
 
