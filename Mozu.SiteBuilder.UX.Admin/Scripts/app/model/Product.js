@@ -261,7 +261,22 @@ Ext.define('Taco.model.Product', {
             "type": "auto",
             "useNull": true,
             convert: function (v) {
-                return Ext.util.Format.htmlEncode(v);
+                if (!v) {
+                    return [];
+                }
+                Ext.Array.forEach(v, function(img) {
+                    img.alt = Ext.util.Format.htmlDecode(img.alt);
+                });
+                return v;
+            },
+            serialize: function (v) {
+                if (!v) {
+                    return [];
+                }
+                Ext.Array.forEach(v, function(img) {
+                    img.alt = Ext.util.Format.htmlEncode(img.alt);
+                });
+                return v;
             }
         },
         {
