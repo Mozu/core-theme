@@ -193,8 +193,15 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
                 // for each item in the return, find the returnable item and update its returnedQuantity.
                 Ext.Array.each(ret.get('items'), function (item) {
-                    var returnableItem = Ext.Array.filter(returnableItems, function (ri) { return ri.productCode === item.productCode })[0];
-                    returnableItem.quantityReturned += item.quantity;
+                    var i, matchingReturnableItems, returnableItem;
+
+                    for (i = 1; i <= item.quantity; i++) {
+                        matchingReturnableItems = Ext.Array.filter(returnableItems, function (ri) { return ri.productCode === item.productCode && ri.quantityReturned < ri.quantityOrdered });
+                        if (!matchingReturnableItems || !matchingReturnableItems.length) continue;
+                        // in case multiple returnable items exist for the same product code, round-robin over them all and increment quantity returned.
+                        returnableItem = Ext.Array.sort(matchingReturnableItems, function (a, b) { return a.quantityReturned < b.quantityReturned ? -1 : 1 })[0];
+                        returnableItem.quantityReturned++;
+                    }
                 });
             }
         });
