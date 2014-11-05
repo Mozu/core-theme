@@ -76,49 +76,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(retList);
         }
 
-       
 
         [HttpPostRoute(UriTemplate = "action")]
-        public async Task<Response<List<OldReturn>>> PerformReturnActions(OldReturnAction action)
+        public async Task<Response<List<Return>>> PerformReturnActions(DCr.ReturnAction action)
         {
-            var dcRetAction = Mapper.Map<DCr.ReturnAction>(action);
-            var dcRma = (await _returnWebApiClient.PerformReturnActions(dcRetAction)).ReadAsSync().Items;
+            var dcRma = (await _returnWebApiClient.PerformReturnActions(action)).ReadAsSync().Items;
 
-            
-            return List2(Mapper.Map<List<OldReturn>>(dcRma));
+            return List2(Mapper.Map<List<Return>>(dcRma));
         }
-        public class PaymentAction
+
+        public class PaymentActionDTO
         {
-            public string orderId { get; set; }
-            public string returnId { get; set; }
-            public string paymentId { get; set; }
-            public string paymentType { get; set; }
-            public decimal  amount { get; set; }
+            public string OrderId { get; set; }
+            public string ReturnId { get; set; }
+            public string PaymentId { get; set; }
+            public string PaymentType { get; set; }
+            public decimal Amount { get; set; }
         }
         [HttpPostRoute(UriTemplate = "paymentAction")]
-        public async Task<Response<List<OldReturn>>> CreatePaymentActionForReturn(PaymentAction action)
+        public async Task<Response<List<Return>>> CreatePaymentActionForReturn(PaymentActionDTO action)
         {
             var dcPaymentAction = new DCp.PaymentAction
                                   {
                                       ActionName = PaymentActions.CREDIT_PAYMENT,
-                                      Amount = action.amount
+                                      Amount = action.Amount
                                   };
 
-            switch (action.paymentType)
+            switch (action.PaymentType)
             {
                 case PaymentTypes.CREDIT_CARD:
-                    dcPaymentAction.ReferenceSourcePaymentId = action.paymentId;
+                    dcPaymentAction.ReferenceSourcePaymentId = action.PaymentId;
                     break;
                 case PaymentTypes.STORE_CREDIT:
                     dcPaymentAction.NewBillingInfo = new DCp.BillingInfo { PaymentType = PaymentTypes.STORE_CREDIT };
                     break;
             }
 
-            var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.returnId, dcPaymentAction)).ReadAsSync();
+            var dcRma = (await _returnWebApiClient.CreatePaymentActionForReturn(action.ReturnId, dcPaymentAction)).ReadAsSync();
 
             dcRma.RefundAmount = dcRma.Payments.Sum(x => x.AmountCredited);
             dcRma = (await _returnWebApiClient.UpdateReturn(dcRma.Id, dcRma)).ReadAsSync();
-            return List2(Mapper.Map<List<OldReturn>>(new List<DCr.Return> {dcRma}));
+            return List2(Mapper.Map<List<Return>>(new List<DCr.Return> {dcRma}));
         }
 
 
@@ -134,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "refundPayments")]
-        public async Task<Response<OldReturn>> RefundPayments(RefundPaymentsArgs args)
+        public async Task<Response<Return>> RefundPayments(RefundPaymentsArgs args)
         {
             var existingPayments = (await _returnWebApiClient.GetPayments(args.ReturnId)).ReadAsSync();
 
@@ -162,7 +160,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var dcReturn = (await _returnWebApiClient.GetReturn(args.ReturnId)).ReadAsSync();
 
-            return Single2(Mapper.Map<OldReturn>(dcReturn));
+            return Single2(Mapper.Map<Return>(dcReturn));
         }
 
 
@@ -173,7 +171,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "createStoreCredit")]
-        public async Task<Response<OldReturn>> CreateStoreCredit(CreateStoreCreditArgs args) {
+        public async Task<Response<Return>> CreateStoreCredit(CreateStoreCreditArgs args) {
             var dcPaymentAction = new DCp.PaymentAction {
                 ActionName = PaymentActions.CREDIT_PAYMENT,
                 Amount = args.Amount,
@@ -183,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             var dcReturn = (await _returnWebApiClient.CreatePaymentActionForReturn(args.ReturnId, dcPaymentAction)).ReadAsSync();
-            return Single2(Mapper.Map<OldReturn>(dcReturn));
+            return Single2(Mapper.Map<Return>(dcReturn));
         }
 
         [HttpPostRoute(UriTemplate = "edit")]

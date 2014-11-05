@@ -95,7 +95,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.ShippingLossTotal, op => op.ResolveUsing(x => x.ShippingLossAmount))
             .ForMember(dc => dc.LossTotal, op => op.ResolveUsing(x => x.TotalLossAmount))
 
+            //ignores
+            .ForMember(dc => dc.Payments, opt => opt.Ignore())
+            .ForMember(dc => dc.CustomerAccountId, op => op.Ignore())
+            .ForMember(dc => dc.VisitId, op => op.Ignore())
+            .ForMember(dc => dc.WebSessionId, op => op.Ignore())
+            .ForMember(dc => dc.CustomerInteractionType, op => op.Ignore())
+            .ForMember(dc => dc.LocationCode, op => op.Ignore())
+            .ForMember(dc => dc.CurrencyCode, op => op.Ignore())
             .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+            .ForMember(dc => dc.Packages, op => op.Ignore())
+            .ForMember(dc => dc.ProductLossTotal, op => op.Ignore())
+            .ForMember(dc => dc.ShippingLossTotal, op => op.Ignore())
+            .ForMember(dc => dc.LossTotal, op => op.Ignore())
+            .ForMember(dc => dc.ProductLossTaxTotal, op => op.Ignore())
+            .ForMember(dc => dc.ShippingLossTaxTotal, op => op.Ignore())
+            .ForMember(dc => dc.ChannelCode, op => op.Ignore())
+            .ForMember(dc => dc.ChangeMessages, op => op.Ignore())
             ;
         }
 

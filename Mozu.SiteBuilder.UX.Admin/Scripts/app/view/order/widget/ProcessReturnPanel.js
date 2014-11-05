@@ -235,9 +235,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 menuDisabled: true,
                 flex: 1,
                 renderer: function (value, meta, record) {
-                    var oItem = me.orderItemsStore.getById(record.getId());
+                    var productCode = record.get('productCode'),
+                        orderItemId = record.get('orderItemId'),
+                        oItem = orderItemId ? me.orderItemsStore.getById(orderItemId) : null,
+                        rItem = !oItem && productCode ? Ext.Array.filter(me.order.data.returnableItems, function(ri) { return ri.productCode === productCode })[0] : null;
 
-                    return oItem ? oItem.get('productName') : '--';
+                    var productNameFromOrderItem = oItem ? oItem.get('productName') : null;
+                    var productNameFromReturnItem = rItem ? rItem.productName : null;
+                    return productNameFromOrderItem || productNameFromReturnItem ||  '--';
                 }
             }, {
                 dataIndex: 'orderItemId',
@@ -248,7 +253,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 menuDisabled: true,
                 width: 100,
                 renderer: function (value, meta, record) {
-                    var oItem = me.orderItemsStore.getById(record.getId());
+                    var oItem = me.orderItemsStore.getById(record.get('orderItemId'));
 
                     return oItem ? Taco.app.context.getCurrent().formatCurrency(oItem.get('unitPrice')) : '--';
                 }
