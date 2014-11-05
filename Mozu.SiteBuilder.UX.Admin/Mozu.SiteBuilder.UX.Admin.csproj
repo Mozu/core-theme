@@ -482,7 +482,6 @@
     <Compile Include="Api\ModelMapping\CapabilityMapping.cs" />
     <Compile Include="Api\ModelMapping\CreditMapping.cs" />
     <Compile Include="Api\ModelMapping\ExtensibleAttributeMapping.cs" />
-    <Compile Include="Api\ModelMapping\OldReturnMapping.cs" />
     <Compile Include="Api\ModelMapping\RuntimeProductMapping.cs" />
     <Compile Include="Api\Models\AppManagement\Capabilty.cs" />
     <Compile Include="Api\Models\Checkout\Gateway.cs" />
@@ -494,7 +493,6 @@
     <Compile Include="Api\Models\Order\OrderDiscount.cs" />
     <Compile Include="Api\Models\Order\OrderItemProductOption.cs" />
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
-    <Compile Include="Api\Models\Returns\OldReturn.cs" />
     <Compile Include="Api\OrderAttributeController.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
     <Compile Include="Api\ProductAvailableInventoryHelper.cs" />
