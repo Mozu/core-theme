@@ -151,6 +151,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UndeliveredDigitalItems, op => op.Ignore())
                 .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
+                .ForMember(x => x.ReturnableItems, op => op.Ignore())
                 
                 .AfterMap((dc, order) =>
                 {
@@ -751,6 +752,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Weight, op => op.Ignore())
                 .ForMember(x => x.UnitPrice, op => op.Ignore())
                 .ForMember(x => x.Total, op => op.Ignore())
+                .ForMember(x => x.IsPackagedStandAlone, op => op.Ignore())
                 ;
         }
 
