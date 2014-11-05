@@ -35,14 +35,13 @@
 
   //  padding: '20px',
     initComponent: function () {
-    
 
-        var data = this.data = Ext.clone(this.record.get('fields'));
+
+        var data = this.data = Ext.clone(this.record.get('fields') || {});
 
         for (name in this.record.data) {
             if (this.record.data.hasOwnProperty(name)&& name !='properties' && name !='item' ) {
                 this.data['document.' + name] = this.record.data[name];
-            //    this.data['container.' + name] = this.record.data[name];
             }
         }
 

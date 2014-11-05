@@ -59,11 +59,15 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
             name: 'page_type_definition',
             fieldLabel: 'Page Template',
             entityType: 'webpage'
-        }, {
-            xtype: 'checkboxfield',
-            name: 'hide_in_nav',
-            boxLabel: 'Hide in Navigation'
-        }, {
+        },
+        //removing for now .. until nav ui is refactored into library
+        //{
+        //    xtype: 'checkboxfield',
+        //    name: 'hide_in_nav',
+        //    boxLabel: 'Hide in Navigation'
+        //},
+
+        {
             xtype: 'textfield',
             fieldLabel: 'Redirect page to',
             name: 'redirect_url',
