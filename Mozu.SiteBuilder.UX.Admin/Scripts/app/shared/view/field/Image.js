@@ -466,45 +466,34 @@ Ext.define('Taco.shared.view.field.Image', {
         var value = [];
 
         //merge product/category images metadata with cms file data
-        if (this.imageMetadata && !this.isMetadataMerged) {
-            var clonedMetadata = Ext.Array.clone(this.imageMetadata);
-            var warningMsgs = [];
-            for (var i = 0; i < clonedMetadata.length; i++) {
-                var imgMeta = clonedMetadata[i];
-                imgMeta.isMatched = false;
-
+        if (this.imageMetadata) {
+            for (var i = 0; i < this.imageMetadata.length; i++) {
+                var imgMeta = this.imageMetadata[i];
                 Ext.Array.every(this.selectedImages.data.items, function(selectImg) {
                     if (imgMeta.cmsId === selectImg.get('cmsId') || imgMeta.cmsId === selectImg.get('name')) {
-                        selectImg.set('alt', imgMeta.alt);
-                        imgMeta.isMatched = true;
+                        if (!selectImg.get('isMerged')) {
+                            selectImg.set('alt', imgMeta.alt);
+                            selectImg.set('isMerged', true);
+                        }
                         return false;
                     }
                     return true;
                 });
-                if (!imgMeta.isMatched) {
-                    warningMsgs.push(imgMeta.cmsId);
-                }
-            }
-            if (warningMsgs.length > 0) {
-                Taco.app.fireEvent('setmessage', 'The following image files are no longer available.  Saving will remove their association to this product and will need to be re-added. ' + warningMsgs.join(', '), 'warning');
             }
         }
 
         this.selectedImages.each(function (record) {
-            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt') });
+            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
         }, this);
 
-        if (value && value.length) {
+        if (value.length > 0) {
             this.emptyDropZone.hide();
             this.imageView.show();
         } else {
             this.emptyDropZone.show();
             this.imageView.hide();
         }
-        if (!this.isMetadataMerged) {
-            this.originalValue = value;
-            this.isMetadataMerged = true;
-        }
+
         return this.mixins.field.setValue.call(this, value);
     },
     

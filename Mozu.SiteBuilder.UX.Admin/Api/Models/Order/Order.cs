@@ -275,8 +275,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         #endregion
 
-
-
         public Customer Customer { get; set; }
+
+        public List<OrderReturnableItem> ReturnableItems { get; set; }
     }
 }

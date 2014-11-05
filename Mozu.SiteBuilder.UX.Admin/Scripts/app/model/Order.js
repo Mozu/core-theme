@@ -204,18 +204,20 @@ Ext.define('Taco.model.Order', {
                 type: 'float',
                 useNull: true
         },
-
-
-
-            {
-                name: 'orderAdjustment',
-                type: 'object',
-                defaultValue: {
-                    amount: 0,
-                    description: '',
-                    internalComment: ''
-                }
+        {
+            name: 'orderAdjustment',
+            type: 'object',
+            defaultValue: {
+                amount: 0,
+                description: '',
+                internalComment: ''
+            }
         },
+        {
+            name: 'returnableItems',
+            type: 'auto'
+        },
+
 
         // a helper member used to seperatly control whether the shipping adjustment is negative or positive;
             {

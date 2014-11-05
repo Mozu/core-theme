@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-
+using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
@@ -133,39 +133,42 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("cart", jCart); // Mapper.Map<VMCart>(cart));
         }
 
-     
+
+        public class CheckoutModel
+        {
+            public string Id { get; set; }
+        }
+
 
         [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
         [System.Web.Http.HttpPost]
-        [System.Web.Http.HttpGet]   
-        public async Task<ActionResult> Checkout(string id = null, HttpRequestMessage requestMessage = null)
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> Checkout(CheckoutModel model)
         {
             Cart cart = null;
             Exception error = null;
             CommerceRuntime.Contracts.Orders.Order order = null;
-            if (id == null)
+            if (model == null || string.IsNullOrEmpty(model.Id))
             {
                 cart = (await _cartClient.GetOrCreateCart()).ReadAsSync();
-                id = cart.Id;
+                model = new CheckoutModel {Id = cart.Id};
             }
 
             try
             {
-                order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
+                order = (await _orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
             }
             catch (Exception e)
             {
-                UpdateCartWithExceptionMessage(id, e);
+                UpdateCartWithExceptionMessage(model.Id, e);
                 error = e;
             }
             if (error != null)
             {
                 return await RenderCartViewWithMessage(error);
             }
-            else
-            {
-                return Redirect(CreateRedirectUrl("/checkout/" + order.Id).ToString());
-            }
+            
+            return Redirect(CreateRedirectUrl("/checkout/" + order.Id).ToString());
         }
 
 

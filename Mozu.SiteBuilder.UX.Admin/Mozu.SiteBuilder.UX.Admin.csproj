@@ -210,9 +210,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.13.2\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.13.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.13.4\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.13.6\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -298,17 +298,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.13.1\lib\net451\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reference.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.13.1\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Reference.Contracts">
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.13.2\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.Reporting.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Reporting.Contracts.1.11.0.1\lib\Mozu.Reporting.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.1\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+    <Reference Include="Mozu.ShippingAdmin.Contracts">
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -448,6 +448,8 @@
     <Compile Include="Api\ModelMapping\LocalizationMapping.cs" />
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />
+    <Compile Include="Api\ModelMapping\OrderMappingExtensions.cs" />
+    <Compile Include="Api\ModelMapping\ReturnMapping.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\Entities\TenantAdminGlobalSettings.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
@@ -464,8 +466,11 @@
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
     <Compile Include="Api\Models\Order\BulkOrderRequest.cs" />
+    <Compile Include="Api\Models\Order\OrderReturnItem.cs" />
     <Compile Include="Api\Models\Order\OrderSummary.cs" />
     <Compile Include="Api\Models\ProductModels\ProductCodeRename.cs" />
+    <Compile Include="Api\Models\Returns\Return.cs" />
+    <Compile Include="Api\Models\Returns\ReturnItem.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />
@@ -477,7 +482,6 @@
     <Compile Include="Api\ModelMapping\CapabilityMapping.cs" />
     <Compile Include="Api\ModelMapping\CreditMapping.cs" />
     <Compile Include="Api\ModelMapping\ExtensibleAttributeMapping.cs" />
-    <Compile Include="Api\ModelMapping\ReturnMapping.cs" />
     <Compile Include="Api\ModelMapping\RuntimeProductMapping.cs" />
     <Compile Include="Api\Models\AppManagement\Capabilty.cs" />
     <Compile Include="Api\Models\Checkout\Gateway.cs" />
@@ -489,7 +493,6 @@
     <Compile Include="Api\Models\Order\OrderDiscount.cs" />
     <Compile Include="Api\Models\Order\OrderItemProductOption.cs" />
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
-    <Compile Include="Api\Models\Returns\Return.cs" />
     <Compile Include="Api\OrderAttributeController.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
     <Compile Include="Api\ProductAvailableInventoryHelper.cs" />
