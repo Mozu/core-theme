@@ -72,6 +72,14 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         menuDisabled: true,
         width:100
     }, {
+        dataIndex: 'quantityFulfilled',
+        text: 'Qty Fulfilled',
+        draggable: false,
+        sortable: false,
+        resizable: false,
+        menuDisabled: true,
+        width: 100
+    }, {
         dataIndex: 'quantityReturned',
         text: 'Qty Returned',
         draggable: false,
@@ -160,79 +168,49 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         returnsStore.load();
     },
 
-    addReturnableItems: function (store, records) {
+    addReturnableItems: function (store, returns) {
         var ineligibleStatuses = [
             Taco.model.Return.constants.statuses.CANCELLED,
             Taco.model.Return.constants.statuses.REJECTED
         ];
 
-
-
+        var returnableItems = this.order.get('returnableItems');
 
         // list of items and their qty currently added to active returns
         var returnedItemQuantities = {};
-
-        //list of items availabie in the returnable item grid
-        var eligibleItems = [];
         
         // track the returned quantities of each item in the order
 
+        // initialize quantity already returned for each returnable item.
+        Ext.Array.each(returnableItems, function (returnableItem) {
+            returnableItem.quantityReturned = 0 // returnedItemQuantities[returnableItem.orderItemId];
+        });
+
         // build a list of items already added to a return and determine the qty of each that has already been added;
-        Ext.Array.each(records, function (record) {
+        Ext.Array.each(returns, function (ret) {
             // ignore any records that have been cancelled or rejected;
-            if (!Ext.Array.contains(ineligibleStatuses, record.get('status'))) {
+            if (!Ext.Array.contains(ineligibleStatuses, ret.get('status'))) {
 
-                // for each item in the return add it
-                Ext.Array.each(record.get('items'), function (item) {
+                // for each item in the return, find the returnable item and update its returnedQuantity.
+                Ext.Array.each(ret.get('items'), function (item) {
+                    var i, matchingReturnableItems, returnableItem;
 
-                    // initialize the item in the list if its not already in the list
-                    if (!(item.orderItemId in returnedItemQuantities)) {
-                        returnedItemQuantities[item.orderItemId] = 0;
+                    for (i = 1; i <= item.quantity; i++) {
+                        matchingReturnableItems = Ext.Array.filter(returnableItems, function (ri) { return ri.productCode === item.productCode && ri.quantityReturned < ri.quantityOrdered });
+                        if (!matchingReturnableItems || !matchingReturnableItems.length) continue;
+                        // in case multiple returnable items exist for the same product code, round-robin over them all and increment quantity returned.
+                        returnableItem = Ext.Array.sort(matchingReturnableItems, function (a, b) { return a.quantityReturned < b.quantityReturned ? -1 : 1 })[0];
+                        returnableItem.quantityReturned++;
                     }
-                    // increment the quantity for the current item;
-                    returnedItemQuantities[item.orderItemId] += item.quantity;
                 });
-            }
-        }, this);
-
-        // add items to the returnable items store
-        // generate a full list of items to add to the returnable items store; Expanding list of bundled items;
-        Ext.Array.each(this.order.get('items'), function (orderItem) {
-            if (orderItem.bundledProducts && orderItem.bundledProducts.length > 0) {
-                Ext.Array.each(orderItem.bundledProducts, function (item) {
-                    addItem(Ext.apply({}, { quantity: item.quantity * orderItem.quantity }, item), orderItem.id, orderItem.productName);
-                });
-            } else {
-                addItem(orderItem, orderItem.id);
             }
         });
 
-
-        // add configured item to the store;        
-        //this.store.add(eligibleItems);
-        this.store.loadData(eligibleItems);
-
-
-        // adds an item unless it has been fully returned
-        function addItem (item, orderItemId, parentBundleName) {
-            if (!allReturned(item)) {
-                eligibleItems.push({
-                    orderItemId: parentBundleName ? null : orderItemId,
-                    productCode: item.productCode,
-                    productName: item.productName || item.name,
-                    quantity: 0,
-                    quantityOrdered: item.quantity,
-                    quantityReturned: returnedItemQuantities[orderItemId],
-                    parentBundleName: parentBundleName,
-                    parentItemId: parentBundleName && orderItemId
-                });
-            }
-        }
-
-        // checks if an item has been fully returned
-        function allReturned (orderItem) {
-            return orderItem.id in returnedItemQuantities && returnedItemQuantities[orderItem.id] >= orderItem.quantity;
-        }
+        // filter out items which are already fully returned.
+        var returnableItemsFiltered = Ext.Array.filter(returnableItems, function (returnableItem) {
+            return returnableItem.quantityOrdered > returnableItem.quantityReturned;
+        });
+        this.store.loadData(returnableItemsFiltered);
     },
 
     getReturnableItemsStore: function () {
@@ -246,6 +224,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'string',  name: 'reason', defaultValue: 'Damaged' },
                 { type: 'number',  name: 'quantity', defaultValue: 0 },
                 { type: 'number',  name: 'quantityOrdered' },
+                { type: 'number',  name: 'quantityFulfilled' },
                 { type: 'number',  name: 'quantityReturned', defaultValue: 0 },
                 { type: 'string', name: 'orderItemId' },
                 { type: 'string', name: 'parentItemId'}

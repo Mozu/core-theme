@@ -146,11 +146,7 @@ Ext.define('Taco.core.ux.form.NavForm2', {
     initLeftNav: function () {
         if (!this.enableScrollSpy) return;
 
-        this.getWrapper().on({
-            resize: function () {
-                console.log("resize")          
-                
-            },
+        this.getWrapper().on({            
             afterlayout: this.rebuildMap,
             scope: this
         });

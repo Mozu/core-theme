@@ -97,6 +97,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 if (me.getDocument()) {
                     me.getDocument().setDirty();
                 }
+
                 if ((me.pageContext.editMode || "").toLowerCase() === 'template') {
                     source = me.pageContext.cmsContext.template;
                 } else if ((me.pageContext.editMode || "").toLowerCase() === 'site') {

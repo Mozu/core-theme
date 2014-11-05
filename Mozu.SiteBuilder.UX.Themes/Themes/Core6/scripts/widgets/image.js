@@ -22,7 +22,7 @@
                         scalePhotos: true,
                         transition: 'none',
                         onComplete: function() {
-                            $('#cboxClose').html('X');
+                            $('#cboxClose').html('<span style="display: inline-block">X</span>');
                         }
                     });
 

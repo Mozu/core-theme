@@ -636,7 +636,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var result = new InternalBulkActionResult
             {
                 ActionName = actionName,
-                StatusCode = HttpStatusCode.BadRequest, // overwrite in the positive case
+                StatusCode = HttpStatusCode.OK,
                 OrderId = orderContext.OrderId
             };
             var orderResponse = await orderWebApiClient.GetPayments(orderContext.OrderId);
@@ -670,6 +670,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var paymentResponse = await orderWebApiClient.PerformPaymentAction(orderContext.OrderId, payment.Id, action);
             if (paymentResponse.ResponseMessage.StatusCode != HttpStatusCode.OK)
             {
+                result.StatusCode = paymentResponse.ResponseMessage.StatusCode;
                 result.Message = orderResponse.HasException
                     ? orderResponse.ReadException().Message
                     : string.Format("Unknown Error performing the root action '{0}'", actionName);

@@ -102,9 +102,12 @@
             savesuccess: function () {
                 this.onComplete();
                 this.fireEvent('aftersave', this, this.record, this.isEdit());                
-                if (this.record && this.record.getId() != this.originalId) {
-                    this.fireEvent('idchange', this, this.record, this.originalId);
-                }
+
+
+                // moved this to navHeader
+                //if (this.record && this.record.getId() != this.originalId) {
+                //    this.fireEvent('idchange', this, this.record, this.originalId);
+                //}
 
                 this.saveSuccess(this.record);
 

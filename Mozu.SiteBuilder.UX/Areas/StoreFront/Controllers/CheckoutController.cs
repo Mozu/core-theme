@@ -75,6 +75,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Order.OrderStatusConst.SUBMITTED,
             Order.OrderStatusConst.ACCEPTED,
             Order.OrderStatusConst.PENDING_REVIEW, 
+            Order.OrderStatusConst.PROCESSING,
             Order.OrderStatusConst.COMPLETED
         };
 
