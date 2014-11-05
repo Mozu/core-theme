@@ -544,92 +544,52 @@
             "*"
         ]
     }, {
-        "defaultConfig": {
-            "mainCategory": "Category",
-            "numberToDisplay": 4,
-            "template": "primary"
-        },
-        "displayName": "Category Navigation",
-        "displayTemplate": "misc/category-navigation",
-        "editViewFields": [{
-            "anchor": "100%",
-            "fieldLabel": "Main Category",
-            "name": "mainCategory",
-            "xtype": "categorycombobox"
-        }, {
-            "anchor": "100%",
-            "fieldLabel": "Template",
-            "name": "template",
-            "store": [
-                [
-                    "primary",
-                    "primary"
-                ],
-                [
-                    "secondary",
-                    "secondary"
-                ],
-                [
-                    "tertiary",
-                    "tertiary"
-                ]
+            "defaultConfig": {
+                "numberToDisplay": 4,
+                "template": "primary"
+            },
+            "displayName": "Navigation Subsection",
+            "displayTemplate": "misc/category-navigation",
+            "editViewFields": [
+                {
+                    "anchor": "100%",
+                    "fieldLabel": "Parent Navigation Node",
+                    "name": "mainCategory",
+                    "xtype": "mz-input-navnode"
+                },
+                {
+                    "anchor": "100%",
+                    "fieldLabel": "Template",
+                    "name": "template",
+                    "store": [
+                        [
+                            "primary",
+                            "primary"
+                        ],
+                        [
+                            "secondary",
+                            "secondary"
+                        ],
+                        [
+                            "tertiary",
+                            "tertiary"
+                        ]
+                    ],
+                    "xtype": "mz-input-dropdown"
+                },
+                {
+                    "anchor": "100%",
+                    "fieldLabel": "Number to display",
+                    "name": "numberToDisplay",
+                    "xtype": "mz-input-number"
+                }
             ],
-            "xtype": "combo"
+            "icon": "/resources/admin/widgets/22_category_navigation.png",
+            "id": "catNav",
+            "validPageTypes": [
+                "*"
+            ]
         }, {
-            "anchor": "100%",
-            "fieldLabel": "Count",
-            "name": "numberToDisplay",
-            "xtype": "numberfield"
-        }],
-        "icon": "/resources/admin/widgets/22_category_navigation.png",
-        "id": "catNav",
-        "validPageTypes": [
-            "*"
-        ]
-    }, {
-        "defaultConfig": {
-            "mainCategory": "Category",
-            "numberToDisplay": 4,
-            "template": "primary"
-        },
-        "displayName": "Navigation Subsection",
-        "displayTemplate": "misc/nav-subsection",
-        "editViewFields": [{
-            "anchor": "100%",
-            "fieldLabel": "Parent",
-            "name": "parent",
-            "xtype": "mz-input-navnode"
-        }, {
-            "anchor": "100%",
-            "fieldLabel": "Style",
-            "name": "style",
-            "store": [
-                [
-                    "primary",
-                    "primary"
-                ],
-                [
-                    "secondary",
-                    "secondary"
-                ],
-                [
-                    "tertiary",
-                    "tertiary"
-                ]
-            ],
-            "xtype": "combo"
-        }, {
-            "anchor": "100%",
-            "fieldLabel": "Count",
-            "name": "numberToDisplay",
-            "xtype": "mz-input-number"
-        }],
-        "icon": "/resources/admin/widgets/22_category_navigation.png",
-        "id": "subNav",
-        "validPageTypes": [
-            "*"
-        ]
-    }, {
         "defaultConfig": {
             "attributeId": "tenant~product-crosssell",
             "count": "4",
