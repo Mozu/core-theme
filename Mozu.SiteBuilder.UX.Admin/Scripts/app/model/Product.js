@@ -259,7 +259,10 @@ Ext.define('Taco.model.Product', {
         {
             "name": "productImages",
             "type": "auto",
-            "useNull": true
+            "useNull": true,
+            convert: function (v) {
+                return Ext.util.Format.htmlEncode(v);
+            }
         },
         {
             "name": "productName",

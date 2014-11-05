@@ -24,12 +24,7 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
                 fieldLabel: 'Enter Alt Text for this Image',
                 allowBlank: true,
                 selectOnFocus: true,
-                maxLength: 150,
-                validateOnChange: true,
-                validator: function (val) {
-                    if (!val || val.search(/['"=<>`]+|(&\s)+/) === -1) return true;
-                    return 'Disallowed characters in HTML attributes: \' " = < > ` &. You may HTML escape them.';
-                },
+                maxLength: 150,                
                 width: "100%"
             }]
         });
