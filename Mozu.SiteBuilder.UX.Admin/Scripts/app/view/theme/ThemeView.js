@@ -96,7 +96,7 @@ Ext.define('Taco.view.theme.ThemeView', {
                                 flex: 1,
                                 itemId: 'iframe',
                                 xtype: 'uxiframe',
-                                src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend('/', 'SBTHEME=' + model.getId())),
+                                src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=editing&redir=' + encodeURIComponent(Ext.String.urlAppend('/', '/?iseditmode=true&SBTHEME=' + model.getId())),
                                 listeners: {
                                     load: function (iframe) {
                                         Ext.EventManager.on(iframe.getDoc(), 'click', function (e, target) {
