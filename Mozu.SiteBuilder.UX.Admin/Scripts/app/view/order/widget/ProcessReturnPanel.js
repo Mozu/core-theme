@@ -26,12 +26,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.paymentsStore = record.getPayments();
         this.orderItemsStore = order.items();
 
-        this.itemsStore.each(function (item) {
-            item.set({
-                quantityShipped: item.get('quantity'),
-                quantityRestockable: Ext.valueFrom(item.get('quantityRestockable'), 0)
-            });
-        });
 
         // set up major components
         this.itemsGrid = this.initItemsGrid();

@@ -69,6 +69,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.ProductLossTaxAmount, op => op.ResolveUsing(dc => dc.ProductLossTaxAmount))
             .ForMember(x => x.ShippingLossAmount, op => op.ResolveUsing(dc => dc.ShippingLossAmount))
             .ForMember(x => x.ShippingLossTaxAmount, op => op.ResolveUsing(dc => dc.ShippingLossTaxAmount))
+            .AfterMap((dc, x) => {
+                // for some reason, the service expects us to tell it how many of this item have been fulfilled. 
+                // since you can't have created a return that exceeds the # shipped, we should default this field to the quantity.
+                x.QuantityShipped = Math.Max(x.QuantityShipped, x.Quantity);
+            })
             ;
         }
 
