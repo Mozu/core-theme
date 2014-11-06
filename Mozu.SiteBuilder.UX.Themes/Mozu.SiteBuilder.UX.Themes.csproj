@@ -1926,11 +1926,6 @@
     <Content Include="Themes\Core5\templates\Widgets\misc\instock-request.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\misc\nav-subsection.hypr">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Themes\Core5\templates\Widgets\misc\pickels.hypr" />
   </ItemGroup>
   <ItemGroup>
