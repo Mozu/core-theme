@@ -54,6 +54,7 @@ Ext.define('Taco.view.order.Grid', {
             [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
+            [{ orderStatus: 'Errored' }, 'Errored Orders'],
             [{}, 'All Orders']
         ]
     },
