@@ -85,6 +85,9 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                         }, {
                             name: "Validated",
                             id: "Validated"
+                        }, {
+                            name: "Errored",
+                            id: "Errored"
                         }
                     ]
                 })

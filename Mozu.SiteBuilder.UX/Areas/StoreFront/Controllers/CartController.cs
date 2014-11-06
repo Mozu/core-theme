@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
@@ -12,19 +8,15 @@ using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.Location.Contracts;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.Core.Settings;
-
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 //using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
 //using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
 using VM=Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
 using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiClient ;
-using Product = Mozu.ProductRuntime.Contracts.Product;
 using Mozu.Location.Contracts.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -58,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _settings = settings;
         }
 
-        private string BuildLocationsFilter(List<string> locationCodes)
+        private string BuildLocationsFilter(IEnumerable<string> locationCodes)
         {
             return string.Join(" or ", locationCodes.Select(x => "Code eq \"" + x +"\""));
         }
