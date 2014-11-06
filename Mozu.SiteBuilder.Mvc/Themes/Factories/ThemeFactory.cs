@@ -85,15 +85,24 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             t.MergedLabels[t.DefaultLanguage] = new ThemeLabelCollection();
         }
 
+        /// <summary>
+        /// Ugh, we can't assume that the values posted in are actually any good, so here we have to ensure uniqueness according to the identifier member passed in
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<T> EnsureUniqueness<T>(IEnumerable<T> values, Func<T, string> identifierMember)
+        {
+            return (values ?? Enumerable.Empty<T>()).GroupBy(identifierMember).Select(x => x.First());
+        } 
+
         private static IEnumerable<TOut> Merge<TOut>(IEnumerable<TOut> themeValues, IEnumerable<TOut> parentValues, Func<TOut, string> identifierMember)
         {
-            var p = (parentValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x, StringComparer.OrdinalIgnoreCase);
-            var t = (themeValues ?? Enumerable.Empty<TOut>()).ToDictionary(identifierMember.Invoke, x => x, StringComparer.OrdinalIgnoreCase);
+            var p = EnsureUniqueness(parentValues, identifierMember).ToDictionary(identifierMember.Invoke, x => x, StringComparer.OrdinalIgnoreCase);
+            var t = EnsureUniqueness(themeValues, identifierMember).ToDictionary(identifierMember.Invoke, x => x, StringComparer.OrdinalIgnoreCase);
 
             var output = MergeValuesPreferChild(p, t, StringComparer.OrdinalIgnoreCase);
             return output.Select(x => x.Value);
         }
-
+        
         private static Dictionary<string, ThemeLabelCollection> MergeLabels(Dictionary<string, ThemeLabelCollection> themeValues, Dictionary<string, ThemeLabelCollection> parentValues)
         {
             if (themeValues == null || parentValues == null)
