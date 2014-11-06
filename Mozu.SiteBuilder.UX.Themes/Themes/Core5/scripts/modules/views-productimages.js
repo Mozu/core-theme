@@ -11,6 +11,9 @@
             _.each(this.model.get('content').get('productImages'), function (img) {
                 var i = new Image();
                 i.src = img.imageUrl + "?max=" + Hypr.getThemeSetting('productImagesContainerWidth');
+                if (img.altText) {
+                    i.alt = img.altText;
+                }
                 imageCache[img.sequence.toString()] = i;
             });
         },
@@ -22,7 +25,9 @@
         },
         updateMainImage: function () {
             if (this.imageCache[this.selectedImageIx]) {
-                this.$('[data-mz-productimage-main]').prop('src', this.imageCache[this.selectedImageIx].src);
+                this.$('[data-mz-productimage-main]')
+                    .prop('src', this.imageCache[this.selectedImageIx].src)
+                    .prop('alt', this.imageCache[this.selectedImageIx].alt);
             }
         },
         render: function () {
