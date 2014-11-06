@@ -51,11 +51,10 @@ Ext.define('Taco.view.order.Edit', {
     initComponent: function () {
         this.saveHidden
             = this.cancelHidden
-            = this.record.get('orderStatus') !== 'Pending';
+            = !Ext.Array.contains(this.record.get('availableActions'), "SubmitOrder");
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderGrid');
 
         
-
         this.additionalActions = [{
             xtype: 'button',
             ui: 'action',

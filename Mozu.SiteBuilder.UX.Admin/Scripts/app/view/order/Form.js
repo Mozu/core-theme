@@ -206,16 +206,19 @@ Ext.define('Taco.view.order.Form', {
     },
 
     isEdit: function () {
-        if (this._isEdit === undefined) {
-            this._isEdit = this.record.get('orderStatus') !== 'Pending';
-        }
-        return this._isEdit;
+        return this.record.get('orderStatus') !== 'Pending';
+    },
+
+    isErrored: function () {
+        return this.record.get('orderStatus') === 'Errored';
     },
 
     isValid: function () {        
         var me = this,
             isValid = true,
            errors = [];
+
+        if (this.isErrored()) return true;
         
         var isShippable = this.record.isShippable();
         // Only validate when in create mode

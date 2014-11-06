@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ISettings _settings;
-        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
+        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;  
         private readonly ICreditWebApiClient _creditWebApiClient;
   
         
@@ -76,7 +76,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Order.OrderStatusConst.ACCEPTED,
             Order.OrderStatusConst.PENDING_REVIEW, 
             Order.OrderStatusConst.PROCESSING,
-            Order.OrderStatusConst.COMPLETED
+            Order.OrderStatusConst.COMPLETED,
+            Order.OrderStatusConst.ERRORED
         };
 
 

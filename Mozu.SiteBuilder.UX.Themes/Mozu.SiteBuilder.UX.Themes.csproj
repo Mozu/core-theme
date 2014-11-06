@@ -286,7 +286,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.ShippingAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.5\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -1924,11 +1924,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\Widgets\misc\instock-request.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\misc\nav-subsection.hypr">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\Widgets\misc\pickels.hypr" />
