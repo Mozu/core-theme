@@ -69,7 +69,7 @@ Ext.define('Taco.view.order.Grid', {
             'AcceptOrder': '{0} of {1} orders were accepted successfully.',
             'CancelOrder': '{0} of {1} orders were cancelled successfully.',
             'CapturePayment': '{0} of {1} payments were captured successfully.',
-            'Ship': '{0} of {1} packages were shipped successfully.'
+            'Ship': '{0} of {1} orders were shipped successfully.'
         }
     },
         
