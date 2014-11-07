@@ -17,12 +17,15 @@
     @include icon-font($glyph-arrowright);
     margin-left: -3px;
     position: absolute;
-}
+    background-color: $color-framework-gray-light;
+    background-image: none;
+}   
 
 .#{$prefix}splitter-collapsed {
     .#{$prefix}layout-split-right {
         &::after {
             content: $glyph-arrowleft;
+            background-image: none;
         }
     }
 }
