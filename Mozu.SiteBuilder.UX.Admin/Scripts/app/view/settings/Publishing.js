@@ -228,7 +228,7 @@ Ext.define('Taco.view.settings.Publishing', {
             xtype: 'radio',
             inputValue: 'Pending',
             checked: site.isContentPublishingEnabled(),
-            name: 'content-publishing-' + site.id,
+            name: 'content-publishing-' + site.urlToken,
             cellCls: 'site radio'
         });
 
