@@ -31,7 +31,8 @@ Ext.define('Taco.core.context.TaContext', {
         Ext.Ajax.on('requestexception', function (conn, resp) {
             var corId,
                 logzuUrl,
-                url;
+                url,
+                errObj;
 
             //occurs on abort of xhr
             if (!resp || !resp.getResponseHeader) {
@@ -45,6 +46,12 @@ Ext.define('Taco.core.context.TaContext', {
                 url = logzuUrl + '#trace/' + corId;
             }
             console.error('AJAX Exception', 'View in Logzu', url);
+
+            errObj = Ext.decode(resp.responseText);
+            if (errObj && errObj.message) {
+                Taco.app.fireEvent('setmessage', errObj.message, 'error');
+            }
+
         }, this);
 
     },
