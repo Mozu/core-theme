@@ -12,19 +12,23 @@
                 ci.on('click', function (event) {
                     event.preventDefault();
 
-                    $.colorbox({
-                        photo: true,
-                        href: imageUrl,
-                        maxHeight: $(window).height() - 200,
-                        maxWidth: $(window).width() - 200,
-                        scrolling: false,
-                        opacity: '0.7',
-                        scalePhotos: true,
-                        transition: 'none',
-                        onComplete: function() {
-                            $('#cboxClose').html('<span style="display: inline-block">X</span>');
-                        }
-                    });
+                    if (!require.mozuData('pagecontext').isEditMode) {
+
+                        $.colorbox({
+                            photo: true,
+                            href: imageUrl,
+                            maxHeight: $(window).height() - 200,
+                            maxWidth: $(window).width() - 200,
+                            scrolling: false,
+                            opacity: '0.7',
+                            scalePhotos: true,
+                            transition: 'none',
+                            onComplete: function() {
+                                $('#cboxClose').html('<span style="display: inline-block">X</span>');
+                            }
+                        });
+                        
+                    }
 
                 });
             }
