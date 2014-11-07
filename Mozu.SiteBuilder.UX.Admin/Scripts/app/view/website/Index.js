@@ -404,7 +404,8 @@ Ext.define('Taco.view.website.Index', {
                         },
                         split: {
                             canResize: true,
-                            size: 10
+                            size: 10,
+                            cls: 'taco-website-sidebar-splitter'
                         },
                         layout: {
                             type: 'card'
