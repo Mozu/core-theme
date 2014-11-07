@@ -74,7 +74,11 @@
   }
 
   .#{$vprefix}website-sidebar-splitter {
-      background-color: $color-framework-gray-border;
+    background-color: $color-framework-gray-border;
+  }
+
+  .#{$vprefix}website-tree-backcolor {
+    background-color: $color-framework-gray-lighter !important;
   }
 
   .#{$vprefix}website-sidebar {

@@ -24,7 +24,8 @@ Ext.define('Taco.view.website.Tree', {
         stripeRows: false,
         plugins: {
             ptype: 'treeviewdragdrop'
-        }
+        },
+        cls: 'taco-website-tree-backcolor'
     },
 
     initComponent: function () {
