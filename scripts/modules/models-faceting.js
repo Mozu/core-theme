@@ -76,12 +76,17 @@
         setHierarchy: function(hierarchyField, hierarchyValue) {
             this.hierarchyField = hierarchyField;
             this.hierarchyValue = hierarchyValue;
-            this.baseRequestParams = (hierarchyValue !== null) && {
-                filter: hierarchyField + ' req ' + hierarchyValue,
-                facetTemplate: hierarchyField + ':' + hierarchyValue,
-                facetHierValue: hierarchyField + ':' + hierarchyValue,
-                facetHierDepth: hierarchyField + ':' + this.hierarchyDepth
-            };
+            this.baseRequestParams = this.baseRequestParams || {};
+            if (hierarchyValue || hierarchyValue === 0) {
+                this.baseRequestParams = _.extend(this.baseRequestParams, {
+                    filter: hierarchyField + ' req ' + hierarchyValue,
+                    facetTemplate: hierarchyField + ':' + hierarchyValue,
+                    facetHierValue: hierarchyField + ':' + hierarchyValue,
+                    facetHierDepth: hierarchyField + ':' + this.hierarchyDepth
+                });
+            } else {
+                this.baseRequestParams = _.omit(this.baseRequestParams, 'filter', 'facetTemplate', 'facetHierValue', 'facetHierDepth');
+            }
             if (this.query) this.baseRequestParams.query = this.query;
             this.lastRequest = this.buildRequest();
         },
