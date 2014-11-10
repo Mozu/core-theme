@@ -72,7 +72,7 @@
                 <option {% if model.expireYear == "2021" %}selected="selected"{% endif %} value="2021">2021</option>
                 <option {% if model.expireYear == "2022" %}selected="selected"{% endif %} value="2022">2022</option>
                 <option {% if model.expireYear == "2023" %}selected="selected"{% endif %} value="2023">2023</option>
-                <option {% if model.expireYear == "2024" %}selected="selected"{% endif %} value="2023">2023</option>
+                <option {% if model.expireYear == "2024" %}selected="selected"{% endif %} value="2024">2024</option>
             </select>
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}expireYear"></span>
         </div>
