@@ -17,6 +17,13 @@
                 model: FacetValue
             })
         },
+        //parse: function (raw) {
+        //    // trying to accommodate the shape of the Hierarchical Facet
+        //    if (raw.facetType === "Hierarchy") {
+        //        raw.values = raw.values[0] ? raw.values[0].childrenFacetValues : [];
+        //    }
+        //    return raw;
+        //},
         isFaceted: function() {
             return !!this.get("values").findWhere({ "isApplied": true });
         },
@@ -43,12 +50,11 @@
         helpers: ['hasValueFacets'],
         hierarchyDepth: 2,
         hierarchyField: 'categoryId',
-        getQueryParams: function() {
-            var params = Backbone.MozuPagedCollection.prototype.getQueryParams.apply(this, arguments);
-            if (this.hierarchyValue) {
-                params[window.encodeURIComponent(this.hierarchyField)] = window.encodeURIComponent(this.hierarchyValue);
-            }
-            return params;
+        getQueryString: function() {
+            var qs = Backbone.MozuPagedCollection.prototype.getQueryString.apply(this, arguments) || "",
+                extra = this.hierarchyValue && window.encodeURIComponent(this.hierarchyField) + "=" + window.encodeURIComponent(this.hierarchyValue);
+
+            return extra ? (qs ? qs + "&" + extra : "?" + extra) : qs;
         },
         buildRequest: function(filterValue) {
             var conf = Backbone.MozuPagedCollection.prototype.buildRequest.apply(this, arguments);
@@ -61,7 +67,8 @@
             if (!this.hierarchyValue && !this.baseRequestParams) {
                 this.baseRequestParams = {
                     facet: this.hierarchyField,
-                    facetHierDepth: this.hierarchyField + ":" + this.hierarchyDepth
+                    facetHierDepth: this.hierarchyField + ":" + this.hierarchyDepth,
+                    query: query
                 };
             }
             this.lastRequest = this.buildRequest();
@@ -121,30 +128,12 @@
                 me.trigger('facetchange', me.getQueryString());
             });
         }
-    }),
-
-    Category = FacetedProductCollection.extend({}),
-
-    SearchResult = FacetedProductCollection.extend({
-        defaultSort: '', // relevance rather than createdate
-        buildRequest: function() {
-            var conf = FacetedProductCollection.prototype.buildRequest.apply(this, arguments);
-            if (this.query) conf.query = this.query;
-            return conf;
-        },
-        getQueryParams: function() {
-            var params = FacetedProductCollection.prototype.getQueryParams.apply(this, arguments);
-            if (this.query) params.query = this.query;
-            return params;
-        }
     });
 
     return {
         Facet: Facet,
         FacetValue: FacetValue,
-        FacetedProductCollection: FacetedProductCollection,
-        Category: Category,
-        SearchResult: SearchResult
+        FacetedProductCollection: FacetedProductCollection
     };
 
 });
