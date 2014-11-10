@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Runtime.Hosting;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -855,10 +856,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
            
 
                 var env = new Env {Compress = !_debug, Debug = _debug};
+                
 
                 var mlp = new ProbeForThemeVariablesPlugin()
                           {
-                              ThemeSettings = Controller.SiteContext.ThemeSettings
+                              ThemeSettings = Controller.SiteContext.ThemeSettings,
+                              CdnPrefix = Controller.SiteContext.CdnPrefix
                           };
                 env.AddPlugin(mlp);
 
@@ -866,7 +869,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                               {
                                   Rules = mlp.Rules
                               });
-
+                env.AddFunction("cdnurl", typeof(CdnFunction));
                 
                 try
                 {
@@ -1094,6 +1097,45 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
 
+        class CdnFunction : dotless.Core.Parser.Functions.Function
+        {
+         
+            protected override Node Evaluate(Env env)
+            {
+                string inner;
+                var tn = Arguments[0] as TextNode;
+                if (tn == null)
+                {
+                    inner = Arguments[0].ToCSS(env);
+                }
+                else
+                {
+
+                    inner = tn.Value;
+                }
+
+                
+
+             
+                
+
+                var imagePath = inner;
+                if (!inner.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    var cndPrefix = env.VisitorPlugins.OfType<ProbeForThemeVariablesPlugin>().First().CdnPrefix;
+                    if (!cndPrefix.EndsWith("/"))
+                    {
+                        cndPrefix += "/";
+                    }
+                    imagePath = cndPrefix + inner;
+                }
+
+
+                return new TextNode("url(\"" + imagePath + "\")");
+
+
+            }
+        }
 
         private class InsertThemeVariablePlugin : VisitorPlugin
         {
@@ -1131,8 +1173,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             public Dictionary<string, Node> Rules = new Dictionary<string, Node>(); 
             const string prefix ="@theme-settings-";
        
+
             public ThemeRuntimeSettingsCollection ThemeSettings { get; set; }
-            
+            public string CdnPrefix { get; set; }
             public override Node Execute(Node node, out bool visitDeeper)
             {
                 
