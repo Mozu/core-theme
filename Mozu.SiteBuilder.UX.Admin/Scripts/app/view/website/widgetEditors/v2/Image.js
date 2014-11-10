@@ -478,6 +478,24 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                 }
             }
         });
+
+        this.on({
+            boxready: {
+                scope: this,
+                fn: function( cmp, width, height ) {
+                    var data = this.up().widgetData;
+                    
+                    if ( data.imageFileId ) {
+                        this.imageStore.add({
+                            id: data.imageField,
+                            url: ['/cms/', Taco.app.context.currentCtx.id, '/files/', data.imageFileId].join('')
+                        });
+                    }
+
+                }
+            }
+        });
+
     },
 
     handleImageClickActionChange: function (newValue) {

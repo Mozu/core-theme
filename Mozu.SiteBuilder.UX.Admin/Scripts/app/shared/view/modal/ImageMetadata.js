@@ -32,7 +32,7 @@ Ext.define('Taco.shared.view.modal.ImageMetadata', {
                     if (encodedLength <= maxLen)
                         return true;
                     return 'The maximum number of characters is ' + maxLen + ', including characters escaped into HTML, such as "&". Please reduce text by ' + (encodedLength - 150) + ' character' + ((encodedLength - 150 > 1) ? 's.' : '.');
-                },
+                }
             }]
         });
 

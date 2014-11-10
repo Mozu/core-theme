@@ -4,7 +4,7 @@
   {% block item-listing-image %}
   {% if model.product.imageUrl %}
   <div class="mz-itemlisting-thumb">
-    <img class="mz-itemlisting-thumb-img" src="{{ model.product.imageUrl }}?max=80" />
+    <img class="mz-itemlisting-thumb-img" src="{{ model.product.imageUrl }}?max=80" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% endif %} />
   </div>
   {% endif %}
   {% endblock item-listing-image %}

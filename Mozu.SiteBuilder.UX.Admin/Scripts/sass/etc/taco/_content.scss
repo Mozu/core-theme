@@ -73,6 +73,10 @@
     }
   }
 
+  .#{$vprefix}website-sidebar-splitter {
+      background-color: $color-framework-gray-border;
+  }
+
   .#{$vprefix}website-sidebar {
     overflow: visible !important;
 

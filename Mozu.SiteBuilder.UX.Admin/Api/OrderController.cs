@@ -636,14 +636,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var result = new InternalBulkActionResult
             {
                 ActionName = actionName,
-                StatusCode = HttpStatusCode.OK,
+                StatusCode = HttpStatusCode.BadRequest,
                 OrderId = orderContext.OrderId
             };
             var orderResponse = await orderWebApiClient.GetPayments(orderContext.OrderId);
 
             var payments = orderResponse.ReadAsSync().Items;
 
-            // perform validation on the payments
+            // perform validation on the payments; return BadRequest early if validation fails
             if (payments.IsNullOrEmpty())
             {
                 result.Message = "No payments on the order";
@@ -657,10 +657,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var payment = payments.First();
             if (payment.PaymentType == Mozu.CommerceRuntime.Contracts.Payments.PaymentTypeConst.CHECK)
             {
-                result.Message = string.Format("'{0}' is not a valid paymenttype for a bulk capture action",
+                result.Message = string.Format("'{0}' is not a valid paymentType for a bulk capture action.",
                     CommerceRuntime.Contracts.Payments.PaymentTypeConst.CHECK);
                 return result;
             }
+
+            // validation passed; perform payment action
             var action = new DCp.PaymentAction
             {
                 ActionName = actionName,
@@ -668,9 +670,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             var paymentResponse = await orderWebApiClient.PerformPaymentAction(orderContext.OrderId, payment.Id, action);
+
+            // overwrite default values with real ones from the response
+            result.StatusCode = paymentResponse.ResponseMessage.StatusCode;
             if (paymentResponse.ResponseMessage.StatusCode != HttpStatusCode.OK)
             {
-                result.StatusCode = paymentResponse.ResponseMessage.StatusCode;
                 result.Message = orderResponse.HasException
                     ? orderResponse.ReadException().Message
                     : string.Format("Unknown Error performing the root action '{0}'", actionName);
