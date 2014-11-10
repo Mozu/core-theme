@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -198,10 +198,15 @@
             var me = this;
             this.whenReady(function() {
                 if (!me.validate()) {
-                    me.apiAddToCart(me.get("quantity")).then(function(item) {
+                    me.apiAddToCart({
+                        options: me.getConfiguredOptions(),                       
+                        quantity: me.get("quantity")
+                    }).then(function (item) {
                         me.trigger('addedtocart', item);
                     });
                 }
+
+
             });
         },
         addToWishlist: function() {
