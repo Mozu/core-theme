@@ -67,7 +67,7 @@
     "emailTemplates": [{
         "id": "order.shipped",
         "properties": {
-            "subject": "Your Order Has Shipped #{model.orderNumber}"
+            "subject": "Your Order Has Shipped"
         },
         "template": "email/order-shipped",
         "title": "Order Shipped"
@@ -75,7 +75,7 @@
         "id": "order.changed",
         "customEditor": "email-orderconfirmation",
         "properties": {
-            "subject": "Order Confirmation #{model.orderNumber}"
+            "subject": "Order Confirmation"
         },
         "template": "email/order-confirmation",
         "title": "Order Confirmation"
