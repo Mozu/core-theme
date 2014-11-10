@@ -275,16 +275,17 @@
         },
         addToCart: function() {
             var me = this;
-            this.whenReady(function() {
+            this.whenReady(function () {
                 if (!me.validate()) {
                     var fulfillMethod = me.get('fulfillmentMethod');
-                    if (! fulfillMethod) {
+                    if (!fulfillMethod) {
                         fulfillMethod = (me.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
                     }
                     me.apiAddToCart({
+                        options: me.getConfiguredOptions(),
                         fulfillmentMethod: fulfillMethod,
                         quantity: me.get("quantity")
-                        }).then(function (item) {
+                    }).then(function (item) {
                         me.trigger('addedtocart', item);
                     });
                 }
