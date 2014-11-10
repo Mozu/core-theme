@@ -14,6 +14,23 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     
     using Microsoft.FSharp.Collections;
 
+
+    [NDjango.ParserNodes.Description("sets varaible s in the current scope")]
+    [NDjango.Interfaces.Name("set_var")]
+    public class SetVarTag : SimpleTagBase
+    {
+
+        protected override void ProcessTag(ArgumentCollection arguments, ref IContext context, out string buffer, out string templateName)
+        {
+            var name = arguments[0].TokenValue;
+            var value = arguments[1].Value;
+            
+            context.add2(new Tuple<string, object>(name, value));
+            buffer = "";
+            templateName = null;
+        }
+    }
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>

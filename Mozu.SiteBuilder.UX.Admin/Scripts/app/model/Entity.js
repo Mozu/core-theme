@@ -61,7 +61,7 @@ Ext.define('Taco.model.Entity', {
             "name": "entityId",
             "type": "string",
             convert: function (v, rec) {
-                if (rec.raw) {
+                if (rec && rec.raw) {
                     if (rec.raw.listFQN) {
                         return 'cms_' + rec.raw.listFQN + '_' + rec.raw.id;
                     } else {

@@ -83,7 +83,24 @@ Ext.define('Taco.view.entityManager.Index', {
                                  url = "/cms/" + record.get('listFQN') + "/" + record.get('name');
                                  window.open('/_gosite/' + siteId + '?environment=staging&redir=' + encodeURIComponent(url));
                              }
-                         }
+                         },
+                          {
+                              xtype: "menuseparator",
+                              style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
+                          },
+                          {
+                              text: 'Duplicate',
+                             
+                              handler: function (item) {
+                                  var copyRec = me.getCurrentEntityRecord().copy({ name: null, id: null });
+                                  if (copyRec.get('name')) {
+                                      copyRec.set('name', null);
+                                  }
+                                  copyRec.phantom = true;
+                                  me.loadEditor(copyRec);
+                            
+                              }
+                          },
                     ]
                 }
             },

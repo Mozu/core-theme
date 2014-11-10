@@ -16,6 +16,7 @@ using FSharpx.Collections;
 using Magnum.Extensions;
 using Microsoft.Server.Common;
 using Microsoft.Win32;
+using MongoDB.Bson.Serialization.Conventions;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -37,6 +38,7 @@ using dotless.Core.Parser.Infrastructure.Nodes;
 using dotless.Core.Parser.Tree;
 using dotless.Core.Plugins;
 using Mozu.SiteBuilder.Mvc.Navigation;
+using Stact.Routing.Nodes;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -826,7 +828,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 var parser = new Parser
                                  {
-                    Importer = new Importer(reader, true, false, false)
+                    Importer = new Importer(reader, true, "c:\\", false, false)
                                  };
            
 
@@ -849,18 +851,22 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     else throw;
                 }
 
-                //quickly adding themesettings vars into less scope
-                var nodes = new  List<Node>();
-                foreach (var setting in Controller.SiteContext.ThemeSettings.InnerDictionary)
-                {
-                    nodes.Add(new Rule("@themeSettings_" + setting.Key, new TextNode(setting.Value.Value == null ? null : setting.Value.Value.ToString())));
-                }
-                tree.Rules.InsertRange(0, nodes);
-
+                
+           
 
                 var env = new Env {Compress = !_debug, Debug = _debug};
-                
-               // env.AddPlugin(new MyLessPlugin());
+
+                var mlp = new ProbeForThemeVariablesPlugin()
+                          {
+                              ThemeSettings = Controller.SiteContext.ThemeSettings
+                          };
+                env.AddPlugin(mlp);
+
+                env.AddPlugin(new InsertThemeVariablePlugin()
+                              {
+                                  Rules = mlp.Rules
+                              });
+
                 
                 try
                 {
@@ -1088,61 +1094,190 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
 
-        private class MyLessPlugin : VisitorPlugin
+
+        private class InsertThemeVariablePlugin : VisitorPlugin
         {
             public override VisitorPluginType AppliesTo
             {
                 get { return VisitorPluginType.BeforeEvaluation; }
             }
-
-            public Env Env { get; set; }
-
+            public Dictionary<string, Node> Rules = new Dictionary<string, Node>();
+     
             public override Node Execute(Node node, out bool visitDeeper)
             {
-                Root rootNode = node as Root;
-                if (rootNode != null)
+                visitDeeper = true;
+               
+                var root  = node as Root;
+                if (root != null && this.Rules.Count>0)
                 {
-                    var thom = new MyVariable("@thom");
-                 
-                    rootNode.Rules.Insert(0, thom);
+                    root.Rules.InsertRange(0,Rules.Values);
+                    this.Rules.Clear();
+                    visitDeeper = false;
                 }
-                visitDeeper = false;
-                //node.AppendCSS();
-                //visitDeeper = true;
-                //if (node is Value)
-                //{
-                //    // do nothing
-                //}
-                //if (node is Variable)
-                //{
-                //    var inNode = (Variable) node;
-                //    if (inNode.Name == "@headingsColor")
-                //    {
-                //        Rule rule = Env.FindVariable(inNode.Name);
-                //        var parser = new Parser();
-                //        //  var resRs = parser.Parse("lighten(@orange, 15%)", "xxx");
-                //    }
-                //    node = new MyVariable(inNode.Name);
-                //}
+                
+               
                 return node;
             }
         }
 
-        private class MyVariable : Variable
+        private class ProbeForThemeVariablesPlugin : VisitorPlugin
         {
-            public MyVariable(string name)
-                : base(name)
+            public override VisitorPluginType AppliesTo
             {
+                get { return VisitorPluginType.BeforeEvaluation; }
             }
-
-            public override Node Evaluate(Env env)
+            
+            public Env Env { get; set; }
+            public Dictionary<string, Node> Rules = new Dictionary<string, Node>(); 
+            const string prefix ="@theme-settings-";
+       
+            public ThemeRuntimeSettingsCollection ThemeSettings { get; set; }
+            
+            public override Node Execute(Node node, out bool visitDeeper)
             {
+                
+                var variableNode = node as Variable;
+                visitDeeper = true;
+                if (variableNode != null)
+                {
+                    if (variableNode.Name.IndexOf(prefix, StringComparison.OrdinalIgnoreCase) == 0 && !Rules.ContainsKey(variableNode.Name))
+                    {
+                     
+                        var setting = ThemeSettings[variableNode.Name.Substring(prefix.Length)];
+                        bool added = false;
+                        if (setting != null)
+                        {
+                            Parser p = new Parser();
+                            var val = variableNode.Name + ":" + setting.ToString() + ";";
+                            try
+                            {
+                                var ruleSet = p.Parse(val, "c:\\themesettingVariables.less");
 
-                var tn = new TextNode("red");
-                return tn;
+                                Rules.Add(variableNode.Name,ruleSet.Rules.First());
+                            }
+                            catch
+                            {
+                                val = variableNode.Name + ":\"" + setting.ToString() + "\";";
 
+                                try
+                                {
+                                    var ruleSet = p.Parse(val, "c:\\themesettingVariables.less");
+                                    Rules.Add(variableNode.Name, ruleSet.Rules.First());
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            
+                            added = true;
+                        }
+                    }
+                    visitDeeper = false;
+                    
+                }
+                
+               
+                return node;
             }
         }
 
+        //private class MyNode : Node, IOperable, IComparable
+        //{
+        //    private Node _xformedNode;
+        //    private readonly ThemeRuntimeSetting _setting;
+
+        //    public MyNode(ThemeRuntimeSetting setting)
+        //    {
+        //        _setting = setting;
+        //    }
+
+        //    public override Node Evaluate(Env env)
+        //    {
+        //       var ret= XformedNode.Evaluate(env);
+        //        return ret;
+
+        //    }
+
+        //    public Node XformedNode
+        //    {
+        //        get {
+        //            if (_xformedNode ==  null)
+        //            {
+        //                if (_setting.Value == null || _setting.Value is JObject || _setting.Value is JArray)
+        //                {
+        //                    _xformedNode =  new TextNode(_setting.Value == null ? null : _setting.Value.ToString());
+        //                }
+        //                else
+        //                {
+        //                    Parser p = new Parser();
+        //                var val = "@x:" + (_setting.Value == null ? null : _setting.Value.ToString()) + ";";
+        //                var ruleSet = p.Parse(val, "c:\\stuff.less");
+        //                var rule = ruleSet.Rules.First() as Rule;
+        //                if (rule == null)
+        //                {
+        //                    _xformedNode = new TextNode(null);
+        //                }
+        //                _xformedNode = rule.Value;
+
+                           
+        //                }
+                        
+
+
+        //            }
+        //            return _xformedNode;
+        //        }
+        //        set { _xformedNode = value; }
+        //    }
+
+        //    public Node Operate(Operation op, Node other)
+        //    {
+        //        var oper = XformedNode as IOperable;
+        //        if (oper!= null)
+        //        {
+        //            return oper.Operate(op, other);
+        //        }
+        //        throw new NotImplementedException();
+        //    }
+
+        //    public Color ToColor()
+        //    {
+             
+        //        var oper = XformedNode as IOperable;
+        //        if (oper != null)
+        //        {
+        //            return oper.ToColor();
+        //        }
+        //        throw new NotImplementedException();
+        //    }
+
+        //    public int CompareTo(object obj)
+        //    {
+        //        var oper = XformedNode as IComparable;
+        //        if (oper != null)
+        //        {
+        //            return oper.CompareTo(obj);
+        //        }
+        //        throw new NotImplementedException();
+        //    }
+        //}
+
+        //private class MyVariable : Variable
+        //{
+        //    public MyVariable(string name)
+        //        : base(name)
+        //    {
+        //    }
+
+        //    public override Node Evaluate(Env env)
+        //    {
+
+        //        var tn = new TextNode("red");
+        //        return tn;
+
+        //    }
+        //}
+
+      
     }
 }

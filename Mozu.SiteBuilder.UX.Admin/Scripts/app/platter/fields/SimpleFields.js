@@ -77,7 +77,8 @@ Ext.define('Taco.platter.SimpleField', {
 
 Ext.define('Taco.platter.fields.DateTime', {
     extend: 'Taco.core.ux.picker.DateTime',
-    format:'c',
+    format: 'c',
+    altFormats:"m/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|c",
     alias: ['widget.mz-input-date'],
     mixins: ['Taco.platter.SimpleField'],
     initComponent: function() {

@@ -189,6 +189,9 @@
             this.record.set('properties', data);
             if (this.showNameEditor && this.down('#cms_entity_name')) {
                 this.record.set('name', this.down('#cms_entity_name').getValue());
+                if (containerData) {
+                    delete containerData.name;
+                }
             }
            
         }
