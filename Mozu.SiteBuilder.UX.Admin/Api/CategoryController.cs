@@ -235,13 +235,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(Mapper.Map<Category>(newCategory));
         }
 
-        private static void AnyExceptionsThenThrow<T>(IEnumerable<Task<ServiceClientResponse<T>>> taskResults)
-        {
-            foreach (var taskResult in taskResults.Where(taskResult => taskResult.Result.HasException))
-            {
-                throw taskResult.Result.ReadException();
-            }
-        }
-
     }
 }

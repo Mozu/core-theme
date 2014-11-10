@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -7,6 +8,7 @@ using System.Web.Http;
 using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Authorization;
+using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Controllers;
 using Mozu.Core.ErrorHandling;
 using Mozu.ProductAdmin.Contracts;
@@ -292,6 +294,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Success = success,
                     Message = message,
                 };
+        }
+
+        protected void AnyExceptionsThenThrow<T>(IEnumerable<Task<ServiceClientResponse<T>>> taskResults)
+        {
+            foreach (var taskResult in taskResults.Where(taskResult => taskResult.Result.HasException))
+            {
+                throw taskResult.Result.ReadException();
+            }
         }
     }
 }
