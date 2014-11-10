@@ -201,13 +201,13 @@
         "customEditor": "productContent@mozu"
     }, {
         "entityType": "searchresult",
-        "id": "no-search-results",
+        "id": "search-results",
         "template": "search-results",
         "title": "Search Results",
         "userCreatable": false
     }, {
         "entityType": "nosearchresult",
-        "id": "no-results",
+        "id": "no-search-results",
         "template": "no-search-results",
         "title": "Empty Search Results",
         "userCreatable": false
