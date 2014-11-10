@@ -38,7 +38,19 @@ Ext.define('Taco.view.themesettings.Form', {
             })
         })
 
-        this.callParent(arguments);
+        try {
+            this.callParent(arguments);
+        } catch (e) {
+            console.log(e);
+            
+            this.items = [];
+            this.callParent(arguments);
+            Ext.defer(function () {
+                Taco.core.StateManager.attemptNavigate('themes');
+                Taco.app.fireEvent('setmessage', 'Error in theme\'s UI Form', 'error');
+            }, 500);
+            
+        }
 
         this.getForm().setValues(this.themeInfo.settingsValues);
 
@@ -50,7 +62,8 @@ Ext.define('Taco.view.themesettings.Form', {
         var me = this;
         tasks.add({
             fn:function (task) {
-                var values = me.getForm().getValues(false, true, false, true);
+                var values = me.getForm().getValues(false, true, false, true);
+
 
                 Ext.Object.each(values, function (key, value, object) {
                     if (Ext.isEmpty(value)) {
