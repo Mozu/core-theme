@@ -828,7 +828,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 var parser = new Parser
                                  {
-                    Importer = new Importer(reader, true, "c:\\", false, false)
+                    Importer = new Importer(reader, true, false, false)
                                  };
            
 
