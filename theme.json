@@ -66,82 +66,60 @@
         ],
     "emailTemplates": [{
         "id": "order.shipped",
-        "properties": {
-            "subject": "Your Order Has Shipped"
-        },
+        "properties": {},
         "template": "email/order-shipped",
-        "title": "Order Shipped"
+        "title": "Your Order Has Shipped"
     }, {
         "id": "order.changed",
         "customEditor": "email-orderconfirmation",
-        "properties": {
-            "subject": "Order Confirmation"
-        },
+        "properties": {},
         "template": "email/order-confirmation",
         "title": "Order Confirmation"
     }, {
         "id": "return.created",
-        "properties": {
-            "subject": "Your Return Request"
-        },
+        "properties": {},
         "template": "email/product-return-changed",
         "title": "Return Created"
     }, {
         "id": "return.authorized",
-        "properties": {
-            "subject": "RMA Request Approved"
-        },
+        "properties": {},
         "template": "email/product-return-authorized",
         "title": "Return Authorized"
     }, {
         "id": "return.rejected",
-        "properties": {
-            "subject": "RMA Request Rejected"
-        },
+        "properties": {},
         "template": "email/product-return-rejected",
-        "title": "Return Rejected"
+        "title": "Return Request Rejected"
     }, {
         "id": "return.closed",
-        "properties": {
-            "subject": "Return Item Received"
-        },
+        "properties": {},
         "template": "email/product-return-received",
         "title": "Return Item Received"
     }, {
         "id": "return.changed",
-        "properties": {
-            "subject": "Your Return Updated"
-        },
+        "properties": {},
         "template": "email/product-return-changed",
         "title": "Return Has Been Updated"
     }, {
         "id": "user.created",
-        "properties": {
-            "subject": "Welcome"
-        },
+        "properties": {},
         "template": "email/new-user",
-        "title": "New Login Created"
+        "title": "Welcome"
     }, {
         "id": "user.passwordreset",
-        "properties": {
-            "subject": "Reset Your Password"
-        },
+        "properties": {},
         "template": "email/password-reset",
         "title": "Password Reset"
     }, {
         "id": "product.instock",
-        "properties": {
-            "subject": "Back in Stock"
-        },
+        "properties": {},
         "template": "email/product-instock",
         "title": "Back in Stock"
     }, {
         "id": "giftcard.created",
-        "properties": {
-            "subject": "Gift Card"
-        },
+        "properties": {},
         "template": "email/giftcard-created",
-        "title": "Gift Card"
+        "title": "Gift Card Created"
     }],
     "pageTypes": [{
         "documentType": "web_page",
