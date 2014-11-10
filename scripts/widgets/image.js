@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'shim!vendor/underscore>_', 'modules/api', 'modules/backbone-mozu', 'shim!vendor/jquery.colorbox-min[jquery=jQuery]>jQuery'],
+define(['modules/jquery-mozu', 'shim!vendor/underscore>_', 'modules/api', 'modules/backbone-mozu', 'shim!vendor/jquery.colorbox-min[jquery=jQuery]>jQuery'],
     function ($, _, api, Backbone) {
         $('[data-mz-cms-image]').each(function (index, ci) {
             ci = $(ci);
@@ -14,7 +14,9 @@
 
                     $.colorbox({
                         photo: true,
-                        href: imageUrl
+                        href: imageUrl,
+                        maxHeight: $(window).height(),
+                        maxWidth: $(window).width()
                     });
                 });
             }
