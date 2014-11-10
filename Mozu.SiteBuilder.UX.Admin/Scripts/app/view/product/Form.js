@@ -340,9 +340,7 @@ Ext.define('Taco.view.product.Form', {
         var productRecord = this.record,
             variantStore = this.record.getVariations(false),
             variantSaveTask;
-            
-
-
+        
         this.callParent(arguments);
 
        

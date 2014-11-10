@@ -138,6 +138,19 @@
 
 
 
+	// checkcolumn
+	.x-grid-checkcolumn {
+		width:17px;
+		height:15px;		
+		background-image: url("images/icons/checkbox.gif");
+	}
+
+	.x-grid-checkcolumn-checked {	
+	    background-position: 0 -15px;
+    }
+
+
+
   // .#{$prefix}form-cb-label-after {
   //   font-size: 0.875em;
   // }
