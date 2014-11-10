@@ -32,9 +32,10 @@
                 'modules/models-product',
                 'modules/scroll-nav',
                 'modules/search-autocomplete',
+                'modules/views-collections',
                 'modules/views-messages',
                 'modules/views-paging',
-                'modules/views-productlists'
+                'modules/views-productlists',
             ],
             exclude: ['jquery'],
         },
@@ -64,6 +65,10 @@
         },
         {
             name: "pages/product",
+            exclude: ["modules/common"]
+        },
+        {
+            name: 'pages/search',
             exclude: ["modules/common"]
         }
     ]
