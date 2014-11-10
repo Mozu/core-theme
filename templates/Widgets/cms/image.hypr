@@ -1,6 +1,5 @@
 <div class="mz-cms-image" style="height: 100%; width: 100%;" data-mz-cms-image="{% json_attribute Model.config|default:'{}' %}">
 
-<h1>Some image {{Model.config.imageSize}}</h1> 
 {% if not Model.config  %}
 
     <img class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
@@ -8,8 +7,6 @@
 {% endif %}
 
 {% if Model.config.imageSize == 'maintain' %}
-    <p>maintain that bitch<p>
-    <p>s {{Model.config.imageSource}} s</p>
     <img class="mz-cms-image-maintain" src="{{Model.config.imageExternalUrl}}">
 
 {% else %}
