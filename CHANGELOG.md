@@ -1,6 +1,18 @@
 Core4 Changelog
 ===============
 
+v4.1.0
+------
+* Fixed an issue where the image widget lightbox would not take up the whole browser dimensions.
+* Removed misleading, unsupported templating strings from email template configuration in `theme.json`.
+* Fixed misleading page type IDs in `theme.json`.
+* Fixed misplaced comment in `templates/pages/parent-category.hypr`.
+* Added performance enhancement (reduced payload size) to the call to `.apiConfigure()` in `scripts/modules/models-product.js'`.
+* Fixed a typographic error in `templates/modules/common/credit-card-form.hypr.live` which misrepresented the year 2024.
+* Updated thumbnail image to clearly distinguish Core4.
+* Added behavior in `scripts/modules/models-checkout.js` to reset the selected shipping method whenever the shipping address is changed.
+* Added alt text support to product, cart and wishlist item images.
+
 v4.0.7
 ------
 * Fixed an issue where the back-button-cache in Firefox would preserve a product page in a loading state.
