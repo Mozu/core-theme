@@ -254,7 +254,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     return null;
                 }
                 x.EnablePublishing = request.PublishingEnabled;
-                return client.UpdateDocumentList(x.Name, x);
+                return client.UpdateDocumentList(x.ListFQN, x);
             }).Where(x=> x!= null).ToArray();
             await Task.WhenAll(updateTasks);
             AnyExceptionsThenThrow(updateTasks);
