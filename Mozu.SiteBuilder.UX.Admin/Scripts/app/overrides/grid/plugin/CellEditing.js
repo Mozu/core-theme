@@ -8,7 +8,7 @@ Ext.define('Taco.overrides.grid.plugin.CellEditing', {
 
     init: function (view) {
         var me = this;
-        me.grid = me.cmp;
+        me.grid = view;
 
         me.mon(me.grid, 'beforereconfigure', function (view, store, columns, oldStore) {            
             this.updateEditableStyles(columns)
