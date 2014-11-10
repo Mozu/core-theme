@@ -14,9 +14,7 @@ Ext.define('Taco.view.product.variant.Modal', {
     primaryText: 'Save',
     closeAction :'destroy',
 
-    secondaryHandler: function () {
-        this.onCancel();
-    },
+
 
     scale: 'large',
     title: 'Edit Variants',
@@ -45,65 +43,131 @@ Ext.define('Taco.view.product.variant.Modal', {
     }],
 
     initComponent: function () {
+        var me = this;
+
+        me.initOptionsData();
         
+        this.variationGrid = Ext.create('Taco.view.product.variant.Grid', {            
+            product: this.product,
+            optionsData: me.optionsData,
+            productType: this.productType
+        })
+
+
+        this.mon(me.variationGrid, 'savesuccess', function () {
+            me.saveSuccess();
+        }, me)
+        
+
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: 'fit',
             items: [
-                Ext.create('Taco.view.product.variant.Grid', {
-                  product: this.product,
-                  productType: this.productType
-                })
+                this.variationGrid
             ]
         });
 
         this.items = [this.form];
 
         this.callParent(arguments);
-
-        this.on({
-            beforesave: this.onBeforeSave,
-            scope: this
-        });
     },
 
-    onBeforeSave: function () {
+    initOptionsData : function (){
+        var me = this,
+            optionsStore = me.product.getOptions()
 
+        
+        me.optionsData = new Ext.util.MixedCollection();
+
+        // saturate the options mixed collection;
+        optionsStore.each(function (record) {
+            me.optionsData.add(record.get("attributeFQN"), Ext.clone(record.data));
+        });        
     },
+
+    //getOptions: function () {
+    //    var me = this,
+    //        optionsStore = me.product.getOptions(),
+    //        optionsData = [];
+
+    //    if (me.optionsData) {
+    //        me.optionsData = optionsData;
+    //        return me.optionsData;
+    //    }
+
+    //    optionsStore.each(function (option) {
+    //        optionsData.push({
+    //            data: Ext.clone(option.data)
+    //        });
+    //    });
+
+    //    return optionsData;
+    //},
 
     updateOptions: function () {
+        
+        var me = this;
+
         Ext.create('Taco.view.product.variant.Options', {
             product: this.product,
             productType: this.productType,
+            optionsData: me.optionsData,
             listeners: {
-                redooptions: this.redrawGrid,
+                aftersaveclose: this.onOptionChange,      
                 scope: this
             }
         })
     },
 
+    onOptionChange: function (view, optionsData) {
+        
+        var me = this;
+
+
+        me.optionsData = Ext.clone(optionsData)
+        // cache the updated options and get the grid to update with new options
+
+        // update the options cache and reload the variations store;
+
+        this.variationGrid.onOptionChange(me.optionsData);
+
+      
+    },
+
+    onSaveSuccess : function (){
+        
+        
+        //this.close();
+    },
+
+    doOptionStoreUpdate: function (){
+        var me = this;
+        var optionsStore = me.product.getOptions();
+        
+        // clear out the options store();
+        optionsStore.removeAll();
+        
+        me.optionsData.each(function (item) {
+            optionsStore.add({
+                attributeFQN: item.attributeFQN,
+                values: item.values
+            })
+        })
+
+        
+    },
+
+    // grid does the work updating the variations and options.
     doSave: function () {
+        var me = this;
+        // tell the grid to update the product models copy of the variants store;        
         //saving on product form save
-       // this.product.getVariations().sync();
-        this.close();
-    },
+        // this.product.getVariations().sync();
 
-    onCancel: function () {
-        var options = this.product.getOptions(),
-            variants = this.product.getVariations();
+        // need to update the options store on the product with the latest versions;
+        me.doOptionStoreUpdate();
 
-        options.rejectChanges();
 
-        variants.whenLoaded(function () {
-            variants.rejectChanges();
-            this.hide();
-        }, this);
-    },
-
-    redrawGrid: function () {
-        this.removeAll();
-        this.add(Ext.create('Taco.view.product.variant.Grid', {
-            product: this.product,
-            productType: this.productType
-        }));
+        me.variationGrid.doSave();
+ 
     }
 });

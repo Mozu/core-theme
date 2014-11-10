@@ -39,16 +39,7 @@ Ext.define('Taco.view.product.subform.Options', {
                     //    );
                     //    return;
                     //}
-                    Ext.create('Taco.view.product.variant.Modal', {
-                        product: this.product,
-                        productType: this.productType,
-                        listeners: {
-                            close: function () {
-                                this.product.getVariations().whenLoaded(this.rebuild, this);
-                            },
-                            scope: this
-                        }
-                    });
+                    this.editVariants()
                 },
                 scope: this
             }];
@@ -62,11 +53,57 @@ Ext.define('Taco.view.product.subform.Options', {
         }, this, { single: true, delay: 15 });
     },
 
+    onVariantChange: function (view, variantData, optionData) {
+        var me = this;
+        
+        // update the local option data
+
+        // update the local variant data;
+        this.list.update(this.buildOptionsHtml());
+
+        
+    },
+
+    // get data from optionsStore
+    getOptionsData: function () {
+        var data = [];
+        this.product.getOptions().each(function (item) {
+            data.push(Ext.clone(item.data))
+        }, this);
+
+        return data;
+    },
+    // get the unpersisted data from the variations store;
+    getVariationsData: function () {
+        var data = [];
+        this.product.getVariations().each(function (item) {
+            data.push(Ext.clone(item.data))
+        }, this);
+
+        return data;
+    },
+
+    editVariants: function () {
+
+        Ext.create('Taco.view.product.variant.Modal', {
+            product: this.product,
+            productType: this.productType,
+            listeners: {
+                aftersaveclose : this.onVariantChange,
+                close: function () {
+
+                    //this.product.getVariations().whenLoaded(this.rebuild, this);
+                },
+                scope: this
+            }
+        });
+    },
+
     buildOptionsHtml: function () {
         var ret = [];
 
         if (!this.productType) return '';
-
+        
         this.product.getOptions().each(function (option) {
             var attribute;
 

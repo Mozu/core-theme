@@ -688,7 +688,7 @@ Ext.define('Taco.model.Product', {
             proxy;
         autoLoad = (autoLoad !== false);
 
-        if (me.productVariationStore) {
+        if (me.productVariationStore) {            
             return me.productVariationStore;
         }
         
@@ -714,10 +714,21 @@ Ext.define('Taco.model.Product', {
                 params.productTypeId = me.get('productTypeId');
                 params.options = Ext.JSON.encode(params.options);
                 this.load({
-                    params: params,
-                    callback: function (records) {
+                    params: params,                    
+                    callback: function (records, operation, success) {
+
+                        if (!success) {
+                            var error = operation.error;
+                            var json = Ext.decode(operation.error.responseText, true);
+                            var msg = json.message;
+                            Taco.app.fireEvent('setmessage', msg, 'error');
+                            return 
+                        }
+
                         Ext.Array.each(records, function (newRecord) {
                             
+
+                            // this whole section needs to go away.
                             // if this is a new product, default the enabled option on for all new options
                             if (me.phantom) {
                                 newRecord.set('isActive', true);
