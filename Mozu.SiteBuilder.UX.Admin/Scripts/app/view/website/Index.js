@@ -474,6 +474,7 @@ Ext.define('Taco.view.website.Index', {
                                 //    }
                                 //]
                             }
+                            
                         ]
                     }
                 ]
@@ -706,7 +707,8 @@ Ext.define('Taco.view.website.Index', {
 
     },
     reloadPage: function () {
-        this.iframe.getWin().location.reload();
+        this.navigate({ url: this.iframe.getWin().location });
+        //this.iframe.getWin().location.reload();
     },
 
     onDirtyChange: Ext.emptyFn,
