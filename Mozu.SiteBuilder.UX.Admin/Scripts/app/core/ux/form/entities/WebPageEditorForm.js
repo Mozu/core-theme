@@ -97,8 +97,8 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
         }
         this.data = data;
     },
-    getData: function() {
-        var data = this.getValues(false, false, false, true);
-        return Ext.applyIf(data, this.data);
+    getData: function () {
+        return this.getValues(false, false, false, true);
+
     }
 });

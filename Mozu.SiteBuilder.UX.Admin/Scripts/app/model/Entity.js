@@ -56,6 +56,9 @@ Ext.define('Taco.model.Entity', {
           id: this.get('id')
       }  
     },
+    getFields:function () {
+        return this.get('properties') || this.get('item') || {};
+    },
     fields: [
         {
             "name": "entityId",
@@ -77,26 +80,6 @@ Ext.define('Taco.model.Entity', {
             persist: false
         },
         {
-            name: 'fields',
-            type: 'auto',
-            convert: function (v, rec) {
-                var ret, tmp;
-                if (rec.raw) {
-                    ret = rec.raw.item || rec.raw.properties;
-
-                }
-                //temp code till cms is reworked
-                if (ret && Ext.isArray(ret)) {
-                    tmp = {};
-                    Ext.Array.each(ret, function (item) {
-                        tmp[item.propertyType] = item.value && Ext.isString(item.value) && (item.value.indexOf('[') === 0 || item.value.indexOf('{') === 0) && Ext.decode(item.value, true) ? Ext.decode(item.value) : item.value;
-                    });
-                    ret = tmp;
-                }
-                return ret;
-            },
-            persist: false
-        }, {
             name: 'tenantId',
             type: 'auto',
             useNull: true
@@ -211,6 +194,7 @@ Ext.define('Taco.model.Entity', {
 
         pubRecord.save.apply(pubRecord, arguments);
     },
+
    
     proxy: {
         type: 'ajax',

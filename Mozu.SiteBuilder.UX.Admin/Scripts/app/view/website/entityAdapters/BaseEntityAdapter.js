@@ -120,16 +120,10 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
 
                 if (document) {
                    
-                    editListener = function (item) {
-                        var props;
-                        props =  Ext.clone(item.get('properties'));
-                        props.dropzones = zoneData;
-                        item.suspendEvent('afteredit');
-                        item.set('properties', props);
-                        item.resumeEvent('afteredit');
-                    };
-                    editListener(document);
-                    document.on('afteredit', editListener);
+                    props = Ext.clone(document.get('properties'));
+                    props.dropzones = zoneData;
+                    document.set('properties', props);
+                    
 
                 } else {
                     tasks.add({
@@ -157,9 +151,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                     if (Ext.isEmpty(endTasks.errors)) {
                         this.editor.resetDirtyState();
                     }
-                    if (editListener) {
-                        document.removeListener('afteredit', editListener);
-                    }
+                    
                 }, this);
             }
         }
