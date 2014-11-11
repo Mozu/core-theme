@@ -265,7 +265,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var cleanedRequestUrl = _slugNormalizer.StripUrl(requestUrl);
             var cleanedUrl = _slugNormalizer.StripUrl(url);
 
-
+            if (this.Request.RequestUri.OriginalString.IndexOf(this.Request.RequestUri.AbsolutePath, StringComparison.OrdinalIgnoreCase) ==-1)
+            {
+                return false;
+            }
 
             if (!this.SiteContext.IsEditMode && !string.Equals(cleanedRequestUrl, cleanedUrl, StringComparison.OrdinalIgnoreCase) && !SeoDelegatingHandler.IsSeoRewrite(this.Request))
             {

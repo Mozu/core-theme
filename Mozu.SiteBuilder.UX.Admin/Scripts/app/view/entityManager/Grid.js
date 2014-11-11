@@ -151,7 +151,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 xtype: 'gridcolumn',
                 dataIndex: viewField.name,
                 renderer: function (value, metaData, record) {
-                    var fields = record.get('fields');
+                    var fields = record.getFields();
                     if (fields) {
                         return fields[viewField.name];
                     }

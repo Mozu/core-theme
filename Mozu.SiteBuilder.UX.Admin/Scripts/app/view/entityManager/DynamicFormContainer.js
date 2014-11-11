@@ -37,7 +37,7 @@
     initComponent: function () {
 
 
-        var data = this.data = Ext.clone(this.record.get('fields') || {});
+        var data = this.data = Ext.clone(this.record.getFields() || {});
 
         for (name in this.record.data) {
             if (this.record.data.hasOwnProperty(name)&& name !='properties' && name !='item' ) {
@@ -157,6 +157,8 @@
         
 
         data = data || (this.record.get('entityType') === 'mzdb' ? containerData.item : containerData.properties);
+
+        data = Ext.apply({}, data, this.record.getFields());
 
         containerData = containerData || {};
 
