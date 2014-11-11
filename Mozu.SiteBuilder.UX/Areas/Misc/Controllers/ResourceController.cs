@@ -1122,7 +1122,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var imagePath = inner;
                 if (!inner.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
-                    var cndPrefix = env.VisitorPlugins.OfType<ProbeForThemeVariablesPlugin>().First().CdnPrefix;
+                    var cndPrefix = env.VisitorPlugins.OfType<ProbeForThemeVariablesPlugin>().First().CdnPrefix ?? "";
                     if (!cndPrefix.EndsWith("/"))
                     {
                         cndPrefix += "/";
