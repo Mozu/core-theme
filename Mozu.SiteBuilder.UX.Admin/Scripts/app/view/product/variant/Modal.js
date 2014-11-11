@@ -142,16 +142,19 @@ Ext.define('Taco.view.product.variant.Modal', {
     doOptionStoreUpdate: function (){
         var me = this;
         var optionsStore = me.product.getOptions();
-        
+      
         // clear out the options store();
         optionsStore.removeAll();
         
         me.optionsData.each(function (item) {
-            optionsStore.add({
-                attributeFQN: item.attributeFQN,
-                values: item.values
-            })
+            var record = optionsStore.add({
+                attributeFQN: item.attributeFQN
+            })[0];
+
+            // must set the values after create to dirty the record
+            record.set("values", item.values)
         })
+
 
         
     },
