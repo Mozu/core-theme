@@ -111,9 +111,25 @@ Ext.define('Taco.view.website.Tree', {
             shadow: false,
             items: []
         });
-
+        
         this.callParent(arguments);
-
+        this.addDocked({
+            xtype: 'toolbar',
+            items: [
+                {
+                    itemId: 'refresh',
+                    tooltip: 'Refresh',
+                    overflowText: 'Refresh',
+                    iconCls: 'x-tbar-loading',
+                   // disabled: this.store.isLoading(),
+                    handler: this.store.reload,
+                    scope: this.store
+                }
+            ],
+            // store: this.store,
+            dock: 'bottom',
+            displayInfo: false
+        });
         this.on({
             itemclick: {
                 scope: this,
