@@ -186,7 +186,7 @@
                                     "widgets": [
                                         {
                                             "config": {
-                                                "body": "&lt;h2&gt;Insert Title&lt;/h2&gt;&lt;p&gt;Insert Content&lt;/p&gt;"
+                                                "body": "<h2>Insert Title</h2><p>Insert Content</p>"
                                             },
                                             "definitionId": "content",
                                             "isRichText": true
@@ -906,7 +906,7 @@
         },
         {
             "defaultConfig": {
-                "body": "&lt;h2&gt;Insert Title&lt;/h2&gt;&lt;p&gt;Insert Content&lt;/p&gt;"
+                "body": "<h2>Insert Title</h2><p>Insert Content</p>"
             },
             "displayName": "Content",
             "displayTemplate": "cms/content",
@@ -952,7 +952,7 @@
         },
         {
             "defaultConfig": {
-                "body": "&lt;h2&gt;Insert Markup&lt;/h2&gt;"
+                "body": "<h2>Insert Markup</h2>"
             },
             "displayName": "HTML",
             "displayTemplate": "cms/content",
@@ -994,12 +994,12 @@
                     ]
                 },
                 {
-                    "html": "Register with &lt;a target=\"_blank\" href=\"https://www.addthis.com\"&gt;AddThis&lt;/a&gt; for a free in-depth analytics reports and better understand your site's social traffic.",
+                    "html": "Register with <a target=\"_blank\" href=\"https://www.addthis.com\">AddThis</a> for a free in-depth analytics reports and better understand your site's social traffic.",
                     "xtype": "box"
                 },
                 {
                     "allowBlank": true,
-                    "fieldLabel": "AddThis&lt;br/&gt; profile ID",
+                    "fieldLabel": "AddThis<br/> profile ID",
                     "name": "profileId",
                     "xtype": "mz-input-text"
                 }
