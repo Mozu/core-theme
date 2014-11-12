@@ -697,88 +697,146 @@ Ext.define('Taco.model.Product', {
             model: 'Taco.model.ProductVariation',
             autoLoad: false,
             pageSize: 1000,
-            loadFromOptions: function () {
-                
-                var beforeState =[];
-                if (me.productVariationStore && me.productVariationStore.data && me.productVariationStore.data.items) {
-                    beforeState = Ext.Array.pluck(me.productVariationStore.data.items, 'internalId')
-                }
-                params.options = [];
-                me.getOptions().each(function (option) {
-                    params.options.push({
-                        attributeFQN: option.data.attributeFQN,
-                        values: option.data.values
-                    });
-                });
-                params.tempProductCode = me.tempProductCode;
-                params.productTypeId = me.get('productTypeId');
-                params.options = Ext.JSON.encode(params.options);
-                this.load({
-                    params: params,                    
-                    callback: function (records, operation, success) {
-
-                        if (!success) {
-                            var error = operation.error;
-                            var json = Ext.decode(operation.error.responseText, true);
-                            var msg = json.message;
-                            Taco.app.fireEvent('setmessage', msg, 'error');
-                            return 
-                        }
-
-                        Ext.Array.each(records, function (newRecord) {
-                            
-
-                            // this whole section needs to go away.
-                            // if this is a new product, default the enabled option on for all new options
-                            if (me.phantom) {
-                                newRecord.set('isActive', true);
-                            } else {
-                                // only mark old values as active;
-                                if (Ext.Array.indexOf(beforeState, newRecord.internalId) == -1) {
-                                    newRecord.set('isActive', true);
-                                }
-                            }
+            listeners:{
+                beforeload: function (store, operation) {
+                    
+                    params.options = [];
+                    me.getOptions().each(function (option) {
+                        params.options.push({
+                            attributeFQN: option.data.attributeFQN,
+                            values: option.data.values
                         });
-                    }
-                });
-            }
-        });
+                    });
+                    params.tempProductCode = me.tempProductCode;
+                    params.productTypeId = me.get('productTypeId');
+                    params.options = Ext.JSON.encode(params.options);
 
+                    proxy = me.productVariationStore.getProxy();
+
+                    if (!proxy.extraParams) {
+                        proxy.extraParams = {};
+                    }
+                    
+                    if (me.data.productCode) {
+                        proxy.extraParams.productCode = me.data.productCode;
+                    }
+
+                    proxy.extraParams.tempProductCode = params.tempProductCode;
+                    proxy.extraParams.productTypeId = params.productTypeId;
+                    proxy.extraParams.options = params.options;
+                    
+
+                },
+                scope: this
+            }
+
+            //,
+
+            //loadFromOptions: function () {
+                
+            //    return;
+                
+
+            //    var beforeState =[];
+            //    //if (me.productVariationStore && me.productVariationStore.data && me.productVariationStore.data.items) {
+            //    //    beforeState = Ext.Array.pluck(me.productVariationStore.data.items, 'internalId')
+            //    //}
+            //    params.options = [];
+            //    me.getOptions().each(function (option) {
+            //        params.options.push({
+            //            attributeFQN: option.data.attributeFQN,
+            //            values: option.data.values
+            //        });
+            //    });
+            //    params.tempProductCode = me.tempProductCode;
+            //    params.productTypeId = me.get('productTypeId');
+            //    params.options = Ext.JSON.encode(params.options);
+
+                
+
+            //    proxy = this.getProxy();
+
+            //    if (!proxy.extraParams) {
+            //        proxy.extraParams = {};
+            //    }
+                
+            //    if (me.data.productCode) {                    
+            //        proxy.extraParams.productCode = me.data.productCode;
+            //    }
+               
+            //    proxy.extraParams.tempProductCode = params.tempProductCode;
+            //    proxy.extraParams.productTypeId = params.productTypeId;
+            //    proxy.extraParams.options = params.options;
+
+
+            //    this.load({
+            //        //params: params,                    
+            //        callback: function (records, operation, success) {
+
+            //            if (!success) {
+            //                var error = operation.error;
+            //                var json = Ext.decode(operation.error.responseText, true);
+            //                var msg = json.message;
+            //                Taco.app.fireEvent('setmessage', msg, 'error');
+            //                return 
+            //            }
+
+                        
+
+            //            //Ext.Array.each(records, function (newRecord) {                           
+
+            //            //    // this whole section needs to go away.
+            //            //    // if this is a new product, default the enabled option on for all new options
+            //            //    if (me.phantom) {
+            //            //        newRecord.set('isActive', true);
+            //            //    } else {
+            //            //        // only mark old values as active;
+            //            //        if (Ext.Array.indexOf(beforeState, newRecord.internalId) == -1) {
+            //            //            newRecord.set('isActive', true);
+            //            //        }
+            //            //    }
+            //            //});
+            //        }
+            //    });
+            //}
+        });
+        
         proxy = me.productVariationStore.getProxy();
         if (!proxy.extraParams) {
             proxy.extraParams = {};
         }
         proxy.extraParams.productCode = this.getId();
-
-
         params = {};
 
-        if (autoLoad) {
-            if (me.phantom) {
-                me.productVariationStore.loadFromOptions();
-            } else {
-                this.productVariationStore.load();
-            }
-        }
+        //me.productVariationStore.loadFromOptions();
+        //me.productVariationStore.load();
+
+        //if (autoLoad) {
+        //    if (me.phantom) {
+        //        me.productVariationStore.loadFromOptions();
+        //    } else {
+        //        this.productVariationStore.load();
+        //    }
+        //}
 
 
-        this.on('aftercommit', function () {
-            proxy.extraParams.productCode = this.getId();
-        }, this);
+        this.on('aftercommit', function () {            
+            me.productVariationStore.proxy.extraParams.productCode = this.getId();
+        }, me);
 
 
-        this.getOptions().on('update', function () {
-                me.productVariationStore.loadFromOptions();
+        //this.getOptions().on('update', function () {
+        //        me.productVariationStore.loadFromOptions();
 
-                //if (me.phantom) {
-                //    me.productVariationStore.loadFromOptions();
-                //} else {
-                //    this.productVariationStore.load();
+        //        //if (me.phantom) {
+        //        //    me.productVariationStore.loadFromOptions();
+        //        //} else {
+        //        //    this.productVariationStore.load();
 
-                //}
-            },
-            me,
-            { buffer: 20 });
+        //        //}
+        //    },
+        //    me,
+        //    { buffer: 20 });
 
 
         return this.productVariationStore;
