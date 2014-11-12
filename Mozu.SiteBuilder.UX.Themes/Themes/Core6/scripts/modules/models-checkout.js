@@ -1128,6 +1128,7 @@
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
+                    billingContact = billingInfo.get('billingContact'),
                     isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
                     isSavingCreditCard = false,
                     isSavingNewCustomer = this.isSavingNewCustomer(),
@@ -1145,6 +1146,10 @@
                 if (this.isSubmitting) return;
 
                 this.isSubmitting = true;
+
+                if (requiresBillingInfo && !billingContact.isValid()) {
+                    billingContact.set(this.apiModel.getCurrentPayment().billingInfo.billingContact); // reconcile the empty address after we got back from paypal and possibly other situations
+                }
 
                 this.syncBillingAndCustomerEmail();
 
