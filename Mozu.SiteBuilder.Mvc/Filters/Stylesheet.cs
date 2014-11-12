@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             var themeTs = ctx.Theme.TimeStamp;
             var cdn = context.Resolve<SiteContext>().CdnPrefix;
             var pc = context.PageContext();
-            return string.Format("<link rel=\"stylesheet\" href=\"{4}{0}?t={1}&dt={2}-{3}{5}\"  type=\"text/css\">", value, theme, themeSettingsTs.Ticks.ToString("X2"), themeTs.Ticks.ToString("X2"), string.IsNullOrEmpty(cdn) ? null : (cdn + "/"), (pc.IsDebugMode? "&debug=true": ""));
+            return string.Format("<link rel=\"stylesheet\" href=\"{4}{0}?SBTHEME={1}&dt={2}-{3}{5}\"  type=\"text/css\">", value, theme, themeSettingsTs.Ticks.ToString("X2"), themeTs.Ticks.ToString("X2"), string.IsNullOrEmpty(cdn) ? null : (cdn + "/"), (pc.IsDebugMode ? "&debug=true" : ""));
                 
              
 
