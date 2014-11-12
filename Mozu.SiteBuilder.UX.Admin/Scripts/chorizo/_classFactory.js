@@ -22,8 +22,13 @@
                     options = typeof option === 'object' && option,
                     val;
 
+                // First pass, run constructor (no method defined)
                 if (!data) $this.data(pluginName, (data = new cls(this, options)));
-                if (typeof option === 'string') val = data[option].apply(data, Array.prototype.slice.call(args, 1));
+                
+                // Method is defined
+                if (typeof option === 'string') {
+                    val = data[option].apply(data, Array.prototype.slice.call(args, 1));
+                }
 
                 if (typeof val !== 'undefined' && val !== $this) {
                     ret = val;

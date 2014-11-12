@@ -56,7 +56,7 @@
 
         this.$content = this.element.find('.mz-cms-content');
 
-        //if (!this.options.isRichText) this.element.addClass('mz-cms-drag-handle');
+        //if (!this.options.isichText) this.element.addClass('mz-cms-drag-handle');
 
         this.element
             .append($('<ul class="mz-cms-tools"><li class="mz-cms-drag-handle"></li><li class="mz-cms-trash"></li></ul>'));
@@ -283,6 +283,16 @@
 
     Img.prototype = new Content();
 
+    Img.prototype.update = function (data) {
+        var height = typeof data.config.height === 'number' ? data.config.height + 'px' : data.config.height;
+
+        this.widgetData = data;
+        this.moveColumns = this.widgetData.config.imageSize === 'maintain';
+        console.log('update img data', data);
+
+        this.$content.height(height);
+    }
+
     Img.prototype._defaultState = function () {
         console.log('default');
     }
@@ -322,7 +332,9 @@
     Img.prototype._onStop = function (e, ui) {
         $doc.off('mousemove', this._moveHandler);
         Chorizo.editor.cursor('auto');
-        //this.widgetData.config.height = this.$content.outerHeight();
+        
+        if (!this.moveColumns) this.widgetData.config.height = this.$content.outerHeight();
+        
         Chorizo.editor.dirtyStateCheck();
         this.snapHeights = [];
     }

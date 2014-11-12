@@ -541,9 +541,11 @@
         this.$content.html(html);
 
         if (this.widgetData.isRichText) {
-            this.element.mzText({isRichText: true});
+            //this.element.mzText({isRichText: true});
+            this.element.mzText('update', data);
         } else {
-            this.element.mzImg({isRichText: false});
+            //this.element.mzImg({isRichText: false});
+            this.element.mzImg('update', data);
         }
 
         console.log('update block', this.element[0])
