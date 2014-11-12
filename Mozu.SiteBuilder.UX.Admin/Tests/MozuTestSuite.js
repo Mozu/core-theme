@@ -1,13 +1,14 @@
 ﻿var Harness = Siesta.Harness.Browser.ExtJS,
     protoCal = window.location.protocol,
     simAndSinPreloads = [
-        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimXhr.js',
-        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/Simlet.js',
-        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/DataSimlet.js',
-        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/JsonSimlet.js',
-        protoCal + '//cdn.sencha.io/ext-4.2.0-gpl/examples/ux/ajax/SimManager.js',
+        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/SimXhr.js',
+        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/Simlet.js',
+        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/DataSimlet.js',
+        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/JsonSimlet.js',
+        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/SimManager.js',
         '/admin/tests/sinon.js'
     ];
+
 
 
 Harness.configure({
