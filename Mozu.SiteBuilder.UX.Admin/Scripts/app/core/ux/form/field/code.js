@@ -16,7 +16,12 @@ Ext.define('Taco.core.ux.form.field.Code', {
     inputType: 'hidden',
     mode: 'mozufilter',
     showGutter: true,
-
+    setReadOnly: function (value) {
+        this.readOnly = value;
+        if (this.editor) {
+            this.editor.setReadOnly(this.readOnly);
+        } 
+    },
     initComponent: function () {
         var me = this;
         me.on('resize', function () {

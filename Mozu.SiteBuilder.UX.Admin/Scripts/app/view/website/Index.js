@@ -515,8 +515,8 @@ Ext.define('Taco.view.website.Index', {
         this.tree.on('pagecreate', this.onPageCreate, this);
         this.tree.on('urlclick', this.onTreeUrlClick, this);
         this.tree.on('contentlistclick', this.onContentListClick, this);
-        this.tree.on('navigationchange', this.reloadPage, this);
-        this.tree.on('navigationchange', this.reloadPage, this);
+        this.tree.on('navigationchange', this.onNavigationChange, this);
+        this.tree.on('navigationchange', this.onNavigationChange, this);
         this.on('render', function () {
             var header = me.getHeader();
 
@@ -693,7 +693,7 @@ Ext.define('Taco.view.website.Index', {
         this.url = config.url;
   
         this.pageSettings.removeAll(true);
-        this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme);
+        this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme+'&cb='+ new Date().getTime());
         Taco.core.StateManager.addState('website/page' + config.url);
         if (config.view === 'page') {
             this.toggleCard(0);
@@ -706,9 +706,28 @@ Ext.define('Taco.view.website.Index', {
         }
 
     },
+    onNavigationChange:function (navStore,navRecord) {
+        this.reloadPage();
+    },
     reloadPage: function () {
-        this.navigate({ url: this.iframe.getWin().location });
-        //this.iframe.getWin().location.reload();
+
+        var curPath,
+            win = this.iframe.getWin();
+
+        if (win && win.location.pathname && this.url )
+        {
+            if (win.location.pathname.toLowerCase().indexOf(this.url.toLowerCase()) === 0 && win.document.readyState != 'complete') {
+                return;
+            }
+            if (win.location.pathname.toLowerCase().indexOf(this.url.toLowerCase()) === -1 ) {
+                return;
+            }
+        }
+ 
+
+       
+        this.navigate({ url: this.url });
+        
     },
 
     onDirtyChange: Ext.emptyFn,

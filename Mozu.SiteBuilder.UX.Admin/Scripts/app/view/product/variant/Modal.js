@@ -73,8 +73,7 @@ Ext.define('Taco.view.product.variant.Modal', {
 
     initOptionsData : function (){
         var me = this,
-            optionsStore = me.product.getOptions()
-
+            optionsStore = me.product.getOptions();
         
         me.optionsData = new Ext.util.MixedCollection();
 
@@ -159,17 +158,70 @@ Ext.define('Taco.view.product.variant.Modal', {
         
     },
 
-    // grid does the work updating the variations and options.
-    doSave: function () {
+    isValid: function () {
+        var me = this,
+        needsPrompt = me.variationGrid.modifiedRecords.findBy(function (record) {            
+            return (!record.exists && !record.isActive)
+        });
+
+        if (needsPrompt) {
+            var msg = "You have entered data for variations, that have not been enabled. <br/>This data will not be saved. <br/>Do you want to enable these variations before saving?. ";
+
+            Ext.MessageBox.show({
+                title: 'Enable Variations?',
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: msg,
+                closable: false,
+                buttons: Ext.Msg.YESNO,
+                fn: function (val) {
+                    if (val === 'yes') {
+                        // force new variations with data to be enabled;
+                        me.enableDirtyRecords();
+                        // attempt the save again;
+                        me.doSave(true);
+                    } else if (val === 'no') {
+                        //going to loose any dirty disabled records that were not previously enabled;
+                        me.doSave(true);
+                    }
+                }
+            });
+
+            return false;
+        } else {
+            return true;
+        }
+    },
+
+    enableDirtyRecords: function () {
+        
         var me = this;
-        // tell the grid to update the product models copy of the variants store;        
-        //saving on product form save
-        // this.product.getVariations().sync();
+
+        // enable reccords that dont' already exist and are disabled and have data;;
+        me.variationGrid.modifiedRecords.each(function (record) {
+            if (!record.exists && !record.isActive1) {
+                record.isActive = true;
+            }
+        })
+        
+    },
+
+    // grid does the work updating the variations and options.
+    doSave: function (disableDirtyRecordCheck) {
+        var me = this;
+
+        // need to validate that any variant records that are new and have changes are enabled. prompt user to enable these;
+        if (!disableDirtyRecordCheck && !me.isValid()) {
+            return 
+        }
 
         // need to update the options store on the product with the latest versions;
         me.doOptionStoreUpdate();
 
-
+        
+        // need to wait for the grid to finish its snerst and it will fire the savesuccess event; and call me.saveSuccess();
         me.variationGrid.doSave();
  
     }
