@@ -487,7 +487,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                     
                     if ( data.imageFileId ) {
                         this.imageStore.add({
-                            id: data.imageField,
+                            id: data.imageFileId,
                             url: ['/cms/', Taco.app.context.currentCtx.id, '/files/', data.imageFileId].join('')
                         });
                     }

@@ -155,6 +155,10 @@
 
     }
 
+    Content.prototype.update = function () {
+        console.log('placeholder for update override');
+    }
+
 
     /**
      * TEXT class definition
@@ -290,7 +294,8 @@
         this.moveColumns = this.widgetData.config.imageSize === 'maintain';
         console.log('update img data', data);
 
-        this.$content.height(height);
+        //this.$content.height(height);
+        this.$content.css('height', height);
     }
 
     Img.prototype._defaultState = function () {
