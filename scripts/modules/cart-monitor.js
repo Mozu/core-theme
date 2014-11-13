@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Watches for changes to the quantity of items in the shopping cart, to update
  * cart count indicators on the storefront.
  */

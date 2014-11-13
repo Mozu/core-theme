@@ -1,4 +1,4 @@
-﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountSettings }}</h3>
+<h3 class="mz-l-stack-sectiontitle">{{ labels.accountSettings }}</h3>
   <div class="mz-accountsettings-section mz-accountsettings-name {% if editing.name %} is-editing {% endif %}">
     {% if editing.name %}
     <input class="mz-accountsettings-firstname" type="text" placeholder="{{ labels.firstName }}" data-mz-value="firstName" value="{{ model.firstName }}" />

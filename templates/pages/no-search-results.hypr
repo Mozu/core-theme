@@ -1,4 +1,4 @@
-﻿{% extends "page" %}
+{% extends "page" %}
 
 {% block title-tag-content %}{{ labels.noResultsTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
 
@@ -15,6 +15,7 @@
 
 </div>
 
-
 {% endblock body-content %}
 
+{% block body-below-content %}
+{% endblock body-below-content %}

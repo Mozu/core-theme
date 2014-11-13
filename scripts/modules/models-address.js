@@ -1,4 +1,4 @@
-﻿define(
+define(
     ["modules/backbone-mozu", 'hyprlive'],
     function(Backbone, Hypr) {
 

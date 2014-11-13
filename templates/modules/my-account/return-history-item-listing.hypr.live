@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/item-listing" %}
+{% extends "modules/common/item-listing" %}
 {% block module-classes %} mz-itemlisting-rmaitem {% endblock module-classes %}
 {% block item-listing-prefix %}
 <h3>{{ labels.returning }}</h3>

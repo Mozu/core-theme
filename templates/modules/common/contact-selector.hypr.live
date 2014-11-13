@@ -1,4 +1,4 @@
-﻿<div class="mz-contactselector {% block module-classes %}{% endblock module-classes %}">
+<div class="mz-contactselector {% block module-classes %}{% endblock module-classes %}">
     {% block contact-selector %}
     {% for contact in model.contacts %}
     <label class="mz-contactselector-contact">

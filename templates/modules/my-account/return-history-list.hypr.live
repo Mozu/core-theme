@@ -1,4 +1,4 @@
-﻿      <ul class="mz-orderlist">
+      <ul class="mz-orderlist">
         {% for rma in model.items %}
         <li>{% include "modules/my-account/return-history-return-listing" with model=rma %}</li>
         {% endfor %}

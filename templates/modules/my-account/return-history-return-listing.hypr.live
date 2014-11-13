@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/order-listing" %}
+{% extends "modules/common/order-listing" %}
 {% block order-details %}
     <dl class="mz-propertylist">
         <dt>{{ labels.status }}</dt>

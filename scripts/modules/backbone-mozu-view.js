@@ -1,4 +1,4 @@
-﻿define([
+define([
     "modules/jquery-mozu",
     "underscore",
     "hyprlive",
@@ -133,10 +133,16 @@
                     'mzFocusBookmark': document.activeElement.getAttribute('data-mz-focus-bookmark'),
                     'value': document.activeElement.value
                 };
+
+                this.storeDropzones();
+
                 Backbone.Validation.unbind(this);
                 this.undelegateEvents();
                 var newHtml = this.template.render(this.getRenderContext());
                 this.$el.html(newHtml);
+
+                this.retrieveDropzones();
+
                 this.delegateEvents();
                 Backbone.Validation.bind(this);
                 if (thenFocus) {
@@ -152,6 +158,20 @@
                     this.trigger('render', newHtml);
                     Backbone.MozuView.trigger('render', this, newHtml);
                 }
+            },
+
+            storeDropzones: function() {
+                var dropzones = this.dropzones = {};
+                this.$('.mz-drop-zone').each(function() {
+                    dropzones[this.id] = this;
+                });
+            },
+
+            retrieveDropzones: function() {
+                var dropzones = this.dropzones;
+                this.$('.mz-drop-zone').each(function() {
+                    if (dropzones[this.id]) $(this).replaceWith(dropzones[this.id]);
+                });
             }
 
             /**

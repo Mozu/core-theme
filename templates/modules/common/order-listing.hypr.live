@@ -1,4 +1,4 @@
-﻿<div class="mz-orderlisting" data-mz-id="{{ model.id }}">
+<div class="mz-orderlisting" data-mz-id="{{ model.id }}">
     <div class="mz-orderlisting-detail">
         <h3 class="mz-orderlisting-date">{{ model.auditInfo.createDate|date("F j, Y") }}</h3>
         {% block order-details %}

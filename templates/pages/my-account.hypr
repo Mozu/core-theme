@@ -1,4 +1,4 @@
-﻿{% extends "page" %}
+{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.yourAccount %} - {% parent %}{% endblock title-tag-content %}
 
@@ -21,6 +21,8 @@
 
     <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
 
+		{% dropzone "my-account-top" scope="template" %}
+
         <div id="account-messages">
             {% include "modules/common/message-bar" with model=model.messages %}
         </div>
@@ -30,7 +32,7 @@
             {% include "modules/my-account/my-account-settings" %}
         </div>
 
-        {% if themeSettings.allowWishlist %}
+        {% if siteContext.generalSettings.isWishlistCreationEnabled %}
         <a id="wishlist"></a>
         <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">
             {% include "modules/my-account/my-account-wishlist" with model=model.wishlist %}
@@ -62,7 +64,11 @@
             {% include "modules/my-account/my-account-storecredit" %}
         </div>
 
+		{% dropzone "my-account-bottom" scope="template" %}
+
     </div>
 </div>
 {% endblock body-content %}
 
+{% block body-below-content %}
+{% endblock body-below-content %}

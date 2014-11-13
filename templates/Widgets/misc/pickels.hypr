@@ -1,4 +1,4 @@
-﻿<div {% data_attributes Model%}>
+<div {% data_attributes Model%}>
 <code><pre style="margin: 0px;">     [___________]
      /           \
     /~~^~^~^~^~^~^\

@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -273,7 +273,9 @@
                 return biscuit;
             }, []);
         },
-        addToCart: function() {
+
+
+        addToCart: function () {
             var me = this;
             this.whenReady(function () {
                 if (!me.validate()) {

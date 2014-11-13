@@ -1,4 +1,4 @@
-﻿    <table class="mz-ordersummary">
+    <table class="mz-ordersummary">
         <thead>
             <tr>
                 <th class="mz-ordersummary-header-product">{{ labels.product }}</th>

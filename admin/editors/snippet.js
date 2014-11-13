@@ -1,4 +1,4 @@
-﻿Ext.widget({
+Ext.widget({
     xtype:'mz-form-entity',
     title: 'snippet',
     items: [

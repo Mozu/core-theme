@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/credit-card-form" %}
+{% extends "modules/common/credit-card-form" %}
 {% block credit-card-form %}
     {% set cardcontext="card." %}
         {% parent %}

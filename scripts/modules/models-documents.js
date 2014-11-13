@@ -1,4 +1,4 @@
-﻿define(
+define(
     ["modules/backbone-mozu", "underscore", "hyprlivecontext"],
     function (Backbone, _, PagingMixin, context) {
         

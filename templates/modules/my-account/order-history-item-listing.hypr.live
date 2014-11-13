@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/item-listing" %}
+{% extends "modules/common/item-listing" %}
 {% block item-name %}
     {% if model.dateShipped %} {{ labels.shipped }}: {{ model.dateShipped|date("F j, Y") }} }}{% endif %}
     {% parent %}

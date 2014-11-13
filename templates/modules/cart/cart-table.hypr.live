@@ -1,4 +1,4 @@
-﻿<thead>
+<thead>
   <tr>
     <th class="mz-carttable-header-product">{{ labels.product }}</th>
     <th class="mz-carttable-header-price">{{ labels.price }}</th>

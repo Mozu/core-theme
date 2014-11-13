@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Creates an interface object to the Mozu store's Web APIs. It pulls in the Mozu
  * JavaScript SDK and initializes it with the current store's context values
  * (tenant, catalog and store IDs, and authorization tickets).

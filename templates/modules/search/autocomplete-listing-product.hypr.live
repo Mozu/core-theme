@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/item-listing" %}
+{% extends "modules/common/item-listing" %}
 
 {% block module-classes %}mz-itemlisting-autocomplete mz-itemlisting-autocomplete-product{% endblock module-classes %}
 
@@ -16,6 +16,6 @@
 {% endblock item-name %}
 {% block item-details %}
 <div class="mz-itemlisting-description">
-    {{ model.content.productShortDescription|truncatewords(20) }}
+    {{ model.content.productShortDescription|truncatewords(20)|safe }}
 </div>
 {% endblock %}

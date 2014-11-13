@@ -1,4 +1,4 @@
-﻿    <span>{{ model.firstName }} {{ model.lastNameOrSurname }}</span>
+    <span>{{ model.firstName }} {{ model.lastNameOrSurname }}</span>
     <span>{{ model.address.address1 }}</span>
     {% if model.address.address2 %}
         <span>{{ model.address.address2 }}</span>

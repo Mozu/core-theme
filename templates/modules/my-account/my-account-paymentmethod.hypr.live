@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/payment-method" %}
+{% extends "modules/common/payment-method" %}
 {% block module-classes %}mz-paymentmethod-myaccount{% endblock %}
 {% block payment-method-actions %}
     <a class="mz-paymentmethod-edit" href="javascript:;" data-mz-action="beginEditCard" data-mz-card="{{ model.id }}">{{ labels.edit }}</a>

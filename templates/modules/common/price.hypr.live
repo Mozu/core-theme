@@ -1,4 +1,4 @@
-﻿ {% if model.onSale %}
+ {% if model.onSale %}
  <span class="mz-price is-crossedout">
      {{model.price|currency}}
  </span>

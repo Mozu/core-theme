@@ -1,4 +1,4 @@
-﻿/* jshint undef: true */
+/* jshint undef: true */
 /* global YT */
 define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
     function($) {

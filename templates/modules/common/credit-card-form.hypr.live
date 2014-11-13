@@ -1,4 +1,4 @@
-﻿{% block credit-card-form %}
+{% block credit-card-form %}
     <div class="mz-l-formfieldgroup-row mz-payment-credit-card-type-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-credit-card-type">{{ labels.cardType }}<span class="is-required"> *</span>:</label>

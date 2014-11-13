@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/address-form" %}
+{% extends "modules/common/address-form" %}
 {% block address-form %}
     {% set addresscontext="editingContact." %}
     {% if model.isShippingContact %}

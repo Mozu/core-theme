@@ -1,13 +1,3 @@
-﻿<label class="mz-pagingcontrols-pagestate-label">
-{% if model.totalCount %}
-  {% if model.totalCount != 1 %}
-    {{ labels.pageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
-  {% else %}
-    {{ labels.pageStateSingular }}
-  {% endif %}
-{% endif %}
-</label>
-
 <label class="mz-pagingcontrols-pagesize-label">
   <span class="mz-paging-title">{{ labels.show }}:</span>
   <select data-mz-value="pageSize" class="mz-pagingcontrols-pagesize-dropdown" autocomplete="off">
@@ -18,3 +8,12 @@
     {% endblock page-sizes %}
   </select>
 </label>
+<span class="mz-pagingcontrols-pagestate-label">
+    {% if model.totalCount %}
+    {% if model.totalCount != 1 %}
+    {{ labels.pageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
+    {% else %}
+    {{ labels.pageStateSingular }}
+    {% endif %}
+    {% endif %}
+</span>

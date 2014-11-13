@@ -1,4 +1,4 @@
-﻿<nav class="mz-sitenav">
+<nav class="mz-sitenav">
     <ul class="mz-sitenav-list" 
         data-mz-contextify='.mz-sitenav-link[href="{{ navigation.currentNode.url }}"]'
         data-mz-contextify-attr='class'
@@ -8,30 +8,30 @@
       {% if not link.isHidden  and  forloop.counter0 < themeSettings.maxTopLevelNavItems %}
         
         <li class="mz-sitenav-item">
-                <div class="mz-sitenav-item-inner">
-                    <a class="mz-sitenav-link" href="{{link.url}}">{{link.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)}}</a>
-                    {% if link.items %}
-                    <ul class="mz-sitenav-sub">
-                        {% for sublink in link.items %}
-                            <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
-                                <a class="mz-sitenav-link" href="{{sublink.url}}">{{sublink.name}}</a>
-                              {%comment%}
-                              <!-- uncoment out  this block to get 3rd laver of nav -->
-                              {% if sublink.items %}
-                                       <ul class="mz-sitenav-sub-sub">
-                                            {% for subsublink in sublink.items %}
-                                                <li class="mz-sitenav-item">
-                                                    <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name}}</a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                              {% endif %}
-                              {%endcomment%}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </div>
+          <div class="mz-sitenav-item-inner">
+            <a class="mz-sitenav-link" href="{{link.url}}">{{link.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}}</a>
+            {% if link.items %}
+            <ul class="mz-sitenav-sub">
+              {% for sublink in link.items %}
+              <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
+                <a class="mz-sitenav-link" href="{{sublink.url}}">{{ sublink.name|safe }}</a>
+                {%comment%}
+                <!-- uncoment out  this block to get 3rd laver of nav -->
+                {% if sublink.items %}
+                <ul class="mz-sitenav-sub-sub">
+                  {% for subsublink in sublink.items %}
+                  <li class="mz-sitenav-item">
+                    <a class="mz-sitenav-link" href="{{subsublink.url}}">{{ sublink.name|safe }}</a>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                {%endcomment%}
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
             </li>
             {% endif %}
         {% endfor %}
@@ -43,14 +43,14 @@
                     {% for sublink in navigation.tree %}
                         {% if sublink.index >= themeSettings.maxTopLevelNavItems %}
                         <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
-                                <a class="mz-sitenav-link" href="{{sublink.url}}">{{sublink.name}}</a>
+                                <a class="mz-sitenav-link" href="{{sublink.url}}">{{sublink.name|safe}}</a>
                               {% if sublink.items %}
                               {%comment%}
                               <!-- uncoment out  this block to get 3rd laver of nav -->
                                        <ul class="mz-sitenav-sub-sub">
                                             {% for subsublink in sublink.items %}
                                                 <li class="mz-sitenav-item">
-                                                    <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name}}</a>
+                                                    <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name|safe}}</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>

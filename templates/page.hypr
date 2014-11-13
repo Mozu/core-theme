@@ -1,4 +1,4 @@
-﻿{% autoescape on %}
+{% autoescape on %}
 {% block doctype %}
 <!doctype html>
 {% endblock doctype %}
@@ -102,7 +102,9 @@
                 {% dropzone "body" scope="page" %}
                 {% endblock body-content %}
                 
+                {% block body-below-content %}
                 {% dropzone "body-bottom" scope="template" %}
+                {% endblock body-below-content %}
                 
             </div>
 

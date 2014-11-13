@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
     var ProductListView = Backbone.MozuView.extend({
             templateName: 'modules/product/product-list-tiled'
         }),

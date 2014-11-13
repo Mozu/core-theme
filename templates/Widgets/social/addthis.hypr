@@ -1,4 +1,4 @@
-﻿<div  >
+<div  >
 
 {%if  SiteContext.IsEditMode %}
 <div style="background: url(https://cache.addthiscdn.com/www/20120531075334/style/images/header/bg-logo.png) no-repeat left center;width: 116px;height: 50px;overflow: hidden;text-indent: -9999px;">AddThis</div>

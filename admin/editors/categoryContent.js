@@ -1,3 +1,3 @@
-﻿Ext.widget({
+Ext.widget({
     xtype: 'mz-form-categoryPage'
 });

@@ -1,4 +1,4 @@
-﻿{% extends "page" %}
+{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.logIn %} - {% parent %}{% endblock title-tag-content %}
 
@@ -7,6 +7,7 @@
 {% block body-content %}
     <div class="mz-l-container">
         <h1 class="mz-pagetitle">{{ labels.logIn }}</h1>
+		{% dropzone "login-top" scope="template" %}
         <form method="post" class="mz-loginform mz-loginform-page">
            {% include "modules/common/message-bar" with model=model.messages %}
            <input type="hidden" name="returnUrl" value="{{ model.returnUrl }}" />

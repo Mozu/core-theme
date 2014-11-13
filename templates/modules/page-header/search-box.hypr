@@ -1,4 +1,4 @@
-﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.searchExpandOnFocus %} mz-searchbox-expands{% endif %}" action="/search">
+<form id="searchbox" class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}" action="/search">
     <span class="mz-searchbox-field">
         <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
         <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>

@@ -1,4 +1,4 @@
-﻿    <h3 class="mz-formstep-header">
+    <h3 class="mz-formstep-header">
         {{ labels.shippingInformation }}
         {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
           <button class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>

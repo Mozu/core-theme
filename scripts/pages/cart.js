@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor'], function (Backbone, _, $, CartModels, CartMonitor) {
+define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/models-cart', 'modules/cart-monitor'], function (Backbone, _, $, CartModels, CartMonitor) {
 
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",

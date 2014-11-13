@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu'], function ($) {
+define(['modules/jquery-mozu'], function ($) {
     $(document).ready(function () {
         $('[data-mz-contextify]').each(function () {
             var $this = $(this),

@@ -1,35 +1,37 @@
-﻿.mz-l-paginatedlist {
+.mz-l-paginatedlist {
     overflow: auto;
     position: relative;
     .mz-sortby {
-        position: absolute;
-        left: 0;
-        bottom: 1em;
+        float: left;
+        margin-right: @gutter*2;
     }
     .mz-pagingcontrols {
-        position: absolute;
-        right: 0;
-        bottom: 1em;
-        text-align: right;
+        float: right;
+        margin-left: @gutter;
     } 
     .mz-pagenumbers {
-        position: absolute;
-        right: 0;
-        top: 0;
-        text-align: right;
+        float: right;
+        margin-top: 5px;
+        margin-left: @gutter;
     }
     .mz-l-tiles {
         clear: both;
     }
     .mz-l-paginatedlist-header {
         .clearfix();
-        height: 9em;
+        margin-bottom: @gutter/2;
         position: relative;
     }
     .mz-l-paginatedlist-footer {
         .clearfix();
+        .mz-pagenumbers {
+            margin-top: 0;
+        }
+        .mz-pagingcontrols-pagesize-label {
+            display: none;
+        }
     }
     .mz-l-paginatedlist-list {
-        clear: both;
+        .clearfix();
     }
 }

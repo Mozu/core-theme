@@ -1,4 +1,4 @@
-﻿{% extends "page" %}
+{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.pageNotFound %} - {% parent %}{% endblock title-tag-content %}
 
@@ -10,3 +10,6 @@
     {% dropzone "notfound" scope="template" %}
 </div>
 {% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

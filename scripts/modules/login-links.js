@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Adds a login popover to all login links on a page.
  */
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore'], function ($, api, Hypr, _) {
@@ -103,6 +103,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             DismissablePopover.prototype.onPopoverShow.apply(this, arguments);
             this.panelWidth = this.$parent.find('.mz-l-slidebox-panel').first().outerWidth();
             this.$slideboxOuter = this.$parent.find('.mz-l-slidebox-outer');
+
+            if (this.$el.hasClass('mz-forgot')){
+                this.slideRight();
+            }
         },
         handleEnterKey: function (e) {
             if (e.which === 13) {
@@ -120,7 +124,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         },
         slideRight: function () {
             this.$slideboxOuter.css('left', -this.panelWidth);
-        },        slideLeft: function () {
+        },
+        slideLeft: function () {
             this.$slideboxOuter.css('left', 0);
         },
         login: function () {
@@ -204,6 +209,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         });
         $('[data-mz-action="signup"]').each(function () {
             var popover = new SignupPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="launchforgotpassword"]').each(function () {
+            var popover = new LoginPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
         });

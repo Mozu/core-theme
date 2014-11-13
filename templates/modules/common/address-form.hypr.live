@@ -1,4 +1,4 @@
-﻿{% block address-form %}
+{% block address-form %}
     <div class="mz-l-formfieldgroup-row mz-addressform-firstname">
         <div class="mz-l-formfieldgroup-cell">
             <label for="firstname">{{ labels.firstName }}<span class="is-required"> *</span></label>

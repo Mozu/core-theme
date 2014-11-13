@@ -1,4 +1,4 @@
-﻿<script>
+<script>
   _gaq.push(['_addTrans',
   '{{ model.orderNumber }}',
   '{{ siteContext.generalSettings.websiteName }}',

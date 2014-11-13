@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Adds builtin validation features to BackboneJS Models, customized to connect
  * to display internationalized Mozu text labels.
  */

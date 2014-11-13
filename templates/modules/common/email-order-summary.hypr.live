@@ -1,4 +1,4 @@
-﻿    <table class="mz-ordersummary" cellpadding="1" width="100%">
+    <table class="mz-ordersummary" cellpadding="1" width="100%">
         <thead>
             <tr>
                 <td bgcolor="#666666" class="mz-ordersummary-header-product"><font color="#ffffff">{{ labels.product }}</font></td>

@@ -1,15 +1,20 @@
-﻿/**
+/**
  * Can be used on any Backbone.MozuModel that has had the paging mixin in mixins-paging added to it.
  */
 define(['modules/jquery-mozu', 'underscore', 'hyprlive', 'modules/backbone-mozu', "modules/models-faceting", "modules/views-productlists", "modules/views-paging"], function($, _, Hypr, Backbone, FacetingModels, ProductListViews, PagingViews) {
 
     function factory(conf) {
         var views = {},
-            model = new FacetingModels.FacetedProductCollection(conf.data),
+            model,
             categoryId = conf.$body.data('mz-category'),
             searchQuery = conf.$body.data('mz-search');
 
-        if (searchQuery) model.setQuery(searchQuery);
+        if (searchQuery) {
+            model = new FacetingModels.SearchResult(conf.data);
+            model.setQuery(searchQuery);
+        } else {
+            model = new FacetingModels.Category(conf.data);
+        }
         if (categoryId) model.setHierarchy('categoryId', categoryId);
 
         _.extend(views, {

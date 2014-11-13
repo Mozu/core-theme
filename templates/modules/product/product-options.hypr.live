@@ -1,4 +1,4 @@
-﻿<div class="mz-productoptions">
+<div class="mz-productoptions">
     {% for option in model.options %}
     <div class="mz-productoptions-optioncontainer">
         {% if option.isRequired %}

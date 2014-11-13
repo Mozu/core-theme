@@ -1,4 +1,4 @@
-﻿{% extends "page" %}
+{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle model.name %} - {% parent %}{% endblock title-tag-content %}
 
@@ -7,3 +7,6 @@
 {% block body-content %}
     {% dropzone "home" scope="template" %}
 {% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

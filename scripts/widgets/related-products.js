@@ -1,4 +1,4 @@
-﻿define(['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+define(['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, _, api, Backbone, ProductModels) {
 
         var getRelatedProducts = function(pageType, codes, pageSize) {

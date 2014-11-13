@@ -41,7 +41,7 @@
       {{ labels.addToCart }}
   </button>
 
-  {% if not user.isAnonymous and themeSettings.allowWishlist %}
+  {% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
   <button id="add-to-wishlist" {% if model.notDoneConfiguring %} disabled="disabled" {% endif %} class="mz-productdetail-addtowishlist mz-button" data-mz-action="addToWishlist">
       {{ labels.addToWishlist }}
   </button>
@@ -106,25 +106,27 @@
 {% if model.measurements and themeSettings.showProductDetailMeasurements and not model.bundledProducts %}
 <div class="mz-productdetail-measurements mz-l-stack-section">
     <h4 class="mz-l-stack-sectiontitle">{{ labels.measurements }}</h4>
-    <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
+    <dl class="mz-propertylist mz-propertylist-justified">
       <dt>{{ labels.weight }}</dt>
       <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">
-        <span itemprop="value">{{ model.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWeight.unit }}</span></dd>
-    </dl>
-	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-      <dt>{{ labels.length }}</dt>
+        <span itemprop="value">{{ model.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWeight.unit }}</span>
+	  </dd>
+	  
+	  <dt>{{ labels.length }}</dt>
       <dd itemprop="length" itemscope itemtype="http://schema.org/QuantitativeValue">
-        <span itemprop="value">{{ model.measurements.packageLength.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageLength.unit }}</span></dd>
-    </dl>
-	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-      <dt>{{ labels.width }}</dt>
+        <span itemprop="value">{{ model.measurements.packageLength.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageLength.unit }}</span>
+	  </dd>
+    
+	  <dt>{{ labels.width }}</dt>
       <dd itemprop="width" itemscope itemtype="http://schema.org/QuantitativeValue">
-        <span itemprop="value">{{ model.measurements.packageWidth.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWidth.unit }}</span></dd>
-    </dl>
-	<dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
-      <dt>{{ labels.height }}</dt>
+        <span itemprop="value">{{ model.measurements.packageWidth.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageWidth.unit }}</span>
+	  </dd>
+    
+	  <dt>{{ labels.height }}</dt>
       <dd itemprop="height" itemscope itemtype="http://schema.org/QuantitativeValue">
-        <span itemprop="value">{{ model.measurements.packageHeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageHeight.unit }}</span></dd>
+        <span itemprop="value">{{ model.measurements.packageHeight.value }}</span> <span itemprop="unitCode">{{ model.measurements.packageHeight.unit }}</span>
+	  </dd>
+
     </dl>
 </div>
 
@@ -145,22 +147,24 @@
     <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
         <dt>{{ labels.weight }}</dt>
         <dd itemprop="weight" itemscope itemtype="http://schema.org/QuantitativeValue">
-          <span itemprop="value">{{ product.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageWeight.unit }}</span></dd>
-      </dl>
-    <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
+          <span itemprop="value">{{ product.measurements.packageWeight.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageWeight.unit }}</span>
+		</dd>
+
         <dt>{{ labels.length }}</dt>
         <dd itemprop="length" itemscope itemtype="http://schema.org/QuantitativeValue">
-          <span itemprop="value">{{ product.measurements.packageLength.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageLength.unit }}</span></dd>
-      </dl>
-    <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
+          <span itemprop="value">{{ product.measurements.packageLength.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageLength.unit }}</span>
+		</dd>
+
         <dt>{{ labels.width }}</dt>
         <dd itemprop="width" itemscope itemtype="http://schema.org/QuantitativeValue">
-          <span itemprop="value">{{ product.measurements.packageWidth.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageWidth.unit }}</span></dd>
-      </dl>
-    <dl class="mz-propertylist mz-propertylist-justified mz-propertylist-inline">
+          <span itemprop="value">{{ product.measurements.packageWidth.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageWidth.unit }}</span>
+		</dd>
+
         <dt>{{ labels.height }}</dt>
         <dd itemprop="height" itemscope itemtype="http://schema.org/QuantitativeValue">
-          <span itemprop="value">{{ product.measurements.packageHeight.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageHeight.unit }}</span></dd>
+          <span itemprop="value">{{ product.measurements.packageHeight.value }}</span> <span itemprop="unitCode">{{ product.measurements.packageHeight.unit }}</span>
+		</dd>
+
       </dl>
     {% endif %}
   {% endfor %}

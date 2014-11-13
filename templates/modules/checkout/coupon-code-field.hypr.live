@@ -1,4 +1,4 @@
-﻿        <div class="mz-l-formfieldgroup-cell">
+        <div class="mz-l-formfieldgroup-cell">
             <label for="coupon-code">{{ labels.couponCode }}: </label>
         </div>
         <div class="mz-l-formfieldgroup-cell">

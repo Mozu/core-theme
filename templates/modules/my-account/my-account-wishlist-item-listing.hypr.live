@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/item-listing" %}
+{% extends "modules/common/item-listing" %}
 
 {% block item-details %}
   {% parent %}
