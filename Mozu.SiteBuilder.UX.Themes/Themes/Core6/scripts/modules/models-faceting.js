@@ -61,7 +61,8 @@
             if (!this.hierarchyValue && !this.baseRequestParams) {
                 this.baseRequestParams = {
                     facet: this.hierarchyField,
-                    facetHierDepth: this.hierarchyField + ":" + this.hierarchyDepth
+                    facetHierDepth: this.hierarchyField + ":" + this.hierarchyDepth,
+                    query: query
                 };
             }
             this.lastRequest = this.buildRequest();
