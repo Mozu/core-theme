@@ -12,7 +12,7 @@ module.exports = {
             product: {
                 productCode: this.data.productCode,
                 variationProductCode: this.data.variationProductCode,
-                options: payload.options
+                options: payload.options || this.data.options
             },
             quantity: payload.quantity || 1,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,

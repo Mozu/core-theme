@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-10-24
+ * Mozu JavaScript SDK - v0.3.0 - 2014-11-14
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -4605,7 +4605,7 @@ module.exports = {
             product: {
                 productCode: this.data.productCode,
                 variationProductCode: this.data.variationProductCode,
-                options: payload.options
+                options: payload.options || this.data.options
             },
             quantity: payload.quantity || 1,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
