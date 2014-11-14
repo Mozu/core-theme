@@ -670,6 +670,7 @@
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\Mocks\Attributes.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
+    <Compile Include="Modules\VersionValidationCacheHeaderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\.sencha\app\find-cmd-impl.xml" />
     <Content Include="Scripts\.sencha\app\init-impl.xml" />
@@ -2419,7 +2420,6 @@
   <ItemGroup>
     <Folder Include="Api\Models\Cms\" />
     <Folder Include="Models\" />
-    <Folder Include="Modules\" />
     <Folder Include="Scripts\app\exported\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\platter\containers\" />
