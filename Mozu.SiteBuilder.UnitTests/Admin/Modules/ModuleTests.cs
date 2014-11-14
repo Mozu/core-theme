@@ -106,7 +106,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Modules
 
 
             mod.ProcessRequest(context);
-            context.Response.Received().Redirect("https://mozu/a/b/c");
+            context.Response.DidNotReceive().Redirect("https://mozu/a/b/c");
 
         }
     }
