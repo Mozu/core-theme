@@ -6,6 +6,22 @@
     var cdnHost = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
     var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
 }
+@helper DoCss(System.Diagnostics.FileVersionInfo ver, string cdn)
+{
+    var subCss = System.IO.Directory.GetFiles(Server.MapPath("~/Scripts/build/resources/"), "Taco-all_*.css");
+
+    if (subCss.Length == 0)
+    {
+        <link rel="stylesheet" type="text/css" href="@cdn@Url.Content("~/Scripts/build/resources/Taco-all.css")?ver=@ver.FileVersion" />
+    }
+    else
+    {
+        foreach (var css in subCss)
+        {
+            <link rel="stylesheet" type="text/css" href="@cdn@Url.Content("~/Scripts/build/resources/" + System.IO.Path.GetFileName(css))?ver=@ver.FileVersion" />
+        }
+    }
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,9 +29,10 @@
     <link type="image/x-icon" href="@cdn@Url.Content("~/Scripts/resources/favicon.ico")?ver=@ver.FileVersion" rel="icon" />
     <link type="image/x-icon" href="@cdn@Url.Content("~/Scripts/resources/favicon.ico")?ver=@ver.FileVersion" rel="shortcut icon" />
 
-    <link rel="stylesheet" type="text/css" href="@cdn@Url.Content("~/Scripts/build/resources/Taco-all.css")?ver=@ver.FileVersion" />
+    @DoCss(ver, cdn);
     @Html.Partial("admininlinejson")
-    <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/resources/lib/init.min.js")"></script>    
+    <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/resources/lib/init.min.js")"></script>
+    
     <script type="text/javascript" src="@cdn@Url.Content("~/Scripts/build/" + ViewData["applib"])?ver=@ver.FileVersion"></script>
     <script src="@cdn@Url.Content("~/Scripts/build/locale/" + ViewData["extlocalefile"])"></script>
     
