@@ -18,6 +18,7 @@ using Magnum.Extensions;
 using Microsoft.Server.Common;
 using Microsoft.Win32;
 using MongoDB.Bson.Serialization.Conventions;
+using Mozu.Core;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -241,10 +242,29 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             };
         }
 
+        DataViewModeType Convert(string dataViewModeString)
+        {
+            switch ((dataViewModeString ?? "").ToLowerInvariant())
+            {
+                case "p":
+                {
+                    return DataViewModeType.Pending;
+                }
+                case "l":
+                {
+                    return DataViewModeType.Live;
+                }
+
+            }
+            return SbApiContext.DataViewMode;
+        }
+
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
-        public HttpResponseMessage Stylesheets(string pathinfo, bool debug = false)
+        public HttpResponseMessage Stylesheets(string pathinfo, bool debug = false, string dv= null)
         {
+            ((Mozu.Core.ApiContext) this.SbApiContext).DataViewMode = Convert(dv);
+            
             return Path.GetExtension(pathinfo) == ".less" ? 
                 Less(pathinfo, debug) : // TODO: set debug to false later
                 Content("stylesheets/" + pathinfo);
@@ -451,8 +471,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [HttpGet]
-        public HttpResponseMessage HyprContextAction()
+        public HttpResponseMessage HyprContextAction( string dv= null)
         {
+            ((Mozu.Core.ApiContext) this.SbApiContext).DataViewMode = Convert(dv);
             var ctx = new Dictionary<string, object>();
             var locals = new Dictionary<string, object>();
             var siteContext = new Dictionary<string, object>();
