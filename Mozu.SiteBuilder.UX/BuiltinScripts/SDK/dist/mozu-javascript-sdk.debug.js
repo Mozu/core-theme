@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-11-14
+ * Mozu JavaScript SDK - v0.3.0 - 2014-11-17
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2645,6 +2645,10 @@ module.exports = {
         SHIP: "Ship",
         PICKUP: "Pickup",
         DIGITAL: "Digital"
+    },
+    GOODS_TYPES: {
+        PHYSICAL: 'Physical',
+        DIGITAL: 'Digital'
     }
 };
 
@@ -4609,7 +4613,7 @@ module.exports = {
             },
             quantity: payload.quantity || 1,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
-            fulfillmentMethod: payload.fulfillmentMethod || "Ship"
+            fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && this.data.fulfillmentTypesSupported[0]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.FULFILLMENT_METHODS.SHIP : CONSTANTS.FULFILLMENT_METHODS.DIGITAL)
         });
     },
     addToWishlist: function (payload) {

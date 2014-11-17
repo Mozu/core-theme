@@ -31,5 +31,9 @@ module.exports = {
         SHIP: "Ship",
         PICKUP: "Pickup",
         DIGITAL: "Digital"
+    },
+    GOODS_TYPES: {
+        PHYSICAL: 'Physical',
+        DIGITAL: 'Digital'
     }
 };

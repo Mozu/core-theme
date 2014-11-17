@@ -16,7 +16,7 @@ module.exports = {
             },
             quantity: payload.quantity || 1,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
-            fulfillmentMethod: payload.fulfillmentMethod || "Ship"
+            fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && this.data.fulfillmentTypesSupported[0]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.FULFILLMENT_METHODS.SHIP : CONSTANTS.FULFILLMENT_METHODS.DIGITAL)
         });
     },
     addToWishlist: function (payload) {
