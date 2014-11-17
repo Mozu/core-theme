@@ -1,7 +1,6 @@
 ﻿/**
  * @class Taco.view.website.entityAdapters.BaseEntityAdapter
  */
-
 Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     extend: 'Ext.util.Observable',
     requires: [],
@@ -12,92 +11,83 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         destroy: false,
         more: false
     },
-
-    constructor: function () {
+    constructor: function() {
         this.callParent(arguments);
         this.manager.entitypeTypeHandler = this;
         this.load();
-
         this.mon(this.manager, 'activecardchanged', this.onManagerActiveItemChange, this);
     },
-
-    onManagerActiveItemChange: function (manager, activeItem) {
+    onManagerActiveItemChange: function(manager, activeItem) {
         if (activeItem.itemId === 'pageEditor' && this.webPageNeedsRefresh) {
             this.webPageNeedsRefresh = false;
             this.manager.reloadPage();
         }
     },
-
-    getDocument: function () {
+    getDocument: function() {
         return this.get();
     },
-
-    getPageSettings: function () {
+    getPageSettings: function() {
         var me = this,
             doc = this.getDocument(),
             customerEditor,
             ret = [];
-
         if (!customerEditor) {
             customerEditor = me.manager.entityEditors.findEditor(doc);
         }
         if (customerEditor) {
-            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', { editor: customerEditor, record: doc, showNameEditor: me.showNameEditor });
+            me.dynamicFormContainer = Ext.create('Taco.view.entityManager.DynamicFormContainer', {
+                editor: customerEditor,
+                record: doc,
+                showNameEditor: me.showNameEditor
+            });
             ret.push(me.dynamicFormContainer);
         } else {
-            ret.push(Ext.create('Taco.core.ux.form.Form', { record: doc }));
+            ret.push(Ext.create('Taco.core.ux.form.Form', {
+                record: doc
+            }));
         }
-
-
         return ret;
     },
-
-
-    deleteRecord: function () {
+    deleteRecord: function() {
         var me = this,
             record = this.get();
-
         if (me.fireEvent('destroy', record) !== false) {
             if (record) {
                 record.destroy({
-                    callback: function () {
+                    callback: function() {
                         me.fireEvent('destroy', record);
                     }
                 });
             }
         }
     },
-
-    getId: function () {
+    getId: function() {
         if (this.record) {
             return this.record.getLoadParams();
         }
         if (!this.pageContext.cmsContext.page.listFQN || !this.pageContext.cmsContext.page.id) {
             return undefined;
         }
-        return { listFQN: this.pageContext.cmsContext.page.listFQN, id: this.pageContext.cmsContext.page.id };
+        return {
+            listFQN: this.pageContext.cmsContext.page.listFQN,
+            id: this.pageContext.cmsContext.page.id
+        };
     },
-    get: function () {
+    get: function() {
         return this.record;
     },
-
-    getSaveTask: function () {
+    getSaveTask: function() {
         var me = this,
             tasks = Ext.create('Taco.core.ux.form.Tasks'),
-            zoneData = [],
-            properties,
+            properties = [],
             document,
-            editListener,
             source;
-
         if (me.editor) {
             me.editor.dirtyStateCheck();
-            
             if (me.editor.isDirty()) {
                 if (me.getDocument()) {
                     me.getDocument().setDirty();
-                }
-
+                }git 
                 if ((me.pageContext.editMode || "").toLowerCase() === 'template') {
                     source = me.pageContext.cmsContext.template;
                 } else if ((me.pageContext.editMode || "").toLowerCase() === 'site') {
@@ -105,102 +95,82 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                 } else {
                     source = me.pageContext.cmsContext.page;
                 }
-
-                Ext.each(me.editor.persistanceData(), function (zone) {
-                    // if (!Ext.isEmpty(zone.rows)) {
-                    //todo: check pc for edit type... page/vs template
-                    zone.source = source;
-                    zoneData.push(zone);
-                    //}
-                });
-
-                zoneData = Ext.clone(zoneData);
-
                 document = me.getDocument();
-
                 if (document) {
-                   
-                    props = Ext.clone(document.get('properties'));
-                    props.dropzones = zoneData;
-                    document.set('properties', props);
-                    
-
+                    properties = Ext.clone(document.get('properties'));
+                    properties.dropzones = properties.dropzones || [];
+                }
+                Ext.each(me.editor.persistanceData(), function(zone) {
+                    var existing = Ext.Array.findBy(properties.dropzones, function(x) {
+                        return (x.id || '').toLowerCase() === (zone.id || '').toLowerCase();
+                    });
+                    if (existing) {
+                        Ext.Array.remove(properties.dropzones, existing);
+                    }
+                    zone.source = source;
+                    properties.dropzones.push(zone);
+                });
+                if (document) {
+                    document.set('properties', Ext.clone(properties));
                 } else {
                     tasks.add({
-                        fn: function (t) {
-
+                        fn: function(t) {
                             Ext.Ajax.request({
                                 url: '/admin/app/cmsdocument/widgetdata/update',
                                 method: 'post',
                                 jsonData: {
-                                    zones: zoneData,
+                                    zones: properties.dropzones,
                                     source: source
                                 },
-                                success: function () {
+                                success: function() {
                                     t.callback();
-
                                 }
                             });
-
-
                         }
                     });
                 }
-
-                tasks.on('complete', function (endTasks) {
+                tasks.on('complete', function(endTasks) {
                     if (Ext.isEmpty(endTasks.errors)) {
                         this.editor.resetDirtyState();
                     }
-                    
                 }, this);
             }
         }
-
-        tasks.on('complete', function () {
+        tasks.on('complete', function() {
             me.webPageNeedsRefresh = true;
             me.fireEvent('savesuccess', me);
         });
-
-
-
         this.addSaveTasks(tasks);
-
         return tasks;
     },
-
-  
-
-    publish: function () {
+    publish: function() {
         if (!this.pageContext || !this.pageContext.cmsContext) {
             return;
         }
         var store = Ext.create('Taco.store.CmsDocumentDrafts');
-
-        Ext.Object.each(this.pageContext.cmsContext, function (key, value) {
+        Ext.Object.each(this.pageContext.cmsContext, function(key, value) {
             if (value.id) {
-                var doc = store.add({ id: value.id })[0];
+                var doc = store.add({
+                    id: value.id
+                })[0];
                 doc.set('isPublished', true);
             }
         }, this);
         store.sync({
-            success: function () {
+            success: function() {
                 this.manager.setPublishable(false);
             },
             scope: this
         });
     },
-
-    isDirty: function () {
+    isDirty: function() {
         return false;
     },
-
-    isHidden: function () {
+    isHidden: function() {
         return false;
     },
-
-    load: function () {
+    load: function() {
         var me = this;
-
         if (me.record) {
             this.set(me.record);
             return;
@@ -208,16 +178,13 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         if (!this.getId()) {
             return;
         }
-
         Taco.model.Entity.load(this.getId(), {
             scope: this,
-            success: function (record) {
+            success: function(record) {
                 this.set(record);
             }
         });
     },
-
-
     //load: function () {
     //    var me = this,
     //        key = this.getId(),
@@ -237,8 +204,7 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
     //        this.set(this.record);
     //    }
     //},
-
-    set: function (record, add) {
+    set: function(record, add) {
         this.isLoading = false;
         this.record = record;
         if (add) {
@@ -250,42 +216,31 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         }
         this.fireEvent('load', record);
     },
-
-    setPubState: function () {
+    setPubState: function() {
         if (this.record && this.record.get('publishState') === 'draft') {
             this.manager.showHideButtons(['isPublishable'], true);
             this.manager.setPublishable(true);
         }
-
         if (!this.pageContext || !this.pageContext.cmsContext) {
             return;
         }
-        Ext.Object.each(this.pageContext.cmsContext, function (key, value) {
+        Ext.Object.each(this.pageContext.cmsContext, function(key, value) {
             if (value && value.publishState === 'draft') {
                 this.manager.setPublishable(true);
             }
         }, this);
-
-
-
     },
-
-    addSaveTasks: function (tasks) {
+    addSaveTasks: function(tasks) {
         this.manager.pageSettings.addSaveTasks(tasks);
-  
         if (this.dynamicFormContainer) {
-            tasks.add([
-                {
-                    updateRecord: this.get(),
-                    updateForm: this.dynamicFormContainer
-                }, {
-                    saveRecord: this.get()
-                }
-            ]);
+            tasks.add([{
+                updateRecord: this.get(),
+                updateForm: this.dynamicFormContainer
+            }, {
+                saveRecord: this.get()
+            }]);
         }
     },
-    
-
     getStore: Ext.emptyFn,
     setHidden: Ext.emptyFn,
     unload: Ext.emptyFn
