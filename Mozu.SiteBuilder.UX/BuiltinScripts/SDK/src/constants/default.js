@@ -27,9 +27,14 @@ module.exports = {
         CANCEL_ORDER: "CancelOrder",
         REOPEN_ORDER: "ReopenOrder"
     },
-    FULFILLMENT_METHODS: {
+    COMMERCE_FULFILLMENT_METHODS: {
         SHIP: "Ship",
         PICKUP: "Pickup",
+        DIGITAL: "Digital"
+    },
+    CATALOG_FULFILLMENT_TYPES: {
+        SHIP: "DirectShip",
+        PICKUP: "InStorePickup",
         DIGITAL: "Digital"
     },
     GOODS_TYPES: {
