@@ -42,7 +42,7 @@ module.exports = {
     },
     addToCartForPickup: function (opts) {
         return this.addToCart(utils.extend({}, this.data, {
-            fulfillmentMethod: CONSTANTS.FULFILLMENT_METHODS.PICKUP
+            fulfillmentMethod: CONSTANTS.COMMERCE_FULFILLMENT_METHODS.PICKUP
         }, opts));
     }
 };
