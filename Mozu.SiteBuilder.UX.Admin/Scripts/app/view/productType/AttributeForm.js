@@ -122,7 +122,7 @@
     },
 
     addAttributes: function (filter, attribute) {
-        
+        var me = this;
         this.attributeStore.suspendEvents(false);
         this.attributeStore.clearFilter();
         this.attributeStore.filter(filter);
@@ -150,13 +150,9 @@
                     deselectOnContainerClick: false,
                     mode: 'SINGLE',
                     listeners: {
-                        selectionchange: function (selectionModel, records) {
-                            if (!Ext.isArray(records) || records.length !== 1) {
-                                return;
-                            }
-                            this.addEditor(records[0]);
-                            // this.saveButton.setDirty(true);
-                            this.selectedAttribute = records[0];
+                        selectionchange: {
+                            fn: me.onSelectedAttributeChanged,
+                            scope: this
                         },
                         buffer: 1,
                         scope: this
@@ -164,6 +160,23 @@
                 }
             }
         }));
+    },
+
+    onSelectedAttributeChanged: function (selectionModel, records) {
+        if (!Ext.isArray(records) || records.length !== 1) {
+            return;
+        }
+        this.addEditor(records[0]);
+        // this.saveButton.setDirty(true);
+        this.selectedAttribute = records[0];
+    },
+
+    selectAttributeAndUpdateValues : function(ptAttribute) {
+        var modelAttr = this.attributeStore.getById(ptAttribute.getId());
+        if (modelAttr) {
+            ptAttribute.set('values', modelAttr.get('values'));
+        }
+        this.onSelectedAttributeChanged(null, [ptAttribute]);
     },
 
     addEditor: function (attribute) {
