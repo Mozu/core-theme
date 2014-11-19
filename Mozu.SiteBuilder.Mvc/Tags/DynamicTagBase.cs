@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     public abstract class DynamicTagBase : SimpleTagBase
     {
         
-        protected override ArgumentCollection.ParseStrategy ArguemntParserStrategy
+        protected override ArgumentCollection.ParseStrategy ArgumentParserStrategy
         {
             get
             {
