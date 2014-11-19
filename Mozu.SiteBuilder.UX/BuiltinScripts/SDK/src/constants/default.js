@@ -14,6 +14,7 @@ module.exports = {
         CREATED: "Created",
         PENDING_REVIEW: "PendingReview",
         PROCESSING: "Processing",
+        ERRORED: "Errored",
         SUBMITTED: "Submitted",
         VALIDATED: "Validated"
     },

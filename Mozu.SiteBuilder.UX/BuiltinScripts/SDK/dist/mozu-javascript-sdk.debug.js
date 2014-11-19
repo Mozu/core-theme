@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-11-18
+ * Mozu JavaScript SDK - v0.3.0 - 2014-11-19
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2628,6 +2628,7 @@ module.exports = {
         CREATED: "Created",
         PENDING_REVIEW: "PendingReview",
         PROCESSING: "Processing",
+        ERRORED: "Errored",
         SUBMITTED: "Submitted",
         VALIDATED: "Validated"
     },
@@ -4453,6 +4454,8 @@ module.exports = (function () {
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PROCESSING] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ERRORED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.COMPLETED] = true;
 
     var OrderStatus2IsReady = {};
