@@ -36,11 +36,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly Regex categoryIdRE = new Regex("categoryId:(?<categoryId>\\w+)");
 
         [HttpGet]
-        public async Task<ActionResult> Index(string query, int? categoryId = null, string sortBy = null, int? startIndex = null, int? page = null, int? pageSize = null, string facetValueFilter = null)
+        public async Task<ActionResult> Index(string query= null, int? categoryId = null, string sortBy = null, int? startIndex = null, int? page = null, int? pageSize = null, string facetValueFilter = null, 
+            //adding w as an extra param for jelly belly.  Plan to remove in r6.1
+            string w=null)
         {
           
             int filterCatId = 0;
             bool isCatFiltered = false;
+            query = query ?? w;
             Match m;
             if (facetValueFilter != null)
             {

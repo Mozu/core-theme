@@ -101,8 +101,9 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
                     properties.dropzones = properties.dropzones || [];
                 }
                 Ext.each(me.editor.persistanceData(), function(zone) {
-                    var existing = Ext.Array.findBy(properties.dropzones, function(x) {
-                        return (x.id || '').toLowerCase() === (zone.id || '').toLowerCase();
+                    var existing = Ext.Array.findBy(properties.dropzones, function (x) {
+                        //adding tollerance for older docs that had the wrong case on the id addtribute.
+                        return (x.id || x.Id ||  '').toLowerCase() === (zone.id || zone.Id || '').toLowerCase();
                     });
                     if (existing) {
                         Ext.Array.remove(properties.dropzones, existing);
