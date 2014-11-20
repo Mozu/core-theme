@@ -1,26 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-
-using AutoMapper;
-using Mozu.Core.Api.Client;
-using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -60,20 +46,17 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [NDjango.Interfaces.Name("include_products")]
     public class IncludeProductsTag : SimpleTagBaseAsync
     {
-
-
-
-        protected override async Task<SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, NDjango.Interfaces.IContext context)
+        protected override async Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, NDjango.Interfaces.IContext context)
         {
-            var result = new SimpleTagBaseAsync.ProcessTagResult(context);
+            var result = new ProcessTagResult(context);
             var cache = context.Resolve<IStorefrontCache>();
 
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
-            var includeFacets = arguments.GetValueOrDefault<bool>("includeFacets", false);
-            var pageWithUrl = arguments.GetValueOrDefault<bool>("pageWithUrl", false);
-            var sortWithUrl = arguments.GetValueOrDefault<bool>("sortWithUrl", false);
-            var startIndex = arguments.GetValueOrDefault<int>("startIndex", 0);
-            var pageSize = arguments.GetValueOrDefault<int>("pageSize", 15);
+            var includeFacets = arguments.GetValueOrDefault("includeFacets", false);
+            var pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
+            var sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
+            var startIndex = arguments.GetValueOrDefault("startIndex", 0);
+            var pageSize = arguments.GetValueOrDefault("pageSize", 15);
             var query = arguments.GetValueOrDefault<string>("query");
             var sort = arguments.GetValueOrDefault<string>("sort");
             var productCodes = arguments.GetValueOrDefault<IEnumerable>("productCodes");
@@ -90,8 +73,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetHierValue = null;
             string facetHierDepth = null;
             var categoryId = pageContext.CategoryId;
-            var qurey = "*:*";
-            string[] productCodesFilters = null;
+            var defaultQuery = "*:*";
+
             if (query != null)
             {
                 searchQuery.Append(query);
@@ -100,14 +83,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 if (productCodes is string)
                 {
-                    productCodes = ((string) productCodes).Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                }
-                else
-                {
-                    productCodes = (productCodes ?? Enumerable.Empty<object>()).Cast<object>().Where(x => x != null).Select(x => x.ToString());
+                    productCodes = ((string)productCodes).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 }
 
-                productCodesFilters = productCodes.Cast<string>().Select(x => string.Format("productCode eq {0}", x)).ToArray();
+                var productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
 
                 if (productCodesFilters.Length == 0)
                 {
@@ -148,10 +127,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     startIndex = tmp;
                 }
-
             }
-
-
+            
             if (includeFacets && categoryId.HasValue)
             {
                 facetHierDepth = "categoryId:2";
@@ -160,33 +137,25 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 facetValueFilter = request.QueryString["facetValueFilter"];
             }
 
-            string sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
-
+            var sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
 
             if (sortWithUrl && !string.IsNullOrEmpty(request["sortBy"]))
             {
                 sortBy = request["sortBy"];
             }
 
-            ProductSearchResult pc;
-            //searchWebApiClient = searchWebApiClient.CloneWithConfigOptions(x => x.HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead);
             var filter = searchQuery.ToString();
+            var cacheKey = new StringBuilder().Append(defaultQuery).Append(filter).Append(facetHierValue).Append(facetTemplate).Append(facetHierDepth).Append(facetValueFilter).Append(startIndex).Append(sortBy).Append(pageSize).ToString();
 
-            var cacheKey = new StringBuilder().Append(qurey).Append(filter).Append(facetHierValue).Append(facetTemplate).Append(facetHierDepth).Append(facetValueFilter).Append(startIndex).Append(sortBy).Append(pageSize).ToString();
-
-            pc = cache.Get<ProductSearchResult>(cacheKey);
+            var pc = cache.Get<ProductSearchResult>(cacheKey);
             if (pc == null)
             {
-                var res = await searchWebApiClient.Search(query: qurey, filter: filter, facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
-
+                var res = await searchWebApiClient.Search(query: defaultQuery, filter: filter, facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
                 using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync())
                 {
-                    using (var rdr = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, System.Text.Encoding.UTF8))
+                    using (var rdr = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, Encoding.UTF8))
                     {
-
                         var ser = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
-                        //var ser = JsonSerializer.CreateDefault();
-
                         pc = ser.Deserialize<ProductSearchResult>(rdr);
                         
                         if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null )
@@ -198,115 +167,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
                 cache.Set(cacheKey, pc);
             }
-
-            //    var pcDC = await  res.ReadAsAsync();
-            //     var pc = Mapper.Map<ProductSearchResult>(pcDC);
             result.Template = template;
-
-
             result.Context = context.add(new Tuple<string, object>("model", pc));
-            ;
             return result;
-
-
         }
-       
-        
-        class ProductSkuCompare  : IComparer<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product> 
-        {
-
-            public ProductSkuCompare(string[] productCodes)
-            {
-                
-            }
-            public int Compare(Product x, Product y)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        //public string ProductListing( HttpRequestBase request , ISiteBuilderContext siteBuilderContext , int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, IEnumerable productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
-        //{
-
-        //    IEnumerable<object> _productCodes = productCodes == null ? null : productCodes.Cast<object>();
-
-        //        categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
-        //    if (useUrlParams.GetValueOrDefault(false))
-        //    {
-        //        var itemsPerPageParam = request.QueryString["pageSize"];
-        //        var startIndexParam = request.QueryString["startIndex"];
-        //        itemsPerPage = String.IsNullOrWhiteSpace(itemsPerPageParam) ? Convert.ToInt32(siteBuilderContext.ThemeSettings["defaultPageSize"]) : Convert.ToInt32(itemsPerPageParam);
-        //        startIdx = String.IsNullOrWhiteSpace(startIndexParam) ? 0 : Convert.ToInt32(startIndexParam);
-        //    }
-        //    else
-        //    {
-        //        itemsPerPage = itemsPerPage.GetValueOrDefault(Convert.ToInt32(siteBuilderContext.ThemeSettings["defaultPageSize"]));
-        //        startIdx = startIdx.GetValueOrDefault(0);
-        //    }
-        //    var recurse = categoryId.HasValue;
-        //    string filter = null;
-        //    if (productCodes != null && _productCodes.Count() > 0)
-        //    {
-        //        var productCodes2 = _productCodes.Select(x => x.ToString()).Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => string.Format("productCode eq {0}", x)).ToList();
-        //        if (productCodes2.Count > 0)
-        //        {
-        //            filter = string.Join(" or ", productCodes2);
-        //        }
-
-        //        itemsPerPage = _productCodes.Count();
-
-        //    }
-        //    if (categoryId.HasValue)
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(filter))
-        //        {
-        //            filter = "(categoryId req " + categoryId + ") and (" + filter + ")";
-        //        }
-        //        else
-        //        {
-        //            filter = "categoryId req " + categoryId;
-        //        }
-        //    }
-        //    //todo do i need to replace recurese
-        //    // recurse: recurse,
-        //    try
-        //    {
-
-
-
-        //        if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
-        //        {
-        //            string facetValueFilter = request.QueryString["facetValueFilter"];
-        //            var pcDC = _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter).Result.ReadAsSync();
-        //            var pc = Mapper.Map<ProductSearchResult>(pcDC);
-        //            return PartialView(pcDC);
-        //        }
-        //        else
-        //        {
-        //            var pcDC = _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options").Result.ReadAsSync();
-        //            var pc = Mapper.Map<ProductCollection>(pcDC);
-        //            return PartialView(pc);
-
-        //        }
-
-        //        //`
-        //        //pc.Paging.CurrentSort = sortBy;
-        //        //pc.Paging.StartIndex = startIdx;
-        //        //pc.Paging.UrlBase = "?";
-
-
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ContentResult() { Content = "[product service error]: " + ex.Message };
-        //    }
-        //}
-
-
-
-
-
     }
 }
