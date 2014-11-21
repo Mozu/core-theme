@@ -451,13 +451,10 @@ Ext.define('Taco.view.product.subform.General', {
             selectOnFocus: true,
             enableKeyEvents: true,
             scope: me,
-            listeners: {
+            listeners: {                
                 keyup: {
                     scope: me,
-                    fn: function (source) {
-                        var isEnabled = (source.getValue() != null);
-                        me.enableDateRangeFields(source, me.mapStartField, me.mapEndField, isEnabled);
-                    }
+                    fn: me.onMapFieldChange
                 }
             }
         };
@@ -472,7 +469,8 @@ Ext.define('Taco.view.product.subform.General', {
             endDateField: 'mapenddt',
             pickerOffset: 4,
             disabled: !isMapEnabled,
-            allowBlank: !isMapEnabled,
+            //allowBlank: !isMapEnabled,
+            allowBlank: true,
             invalidText: invalidDateText,
             emptyText: 'mm/dd/yy',
             listeners: {
@@ -494,7 +492,8 @@ Ext.define('Taco.view.product.subform.General', {
             startDateField: 'mapstartdt',
             pickerOffset: 4,
             disabled: !isMapEnabled,
-            allowBlank: !isMapEnabled,
+            //allowBlank: !isMapEnabled,
+            allowBlank: true,
             invalidText: invalidDateText,
             emptyText: 'mm/dd/yy',
             listeners: {
@@ -1029,13 +1028,26 @@ Ext.define('Taco.view.product.subform.General', {
         Taco.app.fireEvent('producttypechanged', productTypeRecord);
     },
 
+    onMapFieldChange: function (field) {
+        var me = this,
+            isEnabled = (field.getValue() != null);
+        
+        me.enableDateRangeFields(me, me.mapStartField, me.mapEndField, isEnabled);
+
+        // if this is a change to the global form's map field we will need to update the value on the site forms that are not in an override state to keep them current and in sync.
+    },
+
     onDiscountRestrictedChange: function (source, isChecked) {
-        var me = source.scope;
+        //var me = source.scope;
+        var me = this;
+
+
         me.enableDateRangeFields(source, me.discountsRestrictedStartField, me.discountsRestrictedEndField, isChecked);
     },
 
     enableDateRangeFields: function(source, startField, endField, isEnabled) {
-        var me = source.scope;
+        //var me = source.scope;
+        var me = this;
         
         if (isEnabled) {
             me.enableDateField(startField);
@@ -1050,7 +1062,7 @@ Ext.define('Taco.view.product.subform.General', {
     },
 
     disableDateField: function (dateField) {
-        dateField.allowBlank = true;
+        //dateField.allowBlank = true;
         dateField.setDisabled(true);
         dateField.setValue(null);
         dateField.setMaxValue(null);
@@ -1059,7 +1071,7 @@ Ext.define('Taco.view.product.subform.General', {
     },
 
     enableDateField: function (dateField) {
-        dateField.allowBlank = false;
+        //dateField.allowBlank = false;
         dateField.setDisabled(false);
     },
 
