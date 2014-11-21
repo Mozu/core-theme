@@ -258,22 +258,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     catch { } // it's really okay if this doesn't work
                    
                 }
-                var methods = (isFulfillmentInfoRequired)
-                    ? (await _orderWebApiClient.GetAvailableShipmentMethods(id)).ReadAsSync()
-                    : new List<ShippingRate>();
-                var asm = JArray.FromObject(methods, jSerializer);
+
+                List<ShippingRate> methods = null;
+                if (isFulfillmentInfoRequired)
+                {
+                    var resp = await _orderWebApiClient.GetAvailableShipmentMethods(id);
+                    if (resp.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        methods = resp.ReadAsSync();
+                    }
+                }
+
+                var asm = JArray.FromObject(methods ?? new List<ShippingRate>(0), jSerializer);
                 JObject si = (JObject)jOrder["fulfillmentInfo"];
                 si.Add("availableShippingMethods", asm);
                 //jOrder.Add("AvailableShippingMethods", asm);
                 //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
            
-
-
-               
-
-
-
 
             return View("checkout", jOrder);
         }
