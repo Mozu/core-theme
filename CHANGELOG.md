@@ -1,6 +1,15 @@
 Core5 Changelog
 ===============
 
+v6.0.0
+------
+* Dropzones now available in live templates
+* Enhanced `theme-ui.json` to include a new library of theme controls
+* Fixed a number of issues with theme settings in `theme-ui.json`
+* Visual refresh of pagination controls
+* New dropzones in several pages
+* Other enhancements listed in [Mozu Release Notes](http://info.mozu.com/rs/volusion/images/Mozu-ReleaseNotes-q42014.pdf).
+
 v5.2.0
 ------
 * Fixed an issue where the image widget lightbox would not take up the whole browser dimensions.
