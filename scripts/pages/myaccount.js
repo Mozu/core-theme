@@ -1,4 +1,4 @@
-define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews) {
+define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/api'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, Api) {
     
     var EditableView = Backbone.MozuView.extend({
         constructor: function () {
@@ -398,17 +398,40 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
                 messagesEl: $messagesEl
             })
         };
-            
-        
-        if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled) accountViews.wishList = new WishListView({
-            el: $wishListEl,
-            model: accountModel.get('wishlist'),
-            messagesEl: $messagesEl
-        });
+
+        var wishlist;
+
+        if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled) {
+            wishlist = accountModel.get('wishlist');
+
+            accountViews.wishList = new WishListView({
+                el: $wishListEl,
+                model: wishlist,
+                messagesEl: $messagesEl
+            });
+        }
 
         // TODO: upgrade server-side models enough that there's no delta between server output and this render,
         // thus making an up-front render unnecessary.
         _.invoke(window.accountViews, 'render');
+
+        // inventory data for configurable products in the wishlist is inaccurate on initial load/render
+        // retrieving new data for each product and re-rendering the wishlist is *technically* a solution
+        // #shame
+        if (wishlist) {
+            Api.all.apply(Api, wishlist.get('items').map(function (item) {
+                var product = item.get('product');
+                var options = product.get('options').map(function (opt) {
+                    return { attributeFQN: opt.get('attributeFQN'), value: opt.get('value') };
+                });
+
+                return options.length === 0 ? product : product.apiConfigure({ options: options }, { useExistingInstances: true }).then(function (nextProduct) {
+                    item.set('product', nextProduct.data);
+                });
+            })).then(function () {
+                accountViews.wishList.render();
+            });
+        }
 
     });
 });

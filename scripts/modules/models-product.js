@@ -17,7 +17,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         initialize: function() {
             var me = this;
             _.defer(function() {
-                me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
+                if (me.collection) me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
 
             var equalsThisValue = function(fvalue, newVal) {
