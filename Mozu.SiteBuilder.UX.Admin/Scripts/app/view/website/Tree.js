@@ -30,6 +30,7 @@ Ext.define('Taco.view.website.Tree', {
 
     initComponent: function () {
         var me = this;
+
         this.addEvents('urlclick', 'additemclick');
 
         this.cellEditor = Ext.create('Ext.grid.plugin.CellEditing', {
@@ -44,6 +45,9 @@ Ext.define('Taco.view.website.Tree', {
                 }
             }
         });
+    
+        this.mon(this.store, 'load', this.showNavState.bind(this),{single: true});
+
         this.plugins = this.plugins || [];
         this.plugins.push(this.cellEditor);
         this.columns = [{
@@ -320,6 +324,28 @@ Ext.define('Taco.view.website.Tree', {
 
 
         return items;
+    },
+    showNavState: function() {
+        
+        var me = this,
+            navItems = this.store.tree.nodeHash,
+            current;
+
+        function expandParent(node) {
+            node.expand();
+
+            if (node.parentNode) expandParent(node.parentNode);
+        };
+
+        Object.keys(navItems).forEach( function(k) {
+
+            if (navItems[k] && navItems[k].data.url.substring(1) === me.url) {
+                current = me.getStore().getNodeById(navItems[k].data.id);
+                expandParent(current.parentNode);
+                me.getSelectionModel().select(current);
+            } 
+            
+        });
     },
     showLinkEditor: function (record, parentRecord) {
         var me = this,

@@ -413,7 +413,8 @@ Ext.define('Taco.view.website.Index', {
                         items: [
                             {
                                 xtype: 'taco-website-tree',
-                                store: navStore
+                                store: navStore,
+                                url: this.url
                             }, {
                                 xtype: 'gridpanel',
                                 title: 'Results',
