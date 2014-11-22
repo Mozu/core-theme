@@ -1,10 +1,14 @@
 <div class="mz-cms-image" data-mz-cms-image="{% json_attribute Model.config|default:'{}' %}">
 
-{% if not Model.config  %}
+{% if pageContext.isEditMode and Model.config.imageSource != 'externalUrl' and Model.config.imageFileId == '' or siteContext.isEditMode and Model.config.imageSource != 'externalUrl' and Model.config.imageFileId == '' %}
 
-    <img class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
-
-{% endif %}
+    <img class="mz-cms-image-cover" style="
+        background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');
+        background-size: contain;
+        background-repeat: no-repeat;">
+    </div>
+     
+{% else %}        
 
 {% if Model.config.imageSize == 'maintain' %}
     
@@ -25,7 +29,6 @@
                 {% endif %}
             {% endif %}
             >
-
 
     {% endif %}
 
@@ -95,5 +98,8 @@
         </{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}>
 
 {% endif %}
+
+{% endif %}    
+
 </div>
 {% require_script "widgets/image" %}
