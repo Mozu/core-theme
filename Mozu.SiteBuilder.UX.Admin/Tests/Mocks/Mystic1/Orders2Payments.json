@@ -172,7 +172,6 @@
           "availableActions": [
             "VoidPayment",
             "CapturePayment",
-            "DeclinePayment",
             "ManualVoidPayment",
             "ManualCapturePayment",
             "ManualDeclinePayment"
@@ -629,94 +628,93 @@
       "fulfillmentStatus": "NotFulfilled",
       "paymentStatus": "Unpaid",
       "payments": [
+          {
+              "orderId": "abc",
+              "status": "New",
+              "amountCollected": 0.0,
+              "amountAuthorized": 0.0,
+              "amountCredited": 0.0,
+              "interactions": [
+              ],
+              "availableActions": [
+              ],
+              "isManual": false,
+              "createDate": "2014-05-30T23:22:36.122Z"
+          },
+          {
+              "orderId": "abc",
+              "paymentServiceTransactionId": "6bbbef677ae74f92aeb80dbdfc631c8d",
+              "status": "Authorized",
+              "amountCollected": 0.0,
+              "amountAuthorized": 64.0,
+              "amountCredited": 0.0,
+              "interactions": [
                 {
-                    "orderId": "abc",
-                    "status": "New",
-                    "amountCollected": 0.0,
-                    "amountAuthorized": 0.0,
-                    "amountCredited": 0.0,
-                    "interactions": [
-                    ],
-                    "availableActions": [
-                    ],
-                    "isManual": false,
-                    "createDate": "2014-05-30T23:22:36.122Z"
-                },
-                {
-                    "orderId": "abc",
-                    "paymentServiceTransactionId": "6bbbef677ae74f92aeb80dbdfc631c8d",
+                    "id": "ba8b3fa1bc214a2cada7a33b010de3ce",
+                    "paymentId": "3164ef3ae479426fb7c2a33b010de136",
+                    "gatewayTransactionId": "2214106066",
+                    "gatewayInteractionId": 0,
+                    "interactionType": "Authorization",
                     "status": "Authorized",
-                    "amountCollected": 0.0,
-                    "amountAuthorized": 64.0,
-                    "amountCredited": 0.0,
-                    "interactions": [
-                      {
-                          "id": "ba8b3fa1bc214a2cada7a33b010de3ce",
-                          "paymentId": "3164ef3ae479426fb7c2a33b010de136",
-                          "gatewayTransactionId": "2214106066",
-                          "gatewayInteractionId": 0,
-                          "interactionType": "Authorization",
-                          "status": "Authorized",
-                          "gatewayResponseCode": "1",
-                          "gatewayResponseText": "This transaction has been approved.",
-                          "amount": 64.0,
-                          "isManual": false,
-                          "createDate": "2014-05-30T16:22:38.337Z",
-                          "canEdit": false,
-                          "canDelete": false
-                      }
-                    ],
-                    "paymentType": "CreditCard",
-                    "cardType": "VISA",
-                    "cardNumber": "************1111",
-                    "nameOnCard": "CreditCardName",
-                    "availableActions": [
-                      "VoidPayment",
-                      "CapturePayment",
-                      "DeclinePayment",
-                      "ManualVoidPayment",
-                      "ManualCapturePayment",
-                      "ManualDeclinePayment"
-                    ],
+                    "gatewayResponseCode": "1",
+                    "gatewayResponseText": "This transaction has been approved.",
+                    "amount": 64.0,
                     "isManual": false,
-                    "createDate": "2014-05-30T16:22:36.122Z"
-                },
-                {
-                    "orderId": "abc",
-                    "paymentServiceTransactionId": "bb09f5c71c764d8b8cc0783be5f37eb6",
-                    "status": "Pending",
-                    "amountCollected": 0.0,
-                    "amountAuthorized": 0.0,
-                    "amountCredited": 0.0,
-                    "interactions": [
-                      {
-                          "id": "1c50ce8fce5e4c2f928ca33b010dcd5b",
-                          "paymentId": "2f3c12151b6945708dc6a33b010dc352",
-                          "gatewayTransactionId": "0",
-                          "gatewayInteractionId": 0,
-                          "interactionType": "Authorization",
-                          "status": "Failed",
-                          "gatewayResponseCode": "78",
-                          "gatewayResponseText": "The card code is invalid.",
-                          "amount": 64.0,
-                          "isManual": false,
-                          "createDate": "2014-05-30T16:22:19.179Z",
-                          "canEdit": false,
-                          "canDelete": false
-                      }
-                    ],
-                    "paymentType": "CreditCard",
-                    "cardType": "VISA",
-                    "cardNumber": "************1111",
-                    "nameOnCard": "CreditCardName",
-                    "availableActions": [
-                      "VoidPayment",
-                      "ManualVoidPayment"
-                    ],
-                    "isManual": false,
-                    "createDate": "2014-05-30T16:22:10.614Z"
+                    "createDate": "2014-05-30T16:22:38.337Z",
+                    "canEdit": false,
+                    "canDelete": false
                 }
-            ],
+              ],
+              "paymentType": "CreditCard",
+              "cardType": "VISA",
+              "cardNumber": "************1111",
+              "nameOnCard": "CreditCardName",
+              "availableActions": [
+                "VoidPayment",
+                "CapturePayment",
+                "ManualVoidPayment",
+                "ManualCapturePayment",
+                "ManualDeclinePayment"
+              ],
+              "isManual": false,
+              "createDate": "2014-05-30T16:22:36.122Z"
+          },
+          {
+              "orderId": "abc",
+              "paymentServiceTransactionId": "bb09f5c71c764d8b8cc0783be5f37eb6",
+              "status": "Pending",
+              "amountCollected": 0.0,
+              "amountAuthorized": 0.0,
+              "amountCredited": 0.0,
+              "interactions": [
+                {
+                    "id": "1c50ce8fce5e4c2f928ca33b010dcd5b",
+                    "paymentId": "2f3c12151b6945708dc6a33b010dc352",
+                    "gatewayTransactionId": "0",
+                    "gatewayInteractionId": 0,
+                    "interactionType": "Authorization",
+                    "status": "Failed",
+                    "gatewayResponseCode": "78",
+                    "gatewayResponseText": "The card code is invalid.",
+                    "amount": 64.0,
+                    "isManual": false,
+                    "createDate": "2014-05-30T16:22:19.179Z",
+                    "canEdit": false,
+                    "canDelete": false
+                }
+              ],
+              "paymentType": "CreditCard",
+              "cardType": "VISA",
+              "cardNumber": "************1111",
+              "nameOnCard": "CreditCardName",
+              "availableActions": [
+                "VoidPayment",
+                "ManualVoidPayment"
+              ],
+              "isManual": false,
+              "createDate": "2014-05-30T16:22:10.614Z"
+          }
+      ],
       "packages": [],
       "pickups": [],
       "orderType": "Offline",
@@ -724,10 +722,10 @@
       "unpickedupItems": [],
       "availableActions": [],
       "authorizationInfo": {
-                    "amountCollected": 1045.85,
-                    "totalAmount": 1045.85,
-                    "captureAmount": 0
-                },
+          "amountCollected": 1045.85,
+          "totalAmount": 1045.85,
+          "captureAmount": 0
+      },
       "orderSummary": {
         "amountCollected": 0,
         "balance": 0,

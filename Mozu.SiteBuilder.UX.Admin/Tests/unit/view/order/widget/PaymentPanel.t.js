@@ -81,9 +81,11 @@
             t.ok(orderApprovedNotice && orderApprovedNotice.isHidden(), "orderApprovedNotice is hidden");
             
             // more actions menu
-            var moreActionsButton = m.authorizedPanel.down('#moreActionsButton');
-
-            t.ok(moreActionsButton && moreActionsButton.getEl() && (moreActionsButton.menu.items.filter('hidden', false).length === Ext.Array.filter(m.authorizedPanel.record.data.availableActions, function(act) { return act !== "CapturePayment"; }).length), "More Actions menu items display the available actions on the order");
+            var moreActionsButton = m.authorizedPanel.down('#moreActionsButton'),
+                menuActions = moreActionsButton && moreActionsButton.getEl() && moreActionsButton.menu.items.filter('hidden', false) || [],
+                dataActions = Ext.Array.filter(m.authorizedPanel.record.data.availableActions, function(act) { return act !== "CapturePayment"; });
+            
+            t.ok(menuActions.length === dataActions.length, "More Actions menu items display the available actions on the order");
             
 
             // capture button
@@ -134,7 +136,7 @@
                     t.diag("More Actions menu");
                     next(); 
                 })
-            }].concat(m.authorizedPanel.record.data.availableActions.filter(function(action) { return action !== "CapturePayment"; }).map(function(action) {
+            }].concat(m.authorizedPanel.record.data.availableActions.filter(function(action) { return action !== "CapturePayment" && action !== "ManualDeclinePayment"; }).map(function(action) {
                 return function(next) {
                     t.click(moreActionsButton, function() {
                         t.waitForComponentVisible(moreActionsButton.menu, function() {
