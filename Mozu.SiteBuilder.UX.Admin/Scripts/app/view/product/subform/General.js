@@ -41,8 +41,7 @@ Ext.define('Taco.view.product.subform.General', {
             requiredContent,
             classDef = this.statics(),
             visable,
-            //isMapEnabled = (this.product.get("map") != null),
-            isMapEnabled = (this.productInCatalogInfo ? (this.productInCatalogInfo.get('map') !== null) : (this.product.get("map") !== null)),
+            isMapEnabled = false,
             isDiscountRestricted = this.product.get("discountsRestricted"),
             isTaxable = (this.product.get("isTaxable")),
             isDigitalCredit = false,
@@ -51,8 +50,29 @@ Ext.define('Taco.view.product.subform.General', {
             productTypeRecord = null,
             invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
 
-
         
+        
+
+
+        var currentGlobalMapValue = this.product.get("map");
+
+        //isMapEnabled = (this.productInCatalogInfo ? (this.productInCatalogInfo.get('map') !== null) : (this.product.get("map") !== null));
+        
+
+        // if we have a site specific override of the map field and this is a siteform;
+        if (this.productInCatalogInfo && this.productInCatalogInfo.get('map') !== null) {
+            isMapEnabled = true;
+        } else if (this.productForm && this.productForm.getForm()) {
+            // if user has entered a map value into the global form but hasnt persisted it yet;
+            var globalMapField = this.productForm.getForm().findField("map");
+            currentGlobalMapValue = globalMapField.getValue();
+            if (currentGlobalMapValue) {
+                isMapEnabled = true;
+            }
+        } else if (currentGlobalMapValue !== null && currentGlobalMapValue > 0) {
+            // user previously persisted a map value and the form hasn't been rendered yet;
+            isMapEnabled = true;
+        }
         
 
         me.on('resize', function (cmp, width, height) {
