@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
 {
     [TestFixture]
-    public class GetProductAttributeTests : FilterTestBase
+    public class GetProductAttributeTests : TemplateTestBase
     {
         [Test, TestCaseSource("GetTests")]
         public void Run(TestDescriptor desc)
