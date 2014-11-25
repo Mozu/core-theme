@@ -140,23 +140,27 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     //large-type display amount for the total amount collected, displayed, or authorized
     initDisplayAmount: function() {
-        var cls = Taco.baseCSSPrefix + 'orderform-payment-amounts-summary';
+        var cls = Taco.baseCSSPrefix + 'orderform-payment-amounts-summary',
+            lbl = function (label, value) {
+                return '<h4><span class="{cls}-label">' + label + '</span> <strong class="{cls}-value">' + value + '</strong></h4>';
+            };
+
         this.displayAmount = Ext.widget('component', {
             cls: cls,
             tpl: [
-                '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}</strong></h4>',
-                '<h4><span class="{cls}-label">{labels.collected}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}</strong></h4>',
+                '<tpl if="payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0">',
+                lbl('Amount Requested: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested)]}'),
+                '</tpl>',
+                '<tpl if="payment.amountAuthorized != 0">',
+                lbl('Amount Authorized: ', '{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}'),
+                '</tpl>',
+                lbl('Amount Collected: ', '{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}'),
                 '<tpl if="payment.amountCredited != 0">',
-                '<h4><span class="{cls}-label">{labels.credited}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}</strong></h4>',
+                lbl('Amount Credited: ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
                 '</tpl>',
             ],
             data: {
                 cls: cls,
-                labels: {
-                    collected: 'Amount Collected',
-                    credited: 'Amount Credited',
-                    authorized: 'Amount Authorized'
-                },
                 orderRecord: this.order, 
                 payment: this.record.data
             }

@@ -35,6 +35,11 @@ Ext.define('Taco.model.OrderPayment', {
             'useNull': true
         },
         {
+            'name': 'amountRequested',
+            'type': 'float',
+            'useNull': false
+        },
+        {
             'name': 'amountCollected',
             'type': 'float',
             'useNull': false
