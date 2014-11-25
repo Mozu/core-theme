@@ -546,9 +546,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
     toggleAssociator: function (state, button, store) {
         if (state) {
             if (!this.associator) {
-                this.associator = Ext.create('Taco.view.fileManager.Associator', {});
-                //override close action for modal
-                Ext.override(this.associator, {closeAction: 'hide'});
+                this.associator = Ext.create('Taco.view.fileManager.Associator', {closeAction: 'hide'});
             } else {
                 this.associator.show();
             }
