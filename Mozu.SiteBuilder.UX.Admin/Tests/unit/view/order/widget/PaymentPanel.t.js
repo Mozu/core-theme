@@ -68,7 +68,6 @@
             orderStatus: "Accepted",
             authorizationInfo: {
                 amountCollected: 0,
-                captureAmount: 64,
                 totalAmount: 64
             }
         }),
@@ -159,7 +158,6 @@
             orderStatus: "PendingReview",
             authorizationInfo: {
                 amountCollected: 0,
-                captureAmount: 64,
                 totalAmount: 64
             }
         }),

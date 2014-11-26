@@ -171,7 +171,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     initStatusRow: function () {
         var me = this,
             // capture amount is the outstanding balance on the order
-            captureAmount = me.order.data.authorizationInfo.captureAmount,
+            captureAmount = me.order.getCaptureAmountHint(),
             // auth ready is when you have an authorized card with id
             authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
             // can capture is when you are auth ready and your order has a positive capture amount
@@ -378,7 +378,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                 '<div class="fullName">{billingContact.firstName} {billingContact.lastName}</div>',
                                 '<div class="address">{billingContact.address1}</div>',
                                 '<div class="address">{billingContact.address2}</div>',
-                                '<div class="address">{billingContact.cityOrTown}, {billingContact.stateOrProvince}  {billingContact.postalOrZipCode}</div>',
+                                '<div class="address">',
+                                '{billingContact.cityOrTown}',
+                                '<tpl if="billingContact.cityOrTown && billingContact.stateOrProvince">, </tpl>',
+                                '{billingContact.stateOrProvince}  {billingContact.postalOrZipCode}</div>',
                                 '<div class="address">{billingContact.countryCode}</div>',
                                 '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
                             '</tpl>',

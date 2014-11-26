@@ -441,7 +441,8 @@ Ext.define('Taco.view.order.Grid', {
                     hidden: true,
                     
                     renderer: function (value, metaData, record) {
-                        return record.formatCurrency(value.captureAmount);
+                        var amount = record.get('total') - value.amountCollected;
+                        return record.formatCurrency(amount);
                     }
                 }, {
                     stateId: 'ipAddress',
@@ -498,7 +499,7 @@ Ext.define('Taco.view.order.Grid', {
 
                                     grid = eventData.grid,
                                     index = eventData.rowIndex,
-                                    amount = record.get('total') - (((record.get('authorizationInfo') || {}).amountCollected) || 0),
+                                    amount = record.getCaptureAmountHint(),
                                     data = {
                                         orderId: record.getId(),
                                         paymentId: payment.getId(),

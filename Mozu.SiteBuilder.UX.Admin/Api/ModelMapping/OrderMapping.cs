@@ -247,8 +247,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // authorizationInfo duplicates OrderSummary and should go away soon.
                     order.AuthorizationInfo = new OrderAuthorizationInfo {
                         TotalAmount = totalAmount,
-                        AmountCollected = amountCollected,
-                        CaptureAmount = balance
+                        AmountCollected = amountCollected
                     };
                 })
                 .AfterMap((dc, order) =>
