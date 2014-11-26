@@ -247,8 +247,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // authorizationInfo duplicates OrderSummary and should go away soon.
                     order.AuthorizationInfo = new OrderAuthorizationInfo {
                         TotalAmount = totalAmount,
-                        AmountCollected = amountCollected,
-                        CaptureAmount = balance
+                        AmountCollected = amountCollected
                     };
                 })
                 .AfterMap((dc, order) =>
@@ -624,13 +623,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OrderId, op => op.ResolveUsing(dc => dc.OrderId))
                 .ForMember(x => x.PaymentServiceTransactionId, op => op.ResolveUsing(dc => dc.PaymentServiceTransactionId))
                 .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+                .ForMember(x => x.AmountRequested, op => op.ResolveUsing(dc => dc.AmountRequested))
                 .ForMember(x => x.AmountCollected, op => op.ResolveUsing(dc => dc.AmountCollected))
                 .ForMember(x => x.AmountCredited, op => op.ResolveUsing(dc => dc.AmountCredited))
                 .ForMember(x => x.AmountAuthorized, op => op.ResolveUsing(dc =>
                 {
-                    if (dc.PaymentType == PaymentsDC.PaymentTypeConst.CHECK && dc.Status == "Pending" && dc.Interactions.Any(i => i.Status == "CheckRequested"))
-                        return dc.Interactions.First(i => i.Status == "CheckRequested").Amount.GetValueOrDefault(0);
-                    else if (dc.Status == "Authorized" && dc.Interactions.Any(i => i.Status == "Authorized"))
+                    if (dc.Status == "Authorized" && dc.Interactions.Any(i => i.Status == "Authorized"))
                         return dc.Interactions.First(i => i.Status == "Authorized").Amount.GetValueOrDefault(0);
                     else
                         return 0;

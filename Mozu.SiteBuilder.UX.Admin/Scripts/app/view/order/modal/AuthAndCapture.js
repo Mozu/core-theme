@@ -25,7 +25,7 @@ Ext.define('Taco.view.order.modal.AuthAndCapture', {
                 fieldLabel: 'Amount to Authorize and Capture',
                 selectOnFocus: true,
                 width: 170,
-                value: this.order.get('authorizationInfo').captureAmount
+                value: this.order.getNewPaymentAmountHint()
             }]
         });
 

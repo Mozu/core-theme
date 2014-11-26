@@ -22,10 +22,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// amount collected so far
         /// </summary>
         public decimal AmountCollected { get; set; }
-
-        /// <summary>
-        /// amount eligible to be captured
-        /// </summary>
-        public decimal CaptureAmount { get; set; }
     }
 }

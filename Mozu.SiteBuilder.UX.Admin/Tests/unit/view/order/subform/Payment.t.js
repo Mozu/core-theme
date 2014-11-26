@@ -51,14 +51,24 @@ StartTest(function(t) {
         },
 
         function(next) {
+            m.panel.on('rerender', next, { single: true });
+            m.record.set({
+                authorizationInfo: {
+                    amountCollected: 1045.85,
+                    totalAmount: 1045.85
+                }
+            });
+            m.record.commit();
+        },
+
+        function(next) {
             t.diag("panel header bound to record");
             m.panel.on('rerender', next, { single: true });
             t.isHandleHtml(m.panel, 'order-payment-status', 'Fully Paid', 'panel header reflects fully paid status');
             m.record.set({
                 authorizationInfo: {
                     amountCollected: 0,
-                    totalAmount: 1045.85,
-                    captureAmount: 1045.85
+                    totalAmount: 1045.85
                 }
             });
 
@@ -72,8 +82,7 @@ StartTest(function(t) {
             m.record.set({
                 authorizationInfo: {
                     amountCollected: 1000,
-                    totalAmount: 1045.85,
-                    captureAmount: 45.85
+                    totalAmount: 1045.85
                 }
             });
 

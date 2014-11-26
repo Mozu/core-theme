@@ -758,6 +758,24 @@ Ext.define('Taco.model.Order', {
             return this.customer || null;
         },
 
+        // order total minus any money that is accounted for (requested/authorized/captured)
+        getNewPaymentAmountHint: function () {
+            var payments = this.getAssociatedData('payments').payments,
+                total = this.get('total'),
+                pendingOrCapturedAmount = 0;
+            
+            if (payments && payments.length) {
+                pendingOrCapturedAmount = Ext.Array.sum(Ext.Array.pluck(payments, 'effectiveAmount'))
+            }
+
+            return Math.max(0, total - pendingOrCapturedAmount);
+        },
+
+        // order total minus money that is already captured
+        getCaptureAmountHint: function () {
+            return this.get('total') - this.get('authorizationInfo').amountCollected;
+        },
+
         associations: [
         // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
         // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
