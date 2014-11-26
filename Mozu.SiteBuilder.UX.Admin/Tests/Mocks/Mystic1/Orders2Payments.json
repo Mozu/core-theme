@@ -722,9 +722,8 @@
       "unpickedupItems": [],
       "availableActions": [],
       "authorizationInfo": {
-          "amountCollected": 1045.85,
-          "totalAmount": 1045.85,
-          "captureAmount": 0
+          "amountCollected": 0,
+          "totalAmount": 64
       },
       "orderSummary": {
         "amountCollected": 0,
@@ -745,7 +744,7 @@
       "handlingTotal": 0,
       "feeTotal": 0,
       "taxTotal": 0,
-      "total": 0
+      "total": 64
     },
     {
       "shippingSubtotal": 0,
