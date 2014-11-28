@@ -29,6 +29,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public string Status { get; set; }
 
+        public decimal AmountRequested { get; set; }
+
         public decimal AmountCollected { get; set; }
 
         public decimal AmountAuthorized { get; set; }

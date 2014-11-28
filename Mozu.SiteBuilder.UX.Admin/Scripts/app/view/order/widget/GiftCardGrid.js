@@ -41,7 +41,7 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
     defaultFocusColumn: 2,
     initComponent: function () {
         var me = this;
-        this.orderBalance = this.order.get('authorizationInfo').captureAmount || 0;
+        this.orderBalance = this.order.getNewPaymentAmountHint();
 
 
         Ext.apply(me, {

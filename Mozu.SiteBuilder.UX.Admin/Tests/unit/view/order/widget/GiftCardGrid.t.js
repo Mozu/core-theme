@@ -82,7 +82,7 @@
                 var editor, context;
                 m.grid = m.modal.down('taco-order-gift-card-grid');
                 t.it("should have a getOrderBalance method", function(t) {
-                    t.ok(m.grid.getOrderBalance() == m.record.get('authorizationInfo').captureAmount);
+                    t.ok(m.grid.getOrderBalance() == m.record.getNewPaymentAmountHint());
                 });
 
                 // Note: I (simeon) removed this test, because I disabled the autoEdit feature in the view. it merely focuses on the cell so user can initiate the edit or choose another credit to use; Also I renamed the method to startInitialFocus();

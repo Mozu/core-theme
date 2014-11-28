@@ -22,8 +22,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
     initComponent: function () {
         var me = this,
-            authorizationInfo = this.record.get('authorizationInfo'),
-            balance = authorizationInfo.captureAmount || 0,
+            balance = this.record.getNewPaymentAmountHint(),
             formItems = [];
 
         // moved the payment form into a method so that it can be overwritten by a subclass (add manual payment)
@@ -392,10 +391,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         // only do this if one is not set when instantiating this class;
         if (!this.defaultPaymentAmount) {
-            authInfo = me.record.data.authorizationInfo;
-            if (authInfo && authInfo.captureAmount) {
-                retVal = authInfo.captureAmount;
-            }
+            retVal = this.record.getNewPaymentAmountHint()
         } else {
             retVal = this.defaultPaymentAmount;
         }
