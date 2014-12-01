@@ -124,12 +124,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "senderEmail")*/]
         public string SenderEmailAddress { get; set; }
 
-        [DataMember/*(Name = "senderEmailName")*/]
-        public string SenderEmailAddressName
-        {
-            get { return SenderEmailAddress; }
-            set { }
-        }
+
+        [DataMember/*(Name = "senderEmailAlias")*/]
+        public string SenderEmailAlias { get; set; }
 
 
         [DataMember/*(Name = "channelId")*/]
