@@ -61,7 +61,7 @@ Ext.define('Taco.model.OrderPayment', {
             type: 'float',
             useNull: false,
             convert: function (value, record) {
-                if (record.get('status') === 'Voided') return 0;
+                if (Ext.Array.contains(['Voided', 'Declined'], record.get('status'))) return 0;
 
                 var amount = record.get('amountCollected') || record.get('amountAuthorized') || record.get('amountRequested')
                 amount -= record.get('amountCredited');
