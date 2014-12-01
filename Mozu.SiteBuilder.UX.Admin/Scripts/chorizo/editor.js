@@ -127,12 +127,31 @@
             return this._dragging;
         },
 
-        startDrag: function(widgetCfg) {
+        initDragIconMove: function(icon) {
+
+            this.dragIcon = icon;
+            icon.appendTo('body');
+            var padding = 10; //to keep the dragIcon slightly to the bottom left
+
+            $(document).on('mousemove', function(e) {
+                $(icon).css({ left: e.pageX + padding, top: e.pageY + padding});
+            });
+        },
+
+        destroyDragIcon: function() {
+
+            this.dragIcon.remove();
+        },
+
+        startDrag: function(widgetCfg, dragIcon) {
             if (widgetCfg && widgetCfg.type && widgetCfg.type() === 'block') {
                 widgetCfg = {
                     block: widgetCfg
                 };
             }
+
+            if (dragIcon) this.initDragIconMove(dragIcon);
+
             this.widgetCfg = widgetCfg || {};
             $('.mz-cms-grid').addClass('mz-cms-droppable');
             this.dragging(true);
@@ -148,6 +167,7 @@
                 left: -1000,
                 top: -1000
             });
+            if (this.dragIcon) this.destroyDragIcon();
         },
 
         widgets: function() {

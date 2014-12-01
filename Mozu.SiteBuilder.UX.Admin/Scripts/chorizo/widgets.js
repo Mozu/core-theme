@@ -96,10 +96,17 @@
     };
 
     Widget = function(element, options) {
-        var me = this;
+        var me = this,
+            img = $(element).find('.mz-cms-icon').css('backgroundImage');
 
         this.options = $.extend({}, options);
         this.element = $(element);
+
+        this.dragIcon = function() {
+    
+            return $( ['<div class="mz-drag-icon" style="background-image:', img, '; width: 50px; height:50px; background-repeat:round; position:absolute"></div>'].join('') );
+            
+        };
 
         this.element
             .addClass('mz-cms-draggable')
@@ -114,8 +121,9 @@
                     return $('<div>');
                 },
                 start: function() {
+                    // $('body').css('cursor', img + ', auto');
                     Chorizo.widgets.hide();
-                    Chorizo.editor.startDrag(me.element.data('definition'));
+                    Chorizo.editor.startDrag(me.element.data('definition'), me.dragIcon());
                 },
                 stop: function() {
                     Chorizo.editor.stopDrag();
