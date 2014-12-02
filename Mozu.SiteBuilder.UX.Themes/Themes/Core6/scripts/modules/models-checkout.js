@@ -19,6 +19,11 @@
             // reference in .getOrder to exist;
             initStep: function () {
                 var me = this;
+                this.next = (function(next) {
+                    return _.debounce(function() {
+                        if (!me.isLoading()) next.call(me);
+                    }, 750, true);
+                })(this.next);
                 var order = me.getOrder();
                 me.calculateStepStatus();
                 me.listenTo(order, "error", function () {
