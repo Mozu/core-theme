@@ -28,7 +28,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             width: 300,
             checked: this.record.get('includeAllProducts'),
             listeners: {
-                change: function (radio, newValue, oldValue, eOpts) {
+                change: function () {
                     this.parentForm.setFieldVisibility();
                     enableDisableCriteriaQuantities();
                 },
@@ -61,6 +61,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
         catStore = this.record.getCategoryStore();
+        catStore.clearFilter(true);
+        catStore.load();
+
         // reset the list's dirty state when its store first loads
 
         catStore.on({
@@ -79,6 +82,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             getStore: function () {
                 return catStore;
             },
+            queryMode: 'local',
             hideTrigger: true,
             triggerOnClick: false,
             forceSelection: true,
@@ -92,14 +96,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        function disableCmp(cmp) { cmp.disable(); }
-        function enableCmp(cmp) { cmp.enable(); }
+
         function enableDisableCriteriaQuantities() {
             //var fn = me.includeAllProductsInput.getValue() ? disableCmp : enableCmp;
             var isVisible = me.includeAllProductsInput.getValue() ? false : true;
 
-            me.productsBox.setVisible(isVisible)
-            me.categoriesBox.setVisible(isVisible)
+            me.productsBox.setVisible(isVisible);
+            me.categoriesBox.setVisible(isVisible);
 
 
             //var box = me.productsBox.down('radio').getValue() ? me.productsBox : me.categoriesBox;
@@ -191,6 +194,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             getStore: function () {
                 return catStore;
             },
+            queryMode: 'local',
             hideTrigger: true,
             triggerOnClick: false,
             forceSelection: true,
@@ -228,6 +232,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         });
 
         productStore = this.record.getProductStore();
+        productStore.clearFilter(true);
+        productStore.load();
 
         productStore.on({
             load: function () {
@@ -421,14 +427,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         });
 
-        var trimmedZones = function () {
+        var trimmedZones = (function () {
             var zones = me.record.get('shippingZones');
             if (!zones || zones.length === 0) return zones;
             for (var i = 0; i < zones.length; i++) {
                 zones[i] = zones[i].trim();
             }
             return zones;
-        }();
+        })();
 
         this.shippingZoneList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'shippingZones',
@@ -497,7 +503,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
      * @private
      */
     launchCategoryModal: function (list) {
-        var treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+        var me = this,
+            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
@@ -506,6 +513,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.modal.on({
             savesuccess: function (modal, values) {
                 list.addValue(values);
+                me.reloadStore(list);
+            },
+            aftercancelclose: function () {
+                me.reloadStore(list);
             },
             scope: this
         });
@@ -516,12 +527,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
      * @private
      */
     launchProductModal: function (list) {
-        var gridStore = Taco.core.data.StoreManager.getOrCreate({
+        var me = this,
+            gridStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Products',
             clearFilters: true,
             clearSort: true,
             autoLoad: true
-        });
+            });
+        gridStore.filter(true);
+        gridStore.load();
 
         this.modal = Ext.create('Taco.view.product.Modal', {
             store: gridStore
@@ -530,6 +544,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.modal.on({
             savesuccess: function (modal, values) {
                 list.addValue(values);
+                me.reloadStore(list);
+            },
+            aftercancelclose: function () {
+                me.reloadStore(list);
             },
             scope: this
         });
@@ -539,6 +557,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         //     this.modal.show();
         //     return;
         // }
+    },
+
+    reloadStore: function (list) {
+        var store = list.getStore(),
+            proxy = store.getProxy();
+        if (proxy.extraParams) {
+            proxy.extraParams = {};
+        }
+        store.load();
     },
 
     /**

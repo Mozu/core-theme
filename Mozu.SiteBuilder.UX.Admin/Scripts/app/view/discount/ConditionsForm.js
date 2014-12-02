@@ -169,7 +169,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     buildProduct: function () {
         var productStore = this.record.getProductStore();
-
+        productStore.clearFilter(true);
+        productStore.load();
+        
         productStore.on({
             load: function () {
                 this.productList.resetOriginalValue();
@@ -297,6 +299,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     buildCategory: function () {
         var catStore = this.record.getCategoryStore();
         // reset the list's dirty state when its store first loads
+        catStore.clearFilter(true);
+        catStore.load();
 
         catStore.on({
             load: function () {
@@ -305,6 +309,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             single: true,
             scope: this
         });
+
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'conditionalCategories',
@@ -314,6 +319,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             getStore: function () {
                 return catStore;
             },
+            queryMode: 'local',
             hideTrigger: true,
             triggerOnClick: false,
             forceSelection: true,
@@ -384,8 +390,11 @@ Ext.define('Taco.view.discount.ConditionsForm', {
      * @private
      */
     launchCategoryModal: function (list) {
-        var listStore = list.getStore(),
+        var me = this,
             treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+
+        treeStore.clearFilter(true);
+        treeStore.load();
 
         this.modal = Ext.create('Taco.view.category.Modal', {
             store: treeStore
@@ -394,6 +403,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.modal.on({
             savesuccess: function (modal, values) {
                 list.addValue(values);
+                me.reloadStore(list);
+            },
+            aftercancelclose: function () {
+                me.reloadStore(list);
             },
             scope: this
         });
@@ -404,13 +417,14 @@ Ext.define('Taco.view.discount.ConditionsForm', {
      * @private
      */
     launchProductModal: function (list) {
-        var listStore = list.getStore(),
+        var me = this,
             gridStore = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Products',
                 clearFilters: true,
                 clearSort: true,
                 autoLoad: true
             });
+        gridStore.load();
 
         this.modal = Ext.create('Taco.view.product.Modal', {
             store: gridStore
@@ -419,14 +433,26 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.modal.on({
             savesuccess: function (modal, values) {
                 list.addValue(values);
+                me.reloadStore(list);
+            },
+            aftercancelclose: function () {
+                me.reloadStore(list);
             },
             scope: this
         });
     },
 
+    reloadStore: function(list) {
+        var store = list.getStore(),
+            proxy = store.getProxy();
+        if (proxy.extraParams) {
+            proxy.extraParams = {};
+        }
+        store.load();
+    },
+
     launchSegmentModal: function (list) {
-        var listStore = list.getStore(),
-            gridStore = Taco.core.data.StoreManager.getOrCreate({
+        var gridStore = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.CustomerSegments',
                 clearFilters: true,
                 clearSort: true,
@@ -451,8 +477,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             productList = this.productList.getValue(),
             hasProducts = productList && productList.length,
             hasCats = (categoryList && categoryList.length),
-            minReqCatVal = this.minimumQuantityProductsRequiredInCategories.getValue(),
-            minReqProdVal = this.minimumQuantityRequiredProducts.getValue(),
+            //minReqCatVal = this.minimumQuantityProductsRequiredInCategories.getValue(),
+            //minReqProdVal = this.minimumQuantityRequiredProducts.getValue(),
             hasStuff = hasProducts || hasCats;
 
         this.minimumCategorySubtotalBeforeDiscounts[hasStuff ? 'enable' : 'disable']();
@@ -526,7 +552,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         }
     },
 
-    setFieldVisibility: function (isLineItem, appliesToShipping) {
+    setFieldVisibility: function (isLineItem) {
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);
         this.minimumOrderAmountInput.setVisible(!isLineItem);
     }

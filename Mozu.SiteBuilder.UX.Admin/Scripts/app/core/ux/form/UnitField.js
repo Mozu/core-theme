@@ -191,7 +191,7 @@ Ext.define('Taco.core.ux.form.UnitField', {
         var decimalSeparator = this.decimalSeparator,
             ret;
 
-        if (value == null)
+        if (!value)
             return value;
 
         value = this.stripUnitString(value.toString());
@@ -228,6 +228,8 @@ Ext.define('Taco.core.ux.form.UnitField', {
     },
 
     stripUnitString: function (value) {
+        if (!value)
+            return value;
         var regex = new RegExp('\\' + this.unitString);
 
         return value.replace(regex, '');
