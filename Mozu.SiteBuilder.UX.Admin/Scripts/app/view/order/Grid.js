@@ -125,20 +125,20 @@ Ext.define('Taco.view.order.Grid', {
                         this.doBulkAction('CancelOrder');
                     }
                 }, {
-                    itemId: 'Ship',
-                    text: 'Ship',
-                    disabled: true,
-                    scope: this,
-                    handler: function () {
-                        this.doBulkAction('Ship');
-                    }
-                }, {
                     itemId: 'CapturePayment',
                     text: 'Capture',
                     disabled: true,
                     scope: this,
                     handler: function () {
                         this.doBulkAction('CapturePayment');
+                    }
+                }, {
+                    itemId: 'Ship',
+                    text: 'Ship',
+                    disabled: true,
+                    scope: this,
+                    handler: function () {
+                        this.doBulkAction('Ship');
                     }
                 }],
                 listeners: {
@@ -152,43 +152,14 @@ Ext.define('Taco.view.order.Grid', {
     },
 
     getBulkActions: function (menu) {
+        var me = this;
         var selection = this.getSelectionModel().getSelection();
         var context = Taco.app.context.getCurrent();
-        var orders, config;
+        var allAvailableBulkActions = Ext.Array.flatten(Ext.Array.map(selection, function (o) { return o.get('availableBulkActions') }));
 
-        orders = Ext.Array.map(selection, function (item) {
-            var siteId = item.get('siteId');
-            var mcId = context.masterCatalogId || this.getMasterCatalogId(context, siteId);
-
-            return {
-                orderId: item.get('id'),
-                masterCatalogId: mcId
-            };
-        }, this);
-
-        config = {
-            url: '/admin/app/order/availableactions',
-            method: 'POST',
-            jsonData: {
-                orderContexts: orders
-            },
-            callback: Ext.Function.bind(this.onGetBulkActions, this, [menu], 0)
-        };
-
-        menu.setLoading(true);
-        Ext.Ajax.request(config);
-    },
-
-    onGetBulkActions: function (menu, operation, succeeded, response) {
-        var parse = Ext.JSON.decode(response.responseText);
-
-        if (menu && menu.rendered) {
-            menu.items.each(function (item) {
-                item.setDisabled(!succeeded || !Ext.Array.contains(parse.items, item.getItemId()));
-            });
-
-            menu.setLoading(false);
-        }
+        menu.items.each(function (item) {
+            item.setDisabled(!Ext.Array.contains(allAvailableBulkActions, item.getItemId()));
+        });
     },
     
     doBulkAction: function (action) {

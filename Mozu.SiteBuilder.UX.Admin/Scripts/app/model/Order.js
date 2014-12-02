@@ -369,6 +369,11 @@ Ext.define('Taco.model.Order', {
                 defaultValue: []
         },
             {
+                name: 'availableBulkActions',
+                type: 'auto',
+                defaultValue: []
+            },
+            {
                 name: 'lastValidationDate',
                 type: 'date',
                 useNull: true,

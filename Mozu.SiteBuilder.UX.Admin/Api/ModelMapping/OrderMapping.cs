@@ -152,7 +152,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
-                
+                .AfterMap(MapAvailableBulkActions)
                 .AfterMap((dc, order) =>
                 {
                     if (order.Packages == null)
@@ -419,6 +419,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         });
                     });
                 });
+        }
+
+        private void MapAvailableBulkActions(OrdersDC.Order dc, Order order)
+        {
+            const string ACCEPT_ORDER = Mozu.CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.ACCEPT_ORDER;
+            const string CANCEL_ORDER = Mozu.CommerceRuntime.Contracts.Orders.OrderAction.OrderActionNameConst.CANCEL_ORDER;
+            const string CAPTURE_PAYMENT = Mozu.CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst.CAPTURE_PAYMENT;
+            const string CHECK = Mozu.CommerceRuntime.Contracts.Payments.PaymentTypeConst.CHECK;
+            const string SHIP = Mozu.CommerceRuntime.Contracts.Fulfillment.FulfillmentAction.FulfillmentActionNameConst.SHIP;
+
+            order.AvailableBulkActions = new List<string>(4);
+
+            // accept order
+            if (dc.AvailableActions != null && dc.AvailableActions.Contains(ACCEPT_ORDER))
+                order.AvailableBulkActions.Add(ACCEPT_ORDER);
+
+            // cancel order
+            if (dc.AvailableActions != null && dc.AvailableActions.Contains(CANCEL_ORDER))
+                order.AvailableBulkActions.Add(CANCEL_ORDER);
+
+            // capture payment
+            if (dc.Payments != null && dc.Payments.Count == 1 && dc.Payments[0].AvailableActions.Contains(CAPTURE_PAYMENT) && dc.Payments[0].PaymentType != CHECK)
+                order.AvailableBulkActions.Add(CAPTURE_PAYMENT);
+            
+            // ship package
+            if (dc.Packages != null && dc.Packages.Count == 1 && dc.Packages[0].AvailableActions.Contains(SHIP))
+                order.AvailableBulkActions.Add(SHIP);
         }
 
         private void Map_DcOrderItem_to_OrderItem()

@@ -474,6 +474,7 @@
     <Compile Include="Api\Models\ProductModels\ProductCodeRename.cs" />
     <Compile Include="Api\Models\Returns\Return.cs" />
     <Compile Include="Api\Models\Returns\ReturnItem.cs" />
+    <Compile Include="Api\OrderBulkActionController.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />

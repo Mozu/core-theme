@@ -126,6 +126,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public List<OrderDigitalPackageItem> UndeliveredDigitalItems { get; set; }
 
         public List<string> AvailableActions { get; set; }
+
+        public List<string> AvailableBulkActions { get; set; }
         #endregion
 
         /// <summary>
