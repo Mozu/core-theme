@@ -24,10 +24,17 @@ Ext.define('Taco.overrides.form.Basic', {
         }
 
         if (valid !== me.wasValid) {
-            me.onValidityChange(valid);
+
+            Ext.defer(function () {
+                me.onValidityChange(valid);
+            }, 10, me)
+            
             me.fireEvent('validitychange', me, valid);
             me.wasValid = valid;
         }
+
+        me.wasValid = valid;
+
     },
 
     initialize: function () {

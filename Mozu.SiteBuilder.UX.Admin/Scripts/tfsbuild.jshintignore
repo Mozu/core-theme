@@ -25,6 +25,7 @@ app\view\order\widget\AddOrderItemToolbar.js
 app\view\order\widget\PackagePickup.js
 app\view\order\widget\ShippingItemGrid.js
 app\view\product\Edit.js
+app\view\product\subform\General.js
 app\view\report\SidebarList.js
 app\view\settings\paymentAndCheckout\ExternalGateway.js
 app\view\settings\shipping\subform\MethodsAndRates.js
