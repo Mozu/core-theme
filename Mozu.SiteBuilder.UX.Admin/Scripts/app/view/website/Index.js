@@ -222,7 +222,7 @@ Ext.define('Taco.view.website.Index', {
                                         group: 'resolutions',
                                         handler: function () {
                                             me.resolutionOverride = 0;
-                                            me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me, null), me.resolutionOverride);
+                                            me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
                                         }
                                     }, {
                                         text: 'Phone (480px)',
@@ -230,7 +230,7 @@ Ext.define('Taco.view.website.Index', {
                                         group: 'resolutions',
                                         handler: function () {
                                             me.resolutionOverride = 480;
-                                            me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me, null), me.resolutionOverride);
+                                            me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
                                         }
                                     }, {
                                         text: 'Tablet (768px)',
@@ -238,7 +238,7 @@ Ext.define('Taco.view.website.Index', {
                                         group: 'resolutions',
                                         handler: function () {
                                             me.resolutionOverride = 768;
-                                            me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me, null), me.resolutionOverride);
+                                            me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
                                         }
                                     }
                                 ]
@@ -768,7 +768,10 @@ Ext.define('Taco.view.website.Index', {
         }
 
         window.addEventListener("resize", function (e) {
-            me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
+            // have to delay because browsers throw this event before the resize finishes.
+            setTimeout(function(){
+                me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
+            }, 150);
         });
 
         this.entitypeTypeHandler = this.createEntityTypeAdapter(pc, editor);
@@ -1135,7 +1138,8 @@ Ext.define('Taco.view.website.Index', {
     },
 
     getWidthForFrameAndSpacers : function() {
-        return this.container.getWidth();
+        // for some reason, the container reports its width as including the sidebar portion, so we have to remove it here.
+        return this.container.getWidth() - this.sideBar.getWidth(); 
     },
 
     resizeIframeSpacers : function(maxSpace, spaceToReserve) {
