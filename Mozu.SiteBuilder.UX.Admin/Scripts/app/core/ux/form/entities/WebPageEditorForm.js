@@ -15,22 +15,6 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
         },
     },
     containers: [{
-        margin: '10 0 0 0',
-        xtype: 'panel',
-        collapsible: 'true',
-        ui: 'subform',
-        title: 'SEO',
-        itemId: 'seoPanel',
-        items: [{
-            xtype: 'textfield',
-            name: 'meta_title',
-            fieldLabel: 'Meta Title'
-        }, {
-            xtype: 'textarea',
-            name: 'meta_description',
-            fieldLabel: 'Meta Description'
-        }]
-    }, {
         xtype: 'panel',
         collapsible: 'true',
         ui: 'subform',
@@ -80,6 +64,22 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
             name: 'extended_header_content',
             fieldLabel: 'Additional Header Tags',
             emptyText: '[none]'
+        }]
+    },{
+        margin: '10 0 0 0',
+        xtype: 'panel',
+        collapsible: 'true',
+        ui: 'subform',
+        title: 'SEO',
+        itemId: 'seoPanel',
+        items: [{
+            xtype: 'textfield',
+            name: 'meta_title',
+            fieldLabel: 'Meta Title'
+        }, {
+            xtype: 'textarea',
+            name: 'meta_description',
+            fieldLabel: 'Meta Description'
         }]
     }],
     initComponent: function() {
