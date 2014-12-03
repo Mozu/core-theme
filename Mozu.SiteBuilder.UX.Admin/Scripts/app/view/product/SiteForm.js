@@ -86,6 +86,7 @@ Ext.define('Taco.view.product.SiteForm', {
                 hidden:false,
                 record: this.record,
                 product: this.product,
+                productForm: this.productForm,
                 productInCatalogInfo: this.productInCatalogInfo,
                 isSingleSite: this.isSingleSite,
                 isGlobal: false,

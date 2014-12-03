@@ -26,7 +26,7 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "logoText", "type": "string", "useNull": true },
         { "name": "replyToEmailAddress", "type": "string", "useNull": true },
         { "name": "senderEmailAddress", "type": "string", "useNull": true },
-        { "name": "senderEmailAddressName", "type": "string", "useNull": true },
+        { "name": "senderEmailAlias", "type": "string", "useNull": true },
         { "name": "isAddressValidationEnabled", "type": "boolean", "useNull": true },
         { "name": "allowInvalidAddresses", "type": "boolean", "useNull": true },
         { "name": "isWishlistCreationEnabled", "type": "boolean", "useNull": true },

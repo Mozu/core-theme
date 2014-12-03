@@ -37,6 +37,7 @@ Ext.define('Taco.view.product.Form', {
 
         this.globalForm = Ext.create('Taco.view.product.GlobalForm', {
             record: this.record,
+            productForm: this,
             isSingleSite: this.isSingleSite
         });
 
@@ -173,6 +174,7 @@ Ext.define('Taco.view.product.Form', {
         return Ext.create('Taco.view.product.SiteForm', {
             isSingleSite: this.singleSiteCheck(),
             record: productInCatalogInfo,
+            productForm: this,
             product: this.record,
             productInCatalogInfo: productInCatalogInfo,
             tasksKeyPrefix: 'site-' + catalogId,
