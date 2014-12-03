@@ -1,0 +1,4 @@
+﻿<h1>Order #{{ model.OrderNumber }}</h1>
+
+<h3>{{ model.Total|currency }} Monies.</h3>
+{% dump model %}

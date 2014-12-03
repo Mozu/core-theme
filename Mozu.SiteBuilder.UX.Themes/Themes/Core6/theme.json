@@ -163,6 +163,10 @@
             },
             "template": "email/giftcard-created",
             "title": "Gift Card Created"
+        },
+        {
+            "id": "orderdetailz",
+            "template": "email/orderdetailz"
         }
     ],
     "pageTypes": [

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +9,7 @@ using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Behaviors;
+using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -77,9 +77,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var order = await (await customOrderClient.GetOrder(orderId)).ReadAsAsync();
 
-            var resp = new HttpResponseMessage(HttpStatusCode.OK);
-            resp.Content = new StringContent("hi! " + order.OrderNumber);
-            return resp;
+
+            var template = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("orderdetailz"));
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find order details template for the current Theme.");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, order));
+//            var resp = new HttpResponseMessage(HttpStatusCode.OK);
+//            resp.Content = new StringContent("hi! " + order.OrderNumber);
+//            return resp;
         }
 
         private HttpResponseMessage TokenExpiredResponse()
