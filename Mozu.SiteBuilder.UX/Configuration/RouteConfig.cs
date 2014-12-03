@@ -427,14 +427,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
-                "order mouse",
-                "mouse/{orderId}",
-                new { controller = "AdminOrderSummary", action = "Mouse" });
-
-            routes.MapHttpRoute(
-                "order cheese",
-                "cheese/{orderId}",
-                new { controller = "AdminOrderSummary", action = "Cheese" });
+                "order details (admin view)",
+                "admin-order-summary/{orderId}",
+                new { controller = "AdminOrderDetails", action = "OrderSummary" });
 
 
             /*********************************************************************

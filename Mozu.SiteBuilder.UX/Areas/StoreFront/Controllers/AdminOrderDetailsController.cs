@@ -8,7 +8,6 @@ using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
-using Mozu.Core.Behaviors;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
@@ -23,7 +22,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     /// Since this is an administrator wormholing into storefront, this controller opts out of
     /// the normal pipeline and implements its own security checks.
     /// </summary>
-    public class AdminOrderSummaryController : ApiControllerBase
+    public class AdminOrderDetailsController : ApiControllerBase
     {
         private HttpContextBase _httpContext;
         private ISiteBuilderApiContext _apiContext;
@@ -33,36 +32,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public AdminOrderSummaryController(HttpContextBase httpContext, ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger)
+        public AdminOrderDetailsController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger)
         {
-            _httpContext = httpContext;
             _apiContext = apiContext;
-            _logger = logger;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
         }
 
+        /// <summary>
+        /// Order summary, a.k.a. "Print Order".
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage Mouse(string orderId)
-        {
-            var scope = new UserScope { Id = _apiContext.TenantId, Type = UserScopeType.Tenant, Name = "OrderDetailsScope" };
-            var behaviors = new int[] { 
-                new OrderReadBehavior().Id,
-                //new PaymentReadBehavior().Id
-            };
-
-            var claim = LightweightUserClaims.CreateForAdminUser("907e3523d71f49feb210e018b631661e", behaviors, scope, DateTime.UtcNow.AddMinutes(5));
-            claim.Bag["OrderId"] = orderId;
-            //var claim = LightweightUserClaims.CreateForShopper("907e3523d71f49feb210e018b631661e", null, _apiContext.TenantId, _apiContext.SiteId.Value, DateTime.UtcNow.AddMinutes(5));
-
-            string tok = HttpUtility.UrlEncode( claim.ToAccessToken() );
-
-            var resp = Request.CreateResponse(HttpStatusCode.Found);
-            resp.Headers.Location = new Uri("/cheese/" + orderId + "?t=" + tok, UriKind.Relative);
-            return resp;
-        }
-
-        [HttpGet]
-        public async Task<HttpResponseMessage> Cheese(string orderId, [FromUri(Name="t")]string token = null)
+        public async Task<HttpResponseMessage> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
         {
             LightweightUserClaims userClaimFromQuery = null;
 
@@ -85,9 +68,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, order));
-//            var resp = new HttpResponseMessage(HttpStatusCode.OK);
-//            resp.Content = new StringContent("hi! " + order.OrderNumber);
-//            return resp;
         }
 
         private HttpResponseMessage TokenExpiredResponse()

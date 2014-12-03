@@ -633,6 +633,7 @@
     <Compile Include="Controllers\AdminApiControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\OrderDetailsController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Filters\SiteBuilderAuthorizeAttribute.cs" />
     <Compile Include="GeneralSettingHelper.cs" />
