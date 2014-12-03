@@ -426,6 +426,17 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { controller = "Home", action = "GoogleSiteVerification" });
 
 
+            routes.MapHttpRoute(
+                "order mouse",
+                "mouse/{orderId}",
+                new { controller = "AdminOrderSummary", action = "Mouse" });
+
+            routes.MapHttpRoute(
+                "order cheese",
+                "cheese/{orderId}",
+                new { controller = "AdminOrderSummary", action = "Cheese" });
+
+
             /*********************************************************************
              * 
              *          Single name routes go above here.
