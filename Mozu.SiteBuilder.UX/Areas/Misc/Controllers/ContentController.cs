@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             decimal ratio = maxSize/(decimal) Math.Max(origImage.Width, origImage.Height);
             if (ratio < 1)
             {
-                stream = Resize(origImage, Convert.ToInt32(origImage.Width*ratio), Convert.ToInt32(origImage.Height*ratio), false);
+                stream = Resize(origImage, Convert.ToInt32(origImage.Width*ratio), Convert.ToInt32(origImage.Height*ratio));
                 stream.Position = 0;
             }
             else
@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 int newHeight = size;
                 using (stream)
                 {
-                    return Resize(origImage, newWidth, newHeight, false);
+                    return Resize(origImage, newWidth, newHeight);
                 }
             }
             stream.Position = initPos;
@@ -95,16 +95,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return stream;
         }
 
-        private Stream Resize(Image img, int width, int height, bool isPng)
+        private Stream Resize(Image img, int width, int height)
         {
+            var allowTransparency = img != null && img.RawFormat != null && img.RawFormat.Guid == ImageFormat.Png.Guid;
+
             using (var b = new Bitmap(width, height))
             {
                 using (Graphics g = Graphics.FromImage(b))
                 {
-                    var ia = new ImageAttributes();
-
-                    if (isPng)
+                    if (allowTransparency)
                     {
+                        var ia = new ImageAttributes();
                         g.Clear(Color.Transparent);
                         g.PixelOffsetMode = PixelOffsetMode.HighQuality;
                         ia.SetWrapMode(WrapMode.TileFlipXY);
@@ -119,9 +120,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     }
 
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-
-                    string codec = isPng ? "image/png" : "image/jpeg";
+                    
+                    string codec = allowTransparency ? "image/png" : "image/jpeg";
                     ImageCodecInfo codecInfo = GetEncoderInfo(codec);
                     Encoder qualityEncoder = Encoder.Quality;
 
