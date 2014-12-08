@@ -1,4 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ComplexEmptyTag.cs" company="Microsoft">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System.IO;
 using System.Threading.Tasks;
 using FSharpx.Collections;
 using Microsoft.FSharp.Core;
@@ -10,8 +16,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using NDjango.Interfaces;
-    
+
+    using System.Web.Routing;
+
+
+
+
+
+
+
     public interface IHyprNode
     {
         Walker Walk(ITemplateManager manager, Walker walker);
@@ -22,19 +37,27 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     /// </summary>
     public abstract class SimpleTagBase : ITag
     {
-        public Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>> Perform(Lexer.BlockToken blockToken, IParsingContext parsingContext, LazyList<Lexer.Token> tokenList)
+
+        public Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
+            Perform(
+            NDjango.Lexer.BlockToken blockToken,
+            IParsingContext parsingContext,
+            LazyList<NDjango.Lexer.Token> tokenList)
         {
             var blockTokenArs = PreProcessArguments(blockToken.Args);
-            ParamFilters = blockTokenArs.Select(x => new Expressions.FilterExpression(parsingContext, x));
-            
+            ParamFilters = blockTokenArs.Select(x => new NDjango.Expressions.FilterExpression(parsingContext, x));
+            //var arr = ParamFilters.ToArray();
+
             var nodeImpl = new TagNodeImpl(parsingContext, blockToken, this);
-            return new PerformResponse(nodeImpl, parsingContext, tokenList);
+            var resp = new PerformRespnose(nodeImpl, parsingContext, tokenList);
+            return resp;
+
         }
 
-        public IEnumerable<Expressions.FilterExpression> ParamFilters { get; set; }
         
-        static readonly string[] Keywords = { "as", "with", "as_param", "as_parameter" , "and"};
-        string[] _keywords = (string[])Keywords.Clone();
+
+        static string[] g_keywords = new string[] { "as", "with", "as_param", "as_parameter" , "and"};
+        string[] _keywords = g_keywords;
 
         public string[] KeyWords
         {
@@ -42,68 +65,79 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             set { _keywords = value; }
         }
 
-        protected virtual IEnumerable<Lexer.TextToken> PreProcessArguments(IEnumerable<Lexer.TextToken> tokens)
+        protected virtual IEnumerable<NDjango.Lexer.TextToken> PreProcessArguments(IEnumerable<NDjango.Lexer.TextToken> tokens)
         {
             return tokens;
         }
 
-        protected abstract ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context);
+        protected abstract void  ProcessTag(ArgumentCollection arguments, ref  IContext context , out string buffer , out string templateName );
 
-        protected virtual ArgumentCollection.ParseStrategy ArgumentParserStrategy { get; set; }
-        
-        class TagNodeImpl : ParserNodes.TagNode, IHyprNode
+        protected virtual ArgumentCollection.ParseStrategy ArguemntParserStrategy { get; set; }
+
+
+        IEnumerable<NDjango.Expressions.FilterExpression> ParamFilters;
+
+        class TagNodeImpl : NDjango.ParserNodes.TagNode, IHyprNode
         {
-            public SimpleTagBase TagBase { get { return (SimpleTagBase)Tag; } }
 
-            public TagNodeImpl(IParsingContext parsingContext, Lexer.BlockToken blockToken, SimpleTagBase tag) : base(parsingContext, blockToken, tag)
+            public SimpleTagBase TagBase
             {
-                _blockToken = blockToken;
-                _parsingContext = parsingContext;
+                get{ return (SimpleTagBase)this.Tag;}
             }
 
-            readonly IParsingContext _parsingContext;
-            readonly Lexer.BlockToken _blockToken;
+            public TagNodeImpl(IParsingContext parsingContext, NDjango.Lexer.BlockToken blockToken, SimpleTagBase tag)
+                : base(parsingContext, blockToken, tag)
+            {
+                BlockToken = blockToken;
+                ParsingContext = parsingContext;
+            }
+            IParsingContext ParsingContext;
+            NDjango.Lexer.BlockToken BlockToken;
 
             public override Walker walk(ITemplateManager manager, Walker walker)
             {
                 var arguments = ProcessArguments(walker);
-                if (TagBase.ArgumentParserStrategy != null)
+                if (TagBase.ArguemntParserStrategy != null)
                 {
-                    arguments = TagBase.ArgumentParserStrategy(arguments);
+                    arguments = TagBase.ArguemntParserStrategy(arguments);
                 }
                 var ctx = walker.context;
-                
-                var res = TagBase.ProcessTag(arguments, ctx);
+
+
+
+                string buffer;
+                string templateName;
+                TagBase.ProcessTag(arguments, ref ctx, out buffer, out templateName);
                 if (arguments.OutputVariableName != null)
                 {
                     if (arguments.OutputValue == null)
                     {
-                        arguments.OutputValue = res.Buffer;
-                        res.Buffer = string.Empty;
+                        arguments.OutputValue = buffer;
+                        buffer = string.Empty;
                     }
                     ctx = ctx.add(new Tuple<string, object>(arguments.OutputVariableName, arguments.OutputValue));
                 }
-                
-                var walked = false;
-                if (!string.IsNullOrEmpty(res.Buffer))
+                bool walked = false;
+                if (!string.IsNullOrEmpty(buffer))
                 {
-                    res.Buffer = string.IsNullOrEmpty(walker.buffer) ? res.Buffer : walker.buffer + res.Buffer;
-                    walker = new Walker(walker.parent, walker.nodes, res.Buffer, walker.bufferIndex, ctx);
+                    buffer = string.IsNullOrEmpty(walker.buffer) ? buffer : walker.buffer + buffer;
+                    walker = new Walker(walker.parent, walker.nodes, buffer, walker.bufferIndex, ctx);
                     walker = TagBase.Walk(arguments, ctx, manager, walker, this);
                     walked = true;
                 }
-                if (!string.IsNullOrEmpty(res.Template))
+                if (!string.IsNullOrEmpty(templateName))
                 {
-                    ITemplate template;
+                    ITemplate template = null;
                     try
                     {
-                       template =  manager.GetTemplate(res.Template);
+                       template =  manager.GetTemplate(templateName);
                     }
                     catch (Exception  ex )
                     {
-                        throw new RenderingException(ex.Message, Token, null);
-                    }
+                        throw new NDjango.Interfaces.RenderingException(ex.Message, this.Token, null);
 
+                    }
+                    
                     walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, ctx);
                     walker = TagBase.Walk(arguments, ctx, manager, walker, this);
                     walked = true;
@@ -114,14 +148,61 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     walker = TagBase.Walk(arguments, ctx, manager, walker, this);
                 }
                 return walker;
+
+
+
+
+                
+
+
             }
 
-            static readonly string[] EmptyStringArray = new string[0];
+            static string[] g_emptyStringArray = new string[0];
             private ArgumentCollection ProcessArguments(Walker walker)
             {
-                var arguments = new ArgumentCollection();
-                var kwords = ((SimpleTagBase)Tag).KeyWords ?? EmptyStringArray;
-                arguments.AddRange(_blockToken.Args.Select(arg => TagHandling.GenerateTagArgument(walker, _parsingContext, arg, kwords)));
+                ArgumentCollection arguments = new ArgumentCollection();
+                var kwords = ((SimpleTagBase)this.Tag).KeyWords ?? g_emptyStringArray;
+                foreach (var arg in BlockToken.Args)
+                {
+
+                    TagArgument tagArg = new TagArgument()
+                    {
+                        TokenValue = arg.Value
+                    };
+
+                    var idx = Array.IndexOf<string>(kwords, arg.Value);
+                    if (idx > -1)
+                    {
+                        tagArg.Name = arg.Value;
+                        tagArg.ArgumentType = TagArgument.ArgumentTypes.Keyword;
+                    }
+                    else if (arg.Value.Contains("="))
+                    {
+                        var parts = arg.Value.Split('=');
+                        tagArg.ArgumentType = TagArgument.ArgumentTypes.NamedArgument;
+                        tagArg.Name = parts[0];
+                        tagArg.Value = new NDjango.Expressions.FilterExpression(this.ParsingContext, arg.WithValue(parts[1], null)).Resolve(walker.context, true).Item1.Value;
+                    }
+                    else
+                    {
+                        tagArg.ArgumentType = TagArgument.ArgumentTypes.ValueArgument;
+                        tagArg.Name = "na";
+                        tagArg.Value = new NDjango.Expressions.FilterExpression(this.ParsingContext, arg).Resolve(walker.context, true).Item1.Value;
+                    }
+                    var jarr = tagArg.Value as JArray;
+                    var jval = tagArg.Value as JValue;
+                    if (jval != null)
+                    {
+                        tagArg.Value = jval.Value;
+                    }
+                    else if (jarr != null )
+                    {
+                        tagArg.Value= jarr.Cast<object>().ToList();
+                        //todo turn into some type of colletion or array.
+
+                    }
+                    arguments.Add(tagArg);
+                }
                 return arguments;
             }
 
@@ -133,169 +214,56 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public virtual bool is_header_tag { get; set; }
 
+        public class PerformRespnose : Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
+        {
+            public PerformRespnose(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<NDjango.Lexer.Token> tokenList)
+                : base(nodeImpl, parseContext, tokenList)
+            {
+
+            }
+        }
+
+
         protected virtual Walker Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
         {
-            return tagNode.Walk( templateManager, walker); 
+            return tagNode.Walk( templateManager, walker);
+          
         }
     }
 
-    static class TagHandling
-    {
-        public static TagArgument GenerateTagArgument(Walker walker, IParsingContext context, Lexer.TextToken arg, IEnumerable<string> kwords)
-        {
-            var tagArg = new TagArgument
-            {
-                TokenValue = arg.Value
-            };
-
-            if (IsKeyword(kwords, arg.Value)) // is keyword
-            {
-                tagArg.Name = arg.Value;
-                tagArg.ArgumentType = TagArgument.ArgumentTypes.Keyword;
-            }
-            else if (ContainsNamedParameters(arg.Value)) // is a named expression
-            {
-                var nameValueParts = GetNameValueParts(arg.Value);
-                tagArg.ArgumentType = TagArgument.ArgumentTypes.NamedArgument;
-                tagArg.Name = nameValueParts.Item1;
-                tagArg.Value =
-                    new Expressions.FilterExpression(context, arg.WithValue(nameValueParts.Item2, null)).Resolve(
-                        walker.context, true).Item1.Value;
-            }
-            else // is just a value
-            {
-                tagArg.ArgumentType = TagArgument.ArgumentTypes.ValueArgument;
-                tagArg.Name = "na";
-                tagArg.Value = new Expressions.FilterExpression(context, arg).Resolve(walker.context, true).Item1.Value;
-            }
-
-            var jarr = tagArg.Value as JArray;
-            var jval = tagArg.Value as JValue;
-            if (jval != null)
-            {
-                tagArg.Value = jval.Value;
-            }
-            else if (jarr != null)
-            {
-                tagArg.Value = jarr.Cast<object>().ToList();
-                //todo turn into some type of colletion or array.
-            }
-
-            return tagArg;
-        }
-
-        private static Tuple<string, string> GetNameValueParts(string value)
-        {
-            var matches = QuotedText.Matches(value);
-            if (matches.Cast<Match>().All(x => !x.Success)) // if there's no quoted text
-            {
-                var splits = value.Split('=');                          // then if there are any (=) we must have a named arg
-                return new Tuple<string, string>(splits[0], splits[1]);
-            }
-
-            var ss =
-                matches.Cast<Match>()
-                .Aggregate(value, ReplaceString) // sub out the matches with * in the string
-                .Split('='); // fish out the name and arg parts
-
-            return
-                matches.Cast<Match>()
-                .Aggregate(new Tuple<string, string>(ss[0], ss[1]), ReplaceNameOrArg); // now put the match data back in the string
-        }
-
-        /// <summary>
-        /// subs out from a string with * chars the chunk that was matched.
-        /// </summary>
-        /// <param name="current"></param>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        private static string ReplaceString(string current, Capture match)
-        {
-            return current.Substring(0, match.Index) + new string('*', match.Length) + current.Substring(match.Index + match.Length + 1);
-        }
-
-        /// <summary>
-        /// replaces the * in a string with the matching value from the match
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="match"></param>
-        /// <returns></returns>
-        private static Tuple<string, string> ReplaceNameOrArg(Tuple<string, string> p, Capture match)
-        {
-            if (match.Index < p.Item1.Length)
-            {
-                var nameReplace = ReplaceWithMatch(p.Item1, match.Value);
-                return new Tuple<string, string>(nameReplace, p.Item2);
-            }
-
-            var argReplace = ReplaceWithMatch(p.Item2, match.Value);
-            return new Tuple<string, string>(p.Item1, argReplace);
-        }
-
-        private static string ReplaceWithMatch(string init, string replace)
-        {
-            return init.Replace(new string('*', replace.Length), replace);
-        }
-
-        private static bool IsKeyword(IEnumerable<string> keywords, string blockTokenArg)
-        {
-            return keywords.Contains(blockTokenArg);
-        }
-
-        private static readonly Regex QuotedText = new Regex(@"(?:""(?:[^""\\]*(?:\\.[^""]*)*)""|'(?:[^'\\]*(?:\\.[^']*)*)')", RegexOptions.Compiled);
-
-        /// <summary>
-        /// This is a named parameter if there is an assignment (=) that's not in quotes anywhere in the arg.
-        /// </summary>
-        /// <param name="blockTokenArg"></param>
-        /// <returns></returns>
-        private static bool ContainsNamedParameters(string blockTokenArg)
-        {
-            var matches = QuotedText.Matches(blockTokenArg);
-            if (matches.Cast<Match>().All(x => !x.Success))                     // if there's no quoted text
-                return blockTokenArg.Contains("="); // then if there are any (=) we must have a named arg
-
-            // if there are quoted args, we have to strip each of those matches from the original string and then see if any (=) remain in the string.
-            var replacedString =
-                matches.Cast<Match>()
-                .Aggregate(blockTokenArg, (current, match) => current.Replace(match.Value, string.Empty));
-
-            return replacedString.Contains("=");
-        }
-    }
-
-
-    public class ProcessTagResult
-    {
-        public ProcessTagResult(IContext context)
-        {
-            Context = context;
-        }
-        public string Template { get; set; }
-        public string Buffer { get; set; }
-        public IContext Context { get; set; }
-    }
-
-    public class PerformResponse : Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>>
-    {
-        public PerformResponse(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<Lexer.Token> tokenList) : base(nodeImpl, parseContext, tokenList) { }
-    }
 
     public abstract class SimpleTagBaseAsync : ITag
     {
-        public Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>> Perform(Lexer.BlockToken blockToken, IParsingContext parsingContext, LazyList<Lexer.Token> tokenList)
+
+        public Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
+            Perform(
+            NDjango.Lexer.BlockToken blockToken,
+            IParsingContext parsingContext,
+            LazyList<NDjango.Lexer.Token> tokenList)
         {
             var blockTokenArs = PreProcessArguments(blockToken.Args);
-            ParamFilters = blockTokenArs.Select(x => new Expressions.FilterExpression(parsingContext, x));
-            
+            ParamFilters = blockTokenArs.Select(x => new NDjango.Expressions.FilterExpression(parsingContext, x));
+            //var arr = ParamFilters.ToArray();
+
             var nodeImpl = new TagNodeImplAsync(parsingContext, blockToken, this);
-            var resp = new PerformResponse(nodeImpl, parsingContext, tokenList);
+            var resp = new PerformRespnose(nodeImpl, parsingContext, tokenList);
             return resp;
 
         }
 
-        static readonly string[] Keywords = { "as", "with", "as_param", "as_parameter", "and" };
-        string[] _keywords = Keywords;
+        public class ProcessTagResult
+        {
+            public ProcessTagResult(IContext context)
+            {
+                this.Context = context;
+            }
+            public string Template { get; set; }
+            public string Buffer { get; set; }
+            public NDjango.Interfaces.IContext Context { get; set; }
+        }
+
+        static string[] g_keywords = new string[] { "as", "with", "as_param", "as_parameter", "and" };
+        string[] _keywords = g_keywords;
 
         public string[] KeyWords
         {
@@ -303,42 +271,48 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             set { _keywords = value; }
         }
 
-        protected virtual IEnumerable<Lexer.TextToken> PreProcessArguments(IEnumerable<Lexer.TextToken> tokens)
+        protected virtual IEnumerable<NDjango.Lexer.TextToken> PreProcessArguments(IEnumerable<NDjango.Lexer.TextToken> tokens)
         {
             return tokens;
         }
 
-        protected virtual ArgumentCollection.ParseStrategy ArgumentParserStrategy { get; set; }
-        IEnumerable<Expressions.FilterExpression> ParamFilters;
+        
 
-        class TagNodeImplAsync : ParserNodes.TagNode, IHyprNode, INodeImplAsync
+        protected virtual ArgumentCollection.ParseStrategy ArguemntParserStrategy { get; set; }
+
+
+        IEnumerable<NDjango.Expressions.FilterExpression> ParamFilters;
+
+        class TagNodeImplAsync : NDjango.ParserNodes.TagNode, IHyprNode, NDjango.Interfaces.INodeImplAsync
         {
 
             public SimpleTagBaseAsync TagBase
             {
-                get { return (SimpleTagBaseAsync)Tag; }
+                get { return (SimpleTagBaseAsync)this.Tag; }
             }
 
-            public TagNodeImplAsync(IParsingContext parsingContext, Lexer.BlockToken blockToken, SimpleTagBaseAsync tag)
+            public TagNodeImplAsync(IParsingContext parsingContext, NDjango.Lexer.BlockToken blockToken, SimpleTagBaseAsync tag)
                 : base(parsingContext, blockToken, tag)
             {
-                _blockToken = blockToken;
-                _parsingContext = parsingContext;
+                BlockToken = blockToken;
+                ParsingContext = parsingContext;
             }
-
-            readonly IParsingContext _parsingContext;
-            readonly Lexer.BlockToken _blockToken;
+            IParsingContext ParsingContext;
+            NDjango.Lexer.BlockToken BlockToken;
 
 
             public async Task<Walker> asyncWalk(ITemplateManager manager, Walker walker)
             {
                 var arguments = ProcessArguments(walker);
-                if (TagBase.ArgumentParserStrategy != null)
+                if (TagBase.ArguemntParserStrategy != null)
                 {
-                    arguments = TagBase.ArgumentParserStrategy(arguments);
+                    arguments = TagBase.ArguemntParserStrategy(arguments);
                 }
                 var ctx = walker.context;
-                
+
+
+
+
                 var result = await TagBase.ProcessTagAsync(arguments, ctx).ConfigureAwait(false);
                 var buffer = result.Buffer;
                 var templateName = result.Template;
@@ -352,7 +326,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     }
                     ctx = ctx.add(new Tuple<string, object>(arguments.OutputVariableName, arguments.OutputValue));
                 }
-                var walked = false;
+                bool walked = false;
                 if (!string.IsNullOrEmpty(buffer))
                 {
                     buffer = string.IsNullOrEmpty(walker.buffer) ? buffer : walker.buffer + buffer;
@@ -362,14 +336,15 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
                 if (!string.IsNullOrEmpty(templateName))
                 {
-                    ITemplate template;
+                    ITemplate template = null;
                     try
                     {
                         template = manager.GetTemplate(templateName);
                     }
                     catch (Exception ex)
                     {
-                        throw new RenderingException(ex.Message, Token, null);
+                        throw new NDjango.Interfaces.RenderingException(ex.Message, this.Token, null);
+
                     }
 
                     walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, ctx);
@@ -382,21 +357,65 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     walker = TagBase.Walk(arguments, ctx, manager, walker, this);
                 }
                 return walker;
+
             }
+
 
             public override Walker walk(ITemplateManager manager, Walker walker)
             {
-                var res = asyncWalk(manager, walker).ConfigureAwait(false).GetAwaiter().GetResult();
+                var res = this.asyncWalk(manager, walker).ConfigureAwait(false).GetAwaiter().GetResult();
+              //  task.Wait();
                 return res;
+
+
             }
 
-            static readonly string[] EmptyStringArray = new string[0];
+            static string[] g_emptyStringArray = new string[0];
             private ArgumentCollection ProcessArguments(Walker walker)
             {
-                var arguments = new ArgumentCollection();
-                var kwords = ((SimpleTagBaseAsync)Tag).KeyWords ?? EmptyStringArray;
-                arguments.AddRange(
-                    _blockToken.Args.Select(x => TagHandling.GenerateTagArgument(walker, _parsingContext, x, kwords)));
+                ArgumentCollection arguments = new ArgumentCollection();
+                var kwords = ((SimpleTagBaseAsync )this.Tag).KeyWords ?? g_emptyStringArray;
+                foreach (var arg in BlockToken.Args)
+                {
+
+                    TagArgument tagArg = new TagArgument()
+                    {
+                        TokenValue = arg.Value
+                    };
+
+                    var idx = Array.IndexOf<string>(kwords, arg.Value);
+                    if (idx > -1)
+                    {
+                        tagArg.Name = arg.Value;
+                        tagArg.ArgumentType = TagArgument.ArgumentTypes.Keyword;
+                    }
+                    else if (arg.Value.Contains("="))
+                    {
+                        var parts = arg.Value.Split('=');
+                        tagArg.ArgumentType = TagArgument.ArgumentTypes.NamedArgument;
+                        tagArg.Name = parts[0];
+                        tagArg.Value = new NDjango.Expressions.FilterExpression(this.ParsingContext, arg.WithValue(parts[1], null)).Resolve(walker.context, true).Item1.Value;
+                    }
+                    else
+                    {
+                        tagArg.ArgumentType = TagArgument.ArgumentTypes.ValueArgument;
+                        tagArg.Name = "na";
+                        tagArg.Value = new NDjango.Expressions.FilterExpression(this.ParsingContext, arg).Resolve(walker.context, true).Item1.Value;
+                    }
+                    var jarr = tagArg.Value as JArray;
+                    var jval = tagArg.Value as JValue;
+                    if (jval != null)
+                    {
+                        tagArg.Value = jval.Value;
+                    }
+                    else if (jarr != null)
+                    {
+                        tagArg.Value = jarr.Cast<object>().ToList();
+                        //todo turn into some type of colletion or array.
+
+                    }
+                    arguments.Add(tagArg);
+                }
                 return arguments;
             }
 
@@ -404,15 +423,32 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 return base.walk(templateManager, walker);
             }
+
+           
+          
         }
 
         public virtual bool is_header_tag { get; set; }
-        
+
+        public class PerformRespnose : Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
+        {
+            public PerformRespnose(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<NDjango.Lexer.Token> tokenList)
+                : base(nodeImpl, parseContext, tokenList)
+            {
+
+            }
+        }
+
+
         protected virtual Walker Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
         {
             return tagNode.Walk(templateManager, walker);
+
         }
         
+
+
         protected abstract Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments,  IContext ctx);
+
     }
 }

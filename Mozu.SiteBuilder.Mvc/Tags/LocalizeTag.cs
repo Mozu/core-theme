@@ -1,26 +1,32 @@
 ﻿using System;
+using Autofac;
+
+using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.Localization;
-using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
     [Obsolete]
-    [Name("localize")]
+    [NDjango.Interfaces.Name("localize")]
     public class LocalizeTag: SimpleTagBase 
     {
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        private readonly ILocalizationRepository _localizationRepository = null;
+
+
+        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
         {
+            templateName = null;
             var repo = context.Resolve<ILocalizationRepository>();
-            var colKey = (string)arguments[0].Value;
-            var key = (string)arguments[1].Value;
+            string colKey = (string)arguments[0].Value;
+            string key = (string)arguments[1].Value;
             string defaultValue = null;
             if (arguments.Count > 2)
             {
                 defaultValue = (string)arguments[2].Value;
             }
-            var buffer = repo.Get(colKey, key) ?? defaultValue;
-
-            return new ProcessTagResult(context){Buffer = buffer, Template = null};
+            buffer = _localizationRepository.Get(colKey, key) ?? defaultValue;
         }
+
+      
     }
 }

@@ -1,6 +1,7 @@
 
 using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -15,9 +16,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     {
         public String Process(object model)
         {
-            return model == null
-                ? ("")
-                : JsonConvert.SerializeObject(model, Formatting.None, new CaseInsensitiveJsonSerializerSettings());
+            if (model == null)
+                return ("");
+
+                return JsonConvert.SerializeObject(model, Formatting.None, new CaseInsensitiveJsonSerializerSettings());
+       
         }
     }
 }

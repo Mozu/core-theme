@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Autofac;
-using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
@@ -14,16 +13,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     {
         public static HyprViewContext ViewContext(this NDjango.Interfaces.IContext context)
         {
-            var objMaybe = context.tryfind("_vc");
-            if (FSharpOption<object>.get_IsSome(objMaybe)) return (HyprViewContext) objMaybe.Value;
-            return default(HyprViewContext);
+            return (HyprViewContext)context.tryfind("_vc").Value;
         }
-
         public static HttpContextBase HttpContext(this NDjango.Interfaces.IContext context)
         {
             return context.ViewContext().HttpContext;
         }
-
         public static T GetValueOrDefault<T>(this NDjango.Interfaces.IContext context, string key )
         {
             var entry = context.tryfind("key");

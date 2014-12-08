@@ -1,18 +1,29 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Json;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.UI;
+using AutoMapper;
+using Magnum.Extensions;
+using Microsoft.FSharp.Collections;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Tags;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NDjango.Interfaces;
+using Microsoft.FSharp.Core;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
@@ -52,15 +63,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     public class EditResourcesTag : SimpleTagBase
     {
         const string  Format = "\t\t<script type=\"text/javascript\" src=\"{1}/admin/scripts/chorizo/{0}.js\"></script>\r\n";
-
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override void ProcessTag(Mvc.Tags.ArgumentCollection arguments, ref IContext context, out string buffer, out string templateName)
         {
+            buffer = templateName = null;
             var pageContext = context.PageContext();
-            var cdnHost = Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
-            var cdn = Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost)
-                ? ""
-                : ("//" + cdnHost + "/common");
-
+            var cdnHost = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
+            var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
+            
             var isEditmode = pageContext.IsEditMode;
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
@@ -69,7 +78,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css\">\r", cdn);
                 if (!isEditmode)
                 {
-                    return new ProcessTagResult(context){Buffer = sb.ToString(), Template = null};
+
+                    buffer = sb.ToString();
+                    return;
                 }
 
                 sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css\">");
@@ -86,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 sb.AppendFormat(Format, "targets", cdn);
                 sb.AppendFormat(Format, "widgets", cdn);
                 sb.AppendFormat(Format, "editor", cdn);
-                return new ProcessTagResult(context){Buffer = sb.ToString(), Template = null};
+                buffer = sb.ToString();
             }
         }
     }
@@ -125,9 +136,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             public string id { get; set; }
             public string scope { get; set; }
         }
-        protected override async System.Threading.Tasks.Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, IContext context)
+        protected override async System.Threading.Tasks.Task<Mvc.Tags.SimpleTagBaseAsync.ProcessTagResult> ProcessTagAsync(Mvc.Tags.ArgumentCollection arguments, IContext context)
         {
-            var processResult = new ProcessTagResult(context);
+            var processResult = new Mvc.Tags.SimpleTagBaseAsync.ProcessTagResult(context);
             
             var httpContext = context.HttpContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();

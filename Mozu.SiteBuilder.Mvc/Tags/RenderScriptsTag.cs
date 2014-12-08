@@ -4,13 +4,16 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using NDjango;
 using NDjango.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -21,6 +24,22 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [Name("all_scripts")]
     public class RenderScriptsTag : SimpleTagBase
     {
+        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
+        {
+            buffer = templateName = null;
+
+
+
+            var scriptsArray = (HashSet<string>)context.HttpContext().Items["scripts"];
+            if (scriptsArray == null)
+                return;
+
+
+            string model = string.Join(",", scriptsArray.Select(x => "'" + x + "'"));
+            //buffer= context.Render("debugscripts", model);
+            buffer = model;
+        }
+
         public static void RenderRequiresForWidgetPreview(TextWriter tw, HttpContextBase httpContext)
         {
             var scriptsArray = (HashSet<string>)httpContext.Items["scripts"];
@@ -37,16 +56,6 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
             tw.WriteLine(");");
             tw.WriteLine("</script>");
-        }
-
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
-        {
-            
-            var scriptsArray = (HashSet<string>)context.HttpContext().Items["scripts"];
-            if (scriptsArray == null) return new ProcessTagResult(context){Buffer = null, Template = null};
-
-            var model = string.Join(",", scriptsArray.Select(x => "'" + x + "'"));
-            return new ProcessTagResult(context){Buffer = model, Template = null};
         }
     }
 }
