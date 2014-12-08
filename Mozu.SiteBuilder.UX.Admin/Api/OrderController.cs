@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient, CustomerController customerController)
         {
-            _orderWebApiClient = orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
+            _orderWebApiClient = orderWebApiClient;
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _creditWebApiClient = creditWebApiClient;
             _customerController = customerController;
@@ -52,6 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		[HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft=false)
         {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
             string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
@@ -59,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // get single order
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
-                var order = (await _orderWebApiClient.GetOrder(pagingParams.id, draft)).ReadAsSync();
+                var order = (await orderWebApiClient.GetOrder(pagingParams.id, draft)).ReadAsSync();
 
                 if (order != null)
                 {
@@ -92,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var q = extFilter.ToQString();
                 int? qLimit = q == null ?(int?) null : 26;
                 var responseGroups = "header,payment,packageheaders,availableactions";
-                var dcOrders = (await _orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
+                var dcOrders = (await orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
                 
                 //trim out items for speedyness...
                 dcOrders.Items.ForEach(x=> { x.Items = new List<DCo.OrderItem>();

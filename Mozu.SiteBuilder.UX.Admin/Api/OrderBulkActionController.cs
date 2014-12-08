@@ -29,6 +29,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "action")]
         public async Task<Response<List<OrderActionResult>>> PerformOrdersAction(BulkOrderRequest request)
         {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
+
             if (!VALID_BULK_ACTIONS.Contains(request.ActionName, StringComparer.OrdinalIgnoreCase))
             {
                 throw new VaeMissingOrInvalidParameterException("ActionName",
