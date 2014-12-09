@@ -232,6 +232,8 @@ Ext.define('Taco.view.order.Header', {
 
                 '<span class="label">{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}</span><br>',
 
+                '<tpl if="billingContact.email">{billingContact.email}<br></tpl>',
+
                 '{billingContact.address1}<br>',
 
                 '<tpl if="billingContact.address2">{billingContact.address2}<br></tpl>',
@@ -253,6 +255,8 @@ Ext.define('Taco.view.order.Header', {
                 '<tpl if="fulfillmentContact && fulfillmentContact.address1">',
 
                 '<span class="label">{fulfillmentContact.firstName}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName}</tpl> {fulfillmentContact.lastName}</span><br>',
+
+                '<tpl if="fulfillmentContact.email">{fulfillmentContact.email}<br></tpl>',
 
                 '{fulfillmentContact.address1}<br>',
 
