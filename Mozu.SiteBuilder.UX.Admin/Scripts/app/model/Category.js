@@ -115,6 +115,11 @@ Ext.define('Taco.model.Category', {
             "useNull": true
         },
         {
+            name: "categoryCode",
+            type: "string",
+            useNull: true
+        },
+        {
             name: 'categoryId',
             type: 'int'
         },
