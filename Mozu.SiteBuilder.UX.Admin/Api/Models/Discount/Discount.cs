@@ -53,7 +53,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         public int? MaximumQuantityPerRedemption { get; set; }
         
-
+        public int? MaximumRedemptionPerOrder { get; set; }
+        
              /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
@@ -114,8 +115,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
       
         public Decimal? MinimumLifetimeValueAmount { get; set; }
 
-        
 
+        public Decimal? MaxDiscountAmount { get; set; }
 
       
         public int? MaxRedemptionCount { get; set; }
