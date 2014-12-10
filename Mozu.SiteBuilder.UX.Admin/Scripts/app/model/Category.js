@@ -85,6 +85,13 @@ Ext.define('Taco.model.Category', {
             "useNull": true
         },
         {
+            name: 'nameAndCode',
+            convert: function (v, record) {
+                return record.get('name') + (!record.get('code') ? '' : " (" + record.get('code') + ")");
+            },
+            persist: false
+        },
+        {
             "name": "description",
             "type": "string",
             "useNull": true

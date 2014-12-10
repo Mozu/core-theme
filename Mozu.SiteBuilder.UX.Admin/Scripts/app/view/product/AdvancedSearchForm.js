@@ -121,7 +121,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
             fieldLabel: 'Category',
 
             valueField: 'id',
-            displayField: 'name',
+            displayField: 'nameAndCode',
             queryMode: 'local',
             valueNotFoundText: 'not found',
             editable: true,
