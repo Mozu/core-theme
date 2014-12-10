@@ -1,0 +1,8 @@
+﻿{% extends "order/order" %}
+{% block body-content %}
+
+    <h1>Packing slip!!1!</h1>
+
+    {% dump model %}
+
+{% endblock body-content %}

@@ -92,31 +92,21 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 
 
             if (theme.Parent == null)
-            {
                 return;
-            }
             if (theme.Parent.Widgets != null)
-            {
                 theme.Widgets = theme.Widgets.Union(theme.Parent.Widgets, new WidgetDefinitionEQ()).ToList();
 
-            }
-
             if (theme.Parent.Editors != null)
-            {
                 theme.Editors = theme.Editors.Union(theme.Parent.Editors, new EditorDefinitionEQ()).ToList();
-
-            }
-             if (theme.Parent.PageTypes  != null)
-            {
+        
+            if (theme.Parent.PageTypes  != null)
                 theme.PageTypes = theme.PageTypes.Union(theme.Parent.PageTypes, new PageTemplateDefinitionEQ() ).ToList();
 
-            }
+            if (theme.Parent.EmailTemplates != null)
+                theme.EmailTemplates = theme.EmailTemplates.Union(theme.Parent.EmailTemplates, new PageTemplateDefinitionEQ()).ToList();
 
-             if (theme.Parent.EmailTemplates  != null)
-             {
-                 theme.EmailTemplates = theme.EmailTemplates.Union(theme.Parent.EmailTemplates, new PageTemplateDefinitionEQ()).ToList();
-
-             }
+            if (theme.Parent.OrderTemplates != null)
+                theme.OrderTemplates = theme.OrderTemplates.Union(theme.Parent.OrderTemplates, new PageTemplateDefinitionEQ()).ToList();
             
         }
     }

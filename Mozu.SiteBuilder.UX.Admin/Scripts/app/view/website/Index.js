@@ -28,6 +28,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.website.entityAdapters.TemplateEntityAdapter',
         'Taco.view.website.entityAdapters.DocumentListEntityAdapter',
         'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
+        'Taco.view.website.entityAdapters.OrderTemplateEntityAdapter',
         'Ext.ux.IFrame',
         'Taco.store.ThemeListing',
         'Ext.menu.CheckItem',
@@ -53,6 +54,7 @@ Ext.define('Taco.view.website.Index', {
         product: 'Taco.view.website.entityAdapters.ProductEntityAdapter',
         link: 'Taco.view.website.entityAdapters.ExternalLinkEntityAdapter',
         email: 'Taco.view.website.entityAdapters.EmailTemplateEntityAdapter',
+        order: 'Taco.view.website.entityAdapters.OrderTemplateEntityAdapter',
         documentList: 'Taco.view.website.entityAdapters.DocumentListEntityAdapter'
     },
     enableNavHeader: true,

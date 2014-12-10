@@ -676,6 +676,7 @@
     <Content Include="Themes\Core6\admin\editors\email.js" />
     <Content Include="Themes\Core6\admin\editors\horizontalRule.js" />
     <Content Include="Themes\Core6\admin\editors\image.js" />
+    <Content Include="Themes\Core6\admin\editors\order-details.js" />
     <Content Include="Themes\Core6\admin\editors\pageTemplateContent.js" />
     <Content Include="Themes\Core6\admin\editors\productContent.js" />
     <Content Include="Themes\Core6\admin\editors\snippet.js" />
@@ -2201,6 +2202,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Themes\Core6\templates\order\details.hypr" />
+    <Content Include="Themes\Core6\templates\order\packingslip.hypr" />
+    <Content Include="Themes\Core6\templates\order\order.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

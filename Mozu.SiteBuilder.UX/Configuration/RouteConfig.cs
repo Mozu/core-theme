@@ -431,6 +431,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "admin-order-summary/{orderId}",
                 new { controller = "AdminOrderDetails", action = "OrderSummary" });
 
+            routes.MapHttpRoute(
+                "order details (admin view) - PREVIEW",
+                "admin-order-preview/{templateid}",
+                new { controller = "AdminOrderDetails", action = "Preview" });
+
 
             /*********************************************************************
              * 

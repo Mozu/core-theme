@@ -102,8 +102,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public List<Models.CMS.PageTypeDefinition> PageTypes { get; set; }
 
 
-      [DataMember(Name = "emailTemplates")]
+        [DataMember(Name = "emailTemplates")]
         public List<Models.CMS.PageTypeDefinition> EmailTemplates { get; set; }
+
+        [DataMember(Name = "orderTemplates")]
+        public IEnumerable<PageTypeDefinition> OrderTemplates { get; set; }
+
 
         [IgnoreDataMember]
         public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
@@ -137,6 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string DefaultLanguage { get; set; }
 
         public bool? AllowProduction { get; set; }
+
     }
 
     public class ThemeFileSystemInfo

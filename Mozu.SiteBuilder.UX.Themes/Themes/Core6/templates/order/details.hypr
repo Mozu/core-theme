@@ -1,0 +1,238 @@
+﻿{% extends "order/order" %}
+{% block body-content %}
+
+<style type="text/css">
+body{font-family:"Source Sans Pro",tahoma,sans-serif;font-size:14px;line-height:1;margin:0;padding:0}h1,h2,h3{font-weight:600;margin:0}table{border-collapse:collapse;font-size:inherit;line-height:inherit}.section{border-bottom:1px solid #b3b3b3;padding-bottom:10px}.section>h2{border-bottom:1px solid #bfbfbf;font-size:17px;line-height:1;margin:0 2%;padding:17px 1% 16px}.subsection-wrapper{margin:10px 2%}.subsection-wrapper>h3{padding:7px 2%}.subsection-wrapper .grid{margin-left:0;margin-right:0;width:100%}.subsection{margin:0 2%;width:96%}.subsection .label{font-weight:600;margin:14px 0 7px}.subsection .label:nth-of-type(1){margin-top:0}.subsection td{padding:7px 7px 0 0;vertical-align:top}.grid{border:1px solid #bfbfbf;margin:10px 2%;width:96%}.grid th{background-color:#e5e5e5;font-weight:600;padding:8px 14px;text-align:left;white-space:nowrap}.grid td{border-top:1px solid #bfbfbf;padding:8px 14px;text-align:left}.grid tr:nth-of-type(1) td{border-top-width:0}.panes{margin:10px 2%;width:96%}.panes td{border-left:1px solid #bfbfbf;padding:2px 14px 8px;vertical-align:top;width:33%}.panes td:nth-of-type(1){border-left-width:0}.panes .label{color:#b3b3b3;font-size:13px;margin-bottom:7px}.panes .price-total{font-size:24px;margin-bottom:7px}.panes .item-total{font-size:16px}.print-order-page{width:100%}.header th{border-bottom:1px solid #b3b3b3;font-weight:400;padding:14px 2%;text-align:left;vertical-align:top;width:33%}.header .company-info h1{font-size:24px}.header .company-contacts{text-align:center;vertical-align:middle}.header .order-essentials{text-align:right}.header .order-essentials .order-number{font-size:17px;font-weight:600;margin-bottom:3px}.header .order-essentials .order-number .label{color:#b3b3b3;font-weight:400}.header .order-essentials .order-date .label{font-weight:600}.footer td{padding:14px 3%}.section-attributes .attribute{margin:10px 4%}.section-attributes .attribute span{font-style:italic;margin-right:10px}.section-attributes .attribute .label{font-style:normal;font-weight:600}.section-orderitems .product-name{margin-bottom:4px;}.section-orderitems .bundled-product,.section-orderitems .product-option{border-left:2px solid #ddd;line-height:1.2;margin-left:4px;padding-left:6px;}.section-orderitems .product-option-label{color:#b3b3b3;font-size:12px;font-style:normal;margin-right:8px;text-transform:uppercase;}
+</style>
+<table class="print-order-page">
+<thead class="header"><tr>
+<th class="company-info">{{ customContent.companyName }}</th>
+<th class="company-contacts">{{ customContent.companyAddress }}</th>
+<th class="company-url">{{ customContent.websiteUrl }}</th>
+<th class="order-essentials">
+    <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
+    <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date("m/d/Y") }}</span></div>
+</th>
+</tr></thead>
+<tfoot class="footer"><tr>
+    <td colspan="3">&nbsp;</td>
+</tr></tfoot>
+<tbody><tr><td colspan="3">
+    <div class="section section-contacts"><table class="panes"><tbody><tr>
+        <td class="billing-address">
+            <div class="label">Bill To</div>
+            <div>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</div>
+            <div>{{ model.billingInfo.billingContact.address.address1 }}</div>
+            {% if model.billingInfo.billingContact.address.address2 %}<div>{{ model.billingInfo.billingContact.address.address2 }}</div>{% endif %}
+            {% if model.billingInfo.billingContact.address.address3 %}<div>{{ model.billingInfo.billingContact.address.address3 }}</div>{% endif %}
+            {% if model.billingInfo.billingContact.address.address4 %}<div>{{ model.billingInfo.billingContact.address.address4 }}</div>{% endif %}
+            <div>{{ model.billingInfo.billingContact.address.cityOrTown }}, {{ model.billingInfo.billingContact.address.stateOrProvince }} {{ model.billingInfo.billingContact.address.postalOrZipCode }}</div>
+            {% if model.billingInfo.billingContact.phoneNumbers.home %}<div>{{ model.billingInfo.billingContact.phoneNumbers.home }} (home)</div>{% endif %}
+            {% if model.billingInfo.billingContact.phoneNumbers.work %}<div>{{ model.billingInfo.billingContact.phoneNumbers.work }} (work)</div>{% endif %}
+            {% if model.billingInfo.billingContact.phoneNumbers.mobile %}<div>{{ model.billingInfo.billingContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+            <div>{{ model.billingInfo.billingContact.email }}</div>
+        </td>
+        <td class="shipping-address">
+            <div class="label">Ship To</div>
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
+            {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}, {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
+            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.email }}</div>
+        </td>
+        <td class="order-totals">
+            <div class="label">Totals</div>
+            <div class="price-total">{{ model.total }}</div>
+            <div class="item-total">{{ itemsOrdered }} items</div>
+        </td>
+    </tr></tbody></table></div>
+    <div class="section section-orderitems">
+        <h2>Items Ordered</h2>
+        <table class="grid">
+            <thead><tr>
+                <th>Code</th>
+                <th>Product</th>
+                <th>Fulfillment</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Item Total</th>
+            </tr></thead>
+            <tbody>
+            {% for item in model.items %}
+                <tr>
+                    <td>{{ item.product.productCode }}</td>
+                    <td>
+                        <div class="product-name">{{ item.product.name }}</div>
+                        {% for option in item.product.options %}
+                            <div class="product-option">
+                                <em class="product-option-label">[option]</em>TODO: {{ option.value }}
+                            </div>
+                        {% endfor %}
+                        {% for product in item.product.bundledProducts %}
+                            <div class="bundled-product">
+                                <em class="product-option-label">[includes]</em>{{ product.productCode }} - {{ product.name }} (Qty. {{ product.quantity }})
+                            </div>
+                        {% endfor %}
+                    </td>
+                    <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
+                    <td>{{ item.unitPrice.extendedAmount }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.subtotal }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="section section-payment">
+        <h2>Payment Details</h2>
+        <table class="grid">
+            <thead><tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Info</th>
+                <th>Exp Date</th>
+                <th>Amount</th>
+            </tr></thead>
+            <tbody>
+            {% for payment in model.payments %}
+                {% if payment.status != "Voided" %}
+                <tr>
+                    <td>{{ payment.auditInfo.createDate|date("m/d/Y") }}</td>
+                    <td>{{ payment.status }}</td>
+                    {% if payment.paymentType == "Check" %}
+                        <td>Check</td>
+                        <td>
+                        {% for interaction in payment.interactions %}
+                            {% if interaction.interactionType == "Captured" %}{% endif %}
+                        {% endfor %}
+                        </td>
+                        <td>N/A</td>
+                    {% endif %}
+                    {% if payment.paymentType == "CreditCard" %}
+                        <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
+                        <td>{{ payment.billingInfo.card.cardNumberPartOrMask }}</td>
+                        <td>{% if payment.billingInfo.card.expireMonth %}{{ payment.billingInfo.card.expireMonth }}/{{ payment.billingInfo.card.expireYear }}{% endif %}</td>
+                    {% endif %}
+                    <td>
+                        {% if payment.amountCollected > 0 %}{{ payment.amountCollected }}
+                        {% else %}{{ payment.amountRequested }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if model.fulfillmentInfo.shippingMethodName || (model.packages && model.packages.length) || (model.pickups && model.pickups.length) %}
+        <div class="section section-fulfillment">
+            <h2>Fulfillment</h2>
+            {% if model.fulfillmentInfo.shippingMethodName %}
+                <table class="grid">
+                <thead><tr><th>Customer Selected Shipping Method</th></tr><thead>
+                <tbody><tr><td>{{ model.fulfillmentInfo.shippingMethodName }}</td></tr></tbody>
+                </table>
+            {% endif %}
+            {% if model.packages && model.packages.length %}
+            <div class="subsection-wrapper">
+                <h3>Shipping</h3>
+                <table class="subsection"><tbody>
+                {% for package in model.packages %}
+                    <tr>
+                        <td colspan="2">Package #{{ forloop.counter }}</td>
+                        <td colspan="2">Status: {{ package.status }}</td>
+                    </tr><tr>
+                        <td>
+                            <div class="label">Ship To</div>
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
+                            {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}, {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
+                            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.email }}</div>
+                        </td><td>
+                            <div class="label">Shipping Method</div>
+                            <div>
+                                {% if package.shippingMethodCode == model.fulfillmentInfo.shippingMethodCode %}{{ model.fulfillmentInfo.shippingMethodName }}
+                                {% else %}{{ package.shippingMethodCode }}
+                                {% endif %}
+                            </div>
+                        </td><td>
+                            <div class="label">Packaging Type</div>
+                            <div>{{ package.packagingType }}</div>
+                        </td><td>
+                            <div class="label">Tracking Number</div>
+                            <div>{{ package.trackingNumber }}</div>
+                        </td>
+                    </tr><tr>
+                        <td colspan="4"><table class="grid">
+                            <thead><tr>
+                                <th>Product Code</th>
+                                <th>Quantity</th>
+                            </tr></thead>
+                            <tbody>
+                            {% for packageItem in package.items %}
+                            <tr>
+                                <td>{{ packageItem.productCode }}</td>
+                                <td>{{ packageItem.quantity }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table></td>
+                    </tr>
+                {% endfor %}
+                </tbody></table>
+            </div>
+            {% endif %}
+            {% if model.pickups && model.pickups.length %}
+            <div class="subsection-wrapper">
+                <h3>In-Store Pickup</h3>
+                {% for pickup in model.pickups %}
+                <table class="subsection"><tbody>
+                    <tr>
+                        <td>Pickup #{{ forloop.counter }}</td>
+                        <td>Status: {{ pickup.status }}</td>
+                    </tr><tr>
+                        <td>
+                            <div class="label">Location</div>
+                            <div>{{ pickup.fulfillmentLocationCode }}</div>
+                        </td><td>
+                            <div class="label">Pickup Date</div>
+                            <div>{{ pickup.fulfillmentDate|date("m/d/Y") }}</div>
+                        </td>
+                    </tr><tr>
+                        <td colspan="4"><table class="grid">
+                            <thead><tr>
+                                <th>Product Code</th>
+                                <th>Quantity</th>
+                            </tr></thead>
+                            <tbody>
+                            {% for pickupItem in items %}
+                            <tr>
+                                <td>{{ pickupItem.productCode }}</td>
+                                <td>{{ pickupItem.quantity }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table></td>
+                    </tr>
+                </tbody></table>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</td></tr></tbody>
+</table>
+
+{% endblock body-content %}

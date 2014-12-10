@@ -158,117 +158,188 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<List<ITreeNavigationNode>> GetFlatList(bool? showContentLists)
         {
             List<ITreeNavigationNode> list = await _gandalf.GetFlatList();
-            var pageTypes = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.PageTypes;
-
-            var emailTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.EmailTemplates;
-            list = list.Concat(pageTypes.Select(x => new SimpleTreeNavigationNode
-                                                     {
-                                                         AllowDrag = false,
-                                                         AllowDrop = false,
-                                                         NodeType = NavigationNodeType.Template,
-                                                         Id = "templates-" + x.Id,
-                                                         OriginalId = x.Id,
-                                                         Expanded = false,
-                                                         Expandable = false,
-                                                         Name = x.Title,
-                                                         Url = "/templates/" + x.Id,
-                                                         ParentId = "_templates",
-                                                         IsHidden = false
-                                                     })).ToList();
-            list.Add(new NavigationTreeNode
-                     {
-                         AllowDrag = false,
-                         AllowDrop = false,
-                         NodeType = NavigationNodeType.Group,
-                         Id = "_templates",
-                         OriginalId = "_templates",
-                         Expanded = false,
-                         Expandable = true,
-                         Index = 99,
-                         Name = "Templates",
-                         ParentId = SUPER_ROOT_NODE_NAME,
-                         IsHidden = false
-                     });
 
 
-            list = list.Concat(emailTemplates.Select(x => new NavigationTreeNode
-                                                          {
-                                                              AllowDrag = false,
-                                                              AllowDrop = false,
-                                                              NodeType = NavigationNodeType.EmailTemplate,
-                                                              Id = "templates-" + x.Id,
-                                                              OriginalId = x.Id,
-                                                              Expanded = true,
-                                                              Expandable = false,
-                                                              Name = x.Title,
-                                                              Url = "/email/preview/" + x.Id,
-                                                              ParentId = "_emailTemplates",
-                                                              IsHidden = false
-                                                          })).ToList();
-            list.Add(new NavigationTreeNode
-                     {
-                         AllowDrag = false,
-                         AllowDrop = false,
-                         NodeType = NavigationNodeType.Group,
-                         Id = "_emailTemplates",
-                         OriginalId = "_templates",
-                         Expanded = false,
-                         Expandable = true,
-                         Index = 100,
-                         Name = "Email Templates",
-                         ParentId = SUPER_ROOT_NODE_NAME,
-                         IsHidden = false
-                     });
+            list.AddRange(GetPageTemplateNodes());
+            list.AddRange(GetEmailTemplateNodes());
+            list.AddRange(GetOrderTemplateNodes());
 
             if (showContentLists.GetValueOrDefault(false))
             {
-
-
-                list.Add(new NavigationTreeNode
-                         {
-                             AllowDrag = false,
-                             AllowDrop = false,
-                             NodeType = NavigationNodeType.ContentList,
-                             Id = "_cmsContentTypes",
-                             OriginalId = "_cmsContentTypes",
-                             Expanded = false,
-                             Expandable = true,
-                             Index = 101,
-                             Name = "Content Lists",
-                             ParentId = SUPER_ROOT_NODE_NAME,
-                             IsHidden = false
-                         });
-
                 var etC = this.Request.Resolve<EntityControllerController>();
                 etC.ControllerContext = this.ControllerContext;
-                var etcRet = (await etC.ReadListsTree(pagingParams: new PagingParamaters(), extFilter: null, entityType: "cms"));
-                list.AddRange(etcRet.Items[0].Items
-                    .Where(x =>
-                    {
-                        var usages = x.MetaData["usages"].ToObject<string[]>();
+                var etcRet = (await etC.ReadListsTree(pagingParams: new PagingParamaters(), extFilter: null, entityType: "cms")).Items[0];
 
-                        return usages != null && usages.Contains("sitebuilder", StringComparer.OrdinalIgnoreCase);
+                var entitiesWithSitebuilderUsage =
+                    from e in etcRet.Items
+                    let usages = e.MetaData["usages"].ToObject<string[]>()
+                    where usages != null
+                    where usages.Contains("sitebuilder", StringComparer.OrdinalIgnoreCase)
+                    select e;
 
-                    }
-                    ).
-                    Select(x => new NavigationTreeNode()
-                                {
-                                    AllowDrag = true,
-                                    AllowDrop = false,
-                                    NodeType = NavigationNodeType.ContentList,
-                                    Id = "_cmsContentTypes" + x.Id,
-                                    MetaData = x.MetaData,
-                                    OriginalId = "_cmsContentTypes",
-                                    Expanded = true,
-                                    Expandable = true,
-                                    Index = 101,
-                                    Name = x.Text,
-                                    ParentId = "_cmsContentTypes",
-                                    IsHidden = false
-                                }));
-                
+                list.AddRange(GetExtensibleContentTypeNodes(entitiesWithSitebuilderUsage));
             }
+            
+
             return list;
+        }
+
+        private IEnumerable<ITreeNavigationNode> GetPageTemplateNodes()
+        {
+            var pageTypes = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.PageTypes;
+
+            // first return each of the page templates
+            foreach (var pt in pageTypes) {
+                yield return new SimpleTreeNavigationNode
+                {
+                    AllowDrag = false,
+                    AllowDrop = false,
+                    NodeType = NavigationNodeType.Template,
+                    Id = "templates-" + pt.Id,
+                    OriginalId = pt.Id,
+                    Expanded = false,
+                    Expandable = false,
+                    Name = pt.Title,
+                    Url = "/templates/" + pt.Id,
+                    ParentId = "_templates",
+                    IsHidden = false
+                };
+            }
+
+            // now return the parent node
+            yield return new NavigationTreeNode
+            {
+                AllowDrag = false,
+                AllowDrop = false,
+                NodeType = NavigationNodeType.Group,
+                Id = "_templates",
+                OriginalId = "_templates",
+                Expanded = false,
+                Expandable = true,
+                Index = 99,
+                Name = "Templates",
+                ParentId = SUPER_ROOT_NODE_NAME,
+                IsHidden = false
+            };
+        }
+
+
+        private IEnumerable<ITreeNavigationNode> GetEmailTemplateNodes()
+        {
+            var emailTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.EmailTemplates;
+
+            // first return each of the email templates
+            foreach (var t in emailTemplates)
+            {
+                yield return new NavigationTreeNode
+                    {
+                        AllowDrag = false,
+                        AllowDrop = false,
+                        NodeType = NavigationNodeType.EmailTemplate,
+                        Id = "templates-" + t.Id,
+                        OriginalId = t.Id,
+                        Expanded = true,
+                        Expandable = false,
+                        Name = t.Title,
+                        Url = "/email/preview/" + t.Id,
+                        ParentId = "_emailTemplates",
+                        IsHidden = false
+                    };
+            }
+
+            // now return the parent node
+            yield return new NavigationTreeNode
+                    {
+                        AllowDrag = false,
+                        AllowDrop = false,
+                        NodeType = NavigationNodeType.Group,
+                        Id = "_emailTemplates",
+                        OriginalId = "_templates",
+                        Expanded = false,
+                        Expandable = true,
+                        Index = 100,
+                        Name = "Email Templates",
+                        ParentId = SUPER_ROOT_NODE_NAME,
+                        IsHidden = false
+                    };
+        }
+
+        private IEnumerable<ITreeNavigationNode> GetExtensibleContentTypeNodes(IEnumerable<Mozu.SiteBuilder.UX.Admin.Api.EntityControllerController.Node> eccns)
+        {
+            // first return each of the extensible type templates
+            foreach (var e in eccns) {
+                yield return new NavigationTreeNode()
+                {
+                    AllowDrag = true,
+                    AllowDrop = false,
+                    NodeType = NavigationNodeType.ContentList,
+                    Id = "_cmsContentTypes" + e.Id,
+                    MetaData = e.MetaData,
+                    OriginalId = "_cmsContentTypes",
+                    Expanded = true,
+                    Expandable = true,
+                    Index = 102,
+                    Name = e.Text,
+                    ParentId = "_cmsContentTypes",
+                    IsHidden = false
+                };
+            }
+
+            // now return the parent node
+            yield return new NavigationTreeNode
+            {
+                AllowDrag = false,
+                AllowDrop = false,
+                NodeType = NavigationNodeType.ContentList,
+                Id = "_cmsContentTypes",
+                OriginalId = "_cmsContentTypes",
+                Expanded = false,
+                Expandable = true,
+                Index = 102,
+                Name = "Content Lists",
+                ParentId = SUPER_ROOT_NODE_NAME,
+                IsHidden = false
+            };
+        }
+
+        private IEnumerable<ITreeNavigationNode> GetOrderTemplateNodes()
+        {
+            var orderTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.OrderTemplates;
+
+            // first return each of the email templates
+            foreach (var ot in orderTemplates)
+            {
+                yield return new NavigationTreeNode
+                {
+                    AllowDrag = false,
+                    AllowDrop = false,
+                    NodeType = NavigationNodeType.OrderTemplate,
+                    Id = "templates-" + ot.Id,
+                    OriginalId = ot.Id,
+                    Expanded = true,
+                    Expandable = false,
+                    Name = ot.Title,
+                    Url = "/admin-order-preview/" + ot.Id,
+                    ParentId = "_orderTemplates",
+                    IsHidden = false
+                };
+            }
+
+            // now return the parent node
+            yield return new NavigationTreeNode
+            {
+                AllowDrag = false,
+                AllowDrop = false,
+                NodeType = NavigationNodeType.Group,
+                Id = "_orderTemplates",
+                OriginalId = "_orderTemplates",
+                Expanded = false,
+                Expandable = true,
+                Index = 101,
+                Name = "Order Templates",
+                ParentId = SUPER_ROOT_NODE_NAME,
+                IsHidden = false
+            };
         }
 
         /// <summary>
