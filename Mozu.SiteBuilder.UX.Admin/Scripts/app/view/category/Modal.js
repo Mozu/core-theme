@@ -29,7 +29,7 @@ Ext.define('Taco.view.category.Modal', {
 
         this.tree = Ext.create('Ext.tree.Panel', {
             rootVisible: false,
-            displayField: 'name',
+            displayField: 'nameAndCode',
             store: this.store,
             selModel: this.selModel,
             selectPath: function (path, field, separator, callback, scope) {

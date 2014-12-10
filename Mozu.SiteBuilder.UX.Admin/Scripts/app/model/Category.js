@@ -87,7 +87,7 @@ Ext.define('Taco.model.Category', {
         {
             name: 'nameAndCode',
             convert: function (v, record) {
-                return record.get('name') + (!record.get('code') ? '' : " (" + record.get('code') + ")");
+                return record.get('name') + (!record.get('categoryCode') ? '' : " (" + record.get('categoryCode') + ")");
             },
             persist: false
         },
