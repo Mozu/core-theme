@@ -167,18 +167,98 @@ Ext.define('Taco.view.Header', {
 
 
     },
+    parentHash: {
+        customers: 'Taco.model.CustomerAccount',
+        catalog: 'Taco.model.Product',
+        orders: 'Taco.model.Order',
+        dicounts: 'Taco.model.Discount',
+        locations: 'Taco.model.Location',
+        storeCredits: 'Taco.model.StoreCredit',
+        none: 'none'
+    },
+    getContextHash: function(type, obj) {
+        
+        var rec = obj.record,
+            hash = {
+                orders: {
+                    orderId: rec.data.id,
+                    orderNumber: rec.data.orderNumber,
+                    extOrderNumber: rec.data.externalId,
+                    customerEmail: rec.customer ? rec.customer.data.emailAddress: undefined,
+                    customerName: rec.customer ? [rec.customer.data.firstName, ' ', rec.customer.data.lastName].join(''): undefined,
+                    customerId: rec.customer ? rec.customer.data.id : undefined
+                },  
+                catalog: {
+                    productCode: rec.data.productCode,
+                    catalogId: rec.id,
+                    productType: rec.productType,
+                    productUsage: rec.data.productUsage
+                },
+                customers: {
+                    customerId: rec.data.id,
+                    customerAccntEmail: rec.data.customerOrOrganization,
+                    shopperAccntEmail: rec.data.contacts ? rec.data.contacts.map( function(n) { return n.email }) : undefined,
+                    customerSegName: rec.data.segments
+                },
+                dicounts: {
+                    discountId: rec.data.id,
+                    couponCode: rec.data.couponCode
+                },
+                locations: {
+                    locationCode: rec.data.code,
+                    locationType: rec.data.locationTypes
+                },
+                storeCredits: {
+                    customerId: rec.data.customerId,
+                    creditCode: rec.data.code
+                }
+            }
+
+        return hash[type];
+    },
+    isEnabled: function(item, rec, correctView) {
+
+        if (item.requiredContext === 'none') return true;
+
+        if (!correctView) return false;
+
+        if (item.code) {
+
+            try {
+                eval("var x = " + item.code);
+                var result = x(rec);
+                if (typeof x === 'function' && result && Boolean(result) ) return result;
+
+                return false;
+            }
+
+            catch (err) {
+                return true;
+            }
+        }
+
+        if (!item.code && correctView) return true;
+
+        return true;
+    },
     buildFlyoutMenuConfig: function (items, menuCfg) {
 
-        var me = this;
+        var me = this,
+            record = Taco.app.viewPort.down('[record]');
+
         Ext.Array.each(items, function (item) {
-            var itemCfg = {
-                text: item.label
-            };
+            var correctView = record && record.record ? record.record.$className === me.parentHash[item.metaData.requiredContext] : false,
+                ctx = correctView & item.metaData.requiredContext !== 'none' ? me.getContextHash(item.metaData.requiredContext, record) : undefined,
+                itemCfg = {
+                    text: item.label,
+                    disabled: !me.isEnabled(item.metaData, record, correctView)
+                };
+                
             menuCfg.items.push(itemCfg);
             if (item.address) {
                 itemCfg.handler = function () {
                     if (item.metaData) {
-                        me.launchExtensionWindow(item);
+                        me.launchExtensionWindow(item, ctx);
                     } else {
                         Taco.core.StateManager.attemptNavigate(item.address);
                     }
@@ -191,23 +271,22 @@ Ext.define('Taco.view.Header', {
                 };
                 me.buildFlyoutMenuConfig(item.items, itemCfg.menu);
             }
-
         });
     },
-    launchExtensionWindow: function (extensionLink, secureForm) {
+    launchExtensionWindow: function (extensionLink, ctx, secureForm) {
+        var me = this,
+            jsonData = {'x-vol-return-url': window.location.href};
 
-        var me = this;
+        if (ctx) jsonData.contextVariables = ctx;
 
         if (extensionLink.metaData.appId) {
 
             if (!secureForm) {
-
+                
                 Ext.Ajax.request({
                     url: '/admin/app/capabilities/createSecureForm?appId=' + extensionLink.metaData.appId,
                     method: 'POST',
-                    jsonData: {
-                        'x-vol-return-url': window.location.href
-                    },
+                    jsonData: jsonData,
                     success: function (response) {
                         // success handling here
                         var json = Ext.decode(response.responseText, true);
@@ -215,7 +294,7 @@ Ext.define('Taco.view.Header', {
                             // service didnt' return data properly
                             return;
                         }
-                        me.launchExtensionWindow(extensionLink, json.items);
+                        me.launchExtensionWindow(extensionLink, ctx, json.items);
                     }
                 });
                 return;
