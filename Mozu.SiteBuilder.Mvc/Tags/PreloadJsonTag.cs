@@ -3,6 +3,7 @@ using System.IO;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
 using NDjango.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -22,13 +23,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [NDjango.Interfaces.Name("preload_json")]
     public class PreloadJsonTag : SimpleTagBase
     {
+        // we want to use the settings the rest of the site uses, but with additional escape handling.
         private static readonly Lazy<JsonSerializer> lazySer =
             new Lazy<JsonSerializer>(
                 () =>
-                    JsonSerializer.Create(new JsonSerializerSettings
+                {
+                    var settings = new CaseInsensitiveJsonSerializerSettings
                     {
                         StringEscapeHandling = StringEscapeHandling.EscapeHtml
-                    }));
+                    };
+                    return JsonSerializer.Create(settings);
+                });
 
         protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
         {
