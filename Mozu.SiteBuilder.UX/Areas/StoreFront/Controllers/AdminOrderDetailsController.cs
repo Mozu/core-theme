@@ -31,8 +31,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
         private ILogger _logger;
-        private Lazy<object> _previewModel;
-        private const string CMS_LIST_NAME = "orderTemplateContent@mozu";
+        private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
+        private const string ORDER_PREVIEW_RESOURCE_NAME = "order.admin.order1";
 
         /// <summary>
         /// Public constructor.
@@ -41,8 +41,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
-            
-            _previewModel = new Lazy<object>(() => TestDataBroker.GetFileContents(EmailController.Topics.OrderEmailTopic).FirstOrDefault() ?? new object());
         }
 
         /// <summary>
@@ -68,6 +66,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (template == null)
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find order details template for the current Theme.");
 
+            var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+            var jo = Newtonsoft.Json.Linq.JObject.FromObject(order, ser);
+
             return await RenderWithContext(template, order);
         }
 
@@ -81,7 +82,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (template == null)
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find order template " + templateid);
 
-            var model = _previewModel.Value;
+            object model = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
 
             return await RenderWithContext(template, model);
         }
@@ -105,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
             return Task.WhenAll(this.ContextInitilaztionTasks).ContinueWith(_ => {
-                var foo = this.PageContext.CmsContext;
+                ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
                 return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, model));
             });
         }

@@ -1,6 +1,6 @@
 ﻿Ext.widget({
     xtype: 'mz-form-entity',
-    title: 'Order Email',
+    title: 'Custom Order Details',
     items: [
         {
             fieldLabel: 'Company name',
@@ -10,7 +10,7 @@
         {
             fieldLabel: 'Physical Address',
             xtype: 'textarea',
-            name: 'address'
+            name: 'companyAddress'
         },
         {
             fieldLabel: 'Website Url',
