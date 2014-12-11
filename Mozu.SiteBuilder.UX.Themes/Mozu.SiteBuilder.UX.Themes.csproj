@@ -2298,7 +2298,7 @@
     </ItemGroup>
   </Target>
   <Target Name="AfterCompile">
-    <CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
+    <!--<CallTarget Targets="BuildThemes" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />-->
   </Target>
   <Import Project="..\packages\OctoPack.2.1.3\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
