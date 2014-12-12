@@ -286,9 +286,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.13.2\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.14.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.13.2\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.14.5\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -2073,6 +2073,7 @@
     <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
     <Content Include="Tests\unit\view\customers\subform\information.t.js" />
     <Content Include="Tests\customunit\view\order\header.t.js" />
+    <Content Include="Tests\unit\view\discount\LimitationsForm.t.js" />
     <Content Include="Tests\unit\view\location\subform\location.t.js" />
     <Content Include="Tests\unit\view\order\modal\AddGiftCard.t.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.t.js" />

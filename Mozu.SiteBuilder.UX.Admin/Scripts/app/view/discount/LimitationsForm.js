@@ -18,14 +18,15 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
     initComponent: function () {
         this.maxDiscountValue = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'maxDiscountAmount',
+            name: 'maximumDiscountValuePerOrder',
             fieldLabel: "Maximum Discount Value",
             forcePrecision: true,
             labelAlign: 'top',
             width: 240,
             currencyCode: Taco.app.context.getCurrent().currencyCode,
             align: 'right',
-            unitAtEnd: false
+            unitAtEnd: false,
+            minValue: 0
         });
 
 
@@ -40,7 +41,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         });
 
         this.maxRedemptionsPerOrder = Ext.create('Ext.form.field.Number', {
-            name: 'MaximumRedemptionPerOrder',
+            name: 'maximumRedemptionsPerOrder',
             hideTrigger: true,
             width: 240,
             fieldLabel: 'Max Redemptions per Order',

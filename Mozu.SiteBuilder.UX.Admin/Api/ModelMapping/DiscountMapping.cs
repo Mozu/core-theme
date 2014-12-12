@@ -105,8 +105,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MaxRedemptionCount, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.MaxRedemptionCount
                     : null))
-                .ForMember(x => x.MaximumRedemptionPerOrder, opt => opt.ResolveUsing(x => (x.Conditions != null)
-                    ? x.Conditions.MaximumRedemptionsPerOrder
+                .ForMember(x => x.MaximumRedemptionsPerOrder, opt => opt.ResolveUsing(dc => (dc.Conditions != null)
+                    ? dc.Conditions.MaximumRedemptionsPerOrder
                     : null))
                 .ForMember(x => x.StartDate, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.StartDate
@@ -161,8 +161,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DoesNotApplyToSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToSalePrice))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content.Name))
                 .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content.FriendlyDescription))
-
-                .ForMember(x => x.MaxDiscountAmount, op => op.Ignore());
+                .ForMember(x => x.MaximumDiscountValuePerOrder, op => op.ResolveUsing(dc => dc.MaximumDiscountValuePerOrder));
             
                 
             // To data contract
@@ -188,7 +187,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                MinimumCategorySubtotalBeforeDiscounts = x.MinimumCategorySubtotalBeforeDiscounts,
                                                                                MinimumOrderAmount = x.MinimumOrderAmount == 0 ? null : x.MinimumOrderAmount,
                                                                                MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount == 0 ? null : x.MinimumLifetimeValueAmount,
-                                                                               MaxRedemptionCount = x.MaxRedemptionCount,                                                                             MaximumRedemptionsPerOrder = x.MaximumRedemptionPerOrder,
+                                                                               MaxRedemptionCount = x.MaxRedemptionCount,                                                                             
+                                                                               MaximumRedemptionsPerOrder = x.MaximumRedemptionsPerOrder,
                                                                                StartDate = x.StartDate,
                                                                                ExpirationDate = x.ExpirationDate,
                                                                                RequiresCoupon = x.RequiresCoupon,

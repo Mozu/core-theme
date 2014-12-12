@@ -35,7 +35,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(dest => dest.Path, opt => opt.Ignore())
                 .ForMember(dest => dest.Code, opt => opt.Ignore())
-                .ForMember(dest => dest.CategoryCode, opt => opt.ResolveUsing(c => c.Id))
                 .ForMember(dest => dest.Parent, opt => opt.Ignore())
                 ;
 
