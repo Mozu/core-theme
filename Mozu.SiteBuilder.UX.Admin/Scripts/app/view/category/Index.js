@@ -58,7 +58,7 @@ Ext.define('Taco.view.category.Index', {
                 text: 'Code',
                 flex: 2,
                 checkboxText:'',
-                dataIndex: 'id',
+                dataIndex: 'categoryCode',
                 renderer: function (value) {
                     return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
                 }
