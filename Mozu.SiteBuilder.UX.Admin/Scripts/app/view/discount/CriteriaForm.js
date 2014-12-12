@@ -200,7 +200,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
-            displayField: 'name',
+            displayField: 'nameAndCode',
             valueField: 'id',
             fieldLabel: 'Exclude products in the following categories',
             style: {
