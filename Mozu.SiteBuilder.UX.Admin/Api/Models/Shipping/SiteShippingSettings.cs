@@ -21,8 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
 
         public List<string> StorePickupLocationTypeCodes { get; set; }
 
-
-
+        public List<string> EnabledStates { get; set; }
 
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

@@ -8,6 +8,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.Reference.Contracts;
 using Mozu.Reference.Contracts.Clients;
@@ -67,6 +68,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
            }
 
-        
+        [HttpGetRoute(UriTemplate = "states2/list")]
+        public async Task<HttpResponseMessage> GetStates2([FromUri] PagingParamaters pagingParams,
+            [FromUri] FilterCollection extFilter, string country = "us")
+        {
+            var response = (await _referenceDataWebApi.GetCountriesWithStates()).ReadAsSync();
+
+            var result = response.Items.Where(c => c.Code.EqualsIgnoreCase(country)).SelectMany(c => c.States).ToList();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(SortStates(result), (int) result.Count()));
+        }
+
+
+        List<State> SortStates(List<State> states)
+        {
+            var result = new List<State>();
+
+            var armedForcesStates = states.Where(s => 
+                !string.IsNullOrWhiteSpace(s.Tags) && 
+                s.Tags.ToUpper().Contains("ISARMEDFORCES")).OrderBy(s => s.Name).ToList();
+            
+            result.AddRange(armedForcesStates);
+
+
+            var otherStates = states.Where(s => 
+                string.IsNullOrWhiteSpace(s.Tags) ||
+                !s.Tags.ToUpper().Contains("ISARMEDFORCES")).OrderBy(s => s.Name).ToList();
+
+            result.AddRange(otherStates);
+            return result;
+        }
     }
 }
