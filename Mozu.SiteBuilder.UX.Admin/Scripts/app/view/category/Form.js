@@ -31,7 +31,7 @@ Ext.define('Taco.view.category.Form', {
             name: 'categoryCode',
             fieldLabel: 'Category Code',
             allowBlank: true,
-            maxLength: 10,
+            maxLength: 30,
             required: false,
             regex: /^[a-z0-9_\-]+$/i,
             regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
