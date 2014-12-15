@@ -28,7 +28,8 @@
             }],
             selModel: {
                 selType: 'checkboxmodel',
-                mode: 'MULTI'
+                mode: 'MULTI',
+                headerWidth: 37
             },
             flex: 1,
             //ui: 'dc-grid-panel',
