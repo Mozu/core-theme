@@ -33,6 +33,7 @@ Ext.define('Taco.view.category.Form', {
             allowBlank: true,
             maxLength: 30,
             required: false,
+            emptyText: 'If left blank, a code will be generated',
             regex: /^[a-z0-9_\-]+$/i,
             regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.'
         }, {
