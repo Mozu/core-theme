@@ -71,9 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 {
                     arguments = TagBase.ArgumentParserStrategy(arguments);
                 }
-                var ctx = walker.context;
-                
-                var res = TagBase.ProcessTag(arguments, ctx);
+                var res = TagBase.ProcessTag(arguments, walker.context);
                 if (arguments.OutputVariableName != null)
                 {
                     if (arguments.OutputValue == null)
@@ -81,15 +79,20 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                         arguments.OutputValue = res.Buffer;
                         res.Buffer = string.Empty;
                     }
-                    ctx = ctx.add(new Tuple<string, object>(arguments.OutputVariableName, arguments.OutputValue));
+                    res.Context = res.Context.add(new Tuple<string, object>(arguments.OutputVariableName, arguments.OutputValue));
                 }
                 
+                //TODO: solidify the output states of the ProcessTag call.  They seem to be one or more of:
+                ///     Wrote to a buffer
+                ///     Render the following template
+                ///     walk me
+                /// and it would be helpful to make that more explicit.
                 var walked = false;
                 if (!string.IsNullOrEmpty(res.Buffer))
                 {
                     res.Buffer = string.IsNullOrEmpty(walker.buffer) ? res.Buffer : walker.buffer + res.Buffer;
-                    walker = new Walker(walker.parent, walker.nodes, res.Buffer, walker.bufferIndex, ctx);
-                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
+                    walker = new Walker(walker.parent, walker.nodes, res.Buffer, walker.bufferIndex, res.Context);
+                    walker = TagBase.Walk(arguments, res.Context, manager, walker, this);
                     walked = true;
                 }
                 if (!string.IsNullOrEmpty(res.Template))
@@ -104,14 +107,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                         throw new RenderingException(ex.Message, Token, null);
                     }
 
-                    walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, ctx);
-                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
+                    walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, res.Context);
+                    walker = TagBase.Walk(arguments, res.Context, manager, walker, this);
                     walked = true;
                     
                 }
                 if (!walked)
                 {
-                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
+                    walker = TagBase.Walk(arguments, res.Context, manager, walker, this);
                 }
                 return walker;
             }
