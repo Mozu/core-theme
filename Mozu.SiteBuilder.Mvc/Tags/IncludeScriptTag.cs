@@ -23,9 +23,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
         {
             if (arguments.Count != 1) throw new InvalidOperationException("includescript takes only 1 arg");
-
-            var scripts = (HashSet<string>) context.HttpContext().Items["scripts"] ??
-                          new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            
+            var scripts = (HashSet<string>)context.HttpContext().Items["scripts"];
+            if (scripts == null)
+            {
+                context.HttpContext().Items["scripts"] = scripts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
             scripts.Add(arguments[0].Value.ToString());
 
             return new ProcessTagResult(context){Buffer = null, Template = null};
