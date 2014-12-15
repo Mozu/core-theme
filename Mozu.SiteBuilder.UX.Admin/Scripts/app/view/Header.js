@@ -188,7 +188,7 @@ Ext.define('Taco.view.Header', {
                     customerName: rec.customer ? [rec.customer.data.firstName, ' ', rec.customer.data.lastName].join(''): undefined,
                     customerId: rec.customer ? rec.customer.data.id : undefined
                 },  
-                catalog: {
+                product: {
                     productCode: rec.data.productCode,
                     catalogId: rec.id,
                     productType: rec.productType,
@@ -218,14 +218,14 @@ Ext.define('Taco.view.Header', {
     },
     isEnabled: function(item, rec, correctView) {
 
-        if (item.requiredContext === 'none') return true;
+        if (item.metaData.requiredContext === 'none' || item.items) return true;
 
         if (!correctView) return false;
 
-        if (item.code) {
+        if (item.metaData.code) {
 
             try {
-                eval("var x = " + item.code);
+                eval("var x = " + item.metaData.code);
                 var result = x(rec);
                 if (typeof x === 'function' && result && Boolean(result) ) return result;
 
@@ -237,7 +237,7 @@ Ext.define('Taco.view.Header', {
             }
         }
 
-        if (!item.code && correctView) return true;
+        if (!item.metaData.code && correctView) return true;
 
         return true;
     },
@@ -251,9 +251,8 @@ Ext.define('Taco.view.Header', {
                 ctx = correctView & item.metaData.requiredContext !== 'none' ? me.getContextHash(item.metaData.requiredContext, record) : undefined,
                 itemCfg = {
                     text: item.label,
-                    disabled: !me.isEnabled(item.metaData, record, correctView)
+                    disabled: !me.isEnabled(item, record, correctView)
                 };
-                
             menuCfg.items.push(itemCfg);
             if (item.address) {
                 itemCfg.handler = function () {
@@ -277,7 +276,9 @@ Ext.define('Taco.view.Header', {
         var me = this,
             jsonData = {'x-vol-return-url': window.location.href};
 
-        if (ctx) jsonData.contextVariables = ctx;
+        if (ctx) jsonData = ctx;
+
+        jsonData['x-vol-return-url'] = window.location.href;
 
         if (extensionLink.metaData.appId) {
 
