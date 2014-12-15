@@ -59,6 +59,20 @@ namespace Mozu.SiteBuilder.UX.Controllers
             return res;
         }
 
+        public async Task<List<Reference.Contracts.CountryWithStates>> GetBillingStates()
+        {
+            var refClient = this.Request.Resolve<Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient>().CloneWithoutUserClaims();
 
+            var result = (await refClient.GetCountriesWithStates()).ReadAsSync().Items;
+            return result;
+        }
+        
+        public async Task<List<Reference.Contracts.CountryWithStates>> GetShippingStates()
+        {
+            var shippingWebApiClient = this.Request.Resolve<IShippingWebApiClient>();
+
+            var result = (await shippingWebApiClient.GetShippableStates()).ReadAsSync();
+            return result;
+        }
     }
 }

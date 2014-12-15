@@ -163,10 +163,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
             Customer.Contracts.Credit.CreditCollection credits = null;
+
+
             var shipTask = GetShippableCountries();
             var billTask = GetBillingCountries();
+            var shipStateTask = GetShippingStates();
+            var billStateTask = GetBillingStates();
+            
             var orderTask = _orderWebApiClient.GetOrder(id);
-            await Task.WhenAll(shipTask, billTask, orderTask);
+            await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask);
 
             try
             {
@@ -183,6 +188,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
            // dynamic dOrder = jOrder;
             this.PageContext.BillingCountries = billTask.Result;
             this.PageContext.ShippingCountries = shipTask.Result;
+
+            this.PageContext.BillableStates = billStateTask.Result;
+            this.PageContext.ShippingStates = shipStateTask.Result;
 
 
             if (!this.PageContext.User.IsAnonymous)
