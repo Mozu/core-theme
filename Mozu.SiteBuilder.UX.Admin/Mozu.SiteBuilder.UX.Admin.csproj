@@ -310,17 +310,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.14.2\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
-    </Reference>
     <!--<Reference Include="PhoneNumbers">
       <HintPath>..\packages\libphonenumber-csharp.4.10.0.62\lib\PhoneNumbers.dll</HintPath>
     </Reference>-->
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.4\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
