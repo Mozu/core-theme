@@ -82,14 +82,14 @@
         <div class="mz-l-formfieldgroup-cell">
             <select data-mz-value="{{ addresscontext }}address.stateOrProvince">
                 <option></option>
-				
-                {% if states && states[code="US"] && states[code="US"].states.length > 0 %}
-                {% for state in states[code="US"].states %}
-                    <option {% if model.address.stateOrProvince == state.code %}selected="selected"{% endif %} value="{{ state.code }}">{{ state.name }}</option>
+
+                {% if states && states.length > 0 %}
+                {% for state in states %}
+                    <option {% if model.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
                 {% endfor %}
                 {% else %}
-                {% for state in pageContext.[code="US"].states %}
-                    <option {% if model.address.stateOrProvince == state.code %}selected="selected"{% endif %} value="{{ state.code }}">{{ state.name }}</option>
+                {% for state in pageContext.billingStates %}
+                    <option {% if model.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
                 {% endfor %}
                 {% endif %}
 

@@ -14,6 +14,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Core.Lifetime;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Extensions;
 using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -59,20 +60,29 @@ namespace Mozu.SiteBuilder.UX.Controllers
             return res;
         }
 
-        public async Task<List<Reference.Contracts.CountryWithStates>> GetBillingStates()
+        public async Task<List<KeyValuePair<string, string>>> GetUSBillingStates()
         {
             var refClient = this.Request.Resolve<Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient>().CloneWithoutUserClaims();
 
-            var result = (await refClient.GetCountriesWithStates()).ReadAsSync().Items;
-            return result;
+            var response = (await refClient.GetCountriesWithStates()).ReadAsSync();
+            var states = response.Items.Where(c => c.Code.EqualsIgnoreCase("US"))
+                .SelectMany(c => c.States)
+                .OrderBy(s => s.Name)
+                .Select(s => new KeyValuePair<string, string>(s.Code, s.Name)).ToList();
+
+            return states;
         }
-        
-        public async Task<List<Reference.Contracts.CountryWithStates>> GetShippingStates()
+
+        public async Task<List<KeyValuePair<string, string>>> GetUSShippingStates()
         {
             var shippingWebApiClient = this.Request.Resolve<IShippingWebApiClient>();
 
             var result = (await shippingWebApiClient.GetShippableStates()).ReadAsSync();
-            return result;
+            var states = result.Where(c => c.Code.EqualsIgnoreCase("US"))
+                .SelectMany(c => c.States)
+                .OrderBy(s => s.Name)
+                .Select(s => new KeyValuePair<string, string>(s.Code, s.Name)).ToList();
+            return states;
         }
     }
 }

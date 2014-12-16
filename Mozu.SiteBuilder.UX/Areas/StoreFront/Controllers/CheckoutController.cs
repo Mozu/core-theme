@@ -167,8 +167,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var shipTask = GetShippableCountries();
             var billTask = GetBillingCountries();
-            var shipStateTask = GetShippingStates();
-            var billStateTask = GetBillingStates();
+            var shipStateTask = GetUSShippingStates();
+            var billStateTask = GetUSBillingStates();
             
             var orderTask = _orderWebApiClient.GetOrder(id);
             await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask);
