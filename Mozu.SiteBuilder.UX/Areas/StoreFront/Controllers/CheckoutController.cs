@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.BillingCountries = billTask.Result;
             this.PageContext.ShippingCountries = shipTask.Result;
 
-            this.PageContext.BillableStates = billStateTask.Result;
+            this.PageContext.BillingStates = billStateTask.Result;
             this.PageContext.ShippingStates = shipStateTask.Result;
 
 

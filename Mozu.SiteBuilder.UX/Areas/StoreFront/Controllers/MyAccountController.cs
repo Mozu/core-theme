@@ -113,7 +113,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.ShippingCountries = shipTask.Result;
             this.PageContext.BillingCountries  = billTask.Result;
 
-            this.PageContext.BillableStates = billStateTask.Result;
+            this.PageContext.BillingStates = billStateTask.Result;
             this.PageContext.ShippingStates = shipStateTask.Result;
             
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;

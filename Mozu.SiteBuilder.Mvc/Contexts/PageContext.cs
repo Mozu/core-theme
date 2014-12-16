@@ -364,7 +364,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string SecureHost { get; set; }
 
-        public List<Reference.Contracts.CountryWithStates> BillableStates { get; set; }
+        public List<Reference.Contracts.CountryWithStates> BillingStates { get; set; }
         public List<Reference.Contracts.CountryWithStates> ShippingStates { get; set; }
     }
 }
