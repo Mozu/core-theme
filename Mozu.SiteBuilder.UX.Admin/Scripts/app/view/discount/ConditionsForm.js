@@ -325,7 +325,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
-            displayField: 'name',
+            displayField: 'nameAndCode',
             valueField: 'id',
             hideLabel: true,
 

@@ -85,6 +85,13 @@ Ext.define('Taco.model.Category', {
             "useNull": true
         },
         {
+            name: 'nameAndCode',
+            convert: function (v, record) {
+                return record.get('name') + (!record.get('categoryCode') ? '' : " (" + record.get('categoryCode') + ")");
+            },
+            persist: false
+        },
+        {
             "name": "description",
             "type": "string",
             "useNull": true
@@ -113,6 +120,11 @@ Ext.define('Taco.model.Category', {
             "name": "metaKeywords",
             "type": "string",
             "useNull": true
+        },
+        {
+            name: "categoryCode",
+            type: "string",
+            useNull: true
         },
         {
             name: 'categoryId',

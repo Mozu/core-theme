@@ -74,12 +74,11 @@ Ext.define('Taco.model.Discount', {
             type: 'auto',
             defaultValue: []
         },
-    {
-        name:'maximumQuantityPerRedemption',
-        type:'auto',
-        defaultValue:null
-    },
-
+        {
+          name:'maximumQuantityPerRedemption',
+          type:'auto',
+          defaultValue:null
+        },
         {
             name: 'shippingMethods',
             type: 'auto',
@@ -107,7 +106,16 @@ Ext.define('Taco.model.Discount', {
             defaultValue: []
         },
         {
+            name: 'maximumDiscountValuePerOrder',
+            type: 'float',
+            useNull: true
+        },
+        {
             name: 'maxRedemptionCount',
+            type: 'int',
+            useNull: true
+        },{
+            name: 'maximumRedemptionsPerOrder',
             type: 'int',
             useNull: true
         },

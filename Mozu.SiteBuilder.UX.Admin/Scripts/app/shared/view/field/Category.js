@@ -10,7 +10,7 @@ Ext.define('Taco.shared.view.field.Category', {
     ],
 
     fieldLabel: 'Select Categories',
-    displayField: 'name',
+    displayField: 'nameAndCode',
     valueField: 'id',
     buttonLabel: 'Add',
     

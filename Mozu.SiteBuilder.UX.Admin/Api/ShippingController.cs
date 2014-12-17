@@ -78,10 +78,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return list2;
         }
 
- 
 
 
-        public ShippingController(ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient, IApiContext apiCtx, Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient, ITargetRulesWebApiClient targetRulesWebApiClient, IShippingProfileWebApiClient shippingProfileWebApiClient, IShippingAdminProvisioningWebApiClient shippingAdminProvisioningWebApiClient)
+
+        public ShippingController(IApiContext apiCtx, ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, 
+            ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient, 
+             Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient, 
+            ITargetRulesWebApiClient targetRulesWebApiClient, 
+            IShippingProfileWebApiClient shippingProfileWebApiClient, 
+            IShippingAdminProvisioningWebApiClient shippingAdminProvisioningWebApiClient
+            )
         {
             _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
           
@@ -125,6 +131,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             settings.StorePickupLocationTypeCodes = locRes.Items.Where(x => x.LocationUsageTypeCode == "SP").First().LocationTypeCodes;
             settings.EnableInStorePickup = settings.StorePickupLocationTypeCodes != null && settings.StorePickupLocationTypeCodes.Count > 0;
+
+            var profileCode = await GetProfileCode();
+            var enabledStates = (await _shippingProfileWebApiClient.GetStates(profileCode)).ReadAsSync();
+            settings.EnabledStates = enabledStates.SelectMany(s => s.States).Select(s => s.Code).ToList();
 
             return Single2<SiteShippingSettings>(settings);
         }
@@ -182,13 +192,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw (res.ReadException());
             }
 
+            
 
+            var profileCode = await GetProfileCode();
+            var statesResponse = await _shippingProfileWebApiClient.UpdateStates(profileCode,
+                ToShippingStates(settings.EnabledStates));
 
-
-
-
+            if (statesResponse.HasException)
+            {
+                throw (res.ReadException());
+            }
 
             return await GetSettings();
+
+        }
+
+        // handling only US for now.. the current UI design will not scale for other countries anyway ..
+        // will address it when the UI can handle other countries.
+        List<ShippingStates> ToShippingStates(List<string> stateCodes)
+        {
+
+            return new List<ShippingStates>
+            {
+                new ShippingStates
+                {
+                    CountryCode = "US",
+                    States =
+                        new HashSet<State>(
+                            stateCodes.Select(sc => new State{ Code = sc, Name = sc}))
+                }
+            };
 
         }
 

@@ -17,24 +17,50 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     title: 'Discount Limitations',
 
     initComponent: function () {
-        //this.maximumValueInput = Ext.create('Taco.core.ux.form.CurrencyField', {
-        //    name: 'maximumValue',
-        //    fieldLabel: "Maximum Value",
-        //    forcePrecision: true,
-        //    labelAlign: 'top',
-        //    width: 600,
-        //    currencyCode: Taco.app.context.getCurrent().currencyCode,
-        //    align: 'right',
-        //    unitAtEnd: false
-        //});
+        this.maxDiscountValue = Ext.create('Taco.core.ux.form.CurrencyField', {
+            name: 'maximumDiscountValuePerOrder',
+            itemId: 'maxDiscountValuePerOrder',
+            fieldLabel: "Maximum Discount Value",
+            forcePrecision: true,
+            labelAlign: 'top',
+            width: 240,
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
+            align: 'right',
+            unitAtEnd: false,
+            minValue: 0
+        });
+
 
         this.redemptionLimits = Ext.create('Ext.form.field.Number', {
             name: 'maxRedemptionCount',
             hideTrigger: true,
-            width: 600,
+            width: 240,
+            margin: "0px 20px 0px 0px",
             fieldLabel: 'Total Number of Redemptions: ' + (this.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
             emptyText: 'unlimited',
             minValue: 0
+        });
+
+        this.maxRedemptionsPerOrder = Ext.create('Ext.form.field.Number', {
+            name: 'maximumRedemptionsPerOrder',
+            hideTrigger: true,
+            width: 240,
+            fieldLabel: 'Max Redemptions per Order',
+            //emptyText: 'unlimited',
+            minValue: 0
+        });
+
+        this.redemptionContainer = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: 500,
+            defaults: {
+                labelAlign: 'top',
+                labelSeparator: ''
+            },
+            items: [this.redemptionLimits, this.maxRedemptionsPerOrder]
         });
 
         this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
@@ -94,8 +120,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 html: 'Discount limitations specify the limit a coupon/discount can be redeemed.',
                 margin: '15 0 0 0'
             },
-            this.maximumValueInput,
-            this.redemptionLimits,
+            this.maxDiscountValue,
+            this.redemptionContainer,            
             this.requiresCouponInput,
             this.couponCodeBox,
             this.oneTimeUsePerShopper

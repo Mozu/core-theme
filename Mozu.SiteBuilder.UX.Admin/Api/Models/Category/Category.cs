@@ -9,8 +9,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public int? Id { get; set; }
         string _catCode;
         
-        [JsonProperty(PropertyName = "code")]
-        public string CategoryCode
+        public string Code
         {
             get{ return string.IsNullOrEmpty ( _catCode )?  System.Guid.NewGuid ().ToString () : _catCode ;}
             set{ _catCode = value ;}
@@ -19,6 +18,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public string Slug { get; set; }
 
         public int? CatalogId { get; set; }
+
+        public string CategoryCode { get; set; }
 
         //public string CategoryPath { get; set; }
 

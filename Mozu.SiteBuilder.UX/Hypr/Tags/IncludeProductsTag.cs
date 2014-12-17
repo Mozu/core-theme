@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetHierDepth = null;
             var categoryId = pageContext.CategoryId;
             var qurey = "*:*";
-
+            string[] productCodesFilters = null;
             if (query != null)
             {
                 searchQuery.Append(query);
@@ -100,10 +100,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 if (productCodes is string)
                 {
-                    productCodes = ((string)productCodes).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    productCodes = ((string) productCodes).Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                }
+                else
+                {
+                    productCodes = (productCodes ?? Enumerable.Empty<object>()).Cast<object>().Where(x => x != null).Select(x => x.ToString());
                 }
 
-                var productCodesFilters = (productCodes ?? Enumerable.Empty<object>()).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
+                productCodesFilters = productCodes.Cast<string>().Select(x => string.Format("productCode eq {0}", x)).ToArray();
 
                 if (productCodesFilters.Length == 0)
                 {
@@ -184,6 +188,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         //var ser = JsonSerializer.CreateDefault();
 
                         pc = ser.Deserialize<ProductSearchResult>(rdr);
+                        
+                        if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null )
+                        {
+                            pc.Items = productCodes.Cast<string>().Select(x => pc.Items.FirstOrDefault(y => y.ProductCode.Equals(x, StringComparison.OrdinalIgnoreCase)))
+                                .Where(x => x != null).ToList();
+                        }
                     }
                 }
                 cache.Set(cacheKey, pc);
@@ -200,8 +210,20 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
 
         }
+       
+        
+        class ProductSkuCompare  : IComparer<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product> 
+        {
 
-
+            public ProductSkuCompare(string[] productCodes)
+            {
+                
+            }
+            public int Compare(Product x, Product y)
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         //public string ProductListing( HttpRequestBase request , ISiteBuilderContext siteBuilderContext , int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, IEnumerable productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
         //{

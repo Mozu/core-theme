@@ -54,6 +54,15 @@ Ext.define('Taco.view.category.Index', {
                     return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
                 }
             }, {
+                xtype: 'treecolumn',
+                text: 'Code',
+                flex: 2,
+                checkboxText:'',
+                dataIndex: 'categoryCode',
+                renderer: function (value) {
+                    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+                }
+            }, {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 menuItems: [{

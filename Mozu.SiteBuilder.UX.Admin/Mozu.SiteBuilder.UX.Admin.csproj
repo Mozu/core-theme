@@ -286,9 +286,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.13.2\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.14.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.13.2\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.14.5\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -298,29 +298,29 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.13.1\lib\net451\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reference.Contracts">
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.13.2\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.Reference.Contracts, Version=1.14.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.14.3\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reporting.Contracts, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Reporting.Contracts.1.11.0.1\lib\Mozu.Reporting.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.13.5\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
-    </Reference>
     <!--<Reference Include="PhoneNumbers">
       <HintPath>..\packages\libphonenumber-csharp.4.10.0.62\lib\PhoneNumbers.dll</HintPath>
     </Reference>-->
+    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.14.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.14.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.4\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
@@ -748,6 +748,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\State.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\Card.js" />
     <Content Include="Scripts\app\model\EntityList.js" />
@@ -825,6 +826,7 @@
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
+    <Content Include="Scripts\app\store\States2.js" />
     <Content Include="Scripts\app\store\Currencies.js" />
     <Content Include="Scripts\app\store\CustomerGrid.js" />
     <Content Include="Scripts\app\store\DocumentTypes.js" />
@@ -891,6 +893,7 @@
     <Content Include="Scripts\app\view\order\modal\BulkActionMessage.js" />
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
+    <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
     <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
     <Content Include="Scripts\app\view\entityManager\Index.js" />
@@ -2073,6 +2076,7 @@
     <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
     <Content Include="Tests\unit\view\customers\subform\information.t.js" />
     <Content Include="Tests\customunit\view\order\header.t.js" />
+    <Content Include="Tests\unit\view\discount\LimitationsForm.t.js" />
     <Content Include="Tests\unit\view\location\subform\location.t.js" />
     <Content Include="Tests\unit\view\order\modal\AddGiftCard.t.js" />
     <Content Include="Tests\unit\view\order\subform\Payment.t.js" />

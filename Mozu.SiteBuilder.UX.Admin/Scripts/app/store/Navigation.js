@@ -332,7 +332,7 @@ Ext.define('Taco.store.Navigation', {
                             },
                             {
                                 "id": "shipping1",
-                                "label": "Carriers",
+                                "label": "Carriers and Settings",
                                 "address": "shipping/carriers"
                             },
                             {
