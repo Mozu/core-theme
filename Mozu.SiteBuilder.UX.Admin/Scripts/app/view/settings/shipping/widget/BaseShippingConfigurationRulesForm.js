@@ -14,6 +14,9 @@
     createRoute: 'shipping/shippingMethodCreate',
     editRoute: 'shipping/shippingMethodEdit',
 
+    
+    stateId: null,
+
     initComponent: function () {
         var me = this,
             gridCfg;
@@ -55,12 +58,14 @@
             columns: [
                 {
                     width: 16,
+                    stateful:false,
                     xtype: 'draghandlecolumn',
                     allowNavigation: false,
 
                 },
                 {
                     dataIndex: 'sequence',
+                    stateId:"sequence",
                     text: 'Sequence',
                     width: 100,
                     allowNavigation: false,
@@ -68,6 +73,7 @@
 
                 }, {
                     dataIndex: 'shippingTargetRuleCodes',
+                    stateId: "shippingTargetRuleCodes",
                     text: 'Zones',
                     flex: 1,
                     renderer: function (value, metaData, record) {
@@ -81,6 +87,7 @@
                 {
                     dataIndex: 'productTargetRuleCodes',
                     text: 'Rules',
+                    stateId: "productTargetRuleCodes",
                     flex: 1,
                     renderer: function (value, metaData, record) {
                         if (value && value.length) {
@@ -93,6 +100,7 @@
                 {
                     dataIndex: 'serviceTypes',
                     text: 'Methods',
+                    stateId: "serviceTypes",
                     flex: 1,
                     renderer: function (value, metaData, record) {
                         value = record.raw.serviceTypes;
@@ -140,6 +148,7 @@
             gridCfg.columns.splice(gridCfg.columns.length - 2, 0, {
                 dataIndex: 'value',
                 text: 'Fees',
+                stateId: "fees",
                 flex: 1,
                 renderer: function (value, metaData, record) {
                     var valueType = record.get('valueType');
@@ -150,6 +159,15 @@
                 }
             });
         }
+
+
+        if (me.stateId && Ext.isString(me.stateId)) {
+            Ext.apply(gridCfg, {
+                stateful:true,
+                stateId:me.stateId
+            })
+        }
+
         me.items = [
             gridCfg
         ];

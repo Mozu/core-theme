@@ -12,17 +12,20 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
                 }
             },
             store: record,
+            stateful: true,
+            stateId:"statefulOrderHistoryGrid",
             columns: [
-                { text: 'Order Id', dataIndex: 'orderNumber', flex: 1 },
-                { xtype: 'datecolumn', text: 'Order Date', dataIndex: 'createDate', flex: 1 },
+                { text: 'Order Id', stateId: "orderId",  dataIndex: 'orderNumber', flex: 1 },
+                { xtype: 'datecolumn', stateId: "orderDate", text: 'Order Date', dataIndex: 'createDate', flex: 1 },
                 {
                     text: 'Order Amount', dataIndex: 'total',
+                    stateId: "orderAmount",
                     renderer: function (value, metaData, record) {
                         return record.formatCurrency(value);
                     },
                     flex: 1
                 },
-                { text: 'Status', dataIndex: 'orderStatus', flex: 1 }
+                { text: 'Status', stateId: "orderStatus", dataIndex: 'orderStatus', flex: 1 }
             ]
 
         }];

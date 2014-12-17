@@ -126,14 +126,18 @@ Ext.define('Taco.view.account.Users', {
             width: 942,
             //hiddenColumns: ['name','siteName'],
             enableColumnHide: true,
+            stateful:true,
+            stateId:"statefulUsersGrid",
             columns: [{
                 xtype: 'gridcolumn',
                 dataIndex: 'email',
+                stateId: "email",
                 text: 'Email',
                 width: 400
                 }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'roleIds',
+                stateId: "roles",
                 text: 'Roles',
                 width: 200,
                 renderer: function (value, metaData, record) {
@@ -143,6 +147,7 @@ Ext.define('Taco.view.account.Users', {
                 }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'activity',
+                stateId: "activity",
                 text: 'Activity',
                 width: 300,
                 renderer: function (value) {

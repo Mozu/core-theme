@@ -80,10 +80,15 @@ Ext.define('Taco.view.locationType.Index', {
 
     gridPanelConf: {
         selModel: {},
-      
+        enableColumnHide: false,
+        sortableColumns:false,
+        stateful: true,
+        stateId: 'statefulLocationTypesGrid',
         columns: [{
             dataIndex: 'code',
+            stateId: 'code',            
             text: 'Code',
+            menuDisabled: true,
             editor: {
                 emptyText: "Code",
                 msgTarget: "qtip",
@@ -96,6 +101,8 @@ Ext.define('Taco.view.locationType.Index', {
             width: 200
         }, {
             dataIndex: 'name',
+            stateId: 'name',
+            menuDisabled: true,            
             editor: {
                 emptyText: "Name",
                 msgTarget: "qtip",

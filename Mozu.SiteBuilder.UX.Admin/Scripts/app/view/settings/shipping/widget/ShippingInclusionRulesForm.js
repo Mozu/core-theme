@@ -7,6 +7,8 @@
 
     createRoute: 'shipping/shippingMethodCreate',
     editRoute: 'shipping/shippingMethodEdit',
+    
+    stateId: "statefulShippingMethodsConfigurationGrid",
     getStore: function () {
         return Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingInclusionRules');
     }

@@ -36,10 +36,12 @@ Ext.define('Taco.view.redirects.Index', {
 
     gridPanelConf: {
         selModel: {},
-
+        stateful: true,
+        stateId: 'statefulRedirectsGrid',
         columns: [{
                 dataIndex: 's',
                 text: 'Source',
+                stateId: 'source',
                 editor: {
                     emptyText: "Source",
                     msgTarget: "qtip",
@@ -52,6 +54,7 @@ Ext.define('Taco.view.redirects.Index', {
                 width: 200
             }, {
                 dataIndex: 'd',
+                stateId: 'destination',
                 editor: {
                     emptyText: "Destination",
                     msgTarget: "qtip",
@@ -63,6 +66,7 @@ Ext.define('Taco.view.redirects.Index', {
             },
             {
                 dataIndex: 'rw',
+                stateId: 'rewrite',
                 editor: {
                     xtype: 'checkboxfield'
                 },

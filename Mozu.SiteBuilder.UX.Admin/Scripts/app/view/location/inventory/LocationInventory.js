@@ -24,7 +24,9 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
     
-    enableSearch:false,
+    enableSearch: false,
+
+    sortableColumns:false,
     
     modelName: 'Taco.model.LocationInventory',
     
@@ -35,6 +37,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     
     enableAutoSelect: false,
 
+    stateful: true,
+    stateId: 'statefulLocationInventoryGrid',
 
     secondToolbarItems: [
         {
@@ -46,7 +50,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
             xtype: "taco-Locationpickerfield",
             emptyText: "Choose a location",
             //width: 300,
-            flex:1,
+            flex: 1,
+            minWidth:150,
             listeners: {
                 select: {
                     fn: function (combo, records, eOpts) {
@@ -81,11 +86,12 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
     initColumnConfig: function () {
         var me = this;
-
+        
         this.columns = [
             {
                 width: 100,
                 text: "Available",
+                stateId: 'stockAvailable',
                 dataIndex: 'stockAvailable'
                 /*
             ,editor: {
@@ -102,6 +108,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                 width: 100,
                 text: 'On Reserve',
                 dataIndex: 'stockReserved',
+                stateId: 'stockReserved',
                 renderer: function (value) {
                     return value || 0;
                 }
@@ -119,7 +126,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
             }, {
                 dataIndex: 'stockOnHand',
                 width: 100,
-                itemId:"stockOnHand",
+                itemId: "stockOnHand",
+                stateId: 'stockOnHand',
                 text: 'On Hand',
                 editor: {
                     emptyText: "On Hand",
@@ -135,6 +143,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 menuDisabled: true,
+                stateId: 'actionsColumn',
                 sortable: false,
                 menuItems: [
                     {
@@ -183,6 +192,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     dataIndex: 'productCode',
                     width: 100,
                     hidden: !me.showProductColumns,
+                    stateId: 'productCode',
                     text: 'Product Code',
                     editor: {
                         // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
@@ -192,6 +202,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                 }, {
                     dataIndex: 'productName',
                     flex: 1,
+                    stateId: 'productName',
                     hidden: !me.showProductColumns,
                     text: 'Product Name',
                     // product selector
@@ -237,22 +248,24 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
             this.columns.unshift(
                 {
                     dataIndex: 'locationCode',
-                    width: 100,
+                    width: 150,
                     text: 'location Code',
+                    stateId: 'locationCode',
                     editor: {
                         // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
                         xtype: "displayfield",
                         allowBlank: false
                     }
                 }, {
-                    dataIndex: 'locationName',
-                    flex: 1,
+                    dataIndex: 'locationName',                    
+                    flex:1,
                     text: 'Location Name',
+                    stateId: 'locationName',
                     editor: {
                         xtype: "taco-locationpickerfield",
-                        editableOnCreateOnly: true,
+                        editableOnCreateOnly: false,
                         autoSelectFirstRecord:false,
-                        msgTarget: "qtip",
+                        msgTarget: "qtip",                        
                         allowBlank: true,
                         onEditorShow: function (field, editor, context) {
                             // need to add the locationCode to the locationInventory;

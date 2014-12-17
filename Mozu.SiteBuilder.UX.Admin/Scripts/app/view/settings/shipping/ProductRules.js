@@ -16,6 +16,9 @@ Ext.define('Taco.view.settings.shipping.ProductRules', {
     createRoute: 'shipping/productrulescreate',
     editorRoute: 'shipping/productrulesedit',
 
+    stateful: true,
+    stateId: "statefulProductRulesGrid",
+
     store: { type: 'Taco.store.ProductRules' }
 
 });

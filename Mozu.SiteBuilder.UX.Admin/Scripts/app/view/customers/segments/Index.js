@@ -31,14 +31,17 @@ Ext.define('Taco.view.customers.Segments.Index', {
        
 
         this.gridPanelConf = {
+            stateful: true,
+            stateId: 'statefulCustomerSegmentsGrid',
             columns: [ {
                 dataIndex: 'id',
+                stateId: 'id',
                 text: 'Id',
                 width: 130
             },{
                 dataIndex: 'code',
+                stateId: 'code',
                 text: 'Code',
-               
                 editor: {
                     // defaults to textfield if no xtype is supplied
                     emptyText: "Code",
@@ -54,7 +57,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
             }, {
                 dataIndex: 'name',
                 text: 'Name',
-               
+                stateId: 'name',
                 editor: {
                     // defaults to textfield if no xtype is supplied
                     emptyText: "Name",
@@ -65,6 +68,7 @@ Ext.define('Taco.view.customers.Segments.Index', {
                 width: 200
             }, {
                 dataIndex: 'description',
+                stateId: 'description',
                 text: 'Description',
                 flex:1,
                 editor: {

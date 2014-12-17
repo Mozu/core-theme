@@ -69,6 +69,9 @@ Ext.define('Taco.view.provisioning.Index', {
                     autoHeight: true,
                     store: this.catalogTreeStore,
                     rootVisible: false,
+                    stateful: true,
+                    stateId: "statefulCatalogStructureGrid",
+
                     dockedItems: [
                         {
                             xtype: 'toolbar',
@@ -89,10 +92,10 @@ Ext.define('Taco.view.provisioning.Index', {
                         }
                     ],
                     columns: [
-                        { xtype: 'treecolumn', text: 'Name', dataIndex: 'name', flex: 1 },
-                        { text: 'Currency', dataIndex: 'defaultCurrencyCode' },
-                        { text: 'Locale', dataIndex: 'defaultLocaleCode' },
-                        { text: 'Status', dataIndex: 'status' },
+                        { xtype: 'treecolumn', stateId:"name", text: 'Name', dataIndex: 'name', flex: 1 },
+                        { text: 'Currency', stateId: "currency", dataIndex: 'defaultCurrencyCode' },
+                        { text: 'Locale', stateId: "locate", dataIndex: 'defaultLocaleCode' },
+                        { text: 'Status', stateId: "status", dataIndex: 'status' },
                         {
                             xtype: 'taco.menucolumn',
                             text: 'Actions',
@@ -123,6 +126,8 @@ Ext.define('Taco.view.provisioning.Index', {
                     flex: 1,
                     margin: '0 0 0 10',
                     autoHeight: true,
+                    stateId: "statefulSitesGrid",
+                    stateful:true,
                     dockedItems: [
                         {
                             xtype: 'toolbar',
@@ -144,10 +149,10 @@ Ext.define('Taco.view.provisioning.Index', {
                     ],
                     store: this.siteStore,
                     columns: [
-                        { text: 'Name', dataIndex: 'name', flex: 1 },
-                        { text: 'Currency', dataIndex: 'defaultCurrencyCode' },
-                        { text: 'Locale', dataIndex: 'defaultLocaleCode' },
-                        { text: 'Status', dataIndex: 'status' },
+                        { text: 'Name', stateId:"name",  dataIndex: 'name', flex: 1 },
+                        { text: 'Currency', stateId: "defaultCurrencyCode", dataIndex: 'defaultCurrencyCode' },
+                        { text: 'Locale', stateId: "defaultLocaleCode", dataIndex: 'defaultLocaleCode' },
+                        { text: 'Status', stateId: "status", dataIndex: 'status' },
                         {
                             xtype: 'taco.menucolumn',
                             text: 'Actions',

@@ -21,35 +21,43 @@ Ext.define('Taco.view.attribute.Index', {
     },
 
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulProductAttributeGrid',
         columns: [{
             dataIndex: 'adminName',
+            stateId: 'adminName',
             text: 'Administration Name',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'name',
+            stateId: 'name',
             text: 'Name',
             flex: 1,
             minWidth: 120
 
         }, {
             dataIndex: 'id',
+            stateId: 'id',
             hidden: true,
             text: 'ID',
             minWidth: 200
         }, {
             dataIndex: 'code',
+            stateId: 'code',
             hidden: true,
             
             text: 'Code',
             minWidth: 200
         }, {
             dataIndex: 'inputType',
+            stateId: 'inputType',
             sortable: false,
             text: 'Input Type',
             width: 130
         }, {
             text: 'Type',
+            stateId: 'type',
             width: 200,
             sortable: false,
             renderer :function (value, metaData, record) {

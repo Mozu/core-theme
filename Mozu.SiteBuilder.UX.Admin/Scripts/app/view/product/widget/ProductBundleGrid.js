@@ -76,8 +76,9 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             {
                 dataIndex: "quantity",
                 text: "Quantity",
+                stateId:"quantity",
                 sortable: false,
-                resizable: false,
+                resizable: true,
                 menuDisabled: true,
                 editor: {
                     // defaults to textfield if no xtype is supplied
@@ -97,34 +98,38 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
             {
                 dataIndex: 'productCode',
                 sortable: false,
-                resizable: false,
+                stateId: "productCode",
+                resizable: true,
                 menuDisabled: true,
                 text: 'Code',
                 width: 100
             }, {
                 dataIndex: 'productName',
                 sortable: false,
-                resizable: false,
+                stateId: "productName",
+                resizable: true,
                 menuDisabled: true,
                 text: 'Name',
                 flex: 1
             }, {
                 dataIndex: 'price',
+                stateId: "price",
                 renderer: function (value) {
                     return me.product.formatCurrency(value);
                 },
                 sortable: false,
-                resizable: false,
+                resizable: true,
                 menuDisabled: true,
                 width: 100,
                 text: 'Price'
             }, {
                 dataIndex: 'salePrice',
+                stateId: "salePrice",
                 renderer: function (value) {
                     return me.product.formatCurrency(value);
                 },
                 sortable: false,
-                resizable: false,
+                resizable: true,
                 menuDisabled: true,
                 width: 100,
                 text: 'Sale Price'

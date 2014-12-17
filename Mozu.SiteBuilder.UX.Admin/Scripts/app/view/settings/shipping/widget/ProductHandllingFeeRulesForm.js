@@ -5,7 +5,9 @@
     requires:['Taco.store.ProductHandlingFeeRules'],
     createRoute: 'shipping/productHandlingFeeCreate',
     editRoute: 'shipping/productHandlingFeeEdit',
-    showFeeColumn:true,
+    showFeeColumn: true,
+    
+    stateId: "statefulProductHandlingFeeRulesGrid",
     getStore: function () {
         return Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductHandlingFeeRules');
     },

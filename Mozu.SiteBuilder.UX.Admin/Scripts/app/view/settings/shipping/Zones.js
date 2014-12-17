@@ -15,6 +15,9 @@ Ext.define('Taco.view.settings.shipping.Zones', {
    
     store: { type: 'Taco.store.ShippingZones' },
 
+    stateful: true,
+    stateId:"statefulShippingZonesGrid",
+
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']

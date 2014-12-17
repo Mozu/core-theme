@@ -108,13 +108,17 @@ Ext.define('Taco.view.location.Index', {
     gridPanelConf: {
       
         selModel: {},
+        stateful: true,
+        stateId: 'statefulLocationsGrid',
         columns: [{
             dataIndex: 'code',
+            stateId: 'code',
             width: 150,
             text: 'Code'
 
         }, {
             dataIndex: 'name',
+            stateId: 'name',
             width:200,
             text: 'Name'
            
@@ -122,6 +126,7 @@ Ext.define('Taco.view.location.Index', {
             width: 200,
             text: "Location Types",
             dataIndex: 'locationTypes',
+            stateId: 'locationTypes',
             xtype: "templatecolumn",
             tpl: [
                 '<tpl for="locationTypes">',
@@ -130,6 +135,7 @@ Ext.define('Taco.view.location.Index', {
             ]
         }, {
             dataIndex: 'addressToString',
+            stateId: 'address',
             text: 'Address',
             flex:1
 

@@ -157,17 +157,22 @@ Ext.define('Taco.view.location.inventory.Index', {
     gridPanelConf: {
         
         viewConfig: {
-            deferEmptyText:false,
+            deferEmptyText: false,            
             emptyText: "No products with inventory at this location."
         },
         selModel: {},
+        enableColumnHide: false,
+        sortableColumns: false,
+        stateful: true,
+        stateId: 'statefulLocationInventoriesGrid',
         columns: [
             {
                 dataIndex: 'productCode',
+                stateId: 'productCode',
                 width: 100,
                 text: 'Product Code',
                 menuDisabled: true,
-                sortable: true,
+                
                 editor: {
                     // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
                     xtype: "displayfield",
@@ -176,9 +181,10 @@ Ext.define('Taco.view.location.inventory.Index', {
 
             }, {
                 dataIndex: 'productName',
+                stateId: 'productName',
                 flex:1,
                 text: 'Product Name',
-                sortable: false,
+                
                 menuDisabled: true,
                 // product selector
                 editor: {
@@ -233,8 +239,9 @@ Ext.define('Taco.view.location.inventory.Index', {
             }, {
                 width: 100,
                 text: "Available",
+                stateId: 'available',
                 menuDisabled: true,
-                sortable: true,
+                
                 dataIndex: 'stockAvailable'
                 
                 /*
@@ -251,8 +258,9 @@ Ext.define('Taco.view.location.inventory.Index', {
             }, {
                 width: 100,
                 text: 'On Reserve',
+                stateId: 'onReserve',
                 menuDisabled: true,
-                sortable: true,
+                
                 dataIndex: 'stockReserved'
                 /*,
                 editor: {
@@ -268,9 +276,10 @@ Ext.define('Taco.view.location.inventory.Index', {
             }, {
                 dataIndex: 'stockOnHand',
                 itemId: "stockOnHand",
+                stateId: 'onReserve',
                 width: 100,
                 menuDisabled: true,
-                sortable: true,
+                
                 text: 'On Hand',
                 editor: {
                     emptyText: "On Hand",
@@ -285,8 +294,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             }, {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
-                menuDisabled: true,
-                sortable: false,
+                menuDisabled: true,                
                 menuItems: [
                     {
                         text: 'Remove Inventory',

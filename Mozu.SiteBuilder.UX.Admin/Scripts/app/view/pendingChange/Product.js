@@ -106,6 +106,8 @@ Ext.define('Taco.view.pendingChange.Product', {
     
     gridPanelConf: {
         selType: 'checkboxmodel',
+        stateful: true,
+        stateId: 'statefulPendingProductChangesGrid',
         dockedItems: [{
             xtype: 'toolbar',
             dock: 'top',
@@ -175,10 +177,12 @@ Ext.define('Taco.view.pendingChange.Product', {
         }],
         columns: [{
             dataIndex: 'productCode',
+            stateId: 'productCode',
             text: 'Code',
             width: 100
         }, {
             dataIndex: 'productName',
+            stateId: 'productName',
             text: 'Name',
             minWidth: 120,
             resizable: false,
@@ -189,15 +193,18 @@ Ext.define('Taco.view.pendingChange.Product', {
             }
         }, {
             dataIndex: 'publishedState',
+            stateId: 'publishedState',
             text: 'Modification',
             width: 130
         }, {
             dataIndex: 'lastModifiedDate',
+            stateId: 'lastModifiedDate',
             text: 'Last Modified',
             width: 150,
             renderer: Ext.util.Format.dateRenderer('d M, Y')
         }, {
             dataIndex: 'lastModifiedBy',
+            stateId: 'lastModifiedBy',
             text: 'Modified By',
             width: 150,
             renderer: function(value, metaData, record) {
@@ -209,11 +216,13 @@ Ext.define('Taco.view.pendingChange.Product', {
             }
         }, {
             dataIndex: 'lastPublishedDate',
+            stateId: 'lastPublishedDate',
             text: 'Last Published',
             width: 150,
             renderer: Ext.util.Format.dateRenderer('d M, Y')
         }, {
             dataIndex: 'lastPublishedBy',
+            stateId: 'lastPublishedBy',
             text: 'Published By',
             width: 150,
             renderer: function (value, metaData, record) {

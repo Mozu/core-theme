@@ -41,6 +41,8 @@ Ext.define('Taco.view.fileManager.Index', {
     allowNavigation: false,
 
     gridPanelConf: {
+        stateful:true,
+        stateId: "statefulFileManagerGrid",
         columns: [{
             sortable:false,
                 xtype: 'templatecolumn',
@@ -56,6 +58,7 @@ Ext.define('Taco.view.fileManager.Index', {
                 ]
             }, {
                 text: 'Name',
+                stateId: "name",
                 editor: {
                     xtype: 'taco.textfield',
                     listeners: {
@@ -82,6 +85,7 @@ Ext.define('Taco.view.fileManager.Index', {
             {
                 text: 'Tags', sortable: false,
                 dataIndex: 'tags',
+                stateId: "tags",
                 renderer: function (value, metaData, record) {
                     return (Ext.isEmpty(value) ? ['...'] : value).join(', ');
                 },
@@ -103,6 +107,7 @@ Ext.define('Taco.view.fileManager.Index', {
             {
                 text: 'Date Modified',
                 dataIndex: 'dateModified',
+                stateId: "dateModified",
                 width: 150,
                 renderer: function (val) {
                     return Ext.Date.format(val, 'M j, Y g:i a');
@@ -111,6 +116,7 @@ Ext.define('Taco.view.fileManager.Index', {
                 text: 'Type', 
                 sortable: false,
                 dataIndex: 'fileType',
+                stateId: "fileType",
                 align: 'right',
                 renderer: function (val) {
                     return val.toUpperCase();
@@ -118,12 +124,13 @@ Ext.define('Taco.view.fileManager.Index', {
             }, {
                 text: 'Size',
                 sortable: false,
+                stateId: "fileSize",
                 dataIndex: 'fileSize',
                 align: 'right'
             },
             {
                 xtype: 'taco.menucolumn',
-                sortable: false,
+                sortable: false,                
                 text: 'Actions',
                 menuItems: [{
                         text: 'Delete',

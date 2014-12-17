@@ -26,21 +26,27 @@ Ext.define('Taco.view.productType.Index', {
     },
     
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulProductTypeGrid',
         columns: [{
             dataIndex: 'id',
+            stateId:"id",
             text: 'ID',
             width: 100
         }, {
             dataIndex: 'name',
+            stateId: "name",
             text: 'Name',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'numberOfProducts',
+            stateId: "numberOfProducts",
             text: 'No. of Products',
             width: 120
         }, {
             xtype: 'templatecolumn',
+            stateId: "attributes",
             text: 'Attributes',
             width: 240,
             sortable: false,
@@ -66,6 +72,7 @@ Ext.define('Taco.view.productType.Index', {
             )
         }, {
             dataIndex: 'modifiedDate',
+            stateId: "modifiedDate",
             text: 'Modified Date',
             width: 120,
             renderer: function (value) {

@@ -40,6 +40,8 @@ Ext.define('Taco.view.inventory.Index', {
     },
 
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulProductInventoryGrid',
         selModel: {
             selType: 'rowmodel',
             checkOnly: true,
@@ -54,10 +56,12 @@ Ext.define('Taco.view.inventory.Index', {
         columns: [
             {
                 dataIndex: 'productCode',
+                stateId: "productCode",
                 text: 'Code',
                 width: 140
             }, {
                 dataIndex: 'productName',
+                stateId: "productName",
                 text: 'Name',
                 minWidth: 120,
                 resizable: false,
