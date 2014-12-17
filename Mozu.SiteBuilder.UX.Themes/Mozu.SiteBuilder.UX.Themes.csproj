@@ -2294,10 +2294,7 @@
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
-    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
-    </Exec>
-    <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
+    <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)"/>
     <ItemGroup>
       <Content Include="Themes\$(ThemeName)\**\*.*" Exclude="Themes\$(ThemeName)\node_modules" />
     </ItemGroup>
