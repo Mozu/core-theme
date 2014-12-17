@@ -25,6 +25,7 @@
                 '<div class="mz-cms-label"></div>',
             '</div>'
         ],
+        widgetIconDefinitions: {},
 
         init: function() {
             var me = this;
@@ -43,9 +44,9 @@
 
             this.controller().findWidgetTypeDefinitions( window, function(widgets) {
                 
-
                 $.each(widgets, function(i, widget) {
                     me.$body.append(me.buildWidget(widget));
+                    me.widgetIconDefinitions[widget.id] = widget.icon;
                 });
 
                 $('.mz-cms-widget').mzWidget();
@@ -92,6 +93,10 @@
                     $(this).toggleClass('hidden');
                 }
             });
+        },
+        getDragIcon: function(img) {
+            img = img.substring(0,3) === 'url' ? img : 'url(' + img + ')';
+            return $( ['<div class="mz-drag-icon" style="background-image:', img, '; width: 50px; height:50px; background-repeat:round; position:absolute"></div>'].join('') );
         }
     };
 
@@ -102,11 +107,7 @@
         this.options = $.extend({}, options);
         this.element = $(element);
 
-        this.dragIcon = function() {
-    
-            return $( ['<div class="mz-drag-icon" style="background-image:', img, '; width: 50px; height:50px; background-repeat:round; position:absolute"></div>'].join('') );
-            
-        };
+        this.dragIcon = widgets.getDragIcon(img);
 
         this.element
             .addClass('mz-cms-draggable')
@@ -123,7 +124,7 @@
                 start: function() {
                     // $('body').css('cursor', img + ', auto');
                     Chorizo.widgets.hide();
-                    Chorizo.editor.startDrag(me.element.data('definition'), me.dragIcon());
+                    Chorizo.editor.startDrag(me.element.data('definition'), me.dragIcon);
                 },
                 stop: function() {
                     Chorizo.editor.stopDrag();

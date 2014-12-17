@@ -479,6 +479,9 @@
                 }, this),
                 dropover: $.proxy(function() {
                     this.initHint();
+                }, this),
+                dragstop: $.proxy(function() {
+                    Chorizo.editor.stopDrag(this);
                 }, this)
             })
             .droppable({

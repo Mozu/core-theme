@@ -139,18 +139,28 @@
         },
 
         destroyDragIcon: function() {
-
             this.dragIcon.remove();
         },
 
         startDrag: function(widgetCfg, dragIcon) {
+            // if (dragIcon) this.initDragIconMove(dragIcon);
+
+            if (dragIcon) {
+                this.initDragIconMove(dragIcon);
+            }
+
+            else {
+                var widgets = this.widgets(),
+                    dragIcon = widgets.getDragIcon( widgets.widgetIconDefinitions[ widgetCfg.widgetData.definitionId ] );
+
+                this.initDragIconMove(dragIcon);
+            }
+
             if (widgetCfg && widgetCfg.type && widgetCfg.type() === 'block') {
                 widgetCfg = {
                     block: widgetCfg
                 };
             }
-
-            if (dragIcon) this.initDragIconMove(dragIcon);
 
             this.widgetCfg = widgetCfg || {};
             $('.mz-cms-grid').addClass('mz-cms-droppable');
@@ -167,7 +177,8 @@
                 left: -1000,
                 top: -1000
             });
-            if (this.dragIcon) this.destroyDragIcon();
+            
+            this.destroyDragIcon();
         },
 
         widgets: function() {
@@ -243,7 +254,6 @@
                 widgetCfg = this.widgetCfg;
 
             this.stopDrag();
-
 
             // Make sure there is a target and a quadrant
             if (target && quadrant && target.insert) {
