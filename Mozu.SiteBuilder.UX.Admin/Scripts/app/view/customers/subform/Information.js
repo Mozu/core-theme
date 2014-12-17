@@ -52,6 +52,29 @@ Ext.define('Taco.view.customers.subform.Information', {
             ]
         });
 
+        this.disabledField = Ext.create('Ext.form.FieldContainer', {
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [{
+                xtype: 'checkboxfield',
+                name: 'disabled',
+                itemId: 'disabledCheckbox',
+                boxLabel: 'Account Disabled'
+            }]
+        });
+
+        this.resetAccountBtn = Ext.create('Ext.button.Button', {
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Reset Password',
+            handler: function () {
+                
+            }
+        });
+
         this.items = [{
             xtype: 'container',
             defaults: {
@@ -142,7 +165,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     forceSelection: true,
                     disableKeyFilter: true,
                     flex: 1
-                }, {
+                    }, {
                     xtype: 'button',
                     ui: 'action',
                     scale: 'medium',
@@ -176,6 +199,20 @@ Ext.define('Taco.view.customers.subform.Information', {
                     });
                 },
                 scope: this
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                width: '100%',
+                items: [
+                    this.disabledField, {
+                        xtype: 'component',
+                        flex: 1
+                    },
+                    this.resetAccountBtn
+                ]
             }]
         }];
 
