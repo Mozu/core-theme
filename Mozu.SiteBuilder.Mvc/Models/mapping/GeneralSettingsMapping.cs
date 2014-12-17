@@ -29,10 +29,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                   .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
                   .ForMember(x => x.PayByMail, opt => opt.ResolveUsing(x => x.PaymentSettings.PayByMail))
                   .ForMember(x => x.PaymentProcessingFlowType, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.PaymentProcessingFlowType))
-                  .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing(x => (x.PaymentSettings.Gateways ?? Enumerable.Empty<DC.Gateway>()).Where(g => g.GatewayAccount != null && g.GatewayAccount.IsActive).Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>()))
+                  // .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing(x => (x.PaymentSettings.Gateways ?? Enumerable.Empty<DC.Gateway>()).Where(g => g.GatewayAccount != null && g.GatewayAccount.IsActive).Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>()))
+                  .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing<SupportedCardsWithCountryCodeContextResolver>())
                   .ForMember(x => x.UseOverridePriceToCalculateDiscounts, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.UseOverridePriceToCalculateDiscounts));
-
-
 
 
             Mapper.CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
@@ -134,6 +133,48 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             return  Convert.ToBase64String(ms.ToArray());
 
 
+        }
+
+
+        /// <summary>
+        /// Custom value resolver that respects countryCode as a mapping context option
+        /// And will choose a list of supported cards from a gateway in that country only.
+        /// </summary>
+        private class SupportedCardsWithCountryCodeContextResolver : IValueResolver
+        {
+            /// <summary>
+            /// if we are passed a country code as a mapping option
+            /// we need to restrict the gateways to that country.
+            /// </summary>
+            public ResolutionResult Resolve(ResolutionResult ctx)
+            {
+                List<DC.Gateway> allGateways = ((DC.CheckoutSettings)ctx.Context.SourceValue).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
+                IEnumerable<DC.Gateway> filteredGateways;
+
+                if (ctx.Context.Options != null && ctx.Context.Options.Items != null && ctx.Context.Options.Items.ContainsKey("countryCode"))
+                {
+                    string countryCode = (string)ctx.Context.Options.Items["countryCode"];
+
+                    filteredGateways =
+                        from g in allGateways
+                        where g.GatewayAccount != null
+                        where g.GatewayAccount.IsActive
+                        where countryCode.Equals(g.GatewayAccount.CountryCode, StringComparison.InvariantCultureIgnoreCase)
+                        select g;
+                }
+                else
+                {
+                    filteredGateways =
+                        from g in allGateways
+                        where g.GatewayAccount != null
+                        where g.GatewayAccount.IsActive
+                        select g;
+                }
+
+                var supportedCards = filteredGateways.Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>();
+
+                return ctx.New(supportedCards, typeof(Dictionary<string, string>));
+            }
         }
     }
 }
