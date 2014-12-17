@@ -46,7 +46,7 @@ Ext.define('Taco.view.website.Tree', {
             }
         });
     
-        this.mon(this.store, 'load', this.showNavState.bind(this),{single: true});
+        this.mon(this.store, 'load', this.showNavState, this, {single: true});
 
         this.plugins = this.plugins || [];
         this.plugins.push(this.cellEditor);
@@ -325,8 +325,7 @@ Ext.define('Taco.view.website.Tree', {
 
         return items;
     },
-    showNavState: function() {
-        
+    showNavState: function(records, success) {
         var me = this,
             navItems = this.store.tree.nodeHash,
             current;
