@@ -8,6 +8,7 @@ using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.AppDev.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
@@ -32,21 +33,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private readonly ISecureCapabilityConfigUrlHelper _secureConfigUrlHelper;
         private readonly IApiContext _apiContext;
+	    private readonly IAppsWebApiClient _appsWebApiClient;
 
-        public CapabilityController(IApplicationsWebApiClient applicationsWebApiClient, ITenantsWebApiClient tenantsWebApiClient, ISecureCapabilityConfigUrlHelper secureConfigUrlHelper, IApiContext apiContext)
+	    public CapabilityController(IApplicationsWebApiClient applicationsWebApiClient, ITenantsWebApiClient tenantsWebApiClient, ISecureCapabilityConfigUrlHelper secureConfigUrlHelper, IApiContext apiContext , Mozu.AppDev.Contracts.Clients.IAppsWebApiClient  appsWebApiClient )
         {
             _applicationsWebApiClient = applicationsWebApiClient;
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
             _secureConfigUrlHelper = secureConfigUrlHelper;
             _apiContext = apiContext;
+            _appsWebApiClient = appsWebApiClient;
         }
 
 
 	    [HttpPostRoute(UriTemplate = "createSecureForm")]
         public async Task<Response<SecureForm>> BulidSecureForm([FromBody]  Dictionary<string, string> body, [FromUri] string appId)
 	    {
-	        var app = (await _applicationsWebApiClient.CloneWithoutUserClaims().GetApplication(appId)).ReadAsSync();
-	        var form = _secureConfigUrlHelper.BulidSecureForm(app.HashKey, body);
+
+	        var hashKey = (await _appsWebApiClient.CloneWithoutUserClaims().GetApplicationHashkey(appId)).ReadAsSync();
+            var form = _secureConfigUrlHelper.BulidSecureForm(hashKey, body);
 
             return this.Single2(form);
 	    }

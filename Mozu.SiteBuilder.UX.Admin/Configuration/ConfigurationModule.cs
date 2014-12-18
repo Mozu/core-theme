@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient).Assembly);
-            
+            builder.RegisterClassesMatchingInterfaceName(typeof (Mozu.AppDev.Contracts.Clients.IAppsWebApiClient).Assembly);
 
 
             builder.RegisterType<NoOpMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerLifetimeScope();
