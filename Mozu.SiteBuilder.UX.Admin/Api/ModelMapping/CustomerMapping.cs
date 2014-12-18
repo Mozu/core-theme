@@ -46,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(x => x.WishlistCount, op => op.Ignore())
                 .ForMember(x => x.PaymentCards, op => op.Ignore())
+                .ForMember(x => x.IsDisabled, op => op.ResolveUsing(dc => !dc.IsActive))
                 ;
 
             //todo: Greg Murray on 2014-01-23 redundant mappings, ex FirstName => FirstName, Remove?
@@ -87,6 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ExternalId, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.IsLocked, op => op.Ignore())
+                .ForMember(dc => dc.IsActive, op => op.ResolveUsing(x => !x.IsDisabled))
                 ;
 
 
