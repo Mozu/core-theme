@@ -35,10 +35,10 @@ Ext.define('Taco.view.website.Tree', {
 
         this.cellEditor = Ext.create('Ext.grid.plugin.CellEditing', {
             listeners: {
-                beforeedit: function (editor, e, eOpts) {
+                beforeedit: function (editor) {
                     return editor.allowEdit === true;
                 },
-                edit: function (editor, e, eOpts) {
+                edit: function (editor, e) {
                     var node = e.record;
                     node.set('editAction', 'rename');
                     node.save();
@@ -71,13 +71,13 @@ Ext.define('Taco.view.website.Tree', {
 
         this.store.load({
             callback:function (records, operation) {
-                if (operation && operation.response && operation.response.getResponseHeader("needsFixup")=='true') {
+                if (operation && operation.response && operation.response.getResponseHeader("needsFixup")==='true') {
                     Ext.Ajax.request(
                         {
                             url: '/admin/app/navigation/fixup',
                             method: 'POST',
                             success: function (response) {
-                                if (response.responseText == "true") {
+                                if (response.responseText === "true") {
                                     me.store.load();
                                 }
                             }
@@ -89,7 +89,7 @@ Ext.define('Taco.view.website.Tree', {
 
         this.mon(this.store,
             {
-                write: function (store, opt) {
+                write: function (store) {
                     var record, records = this.getSelectionModel().getSelection();
                     if (records && records.length && records[0].parentNode) {
                         record = records[0];
@@ -101,7 +101,7 @@ Ext.define('Taco.view.website.Tree', {
                     this.fireEvent('navigationchange', store, record);
 
                 },
-                move: function (node, oldParent, newParent, index, eOpts) {
+                move: function (node) {
                     node.set('editAction', 'move');
                     node.save();
                 },
@@ -177,7 +177,7 @@ Ext.define('Taco.view.website.Tree', {
         this.mon(this.getView(), {
             beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
            
-                if (data.records && data.records.length && data.records[0].get('nodeType') == 'contentlist') {
+                if (data.records && data.records.length && data.records[0].get('nodeType') === 'contentlist') {
                     dropHandlers.cancelDrop();
                     var nodeData = {
                             nodeType: 'link',
@@ -185,11 +185,11 @@ Ext.define('Taco.view.website.Tree', {
                             name: data.records[0].raw.metaData.name,
                             url: '/cms/' + data.records[0].raw.metaData.listFQN
                         },
-                        node,
+                       
                         overIndex = overModel.parentNode.indexOf(overModel);
-                    if (dropPosition == 'append') {
+                    if (dropPosition === 'append') {
                         node = overModel.appendChild(nodeData);
-                    }else if (dropPosition == 'before') {
+                    }else if (dropPosition === 'before') {
                         node = overModel.parentNode.insertChild(overIndex, nodeData);
                     } else {
                         node = overModel.parentNode.insertChild(overIndex, nodeData);
@@ -204,7 +204,7 @@ Ext.define('Taco.view.website.Tree', {
              },
             nodedragover: {
                 scope: this,
-                fn: function (targetNode, position, dragData, e) {
+                fn: function (targetNode, position, dragData) {
                     var roots = ['_unlinked', '_navigation', '_templates'],
                         sourceId = dragData.records[0].getId(),
                         targetId = targetNode.getId(),
@@ -288,13 +288,13 @@ Ext.define('Taco.view.website.Tree', {
                     this.onTestEmail(record);
                 }
             };
-        ;
+        
 
 
-        if (record.getId() == '_navigation') {
+        if (record.getId() === '_navigation') {
             items.push(addLink);
             items.push(addPage);
-        } else if (record.getId() == '_unlinked') {
+        } else if (record.getId() === '_unlinked') {
             items.push(addLink);
             items.push(addPage);
         } else if (record.data.nodeType === 'category') {
@@ -308,13 +308,13 @@ Ext.define('Taco.view.website.Tree', {
             items.push(addLink);
             items.push(addPage);
 
-        } else if (record.data.nodeType == 'page') {
+        } else if (record.data.nodeType === 'page') {
             items.push(rename);
             items.push(addLink);
             items.push(addPage);
             items.push(deletePage);
 
-        } else if (record.data.parentId == '_emailTemplates') {
+        } else if (record.data.parentId === '_emailTemplates') {
             items.push(emailtest);
            
 
@@ -330,30 +330,23 @@ Ext.define('Taco.view.website.Tree', {
             navItems = this.store.tree.nodeHash,
             current;
 
-        function expandParent(node) {
-            node.expand();
-
-            if (node.parentNode) expandParent(node.parentNode);
-        };
-
         Object.keys(navItems).forEach( function(k) {
 
             if (navItems[k] && navItems[k].data.url.substring(1) === me.url) {
                 current = me.getStore().getNodeById(navItems[k].data.id);
-                expandParent(current.parentNode);
-                me.getSelectionModel().select(current);
+                me.selectPath(current.getPath());
             } 
             
         });
     },
     showLinkEditor: function (record, parentRecord) {
-        var me = this,
-            modal = Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
+        var me = this;
+             Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
                 record: record,
                 parentRecord: parentRecord,
                 listeners: {
                     savesuccess: function () {
-                        me.fireEvent('navigationchange', me)
+                        me.fireEvent('navigationchange', me);
                     }
                 }
             });
@@ -363,7 +356,7 @@ Ext.define('Taco.view.website.Tree', {
         var me = this;
         record.destroy({
             success: function () {
-                me.fireEvent('navigationchange', me)
+                me.fireEvent('navigationchange', me);
             },
             scope: this
         });
@@ -379,7 +372,7 @@ Ext.define('Taco.view.website.Tree', {
             success: function () {
                 console.log('link deleted');
                 record.destroy();
-                me.fireEvent('navigationchange', me)
+                me.fireEvent('navigationchange', me);
             },
             scope: this
         });
@@ -425,11 +418,11 @@ Ext.define('Taco.view.website.Tree', {
                             email: dialog.getForm().getValues().recipient || Taco.user.email,
                             id: record.get('originalId')
                         },
-                        success: function (response, opts) {
+                        success: function () {
 
                             Taco.app.fireEvent('setmessage', 'email sent', 'info');
                         },
-                        failure: function (response, opts) {
+                        failure: function (response) {
 
                             var respObj = Ext.decode(response.responseText, true),
                                 errorMsg = respObj && respObj.message ? respObj.message : 'Failure Sending Email';
@@ -469,9 +462,8 @@ Ext.define('Taco.view.website.Tree', {
                             change: function (cmp, newValue) {
                                 cmp.slugField = cmp.slugField || cmp.up('form').down('taco-slugfield');
                                 var previous = cmp.slugField.onNameChangeValue,
-                                    current = cmp.slugField.getValue(),
-                                    newValue;
-                                if (current && previous != current) {
+                                    current = cmp.slugField.getValue();
+                                if (current && previous !== current) {
                                     return;
                                 }
                                 cmp.slugField.setValue(newValue);
