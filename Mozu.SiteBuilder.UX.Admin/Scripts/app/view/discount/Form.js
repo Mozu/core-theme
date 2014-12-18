@@ -52,6 +52,7 @@ Ext.define('Taco.view.discount.Form', {
         this.general = this.down('#general');
         this.conditions = this.down('#conditions');
         this.criteria = this.down('#criteria');
+        this.limitations = this.down('#limitations');
 
         if (!this.isEdit()) this.general.setTitle('Create');
 
@@ -69,6 +70,7 @@ Ext.define('Taco.view.discount.Form', {
 
         this.criteria.setFieldVisibility(isLineItem, appliesToShipping);
         this.conditions.setFieldVisibility(isLineItem, appliesToShipping);
+        this.limitations.setFieldVisibility(isLineItem, appliesToShipping);
         this.loadNavItems();
     },
 

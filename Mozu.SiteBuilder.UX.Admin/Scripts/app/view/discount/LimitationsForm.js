@@ -47,7 +47,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             hideTrigger: true,
             width: 240,
             fieldLabel: 'Max Redemptions per Order',
-            //emptyText: 'unlimited',
+            hidden: this.record.get('scope') === 'Order',
             minValue: 0
         });
 
@@ -130,6 +130,13 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
 
         this.callParent(arguments);
+    },
+
+    setFieldVisibility: function (isLineItem) {
+        this.maxRedemptionsPerOrder.setVisible(isLineItem);
+        if (!isLineItem) {
+            this.maxRedemptionsPerOrder.setValue(null);
+        }
     }
 
     

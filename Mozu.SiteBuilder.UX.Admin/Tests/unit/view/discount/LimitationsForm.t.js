@@ -2,7 +2,7 @@
     var m = {};
 
     function getDiscount(cb) {
-        Taco.model.Discount.load(1, {
+        Taco.model.Discount.load(3, {
             success: function(discountRecord) {
                 m.record = discountRecord;
                 cb(discountRecord);
