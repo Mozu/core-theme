@@ -112,6 +112,7 @@ Ext.define('Taco.view.settings.shipping.Rules', {
             {
                 xtype: 'gridcolumn',
                 dataIndex: 'code',
+                stateId:"code",
                 text: 'Code',
                 hideable: false,
 
@@ -122,6 +123,7 @@ Ext.define('Taco.view.settings.shipping.Rules', {
             }, {
                 xtype: 'gridcolumn',
                 dataIndex: 'description',
+                stateId: "description",
                 text: 'Description',
                 flex: 1,
                 width: 150,

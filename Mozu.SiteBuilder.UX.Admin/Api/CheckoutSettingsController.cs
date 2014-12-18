@@ -38,7 +38,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read")]
         public async Task<Response<CheckoutSettings>> GetSettings()
         {
+            string currCountryCode = await GetCountryCodeForSite();
             var dcSettings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
+
+            // filter out all gateways not from our current country code.
+            dcSettings.PaymentSettings.Gateways = (
+                from g in dcSettings.PaymentSettings.Gateways
+                where g.GatewayAccount != null
+                where g.GatewayAccount.IsActive
+                where currCountryCode.Equals(g.GatewayAccount.CountryCode, StringComparison.InvariantCultureIgnoreCase)
+                select g
+            ).ToList();
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
             return Single2(ret);
         }
@@ -50,8 +60,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "cards/list")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetCards()
         {
-            var dcSettings = (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsSync();
-            var ret = Mapper.Map<CheckoutSettings>(dcSettings).Gateway.SupportedCards.Select(x => new KeyValuePair<string, string>(x, x)) .ToList();
+            var currCountryCode = await GetCountryCodeForSite();
+            var dcGateway = (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetActiveGatewayForCountry(currCountryCode)).ReadAsSync();
+            var ret = dcGateway.SupportedCards.Select(x => new KeyValuePair<string, string>(x, x)) .ToList();
             return List2(ret);
         }
 

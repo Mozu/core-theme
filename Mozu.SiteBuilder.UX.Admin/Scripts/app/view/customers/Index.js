@@ -28,6 +28,8 @@ Ext.define('Taco.view.customers.Index', {
        
 
         this.gridPanelConf = {
+            stateful: true,
+            stateId: 'statefulCustomerGrid',
             columns: {
                 defaults: {
                     sortable: false
@@ -35,11 +37,13 @@ Ext.define('Taco.view.customers.Index', {
                 items: [
                 {
                     dataIndex: 'id',
+                    stateId:"id",
                     sortable: true,
                     text: 'Customer Number',
                     width: 130
                 }, {
                     dataIndex: 'firstNameSafe',
+                    stateId: "firstNameSafe",
                     text: 'First Name',
                     width: 130,
                     renderer: function (value, metaData, record) {
@@ -53,6 +57,7 @@ Ext.define('Taco.view.customers.Index', {
 
                 }, {
                     dataIndex: 'lastNameSafe',
+                    stateId: "lastNameSafe",
                     text: 'Last Name',
                     width: 130,
                     renderer: function (value, metaData, record) {
@@ -65,6 +70,7 @@ Ext.define('Taco.view.customers.Index', {
                     }
                 }, {
                     dataIndex: 'emailAddressSafe',
+                    stateId: "emailAddressSafe",
                     text: 'Email',
                     width: 200,
                     renderer: function (value, metaData, record) {
@@ -77,11 +83,13 @@ Ext.define('Taco.view.customers.Index', {
                     }
                 }, {
                     dataIndex: 'orderCount',
+                    stateId: "orderCount",
                     sortable: true,
                     text: 'Fulfilled Orders',
                     width: 100
                 }, {
                     dataIndex: 'totalSpent',
+                    stateId: "totalSpent",
                     sortable: true,
                     text: 'Lifetime Value',
                     width: 100,
@@ -92,10 +100,12 @@ Ext.define('Taco.view.customers.Index', {
                     }
                 }, {
                     dataIndex: 'visitCount',
+                    stateId: "visitCount",
                     text: 'Total Visits',
                     width: 100
                 }, {
                     dataIndex: 'segments',
+                    stateId: "segments",
                     text: 'Segments',
                     width: 300,
                     renderer: function (value) {

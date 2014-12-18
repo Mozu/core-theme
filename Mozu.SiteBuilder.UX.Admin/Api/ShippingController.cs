@@ -134,7 +134,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var profileCode = await GetProfileCode();
             var enabledStates = (await _shippingProfileWebApiClient.GetStates(profileCode)).ReadAsSync();
-            settings.EnabledStates = enabledStates.SelectMany(s => s.States).Select(s => s.Key).ToList();
+            settings.EnabledStates = enabledStates.SelectMany(s => s.States).Select(s => s.Code).ToList();
 
             return Single2<SiteShippingSettings>(settings);
         }
@@ -218,8 +218,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     CountryCode = "US",
                     States =
-                        new HashSet<KeyValuePair<string, string>>(
-                            stateCodes.Select(sc => new KeyValuePair<string, string>(sc, sc)))
+                        new HashSet<State>(
+                            stateCodes.Select(sc => new State{ Code = sc, Name = sc}))
                 }
             };
 

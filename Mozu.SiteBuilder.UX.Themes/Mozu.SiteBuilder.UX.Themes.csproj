@@ -281,21 +281,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Provisioning.Contracts.1.13.1\lib\net451\Mozu.Provisioning.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reference.Contracts, Version=1.14.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Reference.Contracts, Version=1.14.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.14.2\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.14.3\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.14.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.14.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.14.2\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.14.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.13.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -2290,9 +2291,6 @@
   </Target>
   <Target Name="BuildThemeWithGrunt">
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
-    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
-    </Exec>
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>

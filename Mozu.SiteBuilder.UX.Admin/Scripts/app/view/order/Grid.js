@@ -470,8 +470,7 @@ Ext.define('Taco.view.order.Grid', {
         // add the actions column if required
         if (me.showActionsColumn) {
             columns.push(
-                {
-                    stateId: 'actions',
+                {                    
                     xtype: 'taco.menucolumn',
                     text: 'Actions',
                     menuItems: [

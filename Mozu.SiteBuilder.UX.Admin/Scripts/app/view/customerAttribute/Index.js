@@ -19,18 +19,23 @@ Ext.define('Taco.view.customerAttribute.Index', {
 
 
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulCustomerAttributesGrid',
         columns: [ {
             dataIndex: 'adminName',
+            stateId: 'adminName',
             text: 'Name',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'isRequired',
+            stateId: 'isRequired',
             text: 'Required',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'displayGroup',
+            stateId: 'displayGroup',
             text: 'Display Group',
             flex: 1,
             minWidth: 120

@@ -79,17 +79,22 @@ Ext.define('Taco.view.capability.Index', {
 
             }
         ],
+        stateful: true,
+        stateId:"statefulApplicationsGrid",
         columns: [
             {
                 text: 'Name',
+                stateId: "name",
                 width:200,
                 dataIndex: "applicationName"
             }, {
                 text: 'Publisher',
+                stateId: "publisher",
                 width: 200,
                 dataIndex: "developerAccountName"
             }, {
                 text: 'Initialized',
+                stateId: "initialized",
                 width: 80,
                 dataIndex: "initialized",
                 renderer: function (value) {
@@ -97,6 +102,7 @@ Ext.define('Taco.view.capability.Index', {
                 }
             }, {
                 text: 'Enabled',
+                stateId: "enabled",
                 width: 80,
                 dataIndex: "enabled",
                 renderer: function (value) {
@@ -104,10 +110,12 @@ Ext.define('Taco.view.capability.Index', {
                 }
             }, {
                 text: 'License Type',
+                stateId: "licenseType",
                 width: 200,
                 dataIndex: "licenseType"
             }, {
                 text: 'Coverage Area',
+                stateId: "coverageArea",
                 width: 200,
                 dataIndex: "scopeType",
                 renderer: function (value, row) {
@@ -125,6 +133,7 @@ Ext.define('Taco.view.capability.Index', {
                 }
             }, {
                 text: 'Expiration',
+                stateId: "expiration",
                 width: 200,
                 xtype: 'datecolumn',
                 format: 'M d, Y',

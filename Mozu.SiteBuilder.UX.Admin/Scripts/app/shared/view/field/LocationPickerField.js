@@ -22,7 +22,8 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     hideTrigger: false,
     emptyText: "Search",
     selectOnFocus: false,
-    flex: 1,
+    // note: cant set flex in the base class as it messes up the width when used in as an editor by rowEditor. flex must be set by the instance if needed;
+    //flex: 1,
     listConfig: {
         cls: "location-picker-menu",
 

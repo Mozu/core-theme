@@ -19,7 +19,11 @@
             // reference in .getOrder to exist;
             initStep: function () {
                 var me = this;
-                this.next = _.debounce(this.next, 750, true);
+                this.next = (function(next) {
+                    return _.debounce(function() {
+                        if (!me.isLoading()) next.call(me);
+                    }, 750, true);
+                })(this.next);
                 var order = me.getOrder();
                 me.calculateStepStatus();
                 me.listenTo(order, "error", function () {
@@ -670,8 +674,11 @@
                     billingContact = billingInfo.get('billingContact').toJSON(),
                     card = billingInfo.get('card'),
                     doSaveCard = function () {
-                        order.cardsSaved = order.cardsSaved || {};
-                        var method = order.cardsSaved[card.get('id')] ? 'updateCard' : 'addCard';
+                        order.cardsSaved = order.cardsSaved || customer.get('cards').reduce(function(saved, card) {
+                            saved[card.id] = true;
+                            return saved;
+                        }, {});
+                        var method = order.cardsSaved[card.get('id') || card.get('paymentServiceCardId')] ? 'updateCard' : 'addCard';
                         card.set('contactId', billingContact.id);
                         return customer.apiModel[method](card.toJSON()).then(function (card) {
                             order.cardsSaved[card.data.id] = true;

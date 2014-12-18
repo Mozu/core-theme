@@ -85,9 +85,12 @@ Ext.define('Taco.view.channel.Index', {
     gridPanelConf: {
       
         selModel: {},
+        stateful: true,
+        stateId: "statefulChannelsGrid",
         columns: [{
             dataIndex: 'code',
             text: 'Code',
+            stateId: "code",
             editor: {
                 // defaults to textfield if no xtype is supplied
                 emptyText: "Code",
@@ -100,6 +103,7 @@ Ext.define('Taco.view.channel.Index', {
             width: 200
         }, {
             dataIndex: 'name',
+            stateId: "name",
             editor: {
                 // defaults to textfield if no xtype is supplied
                 emptyText: "Name",
@@ -112,6 +116,7 @@ Ext.define('Taco.view.channel.Index', {
             
         }, {
             dataIndex: 'countryCode',
+            stateId: "countryCode",
             editor: {
                 xtype: 'combobox',
                 fieldLabel: null,

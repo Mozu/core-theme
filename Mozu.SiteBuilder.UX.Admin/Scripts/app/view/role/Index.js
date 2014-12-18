@@ -30,10 +30,13 @@ Ext.define('Taco.view.role.Index', {
                 scope: this
             },
             layout: 'fit',
+            stateful: true,
+            stateId: "statefulRolesGrid",
             columns: [
                 {
                     xtype: 'gridcolumn',
                     dataIndex: 'name',
+                    stateId:"name",
                     text: 'Name',
                     flex: 1,
                     renderer: function (value, metaData, record) {

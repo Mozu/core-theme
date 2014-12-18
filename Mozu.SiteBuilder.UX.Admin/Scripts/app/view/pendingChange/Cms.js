@@ -102,6 +102,8 @@ Ext.define('Taco.view.pendingChange.Cms', {
 
     gridPanelConf: {
         selType: 'checkboxmodel',
+        stateful: true,
+        stateId: 'statefulPendingContentChangesGrid',
         dockedItems: [{
             xtype: 'toolbar',
             dock: 'top',
@@ -155,33 +157,39 @@ Ext.define('Taco.view.pendingChange.Cms', {
         }],
         columns: [{
                 dataIndex: 'name',
+                stateId: 'name',
                 text: 'Name',
                 minWidth: 120,
                 flex: 1
             }, {
                 dataIndex: 'draftType',
+                stateId: 'draftType',
                 text: 'Type',
                 value: 'Page',
                 minWidth: 120,
                 width: 100
             }, {
                 dataIndex: 'modificationType',
+                stateId: 'modificationType',
                 text: 'Modification',
               
                 width: 100
             }, {
                 dataIndex: 'lastModified',
+                stateId: 'lastModified',
                 text: 'Last Modified',
                 xtype: 'datecolumn',
                 width: 200
             }, {
                 dataIndex: 'modifiedBy',
+                stateId: 'modifiedBy',
                 text: 'Modified By',
                 
                 width: 100
             },
             {
                 dataIndex: 'lastPublished',
+                stateId: 'lastPublished',
                 text: 'Last Published',
                 xtype: 'datecolumn',
                 width: 100

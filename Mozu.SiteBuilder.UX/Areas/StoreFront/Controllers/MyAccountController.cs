@@ -105,11 +105,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var shipTask = GetShippableCountries();
             var billTask = GetBillingCountries();
 
-            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, storeCreditsTask, wishlistTask);
+            var shipStateTask = GetUSShippingStates();
+            var billStateTask = GetUSBillingStates();
+
+            await Task.WhenAll(cardsTask, orderHistoryTask, returnHistoryTask, storeCreditsTask, wishlistTask, shipStateTask, billStateTask);
 
             this.PageContext.ShippingCountries = shipTask.Result;
             this.PageContext.BillingCountries  = billTask.Result;
 
+            this.PageContext.BillingStates = billStateTask.Result;
+            this.PageContext.ShippingStates = shipStateTask.Result;
             
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {

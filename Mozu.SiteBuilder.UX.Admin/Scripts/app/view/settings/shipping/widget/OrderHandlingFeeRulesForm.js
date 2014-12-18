@@ -6,6 +6,7 @@
     createRoute: 'shipping/orderHandlingFeeCreate',
     editRoute: 'shipping/orderHandlingFeeEdit',
     showFeeColumn: true,
+    stateId: "statefulOrderHandlingFeeRulesGrid",
     getStore: function () {
         return Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderHandlingFeeRules');
     }

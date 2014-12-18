@@ -27,13 +27,41 @@ Ext.define('Taco.view.product.Index', {
         requiresContextOfType: ['m', 'c', 's']
     },
 
+    statics: {
+
+        // this logic will preload the product types store befofre loading this view;
+        factory: function (cfg, callback, scope) {
+            cfg = Ext.apply(cfg,
+            {
+                productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes')
+            });
+            Ext.create('Taco.core.ux.form.Tasks', {
+                finalCallback: function () {
+                    callback.call(scope || this, Ext.create('Taco.view.product.Index', cfg));
+                },
+                tasks: [
+                    {
+                        storeToLoad: cfg.productTypeStore
+                    }
+                ],
+                autoExecute: true
+            });
+        }
+    },
+
+
+
 
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulProductGrid',
         columns: [{
+                stateId: 'productCode',
                 dataIndex: 'productCode',
                 text: 'Code',
                 width: 100
-            }, {
+        }, {
+                stateId: 'productName',
                 dataIndex: 'productName',
                 text: 'Name',
                 minWidth: 120,
@@ -44,9 +72,8 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 dataIndex: 'price',
+                stateId: 'price',
                 text: 'Price',
-
-
                 width: 70,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('price', true) || '--';
@@ -54,6 +81,7 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 dataIndex: 'salePrice',
+                stateId: 'salePrice',
                 text: 'Sale Price',
                 width: 100,
                 renderer: function (value, metaData, record) {
@@ -61,6 +89,7 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 dataIndex: 'productInCatalogs',
+                stateId: 'catalogs',
                 text: 'Catalogs',
                 sortable: false,
                 width: 120,
@@ -69,6 +98,7 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 dataIndex: 'productInCatalogs',
+                stateId: 'overridden',
                 text: 'Overridden',
                 sortable: false,
                 width: 100,
@@ -85,6 +115,7 @@ Ext.define('Taco.view.product.Index', {
                 }
             }, {
                 dataIndex: "lastModifiedDate",
+                stateId: 'lastModifiedDate',
                 xtype: 'datecolumn',
                 format: 'Y-m-d',
                 text: 'Last Modified',
@@ -92,6 +123,7 @@ Ext.define('Taco.view.product.Index', {
             },
             {
                 dataIndex: "productTypeId",
+                stateId: 'productTypeId',
                 text: 'Product Type',
                 hidden: true,
                 sortable: false,
@@ -103,7 +135,9 @@ Ext.define('Taco.view.product.Index', {
              },
             {
                 dataIndex: "productUsage",
+                stateId: 'productUseage',
                 text: 'Product usage',
+                stateId:"productUsage",
                 hidden: true,
                 sortable: false
 
@@ -111,6 +145,7 @@ Ext.define('Taco.view.product.Index', {
             {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
+                stateId: 'actionsColumn',
                 menuItems: [{
                     itemId: 'live',
                     text: 'View Live',

@@ -17,14 +17,12 @@
                 xtype: 'gridcolumn',
                 flex: 2,
                 dataIndex: 'name',
-                text: 'State',
-                hideable: false
+                text: 'State'
             }, {
                 xtype: 'gridcolumn',
                 flex: 1,
                 dataIndex: 'code',
-                text: 'Code',
-                hideable: false
+                text: 'Code'
             }],
             selModel: {
                 selType: 'checkboxmodel',
@@ -56,6 +54,7 @@
         me.grid.getSelectionModel().mon(me.grid, 'selectionchange', me.onSelectionChange, me);
 
         store.mon(store, 'load', function () {
+            
             var initSelections = null;
 
             Ext.each(me.record.get('enabledStates'), function (code, idx, list) {
@@ -66,10 +65,11 @@
                     initSelections.push(store.getById(code));
                 }
             });
-
+            
             if (initSelections) {
-                me.grid.getSelectionModel().select(initSelections);
+                me.grid.getSelectionModel().select(initSelections, false, true);
             }
+            
         }, me);
     },
 

@@ -353,7 +353,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     SiteSettings.General.Contracts.GeneralSettings genSettingsDC = genSettingsTask.Result.ReadAsSync();
                     SiteSettings.Order.Contracts.CheckoutSettings checkoutSettingsDC = checkoutSettingsTask.Result.ResponseMessage.IsSuccessStatusCode? checkoutSettingsTask.Result.ReadAsSync() : FalloverCheckoutSettings;
                     _generalSettings = Mapper.Map<GeneralSettings>(genSettingsDC);
-                    _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsDC);
+                    _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsDC, opt => opt.Items["countryCode"] = sitesDc.CountryCode);
                     md5.HashAuditInfo(genSettingsDC.AuditInfo).
                         HashAuditInfo(checkoutSettingsDC.CustomerCheckoutSettings.AuditInfo).
                         HashAuditInfo(checkoutSettingsDC.OrderProcessingSettings.AuditInfo).

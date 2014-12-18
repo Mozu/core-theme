@@ -205,6 +205,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public List<KeyValuePair<string, string>> BillingCountries { get; set; }
 
 
+
+
         public bool IsCrawler
         {
             get { return _mobileDetectionProvider.IsCurrentRequestCrawler; }
@@ -362,6 +364,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string SecureHost { get; set; }
 
- 
+        public List<KeyValuePair<string, string>> BillingStates { get; set; }
+        public List<KeyValuePair<string, string>> ShippingStates { get; set; }
     }
 }

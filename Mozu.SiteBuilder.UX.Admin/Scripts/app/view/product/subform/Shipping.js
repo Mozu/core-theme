@@ -107,7 +107,7 @@ Ext.define('Taco.view.product.subform.Shipping', {
         };
 
         var isBundle = this.record.productUsage == "Bundle";
-        if (!isBundle) {
+        if (!isBundle && isPhysical) {
             field.items.push({
                 xtype: 'checkboxfield',
                 name: 'isPackagedStandAlone',

@@ -23,17 +23,22 @@ Ext.define('Taco.view.storeCredit.Index', {
     },
 
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulStoreCreditGrid',
         columns: [ {
             dataIndex: 'code',
+            stateId: 'code',
             text: 'Code',
             flex: 1,
             minWidth: 120
         }, {
             dataIndex: 'creditType',
+            stateId: 'creditType',
             text: 'Type',
             minWidth: 120
         } ,{
             dataIndex: 'initialBalance',
+            stateId: 'initialBalance',
             text: 'Issued Amount',
             flex: 1,
             renderer: function (value, metaData, record) {
@@ -42,6 +47,7 @@ Ext.define('Taco.view.storeCredit.Index', {
             minWidth: 120
         }, {
             dataIndex: 'customer',
+            stateId: 'customer',
             text: 'Customer',
             flex: 1,
             minWidth: 120,
@@ -52,6 +58,7 @@ Ext.define('Taco.view.storeCredit.Index', {
             }
         }, {
             dataIndex: 'activationDate',
+            stateId: 'activationDate',
             text: 'Date Issued',
             flex: 1,
             minWidth: 120,
@@ -59,6 +66,7 @@ Ext.define('Taco.view.storeCredit.Index', {
             format: 'M d g:ia'
         }, {
             dataIndex: 'currentBalance',
+            stateId: 'currentBalance',
             text: 'Current Balance',
             flex: 1,
             renderer: function (value, metaData, record) {
@@ -68,12 +76,14 @@ Ext.define('Taco.view.storeCredit.Index', {
             minWidth: 120
         }, {
             dataIndex: 'customerId',
+            stateId: 'customerId',
             text: 'Customer Id',
             flex: 1,
             minWidth: 120,
             hidden: true
         }, {
             dataIndex: 'customer',
+            stateId: 'customerEmail',
             text: 'Customer Email',
             flex: 1,
             minWidth: 120,

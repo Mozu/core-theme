@@ -23,9 +23,12 @@ Ext.define('Taco.view.discount.Index', {
     },
     
     gridPanelConf: {
+        stateful: true,
+        stateId: 'statefulDiscountsGrid',
         columns: [{
             xtype: 'gridcolumn',
             dataIndex: 'name',
+            stateId: 'name',
             text: 'Name',
             hideable: false,
             flex: 1,
@@ -36,6 +39,7 @@ Ext.define('Taco.view.discount.Index', {
         }, {
             xtype: 'gridcolumn',
             dataIndex: 'amountType',
+            stateId: 'amountType',
             text: 'Type',
             width: 150,
             renderer: function (value, metaData, record, rowIndex, colIndex, store) {
@@ -60,6 +64,7 @@ Ext.define('Taco.view.discount.Index', {
         }, {
             xtype: 'gridcolumn',
             dataIndex: 'target',
+            stateId: 'appliesTo',
             text: 'Applies To',
             width: 180,
             hidden: false,
@@ -94,11 +99,13 @@ Ext.define('Taco.view.discount.Index', {
         }, {
             xtype: 'datecolumn',
             dataIndex: 'startDate',
+            stateId: 'startDate',
             width: 100,
             text: 'Start Date'
         }, {
             xtype: 'datecolumn',
             dataIndex: 'expirationDate',
+            stateId: 'expirationDate',
             width: 100,
             text: 'End Date',
             renderer: function (value, metaData, record, rowIndex, colIndex, store) {
@@ -115,17 +122,20 @@ Ext.define('Taco.view.discount.Index', {
         }, {
             xtype: 'gridcolumn',
             dataIndex: 'status',
+            stateId: 'status',
             text: 'Status',
             sortable: false
         }, {
             xtype: 'gridcolumn',
             dataIndex: 'couponCode',
+            stateId: 'couponCode',
             text: 'Coupon Code',
             width: 130,
             hidden: false
         }, {
             xtype: 'numbercolumn',
             dataIndex: 'currentRedemptionCount',
+            stateId: 'currentRedemptionCount',
             format: "0",
             text: 'Used',
             width: 80,
