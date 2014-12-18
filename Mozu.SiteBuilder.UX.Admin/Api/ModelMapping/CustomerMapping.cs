@@ -87,7 +87,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ExternalId, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.IsLocked, op => op.Ignore())
-                .ForMember(dc => dc.IsActive, op => op.Ignore())
                 ;
 
 
