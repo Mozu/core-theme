@@ -107,8 +107,17 @@
             },
 
             function (next) {
-                t.it("Should prevent a negative maxDiscountValuePerOrder", function (t) {
+                t.it("Should prevent a negative maxRedemptionsPerOrder", function (t) {
                     t.notOk(m.maxRedemptionsPerOrderFld.isValid(), 'Max field should be invalid after entering a negative number');
+                    next();
+                });
+            },
+
+            function (next) {
+                t.it("Should hide the maxRedemptionsPerOrder field for Order level discounts", function (t) {
+                    m.form.setFieldVisibility(false);
+                    t.notOk(m.maxRedemptionsPerOrderFld.isVisible(), 'Max field should be hidden for order level discounts');
+                    t.ok(m.maxRedemptionsPerOrderFld.getValue() === null, 'Value should be set to null when hidden.');
                 });
             }
 
