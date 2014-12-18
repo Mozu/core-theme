@@ -2290,6 +2290,8 @@
     <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="ThemeName=Core4;" Targets="BuildThemeWithGrunt" />
   </Target>
   <Target Name="BuildThemeWithGrunt">
+    <Exec Command="md \sb_npm_cache\$(ThemeName)\node_modules" />
+    <Exec Command="mklink /d /j node_modules \sb_npm_cache\$(ThemeName)\node_modules" />
     <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
