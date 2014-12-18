@@ -70,7 +70,10 @@ Ext.define('Taco.view.settings.Publishing', {
             if (scope == 's') {
                 context = Taco.app.context.findSite(rec.get('siteid'));
             }
-            context.contentPublishingEnabled = rec.get('isPubEnabled');
+            if (context != null) {
+                context.contentPublishingEnabled = rec.get('isPubEnabled');
+            }
+            
         });
         //contentPublishingEnabled
 

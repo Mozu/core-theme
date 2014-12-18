@@ -13,7 +13,12 @@
             HyprLiveContext.locals.labels = {
                 funch: 'gunch {0}'
             };
+
             HyprLiveContext.templates['path/to/example'] = '{% if legaltemplate %}something{% endif %}';
+            HyprLiveContext.templates['path/to/example2'] = '{{pageContext.query.funch}}';
+            HyprLiveContext.templates['path/to/example3'] = '{{pageContext.query.bluch}}';
+            HyprLiveContext.templates['path/to/example4'] = '{{pageContext.query.htmlqs}}';
+            history.replaceState({}, null, window.location.href.split('?').shift() + "?funch=wunch&gunch= spaces then brunch&htmlqs=<b>bla</b>")
         })
         it('include getTemplate, getThemeSetting, and getLabel methods', function() {
             expect(Hypr).to.respondTo('getTemplate');
@@ -34,6 +39,12 @@
         it('getLabel returns a label with argument interpolated as values in a string format', function() {
             expect(Hypr.getLabel('funch')).to.equal('gunch {0}');
             expect(Hypr.getLabel('funch', 'wunch')).to.equal('gunch wunch');
+        });
+
+        it('pageContext.query includes a valid querystring value', function () {
+            expect(Hypr.getTemplate('path/to/example2').render()).to.equal('wunch');
+            expect(Hypr.getTemplate('path/to/example3').render()).to.equal('');
+            expect(Hypr.getTemplate('path/to/example4').render()).to.equal('&lt;b&gt;bla&lt;/b&gt;');
         });
     });
     describe('custom tags', function() {

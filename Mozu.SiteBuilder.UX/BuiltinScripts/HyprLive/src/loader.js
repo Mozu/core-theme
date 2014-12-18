@@ -18,6 +18,7 @@
 
 HyprLiveTemplate.prototype = {
     render: function (obj) {
+        HyprLive.immanentize();
         return HyprLive.engine.run(this.precompiledTpl.tpl, obj, this.path);
     }
 }

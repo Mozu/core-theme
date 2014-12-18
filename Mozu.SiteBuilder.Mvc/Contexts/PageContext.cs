@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Configuration;
@@ -119,19 +120,24 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
     }
 
+  
+
+   
     public class PageContext : Mozu.SiteBuilder.UX.Models.IEditableContext
     {
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISettings _settings;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
+        private readonly HttpContextBase _context;
 
-        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider)
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
             _settings = settings;
             _mobileDetectionProvider = mobileDetectionProvider;
+            _context = context;
             this.IsEditMode = _apiContext.IsEditMode;
             IEnumerable<string> values;
 
@@ -160,7 +166,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         }
 
-        public bool IsDebugMode 
+
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [Newtonsoft.Json.JsonIgnore]
+        public NameValueCollection Query
+        {
+            get { return _context.Request.QueryString; }
+        }
+
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [Newtonsoft.Json.JsonIgnore]
+        public HttpCookieCollection Cookies
+        {
+            get { return _context.Request.Cookies; }
+        }
+
+
+    public bool IsDebugMode 
         {
             get { return _apiContext.IsDebugMode; }
         }

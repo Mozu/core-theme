@@ -1,12 +1,12 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2014-10-03
+ * Mozu Hypr Live - v1.0.0 - 2014-12-18
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2014-10-03
+ * Mozu Hypr Live - v1.0.0 - 2014-12-18
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -5429,10 +5429,14 @@ var HyprLiveTemplate = function (precompiledTpl, path) {
 
 HyprLiveTemplate.prototype = {
     render: function (obj) {
+        HyprLive.immanentize();
         return HyprLive.engine.run(this.precompiledTpl.tpl, obj, this.path);
     }
 }
 // BEGIN INIT
+/*global HyprLiveContext:true, amds:true , getHyprLiveTemplate:true*/
+
+
 
 function formatString(str, arr) {
     var formatted = str, otherArgs = arr;
@@ -5441,6 +5445,21 @@ function formatString(str, arr) {
     }
     return formatted;
 }
+
+function deparam(querystring) {
+    // remove any preceding url and split
+    querystring = querystring || window.location.search;
+    querystring = querystring.substring(querystring.indexOf('?') + 1).split('&');
+    var params = {}, pair, d = decodeURIComponent, i;
+    // march and parse
+    for (i = querystring.length; i > 0;) {
+        pair = querystring[--i].split('=');
+        params[d(pair[0])] = d(pair[1]);
+    }
+
+    return params;
+}//--  fn  deparam
+
 
 HyprLiveContext = HyprLiveContext || {
     locals: {},
@@ -5453,12 +5472,12 @@ HyprLiveContext = HyprLiveContext || {
 var locals = HyprLiveContext.locals,
     volatilelocalNames = ['pageContext', 'user']; // 'navigation'];
 
+
+
 for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
     locals[volatilelocalNames[lni]] = require.mozuData(volatilelocalNames[lni].toLowerCase());
     //if (!locals[volatilelocalNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + volatilelocalNames[lni] + ' global using {% preload_json ' + volatilelocalNames[lni] + ' "' + volatilelocalNames[lni].toLowerCase() + '" %}');
 }
-
-
 
 var HyprLive = {
     engine: new amds[0].Swig({
@@ -5472,10 +5491,22 @@ var HyprLive = {
         return locals.themeSettings[setting];
     },
     getLabel: function (name) {
-        if (arguments.length === 1) return locals.labels[name];
-        if (arguments.length > 1) return formatString(locals.labels[name], Array.prototype.slice.call(arguments, 1));
+        if (arguments.length === 1) {
+            return locals.labels[name];
+        }
+        if (arguments.length > 1) {
+            return formatString(locals.labels[name], Array.prototype.slice.call(arguments, 1));
+        }
+    },
+    immanentize: function () {
+        if (locals.pageContext) {
+            locals.pageContext.query = deparam();
+        }
     }
+
+
 };
+HyprLive.immanentize();
 // END INIT
 //function NullTags() {
 //    this.tags = ['require_script', 'json_attribute', 'data_attributes', 'dump'];
