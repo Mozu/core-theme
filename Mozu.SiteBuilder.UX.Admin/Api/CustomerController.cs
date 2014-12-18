@@ -243,6 +243,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
+
+                if (dcExistingCustomer.IsActive != dcCust.IsActive)
+                {
+                    await _customerWebApiClient.ToggleAccountStatus(dcCust.Id);
+                }
+
                 retList.Add(updatedCustomer.Map<ApiCustomer>());
             }
             return List2(retList);
@@ -526,18 +532,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> Unlock(int accountId)
         {
             var result = (await _customerWebApiClient.UnlockAccount(accountId));
-            if (result.HasException)
-            {
-                throw result.ReadException();
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-        [HttpGetRoute(UriTemplate = "{accountId}/toggleAccountStatus")]
-        public async Task<HttpResponseMessage> ToggleAccountStatus(int accountId)
-        {
-            var result = (await _customerWebApiClient.ToggleAccountStatus(accountId));
             if (result.HasException)
             {
                 throw result.ReadException();
