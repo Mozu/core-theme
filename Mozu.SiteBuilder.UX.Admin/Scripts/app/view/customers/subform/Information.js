@@ -52,6 +52,37 @@ Ext.define('Taco.view.customers.subform.Information', {
             ]
         });
 
+        this.unlockAccountBtn = Ext.create('Ext.button.Button', {
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            disabled: !data.isActive,
+            text: 'Unlock Account',
+            handler: function () {
+                Ext.Ajax.request({
+                    url: 'admin/app/customer/{accountId}/unlock',
+                    params: {
+                        accountId: data.id
+                    },
+                    success: function (response) {
+                        var text = response.responseText;
+                        //TODO: (JK) Update account status!
+                    }
+                });
+            }
+        });
+
+        this.resetAccountBtn = Ext.create('Ext.button.Button', {
+            xtype: 'button',
+            ui: 'action',
+            scale: 'medium',
+            disabled: !data.isActive,
+            text: 'Reset Password',
+            handler: function () {
+                //TODO: (JK) Call popup, this will determine if the email is sent to the user.
+            }
+        });
+
         this.disabledField = Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'hbox',
@@ -61,17 +92,24 @@ Ext.define('Taco.view.customers.subform.Information', {
                 xtype: 'checkboxfield',
                 name: 'disabled',
                 itemId: 'disabledCheckbox',
-                boxLabel: 'Account Disabled'
+                boxLabel: 'Disable Account',
+                checked: !data.isActive,
+                handler: function (cmp, checked) {
+                    this.unlockAccountBtn.setDisabled(checked);
+                    this.resetAccountBtn.setDisabled(checked);
+                    //TODO: (JK) Update Account status!
+                },
+                scope: this
             }]
         });
 
-        this.resetAccountBtn = Ext.create('Ext.button.Button', {
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            text: 'Reset Password',
-            handler: function () {
-                
+        this.resetPopup = Ext.create('widget.taco-window', {
+            title: 'Reset Password',
+            height: 200,
+            width: 400,
+            layout: 'fit',
+            items: {
+
             }
         });
 
@@ -111,7 +149,8 @@ Ext.define('Taco.view.customers.subform.Information', {
                     name: 'acceptsMarketing',
                     boxLabel: 'Yes, keep me up to date on store news and specials'
                 },
-                this.taxExamptField
+                this.taxExamptField,
+                this.disabledField
             ]
         }, {
             xtype: 'container',
@@ -206,8 +245,34 @@ Ext.define('Taco.view.customers.subform.Information', {
                     align: 'bottom'
                 },
                 width: '100%',
-                items: [
-                    this.disabledField, {
+                padding: '5 0 5 0',
+                items: [{
+                    xtype: 'component',
+                    cls: 'customer-history',
+                    data:data,
+                    tpl: [
+                        '<div>Account Status:</div>'
+                    ]}, {
+                        xtype: 'component',
+                        flex: 1
+                    },
+                    this.unlockAccountBtn
+                ]
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                width: '100%',
+                padding: '5 0 5 0',
+                items: [{
+                    xtype: 'component',
+                    cls: 'customer-history',
+                    data: data.accountStatus,
+                    tpl: [
+                        '<h2>{.}</h2>'
+                    ]}, {
                         xtype: 'component',
                         flex: 1
                     },

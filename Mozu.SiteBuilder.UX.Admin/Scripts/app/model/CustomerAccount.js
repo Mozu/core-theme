@@ -110,8 +110,20 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'taxId',
             type: 'string'
+        }, {
+            name: 'isActive',
+            type: 'boolean',
+            defaultValue: false
+        }, {
+            name: 'isLocked',
+            type: 'boolean',
+            defaultValue: false
+        }, {
+            name: 'accountStatus',
+            convert: accountStatus
         }
-    ],    
+
+    ],
    
     getOrders: function () {
 
@@ -173,3 +185,13 @@ Ext.define('Taco.model.CustomerAccount', {
         }
     }
 });
+
+function accountStatus(v, record) {
+    if (record.data.isActive === false) {
+        return 'Disabled';
+    } else if (record.data.isLocked === true) {
+        return 'Locked';
+    } else {
+        return 'Active';
+    }
+}
