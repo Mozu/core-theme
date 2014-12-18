@@ -510,5 +510,40 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items));
         }
 
+        [HttpGetRoute(UriTemplate = "{accountId}/resetpassword")]
+        public async Task<HttpResponseMessage> ResetPassword(int accountId)
+        {
+            var result = (await _customerWebApiClient.SendPasswordResetEmail(accountId));
+            if (result.HasException)
+            {
+                throw result.ReadException();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGetRoute(UriTemplate = "{accountId}/unlock")]
+        public async Task<HttpResponseMessage> Unlock(int accountId)
+        {
+            var result = (await _customerWebApiClient.UnlockAccount(accountId));
+            if (result.HasException)
+            {
+                throw result.ReadException();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGetRoute(UriTemplate = "{accountId}/toggleAccountStatus")]
+        public async Task<HttpResponseMessage> ToggleAccountStatus(int accountId)
+        {
+            var result = (await _customerWebApiClient.ToggleAccountStatus(accountId));
+            if (result.HasException)
+            {
+                throw result.ReadException();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

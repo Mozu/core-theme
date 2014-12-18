@@ -124,5 +124,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
 
         public List<int> SegmentIds { get; set; }
+
+        public bool IsLocked { get; set; }
+        public bool IsActive { get; set; }
     }
 }
