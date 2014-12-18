@@ -21,7 +21,7 @@
         }
     ]);
 
-    t.describe("The Discount Limitations Form", function (t) {
+    t.describe("Setup the Discount Limitations Form", function (t) {
         t.chain(
 
             function (next) {
@@ -45,9 +45,14 @@
                     });
                     t.waitForComponentVisible(m.form, next);
                 });
-            },
+            }
+        );
+    });
 
-            function (next, res) {
+    t.describe("MaxDiscountValuePerOrder Field", function (t) {
+        t.chain(
+
+            function (next) {
                 t.setFormValues('Set maxDiscountValuePerOrder to positive number', m.form, {
                     maximumDiscountValuePerOrder: 123
                 }, next);
@@ -56,13 +61,13 @@
             function (next) {
                 t.it("Should have a maxDiscountValuePerOrder", function (t) {
                     m.maxDiscountValuePerOrderFld = m.form.down('#maxDiscountValuePerOrder');
-                    t.ok(m.maxDiscountValuePerOrderFld !== null, 'new product code field should not be null');
+                    t.ok(m.maxDiscountValuePerOrderFld !== null, 'maxDiscountValuePerOrder field should not be null');
                     t.ok(m.maxDiscountValuePerOrderFld.getValue() === 123, 'Value should be 123');
                     next();
                 });
             },
 
-            function (next, res) {
+            function (next) {
                 t.setFormValues('Set maxDiscountValuePerOrder to negative number', m.form, {
                     maximumDiscountValuePerOrder: -123
                 }, next);
@@ -71,6 +76,39 @@
             function (next) {
                 t.it("Should prevent a negative maxDiscountValuePerOrder", function (t) {
                     t.notOk(m.maxDiscountValuePerOrderFld.isValid(), 'Max field should be invalid after entering a negative number');
+                });
+            }
+
+        );
+    });
+
+    t.describe("MaxRedemptionsPerOrderLimits Field", function (t) {
+        t.chain(
+
+            function (next) {
+                t.setFormValues('Set maxDiscountValuePerOrder to positive number', m.form, {
+                    maximumRedemptionsPerOrder: 123
+                }, next);
+            },
+
+            function (next) {
+                t.it("Should have a maximumRedemptionsPerOrder", function (t) {
+                    m.maxRedemptionsPerOrderFld = m.form.down('#maxRedemptionsPerOrder');
+                    t.ok(m.maxRedemptionsPerOrderFld !== null, 'maxRedemptionsPerOrder field should not be null');
+                    t.ok(m.maxRedemptionsPerOrderFld.getValue() === 123, 'Value should be 123');
+                    next();
+                });
+            },
+
+            function (next) {
+                t.setFormValues('Set maxRedemptionsPerOrder to negative number', m.form, {
+                    maximumRedemptionsPerOrder: -123
+                }, next);
+            },
+
+            function (next) {
+                t.it("Should prevent a negative maxDiscountValuePerOrder", function (t) {
+                    t.notOk(m.maxRedemptionsPerOrderFld.isValid(), 'Max field should be invalid after entering a negative number');
                 });
             }
 

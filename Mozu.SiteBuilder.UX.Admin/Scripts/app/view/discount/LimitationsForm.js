@@ -43,6 +43,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
         this.maxRedemptionsPerOrder = Ext.create('Ext.form.field.Number', {
             name: 'maximumRedemptionsPerOrder',
+            itemId: 'maxRedemptionsPerOrder',
             hideTrigger: true,
             width: 240,
             fieldLabel: 'Max Redemptions per Order',
