@@ -244,9 +244,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
 
-                if (dcExistingCustomer.IsActive != dcCust.IsActive)
+                if (dcExistingCustomer.IsActive)
                 {
-                    await _customerWebApiClient.ToggleAccountStatus(dcCust.Id);
+                    await _customerWebApiClient.DisableAccount(dcCust.Id);
+                }
+                else
+                {
+                    await _customerWebApiClient.ActivateAccount(dcCust.Id);
                 }
 
                 retList.Add(updatedCustomer.Map<ApiCustomer>());
