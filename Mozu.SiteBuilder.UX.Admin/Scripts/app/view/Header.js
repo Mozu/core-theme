@@ -197,7 +197,7 @@ Ext.define('Taco.view.Header', {
                 customers: {
                     customerId: rec.data.id,
                     customerAccntEmail: rec.data.customerOrOrganization,
-                    shopperAccntEmail: rec.data.contacts ? rec.data.contacts.map( function(n) { return n.email }) : undefined,
+                    shopperAccntEmail: rec.data.contacts ? rec.data.contacts.map( function(n) { return n.email; }) : undefined,
                     customerSegName: rec.data.segments
                 },
                 dicounts: {
@@ -212,7 +212,7 @@ Ext.define('Taco.view.Header', {
                     customerId: rec.data.customerId,
                     creditCode: rec.data.code
                 }
-            }
+            };
 
         return hash[type];
     },
@@ -225,7 +225,9 @@ Ext.define('Taco.view.Header', {
         if (item.metaData.code) {
 
             try {
-                eval("var x = " + item.metaData.code);
+                var x;
+                /*jshint evil:true */
+                eval("x = " + item.metaData.code);
                 var result = x(rec);
                 if (typeof x === 'function' && result && Boolean(result) ) return result;
 
@@ -248,7 +250,7 @@ Ext.define('Taco.view.Header', {
 
         Ext.Array.each(items, function (item) {
             var correctView = record && record.record ? record.record.$className === me.parentHash[item.metaData.requiredContext] : false,
-                ctx = correctView & item.metaData.requiredContext !== 'none' ? me.getContextHash(item.metaData.requiredContext, record) : undefined,
+                ctx = correctView && item.metaData.requiredContext !== 'none' ? me.getContextHash(item.metaData.requiredContext, record) : undefined,
                 itemCfg = {
                     text: item.label,
                     disabled: !me.isEnabled(item, record, correctView)
