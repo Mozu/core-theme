@@ -82,6 +82,26 @@ Ext.define('Taco.view.customers.Index', {
                         return null;
                     }
                 }, {
+                    dataIndex: 'isAnonymous',
+                    stateId: 'isAnonymous',
+                    text: 'Shopper Acct',
+                    width: 100,
+                    renderer: function (value, metaData, record) {
+                        if (!value) {
+                            return 'Y';
+                        } else {
+                            return 'N';
+                        }
+                    }
+                }, {
+                    dataInex: 'accountStatus',
+                    stateId: 'accountStatus',
+                    text: 'Status',
+                    width: 100,
+                    renderer: function (value, metaData, record) {
+                        return record.get('accountStatus');
+                    }
+                }, {
                     dataIndex: 'orderCount',
                     stateId: "orderCount",
                     sortable: true,

@@ -13,14 +13,23 @@ Ext.define('Taco.view.customers.subform.Information', {
         align: 'stretch'
     },
 
+    config: {
+        accountStatus: 'Active',
+    },
+
     initComponent: function () {
 
         var me = this,
             data = this.record ? this.record.getData() : {
                 createDate: new Date()
             };
-
-        if (this.record) this.setTitle('Customer ID: ' + this.record.getId());
+        if (this.record) {
+            var titleString = 'Customer ID: ' + this.record.getId();
+            if (!this.record.get('isAnonymous')) {
+                titleString += '  |  Shopper ID: ' + this.record.get('emailAddressSafe');
+            }
+            this.setTitle(titleString);
+        }
 
         this.taxExemptIdField = Ext.create('Ext.form.field.Text', {
             padding: '0 0 0 10',
@@ -30,6 +39,8 @@ Ext.define('Taco.view.customers.subform.Information', {
             cls: 'no-field-padding',
             hidden: !data.taxExempt
         });
+
+        this.setAccountStatus(data.accountStatus);
 
         this.taxExamptField = Ext.create('Ext.form.FieldContainer', {
             layout: {
@@ -56,22 +67,25 @@ Ext.define('Taco.view.customers.subform.Information', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            disabled: data.isDisabled,
+            disabled: data.isDisabled || !data.isLocked,
             text: 'Unlock Account',
             handler: function () {
-                this.unlockAccountAjax(data.id);
-            }
+                this.unlockAccountAjax(this.record.get('id'));
+            },
+            scope: this
         });
 
         this.unlockAccountAjax = function (id) {
+            var me = this;
             Ext.Ajax.request({
-                url: 'admin/app/customer/{accountId}/unlock',
+                url: 'admin/app/customer/' + id + '/unlock',
                 params: {
                     accountId: id
                 },
                 success: function (response) {
                     var text = response.responseText;
-                    //TODO: (JK) Update account status!
+                    //Update account status!
+                    me.setAccountStatus(me.record.get('accountStatus'));
                 }
             });
         }
@@ -83,6 +97,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             disabled: data.isDisabled,
             text: 'Reset Password',
             handler: function () {
+                var id = this.record.get('id');
                 Ext.MessageBox.show({
                     title: 'Reset Passowrd',
                     // pushes the buttons to the right to be consistant with our dialog ux.
@@ -95,13 +110,13 @@ Ext.define('Taco.view.customers.subform.Information', {
                     fn: function (val) {
                         if (val === 'yes') {
                             Ext.Ajax.request({
-                                url: 'admin/app/customer/{accountId}/resetpassword',
+                                url: 'admin/app/customer/' + id + '/resetpassword',
                                 params: {
-                                    accountId: data.id
+                                    accountId: id
                                 },
                                 success: function (response) {
                                     var text = response.responseText;
-                                    // Nothing do do yet!
+                                    me.setAccountStatus(me.record.get('accountStatus'));
                                 }
                             });
                         }
@@ -118,10 +133,14 @@ Ext.define('Taco.view.customers.subform.Information', {
             items: [{
                 xtype: 'checkboxfield',
                 name: 'isDisabled',
-                boxLabel: 'Disable Account',listeners: {
+                boxLabel: 'Disable Account',
+                listeners: {
                     change: function (field, newValue, oldValue, eOpts) {
-                        this.unlockAccountBtn.setDisabled(newValue);
+                        if (this.record.get('isLocked')) {
+                            this.unlockAccountBtn.setDisabled(newValue);
+                        }
                         this.resetAccountBtn.setDisabled(newValue);
+                        this.setAccountStatus(newValue?'Disabled':'Active');
                     },
                     scope: this
                 },
@@ -299,7 +318,11 @@ Ext.define('Taco.view.customers.subform.Information', {
                     data: data,
                     tpl: [
                         '<h2>{accountStatus}</h2>'
-                    ]}, {
+                    ],
+                    listeners: {
+                        accountstatuschanged: { scope: this, fn: function (cmp, newStatus, oldStatus) { this.down('#accountStatus').update({accountStatus: newStatus}) }}
+                    }
+                }, {
                         xtype: 'component',
                         flex: 1
                     },
@@ -310,17 +333,6 @@ Ext.define('Taco.view.customers.subform.Information', {
 
         this.callParent(arguments);
 
-    },
-
-    onBoxReady: function() {
-        this.callParent(arguments);
-
-        this.up('formform').on({
-            savesuccess: {
-                scope: this,
-                fn: 'updateAccountStatus'
-            }
-        });
     },
 
     launchSegmentModal: function () {
@@ -344,11 +356,15 @@ Ext.define('Taco.view.customers.subform.Information', {
         });
     },
 
-    updateAccountStatus: function (cmp) {
-        console.log(cmp.record.getData().accountStatus);
-        var accountStatus = this.down('#accountStatus');
-        console.log(accountStatus);
-        console.log(cmp.record.getData().accountStatus);
-        accountStatus.update(cmp.record.getData());
+    updateAccountStatus: function (newStatus, oldStatus) {
+        console.log('Before IF statement:');
+        console.log('newStatus:');
+        console.log(newStatus);
+        console.log('oldStatus:');
+        console.log(oldStatus);
+        if (newStatus !== oldStatus) {
+            console.log('INSIDE IF statement');
+            this.fireEvent('accountstatuschanged', this, newStatus, oldStatus);
+        }
     }
 });
