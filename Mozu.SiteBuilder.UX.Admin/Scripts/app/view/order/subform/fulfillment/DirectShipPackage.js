@@ -190,9 +190,6 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
         this.actions = [{
             text: 'Print Packing Slip',
-            handler: this.handlePrintPackingSlip2
-        }, {
-            text: 'Print Packing Slip [Old]',
             handler: this.handlePrintPackingSlip
         }, {
             text: 'View Shipping Label',
@@ -230,119 +227,20 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
         this.collapsedActions = [{
             text: 'Print Packing Slip',
-            handler: this.handlePrintPackingSlip2
-        }, {
-            text: 'Print Packing Slip [Old]',
             handler: this.handlePrintPackingSlip
         }];
 
         this.callParent(arguments);
     },
 
-    handlePrintPackingSlip2: function () {
+    handlePrintPackingSlip: function () {
         var siteId = this.record.get('siteId'),
             orderId = this.record.getId(),
             packageId = this.packageData.id;
         window.open('/admin/s-' + siteId + '/orderdetails/' + orderId + '/packages/' + packageId);
-
-    },
-
-    handlePrintPackingSlip: function () {
-        var win = window.open(),
-
-            data = {
-                shippingMethodName: this.packageData.shippingMethodName,
-                items: this.packageData.items,
-                billingContact: this.record.get('billingContact'),
-                fulfillmentContact: this.record.get('fulfillmentContact'),
-                payments: this.record.get('payments'),
-                order: this.record.getData(),
-                orderRecord: this.record,
-                siteName: Taco.app.context.getSite().name
-            },
-            tpl = new Ext.XTemplate(
-                '<div style="font: 14px/1.5 sans-serif;">',
-                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody><tr>',
-                '<td style="padding: 4px 30px 20px 4px; width: 100%;">',
-                '<h1 style="margin: 0px;">{siteName}</h1>',
-                '</td>',
-                '<td style="padding: 4px 30px 20px 4px;">',
-                '<h2 style="margin: 0px; white-space: nowrap;">PACKING SLIP</h2>',
-                '<table style="border-collapse: collapse; border-spacing: 0px;"><tbody><tr>',
-                '<td style="padding: 4px 30px 4px 4px;">',
-                '<div style="font-weight: bold; white-space: nowrap;">Date:</div>',
-                '<div style="white-space: nowrap;">{order.createDate:date("M d g:ia")}</div>',
-                '</td>',
-                '<td style="padding: 4px 30px 4px 4px;">',
-                '<div style="font-weight: bold; white-space: nowrap;">Order #:</div>',
-                '<div style="font-weight: bold; white-space: nowrap;">{order.orderNumber}</div>',
-                '</td>',
-                '</tr></tbody></table>',
-                '</td>',
-                '</tr></tbody></table>',
-                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
-                '<tr>',
-                '<td style="font-weight: bold;">Bill To: (Customer ID #1)</td>',
-                '<td style="font-weight: bold;">Ship To:</td>',
-                '</tr>',
-                '<tr>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">',
-                '<div>{billingContact.firstName} {billingContact.lastName}</div>',
-                '<div>{billingContact.address1}</div>',
-                '<div>{billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode}</div>',
-                '<div>{billingContact.countryCode}</div>',
-                '<div>{billingContact.homePhone}</div>',
-                '<div>{billingContact.email}</div>',
-                '</td>',
-                '<td style="border-top: 2px solid black; font-size: 16px; font-weight: bold; padding: 4px 30px 20px 4px;">',
-                '<div>{fulfillmentContact.firstName} {fulfillmentContact.lastName}</div>',
-                '<div>{fulfillmentContact.address1}</div>',
-                '<div>{fulfillmentContact.cityOrTown}, {fulfillmentContact.stateOrProvince} {fulfillmentContact.postalOrZipCode}</div>',
-                '<div>{fulfillmentContact.countryCode}</div>',
-                '<div>{fulfillmentContact.homePhone}</div>',
-                '<div>{fulfillmentContact.email}</div>',
-                '</td>',
-                '</tr>',
-
-
-                '<tr>',
-                '<td style="font-weight: bold;">Payment Method:</td>',
-                '<td style="font-weight: bold;">Shipping Method:</td>',
-                '</tr>',
-                '<tr>',
-                '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">',
-                '<tpl for="payments">',
-                '<tpl if="values.status!=\'Voided\'">',
-                '<div>{paymentType}<div>',
-                '</tpl>',
-                '</tpl>',
-                '</td>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">{shippingMethodName}</td>',
-                '</tr>',
-
-                '</tbody></table>',
-                '<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>',
-                '<tr>',
-                '<td style="font-weight: bold; white-space: nowrap;">Code</td>',
-                '<td style="font-weight: bold; white-space: nowrap;">Name</td>',
-                '<td style="font-weight: bold; white-space: nowrap;">Qty</td>',
-                '</tr>',
-
-                '<tpl for="values.items"><tr>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{productCode}</td>',
-                '<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 15px 4px; width: 100%;">{productName}</td>',
-                '<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{quantity}</td>',
-                '</tr></tpl>',
-                '</tbody></table>',
-                '</div>'
-            ),
-            html = tpl.apply(data);
-
-        Ext.fly(win.document.body).setHTML(html);
     },
 
     handleOverrideWeight: function () {
-
         Ext.create('Taco.view.order.modal.OverrideTotalWeight', {
             record: this.packageData,
             listeners: {
