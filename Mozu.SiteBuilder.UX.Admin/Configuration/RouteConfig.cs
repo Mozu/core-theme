@@ -42,6 +42,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             routes.MapHttpRoute("order details", "s-{siteId}/orderdetails/{orderId}",
                                 new {action = "Deets", controller = "OrderDetails"});
 
+            routes.MapHttpRoute("packing slip", "s-{siteId}/orderdetails/{orderId}/packages/{packageId}",
+                                new { action = "Deets", controller = "OrderDetails" });
+
             routes.Add("scripts/{*.pathInfo}", new IgnoreRoute("scripts/{*.pathInfo}"));
             routes.Add("{file}.txt", new IgnoreRoute("{file}.txt"));
             routes.Add("{file}.htm", new IgnoreRoute("{file}.htm"));

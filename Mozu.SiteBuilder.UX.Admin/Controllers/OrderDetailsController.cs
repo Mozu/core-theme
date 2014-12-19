@@ -8,6 +8,7 @@ using Mozu.Core;
 using Mozu.Core.Behaviors;
 using Mozu.Core.Exceptions;
 using System.Web.Http;
+using System.Text;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -29,12 +30,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         /// on storefront and sends a 302 redirects to storefront.
         /// </summary>
         [HttpGet]
-        public HttpResponseMessage Deets(int siteId, string orderId)
+        public HttpResponseMessage Deets(int siteId, string orderId, string packageId = null)
         {
             var claim = CreateLimitedUserClaimsForOrder(orderId);
-            string tok = HttpUtility.UrlEncode( claim.ToAccessToken() );
+            string tok = HttpUtility.UrlEncode(claim.ToAccessToken());
 
-            string destinationUrl = String.Format("/admin-order-summary/{0}?t={1}", orderId, HttpUtility.UrlEncode(tok));
+            string destinationUrl = "/admin-order-summary/" + orderId;
+            if (!String.IsNullOrEmpty(packageId))
+                destinationUrl += "/packages/" + packageId;
+            destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
             resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);

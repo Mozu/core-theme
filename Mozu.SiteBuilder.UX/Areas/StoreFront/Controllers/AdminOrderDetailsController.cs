@@ -16,6 +16,7 @@ using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.TestData;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using DC = Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -33,6 +34,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ILogger _logger;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "order.admin.order1";
+        private const string PACKAGE_PREVIEW_RESOURCE_NAME = "order.admin.package1";
 
         /// <summary>
         /// Public constructor.
@@ -49,27 +51,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
         {
-            LightweightUserClaims userClaimFromQuery = null;
-
-            // ensure things are on the up and up
-            bool isAuthorized = LightweightUserClaims.TryParse(token, out userClaimFromQuery) && IsUserAuthorizedForOrder(userClaimFromQuery, orderId);
-            if (!isAuthorized) return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You are not permitted to access this resource.");
-
-            var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromQuery);
-
-            bool isExpired = userClaimFromQuery.Expiration < DateTime.UtcNow;
-            if (isExpired) return TokenExpiredResponse();
-
-            var order = await (await customOrderClient.GetOrder(orderId)).ReadAsAsync();
+            var order = await GetOrderWithCustomToken(orderId, token);
 
             var template = SiteContext.Theme.OrderTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("details"));
             if (template == null)
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find order details template for the current Theme.");
-
-            var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
-            var jo = Newtonsoft.Json.Linq.JObject.FromObject(order, ser);
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find order details template for the current Theme.");
 
             return await RenderWithContext(template, order);
+        }
+
+        /// <summary>
+        /// Packing Slip.
+        /// </summary>
+        [HttpGet]
+        public async Task<HttpResponseMessage> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
+        {
+            var order = await GetOrderWithCustomToken(orderId, token);
+            var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
+
+            if (order == null || package == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var template = SiteContext.Theme.OrderTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packingslip"));
+            if (template == null)
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find packing slip template for the current Theme.");
+
+            var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+            var jo = Newtonsoft.Json.Linq.JObject.FromObject(package, ser);
+
+            ViewData["order"] = order;
+            return await RenderWithContext(template, package);
         }
 
         /// <summary>
@@ -82,9 +93,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (template == null)
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find order template " + templateid);
 
-            object model = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-
-            return await RenderWithContext(template, model);
+            if (templateid == "details")
+            {
+                object model = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "packingslip")
+            {
+                object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(PACKAGE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["order"] = order;
+                return await RenderWithContext(template, model);
+            }
+            else
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
         }
 
         /// <summary>
@@ -111,11 +135,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             });
         }
 
-        private HttpResponseMessage TokenExpiredResponse()
+        private HttpResponseException TokenExpiredException()
         {
             var resp = new HttpResponseMessage(HttpStatusCode.NotFound);
             resp.Content = new StringContent("Aw, poop! Your access to this page has expired. Please re-request this resource from admin.");
-            return resp;
+            return new HttpResponseException(resp);
         }
 
         /// <summary>
@@ -132,6 +156,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 (userClaimFromQuery.Bag.TryGetValue("OrderId", out claimOrderId) && claimOrderId == orderId)
                 &&
                 (userClaimFromQuery.Bag.TryGetValue("TenantId", out tidString) && Int32.TryParse(tidString, out claimTenantId) && claimTenantId == _apiContext.TenantId);
+        }
+
+        /// <summary>
+        /// Retrieves an order from CommerceRuntime service using a custom access token rather than the one in api context.
+        /// </summary>
+        private Task<DC.Order> GetOrderWithCustomToken(string orderId, string authToken)
+        {
+            LightweightUserClaims userClaimFromCustomToken = null;
+
+            // ensure things are on the up and up
+            bool isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
+            if (!isAuthorized) throw new HttpResponseException(this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You are not permitted to access this resource."));
+
+            var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
+
+            bool isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
+            if (isExpired) throw TokenExpiredException();
+
+            return _orderWebApiClient.GetOrder(orderId).ContinueWith(t => t.Result.ReadAsAsync()).Unwrap();
         }
     }
 }

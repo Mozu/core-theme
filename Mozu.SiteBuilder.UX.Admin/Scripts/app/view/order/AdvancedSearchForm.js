@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.product.AdvancedSearchForm
+ * @class Taco.view.order.AdvancedSearchForm
  */
 Ext.define('Taco.view.order.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
@@ -28,7 +28,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
 
         this.items = [{
                 name: 'keyword',
-                fieldLabel: 'Keyword Search'
+                fieldLabel: 'Keyword xxxSearch'
             },
             {
                 xtype: 'combobox',

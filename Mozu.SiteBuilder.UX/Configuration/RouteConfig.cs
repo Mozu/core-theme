@@ -432,6 +432,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "AdminOrderDetails", action = "OrderSummary" });
 
             routes.MapHttpRoute(
+                "packing slip (admin view)",
+                "admin-order-summary/{orderId}/packages/{packageId}",
+                new { controller = "AdminOrderDetails", action = "PackingSlip" });
+
+            routes.MapHttpRoute(
                 "order details (admin view) - PREVIEW",
                 "admin-order-preview/{templateid}",
                 new { controller = "AdminOrderDetails", action = "Preview" });

@@ -1,0 +1,42 @@
+﻿{
+  "shippingMethodCode": "usps_Priority",
+  "shippingMethodName": "Priority Mail",
+  "shipmentId": null,
+  "trackingNumber": null,
+  "packagingType": null,
+  "hasLabel": false,
+  "measurements": null,
+  "id": "e2ab990758df47499dd5a405015c8f9f",
+  "code": "Package-1",
+  "status": "NotFulfilled",
+  "items": [
+    {
+      "productCode": "4Cw8uaZTa",
+      "quantity": 1,
+      "fulfillmentItemType": "Physical"
+    },
+    {
+      "productCode": "productinception",
+      "quantity": 2,
+      "fulfillmentItemType": "Physical"
+    },
+    {
+      "productCode": "MTH001",
+      "quantity": 3,
+      "fulfillmentItemType": "Physical"
+    }
+  ],
+  "fulfillmentDate": null,
+  "fulfillmentLocationCode": "AustinNextDoor",
+  "auditInfo": {
+    "updateDate": "2014-12-18T21:09:04.296Z",
+    "createDate": "2014-12-18T21:09:04.296Z",
+    "updateBy": "907e3523d71f49feb210e018b631661e",
+    "createBy": "907e3523d71f49feb210e018b631661e"
+  },
+  "availableActions": [
+    "Ship",
+    "Fulfill"
+  ],
+  "changeMessages": []
+}

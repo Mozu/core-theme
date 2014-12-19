@@ -2205,6 +2205,7 @@
     <Content Include="Themes\Core6\templates\order\details.hypr" />
     <Content Include="Themes\Core6\templates\order\packingslip.hypr" />
     <Content Include="Themes\Core6\templates\order\order.hypr" />
+    <Content Include="Themes\Core6\stylesheets\order.less" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2297,6 +2298,10 @@
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
+    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+    <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
     <ItemGroup>
       <Content Include="Themes\$(ThemeName)\**\*.*" Exclude="Themes\$(ThemeName)\node_modules" />
     </ItemGroup>

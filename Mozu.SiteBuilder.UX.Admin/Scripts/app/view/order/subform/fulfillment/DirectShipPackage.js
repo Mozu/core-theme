@@ -190,6 +190,9 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
         this.actions = [{
             text: 'Print Packing Slip',
+            handler: this.handlePrintPackingSlip2
+        }, {
+            text: 'Print Packing Slip [Old]',
             handler: this.handlePrintPackingSlip
         }, {
             text: 'View Shipping Label',
@@ -225,12 +228,23 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             }
         };
 
-        this.collapsedActions = {
+        this.collapsedActions = [{
             text: 'Print Packing Slip',
+            handler: this.handlePrintPackingSlip2
+        }, {
+            text: 'Print Packing Slip [Old]',
             handler: this.handlePrintPackingSlip
-        };
+        }];
 
         this.callParent(arguments);
+    },
+
+    handlePrintPackingSlip2: function () {
+        var siteId = this.record.get('siteId'),
+            orderId = this.record.getId(),
+            packageId = this.packageData.id;
+        window.open('/admin/s-' + siteId + '/orderdetails/' + orderId + '/packages/' + packageId);
+
     },
 
     handlePrintPackingSlip: function () {
