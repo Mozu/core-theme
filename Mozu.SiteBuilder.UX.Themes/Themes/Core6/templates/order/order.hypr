@@ -9,6 +9,8 @@
     	    {% include "modules/trailing-scripts" %}
     	    {% cms_resources %}
     	{% endif %}
+
+        <style type="text/css">{% inline_style "order.less" %}</style>
     </head>
     <body>
         {% block body-content %}

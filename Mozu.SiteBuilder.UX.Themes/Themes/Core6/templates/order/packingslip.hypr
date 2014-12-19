@@ -1,85 +1,80 @@
 ﻿{% extends "order/order" %}
 {% block body-content %}
-
-<div style="font: 14px/1.5 sans-serif;">
-<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody><tr>
-<td style="padding: 4px 30px 20px 4px; width: 100%;">
-<h1 style="margin: 0px;">siteName</h1>
-</td>
-<td style="padding: 4px 30px 20px 4px;">
-<h2 style="margin: 0px; white-space: nowrap;">PACKING SLIP</h2>
-<table style="border-collapse: collapse; border-spacing: 0px;"><tbody><tr>
-<td style="padding: 4px 30px 4px 4px;">
-<div style="font-weight: bold; white-space: nowrap;">Date:</div>
-<div style="white-space: nowrap;">{{ model.submittedDate|date("M d g:ia") }}</div>
-</td>
-<td style="padding: 4px 30px 4px 4px;">
-<div style="font-weight: bold; white-space: nowrap;">Order #:</div>
-<div style="font-weight: bold; white-space: nowrap;">{{ model.orderNumber }}</div>
-</td>
-</tr></tbody></table>
-</td>
-</tr></tbody></table>
-<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>
-<tr>
-<td style="font-weight: bold;">Bill To:</td>
-<td style="font-weight: bold;">Ship To:</td>
-</tr>
-<tr>
-<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">
-<div>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</div>
-<div>{{ model.billingInfo.billingContact.address.address1 }}</div>
-{% if model.billingInfo.billingContact.address.address2 %}<div>{{ model.billingInfo.billingContact.address.address2 }}</div>{% endif %}
-{% if model.billingInfo.billingContact.address.address3 %}<div>{{ model.billingInfo.billingContact.address.address3 }}</div>{% endif %}
-{% if model.billingInfo.billingContact.address.address4 %}<div>{{ model.billingInfo.billingContact.address.address4 }}</div>{% endif %}
-<div>{{ model.billingInfo.billingContact.address.cityOrTown }}, {{ model.billingInfo.billingContact.address.stateOrProvince }} {{ model.billingInfo.billingContact.address.postalOrZipCode }}</div>
-{% if model.billingInfo.billingContact.phoneNumbers.home %}<div>{{ model.billingInfo.billingContact.phoneNumbers.home }} (home)</div>{% endif %}
-{% if model.billingInfo.billingContact.phoneNumbers.work %}<div>{{ model.billingInfo.billingContact.phoneNumbers.work }} (work)</div>{% endif %}
-{% if model.billingInfo.billingContact.phoneNumbers.mobile %}<div>{{ model.billingInfo.billingContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
-<div>{{ model.billingInfo.billingContact.email }}</div>
-</td>
-<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">
-<div>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
-<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
-{% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
-{% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
-{% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
-<div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}, {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
-{% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
-{% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
-{% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
-<div>{{ model.fulfillmentInfo.fulfillmentContact.email }}</div>
-</td>
-</tr>
-<tr>
-<td style="font-weight: bold;">Payment Method:</td>
-<td style="font-weight: bold;">Shipping Method:</td>
-</tr>
-<tr>
-<td style="border-top: 2px solid black; font-weight: bold; padding: 4px 30px 20px 4px;">
-{% for payment in model.payments %}
-{% if payment.status == "Voided" %}
-<div>{{ payment.paymentType }}<div>
-{% endif %}
-{% endfor %}
-</td>
-<td style="border-top: 2px solid black; padding: 4px 30px 20px 4px;">{{ model.fulfillmentInfo.shippingMethodName }}</td>
-</tr>
-</tbody></table>
-<table style="border-collapse: collapse; border-spacing: 0px; width: 100%;"><tbody>
-<tr>
-<td style="font-weight: bold; white-space: nowrap;">Product Code</td>
-<td style="font-weight: bold; white-space: nowrap;">Product Name</td>
-<td style="font-weight: bold; white-space: nowrap;">Quantity</td>
-</tr>
-{% for item in model.items %}
-<tr>
-<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{{ item.product.productCode }}</td>
-<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; width: 100%;">{{ item.product.name }}</td>
-<td style="border-top: 2px solid black; padding: 4px 30px 15px 4px; white-space: nowrap;">{{ item.quantity }}</td>
-</tr>
-{% endfor %}
-</tbody></table>
-</div>
+<table class="mz-printable-order mz-printable-order-packingslip">
+<thead class="header"><tr>
+    <th class="company-info">{{ customContent.companyName }}</th>
+    <th class="company-contacts">{{ customContent.companyAddress }}</th>
+    <th class="company-url">{{ customContent.websiteUrl }}</th>
+    <th class="order-essentials">
+        <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date("m/d/Y") }}</span></div>
+    </th>
+</tr></thead>
+<tbody><tr><td colspan="4">
+    <table class="grid">
+        <thead><tr>
+            <th>Bill To:</th>
+            <th>Ship To:</th>
+        </tr></thead>
+        <tbody><tr>
+            <td>
+                <div>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</div>
+                <div>{{ model.billingInfo.billingContact.address.address1 }}</div>
+                {% if model.billingInfo.billingContact.address.address2 %}<div>{{ model.billingInfo.billingContact.address.address2 }}</div>{% endif %}
+                {% if model.billingInfo.billingContact.address.address3 %}<div>{{ model.billingInfo.billingContact.address.address3 }}</div>{% endif %}
+                {% if model.billingInfo.billingContact.address.address4 %}<div>{{ model.billingInfo.billingContact.address.address4 }}</div>{% endif %}
+                <div>{{ model.billingInfo.billingContact.address.cityOrTown }}, {{ model.billingInfo.billingContact.address.stateOrProvince }} {{ model.billingInfo.billingContact.address.postalOrZipCode }}</div>
+                {% if model.billingInfo.billingContact.phoneNumbers.home %}<div>{{ model.billingInfo.billingContact.phoneNumbers.home }} (home)</div>{% endif %}
+                {% if model.billingInfo.billingContact.phoneNumbers.work %}<div>{{ model.billingInfo.billingContact.phoneNumbers.work }} (work)</div>{% endif %}
+                {% if model.billingInfo.billingContact.phoneNumbers.mobile %}<div>{{ model.billingInfo.billingContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                <div>{{ model.billingInfo.billingContact.email }}</div>
+            </td><td>
+                <div>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+                <div>{{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
+                <div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}, {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
+                {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
+                {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                <div>{{ model.fulfillmentInfo.fulfillmentContact.email }}</div>
+            </td>
+        </tr>
+    </tbody></table>
+    <table class="grid">
+        <thead><tr>
+            <th>Payment Method</th>
+            <th>Shipping Method</th>
+        </tr></thead>
+        <tbody><tr>
+            <td>
+                {% for payment in model.payments %}
+                {% if payment.status == "Voided" %}
+                <div>{{ payment.paymentType }}<div>
+                {% endif %}
+                {% endfor %}
+            </td><td>
+                {{ model.fulfillmentInfo.shippingMethodName }}
+            </td>
+        </tr></tbody>
+    </table>
+    <table class="grid">
+        <thead><tr>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+        </tr></thead>
+        <tbody>
+        {% for item in model.items %}
+            <tr>
+                <td>{{ item.product.productCode }}</td>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
+        {% endfor %}</tbody>
+    </table>
+</td></tr></tbody>
+</table>
 
 {% endblock body-content %}
