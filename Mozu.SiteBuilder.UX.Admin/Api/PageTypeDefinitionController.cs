@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
 
 
-            IEnumerable<PageTypeDefinition> pageTypes = _siteContext.Theme.PageTypes.Concat(_siteContext.Theme.EmailTemplates).ToList();
+            IEnumerable<PageTypeDefinition> pageTypes = _siteContext.Theme.PageTypes.Concat(_siteContext.Theme.EmailTemplates).Concat(_siteContext.Theme.OrderTemplates).ToList();
             bool userCreatable = false;
             if (extFilter.TryGetValue("userCreatable",out userCreatable ))
             {

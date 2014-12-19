@@ -49,6 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                     theme.MergedSettings = tmd.Configuration.Settings;
                     theme.PageTypes = tmd.Configuration.PageTypes;
                     theme.EmailTemplates = tmd.Configuration.EmailTemplates;
+                    theme.OrderTemplates = tmd.Configuration.OrderTemplates;
                     theme.Widgets = tmd.Configuration.Widgets;
                     theme.Editors = tmd.Configuration.Editors;
                 }
@@ -57,6 +58,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                     theme.MergedSettings = Merge(tmd.Configuration.Settings, parent.MergedSettings, setting => setting.Id).ToList();
                     theme.PageTypes = Merge(tmd.Configuration.PageTypes, parent.PageTypes, pt => pt.Id).ToList();
                     theme.EmailTemplates = Merge(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id).ToList();
+                    theme.OrderTemplates = Merge(tmd.Configuration.OrderTemplates, parent.OrderTemplates, pt => pt.Id).ToList();
                     theme.Editors = Merge(tmd.Configuration.Editors, parent.Editors, pt => pt.Id).ToList();
                     theme.Widgets = Merge(tmd.Configuration.Widgets, parent.Widgets, widget => widget.Id).ToList();                   
                 }

@@ -444,6 +444,16 @@ Ext.define('Taco.view.order.subform.Detail', {
                 margin: {
                     right: 2
                 },
+                handler: me.openPrintWindow2,
+                scope: me
+            },{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Print Order [Old]',
+                margin: {
+                    right: 2
+                },
                 handler: me.openPrintWindow,
                 scope: me
             }, {
@@ -474,6 +484,12 @@ Ext.define('Taco.view.order.subform.Detail', {
     isValid: function () {
         var items = this.record.get('items');
         return items && items.length;
+    },
+
+    openPrintWindow2: function () {
+        var siteId = this.record.get('siteId'),
+            orderId = this.record.getId();
+        window.open('/admin/s-' + siteId + '/orderdetails/' + orderId);
     },
 
     openPrintWindow: function () {

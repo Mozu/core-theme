@@ -1,8 +1,7 @@
 Ext.define('Taco.view.order.subform.fulfillment.DirectShip', {
     extend: 'Taco.view.order.subform.fulfillment.Container',
     requires: [
-        'Taco.view.order.subform.fulfillment.DirectShipPackage',
-        'Taco.view.order.widget.ShippingItemGrid'
+        'Taco.view.order.subform.fulfillment.DirectShipPackage'
     ],
     alias: 'widget.taco-order-fulfillment-direct-ship',
 
