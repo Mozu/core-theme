@@ -5,7 +5,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         'Ext.ux.form.field.BoxSelect'
     ],
 
-    title: 'Shopper ID',
+    title: 'Customer ID',
     cls: Taco.baseCSSPrefix + 'customer-information',
 
     layout: {
@@ -20,7 +20,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                 createDate: new Date()
             };
 
-        if (this.record) this.setTitle('Shopper ID: ' + this.record.getId());
+        if (this.record) this.setTitle('Customer ID: ' + this.record.getId());
 
         this.taxExemptIdField = Ext.create('Ext.form.field.Text', {
             padding: '0 0 0 10',
@@ -37,17 +37,17 @@ Ext.define('Taco.view.customers.subform.Information', {
                 align: 'stretch'
             },
             items: [{
-                    xtype: 'checkboxfield',
-                    name: 'taxExempt',
-                    itemId: 'taxExemptCheckbox',
-                    boxLabel: 'Tax Exempt',
-                    listeners: {
-                        change: function (field, newValue, oldValue, eOpts) {
-                            this.taxExemptIdField.setVisible(newValue);
-                        },
-                        scope: this
-                    }
-                },
+                xtype: 'checkboxfield',
+                name: 'taxExempt',
+                itemId: 'taxExemptCheckbox',
+                boxLabel: 'Tax Exempt',
+                listeners: {
+                    change: function (field, newValue, oldValue, eOpts) {
+                        this.taxExemptIdField.setVisible(newValue);
+                    },
+                    scope: this
+                }
+            },
                 this.taxExemptIdField
             ]
         });
@@ -56,31 +56,58 @@ Ext.define('Taco.view.customers.subform.Information', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            disabled: !data.isActive,
+            disabled: data.isDisabled,
             text: 'Unlock Account',
             handler: function () {
-                Ext.Ajax.request({
-                    url: 'admin/app/customer/{accountId}/unlock',
-                    params: {
-                        accountId: data.id
-                    },
-                    success: function (response) {
-                        var text = response.responseText;
-                        //TODO: (JK) Update account status!
-                    }
-                });
+                this.unlockAccountAjax(data.id);
             }
         });
+
+        this.unlockAccountAjax = function (id) {
+            Ext.Ajax.request({
+                url: 'admin/app/customer/{accountId}/unlock',
+                params: {
+                    accountId: id
+                },
+                success: function (response) {
+                    var text = response.responseText;
+                    //TODO: (JK) Update account status!
+                }
+            });
+        }
 
         this.resetAccountBtn = Ext.create('Ext.button.Button', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            disabled: !data.isActive,
+            disabled: data.isDisabled,
             text: 'Reset Password',
             handler: function () {
-                //TODO: (JK) Call popup, this will determine if the email is sent to the user.
-            }
+                Ext.MessageBox.show({
+                    title: 'Reset Passowrd',
+                    // pushes the buttons to the right to be consistant with our dialog ux.
+                    rightJustifyButtons: true,
+                    // reverses the order of the buttons
+                    reverseOrder: true,
+                    msg: "Are you sure? This will generate an email that notifies the customer that they will need to create a new password on their next login attempt.",
+                    closable: false,
+                    buttons: Ext.Msg.YESNO,
+                    fn: function (val) {
+                        if (val === 'yes') {
+                            Ext.Ajax.request({
+                                url: 'admin/app/customer/{accountId}/resetpassword',
+                                params: {
+                                    accountId: data.id
+                                },
+                                success: function (response) {
+                                    var text = response.responseText;
+                                    // Nothing do do yet!
+                                }
+                            });
+                        }
+                    }
+                });
+            }, scope: this
         });
 
         this.disabledField = Ext.create('Ext.form.FieldContainer', {
@@ -90,14 +117,13 @@ Ext.define('Taco.view.customers.subform.Information', {
             },
             items: [{
                 xtype: 'checkboxfield',
-                name: 'disabled',
-                itemId: 'disabledCheckbox',
-                boxLabel: 'Disable Account',
-                checked: !data.isActive,
-                handler: function (cmp, checked) {
-                    this.unlockAccountBtn.setDisabled(checked);
-                    this.resetAccountBtn.setDisabled(checked);
-                    //TODO: (JK) Update Account status!
+                name: 'isDisabled',
+                boxLabel: 'Disable Account',listeners: {
+                    change: function (field, newValue, oldValue, eOpts) {
+                        this.unlockAccountBtn.setDisabled(newValue);
+                        this.resetAccountBtn.setDisabled(newValue);
+                    },
+                    scope: this
                 },
                 scope: this
             }]
@@ -121,34 +147,34 @@ Ext.define('Taco.view.customers.subform.Information', {
             flex: 1,
             padding: '0 10 0 0',
             items: [{
-                    xtype: 'textfield',
-                    cls: 'no-field-padding',
-                    name: 'firstName',
-                    fieldLabel: 'First Name',
-                    allowOnlyWhitespace: false
-                }, {
-                    xtype: 'textfield',
-                    name: 'lastName',
-                    fieldLabel: 'Last Name',
-                    allowOnlyWhitespace: false
-                }, {
-                    xtype: 'textfield',
-                    padding: '0 0 16 0',
-                    name: 'emailAddress',
-                    fieldLabel: 'Email',
-                    allowOnlyWhitespace: false
-                }, {
-                    xtype: 'checkboxfield',
-                    name: 'isAnonymous',
-                    boxLabel: 'Create shopper account',
-                    itemId: 'createAccountCheckbox',
-                    checked: !this.record,
-                    hidden: this.record
-                }, {
-                    xtype: 'checkboxfield',
-                    name: 'acceptsMarketing',
-                    boxLabel: 'Yes, keep me up to date on store news and specials'
-                },
+                xtype: 'textfield',
+                cls: 'no-field-padding',
+                name: 'firstName',
+                fieldLabel: 'First Name',
+                allowOnlyWhitespace: false
+            }, {
+                xtype: 'textfield',
+                name: 'lastName',
+                fieldLabel: 'Last Name',
+                allowOnlyWhitespace: false
+            }, {
+                xtype: 'textfield',
+                padding: '0 0 16 0',
+                name: 'emailAddress',
+                fieldLabel: 'Email',
+                allowOnlyWhitespace: false
+            }, {
+                xtype: 'checkboxfield',
+                name: 'isAnonymous',
+                boxLabel: 'Create shopper account',
+                itemId: 'createAccountCheckbox',
+                checked: !this.record,
+                hidden: this.record
+            }, {
+                xtype: 'checkboxfield',
+                name: 'acceptsMarketing',
+                boxLabel: 'Opt-in to Marketing'
+            },
                 this.taxExamptField,
                 this.disabledField
             ]
@@ -204,7 +230,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     forceSelection: true,
                     disableKeyFilter: true,
                     flex: 1
-                    }, {
+                }, {
                     xtype: 'button',
                     ui: 'action',
                     scale: 'medium',
@@ -268,10 +294,11 @@ Ext.define('Taco.view.customers.subform.Information', {
                 padding: '5 0 5 0',
                 items: [{
                     xtype: 'component',
+                    itemId: 'accountStatus',
                     cls: 'customer-history',
-                    data: data.accountStatus,
+                    data: data,
                     tpl: [
-                        '<h2>{.}</h2>'
+                        '<h2>{accountStatus}</h2>'
                     ]}, {
                         xtype: 'component',
                         flex: 1
@@ -282,6 +309,18 @@ Ext.define('Taco.view.customers.subform.Information', {
         }];
 
         this.callParent(arguments);
+
+    },
+
+    onBoxReady: function() {
+        this.callParent(arguments);
+
+        this.up('formform').on({
+            savesuccess: {
+                scope: this,
+                fn: 'updateAccountStatus'
+            }
+        });
     },
 
     launchSegmentModal: function () {
@@ -303,5 +342,13 @@ Ext.define('Taco.view.customers.subform.Information', {
                 scope: this
             }
         });
+    },
+
+    updateAccountStatus: function (cmp) {
+        console.log(cmp.record.getData().accountStatus);
+        var accountStatus = this.down('#accountStatus');
+        console.log(accountStatus);
+        console.log(cmp.record.getData().accountStatus);
+        accountStatus.update(cmp.record.getData());
     }
 });
