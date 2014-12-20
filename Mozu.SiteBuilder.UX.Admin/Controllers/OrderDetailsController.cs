@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var claim = CreateLimitedUserClaimsForOrder(orderId);
             string tok = HttpUtility.UrlEncode(claim.ToAccessToken());
 
-            string destinationUrl = "/admin-order-summary/" + orderId;
+            string destinationUrl = "/back-office/orders/" + orderId;
             if (!String.IsNullOrEmpty(packageId))
                 destinationUrl += "/packages/" + packageId;
             destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);

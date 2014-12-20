@@ -10,7 +10,7 @@
     	    {% cms_resources %}
     	{% endif %}
 
-        <style type="text/css">{% inline_style "order.less" %}</style>
+        <style type="text/css">{% inline_style "back-office.less" %}</style>
     </head>
     <body>
         {% block body-content %}

@@ -1,4 +1,4 @@
-﻿{% extends "order/order" %}
+﻿{% extends "back-office/base" %}
 {% block body-content %}
 <table class="mz-printable-order mz-printable-order-details">
 <thead class="header"><tr>

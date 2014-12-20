@@ -105,8 +105,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             if (theme.Parent.EmailTemplates != null)
                 theme.EmailTemplates = theme.EmailTemplates.Union(theme.Parent.EmailTemplates, new PageTemplateDefinitionEQ()).ToList();
 
-            if (theme.Parent.OrderTemplates != null)
-                theme.OrderTemplates = theme.OrderTemplates.Union(theme.Parent.OrderTemplates, new PageTemplateDefinitionEQ()).ToList();
+            if (theme.Parent.BackOfficeTemplates != null)
+                theme.BackOfficeTemplates = theme.BackOfficeTemplates.Union(theme.Parent.BackOfficeTemplates, new PageTemplateDefinitionEQ()).ToList();
             
         }
     }

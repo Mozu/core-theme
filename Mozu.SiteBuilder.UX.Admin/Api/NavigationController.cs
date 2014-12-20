@@ -162,7 +162,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             list.AddRange(GetPageTemplateNodes());
             list.AddRange(GetEmailTemplateNodes());
-            list.AddRange(GetOrderTemplateNodes());
+            list.AddRange(GetBackOfficeTemplateNodes());
 
             if (showContentLists.GetValueOrDefault(false))
             {
@@ -302,25 +302,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
         }
 
-        private IEnumerable<ITreeNavigationNode> GetOrderTemplateNodes()
+        private IEnumerable<ITreeNavigationNode> GetBackOfficeTemplateNodes()
         {
-            var orderTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.OrderTemplates;
+            var boTemplates = _siteContext == null ? Enumerable.Empty<PageTypeDefinition>() : _siteContext.Theme.BackOfficeTemplates;
 
             // first return each of the email templates
-            foreach (var ot in orderTemplates)
+            foreach (var t in boTemplates)
             {
                 yield return new NavigationTreeNode
                 {
                     AllowDrag = false,
                     AllowDrop = false,
                     NodeType = NavigationNodeType.OrderTemplate,
-                    Id = "templates-" + ot.Id,
-                    OriginalId = ot.Id,
+                    Id = "templates-" + t.Id,
+                    OriginalId = t.Id,
                     Expanded = true,
                     Expandable = false,
-                    Name = ot.Title,
-                    Url = "/admin-order-preview/" + ot.Id,
-                    ParentId = "_orderTemplates",
+                    Name = t.Title,
+                    Url = "/back-office-preview/" + t.Id,
+                    ParentId = "_backOffice",
                     IsHidden = false
                 };
             }
@@ -331,12 +331,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 AllowDrag = false,
                 AllowDrop = false,
                 NodeType = NavigationNodeType.Group,
-                Id = "_orderTemplates",
-                OriginalId = "_orderTemplates",
+                Id = "_backOffice",
+                OriginalId = "_backOffice",
                 Expanded = false,
                 Expandable = true,
                 Index = 101,
-                Name = "Order Templates",
+                Name = "Back Office",
                 ParentId = SUPER_ROOT_NODE_NAME,
                 IsHidden = false
             };

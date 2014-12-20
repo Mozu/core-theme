@@ -34,8 +34,8 @@
             "path": "email-orderconfirmation.js"
         },
         {
-            "id": "order-details@mozu",
-            "path": "order-details.js"
+            "id": "back-office@mozu",
+            "path": "back-office.js"
         },
         {
             "id": "email@mozu",
@@ -169,18 +169,18 @@
             "title": "Gift Card Created"
         }
     ],
-    "orderTemplates": [
+    "backOfficeTemplates": [
         {
-            "id": "details",
+            "id": "order-details",
             "title": "Order Details",
-            "template": "order/details",
-            "customEditor": "order-details@mozu"
+            "template": "back-office/order-details",
+            "customEditor": "back-office@mozu"
         },
         {
-            "id": "packingslip",
+            "id": "packing-slip",
             "title": "Packing Slip",
-            "template": "order/packingslip",
-            "customEditor": "order-details@mozu"
+            "template": "back-office/packing-slip",
+            "customEditor": "back-office@mozu"
         }
     ],
     "pageTypes": [

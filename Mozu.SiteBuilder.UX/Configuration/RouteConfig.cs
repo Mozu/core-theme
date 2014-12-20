@@ -427,19 +427,19 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
 
             routes.MapHttpRoute(
-                "order details (admin view)",
-                "admin-order-summary/{orderId}",
-                new { controller = "AdminOrderDetails", action = "OrderSummary" });
+                "order details (back office)",
+                "back-office/orders/{orderId}",
+                new { controller = "BackOffice", action = "OrderSummary" });
 
             routes.MapHttpRoute(
-                "packing slip (admin view)",
-                "admin-order-summary/{orderId}/packages/{packageId}",
-                new { controller = "AdminOrderDetails", action = "PackingSlip" });
+                "packing slip (back office)",
+                "back-office/orders/{orderId}/packages/{packageId}",
+                new { controller = "BackOffice", action = "PackingSlip" });
 
             routes.MapHttpRoute(
-                "order details (admin view) - PREVIEW",
-                "admin-order-preview/{templateid}",
-                new { controller = "AdminOrderDetails", action = "Preview" });
+                "back office (admin view) - PREVIEW",
+                "back-office-preview/{templateid}",
+                new { controller = "BackOffice", action = "Preview" });
 
 
             /*********************************************************************

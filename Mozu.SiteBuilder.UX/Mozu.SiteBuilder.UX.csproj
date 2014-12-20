@@ -422,7 +422,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
-    <Compile Include="Areas\StoreFront\Controllers\AdminOrderDetailsController.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
     <Compile Include="Configuration\ApplicationConstants.cs" />
