@@ -28,7 +28,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
 
         this.items = [{
                 name: 'keyword',
-                fieldLabel: 'Keyword xxxSearch'
+                fieldLabel: 'Keyword Search'
             },
             {
                 xtype: 'combobox',
