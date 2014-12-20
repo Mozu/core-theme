@@ -10,6 +10,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         private const string ORDERNUMBER = "OrderNumber";
         private const string BILLINGCONTACTFIRSTNAME = "billinginfo.billingcontact.firstname";
         private const string BILLINGCONTACTLASTNAMEORSURNAME = "billinginfo.billingcontact.lastnameorsurname";
+        private const string FULFILLMENTCONTACTFIRSTNAME = "fulfillmentinfo.fulfillmentcontact.firstname";
+        private const string FULFILLMENTCONTACTLASTNAMEORSURNAME = "fulfillmentinfo.fulfillmentcontact.lastnameorsurname";
         private const string BILLINGCONTACTADDRESS = "billinginfo.billingcontact.address";
 
 
@@ -96,9 +98,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "billingcontactfirstname":
                     return string.Format("({1} sw {0})", filter.value, BILLINGCONTACTFIRSTNAME);
                 case "billingcontactlastname":
-                    return string.Format("({1} sw {0})", filter.value, BILLINGCONTACTLASTNAMEORSURNAME);
+                    return string.Format("({1} sw {0})", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME);
                 case "billingcontactaddress":
                     return string.Format("( {1} cont \"{0}\" )", filter.value, BILLINGCONTACTADDRESS);
+                case "firstname":
+                    return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTFIRSTNAME);
+                case "lastname":
+                    return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME, FULFILLMENTCONTACTLASTNAMEORSURNAME);
+                case "emailAddress":
+                    return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME, FULFILLMENTCONTACTLASTNAMEORSURNAME);
                 case "customerid":
                     return string.Format("( CustomerAccountId  eq {0} )", filter.value);
                 case "ordertype":

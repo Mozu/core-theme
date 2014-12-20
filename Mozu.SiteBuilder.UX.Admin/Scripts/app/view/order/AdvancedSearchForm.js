@@ -41,6 +41,31 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 fieldLabel: 'Site'
             },
             {
+                name: 'firstName',
+                fieldLabel: 'Shopper First Name'
+            },
+            {
+                name: 'lastName',
+                fieldLabel: 'Shopper Last Name'
+            },
+/*
+            needs db index!!
+            {
+                name: 'emailAddress',
+                fieldLabel: 'Shopper Email Address'
+            },
+*/
+            {
+                xtype: 'combobox',
+                name: 'site',
+                allowBlank: true,
+                editable: false,
+                store: sites,
+                valueField: 'id',
+                displayField: 'name',
+                fieldLabel: 'Site'
+            },
+            {
                 xtype: 'combobox',
                 name: 'orderStatus',
                 fieldLabel: 'Order Status',
