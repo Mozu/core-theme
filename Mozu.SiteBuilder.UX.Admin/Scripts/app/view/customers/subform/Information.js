@@ -70,7 +70,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             disabled: data.isDisabled || !data.isLocked,
             text: 'Unlock Account',
             handler: function () {
-                this.unlockAccountAjax(this.record.get('id'));
+                this.unlockAccountAjax(this.record.getId());
             },
             scope: this
         });
@@ -78,10 +78,8 @@ Ext.define('Taco.view.customers.subform.Information', {
         this.unlockAccountAjax = function (id) {
             var me = this;
             Ext.Ajax.request({
-                url: 'admin/app/customer/' + id + '/unlock',
-                params: {
-                    accountId: id
-                },
+                url: '/admin/app/customer/' + id + '/unlock',
+                method: 'GET',
                 success: function (response) {
                     var text = response.responseText;
                     //Update account status!
@@ -97,7 +95,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             disabled: data.isDisabled,
             text: 'Reset Password',
             handler: function () {
-                var id = this.record.get('id');
+                var id = this.record.getId();
                 Ext.MessageBox.show({
                     title: 'Reset Passowrd',
                     // pushes the buttons to the right to be consistant with our dialog ux.
@@ -110,10 +108,8 @@ Ext.define('Taco.view.customers.subform.Information', {
                     fn: function (val) {
                         if (val === 'yes') {
                             Ext.Ajax.request({
-                                url: 'admin/app/customer/' + id + '/resetpassword',
-                                params: {
-                                    accountId: id
-                                },
+                                url: '/admin/app/customer/' + id + '/resetpassword',
+                                method: 'GET',
                                 success: function (response) {
                                     var text = response.responseText;
                                     me.setAccountStatus(me.record.get('accountStatus'));
