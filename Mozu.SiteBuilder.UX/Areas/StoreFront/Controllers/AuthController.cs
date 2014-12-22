@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var userClaim = LightweightUserClaims.Parse(authTicket.AccessToken);
                 _apiContext.SetUser(userClaim);
 
-                // iff the visit is already tracked, update the visit with the new page
+                // iff the visit is already tracked, update the visit with the new user id
                 if (_pageContext.Visit.IsTracked)
                 {
                     _pageContext.Visit.UserId = userClaim.UserId;

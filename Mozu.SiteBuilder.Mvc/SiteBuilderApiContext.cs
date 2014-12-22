@@ -406,11 +406,6 @@ namespace Mozu.SiteBuilder.Mvc
 
         public bool HasInvalidCredentials { get; set; }
 
-        public new object Clone()
-        {
-            return this.MemberwiseClone();
-        }
-
         public LightweightUserClaims AdminUserClaim { get; set; }
 
 

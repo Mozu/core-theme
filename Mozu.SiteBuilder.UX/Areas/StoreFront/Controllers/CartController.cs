@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+//using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
+//using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
-using Mozu.Location.Contracts;
-using Mozu.SiteBuilder.Mvc;
+using Mozu.Core;
+using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
+using Mozu.Location.Contracts;
+using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-//using VMCart = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.Cart;
-//using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Cart.CartItem;
-using VM=Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using System.Linq;
-using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiClient ;
-using Mozu.Location.Contracts.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiClient;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -32,7 +34,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICookieProvider _cookieProvider;
         private readonly ILocationRuntimeWebApiClient _locationClient;
         private readonly ISettings _settings;
-        
 
         public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings)
         {
@@ -148,7 +149,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             try
             {
-                order = (await _orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
+                // add visit id to UserClaims bag for this call.
+                var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(apiContext => {
+                    apiContext.UserClaims = apiContext.UserClaims.Copy<LightweightUserClaims>();
+                    apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
+                });
+                order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
             }
             catch (Exception e)
             {

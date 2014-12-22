@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using Mozu.Core;
 using Mozu.Core.Settings;
+using Mozu.Core.Api.Client;
 using APIConstants = Mozu.Core.Api.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
@@ -20,19 +21,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         });
 
         private readonly IApiContext _apiContext;
-        private readonly Lazy<PageContext> _pageContextLazy;
+        private readonly PageContext _pageContext;
         private readonly HttpRequestMessage _requestMessage;
         private readonly ISettings _settings;
         private Dictionary<string, string> _serviceMap;
 
 
-        public ClientApiContext(ISettings settings, IApiContext apiContext, Lazy<PageContext> pageContextLazy, HttpRequestMessage requestMessage)
+        public ClientApiContext(ISettings settings, IApiContext apiContext, PageContext pageContext, HttpRequestMessage requestMessage)
         {
             _settings = settings;
-            _apiContext = apiContext;
-            _pageContextLazy = pageContextLazy;
+            _apiContext = apiContext = apiContext.Copy();
+            _pageContext = pageContext;
             _requestMessage = requestMessage;
 
+            if (pageContext != null && pageContext.Visit != null && apiContext.UserClaims != null)
+            {
+                apiContext.UserClaims.Bag["VisitId"] = pageContext.Visit.VisitId;
+            }
 
             Headers = BuildHeaders(apiContext);
         }
@@ -60,7 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             string secureHost = string.Empty;
 
 
-            var uriBuilder = new UriBuilder(_pageContextLazy.Value.Url ?? _requestMessage.RequestUri.ToString());
+            var uriBuilder = new UriBuilder(_pageContext.Url ?? _requestMessage.RequestUri.ToString());
             defaultHost = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
             uriBuilder.Scheme = "https";
             uriBuilder.Port = 443;
@@ -121,6 +126,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             header[APIConstants.Headers.CATALOG] = apiContext.CatalogId.HasValue ? apiContext.CatalogId.Value.ToString() : "";
             header[APIConstants.Headers.TENANT] = apiContext.TenantId.ToString();
             header[APIConstants.Headers.USER_CLAIMS] = apiContext.UserClaims.ToAccessToken();
+
          //   header[APIConstants.Headers.BYPASS_CACHE] = apiContext.ShouldBypassCache.ToString();
             if (apiContext.DataViewMode == DataViewModeType.Pending)
             {
