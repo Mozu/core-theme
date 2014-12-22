@@ -23,9 +23,12 @@ Ext.define('Taco.view.customers.subform.Information', {
             data = this.record ? this.record.getData() : {
                 createDate: new Date()
             };
+
+        var isAnonymous = this.record.get('isAnonymous');
+
         if (this.record) {
             var titleString = 'Customer ID: ' + this.record.getId();
-            if (!this.record.get('isAnonymous')) {
+            if (!isAnonymous) {
                 titleString += '  |  Shopper ID: ' + this.record.get('emailAddressSafe');
             }
             this.setTitle(titleString);
@@ -67,7 +70,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            disabled: data.isDisabled || !data.isLocked,
+            disabled: data.isDisabled || isAnonymous || !data.isLocked,
             text: 'Unlock Account',
             handler: function () {
                 this.unlockAccountAjax(this.record.getId());
@@ -92,7 +95,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            disabled: data.isDisabled,
+            disabled: data.isDisabled || isAnonymous,
             text: 'Reset Password',
             handler: function () {
                 var id = this.record.getId();
@@ -129,6 +132,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             items: [{
                 xtype: 'checkboxfield',
                 name: 'isDisabled',
+                disabled: isAnonymous,
                 boxLabel: 'Disable Account',
                 listeners: {
                     change: function (field, newValue, oldValue, eOpts) {
