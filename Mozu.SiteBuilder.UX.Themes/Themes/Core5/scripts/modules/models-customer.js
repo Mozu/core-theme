@@ -40,6 +40,9 @@
         };
     });
 
+    var CustomerAttribute = Backbone.MozuModel.extend({
+        mozuType: 'customerattribute'
+    });
 
     var CustomerContact = Backbone.MozuModel.extend({
         mozuType: 'contact',
@@ -149,7 +152,11 @@
         hasSavedContacts: function() {
             var contacts = this.get('contacts');
             return contacts && contacts.length > 0;
-        },        relations: {
+        },
+        relations: {
+            attributes: Backbone.Collection.extend({
+                model: CustomerAttribute
+            }),
             contacts: Backbone.Collection.extend({
                 model: CustomerContact
             }),
@@ -159,6 +166,30 @@
             credits: Backbone.Collection.extend({
                 model: PaymentMethods.DigitalCredit
             })
+        },
+        getAttributes: function () {
+            var self = this;
+            var attributesCollection = this.get('attributes');
+
+            return this.apiGetAttributes().then(function (cc) {
+                // transform attributes into key-value pairs, to avoid multiple lookups
+                var values = _.reduce(cc.data.items, function (a, b) {
+                    a[b.fullyQualifiedName] = b.values;
+                    return a;
+                }, {});
+
+                // get all attribute definitions
+                return self.apiGetAttributeDefinitions().then(function (defs) {
+                    // merge attribute values into definitions
+                    _.each(defs.data.items, function (def) {
+                        def.values = values[def.attributeFQN];
+                    });
+                    // write fully-hydrated attributes to the model
+                    attributesCollection.reset(defs.data.items);
+                    self.trigger('sync', cc.data);
+                    return self;
+                });
+            });
         },
         getPrimaryContactOfType: function (typeName) {
             return this.get('contacts').find(function (contact) {

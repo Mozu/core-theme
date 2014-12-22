@@ -717,7 +717,7 @@ Ext.define('Taco.view.attribute.Form', {
                 xtype: 'checkboxfield',
                 name: 'isVisible',
                 hidden: this.record.supportsAttributeType(),
-                boxLabel: 'Hide in website'
+                boxLabel: 'Show in website'
             }, {
                 xtype: 'selectfield',
                 fieldLabel: 'Display Group',

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-11-19
+ * Mozu JavaScript SDK - v0.3.0 - 2014-12-22
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -3427,6 +3427,27 @@ module.exports=
             "noBody": true
         }
     },
+    "attributedefinition": {
+        "template": "{+customerAttributeDefService}{attributeFQN}",
+        "shortcutParam": "attributeFQN",
+        "defaults": {
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
+        }
+    },
+    "customerattribute": {
+        "template": "{+customerService}{accountId}/attributes/{attributeFQN}",
+        "defaults": {
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
+        }
+    },
+    "customerattributes": {
+        "collectionOf": "customerattribute",
+        "template": "{+customerService}{accountId}/attributes/{?_*}",
+        "defaultParams": {
+            "startIndex": 0,
+            "pageSize": 5
+        }
+    },
     "customer": {
         "template": "{+customerService}{id}",
         "defaults": { 
@@ -3473,6 +3494,34 @@ module.exports=
             "verb": "POST",
             "template": "{+customerService}{id}/change-password",
             "includeSelf": true
+        },
+        "get-attributes": {
+            "template": "{+customerService}{customer.id}/attributes/{?_*}",
+            "defaultParams": {
+                "startIndex": 0,
+                "pageSize": 5
+            },
+            "includeSelf": {
+                "asProperty": "customer"
+            },
+            "returnType": "customerattributes"
+        },
+        "get-attribute": {
+            "template": "{+customerService}{customer.id}/attributes/{attributeFQN}",
+            "includeSelf": {
+                "asProperty": "customer"
+            },
+            "shortcutParam": "attributeFQN",
+            "returnType": "customerattribute"
+        },
+        "get-attribute-definition": {
+            "template": "{+customerAttributeDefService}{attributeFQN}",
+            "shortcutParam": "attributeFQN",
+            "returnType": "attributedefinition"
+        },
+        "get-attribute-definitions": {
+            "template": "{+customerAttributeDefService}",
+            "returnType": "customerattribute"
         },
         "get-orders": {
             "template": "{+orderService}?filter=OrderNumber ne null",

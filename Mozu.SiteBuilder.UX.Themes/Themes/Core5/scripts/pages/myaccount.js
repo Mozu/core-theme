@@ -35,6 +35,9 @@
             'confirmPassword',
             'acceptsMarketing'
         ],
+        initialize: function () {
+            this.model.getAttributes().then(function (customer) {});
+        },
         updateAcceptsMarketing: function(e) {
             var yes = $(e.currentTarget).prop('checked');
             this.model.set('acceptsMarketing', yes);
