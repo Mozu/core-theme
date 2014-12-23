@@ -188,6 +188,7 @@
                         var fqn = def.attributeFQN;
 
                         if (values[fqn]) {
+                            /*jshint -W069 */
                             def.values = values[fqn]['values'];
                             def.attributeDefinitionId = values[fqn]['attributeDefinitionId'];
                         }
