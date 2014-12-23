@@ -3514,6 +3514,15 @@ module.exports=
             "shortcutParam": "attributeFQN",
             "returnType": "customerattribute"
         },
+        "update-attribute": {
+            "verb": "PUT",
+            "template": "{+customerService}{customer.id}/attributes/{attributeFQN}",
+            "includeSelf": {
+                "asProperty": "customer"
+            },
+            "shortcutParam": "attributeFQN",
+            "returnType": "customerattribute"
+        },
         "get-attribute-definition": {
             "template": "{+customerAttributeDefService}{attributeFQN}",
             "shortcutParam": "attributeFQN",

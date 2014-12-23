@@ -174,7 +174,10 @@
             return this.apiGetAttributes().then(function (cc) {
                 // transform attributes into key-value pairs, to avoid multiple lookups
                 var values = _.reduce(cc.data.items, function (a, b) {
-                    a[b.fullyQualifiedName] = b.values;
+                    a[b.fullyQualifiedName] = {
+                        values: b.values,
+                        attributeDefinitionId: b.attributeDefinitionId
+                    };
                     return a;
                 }, {});
 
@@ -182,7 +185,12 @@
                 return self.apiGetAttributeDefinitions().then(function (defs) {
                     // merge attribute values into definitions
                     _.each(defs.data.items, function (def) {
-                        def.values = values[def.attributeFQN];
+                        var fqn = def.attributeFQN;
+
+                        if (values[fqn]) {
+                            def.values = values[fqn]['values'];
+                            def.attributeDefinitionId = values[fqn]['attributeDefinitionId'];
+                        }
                     });
                     // write fully-hydrated attributes to the model
                     attributesCollection.reset(defs.data.items);
@@ -392,6 +400,14 @@
         updateAcceptsMarketing: function(yes) {
             return this.apiUpdate({
                 acceptsMarketing: yes
+            });
+        },
+        updateAttribute: function (attributeFQN, attributeDefinitionId, values) {
+            console.log(arguments);
+            this.apiUpdateAttribute({
+                attributeFQN: attributeFQN,
+                attributeDefinitionId: attributeDefinitionId,
+                values: values
             });
         },
         toJSON: function (options) {
