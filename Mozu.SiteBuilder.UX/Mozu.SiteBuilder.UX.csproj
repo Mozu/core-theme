@@ -610,7 +610,6 @@
     <Content Include="PreDeploy.ps1" />
     <Content Include="PostDeploy.ps1" />
     <Content Include="BuiltinScripts\SDK\README.md" />
-    <Content Include="BuiltinScripts\SDK\src\methods.json" />
     <Content Include="BuiltinScripts\SDK\HISTORY.md" />
     <Content Include="BuiltinScripts\SDK\LICENSE" />
     <Content Include="BuiltinScripts\RequireJS\LICENSE" />

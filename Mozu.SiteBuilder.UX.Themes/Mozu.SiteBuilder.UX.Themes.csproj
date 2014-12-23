@@ -397,6 +397,7 @@
     <Content Include="Addons\Orange\addon.json" />
     <Content Include="Docs\Gruntfile.js" />
     <Content Include="Themes\Core4\admin\editors\about-us.js" />
+    <Content Include="Themes\Core4\admin\editors\back-office.js" />
     <Content Include="Themes\Core4\admin\editors\categoryContent.js" />
     <Content Include="Themes\Core4\admin\editors\email-orderconfirmation.js" />
     <Content Include="Themes\Core4\admin\editors\email.js" />
@@ -524,6 +525,7 @@
     <Content Include="Themes\Core4\tasks\grunt-zubat.js" />
     <Content Include="Themes\Core4\core-thumb.png" />
     <Content Include="Themes\Core5\admin\editors\about-us.js" />
+    <Content Include="Themes\Core5\admin\editors\back-office.js" />
     <Content Include="Themes\Core5\admin\editors\categoryContent.js" />
     <Content Include="Themes\Core5\admin\editors\email-orderconfirmation.js" />
     <Content Include="Themes\Core5\admin\editors\email.js" />
@@ -2207,6 +2209,12 @@
     <Content Include="Themes\Core6\templates\back-office\base.hypr" />
     <Content Include="Themes\Core6\templates\back-office\order-details.hypr" />
     <Content Include="Themes\Core6\templates\back-office\packing-slip.hypr" />
+    <Content Include="Themes\Core5\templates\back-office\base.hypr" />
+    <Content Include="Themes\Core5\templates\back-office\order-details.hypr" />
+    <Content Include="Themes\Core5\templates\back-office\packing-slip.hypr" />
+    <Content Include="Themes\Core4\templates\back-office\base.hypr" />
+    <Content Include="Themes\Core4\templates\back-office\order-details.hypr" />
+    <Content Include="Themes\Core4\templates\back-office\packing-slip.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

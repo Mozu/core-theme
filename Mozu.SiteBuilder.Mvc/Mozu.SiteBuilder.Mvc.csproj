@@ -624,8 +624,8 @@
     <EmbeddedResource Include="TestData\user.created\user1.json" />
     <EmbeddedResource Include="TestData\user.passwordreset\user1.json" />
     <EmbeddedResource Include="TestData\giftcard.created\OrderCredit1.json" />
-    <EmbeddedResource Include="TestData\order.admin\Order1.json" />
-    <EmbeddedResource Include="TestData\order.admin\Package1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Order1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Package1.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tags\Data\" />
