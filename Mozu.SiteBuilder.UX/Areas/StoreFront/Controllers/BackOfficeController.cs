@@ -31,8 +31,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
-        private const string ORDER_PREVIEW_RESOURCE_NAME = "order.admin.order1";
-        private const string PACKAGE_PREVIEW_RESOURCE_NAME = "order.admin.package1";
+        private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
+        private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
 
         /// <summary>
         /// Public constructor.

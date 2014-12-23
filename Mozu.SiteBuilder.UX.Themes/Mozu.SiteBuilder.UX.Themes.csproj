@@ -2203,10 +2203,10 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core6\templates\order\details.hypr" />
-    <Content Include="Themes\Core6\templates\order\packingslip.hypr" />
-    <Content Include="Themes\Core6\templates\order\order.hypr" />
-    <Content Include="Themes\Core6\stylesheets\order.less" />
+    <Content Include="Themes\Core6\stylesheets\back-office.less" />
+    <Content Include="Themes\Core6\templates\back-office\base.hypr" />
+    <Content Include="Themes\Core6\templates\back-office\order-details.hypr" />
+    <Content Include="Themes\Core6\templates\back-office\packing-slip.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

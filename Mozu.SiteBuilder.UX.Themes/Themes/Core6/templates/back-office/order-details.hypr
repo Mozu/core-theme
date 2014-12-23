@@ -121,7 +121,7 @@
                             {% endif %}
                             {% if payment.paymentType == "StoreCredit" %}
                                 <td>Gift Card/Store Credit</td>
-                                <td>{{ payment.billingInfo.StoreCreditCode }}</td>
+                                <td>{{ payment.billingInfo.storeCreditCode }}</td>
                                 <td>N/A</td>
                             {% endif %}
                         {% endif %}
@@ -137,6 +137,37 @@
             </table>
         {% endif %}
     </div>
+    {% if model.shopperNotes %}
+        <div class="section section-notes">
+            <h2>Notes</h2>
+            <table class="grid">
+                <thead><tr>
+                    <th>Date</th>
+                    <th>Author</th>
+                    <th>Comment Type</th>
+                    <th>Message</th>
+                </tr></thead>
+                <tbody>
+                    {% if model.shopperNotes.comments %}
+                        <tr>
+                            <td>{{ model.submittedDate | date("m/d/Y g:i a") }}</td>
+                            <td>Customer</td>
+                            <td>Shopper Notes</td>
+                            <td>{{ model.shopperNotes.comments }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if model.shopperNotes.giftMessage %}
+                        <tr>
+                            <td>{{ model.submittedDate | date("m/d/Y g:i a") }}</td>
+                            <td>Customer</td>
+                            <td>Gift Message</td>
+                            <td>{{ model.shopperNotes.giftMessage }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
     {% if model.fulfillmentInfo.shippingMethodName || (model.packages && model.packages.length) || (model.pickups && model.pickups.length) %}
         <div class="section section-fulfillment">
             <h2>Fulfillment</h2>
