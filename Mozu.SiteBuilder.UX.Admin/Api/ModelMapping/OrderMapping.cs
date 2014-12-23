@@ -140,6 +140,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UnpackagedItems, op => op.Ignore())
                 .ForMember(x => x.UnpickedupItems, op => op.Ignore())
                 .ForMember(x => x.AuthorizationInfo, op => op.Ignore())
+                .ForMember(x => x.AvailableBulkActions, op => op.Ignore())
                 .ForMember(x => x.OrderSummary, op => op.Ignore())
                 .ForMember(x => x.ItemsOrdered, op => op.Ignore())
                 .ForMember(x => x.ItemsNotShipped, op => op.Ignore())
