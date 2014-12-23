@@ -19,6 +19,9 @@
         "id": "email-orderconfirmation",
         "path": "email-orderconfirmation.js"
     }, {
+        "id": "back-office@mozu",
+        "path": "back-office.js"
+    }, {
         "id": "email@mozu",
         "path": "email.js",
         "documentLists": [
@@ -429,7 +432,20 @@
 	  }
 	],
 
-
+    "backOfficeTemplates": [
+        {
+            "id": "order-details",
+            "title": "Order Details",
+            "template": "back-office/order-details",
+            "customEditor": "back-office@mozu"
+        },
+        {
+            "id": "packing-slip",
+            "title": "Packing Slip",
+            "template": "back-office/packing-slip",
+            "customEditor": "back-office@mozu"
+        }
+    ],
     "pageTypes": [
 
         {
