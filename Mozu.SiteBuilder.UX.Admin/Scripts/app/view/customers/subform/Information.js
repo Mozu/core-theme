@@ -78,19 +78,6 @@ Ext.define('Taco.view.customers.subform.Information', {
             scope: this
         });
 
-        this.unlockAccountAjax = function (id) {
-            var me = this;
-            Ext.Ajax.request({
-                url: '/admin/app/customer/' + id + '/unlock',
-                method: 'GET',
-                success: function (response) {
-                    var text = response.responseText;
-                    //Update account status!
-                    me.setAccountStatus(me.record.get('accountStatus'));
-                }
-            });
-        }
-
         this.resetAccountBtn = Ext.create('Ext.button.Button', {
             xtype: 'button',
             ui: 'action',
@@ -366,5 +353,18 @@ Ext.define('Taco.view.customers.subform.Information', {
             console.log('INSIDE IF statement');
             this.fireEvent('accountstatuschanged', this, newStatus, oldStatus);
         }
+    },
+
+    unlockAccountAjax: function (id) {
+        var me = this;
+        Ext.Ajax.request({
+            url: '/admin/app/customer/' + id + '/unlock',
+            method: 'GET',
+            success: function (response) {
+                var text = response.responseText;
+                //Update account status!
+                me.setAccountStatus(me.record.get('accountStatus'));
+            }
+        });
     }
 });

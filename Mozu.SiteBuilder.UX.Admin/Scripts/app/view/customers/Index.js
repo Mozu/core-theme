@@ -20,7 +20,7 @@ Ext.define('Taco.view.customers.Index', {
     
   
     initComponent: function () {
-       
+        var me = this;
         this.header = {
             title: 'Customers'
         };
@@ -156,21 +156,52 @@ Ext.define('Taco.view.customers.Index', {
 
                             page.launchEditor(record, metaData);
                         }
+                    }, {
+                        text: 'Unlock',
+                        itemId: 'unlockAccount',
+                        menuColumnHandler: function (item, eventData) {
+                            var record = eventData.record;
+
+                            me.unlockAccountAjax.call(me, record);
+                        }
                     }],
                     // do any processing needed to show menu
-                    onMenuShow: function () { }
+                    onMenuShow: function (menu, eventData) {
+                        var record = eventData.record,
+                            isLocked = record.get('isLocked'),
+                            unlockItem = menu.items.get('unlockAccount');
+
+                        unlockItem.setDisabled(!isLocked);
+                    }
                 }]
-            } 
+            }
         };
         
         this.callParent(arguments);
     },
-    
+
     advancedSearchConfig : {
         advancedFormCls: 'Taco.view.customers.AdvancedSearchForm'
     },
     
     allowCreate: function() {
         return false;
+    },
+
+    unlockAccountAjax: function (record) {
+        var id = record.getId();
+        var me = this;
+
+        Ext.Ajax.request({
+            url: '/admin/app/customer/' + id + '/unlock',
+            method: 'GET',
+            success: function (response) {
+                var text = response.responseText;
+                // Need to update account status on grid!
+                record.set('isLocked', false);
+
+                me.down('grid').down('pagingtoolbar').doRefresh();
+            }
+        });
     }
 });
