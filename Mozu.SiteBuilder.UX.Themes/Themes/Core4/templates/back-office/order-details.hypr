@@ -2,17 +2,16 @@
 {% block body-content %}
 <table class="mz-printable-order mz-printable-order-details">
 <thead class="header"><tr>
-    <th class="company-info">{{ customContent.companyName }}</th>
-    <th class="company-contacts">{{ customContent.companyAddress }}</th>
-    <th class="company-url">{{ customContent.websiteUrl }}</th>
+    <th class="company-info">
+        <div class="company-name">{{ customContent.companyName }}</div>
+        <div class="company-contacts">{{ customContent.companyAddress }}</div>
+        <div class="company-url">{{ customContent.websiteUrl }}</div>
+    </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
         <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date("m/d/Y") }}</span></div>
     </th>
 </tr></thead>
-<tfoot class="footer"><tr>
-    <td colspan="4">&nbsp;</td>
-</tr></tfoot>
 <tbody><tr><td colspan="4">
     <div class="section section-contacts"><table class="panes"><tbody><tr>
         <td class="billing-address">
