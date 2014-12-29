@@ -40,9 +40,6 @@
         };
     });
 
-    var CustomerAttribute = Backbone.MozuModel.extend({
-        mozuType: 'customerattribute'
-    });
 
     var CustomerContact = Backbone.MozuModel.extend({
         mozuType: 'contact',
@@ -152,11 +149,7 @@
         hasSavedContacts: function() {
             var contacts = this.get('contacts');
             return contacts && contacts.length > 0;
-        },
-        relations: {
-            attributes: Backbone.Collection.extend({
-                model: CustomerAttribute
-            }),
+        },        relations: {
             contacts: Backbone.Collection.extend({
                 model: CustomerContact
             }),
@@ -166,15 +159,6 @@
             credits: Backbone.Collection.extend({
                 model: PaymentMethods.DigitalCredit
             })
-        },
-        getAttributes: function () {
-            var self = this;
-            var attributesCollection = this.get('cards');
-            return this.apiGetAttributes().then(function (cc) {
-                attributesCollection.reset(cc.data.items);
-                self.trigger('sync', cc.data);
-                return self;
-            });
         },
         getPrimaryContactOfType: function (typeName) {
             return this.get('contacts').find(function (contact) {
