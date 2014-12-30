@@ -627,6 +627,7 @@ Ext.define('Taco.view.attribute.Form', {
     },
 
     buildFormComponents: function () {
+        var me = this;
 
         this.subform = Ext.create('Taco.core.ux.form.Form', {
             defaults: this.defaults,
@@ -725,11 +726,31 @@ Ext.define('Taco.view.attribute.Form', {
                 allowOnlyWhitespace: !this.record.supportsDisplayGroup(),
                 hidden: !this.record.supportsDisplayGroup(),
                 readOnly: this.isEdit(),
-                data: 'Admin',
                 store: [
                     ['AdminAndStorefront', 'Storefront & Admin'],
                     ['Admin', 'Admin Only']
                 ]
+            }, {
+                xtype: 'selectfield',
+                fieldLabel: 'Value Source',
+                name: 'valueType',
+                allowOnlyWhitespace: !this.record.supportsDisplayGroup(),
+                hidden: !this.record.supportsDisplayGroup(),
+                readOnly: this.isEdit(),
+                store: [
+                    ['Predefined', 'Predefined'],
+                    ['ShopperEntered', 'Shopper Entered'],
+                    ['ShopperOrAdminEntered', 'Shopper or Admin Entered'],
+                    ['AdminEntered', 'Admin Entered']
+                ],
+                validator: function (value) {
+                    console.log(value);
+                    if (value && value.indexOf('Shopper') !== -1 && me.getForm().findField('displayGroup').getValue() === 'Admin') {
+                        return 'Display Group must be Storefront & Admin';
+                    } else {
+                        return true;
+                    }
+                }
             }, {
                 xtype: 'selectfield',
                 fieldLabel: 'Input Type',
