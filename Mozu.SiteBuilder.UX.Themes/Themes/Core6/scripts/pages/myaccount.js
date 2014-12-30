@@ -1,30 +1,6 @@
 ﻿define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews) {
     
-    var EditableView = Backbone.MozuView.extend({
-        constructor: function () {
-            Backbone.MozuView.apply(this, arguments);
-            this.editing = {};
-        },
-        getRenderContext: function () {
-            var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
-            c.editing = this.editing;
-            return c;
-        },
-        doModelAction: function (action, payload) {
-            var self = this,
-                renderAlways = function () {
-                    self.render();
-                };
-            var operation = this.model[action](payload);
-            if (operation && operation.then) {
-                operation.then(renderAlways,renderAlways);
-                return operation;
-            }
-        }
-    });
-        
-
-    var AccountSettingsView = EditableView.extend({
+    var AccountSettingsView = Backbone.MozuView.extend({
         templateName: 'modules/my-account/my-account-settings',
         autoUpdate: [
             'firstName',
@@ -65,7 +41,34 @@
                 self.editing.name = true;
             });
             this.editing.name = false;
+        }
+    });
+
+    var EditableView = Backbone.MozuView.extend({
+        constructor: function () {
+            Backbone.MozuView.apply(this, arguments);
+            this.editing = {};
         },
+        getRenderContext: function () {
+            var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+            c.editing = this.editing;
+            return c;
+        },
+        doModelAction: function (action, payload) {
+            var self = this,
+                renderAlways = function () {
+                    self.render();
+                };
+            var operation = this.model[action](payload);
+            if (operation && operation.then) {
+                operation.then(renderAlways, renderAlways);
+                return operation;
+            }
+        }
+    });
+
+    var PasswordView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-password',
         startEditPassword: function () {
             this.editing.password = true;
             this.render();
@@ -78,25 +81,13 @@
                 }, 250);
             }, function() {
                 self.editing.password = true;
-            });
-            this.editing.password = false;
-        },
-        cancelEditPassword: function() {
-            this.editing.password = false;
-            this.render();
-        }
-        //startEditPhone: function() {
-        //    this.editing.phone = true;
-        //    this.render();
-        //},
-        //finishEditPhone: function() {
-        //    this.doModelAction('savePrimaryBillingContact');
-        //    this.editing.phone = false;
-        //},
-        //cancelEditPhone: function() {
-        //    this.editing.phone = false;
-        //    this.render();
-        //}
+        });
+        this.editing.password = false;
+    },
+    cancelEditPassword: function() {
+        this.editing.password = false;
+        this.render();
+    }
     });
 
     var WishListView = EditableView.extend({
@@ -351,6 +342,7 @@
         var accountModel = window.accountModel = CustomerModels.EditableCustomer.fromCurrent();
 
         var $accountSettingsEl = $('#account-settings'),
+            $passwordEl = $('#password-section'),
             $orderHistoryEl = $('#account-orderhistory'),
             $returnHistoryEl = $('#account-returnhistory'),
             $paymentMethodsEl = $('#account-paymentmethods'),
@@ -364,6 +356,11 @@
         var accountViews = window.accountViews = {
             settings: new AccountSettingsView({
                 el: $accountSettingsEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            password: new PasswordView({
+                el: $passwordEl,
                 model: accountModel,
                 messagesEl: $messagesEl
             }),

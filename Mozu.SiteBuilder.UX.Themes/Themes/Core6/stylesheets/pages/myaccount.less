@@ -15,19 +15,36 @@
         margin-top: 3px;
         text-indent: @gutter;
     }
+
     @media (max-width: 600px) {
         .mz-myaccount-panels {
             margin-left: 0;
         }
+
         .mz-myaccount-nav {
             float: none;
             width: auto;
             margin-bottom: @gutter;
             .clearfix();
+
             .mz-scrollnav-item {
                 float: left;
                 margin: @gutter/4;
             }
+        }
+    }
+
+    .mz-l-stack-section {
+        min-height: inherit;
+    }
+
+    #account-settings {
+        clear: none;
+
+        .mz-link-edit-accountsettings,
+        .mz-link-change-password {
+            float: none;
+            line-height: inherit;
         }
     }
 }

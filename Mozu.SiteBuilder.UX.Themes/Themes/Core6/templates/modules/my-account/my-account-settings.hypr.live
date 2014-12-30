@@ -1,4 +1,4 @@
-﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountSettings }}</h3>
+﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountSettings }}<a href class="mz-link-edit-accountsettings">{{ labels.edit }}</a></h3>
   <div class="mz-accountsettings-section mz-accountsettings-name {% if editing.name %} is-editing {% endif %}">
     {% if editing.name %}
     <input class="mz-accountsettings-firstname" type="text" placeholder="{{ labels.firstName }}" data-mz-value="firstName" value="{{ model.firstName }}" />
@@ -34,32 +34,7 @@
     <button class="mz-button mz-button-small mz-accountsettings-phoneedit" data-mz-action="startEditPhone">{{ labels.edit }}</button>
     {% endif %}
   </div>
-  <div class="mz-accountsettings-password">
-    {% if editing.password %}
-    <div>
-      <label for="account-oldpassword" class="mz-accountsettings-oldpasswordlabel">{{ labels.oldPassword }}</label>
-      <input id="account-password" class="mz-accountsettings-password" type="password" data-mz-value="oldPassword" value="{{ model.oldPassword }}" />
-    </div>
-    <div>
-      <label for="account-password" class="mz-accountsettings-passwordlabel">{{ labels.newPassword }}</label>
-      <input id="account-password" class="mz-accountsettings-password" type="password" data-mz-value="password" value="{{ model.password }}" />
-    </div>
-    <div>
-      <label for="account-confirmpassword" class="mz-accountsettings-confirmpasswordlabel">{{ labels.confirmPassword }}</label>
-      <input id="account-confirmpassword" class="mz-accountsettings-confirmpassword" type="password" data-mz-value="confirmPassword" value="{{ model.confirmPassword }}" />
-    </div>
-    <div class="mz-password-actions">
-      <div class="mz-validationmessage" data-mz-validationmessage-for="oldPassword"></div>
-      <div class="mz-validationmessage" data-mz-validationmessage-for="password"></div>
-      <div class="mz-validationmessage" data-mz-validationmessage-for="confirmPassword"></div>
-      <button class="mz-button mz-button-small mz-accountsettings-passworddone" data-mz-action="finishEditPassword">{{ labels.save }}</button>
-      <button class="mz-button mz-button-small mz-accountsettings-passwordcancel" data-mz-action="cancelEditPassword">{{ labels.cancel }}</button>
-    </div>
-    {% else %}
-    <button class="mz-button mz-button-small mz-accountsettings-passwordedit" data-mz-action="startEditPassword">{{ labels.changePassword }}</button>
-    <div class="mz-validationmessage" data-mz-validationmessage-for="passwordChanged"></div>
-    {% endif %}
-  </div>
+
   <div class="mz-accountsettings-section mz-accountsettings-acceptsmarketing">
     {% if not editing.name and not editing.password %}
     <input type="checkbox" id="account-acceptsmarketing" data-mz-value="acceptsMarketing" {% if model.acceptsMarketing %}checked="checked"{% endif %} disabled="disabled"/>
