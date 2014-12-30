@@ -65,4 +65,25 @@
     <input type="checkbox" id="account-acceptsmarketing" data-mz-value="acceptsMarketing" {% if model.acceptsMarketing %}checked="checked"{% endif %} disabled="disabled"/>
     {% endif %}
     <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
+    <ul>
+    {% for attribute in model.attributes %}
+      <li class="mz-accountsettings-section mz-accountsettings-attribute">
+        {% if attribute.inputType === "YesNo" %}
+          <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" data-mz-value="{{ attribute.attributeFQN }}" data-mz-action="updateAttribute" {% if attribute.values[0] === true %}checked="checked"{% endif %} />
+          <label for="account-attribute-{{ attribute.attributeFQN }}">{{ attribute.adminName }}</label>
+        {% endif %}
+        {% if attribute.inputType === "TextBox" %}
+          <div>{{ attribute.adminName }}</div>
+          <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" data-mz-value="{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}" disabled="disabled" />
+        {% endif %}
+        {% if attribute.inputType === "List" %}
+          <div>{{ attribute.adminName }}</div>
+          {% for option in attribute.vocabularyValues %}
+            <input type="radio" name="account-attribute-{{ attribute.attributeFQN }}" data-mz-value="{{ attribute.attributeFQN }}" value="{{ option.value }}" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} disabled="disabled" />
+            <label for="account-attribute-{{ attribute.attributeFQN }}">{{ option.value }}</label>
+          {% endfor %}
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
 </div>

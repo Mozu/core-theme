@@ -35,6 +35,17 @@
             'confirmPassword',
             'acceptsMarketing'
         ],
+        initialize: function () {
+            this.model.getAttributes().then(function (customer) {});
+        },
+        updateAttribute: function (e) {
+            var attributeFQN = e.currentTarget.getAttribute('data-mz-value');
+            var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
+            var isChecked = $(e.currentTarget).prop('checked');
+
+            this.model.set('values', [isChecked]);
+            this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
+        },
         updateAcceptsMarketing: function(e) {
             var yes = $(e.currentTarget).prop('checked');
             this.model.set('acceptsMarketing', yes);
