@@ -51,13 +51,16 @@ Ext.define('Taco.view.product.variant.Grid', {
             isPhysical = (goodsType === 'Physical'),
             isDigitalCredit = (goodsType === 'DigitalCredit'),
             fulfillmentData = (isPhysical) ? [{
-                "id": "DirectShip",
+                "value": "",
+                "name": "Same as product"
+            }, {
+                "value": "DirectShip",
                 "name": "Direct Ship"
             }, {
-                "id": "InStorePickup",
+                "value": "InStorePickup",
                 "name": "In Store Pickup"
             }] : [{
-                "id": "Digital",
+                "value": "Digital",
                 "name": "Email"
             }];
 
@@ -79,8 +82,8 @@ Ext.define('Taco.view.product.variant.Grid', {
             enableKeyNav: true
         });        
 
-        var fulfillmentTypeData = Ext.create('Ext.data.Store', {
-            fields: ['id', 'name'],
+        var fulfillmentTypeData =  this.fulfillmentTypeData =  Ext.create('Ext.data.Store', {
+            fields: ['value', 'name'],
             data: fulfillmentData
         });
 
@@ -88,12 +91,28 @@ Ext.define('Taco.view.product.variant.Grid', {
             xtype: "combobox",
             triggerAction: 'all',
             queryMode: 'local',
+            editable:false,
             displayField: 'name',
-            valueField: 'id',
+            valueField: 'value',
             showBorder:true,
             autoSelect: true,
             forceSelection: true,
             store: fulfillmentTypeData,
+            emptyText: "Same as product",
+            listeners: {
+                select: {
+                    fn: function (combo, records) {
+                        var inherits = Ext.Array.findBy(records, function (record) {
+                            return (record.data.value==="")
+                        })
+                        if (inherits) {
+                            // need to clear out any other selections
+                            combo.setValue(null);
+                        }
+                    },
+                    scope:me
+                }
+            },
             multiSelect: true
         };
 
@@ -498,11 +517,27 @@ Ext.define('Taco.view.product.variant.Grid', {
                 mouseWheelEnabled: false
             }
         }, {
-            text: 'Fulfillment Types',
+            text: 'Fulfillment Types',            
             dataIndex: 'fulfillmentTypesSupported',
             hideable: true,
             hidden: true,
             width: 185,
+            renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
+                var str = "";
+                if (value.length) {                    
+                    Ext.Array.each(value, function (val,index, allItems) {
+                        var rec = me.fulfillmentTypeData.findRecord("value",val);
+                        str += rec.get("name");
+                        if (index < allItems.length - 1) {
+                            str += ", ";
+                        }
+                    })
+                } else {
+                    str = "Same as product"
+                }
+                return str;
+
+            },            
             editor: this.fulfillmentEditor
 
         }, {

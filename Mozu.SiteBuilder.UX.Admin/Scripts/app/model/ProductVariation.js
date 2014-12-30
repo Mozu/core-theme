@@ -65,7 +65,7 @@ Ext.define('Taco.model.ProductVariation', {
         {
             name: "fulfillmentTypesSupported",
             type: "auto",
-            defaultValue: ['DirectShip']
+            defaultValue: []
         },
         {
             name: "upc",
