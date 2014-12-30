@@ -218,7 +218,7 @@ Ext.define('Taco.view.Header', {
     },
     isEnabled: function(item, rec, correctView) {
 
-        if (item.metaData.requiredContext === 'none' || item.items) return true;
+        if (item.metaData.requiredContext === 'none' || !item.metaData.requiredContext || item.items) return true;
 
         if (!correctView) return false;
 
