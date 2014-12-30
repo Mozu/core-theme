@@ -165,7 +165,9 @@
             this.codeEntered = !!this.model.get('couponCode');
             this.$el.on('keypress', 'input', function (e) {
                 if (e.which === 13) {
-                    me.handleEnterKey();
+                    if (me.codeEntered) {
+                        me.handleEnterKey();
+                    }
                     return false;
                 }
             });
