@@ -246,11 +246,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (dcExistingCustomer.IsActive)
                 {
-                    await _customerWebApiClient.DisableAccount(dcCust.Id);
+                    if (!dcCust.IsActive)
+                    {
+                        await _customerWebApiClient.DisableAccount(dcCust.Id);
+                    }
                 }
                 else
                 {
-                    await _customerWebApiClient.ActivateAccount(dcCust.Id);
+                    if (dcCust.IsActive)
+                    {
+                        await _customerWebApiClient.ActivateAccount(dcCust.Id);
+                    }
                 }
 
                 retList.Add(updatedCustomer.Map<ApiCustomer>());
