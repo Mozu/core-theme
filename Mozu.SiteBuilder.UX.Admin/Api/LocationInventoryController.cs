@@ -161,26 +161,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<LocationWithInventory>>> GetLocationsForProduct([FromUri]PagingParamaters pagingParams,
             [FromUri]FilterCollection extFilter, string productCode = null, string variationProductCode = null)
         {
-            var prodOrVariantCode = (!string.IsNullOrEmpty(variationProductCode))
-                ? variationProductCode
-                :  (productCode ?? extFilter.PopValue<string>("productcode"));
-            if (prodOrVariantCode == null)
-                throw new ArgumentException("Missing product code.");
+            productCode = productCode ?? extFilter.PopValue<string>("productcode");
+            if (String.IsNullOrEmpty(productCode)) {
+                throw new HttpResponseException( this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "Missing product code."));
+            }
 
             var product = (await _productClient.GetProduct(productCode)).ReadAsSync();
-            if (product == null) 
-                throw new VaeItemNotFoundException(string.Format("Could not find product code {0}", prodOrVariantCode));
+            if (product == null)
+                throw new VaeItemNotFoundException(string.Format("Could not find product code {0}", productCode));
 
             if (product.FulfillmentTypesSupported.Contains("Digital"))
             {
                 return CreateVirtualDigitalLocationWithInventory(product);
             }
 
-            List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(true) && 
+            DC.ProductVariation variation = null;
+            if (!String.IsNullOrEmpty(variationProductCode)) {
+                // we can't look up a variation by its variation product code. we need the variation KEY. Which is used by nobody else ever.
+                // so fuck it, let's just get all the variations and filter for the one we want.
+                var allTheVariations = (await _productClient.GetProductVariations(productCode)).ReadAsSync().Items;
+                variation = allTheVariations.First(v => v.VariationProductCode == variationProductCode);
+            }
+
+            List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(false) && 
                 //todo:not this.
                 product.ProductUsage != "Bundle"
-                ? await GetManagedInventory(pagingParams, extFilter, prodOrVariantCode, product)
-                : await GetUnmanagedInventory(product);
+                ? await GetManagedInventory(pagingParams, extFilter, product, variation)
+                : await GetUnmanagedInventory(product, variation);
 
             var siteShippingLocationCode = await GetDefaultDirectShipLocation();
 
@@ -216,9 +223,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             });
         }
 
-        private async Task<List<LocationWithInventory>> GetManagedInventory(PagingParamaters pagingParams, FilterCollection extFilter, string prodOrVariantCode,
-            DC.Product product)
+        private async Task<List<LocationWithInventory>> GetManagedInventory(PagingParamaters pagingParams, FilterCollection extFilter, DC.Product product, DC.ProductVariation variation)
         {
+            string prodOrVariantCode = variation != null ? variation.VariationProductCode : product.ProductCode;
+            
             var filterString = extFilter.ToFilterString();
             var inventories =
                 (await
@@ -233,14 +241,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await Task.WhenAll(locationLookupTasks);
             var locations = locationLookupTasks.Select(t => t.Result.ReadAsSync()).ToList();
 
-            return  _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories,
-                locations, product);
+            return  _productAvailableInventoryHelper.GetShipAndPickupLocationsWithInventory(inventories, locations, product, variation);
         }
         
-        private async Task<List<LocationWithInventory>> GetUnmanagedInventory(DC.Product product)
+        private async Task<List<LocationWithInventory>> GetUnmanagedInventory(DC.Product product, DC.ProductVariation variation)
         {
             var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
-            return _productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(locations.Items, product);
+            return _productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(locations.Items, product, variation);
         }
 
         private async Task<string> GetDefaultDirectShipLocation()
