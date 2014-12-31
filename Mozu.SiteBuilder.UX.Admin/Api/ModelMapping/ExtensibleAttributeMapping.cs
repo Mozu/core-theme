@@ -226,40 +226,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     },
                     InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
                     DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),
-                    ValueType = GetOrInferValueType(source),
+                    ValueType = Enum.GetName(typeof(AttributeValueType), source.ValueType),
                   
                 };
 
                 return destination;
-            }
-
-            /// <summary>
-            /// Infers the ValueType from the InputType and UsageType if none is provided.
-            /// </summary>
-            private static string GetOrInferValueType(Attribute source)
-            {
-                source.IsProperty = true;
-                if (source.ValueType != AttributeValueType.Unknown)
-                {
-                    return source.ValueType.ToString();
-                }
-                else
-                {
-                    // a "list" input type is always predefined.
-                    if (source.InputType == AttributeInputType.List)
-                        return AttributeValueType.Predefined.ToString();
-                    // a non-list input type has to be either a Property OR an Extra
-                    else if (source.IsProperty == true && source.IsExtra == true)
-                        throw new ArgumentException(String.Format("A {0} input type cannot be both a Property and an Extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
-                    // a Property is always an AdminEntered ValueType
-                    else if (source.IsProperty == true)
-                        return AttributeValueType.AdminEntered.ToString();
-                    // an Extra is always a ShopperEntered ValueType
-                    else if (source.IsExtra == true)
-                        return AttributeValueType.ShopperEntered.ToString();
-                    else
-                        throw new ArgumentException(String.Format("A {0} input type must be a property or an extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
-                }
             }
         }
         //private List<AttributeValue> MapVocabularyValueInProductTypeListToSelectedValues(List<DC.AttributeVocabularyValueInProductType> list, string attributeFQN)

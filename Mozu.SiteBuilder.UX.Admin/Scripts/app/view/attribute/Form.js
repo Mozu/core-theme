@@ -738,7 +738,6 @@ Ext.define('Taco.view.attribute.Form', {
                 hidden: !this.record.supportsDisplayGroup(),
                 readOnly: this.isEdit(),
                 store: [
-                    ['Predefined', 'Predefined'],
                     ['ShopperEntered', 'Shopper Entered'],
                     ['ShopperOrAdminEntered', 'Shopper or Admin Entered'],
                     ['AdminEntered', 'Admin Entered']
