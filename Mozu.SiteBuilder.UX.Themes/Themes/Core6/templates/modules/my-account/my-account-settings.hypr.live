@@ -42,21 +42,34 @@
     <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
     <ul>
     {% for attribute in model.attributes %}
-      <li class="mz-accountsettings-section mz-accountsettings-attribute">
+      <li class="mz-accountsettings-section mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
         {% if attribute.inputType === "YesNo" %}
-          <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" data-mz-value="{{ attribute.attributeFQN }}" data-mz-action="updateAttribute" {% if attribute.values[0] === true %}checked="checked"{% endif %} />
-          <label for="account-attribute-{{ attribute.attributeFQN }}">{{ attribute.adminName }}</label>
+          {% if editing %}
+            <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" {% if attribute.values[0] === true %}checked="checked"{% endif %} />
+          {% endif %}
+          <span class="mz-accountsettings-attribute--{% if editing %}input-{% endif %}label">{{ attribute.adminName }}</span>
+          {% if not editing %}
+            <span class="mz-accountsettings-attribute--value">{% if attribute.values[0] === true %}Yes{% else %}No{% endif %}</span>
+          {% endif %}
         {% endif %}
         {% if attribute.inputType === "TextBox" %}
-          <div>{{ attribute.adminName }}</div>
-          <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" data-mz-value="{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}" disabled="disabled" />
+          <span class="mz-accountsettings-attribute--label">{{ attribute.adminName }}</span>
+          {% if editing %}
+            <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}" />
+          {% else %}
+            <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
+          {% endif %}
         {% endif %}
         {% if attribute.inputType === "List" %}
-          <div>{{ attribute.adminName }}</div>
-          {% for option in attribute.vocabularyValues %}
-            <input type="radio" name="account-attribute-{{ attribute.attributeFQN }}" data-mz-value="{{ attribute.attributeFQN }}" value="{{ option.value }}" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} disabled="disabled" />
-            <label for="account-attribute-{{ attribute.attributeFQN }}">{{ option.value }}</label>
-          {% endfor %}
+          <span class="mz-accountsettings-attribute--label">{{ attribute.adminName }}</span>
+          {% if editing %}
+            {% for option in attribute.vocabularyValues %}
+              <input type="radio" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
+              <span class="mz-accountsettings-attribute--input-label">{{ option.value }}</span>
+            {% endfor %}
+          {% else %}
+            <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
+          {% endif %}
         {% endif %}
       </li>
     {% endfor %}
