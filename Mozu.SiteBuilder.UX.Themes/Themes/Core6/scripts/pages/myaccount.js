@@ -1,49 +1,5 @@
 ﻿define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews) {
     
-    var AccountSettingsView = Backbone.MozuView.extend({
-        templateName: 'modules/my-account/my-account-settings',
-        autoUpdate: [
-            'firstName',
-            'lastName',
-            //'primaryBillingContact.phoneNumbers.home',
-            'oldPassword',
-            'password',
-            'confirmPassword',
-            'acceptsMarketing'
-        ],
-        initialize: function () {
-            this.model.getAttributes().then(function (customer) {});
-        },
-        updateAttribute: function (e) {
-            var attributeFQN = e.currentTarget.getAttribute('data-mz-value');
-            var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
-            var isChecked = $(e.currentTarget).prop('checked');
-
-            this.model.set('values', [isChecked]);
-            this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
-        },
-        updateAcceptsMarketing: function(e) {
-            var yes = $(e.currentTarget).prop('checked');
-            this.model.set('acceptsMarketing', yes);
-            this.model.updateAcceptsMarketing(yes);
-        },
-        startEditName: function () {
-            this.editing.name = true;
-            this.render();
-        },
-        cancelEditName: function() {
-            this.editing.name = false;
-            this.render();
-        },
-        finishEditName: function() {
-            var self = this;
-            this.doModelAction('updateName').otherwise(function() {
-                self.editing.name = true;
-            });
-            this.editing.name = false;
-        }
-    });
-
     var EditableView = Backbone.MozuView.extend({
         constructor: function () {
             Backbone.MozuView.apply(this, arguments);
@@ -64,6 +20,47 @@
                 operation.then(renderAlways, renderAlways);
                 return operation;
             }
+        }
+    });
+
+    var AccountSettingsView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-settings',
+        autoUpdate: [
+            'firstName',
+            'lastName',
+            'acceptsMarketing'
+        ],
+        constructor: function () {
+            EditableView.apply(this, arguments);
+            this.editing = false;
+        },
+        initialize: function () {
+            this.model.getAttributes().then(function (customer) { });
+        },
+        updateAttribute: function (e) {
+            var attributeFQN = e.currentTarget.getAttribute('data-mz-value');
+            var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
+            var isChecked = $(e.currentTarget).prop('checked');
+
+            this.model.set('values', [isChecked]);
+            this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
+        },
+        startEdit: function (event) {
+            event.preventDefault();
+            this.editing = true;
+            this.render();
+        },
+        cancelEdit: function () {
+            this.editing = false;
+            this.render();
+        },
+        finishEdit: function () {
+            this.doModelAction('apiUpdate')
+            .otherwise(function () {
+                self.editing = true;
+            });
+
+            self.editing = false;
         }
     });
 
