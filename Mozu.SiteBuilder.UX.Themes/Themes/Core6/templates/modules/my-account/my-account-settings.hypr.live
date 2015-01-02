@@ -40,7 +40,7 @@
     <li class=" mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
       {% if attribute.inputType === "YesNo" %}
         {% if editing %}
-          <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" {% if attribute.values[0] === true %}checked="checked"{% endif %} />
+          <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.adminName }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" {% if attribute.values[0] === true %}checked="checked"{% endif %} />
         {% endif %}
         <span class="mz-accountsettings-attribute--{% if editing %}input-{% endif %}label">{{ attribute.adminName }}</span>
         {% if not editing %}
@@ -50,7 +50,7 @@
       {% if attribute.inputType === "TextBox" %}
         <span class="mz-accountsettings-attribute--label">{{ attribute.adminName }}</span>
         {% if editing %}
-          <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}" />
+          <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" />
         {% else %}
           <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
         {% endif %}
@@ -59,7 +59,7 @@
         <span class="mz-accountsettings-attribute--label">{{ attribute.adminName }}</span>
         {% if editing %}
           {% for option in attribute.vocabularyValues %}
-            <input type="radio" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
+            <input type="radio" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
             <span class="mz-accountsettings-attribute--input-label">{{ option.value }}</span>
           {% endfor %}
         {% else %}

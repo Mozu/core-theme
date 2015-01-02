@@ -38,12 +38,12 @@
             this.model.getAttributes().then(function (customer) { });
         },
         updateAttribute: function (e) {
-            var attributeFQN = e.currentTarget.getAttribute('data-mz-value');
+            var attributeFQN = e.currentTarget.getAttribute('data-mz-attribute');
             var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
-            var isChecked = $(e.currentTarget).prop('checked');
+            var nextValue = attribute.get('inputType') === 'YesNo' ? $(e.currentTarget).prop('checked') : $(e.currentTarget).val();
 
-            this.model.set('values', [isChecked]);
-            this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
+            attribute.set('values', [nextValue]);
+            // this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
         },
         startEdit: function (event) {
             event.preventDefault();
@@ -52,6 +52,7 @@
         },
         cancelEdit: function () {
             this.editing = false;
+            console.log(this.model);
             this.render();
         },
         finishEdit: function () {
