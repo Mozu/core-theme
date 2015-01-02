@@ -35,6 +35,11 @@ Ext.define('Taco.model.OrderPayment', {
             'useNull': true
         },
         {
+            'name': 'amountRequested',
+            'type': 'float',
+            'useNull': false
+        },
+        {
             'name': 'amountCollected',
             'type': 'float',
             'useNull': false
@@ -48,6 +53,21 @@ Ext.define('Taco.model.OrderPayment', {
             'name': 'amountAuthorized',
             'type': 'float',
             'useNull': false
+        },
+        {
+            // effective amount: how much was requested/authorized/captured based on payment state.
+            // important for totaling how much still has to be paid on an order.
+            name: 'effectiveAmount',
+            type: 'float',
+            useNull: false,
+            convert: function (value, record) {
+                if (Ext.Array.contains(['Voided', 'Declined'], record.get('status'))) return 0;
+
+                var amount = record.get('amountCollected') || record.get('amountAuthorized') || record.get('amountRequested')
+                amount -= record.get('amountCredited');
+
+                return amount;
+            }
         },
         {
             'name': 'interactions',

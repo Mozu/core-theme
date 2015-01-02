@@ -44,8 +44,8 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
     mode: 'mozufilter',
     showGutter: true,
     allowStyles: true,
-    dataFormat:'imageObject', //or urlOnly
-    allowAltText : true,
+    dataFormat: 'imageObject', //or urlOnly
+    allowAltText: true,
     initComponent: function() {
         var me = this;
         me.on('render', function() {
@@ -106,7 +106,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
             ret.imageSize = 'specificSize';
         }
 
-        
+
         return ret;
     },
 
@@ -137,7 +137,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
             //2083-2116/cms/7332/files/b1bf3cab-1d7c-42f8-901a-bff60b56d778?size=60
         }
 
-        if (this.dataFormat == 'urlOnly') {
+        if (this.dataFormat === 'urlOnly') {
             return ret.imageUrl;
         }
         return ret;
@@ -164,6 +164,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
 
         if (me.getImageEl()) {
             data = me.getSubTplData();
+            me.getImageEl().setVisible(!!data.imageUrl)
             me.getImageEl().dom.setAttribute('src', data.imageUrl);
         }
 
@@ -178,12 +179,13 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
         ret = me.mixins.field.setValue.call(me, value);
         if (me.getImageEl()) {
             data = me.getSubTplData();
+            me.getImageEl().setVisible(!!data.imageUrl)
             me.getImageEl().dom.setAttribute('src', data.imageUrl);
         }
         return ret;
     },
     getInputEl: function() {
-        if (!this.getEl()) {
+        if (!this.getEl()) {c
             return null;
         }
         this.inputEl = this.inputEl || this.getEl().getById(this.getInputId());
@@ -196,7 +198,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
         this.imageEl = this.imageEl || this.getEl().getById(this.getInputId() + '-img');
         return this.imageEl;
     },
-    getImageContainerEl: function () {
+    getImageContainerEl: function() {
         if (!this.getEl()) {
             return null;
         }
@@ -212,17 +214,17 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
     },
 
 
-    fieldSubTpl: ['<div style="cursor:pointer;border:2px solid #dddfdf;height:200px;width:200px" id="{id}-cnt"> <img id="{id}-img" src="{imageUrl}" alt="click to edit"  style="max-height:195px;max-width:195px;" ></div><div id="{id}-label" style="cursor:pointer;margin-left: 60px;">click to edit</div>'],
+    fieldSubTpl: ['<div style="cursor:pointer;border:2px solid #dddfdf;height:200px;width:200px;background-image: url(\'/admin/scripts/resources/images/image.png\');background-repeat: no-repeat;background-position: center;" id="{id}-cnt"> <img id="{id}-img" src="{imageUrl}" alt="click to edit"  style="max-height:195px;max-width:195px;{[values.imageUrl ? "":"display:none"]}" ></div><div id="{id}-label" style="cursor:pointer;margin-left: 60px;">click to edit</div>'],
     getSubTplData: function() {
         var templateData = this.callParent(arguments),
             value = this.getValue();
 
         if (Ext.isString(value) && value) {
-            templateData.imageUrl = value || '/admin/scripts/resources/images/noimage.png';
+            templateData.imageUrl = value || null;
         } else {
-            templateData.imageUrl = value && value.imageUrl ? value.imageUrl : '/admin/scripts/resources/images/noimage.png';
+            templateData.imageUrl = value && value.imageUrl ? value.imageUrl : null;
         }
-        
+
         return templateData;
     },
 
@@ -256,10 +258,10 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
     layout: {
         type: 'fit'
     },
-    allowStyles:true,
+    allowStyles: true,
     //allowBlankAltText: false,
     initComponent: function() {
-        var me = this;
+
         this.imageStore = Ext.create('Ext.data.Store', {
             fields: ['id', 'url'],
             data: []
@@ -419,11 +421,11 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                     // }, {
                     xtype: 'textarea',
                     name: 'imageAltText',
-                    hidden : !this.allowAltText,
+                    hidden: !this.allowAltText,
                     fieldLabel: 'Alt Text',
                     //validator :function (value) {
                     //    me.getForm().findField('imageFileId').setValue(value);
-                   
+
                     //}
                 }]
             }, {
@@ -532,158 +534,8 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
                                 }
                             }
                         }
-                    }, {
-                        xtype: 'container',
-                        itemId: 'linkFields',
-                        hidden: true,
-                        padding: '2 0 0',
-                        hidden: true,
-                        layout: {
-                            type: 'hbox'
-                        },
-                        items: [{
-                            xtype: 'combobox',
-                            name: 'linkSource',
-                            width: 170,
-                            editable: false,
-                            forceSelection: true,
-                            value: 'externalUrl',
-                            store: [
-                                ['externalUrl', 'External URL'],
-                                ['internalUrl', 'Internal URL'],
-                                ['file', 'File']
-                            ],
-                            listeners: {
-                                change: {
-                                    scope: this,
-                                    fn: function(field, newValue) {
-                                        this.handleLinkSourceChange(newValue);
-                                    }
-                                }
-                            }
-                        }, {
-                            xtype: 'button',
-                            itemId: 'linkAssociatorButton',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Select Existing',
-                            margin: '0 0 0 15',
-                            hidden: true,
-                            enableToggle: true,
-                            scope: this,
-                            toggleHandler: function(button, state) {
-                                this.toggleAssociator(state, button, this.linkStore);
-                            }
-                        }, {
-                            xtype: 'tacofilefield',
-                            itemId: 'linkUploadButton',
-                            text: 'Upload',
-                            margin: '0 0 0 15',
-                            hidden: true,
-                            buttonConfig: {
-                                ui: 'action',
-                                scale: 'medium'
-                            }
-                        }, {
-                            xtype: 'textfield',
-                            name: 'linkExternalUrl',
-                            emptyText: 'http://',
-                            margin: '0 0 0 15',
-                            flex: 1,
-                            hidden: false
-                        }, {
-                            xtype: 'textfield',
-                            name: 'linkInternalUrl',
-                            margin: '0 0 0 15',
-                            flex: 1,
-                            hidden: true
-                        }, {
-                            xtype: 'textfield',
-                            name: 'linkFileId',
-                            margin: '0 0 0 15',
-                            flex: 1,
-                            hidden: true
-                        }]
-                    },
+                    }
 
-
-
-                     {
-                         xtype: 'container',
-                         itemId: 'linkSelectors',
-                         padding: '10 0 0',
-                         height: 170,
-                         hidden:true,
-                         layout: {
-                             type: 'card'
-                         },
-                         items: [
-                             {
-                                 // Card 0: External URL
-                                 layout: {
-                                     type: 'fit'
-                                 },
-                                 items: [
-                                     {
-                                         xtype: 'component',
-                                         height: 160
-                                     }
-                                 ]
-                             }, {
-                                 // Card 1: Internal URL
-                                 layout: {
-                                     type: 'fit'
-                                 },
-                                 items: [
-                                     {
-                                         xtype: 'treepanel',
-                                         componentCls: 'taco-website-tree',
-                                         hideHeaders: true,
-                                         rootVisible: false,
-                                         useArrows: true,
-                                         store: Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes'),
-                                         columns: [
-                                             {
-                                                 xtype: 'treecolumn',
-                                                 flex: 1,
-                                                 dataIndex: 'name',
-                                                 renderer: function (value) {
-                                                     return '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
-                                                 }
-                                             }
-                                         ],
-                                         listeners: {
-                                             selectionchange: {
-                                                 scope: this,
-                                                 fn: function (selModel, records) {
-                                                     var field = this.getForm().getForm().findField('linkInternalUrl'),
-                                                         urls;
-
-                                                     urls = Ext.Array.map(records, function (record) {
-                                                         return record.get('url');
-                                                     }, this).join(', ');
-
-                                                     field.setValue(urls);
-                                                 }
-                                             }
-                                         }
-                                     }
-                                 ]
-                             }, {
-                                 // Card 2: File
-                                 layout: {
-                                     type: 'fit'
-                                 },
-                                 items: [
-                                     {
-                                         xtype: 'taco-singleimagefield',
-                                         height: 160,
-                                         store: this.linkStore
-                                     }
-                                 ]
-                             }
-                         ]
-                     }
 
 
                 ]
@@ -721,11 +573,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
     },
 
     handleImageClickActionChange: function(newValue) {
-        var isUrl = newValue.imageClickAction === 'url';
-
-        console.log(isUrl ? 'url' : 'not url');
-        this.down('#linkFields').setVisible(isUrl);
-        this.down('#linkSelectors').setVisible(isUrl);
+       
     },
 
     handleImageSizeChange: function(newValue) {
@@ -740,7 +588,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         this.down('#imageAssociatorButton').setVisible(isFile);
         this.down('#imageUploadButton').setVisible(isFile);
         this.down('[name=imageExternalUrl]').setVisible(newValue === 'externalUrl');
-        
+
         this.down('#imageSelectors').getLayout().setActiveItem(cardIndex);
     },
 
@@ -752,11 +600,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
             cardIndex = 1;
         }
 
-        this.down('#linkAssociatorButton').setVisible(isFile);
-        this.down('#linkUploadButton').setVisible(isFile);
-        this.down('[name=linkInternalUrl]').setVisible(newValue === 'internalUrl');
-        this.down('[name=linkExternalUrl]').setVisible(newValue === 'externalUrl');
-        this.down('#linkSelectors').getLayout().setActiveItem(cardIndex);
+   
     },
 
     handleUploadFile: function(files) {
@@ -817,7 +661,7 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
         this.handleImageClickActionChange(data);
         this.handleImageSizeChange(data.imageSize);
         this.handleImageSourceChange(data.imageSource);
-        this.handleLinkSourceChange(data.linkSource);
+
     },
 
     /**
@@ -826,6 +670,6 @@ Ext.define('Taco.core.ux.form.field.BaseImageField.ImageModal', {
      * @private
      */
     beforeDestroy: function() {
-        Ext.destroy(this.associator, this.imageStore, this.linkStore);
+        Ext.destroy(this.associator, this.imageStore);
     }
 });

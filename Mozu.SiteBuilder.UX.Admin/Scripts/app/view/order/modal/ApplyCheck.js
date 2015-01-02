@@ -32,7 +32,7 @@ Ext.define('Taco.view.order.modal.ApplyCheck', {
                 currencyCode: this.order.getCurrencyCode(),
                 name: 'amount',
                 fieldLabel: 'Amount Collected',                
-                value: Math.min(this.record.data.amountAuthorized, this.order.data.authorizationInfo.captureAmount)
+                value: Math.min(this.record.data.amountRequested, this.order.getCaptureAmountHint())
             }]
         });
 

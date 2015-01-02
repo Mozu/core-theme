@@ -31,10 +31,6 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             this.packagingTypeStore = Ext.create('Taco.store.PackagingTypes');
 
             this.packagingTypeStore.load();
-
-            if (this.shippingMethodsStore.count() === 0 && !this.shippingMethodsStore.isLoading()) {
-                this.shippingMethodsStore.load();
-            }
         }
 
         this.details = Ext.widget({
@@ -80,8 +76,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     hidden: !!this.packageData.shipmentId,
                     listeners: {
                         menushow: function (button, menu) {
-                            menu.removeAll();
-                            menu.add(this.buildShippingMethods());
+                            if (this.shippingMethodsStore.count() === 0 && !this.shippingMethodsStore.isLoading()) {
+                                this.shippingMethodsStore.load({
+                                    scope: this,
+                                    callback: function () {
+                                        menu.removeAll();
+                                        menu.add(this.buildShippingMethods());
+                                    }
+                                })
+                            }
                         },
                         scope: this
                     },
@@ -93,7 +96,7 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                             delegate: 'x-menu-item-link'
                         },
                         items: [{
-                            text: ''
+                            text: 'loading..'
                         }]
                     }
                 }, {
@@ -394,6 +397,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
     },
 
     handleShippingMethod: function (menu, item) {
+        if (!item.methodCode) return;
+
         this.packageData.shippingMethodCode = item.methodCode;
         this.packageData.shippingMethodName = item.methodName;
         

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-10-24
+ * Mozu JavaScript SDK - v0.3.0 - 2014-11-19
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -2628,6 +2628,7 @@ module.exports = {
         CREATED: "Created",
         PENDING_REVIEW: "PendingReview",
         PROCESSING: "Processing",
+        ERRORED: "Errored",
         SUBMITTED: "Submitted",
         VALIDATED: "Validated"
     },
@@ -2641,10 +2642,19 @@ module.exports = {
         CANCEL_ORDER: "CancelOrder",
         REOPEN_ORDER: "ReopenOrder"
     },
-    FULFILLMENT_METHODS: {
+    COMMERCE_FULFILLMENT_METHODS: {
         SHIP: "Ship",
         PICKUP: "Pickup",
         DIGITAL: "Digital"
+    },
+    CATALOG_FULFILLMENT_TYPES: {
+        SHIP: "DirectShip",
+        PICKUP: "InStorePickup",
+        DIGITAL: "Digital"
+    },
+    GOODS_TYPES: {
+        PHYSICAL: 'Physical',
+        DIGITAL: 'Digital'
     }
 };
 
@@ -4444,6 +4454,8 @@ module.exports = (function () {
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PROCESSING] = true;
+    OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ERRORED] = true;
     OrderStatus2IsComplete[CONSTANTS.ORDER_STATUSES.COMPLETED] = true;
 
     var OrderStatus2IsReady = {};
@@ -4594,6 +4606,14 @@ module.exports = (function () {
 var errors = require('../errors');
 var utils = require('../utils');
 var CONSTANTS = require('../constants/default');
+
+var catalogToCommerceFulfillmentTypeConstants = {};
+for (var k in CONSTANTS.COMMERCE_FULFILLMENT_METHODS) {
+    if (CONSTANTS.COMMERCE_FULFILLMENT_METHODS.hasOwnProperty(k)) {
+        catalogToCommerceFulfillmentTypeConstants[CONSTANTS.CATALOG_FULFILLMENT_TYPES[k]] = CONSTANTS.COMMERCE_FULFILLMENT_METHODS[k];
+    }
+}
+
 module.exports = {
     addToCart: function(payload) {
         // expect payload to have only "options" and "quantity"
@@ -4605,11 +4625,11 @@ module.exports = {
             product: {
                 productCode: this.data.productCode,
                 variationProductCode: this.data.variationProductCode,
-                options: payload.options
+                options: payload.options || this.data.options
             },
             quantity: payload.quantity || 1,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
-            fulfillmentMethod: payload.fulfillmentMethod || "Ship"
+            fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
         });
     },
     addToWishlist: function (payload) {
@@ -4627,7 +4647,7 @@ module.exports = {
     },
     addToCartForPickup: function (opts) {
         return this.addToCart(utils.extend({}, this.data, {
-            fulfillmentMethod: CONSTANTS.FULFILLMENT_METHODS.PICKUP
+            fulfillmentMethod: CONSTANTS.COMMERCE_FULFILLMENT_METHODS.PICKUP
         }, opts));
     }
 };

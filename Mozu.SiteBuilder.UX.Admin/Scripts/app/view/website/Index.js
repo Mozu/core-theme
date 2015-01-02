@@ -666,6 +666,7 @@ Ext.define('Taco.view.website.Index', {
 
     onNavigateStart: function () {
         var me = this;
+        window.clearTimeout(this.loadingMaskTaskId);
         this.loadingMaskTaskId = Ext.defer(function () {
             me.getCardPanel().setLoading(true);
         }, 500, this);

@@ -36,6 +36,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
 
+            if (apiContext.SiteId.HasValue == false)
+            {
+                return (await base.SendAsync(request, cancellationToken));
+            }
+
+
             var repo = request.Resolve<IRedirectRepository>();
             var redirects = await repo.FetchRedirectEntries().ConfigureAwait(false);
             string stem = request.RequestUri.AbsolutePath;

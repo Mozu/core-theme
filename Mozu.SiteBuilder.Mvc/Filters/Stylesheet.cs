@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Settings;
@@ -56,8 +57,17 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             var themeSettingsTs = context.Resolve<IThemeSettingsRepository>().GetTimeStamp(theme).Result;
             var themeTs = ctx.Theme.TimeStamp;
             var cdn = context.Resolve<SiteContext>().CdnPrefix;
+            var apiContext = context.Resolve<IApiContext>();
+
             var pc = context.PageContext();
-            return string.Format("<link rel=\"stylesheet\" href=\"{4}{0}?SBTHEME={1}&dt={2}-{3}{5}\"  type=\"text/css\">", value, theme, themeSettingsTs.Ticks.ToString("X2"), themeTs.Ticks.ToString("X2"), string.IsNullOrEmpty(cdn) ? null : (cdn + "/"), (pc.IsDebugMode ? "&debug=true" : ""));
+            return string.Format("<link rel=\"stylesheet\" href=\"{4}{0}?SBTHEME={1}&dt={2}-{3}{5}{6}\"  type=\"text/css\">",
+                value, 
+                theme, 
+                themeSettingsTs.Ticks.ToString("X2"),
+                themeTs.Ticks.ToString("X2"),
+                string.IsNullOrEmpty(cdn) ? null : (cdn + "/"), 
+                (pc.IsDebugMode ? "&debug=true" : ""),
+                (apiContext.DataViewMode == DataViewModeType.Pending ? "&dm=p":"") );
                 
              
 

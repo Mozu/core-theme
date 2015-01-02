@@ -33,13 +33,20 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             var apiContext = actionContext.Request.Resolve<IApiContext>();
             if (! apiContext.SiteId.HasValue)
             {
+                var redirLoc = "/admin/auth/launchpad";
+              
+                if (string.Equals(actionContext.Request.RequestUri.AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
+                {
+                    redirLoc = "/admin/Scripts/resources/favicon.ico";
+                }
+                else
+                {
+                    var logger = actionContext.Request.Resolve<ILoggingService>().LoggerFor<RequiresSiteContextRedirectFilterAttribute>();
+                    logger.Warn("missing sitecontext on " + actionContext.Request.RequestUri.ToString());
+                }
 
-                var logger = actionContext.Request.Resolve<ILoggingService>().LoggerFor<RequiresSiteContextRedirectFilterAttribute>();
-                logger.Warn("missing sitecontext on " + actionContext.Request.RequestUri.ToString());
-
-
-                HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Redirect);
-                redir.Headers.Location = new Uri("/admin/auth/launchpad", UriKind.Relative);
+                HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Moved);
+                redir.Headers.Location = new Uri(redirLoc, UriKind.Relative);
                 return Task<HttpResponseMessage>.FromResult(redir);
             }
             else
@@ -49,8 +56,18 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     var sc = actionContext.Request.Resolve<SiteContext>();
                     if (!sc.SiteExists)
                     {
-                        HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Redirect);
-                        redir.Headers.Location = new Uri("/admin/auth/launchpad", UriKind.Relative);
+                        var redirLoc = "/admin/auth/launchpad";
+                        if (string.Equals(actionContext.Request.RequestUri.AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
+                        {
+                            redirLoc = "/admin/Scripts/resources/favicon.ico";
+                        }
+                        else
+                        {
+                            var logger = actionContext.Request.Resolve<ILoggingService>().LoggerFor<RequiresSiteContextRedirectFilterAttribute>();
+                            logger.Warn("missing sitecontext on " + actionContext.Request.RequestUri.ToString());
+                        }
+                        HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Moved );
+                        redir.Headers.Location = new Uri(redirLoc, UriKind.Relative);
                         return redir;
                     }
                     return x.Result;

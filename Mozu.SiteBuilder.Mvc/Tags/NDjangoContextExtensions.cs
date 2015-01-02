@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return context.ViewContext().LifetimeScope.ResolveOptional<T>();
         }
 
-        public static async Task AsyncRender(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer)
+        public static  Task AsyncRender(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer)
         {
             var viewContext = context.ViewContext();
             var viewEngine = viewContext.LifetimeScope.Resolve<HyprViewEngine>();
@@ -73,11 +73,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             var hvc = new HyprViewContext(viewContext.RequestMessage, viewData, viewContext);
             if (view == null)
             {
+
                 writer.Write("view not found: (" + viewName + ")");
-                return;
+                return  Task.Run(()=>true);
             }
 
-            var result = await view.AsyncRender(hvc, writer);
+            return   view.AsyncRender(hvc, writer);
         }
     }
 }

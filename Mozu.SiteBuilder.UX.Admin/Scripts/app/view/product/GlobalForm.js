@@ -60,9 +60,11 @@ Ext.define('Taco.view.product.GlobalForm', {
     },
 
     buildForm: function () {
+        
         var subFormCfg = {
                 isGlobal: true,
                 product: this.record,
+                productForm: this.productForm,
                 persistChangesToModel: true,
                 hidden:false
             },
@@ -72,6 +74,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         var globalSubFormCfg = {
             isGlobal: true,
             product: this.record,
+            productForm: this.productForm,
             persistChangesToModel: true,
             hidden: false
         };

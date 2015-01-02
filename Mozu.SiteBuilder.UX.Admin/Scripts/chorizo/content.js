@@ -264,8 +264,16 @@
             'blur': 'editing > default'
         });
 
+        this.widgetData = this.element.data('widget');
+
         this.$resizer = $('<div class="mz-cms-resizer"><div class="mz-cms-bottom"></div></div>')
             .appendTo(this.element);
+
+        if ( !this.widgetData.config.heightResizable ) {
+
+            this.$resizer.css('display', 'none');
+
+        };
 
         this.$bottom = this.$resizer.find('.mz-cms-bottom')
             .draggable({
@@ -276,19 +284,19 @@
                 stop: $.proxy(this._onStop, this)
             });
 
-        this.widgetData = this.element.data('widget');
-
         this.snapHeights = [];
 
         this.moveColumns = this.widgetData.config.imageSize === 'maintain';
 
         //if (this.widgetData.config.heightResizable === false) this.$bottom.hide();
+
     }
 
     Img.prototype = new Content();
 
     Img.prototype.update = function (data) {
-        var height = typeof data.config.height === 'number' ? data.config.height + 'px' : data.config.height;
+        var height = typeof data.config.height === 'number' ? data.config.height + 'px' : data.config.height,
+            resizer = data.config.heightResizable ? 'block' : 'none';
 
         this.widgetData = data;
         this.moveColumns = this.widgetData.config.imageSize === 'maintain';
@@ -296,6 +304,9 @@
 
         //this.$content.height(height);
         this.$content.css('height', height);
+
+        this.$resizer.css('display', resizer );
+
     }
 
     Img.prototype._defaultState = function () {

@@ -110,12 +110,24 @@ Ext.define('Taco.view.product.subform.Inventory', {
             var productForm = me.up("productform");
 
             if (me.manageInventoryButton) {
-                productForm.getForm().getBoundItems().add(me.manageInventoryButton);
+                productForm.getForm().getBoundItems().add('manageInventoryButton', me.manageInventoryButton);
             }
 
             me.mon(productForm, 'productusagechange', me.onProductUsageChange, me);
         });
 
+    },
+
+    onDestroy: function () {
+        
+        // remove the inventory from the bound items before destroying the view;;
+        var me = this;
+        if (me.manageInventoryButton) {
+            var boundItems = me.productForm.getForm().getBoundItems()
+            boundItems.removeAtKey("manageInventoryButton");            
+        }
+
+        this.callParent(arguments);
     },
     
     // all the logic for what is show or hidden is managed here;

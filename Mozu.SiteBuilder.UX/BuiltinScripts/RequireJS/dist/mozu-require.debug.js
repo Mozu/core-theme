@@ -1,5 +1,5 @@
 /*! 
- * Mozu Require - v0.2.0 - 2014-09-18
+ * Mozu Require - v0.2.0 - 2014-11-14
  *
  * Copyright (c) 2014 Volusion, Inc.
  *
@@ -685,9 +685,13 @@ var storeMode = "debug",
         return e;
     }
 
+    var dataViewMode;
+    try {
+        dataViewMode = getMozuData('apicontext').headers['x-vol-dataview-mode'];
+    } catch(e) {}
 
     var mozuBuiltins = {
-        hyprlivecontext: "/hyprlivecontext?callback=define"
+        hyprlivecontext: "/hyprlivecontext?callback=define&dv=" + (dataViewMode ? dataViewMode.toString().substring(0, 1) : 'L')
     },
         builtinRoot = "/js/";
     each(['sdk', 'hyprlive'], function (modName) {

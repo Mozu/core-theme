@@ -328,9 +328,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.1\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.4\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts">
       <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.13.1\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>

@@ -400,7 +400,7 @@
         };
             
         
-        if (Hypr.getThemeSetting('allowWishlist')) accountViews.wishList = new WishListView({
+        if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled) accountViews.wishList = new WishListView({
             el: $wishListEl,
             model: accountModel.get('wishlist'),
             messagesEl: $messagesEl

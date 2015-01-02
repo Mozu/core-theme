@@ -178,9 +178,13 @@
         return e;
     }
 
+    var dataViewMode;
+    try {
+        dataViewMode = getMozuData('apicontext').headers['x-vol-dataview-mode'];
+    } catch(e) {}
 
     var mozuBuiltins = {
-        hyprlivecontext: "/hyprlivecontext?callback=define"
+        hyprlivecontext: "/hyprlivecontext?callback=define&dv=" + (dataViewMode ? dataViewMode.toString().substring(0, 1) : 'L')
     },
         builtinRoot = "/js/";
     each(['sdk', 'hyprlive'], function (modName) {

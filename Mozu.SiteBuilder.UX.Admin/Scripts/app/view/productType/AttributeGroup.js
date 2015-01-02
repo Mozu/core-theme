@@ -160,9 +160,16 @@
     },
 
     edit: function (ptAttribute) {
+        var activeAttrForm;
+
         this.editor.record = ptAttribute;
         this.editor.edit(ptAttribute);
         this.getLayout().setActiveItem(1);
+        activeAttrForm = this.getLayout().getActiveItem();
+
+        if (activeAttrForm) {
+            activeAttrForm.selectAttributeAndUpdateValues(ptAttribute);
+        }
     },
 
     removeAttribute: function (ptAttribute, attributeView) {
@@ -193,7 +200,7 @@
 
         if (record && record.isModel) {
             //strip out the spaces from the name so it will be a valid itemId
-            name = record.get('attributeFQN');
+            name = Ext.String.createVarName(record.get('attributeFQN'));
             listCt.down('[attributeFQN="' + name + '"]').down('#placeholder').update(record.getData());
         }
     }

@@ -318,13 +318,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.1\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
-    </Reference>
     <!--<Reference Include="PhoneNumbers">
       <HintPath>..\packages\libphonenumber-csharp.4.10.0.62\lib\PhoneNumbers.dll</HintPath>
     </Reference>-->
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.4\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.13.1\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
@@ -670,6 +670,7 @@
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\Mocks\Attributes.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
+    <Compile Include="Modules\VersionValidationCacheHeaderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\.sencha\app\find-cmd-impl.xml" />
     <Content Include="Scripts\.sencha\app\init-impl.xml" />
@@ -1035,10 +1036,13 @@
     <Content Include="Scripts\chorizo\Build\chorizo.css" />
     <Content Include="Scripts\chorizo\Build\siteBuilder.js" />
     <Content Include="Scripts\app\overrides\panel\Tool.js" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\camera.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\error-shipping-label.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\image.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading.gif" />
+    <Content Include="Scripts\resources\images\camera.png" />
     <Content Include="Scripts\resources\images\icons\checkbox.gif" />
     <Content Include="Scripts\resources\images\icons\icon-barcode.png" />
     <Content Include="Scripts\resources\images\icons\icon-cart.png" />
@@ -1061,6 +1065,7 @@
     <Content Include="Scripts\resources\images\icons\icon-target.png" />
     <Content Include="Scripts\resources\images\icons\icon-theme-tablet.png" />
     <Content Include="Scripts\resources\images\icons\icon-tools.png" />
+    <Content Include="Scripts\resources\images\image.png" />
     <Content Include="Scripts\resources\images\loader_25x25.gif" />
     <Content Include="Scripts\resources\images\loader_51x51.gif" />
     <Content Include="Scripts\resources\images\noimage.png" />
@@ -2415,7 +2420,6 @@
   <ItemGroup>
     <Folder Include="Api\Models\Cms\" />
     <Folder Include="Models\" />
-    <Folder Include="Modules\" />
     <Folder Include="Scripts\app\exported\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\platter\containers\" />
@@ -2606,6 +2610,7 @@
     <AjaxMin JsSourceFiles="@(JS)" JsCombinedFileName="$(ProjectDir)\Scripts\resources\lib\init.min.js" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
   </Target>
   <Target Name="AfterCompile" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+    <Exec Command="jsHintTfsbuild.bat" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" CustomErrorRegularExpression=".*error.*" />
     <Exec Command="makeTfsBuild.bat" CustomErrorRegularExpression=".*ERR.*" WorkingDirectory="$(ProjectDir)\Scripts" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
     <ItemGroup>
       <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />

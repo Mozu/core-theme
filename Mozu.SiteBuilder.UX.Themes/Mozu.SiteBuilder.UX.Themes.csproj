@@ -297,9 +297,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.13.3\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.General.Contracts">
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.1\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.4\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -2293,6 +2293,10 @@
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
+    <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+    <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)"/>
     <ItemGroup>
       <Content Include="Themes\$(ThemeName)\**\*.*" Exclude="Themes\$(ThemeName)\node_modules" />
     </ItemGroup>

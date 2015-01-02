@@ -140,23 +140,27 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     //large-type display amount for the total amount collected, displayed, or authorized
     initDisplayAmount: function() {
-        var cls = Taco.baseCSSPrefix + 'orderform-payment-amounts-summary';
+        var cls = Taco.baseCSSPrefix + 'orderform-payment-amounts-summary',
+            lbl = function (label, value) {
+                return '<h4><span class="{cls}-label">' + label + '</span> <strong class="{cls}-value">' + value + '</strong></h4>';
+            };
+
         this.displayAmount = Ext.widget('component', {
             cls: cls,
             tpl: [
-                '<h4><span class="{cls}-label">{labels.authorized}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}</strong></h4>',
-                '<h4><span class="{cls}-label">{labels.collected}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}</strong></h4>',
+                '<tpl if="payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0">',
+                lbl('Amount Requested: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested)]}'),
+                '</tpl>',
+                '<tpl if="payment.amountAuthorized != 0">',
+                lbl('Amount Authorized: ', '{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}'),
+                '</tpl>',
+                lbl('Amount Collected: ', '{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}'),
                 '<tpl if="payment.amountCredited != 0">',
-                '<h4><span class="{cls}-label">{labels.credited}:</span> <strong class="{cls}-value">{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}</strong></h4>',
+                lbl('Amount Credited: ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
                 '</tpl>',
             ],
             data: {
                 cls: cls,
-                labels: {
-                    collected: 'Amount Collected',
-                    credited: 'Amount Credited',
-                    authorized: 'Amount Authorized'
-                },
                 orderRecord: this.order, 
                 payment: this.record.data
             }
@@ -167,7 +171,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     initStatusRow: function () {
         var me = this,
             // capture amount is the outstanding balance on the order
-            captureAmount = me.order.data.authorizationInfo.captureAmount,
+            captureAmount = me.order.getCaptureAmountHint(),
             // auth ready is when you have an authorized card with id
             authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
             // can capture is when you are auth ready and your order has a positive capture amount
@@ -374,7 +378,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                 '<div class="fullName">{billingContact.firstName} {billingContact.lastName}</div>',
                                 '<div class="address">{billingContact.address1}</div>',
                                 '<div class="address">{billingContact.address2}</div>',
-                                '<div class="address">{billingContact.cityOrTown}, {billingContact.stateOrProvince}  {billingContact.postalOrZipCode}</div>',
+                                '<div class="address">',
+                                '{billingContact.cityOrTown}',
+                                '<tpl if="billingContact.cityOrTown && billingContact.stateOrProvince">, </tpl>',
+                                '{billingContact.stateOrProvince}  {billingContact.postalOrZipCode}</div>',
                                 '<div class="address">{billingContact.countryCode}</div>',
                                 '<div class="phoneNumber">{[ values.billingContact.workPhone ? values.billingContact.workPhone : values.billingContact.homePhone ]}</div>',
                             '</tpl>',
