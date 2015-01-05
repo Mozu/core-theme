@@ -29,7 +29,7 @@ Ext.define('Taco.view.customers.subform.Information', {
         if (this.record) {
             var titleString = 'Customer ID: ' + this.record.getId();
             if (!isAnonymous) {
-                titleString += '  |  Shopper ID: ' + this.record.get('emailAddressSafe');
+                titleString += '  |  Shopper ID: ' + this.record.get('userName');
             }
             this.setTitle(titleString);
         }
