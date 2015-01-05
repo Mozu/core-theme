@@ -169,9 +169,9 @@ Ext.define('Taco.view.Header', {
     },
     parentHash: {
         customers: 'Taco.model.CustomerAccount',
-        catalog: 'Taco.model.Product',
+        products: 'Taco.model.Product',
         orders: 'Taco.model.Order',
-        dicounts: 'Taco.model.Discount',
+        discounts: 'Taco.model.Discount',
         locations: 'Taco.model.Location',
         storeCredits: 'Taco.model.StoreCredit',
         none: 'none'
@@ -188,7 +188,7 @@ Ext.define('Taco.view.Header', {
                     customerName: rec.customer ? [rec.customer.data.firstName, ' ', rec.customer.data.lastName].join(''): undefined,
                     customerId: rec.customer ? rec.customer.data.id : undefined
                 },  
-                product: {
+                products: {
                     productCode: rec.data.productCode,
                     catalogId: rec.id,
                     productType: rec.productType,
@@ -200,7 +200,7 @@ Ext.define('Taco.view.Header', {
                     shopperAccntEmail: rec.data.contacts ? rec.data.contacts.map( function(n) { return n.email; }) : undefined,
                     customerSegName: rec.data.segments
                 },
-                dicounts: {
+                discounts: {
                     discountId: rec.data.id,
                     couponCode: rec.data.couponCode
                 },
