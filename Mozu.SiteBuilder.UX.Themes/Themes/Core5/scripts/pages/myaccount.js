@@ -316,8 +316,27 @@
         beginDeleteContact: function (e) {
             var self = this,
                 id = e.currentTarget.getAttribute('data-mz-contact'),
-                contact = this.model.get('contacts').get(id);
-            if (window.confirm(Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')))) {
+                contact = this.model.get('contacts').get(id),
+                cards = this.model.get('cards'),
+                associatedCard = false,
+                associatedCardId = -1,
+                windowMessage = Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1'));
+
+            for (var i in cards.models) {
+                if (cards.models[i].get('contactId') === contact.get('id')) {
+                    associatedCard = true;
+                    associatedCardId = cards.models[i].get('id');
+                }
+            }
+
+            if (associatedCard) {
+                windowMessage += ' ' + Hypr.getLabel('confirmDeleteContact2');
+            }
+
+            if (window.confirm(windowMessage)) {
+                if (associatedCard) {
+                    this.doModelAction('deleteCard', associatedCardId);
+                }
                 this.doModelAction('deleteContact', id);
             }
         }
