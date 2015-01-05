@@ -43,7 +43,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             hidden: !data.taxExempt
         });
 
-        this.setAccountStatus(data.accountStatus);
+        this.updateAccountStatus(data.accountStatus);
 
         this.taxExamptField = Ext.create('Ext.form.FieldContainer', {
             layout: {
@@ -102,7 +102,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                                 method: 'GET',
                                 success: function (response) {
                                     var text = response.responseText;
-                                    me.setAccountStatus(me.record.get('accountStatus'));
+                                    me.updateAccountStatus(me.record.get('accountStatus'));
                                 }
                             });
                         }
@@ -127,7 +127,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                             this.unlockAccountBtn.setDisabled(newValue);
                         }
                         this.resetAccountBtn.setDisabled(newValue);
-                        this.setAccountStatus(newValue?'Disabled':'Active');
+                        this.updateAccountStatus(newValue?'Disabled':'Active');
                     },
                     scope: this
                 },
@@ -305,10 +305,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     data: data,
                     tpl: [
                         '<h2>{accountStatus}</h2>'
-                    ],
-                    listeners: {
-                        accountstatuschanged: { scope: this, fn: function (cmp, newStatus, oldStatus) { this.down('#accountStatus').update({accountStatus: newStatus}) }}
-                    }
+                    ]
                 }, {
                         xtype: 'component',
                         flex: 1
@@ -320,6 +317,13 @@ Ext.define('Taco.view.customers.subform.Information', {
 
         this.callParent(arguments);
 
+        this.on({
+            accountstatuschanged: {
+                scope: this, fn: function (cmp, newStatus, oldStatus) {
+                    this.down('#accountStatus').update({ accountStatus: newStatus });
+                }
+            }
+        });
     },
 
     launchSegmentModal: function () {
@@ -344,13 +348,7 @@ Ext.define('Taco.view.customers.subform.Information', {
     },
 
     updateAccountStatus: function (newStatus, oldStatus) {
-        console.log('Before IF statement:');
-        console.log('newStatus:');
-        console.log(newStatus);
-        console.log('oldStatus:');
-        console.log(oldStatus);
         if (newStatus !== oldStatus) {
-            console.log('INSIDE IF statement');
             this.fireEvent('accountstatuschanged', this, newStatus, oldStatus);
         }
     },
@@ -363,7 +361,8 @@ Ext.define('Taco.view.customers.subform.Information', {
             success: function (response) {
                 var text = response.responseText;
                 //Update account status!
-                me.setAccountStatus(me.record.get('accountStatus'));
+                me.unlockAccountBtn.setDisabled(true);
+                me.updateAccountStatus('Active','Locked');
             }
         });
     }
