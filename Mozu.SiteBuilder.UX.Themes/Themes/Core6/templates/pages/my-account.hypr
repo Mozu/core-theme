@@ -32,6 +32,11 @@
             {% include "modules/my-account/my-account-settings" %}
         </div>
 
+        <a id="password"></a>
+        <div class="mz-l-stack-section mz-passwordsection" id="password-section">
+            {% include "modules/my-account/my-account-password" %}
+        </div>
+
         {% if siteContext.generalSettings.isWishlistCreationEnabled %}
         <a id="wishlist"></a>
         <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">

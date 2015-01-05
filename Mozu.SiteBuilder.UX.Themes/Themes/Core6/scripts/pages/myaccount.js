@@ -17,55 +17,58 @@
                 };
             var operation = this.model[action](payload);
             if (operation && operation.then) {
-                operation.then(renderAlways,renderAlways);
+                operation.then(renderAlways, renderAlways);
                 return operation;
             }
         }
     });
-        
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
         autoUpdate: [
             'firstName',
             'lastName',
-            //'primaryBillingContact.phoneNumbers.home',
-            'oldPassword',
-            'password',
-            'confirmPassword',
             'acceptsMarketing'
         ],
+        constructor: function () {
+            EditableView.apply(this, arguments);
+            this.editing = false;
+        },
         initialize: function () {
-            this.model.getAttributes().then(function (customer) {});
+            this.model.getAttributes().then(function (customer) { });
         },
         updateAttribute: function (e) {
-            var attributeFQN = e.currentTarget.getAttribute('data-mz-value');
+            var attributeFQN = e.currentTarget.getAttribute('data-mz-attribute');
             var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
-            var isChecked = $(e.currentTarget).prop('checked');
+            var nextValue = attribute.get('inputType') === 'YesNo' ? $(e.currentTarget).prop('checked') : $(e.currentTarget).val();
 
-            this.model.set('values', [isChecked]);
-            this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
+            attribute.set('values', [nextValue]);
+            // this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
         },
-        updateAcceptsMarketing: function(e) {
-            var yes = $(e.currentTarget).prop('checked');
-            this.model.set('acceptsMarketing', yes);
-            this.model.updateAcceptsMarketing(yes);
-        },
-        startEditName: function () {
-            this.editing.name = true;
+        startEdit: function (event) {
+            event.preventDefault();
+            this.editing = true;
             this.render();
         },
-        cancelEditName: function() {
-            this.editing.name = false;
+        cancelEdit: function () {
+            this.editing = false;
+            console.log(this.model);
             this.render();
         },
-        finishEditName: function() {
-            var self = this;
-            this.doModelAction('updateName').otherwise(function() {
-                self.editing.name = true;
+        finishEdit: function () {
+            this.doModelAction('apiUpdate').then(function () {
+                console.log('update succeeded', arguments);
+            }).otherwise(function () {
+                console.log('update failed', arguments);
+                self.editing = true;
             });
-            this.editing.name = false;
-        },
+
+            self.editing = false;
+        }
+    });
+
+    var PasswordView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-password',
         startEditPassword: function () {
             this.editing.password = true;
             this.render();
@@ -78,25 +81,13 @@
                 }, 250);
             }, function() {
                 self.editing.password = true;
-            });
-            this.editing.password = false;
-        },
-        cancelEditPassword: function() {
-            this.editing.password = false;
-            this.render();
-        }
-        //startEditPhone: function() {
-        //    this.editing.phone = true;
-        //    this.render();
-        //},
-        //finishEditPhone: function() {
-        //    this.doModelAction('savePrimaryBillingContact');
-        //    this.editing.phone = false;
-        //},
-        //cancelEditPhone: function() {
-        //    this.editing.phone = false;
-        //    this.render();
-        //}
+        });
+        this.editing.password = false;
+    },
+    cancelEditPassword: function() {
+        this.editing.password = false;
+        this.render();
+    }
     });
 
     var WishListView = EditableView.extend({
@@ -351,6 +342,7 @@
         var accountModel = window.accountModel = CustomerModels.EditableCustomer.fromCurrent();
 
         var $accountSettingsEl = $('#account-settings'),
+            $passwordEl = $('#password-section'),
             $orderHistoryEl = $('#account-orderhistory'),
             $returnHistoryEl = $('#account-returnhistory'),
             $paymentMethodsEl = $('#account-paymentmethods'),
@@ -364,6 +356,11 @@
         var accountViews = window.accountViews = {
             settings: new AccountSettingsView({
                 el: $accountSettingsEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            password: new PasswordView({
+                el: $passwordEl,
                 model: accountModel,
                 messagesEl: $messagesEl
             }),

@@ -2215,6 +2215,8 @@
     <Content Include="Themes\Core4\templates\back-office\base.hypr" />
     <Content Include="Themes\Core4\templates\back-office\order-details.hypr" />
     <Content Include="Themes\Core4\templates\back-office\packing-slip.hypr" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-attributes.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\my-account\my-account-password.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
