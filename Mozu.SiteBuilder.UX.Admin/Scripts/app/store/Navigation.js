@@ -266,7 +266,7 @@ Ext.define('Taco.store.Navigation', {
                 "id": "sitebuilder",
                 "label": "Site Builder",
                 "address": "siteSelection",
-                "showBreadCrumbs": false,
+                "showBreadCrumbs": true,
                 //"address": "sites/pages",
                 "icon": "nav-sites",
                 "items": [
