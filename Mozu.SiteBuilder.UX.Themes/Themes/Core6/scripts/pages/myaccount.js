@@ -56,8 +56,10 @@
             this.render();
         },
         finishEdit: function () {
-            this.doModelAction('apiUpdate')
-            .otherwise(function () {
+            this.doModelAction('apiUpdate').then(function () {
+                console.log('update succeeded', arguments);
+            }).otherwise(function () {
+                console.log('update failed', arguments);
                 self.editing = true;
             });
 

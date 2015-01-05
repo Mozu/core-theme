@@ -34,10 +34,9 @@
   <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
 </div>
 
-<div class="mz-accountsettings-section mz-accountsettings-attribute">
-  <ul>
+<div class="mz-accountsettings-section mz-accountsettings-attributes">
   {% for attribute in model.attributes %}
-    <li class=" mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
+    <div class="mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
       {% if attribute.inputType === "YesNo" %}
         {% if editing %}
           <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.adminName }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" {% if attribute.values[0] === true %}checked="checked"{% endif %} />
@@ -48,7 +47,7 @@
         {% endif %}
       {% endif %}
       {% if attribute.inputType === "TextBox" %}
-        <span class="mz-accountsettings-attribute--label">{{ attribute.adminName }}</span>
+        <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
         {% if editing %}
           <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" />
         {% else %}
@@ -56,7 +55,7 @@
         {% endif %}
       {% endif %}
       {% if attribute.inputType === "List" %}
-        <span class="mz-accountsettings-attribute--label">{{ attribute.adminName }}</span>
+        <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
         {% if editing %}
           {% for option in attribute.vocabularyValues %}
             <input type="radio" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
@@ -66,9 +65,8 @@
           <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
         {% endif %}
       {% endif %}
-    </li>
+    </div>
   {% endfor %}
-  </ul>
 </div>
 
 {% if editing %}
