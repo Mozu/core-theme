@@ -100,8 +100,10 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     bindSettingsStore:function() {
         var settingsMenu = this.down('#settingsMenu'),
             settingsRecord = this.navStore.getById('settings');
+
         settingsRecord.items().each(function (item) {
-            if (item.get('visible') === false) {
+
+            if (item.get('visible') === false || item.data.breadCrumbOnly) {
                 return;
             }
 

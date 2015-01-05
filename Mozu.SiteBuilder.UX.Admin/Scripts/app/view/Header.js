@@ -218,7 +218,7 @@ Ext.define('Taco.view.Header', {
     },
     isEnabled: function(item, rec, correctView) {
 
-        if (item.metaData.requiredContext === 'none' || !item.metaData.requiredContext || item.items) return true;
+        if (!item.metaData || !item.metaData.requiredContext || item.metaData.requiredContext === 'none' || item.items) return true;
 
         if (!correctView) return false;
 
@@ -249,7 +249,7 @@ Ext.define('Taco.view.Header', {
             record = Taco.app.viewPort.down('[record]');
 
         Ext.Array.each(items, function (item) {
-            var correctView = record && record.record ? record.record.$className === me.parentHash[item.metaData.requiredContext] : false,
+            var correctView = record && record.record && item.metaData ? record.record.$className === me.parentHash[item.metaData.requiredContext] : false,
                 ctx = correctView && item.metaData.requiredContext !== 'none' ? me.getContextHash(item.metaData.requiredContext, record) : undefined,
                 itemCfg = {
                     text: item.label,
