@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             var product = CreateProduct(true, outOfStockBehavior, fulfillmentTypes);
 
             //act
-            var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
+            var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product, null);
 
             //assert
             Assert.That(actual.Count, Is.EqualTo(expectedCount), scenario);
@@ -141,7 +141,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             var product = CreateProduct(false, "DisplayProduct", fulfillmentTypes, "UNMGD_INV", "Unmanaged Inventory");
             
             //act
-            var actual = sut.GetAllShipAndPickupLocationsForUnmanagedProducts(locations, product);
+            var actual = sut.GetAllShipAndPickupLocationsForUnmanagedProducts(locations, product, null);
 
             //assert
             Assert.That(actual.Count, Is.EqualTo(expectedCount), scenario);
@@ -159,7 +159,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             var product = CreateProduct(manageStock, outOfStockBehavior, new[] {"DirectShip", "InStorePickup"});
             
             //act
-            var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product);
+            var actual = sut.GetShipAndPickupLocationsWithInventory(inventories, locations, product, null);
 
             //assert
             Assert.That(actual[0].Fulfillment.Code, Is.EqualTo(ds.Code) );

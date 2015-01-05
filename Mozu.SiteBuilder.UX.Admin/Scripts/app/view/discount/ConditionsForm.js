@@ -23,12 +23,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumOrderAmount',
             fieldLabel: "Minimum Order Amount",  //(pre-discount)
-            hidden: this.record.get('scope') !== 'Order',
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
             currencyCode: Taco.app.context.getCurrent().currencyCode,
-            emptyText: 'Not Applicable',
             align: 'right',
             unitAtEnd: false
         });
@@ -554,6 +552,5 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     setFieldVisibility: function (isLineItem) {
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);
-        this.minimumOrderAmountInput.setVisible(!isLineItem);
     }
 });

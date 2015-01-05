@@ -14,10 +14,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         List<LocationWithInventory> GetShipAndPickupLocationsWithInventory(
             ProductAdmin.Contracts.LocationInventoryCollection inventories, List<Location.Contracts.Location> locations,
-            ProductAdmin.Contracts.Product product);
+            ProductAdmin.Contracts.Product product, ProductAdmin.Contracts.ProductVariation variation);
 
         List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(
-            List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product);
+            List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product, ProductAdmin.Contracts.ProductVariation variation);
     }
 
     public class ProductAvailableInventoryHelper : IProductAvailableInventoryHelper
@@ -39,13 +39,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="locations">locations for inventory</param>
         /// <param name="product"></param>
         /// <returns></returns>
-        public List<LocationWithInventory> GetShipAndPickupLocationsWithInventory(ProductAdmin.Contracts.LocationInventoryCollection inventories, List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product)
+        public List<LocationWithInventory> GetShipAndPickupLocationsWithInventory(ProductAdmin.Contracts.LocationInventoryCollection inventories, List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product, ProductAdmin.Contracts.ProductVariation variation)
         {
             //converts to sb.
             var locationsWithInventory = inventories.Items.Map<List<LocationWithInventory>>();
 
             var fulfillmentComparer = new LocationWithInventoryFulfillmentComparer();
-            var prodFulfillmentCodes = GetProductFulfillmentCodes(product);
+            var prodFulfillmentCodes = GetProductFulfillmentCodes(product, variation);
 
 
             locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
@@ -87,10 +87,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
-        public List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product)
+        public List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product, ProductAdmin.Contracts.ProductVariation variation)
         {
             var fulfillmentComparer = new LocationWithInventoryFulfillmentComparer();
-            var prodFulfillmentCodes = GetProductFulfillmentCodes(product);
+            var prodFulfillmentCodes = GetProductFulfillmentCodes(product, variation);
 
             var result = new List<LocationWithInventory>();
             foreach (var location in locations.Where(loc => loc.FulfillmentTypes != null))
@@ -113,14 +113,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return result;
         }
 
-        private static List<string> GetProductFulfillmentCodes(Product product)
+        private static List<string> GetProductFulfillmentCodes(Product product, Mozu.ProductAdmin.Contracts.ProductVariation variation)
         {
-            var prodFulfillmentCodes = new List<string>();
-            if (product.FulfillmentTypesSupported.Contains("DirectShip"))
-                prodFulfillmentCodes.Add(FulfillmentTypeConstants.DirectShipCode);
-            if (product.FulfillmentTypesSupported.Contains("InStorePickup"))
-                prodFulfillmentCodes.Add(FulfillmentTypeConstants.InStorePickupCode);
-            return prodFulfillmentCodes;
+            string[] fulfillmentTypesSupported = variation != null ? variation.FulfillmentTypesSupported : product.FulfillmentTypesSupported;
+
+            var returnCodes = new List<string>();
+            if (fulfillmentTypesSupported.Contains("DirectShip"))
+                returnCodes.Add(FulfillmentTypeConstants.DirectShipCode);
+            if (fulfillmentTypesSupported.Contains("InStorePickup"))
+                returnCodes.Add(FulfillmentTypeConstants.InStorePickupCode);
+            return returnCodes;
         }
     }
 
