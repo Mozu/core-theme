@@ -267,6 +267,7 @@
   "addNewContact"        : "Add new address",
   "noSavedContacts"      : "You have no saved addresses.",
   "confirmDeleteContact" : "Are you sure you want to delete the address {0}?",
+  "confirmDeleteContact2":  "This will delete all associated credit cards!",
   "removeFromWishlist"   : "Remove From Wishlist",
   "addedToCart"          : "{0} has been added to your cart.",
   "leaveOnWishlist"      : "Leave On Wishlist",
