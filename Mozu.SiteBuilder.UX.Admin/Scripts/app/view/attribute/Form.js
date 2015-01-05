@@ -720,40 +720,48 @@ Ext.define('Taco.view.attribute.Form', {
                 hidden: this.record.supportsAttributeType(),
                 boxLabel: 'Show in website'
             }, {
-                xtype: 'selectfield',
+                xtype: 'combobox',
                 fieldLabel: 'Display Group',
                 name: 'displayGroup',
+                width: 240,
+                editable: false,
+                forceSelection: true,
                 allowOnlyWhitespace: !this.record.supportsDisplayGroup(),
                 hidden: !this.record.supportsDisplayGroup(),
                 readOnly: this.isEdit(),
                 store: [
-                    ['AdminAndStorefront', 'Storefront & Admin'],
+                    ['AdminAndStorefront', 'Admin & Storefront'],
                     ['Admin', 'Admin Only']
                 ]
             }, {
-                xtype: 'selectfield',
+                xtype: 'combobox',
                 fieldLabel: 'Value Source',
                 name: 'valueType',
+                width: 240,
+                editable: false,
+                forceSelection: true,
                 allowOnlyWhitespace: !this.record.supportsDisplayGroup(),
                 hidden: !this.record.supportsDisplayGroup(),
                 readOnly: this.isEdit(),
                 store: [
                     ['ShopperEntered', 'Shopper Entered'],
-                    ['ShopperOrAdminEntered', 'Shopper or Admin Entered'],
+                    ['AdminOrShopperEntered', 'Admin or Shopper Entered'],
                     ['AdminEntered', 'Admin Entered']
                 ],
                 validator: function (value) {
                     console.log(value);
                     if (value && value.indexOf('Shopper') !== -1 && me.getForm().findField('displayGroup').getValue() === 'Admin') {
-                        return 'Display Group must be Storefront & Admin';
+                        return 'Display Group must be Admin & Storefront';
                     } else {
                         return true;
                     }
                 }
             }, {
-                xtype: 'selectfield',
+                xtype: 'combobox',
                 fieldLabel: 'Input Type',
                 name: 'inputType',
+                editable: false,
+                forceSelection: true,
                 readOnly: this.isEdit(),
                 store: [
                     ['List', 'List'],

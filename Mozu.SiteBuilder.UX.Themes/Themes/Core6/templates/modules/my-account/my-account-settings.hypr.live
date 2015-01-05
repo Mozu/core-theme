@@ -38,17 +38,17 @@
   {% for attribute in model.attributes %}
     <div class="mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
       {% if attribute.inputType === "YesNo" %}
-        {% if editing %}
+        {% if editing and attribute.valueType !== "AdminEntered" %}
           <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.adminName }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" {% if attribute.values[0] === true %}checked="checked"{% endif %} />
         {% endif %}
-        <span class="mz-accountsettings-attribute--{% if editing %}input-{% endif %}label">{{ attribute.adminName }}</span>
-        {% if not editing %}
+        <span class="mz-accountsettings-attribute--{% if editing and attribute.valueType !== "AdminEntered" %}input-{% endif %}label">{{ attribute.adminName }}</span>
+        {% if attribute.valueType === "AdminEntered" or not editing %}
           <span class="mz-accountsettings-attribute--value">{% if attribute.values[0] === true %}Yes{% else %}No{% endif %}</span>
         {% endif %}
       {% endif %}
       {% if attribute.inputType === "TextBox" %}
         <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
-        {% if editing %}
+        {% if editing and attribute.valueType !== "AdminEntered" %}
           <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" />
         {% else %}
           <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
@@ -56,7 +56,7 @@
       {% endif %}
       {% if attribute.inputType === "List" %}
         <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
-        {% if editing %}
+        {% if editing and attribute.valueType !== "AdminEntered" %}
           {% for option in attribute.vocabularyValues %}
             <input type="radio" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" data-mz-value="attribute" data-mz-attribute="{{ attribute.attributeFQN }}" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
             <span class="mz-accountsettings-attribute--input-label">{{ option.value }}</span>
