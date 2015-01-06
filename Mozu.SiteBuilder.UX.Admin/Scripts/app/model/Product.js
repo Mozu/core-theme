@@ -876,10 +876,20 @@ Ext.define('Taco.model.Product', {
 
 
     // manipulate a record that is set to be duplicated prior to loading it in the view. Called by app\core\Controller.js
-    beforeDuplicate : function (){
+    beforeDuplicate: function () {
+        var suffix = " - copy";
+
         this.raw = undefined
         this.set("productCode", "");
-        this.data.productName = this.data.productName + " - copy";
+        this.data.productName = this.data.productName + suffix;
+
+        // need to check for any overriden site specific product names.
+        Ext.Array.each(this.data.productInCatalogs, function (record) {            
+            if (record.isContentOverridden) {
+                record.productName += suffix
+            }
+        })
+
         this.commit();        
     },
 
