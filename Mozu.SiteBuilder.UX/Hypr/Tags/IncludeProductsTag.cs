@@ -74,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetHierDepth = null;
             var categoryId = pageContext.CategoryId;
             var defaultQuery = "*:*";
+            string[] productCodesFilters = null;
 
             if (query != null)
             {
@@ -86,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     productCodes = ((string)productCodes).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 }
 
-                var productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
+                productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
 
                 if (productCodesFilters.Length == 0)
                 {
