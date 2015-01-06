@@ -754,6 +754,12 @@ Ext.define('Taco.view.attribute.Form', {
                     ['AdminOrShopperEntered', 'Admin or Shopper Entered'],
                     ['AdminEntered', 'Admin Entered']
                 ],
+                listeners: {
+                    change: {
+                        scope: this,
+                        fn: function () { this.getForm().findField('inputType').validate(); }
+                    }
+                },
                 validator: function (value) {
                     if (value && value.indexOf('Shopper') !== -1 && me.getForm().findField('displayGroup').getValue() === 'Admin') {
                         return 'Display Group must be Admin & Storefront';
@@ -778,6 +784,13 @@ Ext.define('Taco.view.attribute.Form', {
                 listeners: {
                     change: this.onInputTypeChange,
                     scope: this
+                },
+                validator: function (value) {
+                    if (value === 'Date' && !me.getForm().findField('valueType').isHidden() && me.getForm().findField('valueType').getValue().indexOf('Shopper') !== -1) {
+                        return 'Value Source must be Admin Entered';
+                    } else {
+                        return true;
+                    }
                 }
             },
             this.subform
