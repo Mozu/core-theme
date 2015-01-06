@@ -369,7 +369,6 @@
         },
 
         cursor: function(val) {
-            if (val !== 'auto') val += ' important!';
             $('body').css('cursor', val);
         }
     };
