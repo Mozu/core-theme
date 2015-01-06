@@ -88,8 +88,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             ResolverConfig.Resolver = new CaseInsensitiveMemberResolver();
             EscaperConfig.Escaper = new SafeEscaper();
-            var tm = tmp.GetNewManager();
+            Utilities.UtilConfig.Comparer = new DjangoComparer();
+            Utilities.UtilConfig.VirtualPathFunc = new DjangoUtilHelper();
 
+            var tm = tmp.GetNewManager();
+            
             builder.Register(c => new HyprTemplateManager(tm, c.Resolve<IMozuVirtualPathProvider>()))
                 .As<ITemplateManager>()
                 .InstancePerLifetimeScope();

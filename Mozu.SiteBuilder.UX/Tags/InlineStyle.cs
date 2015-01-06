@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
+using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.UX.Tags
 {
     /// <summary>
     /// simular to the style filter although instead outputs all the css rules inline.   Used primarily for email templates
     /// </summary>
-    [NDjango.Interfaces.Name("inline_style")]
+    [Name("inline_style")]
     public class InlineStyle : SimpleTagBase
     {
-        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
+        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
         {
-            buffer = templateName = null;
             try
             {
                 var controller = context.Resolve<ResourceController>();
-
-              
                 controller.RequestContext = context.ViewContext().RequestMessage.GetRequestContext();
                 controller.Request = context.ViewContext().RequestMessage;
                 var path = (string)arguments[0].Value;
@@ -30,21 +25,24 @@ namespace Mozu.SiteBuilder.UX.Tags
                 var result = controller.Stylesheets(path);
                 if (result.StatusCode != HttpStatusCode.OK)
                 {
-                    buffer = "error rendering stylesheet " + path;
-                    return;
+                    return new ProcessTagResult(context){Buffer = "error rendering stylesheet " + path, Template = null};
                 }
+
                 var oc = result.Content as ObjectContent<ResourceController.MozuVirtualFileResult>;
                 var fileResult = (ResourceController.MozuVirtualFileResult)oc.Value;
-                var stream = new System.IO.MemoryStream();
-                fileResult.WriteFile(stream);
-                stream.Position = 0;
-                //
-                var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
-                buffer = sr.ReadToEnd();
+                using (var stream = new System.IO.MemoryStream())
+                {
+                    fileResult.WriteFile(stream);
+                    stream.Position = 0;
+                    using (var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8))
+                    {
+                        return new ProcessTagResult(context) {Buffer = sr.ReadToEnd(), Template = null};
+                    }
+                }
             }
             catch (Exception e)
             {
-                buffer = "error rendering stylesheet";
+                return new ProcessTagResult(context){Buffer = "error rendering stylesheet", Template = null};
             }
         }
     }

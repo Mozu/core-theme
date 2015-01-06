@@ -101,8 +101,11 @@ Ext.define('Taco.view.customers.subform.Information', {
                                 url: '/admin/app/customer/' + id + '/resetpassword',
                                 method: 'GET',
                                 success: function (response) {
-                                    var text = response.responseText;
-                                    me.updateAccountStatus(me.record.get('accountStatus'));
+                                    if(me.record.get('isLocked')) {
+                                        me.unlockAccountBtn.setDisabled(true);
+                                        me.record.set('isLocked', false);
+                                        me.updateAccountStatus('Active', 'Locked');
+                                    }
                                 }
                             });
                         }
@@ -127,7 +130,8 @@ Ext.define('Taco.view.customers.subform.Information', {
                             this.unlockAccountBtn.setDisabled(newValue);
                         }
                         this.resetAccountBtn.setDisabled(newValue);
-                        this.updateAccountStatus(newValue?'Disabled':'Active');
+                        // updateAccountStatus(newValue, oldValue);
+                        this.updateAccountStatus(newValue?'Disabled':'Active', newValue?'Active':'Disabled');
                     },
                     scope: this
                 },
@@ -359,9 +363,9 @@ Ext.define('Taco.view.customers.subform.Information', {
             url: '/admin/app/customer/' + id + '/unlock',
             method: 'GET',
             success: function (response) {
-                var text = response.responseText;
                 //Update account status!
                 me.unlockAccountBtn.setDisabled(true);
+                me.record.set('isLocked', false);
                 me.updateAccountStatus('Active','Locked');
             }
         });

@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Linq;
+using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -8,7 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     /// </summary>
     [Obsolete]
     [NDjango.ParserNodes.Description("tbd")]
-    [NDjango.Interfaces.Name("set")]
+    [Name("set")]
     public class SetTemplateVariablesTag : SimpleTagBase
     {
         public override bool is_header_tag
@@ -16,23 +17,18 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             get { return true; }
             set { ; }
         }
-    
 
-
-        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
+        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
         {
             var httpContext = context.HttpContext();
             var ht = (System.Collections.Hashtable)httpContext.Items["templateVariables"];
-            foreach (var arg in arguments)
+            foreach (var arg in arguments.Where(arg => arg.ArgumentType == TagArgument.ArgumentTypes.NamedArgument))
             {
-                if (arg.ArgumentType == TagArgument.ArgumentTypes.NamedArgument)
-                {
-                    context = context.add(new Tuple<string, object>(arg.Name, arg.Value));
-                    ht[arg.Name] = arg.Value;
-                }
+                context = context.add(new Tuple<string, object>(arg.Name, arg.Value));
+                ht[arg.Name] = arg.Value;
             }
-            buffer = null;
-            templateName = null;
+
+            return new ProcessTagResult(context) {Buffer = null, Template = null};
         }
     }
 }
