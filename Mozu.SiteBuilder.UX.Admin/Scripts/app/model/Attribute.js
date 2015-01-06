@@ -26,8 +26,7 @@ Ext.define('Taco.model.Attribute', {
             type: 'string'
         }, {
             name: 'valueType',
-            type: 'string',
-            defaultValue: 'AdminEntered'
+            type: 'string'
         }, {
             name: 'isOption',
             type: 'boolean'
