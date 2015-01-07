@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-01-06
+ * Mozu JavaScript SDK - v0.3.0 - 2015-01-07
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3496,7 +3496,7 @@ module.exports=
             "includeSelf": true
         },
         "get-attributes": {
-            "template": "{+customerService}{customer.id}/attributes/{?_*}",
+            "template": "{+customerService}{customer.id}/attributes/{?startIndex,pageSize,sortBy,filter}",
             "defaultParams": {
                 "startIndex": 0,
                 "pageSize": 5

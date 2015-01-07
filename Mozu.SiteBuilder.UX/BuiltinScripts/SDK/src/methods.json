@@ -280,7 +280,7 @@
             "includeSelf": true
         },
         "get-attributes": {
-            "template": "{+customerService}{customer.id}/attributes/{?_*}",
+            "template": "{+customerService}{customer.id}/attributes/{?startIndex,pageSize,sortBy,filter}",
             "defaultParams": {
                 "startIndex": 0,
                 "pageSize": 5
