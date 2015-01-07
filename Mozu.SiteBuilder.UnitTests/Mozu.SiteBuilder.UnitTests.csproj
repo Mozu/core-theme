@@ -408,6 +408,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Api\Helpers\FacetHelpers\FacetUpdaterTest.cs" />
     <Compile Include="Admin\Api\LocalizedContentControllerTest.cs" />
     <Compile Include="Admin\Api\LocationInventoryControllerTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\AdminMappingTest.cs" />
