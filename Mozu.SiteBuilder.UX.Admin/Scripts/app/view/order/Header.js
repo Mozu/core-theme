@@ -222,12 +222,15 @@ Ext.define('Taco.view.order.Header', {
                 '</table>',
                 {
                     calculatePending: function (payments) {
-                        console.log(payments);
                         var retVal = 0;
 
                         Ext.Array.each(payments, function (payment) {
                             if (payment.status === 'Authorized' || payment.status === 'Pending') {
-                                retVal += payment.amountAuthorized;
+                                if (payment.paymentType === 'Check') {
+                                    retVal += payment.amountRequested;
+                                } else {
+                                    retVal += payment.amountAuthorized;
+                                }
                             }
                         }, this);
 
