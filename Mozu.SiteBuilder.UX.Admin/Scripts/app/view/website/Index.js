@@ -294,7 +294,7 @@ Ext.define('Taco.view.website.Index', {
         ];
 
         this.controller = Taco.app.controllers.get('Website');
-        this.url = this.options && this.options.startUrl ? this.options.startUrl : '/';
+        this.url = this.options && this.options.startUrl ? '/' + this.options.startUrl : '/';
         this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
 
         navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
@@ -692,7 +692,7 @@ Ext.define('Taco.view.website.Index', {
             return;
         }
 
-        config.url = parser.pathname + parser.search
+        config.url = parser.pathname + parser.search;
 
         this.fireEvent('navigatestart', this, config);
         //  this.showHideButtons([]);
@@ -730,7 +730,7 @@ Ext.define('Taco.view.website.Index', {
             }
         }
  
-
+        // this.url = this.url.substring(0,1) === '/' ? this.url : '/' + this.url;
        
         this.navigate({ url: this.url });
         
