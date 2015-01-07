@@ -152,7 +152,14 @@ Ext.define('Taco.view.order.Header', {
                             '<tr>',
                                 '<td>Order Total:</td>',
                                 '<td data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</td>',
-                            '</tr><tr>',
+                            '</tr>',
+                            '<tpl if="this.calculatePending(payments)">',
+                            '<tr>',
+                                '<td>Pending:</td>',
+                                '<td>{[values.orderRecord.formatCurrency(this.calculatePending(values.payments))]}</td>',
+                            '</tr>',
+                            '</tpl>',
+                            '<tr>',
                                 '<td>Collected:</td>',
                                 '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</td>',
                             '</tr><tr>',
@@ -212,10 +219,24 @@ Ext.define('Taco.view.order.Header', {
 
                 '</tpl>',
 
-                '</table>'
+                '</table>',
+                {
+                    calculatePending: function (payments) {
+                        console.log(payments);
+                        var retVal = 0;
+
+                        Ext.Array.each(payments, function (payment) {
+                            if (payment.status === 'Authorized' || payment.status === 'Pending') {
+                                retVal += payment.amountAuthorized;
+                            }
+                        }, this);
+
+                        return retVal;
+                    }
+                }
             ],
             data: Ext.apply(this.record.getData(), {
-                orderRecord: this.record
+                orderRecord: this.record,
             })
         });
 
@@ -373,7 +394,7 @@ Ext.define('Taco.view.order.Header', {
         }
 
     },
-
+    
     isCustomerValid: function (customer) {
         var me = this,
             isValid = true;

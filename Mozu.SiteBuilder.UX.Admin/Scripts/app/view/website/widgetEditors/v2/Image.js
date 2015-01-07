@@ -16,7 +16,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
     ],
 
     autoShow: false,
-    width: 580,
+    width: 750,
     height: 600,
 
     layout: {
@@ -200,7 +200,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         fieldLabel: 'Border Width',
                         editable: false,
                         forceSelection: true,
-                        width: 170,
+                        width: 230,
                         value: '1px',
                         store: ['1px', '2px', '3px']
                     }, {
@@ -210,7 +210,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         margin: '0 0 0 15',
                         editable: false,
                         forceSelection: true,
-                        width: 170,
+                        width: 230,
                         value: 'Solid',
                         store: ['Solid', 'Dashed', 'Dotted', 'None']
                     }, {
@@ -218,7 +218,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         name: 'borderColor',
                         fieldLabel: 'Border Color',
                         margin: '0 0 0 15',
-                        width: 170
+                        width: 230
                     }]
                 }, {
                     xtype: 'container',
@@ -229,7 +229,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         xtype: 'combobox',
                         name: 'imageSize',
                         fieldLabel: 'Image Size',
-                        width: 260,
+                        width: 230,
                         editable: false,
                         forceSelection: true,
                         value: 'stretch',
@@ -249,20 +249,15 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         xtype: 'textfield',
                         name: 'imageWidth',
                         fieldLabel: 'Width',
-                        margin: '0 0 0 15',
+                  
                         width: 125,
                         hidden: true
-                    }]
-                }, {
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    items: [{
+                    },{
                         xtype: 'combobox',
                         name: 'positionHorizontal',
                         fieldLabel: 'Horizontal Position',
-                        width: 260,
+                        width: 230,
+                        margin: '0 0 0 15',
                         editable: false,
                         forceSelection: true,
                         value: 'center',
@@ -275,10 +270,11 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                         xtype: 'combobox',
                         name: 'positionVertical',
                         fieldLabel: 'Vertical Position',
-                        width: 260,
+                        width: 230,
+                        margin: '0 0 0 15',
                         editable: false,
                         forceSelection: true,
-                        margin: '0 0 0 12',
+                    
                         value: 'center',
                         store: [
                             ['top', 'Top'],
@@ -289,12 +285,13 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                 }, {
                     xtype: 'radiogroup',
                     fieldLabel: 'Choose one of the following:',
-                    columns: 2,
+                    columns: 1,
                     vertical: true,
                     items: [{
                         name: 'imageClickAction',
                         inputValue: 'lightbox',
                         boxLabel: 'Open larger image in a lightbox'
+
                     }, {
                         name: 'imageClickAction',
                         inputValue: 'url',

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-
-using Autofac;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using System.Collections.Generic;
+using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -35,42 +32,36 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     ///
     /// </summary>
     [NDjango.ParserNodes.Description("tbd")]
-    [NDjango.Interfaces.Name("include")]
+    [Name("include")]
     public class IncludeTag : SimpleTagBase
     {
-      
-
-        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
+        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
         {
-            templateName =(string) arguments[0].Value;
-            List<Tuple <string, object>> additionalState = new List<Tuple<string, object>>();
+            var templateName = (string)arguments[0].Value;
+            var additionalState = new List<Tuple<string, object>>();
             if (arguments.Count > 1)
             {
                 if (arguments[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
                 {
-                    additionalState.Add(new Tuple<string, object>("model", arguments[0].Value));
-                    
-                }
-
-            }
-            for (int i = 0; i < arguments.Count; i++)
-            {
-                if (arguments[i].ArgumentType == TagArgument.ArgumentTypes.NamedArgument)
-                {
-                    additionalState.Add(new Tuple<string, object>(arguments[i].Name , arguments[i].Value));
+                    additionalState.Add(new Tuple<string, object>("model", templateName));
                 }
             }
 
-            foreach ( var kvp in additionalState )
+            additionalState.AddRange(
+                arguments
+                .Where(x => x.ArgumentType == TagArgument.ArgumentTypes.NamedArgument)
+                .Select(a => new Tuple<string, object>(a.Name, a.Value)));
+
+            foreach (var kvp in additionalState)
             {
-                if( context.tryfind( kvp.Item1  ) != null )
+                if (context.tryfind(kvp.Item1) != null)
                 {
-                    context = context.remove( kvp.Item1  );
+                    context = context.remove(kvp.Item1);
                 }
-                context = context.add( kvp );
+                context = context.add(kvp);
             }
-           
-            buffer = null;
+
+            return new ProcessTagResult(context){Buffer = null, Template = templateName};
         }
     }
 }

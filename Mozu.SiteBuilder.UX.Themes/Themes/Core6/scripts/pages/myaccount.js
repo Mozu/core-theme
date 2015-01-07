@@ -52,7 +52,6 @@
         },
         cancelEdit: function () {
             this.editing = false;
-            console.log(this.model);
             this.render();
         },
         finishEdit: function () {

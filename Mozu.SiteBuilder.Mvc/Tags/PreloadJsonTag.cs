@@ -1,7 +1,7 @@
-
+using System;
 using System.IO;
-using System.Text;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
+using NDjango.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -23,32 +23,33 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [NDjango.Interfaces.Name("preload_json")]
     public class PreloadJsonTag : SimpleTagBase
     {
-        protected override void ProcessTag(ArgumentCollection arguments, ref NDjango.Interfaces.IContext context, out string buffer, out string templateName)
+        // we want to use the settings the rest of the site uses, but with additional escape handling.
+        private static readonly Lazy<JsonSerializer> lazySer =
+            new Lazy<JsonSerializer>(
+                () =>
+                {
+                    var settings = new CaseInsensitiveJsonSerializerSettings
+                    {
+                        StringEscapeHandling = StringEscapeHandling.EscapeHtml
+                    };
+                    return JsonSerializer.Create(settings);
+                });
+
+        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
         {
             var model = arguments[0].Value;
             var name = arguments[1].Value;
             using (var container = StringBuilderPool.Default.GetContainer())
             {
                 var sb = container.Item;
-
-
-              
-                sb.Append(@"<script type=""text/json"" id=""data-mz-preload-");
-                sb.Append(name);
-                sb.Append(@""">");
-
-                var serSettings = new CaseInsensitiveJsonSerializerSettings();
-                serSettings.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
-                var ser = Newtonsoft.Json.JsonSerializer.Create(serSettings);
-                var writer = new JsonTextWriter(new StringWriter(sb));
-               
-                ser.Serialize(writer, model );
-                writer.Flush();;
+                sb.AppendFormat(@"<script type=""text/json"" id=""data-mz-preload-{0}"">", name);
+                using (var writer = new JsonTextWriter(new StringWriter(sb)))
+                {
+                    lazySer.Value.Serialize(writer, model);
+                }
                 sb.Append("</script>");
-                buffer = sb.ToString();
-                templateName = null;
+                return new ProcessTagResult(context){Buffer = sb.ToString(), Template = null};
             }
-            
         }
     }
 }

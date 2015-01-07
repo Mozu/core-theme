@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
+using System.Web;
+using System.Web.UI;
 using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
@@ -12,9 +13,9 @@ using NDjango.Misc;
 using NUnit.Framework;
 
 
-namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
+namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
-    public class FilterTestBase
+    public class TemplateTestBase
     {
         private class TestTemplateLoader : ITemplateLoader{
             public Tuple<TextReader, DateTime> GetTemplate(string path)
@@ -36,7 +37,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                 return (_manager ?? (_manager = new TemplateManagerProvider()
                     .WithLibrary(typeof (AddFilter).Assembly)
                     .WithLibrary(typeof (HyprViewEngine).Assembly)
-                    .WithLibrary(typeof (AutofacModule).Assembly)
                     .WithLibrary(typeof (DropZoneTag2).Assembly)
                     .WithLoader(new TestTemplateLoader())
                     .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager()));
@@ -84,7 +84,11 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
 
             for (int i = 0; i <= desc.Context.Length - 2; i += 2)
                 dict.Add(desc.Context[i].ToString(), desc.Context[i + 1]);
-            
+
+            //add viewContextNode
+            var hyprviewcontext = new HyprViewContext(null, null, null);
+            dict.Add("_vc", hyprviewcontext);
+            hyprviewcontext.HttpContext = new HttpContextWrapper(new HttpContext(new HttpRequest("Default", "http://mozilla.com", ""), new HttpResponse(new StreamWriter(new MemoryStream()))));
             return dict;
         }
     }

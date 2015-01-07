@@ -8,8 +8,8 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
     /// Provides a rich object corresponding to the type options of NavigationNode 
     /// which is implicitly castable to and from string.
     /// </summary>
-    [JsonConverter(typeof(NavigationNodeType.NavigationNodeTypeConverter))]
-    public class NavigationNodeType
+    [JsonConverter(typeof(NavigationNodeTypeConverter))]
+    public class NavigationNodeType : IComparable<string>
     {
         private const string NODE_TYPE_CATEGORY = "category";
         private const string NODE_TYPE_GROUP = "group";
@@ -47,10 +47,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             // test for x == null.
             if ((object)nodeType == null)
                 return type == null;
-            else if (nodeType._nodeType == type)
-                return true;
-            else
-                return false;
+            return nodeType._nodeType == type;
         }
 
         public NavigationNodeType() { }
@@ -63,10 +60,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
             // test for x != null
             if ((object)nodeType == null)
                 return type != null;
-            else if (nodeType._nodeType == type)
-                return false;
-            else
-                return true;
+            return nodeType._nodeType != type;
         }
 
         /// <summary>
@@ -98,10 +92,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         /// </summary>
         public static implicit operator string(NavigationNodeType t)
         {
-            if (t != null)
-                return t._nodeType;
-            else
-                return null;
+            return t != null ? t._nodeType : null;
         }
 
         /// <summary>
@@ -117,12 +108,9 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         /// </summary>
         public override bool Equals(object obj)
         {
-            NavigationNodeType t = obj as NavigationNodeType;
+            var t = obj as NavigationNodeType;
 
-            if (t != null && t._nodeType == _nodeType)
-                return true;
-            else
-                return false;
+            return t != null && t._nodeType == _nodeType;
         }
 
         /// <summary>
@@ -131,6 +119,11 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
         public override int GetHashCode()
         {
             return _nodeType.GetHashCode();
+        }
+
+        public int CompareTo(string other)
+        {
+            return String.Compare(_nodeType, other, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -158,12 +151,12 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                 if (reader.TokenType == JsonToken.String) {
                     return (NavigationNodeType)(string)reader.Value;
                 }
-                else if (reader.TokenType == JsonToken.StartObject)
+                if (reader.TokenType == JsonToken.StartObject)
                 {
                     reader.Read();
                     if (reader.TokenType == JsonToken.PropertyName && String.Equals((string)reader.Value, "nodeType", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        string value = reader.ReadAsString();
+                        var value = reader.ReadAsString();
                         reader.Read();
                         return (NavigationNodeType)value;
                     }
@@ -171,7 +164,7 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
                 throw new SerializationException("Could not parse NavigationNodeType.");
             }
 
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
                 writer.WriteValue(value.ToString());
             }

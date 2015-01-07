@@ -248,14 +248,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     if (!dcCust.IsActive)
                     {
-                        await _customerWebApiClient.DisableAccount(dcCust.Id);
+                        await _customerWebApiClient.PerformCustomerAccountAction(dcCust.Id,
+                            new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.DISABLE_ACCOUNT });
                     }
                 }
                 else
                 {
                     if (dcCust.IsActive)
                     {
-                        await _customerWebApiClient.ActivateAccount(dcCust.Id);
+                        await _customerWebApiClient.PerformCustomerAccountAction(dcCust.Id,
+                            new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.ENABLE_ACCOUNT });
                     }
                 }
 
@@ -541,7 +543,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "{accountId}/unlock")]
         public async Task<HttpResponseMessage> Unlock(int accountId)
         {
-            var result = (await _customerWebApiClient.UnlockAccount(accountId));
+            var result = (await _customerWebApiClient.PerformCustomerAccountAction(accountId,
+                            new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.UNLOCK_ACCOUNT }));
             if (result.HasException)
             {
                 throw result.ReadException();
