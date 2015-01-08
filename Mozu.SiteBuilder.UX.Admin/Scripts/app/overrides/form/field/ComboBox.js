@@ -160,5 +160,92 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
             data.push(record.data);
         });        
         return data;
+    },
+
+    /**
+    * override of the extjs initValue method to add support for autoFetching of the display value when using a remote store;
+    * Initializes the field's value based on the initial config.
+    */
+    initValue: function () {
+        var me = this;
+
+        me.value = me.transformOriginalValue(me.value);
+        /**
+         * @property {Object} originalValue
+         * The original value of the field as configured in the {@link #value} configuration, or as loaded by the last
+         * form load operation if the form's {@link Ext.form.Basic#trackResetOnLoad trackResetOnLoad} setting is `true`.
+         */
+        me.originalValue = me.lastValue = me.value;        
+
+        // Set the initial value - prevent validation on initial set
+        me.suspendCheckChange++;
+
+        
+        // *******************  begin override code ***************** // 
+        // for remote stores there is a potential to have the selected value not return on the first page of the store results. this leaves the field without the record to generate the display value.
+        // if the store is 'remote' and the field has a value and this feature is enabled then fetch the values explicitly. otherwise do the default behavior for combo box. 
+        if (me.autoFetchDisplayValue) {
+            var value = Ext.Array.from(me.value, true);
+            if (me.queryMode == "remote" && value.length) {
+                me.fetchDisplayValue();
+            }
+        } else {
+            me.setValue(me.value);
+        }
+        // *******************  end override code ***************** // 
+        
+        me.suspendCheckChange--;
+    },
+
+    // override config parameter that enables fetching of display value for combo with remote store;
+    autoFetchDisplayValue:false,
+
+    // call service and get the display values without loding the attached store.
+    // this allows a remote combo to output a display value when the fields value does not show up in the first page of the store load results. 
+    fetchDisplayValue: function () {
+        var me = this,
+            url = this.store.proxy.api.read,
+            params = {},
+            value = Ext.Array.from(me.value, true),
+            modelName = me.store.model.$className;;        
+
+        Taco.app.getModel(modelName).load(value, {
+            success: function (record) {
+                if (record) {
+                    me.displayTplData = [record.data];
+                    me.lastSelection = [record];
+                    me.setRawValue(me.getDisplayValue());
+                }
+            },
+            failure: function () {
+                console.log("combo: " + me.name + " did not find a matching record to set a display value")
+            },
+            scope: this
+        });
+    },
+
+    /**
+     * Override provides support for paged remote stores. the original method wouldn't return the current value when the paged store did not contain the selected value. this would cause the field to get cleared;
+     * Finds the record by searching for a specific field/value combination.
+     * @param {String} field The name of the field to test.
+     * @param {Object} value The value to match the field against.
+     * @return {Ext.data.Model} The matched record or false.
+     */
+    findRecord: function (field, value) {
+        var me = this,
+            ds = this.store,
+            idx = ds.findExact(field, value);
+
+
+        // ****** BEGIN Override  ******  //
+        // if the value is the same as the last selection return the cached value.
+        // this will allow the store to page since the current selected record may or may not be in the new page of results in ths store
+        if (me.autoFetchDisplayValue && me.queryMode == "remote" && value.length && me.lastSelection && me.lastSelection[0] && me.lastSelection[0].get(me.valueField) == value) {
+            return me.lastSelection[0]
+        }
+        // ****** End Override  ******  //
+
+
+        return idx !== -1 ? ds.getAt(idx) : false;
     }
 });
