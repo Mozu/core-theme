@@ -115,7 +115,7 @@
                 return this.parent.parent;
             },
             choose: function (e) {
-                var idx = parseInt($(e.currentTarget).val());
+                var idx = parseInt($(e.currentTarget).val(), 10);
                 if (idx !== -1) {
                     var addr = this.get('address');
                     var valAddr = addr.get('candidateValidatedAddresses')[idx];
@@ -831,7 +831,7 @@
                 fn: function (value) {
                     if (this.attributes.createAccount && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
-            },
+            }
         };
 
         if (Hypr.getThemeSetting('requireCheckoutAgreeToTerms')) {

@@ -140,7 +140,7 @@
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
-            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
         },
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);

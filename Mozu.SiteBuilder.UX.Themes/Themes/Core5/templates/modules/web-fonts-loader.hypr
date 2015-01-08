@@ -4,7 +4,7 @@
         google: {
             families: [
                 {% for font in themeSettings.fonts %}                
-                    '{{ font }}'{% if not forloop.last %},{% endif %}
+                    {% if not forloop.first %},{% endif %}'{{ font }}'
                 {% endfor %}
             ]
         },
