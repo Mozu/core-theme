@@ -4,14 +4,14 @@
         google: {
             families: [
                 {% for font in themeSettings.loadGoogleFonts %}
-                '{{ font }}:regular,italic,bold,bolditalic'{% if not forloop.last %},{% endif %}
+                {% if not forloop.first %},{% endif %}'{{ font }}:regular,italic,bold,bolditalic'
                 {% endfor %}
             ]
         }
     };
     (function() {
     var wf = document.createElement('script');
-    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont_debug.js';
     wf.type = 'text/javascript';
     wf.async = 'true';
     var s = document.getElementsByTagName('script')[0];
