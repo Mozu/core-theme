@@ -2201,6 +2201,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Themes\.jshintrc" />
+    <Content Include="Themes\.jshintignore" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2296,7 +2298,7 @@
     <Exec Command="grunt -v" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
-    <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)"/>
+    <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
     <ItemGroup>
       <Content Include="Themes\$(ThemeName)\**\*.*" Exclude="Themes\$(ThemeName)\node_modules" />
     </ItemGroup>

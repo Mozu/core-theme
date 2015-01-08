@@ -49,7 +49,7 @@
                 pageSize: Backbone.MozuModel.DataTypes.Int,
                 pageCount: Backbone.MozuModel.DataTypes.Int,
                 startIndex: Backbone.MozuModel.DataTypes.Int,
-                totalCount: Backbone.MozuModel.DataTypes.Int,
+                totalCount: Backbone.MozuModel.DataTypes.Int
             },
 
             _isPaged: true,
@@ -91,9 +91,9 @@
             },
 
             setPage: function(num) {
-                num = parseInt(num);
-                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'))) return this.apiGet($.extend(this.lastRequest, {
-                    startIndex: (num - 1) * parseInt(this.get('pageSize'))
+                num = parseInt(num, 10);
+                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiGet($.extend(this.lastRequest, {
+                    startIndex: (num - 1) * parseInt(this.get('pageSize'), 10)
                 }));
             },
 
