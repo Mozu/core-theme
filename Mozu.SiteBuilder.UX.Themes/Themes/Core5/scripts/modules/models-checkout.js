@@ -632,6 +632,7 @@
                 }
                 me.isLoading(true);
                 return me.retrieveDigitalCredit(customer, creditCode, me).then(function() {
+                    me.isLoading(false);
                     return me;
                 });
             },
