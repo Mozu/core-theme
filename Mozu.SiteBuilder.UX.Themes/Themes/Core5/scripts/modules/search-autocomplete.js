@@ -67,7 +67,7 @@
                     rateLimitWait: 400,
                     ajax: ajaxConfig
                 }
-            }),
+            })
         }
     };
 

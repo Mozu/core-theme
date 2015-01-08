@@ -22,7 +22,7 @@ define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu'], function(
         templateName: 'modules/common/paging-controls',
         autoUpdate: ['pageSize'],
         updatePageSize: function(e) {
-            var newSize = parseInt($(e.currentTarget).val()),
+            var newSize = parseInt($(e.currentTarget).val(), 10),
             currentSize = this.model.get('pageSize');
             if (isNaN(newSize)) throw new SyntaxError("Cannot set page size to a non-number!");
             if (newSize !== currentSize) this.model.set('pageSize', newSize);
@@ -41,7 +41,7 @@ define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu'], function(
         },
         page: function(e) {
             e.preventDefault();
-            return this.model.setPage(parseInt($(e.currentTarget).data('mz-page-num')) || 1);
+            return this.model.setPage(parseInt($(e.currentTarget).data('mz-page-num'), 10) || 1);
         }
     });
 

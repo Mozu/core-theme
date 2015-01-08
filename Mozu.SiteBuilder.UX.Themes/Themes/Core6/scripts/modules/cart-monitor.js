@@ -18,7 +18,7 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
                 this.setCount(this.getCount() + count);
             },
             getCount: function() {
-                return parseInt(this.$el.text()) || 0;
+                return parseInt(this.$el.text(), 10) || 0;
             },
             update: function() {
                 api.get('cartsummary').then(function(summary) {
