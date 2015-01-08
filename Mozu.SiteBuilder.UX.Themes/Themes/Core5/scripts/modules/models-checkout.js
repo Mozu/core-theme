@@ -478,7 +478,7 @@
                 var previousAmount = digitalCredit.get('creditAmountApplied');
                 var previousEnabledState = digitalCredit.get('isEnabled');
 
-                if (!creditAmountToApply) {
+                if (!creditAmountToApply && creditAmountToApply !== 0) {
                     creditAmountToApply = self.getMaxCreditToApply(digitalCredit, self);
                 }
                 
