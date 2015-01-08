@@ -35,7 +35,11 @@
             this.editing = false;
         },
         initialize: function () {
-            this.model.getAttributes().then(function (customer) { });
+            this.model.getAttributes().then(function (customer) {
+                customer.get('attributes').each(function (attribute) {
+                    attribute.set('attributeDefinitionId', attribute.get('id'));
+                });
+            });
         },
         updateAttribute: function (e) {
             var attributeFQN = e.currentTarget.getAttribute('data-mz-attribute');
@@ -55,14 +59,18 @@
             this.render();
         },
         finishEdit: function () {
+            var self = this;
+
             this.doModelAction('apiUpdate').then(function () {
                 console.log('update succeeded', arguments);
+                self.editing = false;
             }).otherwise(function () {
                 console.log('update failed', arguments);
                 self.editing = true;
             });
 
-            self.editing = false;
+            this.initialize();
+            this.render();
         }
     });
 
