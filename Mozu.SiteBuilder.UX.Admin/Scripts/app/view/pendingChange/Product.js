@@ -185,7 +185,6 @@ Ext.define('Taco.view.pendingChange.Product', {
             stateId: 'productName',
             text: 'Name',
             minWidth: 120,
-            resizable: false,
             flex: 1,
             renderer: function (value, metaData, record) {
                 return record.getContextualValue('productName');

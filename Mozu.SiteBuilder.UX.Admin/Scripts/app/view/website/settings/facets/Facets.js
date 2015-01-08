@@ -135,7 +135,7 @@
                                  '<span class="x-boundlist-item-name">{sourceName}</span>',
                                  '<span class="x-boundlist-item-type">{sourceType}</span>',
                              '</span>',
-                             '<span class="x-boundlist-item-action x-boundlist-item-hide">Hide </span>',
+                             // '<span class="x-boundlist-item-action x-boundlist-item-hide">Hide </span>',
                          '</span>'
                      )
                  }
