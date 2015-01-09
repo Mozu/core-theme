@@ -3,7 +3,9 @@
  */
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore'], function ($, api, Hypr, _) {
 
-    var usePopovers = function () {
+    var usePopovers = function() {
+        // don't use popovers in browsers that don't support the placeholder element (IE8)
+        // or in narrow windows
         return ('placeholder' in $('<input>')[0]) && !Modernizr.mq('(max-width: 480px)');
     },
     returnFalse = function () {

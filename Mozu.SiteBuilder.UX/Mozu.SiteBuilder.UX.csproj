@@ -531,6 +531,7 @@
     <Content Include="BuiltinScripts\SDK\src\reference.js" />
     <Content Include="BuiltinScripts\SDK\src\utils.js" />
     <Content Include="BuiltinScripts\SDK\tests\SDKSpec.js" />
+    <Content Include="Resources\Cms\backgroundsize.min.htc" />
     <Content Include="Resources\Cms\layout.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
