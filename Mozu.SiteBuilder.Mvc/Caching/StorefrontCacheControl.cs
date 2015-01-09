@@ -22,26 +22,17 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         public void InvalidateTenant(int tenantId)
         {
-            // expire after 5 minutes of no access.
-            var policy = FiveMinutePolicy;
-
-            _cache.Set(_cache.GetTenantCacheKey(tenantId), Guid.NewGuid(), policy);
+            _cache.Set(_cache.GetTenantCacheKey(tenantId), Guid.NewGuid(), FiveMinutePolicy);
         }
 
         public void InvalidateCatalog(int tenantId, int catalogId)
         {
-            // expire after 5 minutes of no access.
-            var policy = FiveMinutePolicy;
-
-            _cache.Set("tenant:" + tenantId + "catalog:" + catalogId, Guid.NewGuid(), policy);
+            _cache.Set("tenant:" + tenantId + "catalog:" + catalogId, Guid.NewGuid(), FiveMinutePolicy);
         }
 
         public void InvalidateSite(int siteId)
         {
-            // expire after 5 minutes of no access.
-            var policy = FiveMinutePolicy;
-
-            _cache.Set(_cache.GetSiteCacheKey(siteId), Guid.NewGuid(), policy);
+            _cache.Set(_cache.GetSiteCacheKey(siteId), Guid.NewGuid(), FiveMinutePolicy);
         }
     }
 }
