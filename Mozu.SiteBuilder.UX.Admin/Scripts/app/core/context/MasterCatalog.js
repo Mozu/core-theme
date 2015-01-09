@@ -158,6 +158,10 @@
         return distinctCurrencies;
     },
 
+    isSiteSameCountryAsMasterCatalog: function (site) {
+        return (site.currencyCode === this.currencyCode && site.localeCode === this.localeCode);
+    },
+
     updateProductPublishingMode: function (mode) {
         Ext.Ajax.request({
             url: '/admin/app/settings/publishing/product',

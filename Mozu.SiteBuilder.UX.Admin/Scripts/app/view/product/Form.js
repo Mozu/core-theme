@@ -312,12 +312,16 @@ Ext.define('Taco.view.product.Form', {
 
     /**
      * Checks to see if the form is in multisite or singlesite mode
+     * If single site & doesn't match currency & locale of master, then returns false (see 48523)
      * @return {Boolean} True if the product is only on one site, false if it's shared
      */
     singleSiteCheck: function () {
+        var mc = Taco.app.context.getMasterCatalog();
+
         //changing to only run this mode if the user has only one catalogs off of the current master catalog
-        return Taco.app.context.getMasterCatalog().catalogs.length < 2 || this.inSitesStore.count() === 1;
-        //return this.inSitesStore.count() === 1;
+        return mc.catalogs.length < 2
+            || (this.inSitesStore.count() === 1
+                && mc.isSiteSameCountryAsMasterCatalog(this.inSitesStore.data.items[0].get('sites')[0]));
     },
 
     /**
