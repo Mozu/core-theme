@@ -16,6 +16,9 @@ lib/
 */*/*.orig
 user.app.config
 
+*ncrunch*
+*.ide
+
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
 Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.js

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Caching;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
@@ -11,9 +12,10 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
     public  class StorefrontCacheControlImpl : IStorefrontCacheControl
     {
-        private System.Runtime.Caching.ObjectCache _cache;
+        private readonly ObjectCache _cache;
+        private static readonly CacheItemPolicy FiveMinutePolicy = new CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 5, 0) };
 
-        public StorefrontCacheControlImpl(System.Runtime.Caching.ObjectCache cache)
+        public StorefrontCacheControlImpl(ObjectCache cache)
         {
             _cache = cache;
         }
@@ -21,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         public void InvalidateTenant(int tenantId)
         {
             // expire after 5 minutes of no access.
-            var policy = new System.Runtime.Caching.CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 5, 0) };
+            var policy = FiveMinutePolicy;
 
             _cache.Set(_cache.GetTenantCacheKey(tenantId), Guid.NewGuid(), policy);
         }
@@ -29,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         public void InvalidateCatalog(int tenantId, int catalogId)
         {
             // expire after 5 minutes of no access.
-            var policy = new System.Runtime.Caching.CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 5, 0) };
+            var policy = FiveMinutePolicy;
 
             _cache.Set("tenant:" + tenantId + "catalog:" + catalogId, Guid.NewGuid(), policy);
         }
@@ -37,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         public void InvalidateSite(int siteId)
         {
             // expire after 5 minutes of no access.
-            var policy = new System.Runtime.Caching.CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 5, 0) };
+            var policy = FiveMinutePolicy;
 
             _cache.Set(_cache.GetSiteCacheKey(siteId), Guid.NewGuid(), policy);
         }

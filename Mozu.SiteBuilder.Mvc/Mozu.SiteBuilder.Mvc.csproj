@@ -455,6 +455,7 @@
     <Compile Include="ActionResults\RedirectResult.cs" />
     <Compile Include="ActionResults\ViewResultBase.cs" />
     <Compile Include="Caching\CacheScope.cs" />
+    <Compile Include="Caching\ContextAwareStorefrontCache.cs" />
     <Compile Include="Caching\ObjectCacheExtensions.cs" />
     <Compile Include="Caching\StorefrontCache.cs" />
     <Compile Include="Caching\StorefrontCacheControl.cs" />

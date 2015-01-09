@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
+using System.Runtime.Caching;
 using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc;
 using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
@@ -22,21 +17,20 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
     internal sealed class StorefrontCache : IStorefrontCache
     {
-        private ISiteBuilderApiContext _ctx;
-        private System.Runtime.Caching.ObjectCache _cache;
+        private readonly ISiteBuilderApiContext _ctx;
+        private readonly ObjectCache _cache;
         private readonly ILifetimeScope _scope;
-        private static  Hashtable _siteLookupHashtable = new Hashtable();
-        private int _timeout = 300;
+        private static readonly Hashtable SiteLookupHashtable = new Hashtable();
+        private readonly int _timeout;
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public StorefrontCache(ISiteBuilderApiContext ctx, System.Runtime.Caching.ObjectCache cache, ILifetimeScope scope, ISettings setting )
+        public StorefrontCache(ISiteBuilderApiContext ctx, ObjectCache cache, ILifetimeScope scope, ISettings setting )
         {
             _ctx = ctx;
             _cache = cache;
             _scope = scope;
 
-            
             if ( !int.TryParse(setting.AppSettings("storefrontcache_duration"), out _timeout))
             {
                 _timeout = 300;
@@ -45,31 +39,21 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         void ValidateContext()
         {
-            if (_ctx.SiteId.HasValue && !_ctx.CatalogId.HasValue)
+            if (!_ctx.SiteId.HasValue || _ctx.CatalogId.HasValue) return;
+            var key = _ctx.SiteId.Value;
+            var res = (int?)SiteLookupHashtable[key ];
+            if (res == null)
             {
-                var key = _ctx.SiteId.Value;
-                var res = (int?)_siteLookupHashtable[key ];
-                if (res == null)
+                var client = _scope.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
+                var siteTask = client.GetSite(_ctx.SiteId.Value ,true);
+                if (!siteTask.Result.HasException && siteTask.Result.ResponseMessage.IsSuccessStatusCode)
                 {
-                    var client = _scope.Resolve<Mozu.Tenant.Contracts.Clients.ISitesWebApiClient >().CloneWithoutUserClaims();
-                    var siteTask = client.GetSite(_ctx.SiteId.Value ,true);
-                    if (!siteTask.Result.HasException && siteTask.Result.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        var site = siteTask.Result.ReadAsSync();
-                        if (site!= null)
-                        {
-                            res = site.Id;
-                        }
-                        else
-                        {
-                            res = new Nullable<int>();
-                        }
-                    }
-                    _siteLookupHashtable[key] = res;
+                    var site = siteTask.Result.ReadAsSync();
+                    res = site!= null ? site.Id : new int?();
                 }
-                ((MozuServiceApiContext)_ctx).CatalogId = res;
-
+                SiteLookupHashtable[key] = res;
             }
+            ((MozuServiceApiContext)_ctx).CatalogId = res;
         }
 
         /// <summary>
@@ -84,9 +68,9 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             ValidateContext();
             if (_ctx == null || _ctx.TenantId == 0)
                 return null;
-            else if (scope >= CacheScope.Catalog && !_ctx.CatalogId.HasValue)
+            if (scope >= CacheScope.Catalog && !_ctx.CatalogId.HasValue)
                 return null;
-            else if (scope >= CacheScope.Site && !_ctx.SiteId.HasValue)
+            if (scope >= CacheScope.Site && !_ctx.SiteId.HasValue)
                 return null;
 
 
@@ -103,8 +87,8 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         public T Get<T>(string key, CacheScope scope)
         {
-            object value = Get(key, scope);
-            return (value != null && value is T) ? (T)value : default(T);
+            var value = Get(key, scope);
+            return (value is T) ? (T)value : default(T);
         }
 
         public void Set(string key, object value, CacheScope scope = CacheScope.Site)
@@ -115,9 +99,9 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
             if (_ctx == null || _ctx.TenantId == 0)
                 throw new ArgumentOutOfRangeException("scope", "Cannot add item to cache: no api context.");
-            else if (scope >= CacheScope.Catalog && !_ctx.CatalogId.HasValue)
+            if (scope >= CacheScope.Catalog && !_ctx.CatalogId.HasValue)
                 throw new ArgumentOutOfRangeException("scope", "Cannot add item to cache: Api context lacks CatalogId. Requested cache scope: " + scope);
-            else if (scope >= CacheScope.Site && !_ctx.SiteId.HasValue)
+            if (scope >= CacheScope.Site && !_ctx.SiteId.HasValue)
                 throw new ArgumentOutOfRangeException("scope", "Cannot add item to cache: Api context lacks SiteId. Requested cache scope: " + scope);
 
             string cacheKey;
@@ -125,41 +109,41 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             switch (scope)
             {
                 case CacheScope.Catalog:
-                    cacheKey = _cache.GetCatalogCacheKey(_ctx.TenantId, _ctx.CatalogId.Value, key);
-                    dependencies = new string[] { 
+                    cacheKey = _cache.GetCatalogCacheKey(_ctx.TenantId, _ctx.CatalogId.GetValueOrDefault(), key);
+                    dependencies = new [] { 
                         _cache.GetTenantCacheKey(_ctx.TenantId),
-                        _cache.GetCatalogCacheKey(_ctx.TenantId, _ctx.CatalogId.Value) 
+                        _cache.GetCatalogCacheKey(_ctx.TenantId, _ctx.CatalogId.GetValueOrDefault()) 
                     };
                     break;
                 case CacheScope.Site:
-                    cacheKey = _cache.GetSiteCacheKey(_ctx.SiteId.Value, key);
-                    dependencies = new string[] { 
+                    cacheKey = _cache.GetSiteCacheKey(_ctx.SiteId.GetValueOrDefault(), key);
+                    dependencies = new [] { 
                         _cache.GetTenantCacheKey(_ctx.TenantId),
-                        _cache.GetCatalogCacheKey(_ctx.TenantId, _ctx.CatalogId.Value),
-                        _cache.GetSiteCacheKey(_ctx.SiteId.Value)
+                        _cache.GetCatalogCacheKey(_ctx.TenantId, _ctx.CatalogId.GetValueOrDefault()),
+                        _cache.GetSiteCacheKey(_ctx.SiteId.GetValueOrDefault())
                     };
                     break;
                 default:
                     cacheKey = _cache.GetTenantCacheKey(_ctx.TenantId, key);
-                    dependencies = new string[] { 
+                    dependencies = new [] { 
                         _cache.GetTenantCacheKey(_ctx.TenantId)
                     };
                     break;
             }
 
             // ensure that all the dependencies have an entry in cache. we will have a really bad experience if they're not.
-            foreach (string dep in dependencies)
+            foreach (var dep in dependencies)
             {
                 // dependencies have a max expiration
-                _cache.AddOrGetExisting(dep, Guid.NewGuid(), new System.Runtime.Caching.CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.MaxValue });            
+                _cache.AddOrGetExisting(dep, Guid.NewGuid(), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.MaxValue });            
             }
 
-            var itemPolicy = new System.Runtime.Caching.CacheItemPolicy {
+            var itemPolicy = new CacheItemPolicy {
                 // items have a configurable  absolute expiration.
-                AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(_timeout)
+                AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(_timeout),
+                ChangeMonitors = { _cache.CreateCacheEntryChangeMonitor(dependencies)}
             };
-            itemPolicy.ChangeMonitors.Add( _cache.CreateCacheEntryChangeMonitor(dependencies) );
-
+            
             _cache.Set(cacheKey, value, itemPolicy);
         }
     }
