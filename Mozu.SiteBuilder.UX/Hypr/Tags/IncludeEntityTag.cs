@@ -61,10 +61,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             var result = new ProcessTagResult(context);
             var sbContext = context.SiteBuilderApiContext();
-            var cache = context.Resolve<IStorefrontCache>();
-
             string template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
-
 
             bool pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
             bool sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
@@ -85,18 +82,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
             var service = context.Resolve<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>();
 
-
-
-
-
-            PageContext pageContext = context.PageContext();
-            SiteContext siteContext = context.SiteContext();
-            var searchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
-            HttpRequestBase request = context.HttpContext().Request;
-            var searchQuery = new StringBuilder();
-         
-          
-
+            var siteContext = context.SiteContext();
+            var request = context.HttpContext().Request;
             if (pageWithUrl)
             {
                 int tmp;
@@ -118,21 +105,16 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     startIndex = tmp;
                 }
             }
-
-
-
-            dynamic res = null;
-
+            
+            dynamic res;
             if (ids != null && ids.Count == 0)
             {
-                res = (dynamic) (await service.GetEntity(entityListFullName: list, id: ids[0]));
+                res = await service.GetEntity(entityListFullName: list, id: ids[0]);
             }
             else
             {
-                res = (dynamic) (await service.GetEntities(entityListFullName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
+                res = await service.GetEntities(entityListFullName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex);
             }
-
-
 
             object model = null;
             if (res.HasException)
@@ -151,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (model is EntityCollection)
             {
-                model = new PagedCollection<JObject>(((EntityCollection) model).Items.Cast<JObject>())
+                model = new PagedCollection<JObject>(((EntityCollection) model).Items)
                         {
                             PageSize = ((EntityCollection)model).PageSize,
                             StartIndex = ((EntityCollection)model).StartIndex,
@@ -159,15 +141,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         };
             }
 
-
             result.Template = template;
-
             result.Context = context.add(new Tuple<string, object>("model", model));
-
-
             return result;
         }
-
-
     }
 }
