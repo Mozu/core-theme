@@ -4,6 +4,7 @@
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore'], function ($, api, Hypr, _) {
 
     var usePopovers = function () {
+        // return ('placeholder' in $('<input>')[0]) && !Modernizr.mq('(max-width: 480px)');
         return !Modernizr.mq('(max-width: 480px)');
     },
     returnFalse = function () {

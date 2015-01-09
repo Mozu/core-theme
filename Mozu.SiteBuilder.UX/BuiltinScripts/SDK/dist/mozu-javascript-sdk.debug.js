@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2014-11-19
+ * Mozu JavaScript SDK - v0.3.0 - 2015-01-08
  *
- * Copyright (c) 2014 Volusion, Inc.
+ * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
@@ -2824,7 +2824,18 @@ module.exports = errors;
 
 // BEGIN IFRAMEXHR
 var utils = require('./utils');
-module.exports = (function (window, document, undefined) {
+module.exports = (function(window, document, undefined) {
+
+    var on = window.addEventListener ? function(obj, ev, handler) {
+        return obj.addEventListener(ev, handler, false);
+    } : function(obj, ev, handler) {
+        return obj.attachEvent("on" + ev, handler);
+    },
+    off = window.removeEventListener ? function(obj, ev, handler) {
+        return obj.removeEventListener(ev, handler, false);
+    } : function(obj, ev, handler) {
+        return obj.detachEvent("on" + ev, handler);
+    };
 
     var hasPostMessage = window.postMessage && navigator.userAgent.indexOf("Opera") === -1,
         firefoxVersion = (function () {
@@ -2854,13 +2865,13 @@ module.exports = (function (window, document, undefined) {
                     if (e.data === self.uid + " ready") return self.postMessage();
                     self.update(e.data.substring(self.uid.length));
                 };
-                window.addEventListener('message', this.messageListener, false);
+                on(window, 'message', this.messageListener);
             },
             postMessage: function () {
                 return this.getFrameWindow().postMessage(this.getMessage(), this.frameOrigin);
             },
             detachListeners: function () {
-                window.removeEventListener('message', this.messageListener, false);
+                off(window, 'message', this.messageListener);
             }
         } : {
             listen: function () {
