@@ -47,6 +47,7 @@ Ext.define('Taco.view.fileManager.Index', {
             sortable:false,
                 xtype: 'templatecolumn',
                 header: 'Image',
+                stateId: 'ImageColumn',
                 tpl: [
                     '<div class="taco-basegrid-thumbnail">',
                     '<tpl if="localthumbnail">',

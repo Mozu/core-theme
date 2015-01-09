@@ -58,9 +58,9 @@
             columns: [
                 {
                     width: 16,
-                    stateful:false,
+                    stateId: 'dragHandle',
                     xtype: 'draghandlecolumn',
-                    allowNavigation: false,
+                    allowNavigation: false
 
                 },
                 {
@@ -68,7 +68,7 @@
                     stateId:"sequence",
                     text: 'Sequence',
                     width: 100,
-                    allowNavigation: false,
+                    allowNavigation: false
 
 
                 }, {
