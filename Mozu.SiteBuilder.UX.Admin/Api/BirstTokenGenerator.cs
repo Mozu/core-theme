@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var token = await GenerateToken();
             return string.Format(
                 "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dev%2520Dashboard&birst.page=Start%2520Here&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=full&birst.filterLayout=left",
-                   "https://aus02ndbrst01.dev.volusion.com/SSO.aspx",// _settings.AppSettings(SSO_URL_KEY),
+                    _settings.AppSettings(SSO_URL_KEY),
                     token
                 );
         }
@@ -68,10 +68,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // tenantId = 2106;
             // 1055
             return string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=TenantId%3D{4}",
-                "https://aus02ndbrst01.dev.volusion.com/TokenGenerator.aspx",//_settings.AppSettings(TOKEN_URL_KEY),
-                "reportuserqa@mozu.com",//_settings.AppSettings(USER_KEY),
-                "4mSPFxPJcUYhtTMA0Zkh7Akq2BFUUEij",//_settings.AppSettings(PASSWORD_KEY),
-                "61b81c44-14d9-4e84-bd8f-6c4794f43763",//_settings.AppSettings(SPACE_KEY),
+                _settings.AppSettings(TOKEN_URL_KEY),
+                _settings.AppSettings(USER_KEY),
+                _settings.AppSettings(PASSWORD_KEY),
+                _settings.AppSettings(SPACE_KEY),
                 tenantId
             );
         }
