@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
             
             //Mapper.AddProfile<CustomerMapping>();
             //Mapper.AddProfile<DiscountMapping>();
-            //Mapper.AddProfile<ExtensibleAttributeMapping>();
+            //Mapper.AddProfile<ProductAttributeMapping>();
             //Mapper.AddProfile<FacetMapping>();
             //Mapper.AddProfile<FileManagementModelMapping>();
             //Mapper.AddProfile<GeneralSettingsMapping>();

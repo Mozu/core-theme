@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Perf
             Mapper.AddProfile<CreditMapping>();
             Mapper.AddProfile<CustomerMapping>();
             Mapper.AddProfile<DiscountMapping>();
-            Mapper.AddProfile<ExtensibleAttributeMapping>();
+            Mapper.AddProfile<ProductAttributeMapping>();
             Mapper.AddProfile<FacetMapping>();
             Mapper.AddProfile<FileManagementModelMapping>();
             Mapper.AddProfile<GeneralSettingsMapping>();

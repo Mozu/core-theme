@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
-using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
+using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product.Attribute;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers

@@ -4,13 +4,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using AutoMapper;
-
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
-using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
-using AttributeMetadataItem = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.AttributeMetadataItem;
-using AttributeModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
-using AttributeVocabularyValue = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.AttributeVocabularyValue;
-using AttributeVocabularyValueLocalizedContent = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.AttributeVocabularyValueLocalizedContent;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible;
+using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible.Attribute;
+using AttributeMetadataItem = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible.AttributeMetadataItem;
+using AttributeModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible.Attribute;
+using AttributeVocabularyValue = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible.AttributeVocabularyValue;
+using AttributeVocabularyValueLocalizedContent = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible.AttributeVocabularyValueLocalizedContent;
 using DC = Mozu.Core.Extensible.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping

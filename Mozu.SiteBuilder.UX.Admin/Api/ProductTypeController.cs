@@ -9,7 +9,7 @@ using AutoMapper;
 using Mozu.Core.Api.Routing;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductTypeHelpers;
 using Mozu.SiteBuilder.UX.Admin.MockServices;

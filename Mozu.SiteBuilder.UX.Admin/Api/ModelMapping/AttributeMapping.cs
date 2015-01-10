@@ -3,8 +3,8 @@ using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using AutoMapper;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
-using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
+using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product.Attribute;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping

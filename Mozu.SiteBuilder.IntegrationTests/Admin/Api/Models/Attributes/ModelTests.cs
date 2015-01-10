@@ -4,11 +4,11 @@ using System.Linq;
 using AutoMapper;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
 using NUnit.Framework;
 using Should;
 using Attribute = Mozu.ProductAdmin.Contracts.Attribute;
-using ProductType = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.ProductType;
+using ProductType = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product.ProductType;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
 {
@@ -149,7 +149,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
         public void Can_create_an_Attribute_with_AttributeValues()
         {
             string id = "92348u502u";
-            var attribute = new UX.Admin.Api.Models.Attributes.Attribute
+            var attribute = new UX.Admin.Api.Models.Attributes.Product.Attribute
                             {
                                 Id = id,
                                 Values = new List<AttributeValue>
@@ -168,7 +168,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
         [Test]
         public void Can_map_Attribute_Enums_to_Strings()
         {
-            var attribute = new UX.Admin.Api.Models.Attributes.Attribute
+            var attribute = new UX.Admin.Api.Models.Attributes.Product.Attribute
                             {
                                 ValueType = AttributeValueType.ShopperEntered,
                                 InputType = AttributeInputType.TextBox,
@@ -191,7 +191,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                                 DataType = "DateTime",
                                 Validation = new AttributeValidation {RegularExpression = "/bla(h|H)"},
                             };
-            var mapped = Mapper.Map<UX.Admin.Api.Models.Attributes.Attribute>(attribute);
+            var mapped = Mapper.Map<UX.Admin.Api.Models.Attributes.Product.Attribute>(attribute);
 
             mapped.ValueType.ShouldEqual(AttributeValueType.ShopperEntered);
             mapped.InputType.ShouldEqual(AttributeInputType.TextBox);
@@ -212,7 +212,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                                              },
                             };
 
-            var actual = Mapper.Map<UX.Admin.Api.Models.Attributes.Attribute>(attribute);
+            var actual = Mapper.Map<UX.Admin.Api.Models.Attributes.Product.Attribute>(attribute);
 
             // TODO: not possible.
             // actual.Min.ShouldBeType<DateTime>();
@@ -235,7 +235,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
                                              },
                             };
 
-            var actual = Mapper.Map<UX.Admin.Api.Models.Attributes.Attribute>(attribute);
+            var actual = Mapper.Map<UX.Admin.Api.Models.Attributes.Product.Attribute>(attribute);
 
             actual.Min.ShouldBeType<decimal>();
             actual.Min.ShouldEqual(attribute.Validation.MinNumericValue);
@@ -247,7 +247,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
         [Test]
         public void Travis_test()
         {
-            var attribute = new UX.Admin.Api.Models.Attributes.Attribute
+            var attribute = new UX.Admin.Api.Models.Attributes.Product.Attribute
                             {
                                 Regex = "travis",
                                 Id = "UPC",

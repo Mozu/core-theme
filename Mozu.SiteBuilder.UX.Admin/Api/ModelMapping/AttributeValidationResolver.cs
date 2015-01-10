@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes;
 using dotless.Core.Parser.Tree;
-using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
+using Attribute = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product.Attribute;
 using AttributeValidation = Mozu.ProductAdmin.Contracts.AttributeValidation;
 using DC = Mozu.ProductAdmin.Contracts;
 

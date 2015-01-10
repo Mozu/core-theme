@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 {
-    using Attributes;
-
     //
     //public class ProductExtraValueDeltaPrice
     //{

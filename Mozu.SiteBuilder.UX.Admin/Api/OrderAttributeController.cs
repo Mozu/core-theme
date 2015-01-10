@@ -10,7 +10,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.Core.Api.Client;
 using AttributeDC = Mozu.Core.Extensible.Contracts.Attribute;
-using AttributeModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Attribute;
+using AttributeModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product.Attribute;
 
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
