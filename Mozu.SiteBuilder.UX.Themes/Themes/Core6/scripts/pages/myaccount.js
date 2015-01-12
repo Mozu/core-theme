@@ -290,7 +290,7 @@
             'editingContact.isBillingContact',
             'editingContact.isPrimaryBillingContact',
             'editingContact.isShippingContact',
-            'editingContact.isPrimaryShippingContact',
+            'editingContact.isPrimaryShippingContact'
             ],
         renderOnChange: [
             'editingContact.address.countryCode',

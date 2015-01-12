@@ -115,7 +115,7 @@
                 return this.parent.parent;
             },
             choose: function (e) {
-                var idx = parseInt($(e.currentTarget).val());
+                var idx = parseInt($(e.currentTarget).val(), 10);
                 if (idx !== -1) {
                     var addr = this.get('address');
                     var valAddr = addr.get('candidateValidatedAddresses')[idx];
@@ -831,7 +831,7 @@
                 fn: function (value) {
                     if (this.attributes.createAccount && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
-            },
+            }
         };
 
         if (Hypr.getThemeSetting('requireCheckoutAgreeToTerms')) {
@@ -911,7 +911,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'finalPaymentReconcile', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
 
 
@@ -955,12 +955,10 @@
                     errorHandled = false;
                 order.isLoading(false);
                 if (!error || !error.items || error.items.length === 0) {
-                    error = error.message ? {
-                        items: [error]
-                    } : {
+                    error = {
                         items: [
                             {
-                                message: Hypr.getLabel('unknownError')
+                                message: error.message || Hypr.getLabel('unknownError')
                             }
                         ]
                     };
@@ -1134,6 +1132,55 @@
             isSavingNewCustomer: function() {
                 return this.get("createAccount") && !this.customerCreated;
             },
+            finalPaymentReconcile: function() {
+
+                var order = this,
+                    total = this.get('total'),
+                    activePayments = this.apiModel.getActivePayments(),
+                    currentPayment = this.apiModel.getCurrentPayment(),
+                    billingInfo,
+                    difference = Math.round((_.reduce(activePayments, function(sum, payment) { return sum + payment.amountRequested; }, 0) - total) * 100) / 100,
+                    deferred;
+
+                if (difference === 0) {
+                    // no recalculation necessary, simply return a fulfilled promise to continue
+                    deferred = api.defer();
+                    deferred.resolve(true);
+                    return deferred.promise;
+                } else {
+                    billingInfo = order.get('billingInfo');
+                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress" || difference < 0) {
+                        // if store credits or PayPal are being used,
+                        // or multiple payments are active,
+                        // or the order total has increased,
+                        // void all payments and ask the shopper to recalculate payment manually
+                        return api.all.apply(api, activePayments.map(function(payment) { return order.apiVoidPayment(payment.id); })).then(function() {
+                            order.get('customer.credits').each(function(credit) {
+                                // blank out cached credits manually
+                                credit.set({
+                                    isEnabled: false,
+                                    creditAmountApplied: 0,
+                                    remainingBalance: credit.get('currentBalance')
+                                });
+                            });
+                            return billingInfo.loadCustomerDigitalCredits();
+                        }).then(function() {
+                            billingInfo.clear();
+                            billingInfo.stepStatus('incomplete');
+                            throw new Error(Hypr.getLabel("recalculatePayments"));
+                        });
+                    } else {
+                        // in the simplest, most common case, where the order total has reduced and only one
+                        // payment method is active, then we can automatically deduct the difference
+                        return order.apiVoidPayment(currentPayment.id).then(function() {
+                            currentPayment.amountRequested = total;                            
+                            billingInfo.set(currentPayment);
+                            return billingInfo.applyPayment();
+                        });
+                    }
+                }
+
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1194,7 +1241,7 @@
                     }
                 }
                
-                process.push(this.apiCheckout);
+                process.push(this.finalPaymentReconcile, this.apiCheckout);
                 
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 

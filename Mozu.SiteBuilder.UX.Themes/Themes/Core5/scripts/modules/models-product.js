@@ -352,7 +352,7 @@
             FulfillmentMethods: {
                 SHIP: "Ship",
                 PICKUP: "Pickup",
-                DIGITAL: "Digital",
+                DIGITAL: "Digital"
             },
             // for catalog instead of commerce
             FulfillmentTypes: {

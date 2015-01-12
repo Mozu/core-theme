@@ -565,7 +565,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'finalPaymentReconcile', 'apiCheckout');
 
 
 
@@ -606,12 +606,10 @@
                     errorHandled = false;
                 order.isLoading(false);
                 if (!error || !error.items || error.items.length === 0) {
-                    error = error.message ? {
-                        items: [error]
-                    } : {
+                    error = {
                         items: [
                             {
-                                message: Hypr.getLabel('unknownError')
+                                message: error.message || Hypr.getLabel('unknownError')
                             }
                         ]
                     };
@@ -706,6 +704,45 @@
                 var billingEmail = this.get('billingInfo').get('billingContact').get('email'),
                     customerEmail = this.get('emailAddress');
                 if (!customerEmail) this.set('emailAddress', billingEmail);
+            },
+            finalPaymentReconcile: function() {
+
+                var order = this,
+                    total = this.get('total'),
+                    activePayments = this.apiModel.getActivePayments(),
+                    currentPayment = this.apiModel.getCurrentPayment(),
+                    billingInfo,
+                    difference = Math.round((_.reduce(activePayments, function(sum, payment) { return sum + payment.amountRequested; }, 0) - total) * 100) / 100,
+                    deferred;
+
+                if (difference === 0) {
+                    // no recalculation necessary, simply return a fulfilled promise to continue
+                    deferred = api.defer();
+                    deferred.resolve(true);
+                    return deferred.promise;
+                } else {
+                    billingInfo = order.get('billingInfo');
+                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress" || difference < 0) {
+                        // if store credits or PayPal are being used,
+                        // or multiple payments are active,
+                        // or the order total has increased,
+                        // void all payments and ask the shopper to recalculate payment manually
+                        return api.all.apply(api, activePayments.map(function(payment) { return order.apiVoidPayment(payment.id); })).then(function() {
+                            billingInfo.clear();
+                            billingInfo.stepStatus('incomplete');
+                            throw new Error(Hypr.getLabel("recalculatePayments"));
+                        });
+                    } else {
+                        // in the simplest, most common case, where the order total has reduced and only one
+                        // payment method is active, then we can automatically deduct the difference
+                        return order.apiVoidPayment(currentPayment.id).then(function() {
+                            currentPayment.amountRequested = total;
+                            billingInfo.set(currentPayment);
+                            return billingInfo.applyPayment();
+                        });
+                    }
+                }
+
             },
             submit: function () {
                 var order = this,

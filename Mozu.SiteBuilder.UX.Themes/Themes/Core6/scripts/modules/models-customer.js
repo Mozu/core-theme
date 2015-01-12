@@ -48,7 +48,7 @@
         mozuType: 'contact',
         relations: {
             address: AddressModels.StreetAddress,
-            phoneNumbers: AddressModels.PhoneNumbers,
+            phoneNumbers: AddressModels.PhoneNumbers
         },
         validation: {
             firstName: {
@@ -264,7 +264,7 @@
                 fn: function(value) {
                     if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
-            },
+            }
         },
         defaults: {
             editingCard: {},

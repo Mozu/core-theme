@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.fileManager.Index
  * @author Travis Johnson
  * The File Manager Browser Page

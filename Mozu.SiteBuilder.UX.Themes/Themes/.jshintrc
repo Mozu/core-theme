@@ -1,0 +1,15 @@
+{
+    "es3": true,
+    "globals": {
+        "console": true,
+        "window": true,
+        "document": true,
+        "setTimeout": true,
+        "clearTimeout": true,
+        "module": true,
+        "define": true,
+        "require": true,
+        "Modernizr": true,
+        "process": true
+    }
+}
