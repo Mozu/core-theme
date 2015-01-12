@@ -464,6 +464,7 @@
   <ItemGroup>
     <Compile Include="ActionFilters\AnonymousShopperFilter.cs" />
     <Compile Include="ActionFilters\ClientCacheHeadersAttribute.cs" />
+    <Compile Include="ActionFilters\CodeBlockActionFilter.cs" />
     <Compile Include="ActionFilters\ContextInitializationAttribute.cs" />
     <Compile Include="ActionFilters\EditModeCacheInvalidatorFilter.cs" />
     <Compile Include="ActionFilters\ErrorFormattingActionFilterAttribute.cs" />

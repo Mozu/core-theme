@@ -32,9 +32,10 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
         {
             builder.RegisterClassesMatchingInterfaceName(typeof(IShippingWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
+            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Core.CodeBlocks.CodeBlockDescriptor	).Assembly);
              
             builder.RegisterType<MozuVirtualPathProvider>().As<IMozuVirtualPathProvider>().InstancePerRequest();
-            
+         
             //contexts
             builder.RegisterType<ClientApiContext>().InstancePerRequest();
             builder.RegisterType<NavigationContext>().InstancePerRequest();

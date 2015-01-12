@@ -259,6 +259,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         private const string Length = "length";
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
+            object ret;
+            if (container is IDictionary<string, object> && ((IDictionary<string,Object>)container).TryGetValue(memberName, out ret))
+            {
+                return new FSharpOption<object>(CleanJson(ret));
+            }
             var lookup = _lookupDic.GetOrAdd(container.GetType(), Doit);
 
             //add support for looking up stuff by Length enven if only count is available
