@@ -35,10 +35,25 @@
             this.editing = false;
         },
         initialize: function () {
-            this.model.getAttributes().then(function (customer) {
-                customer.get('attributes').each(function (attribute) {
+            return this.model.getAttributes().then(function (customer) {
+                var attributes = customer.get('attributes');
+                var inputTypes = ['YesNo', 'List', 'Date', 'TextBox', 'TextArea'];
+
+                attributes.each(function (attribute) {
                     attribute.set('attributeDefinitionId', attribute.get('id'));
                 });
+                attributes.comparator = function (a, b) {
+                    if (inputTypes.indexOf(a.inputType) < inputTypes.indexOf(b.inputType)) {
+                        return -1;
+                    } else if (inputTypes.indexOf(a.inputType) > inputTypes.indexOf(b.inputType)) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                };
+                attributes.sort();
+
+                return customer;
             });
         },
         updateAttribute: function (e) {
@@ -47,7 +62,6 @@
             var nextValue = attribute.get('inputType') === 'YesNo' ? $(e.currentTarget).prop('checked') : $(e.currentTarget).val();
 
             attribute.set('values', [nextValue]);
-            // this.model.updateAttribute(attributeFQN, attribute.get('attributeDefinitionId'), [isChecked]);
         },
         startEdit: function (event) {
             event.preventDefault();
@@ -69,8 +83,11 @@
                 self.editing = true;
             });
 
-            this.initialize();
             this.render();
+            this.initialize().then(function (customer) {
+                console.log(customer.get('attributes').pluck('inputType'));
+                self.render();
+            });
         }
     });
 

@@ -57,6 +57,15 @@
           <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
         {% endif %}
       {% endif %}
+      {% if attribute.inputType === "Date" %}
+        <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+        {% if editing and attribute.valueType !== "AdminEntered" %}
+          <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
+            placeholder="MM/DD/YYYY" data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
+        {% else %}
+          <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
+        {% endif %}
+      {% endif %}
       {% if attribute.inputType === "List" %}
         <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
         {% if editing and attribute.valueType !== "AdminEntered" %}

@@ -712,12 +712,12 @@ Ext.define('Taco.view.attribute.Form', {
             }, {
                 xtype: 'checkboxfield',
                 name: 'isRequired',
-                hidden: this.record.supportsAttributeType(),
+                hidden: true,
                 boxLabel: 'This attribute is required'
             }, {
                 xtype: 'checkboxfield',
                 name: 'isVisible',
-                hidden: this.record.supportsAttributeType(),
+                hidden: true,
                 boxLabel: 'Show in website'
             }, {
                 xtype: 'combobox',
@@ -784,13 +784,6 @@ Ext.define('Taco.view.attribute.Form', {
                 listeners: {
                     change: this.onInputTypeChange,
                     scope: this
-                },
-                validator: function (value) {
-                    if (value === 'Date' && !me.getForm().findField('valueType').isHidden() && me.getForm().findField('valueType').getValue().indexOf('Shopper') !== -1) {
-                        return 'Value Source must be Admin Entered';
-                    } else {
-                        return true;
-                    }
                 }
             },
             this.subform
