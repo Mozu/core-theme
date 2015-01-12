@@ -1,16 +1,29 @@
 
  
 
-.#{$vprefix}customer-information {  
-  .customer-history td {
-    text-align: center;
+.#{$vprefix}customer-information {
 
-    h2 {
-      margin: 10px;
+    .#{$prefix}btn-link-medium {
+        .#{$prefix}btn-inner {
+            color: $color-standard-link;
+        }
     }
-  }
 
-  .no-field-padding .x-form-item-label-top {
-    padding-top: 0 !important;
-  }
+    .#{$prefix}btn-action-medium {
+        .#{$prefix}btn-inner {
+            color: $color-framework-black;
+        }
+    }
+
+    .customer-history td {
+        text-align: center;
+
+        h2 {
+            margin: 10px;
+        }
+    }
+
+    .no-field-padding .x-form-item-label-top {
+        padding-top: 0 !important;
+    }
 }
