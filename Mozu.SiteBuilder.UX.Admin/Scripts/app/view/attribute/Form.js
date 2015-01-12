@@ -712,12 +712,12 @@ Ext.define('Taco.view.attribute.Form', {
             }, {
                 xtype: 'checkboxfield',
                 name: 'isRequired',
-                hidden: this.record.supportsAttributeType(),
+                hidden: !this.record.supportsDeprecatedFields(),
                 boxLabel: 'This attribute is required'
             }, {
                 xtype: 'checkboxfield',
                 name: 'isVisible',
-                hidden: this.record.supportsAttributeType(),
+                hidden: !this.record.supportsDeprecatedFields(),
                 boxLabel: 'Show in website'
             }, {
                 xtype: 'combobox',
@@ -746,20 +746,14 @@ Ext.define('Taco.view.attribute.Form', {
                 width: 240,
                 editable: false,
                 forceSelection: true,
-                allowOnlyWhitespace: !this.record.supportsDisplayGroup(),
-                hidden: !this.record.supportsDisplayGroup(),
+                allowOnlyWhitespace: !this.record.supportsValueType(),
+                hidden: !this.record.supportsValueType(),
                 readOnly: this.isEdit(),
                 store: [
                     ['ShopperEntered', 'Shopper Entered'],
                     ['AdminOrShopperEntered', 'Admin or Shopper Entered'],
                     ['AdminEntered', 'Admin Entered']
                 ],
-                listeners: {
-                    change: {
-                        scope: this,
-                        fn: function () { this.getForm().findField('inputType').validate(); }
-                    }
-                },
                 validator: function (value) {
                     if (value && value.indexOf('Shopper') !== -1 && me.getForm().findField('displayGroup').getValue() === 'Admin') {
                         return 'Display Group must be Admin & Storefront';
@@ -784,13 +778,6 @@ Ext.define('Taco.view.attribute.Form', {
                 listeners: {
                     change: this.onInputTypeChange,
                     scope: this
-                },
-                validator: function (value) {
-                    if (value === 'Date' && !me.getForm().findField('valueType').isHidden() && me.getForm().findField('valueType').getValue().indexOf('Shopper') !== -1) {
-                        return 'Value Source must be Admin Entered';
-                    } else {
-                        return true;
-                    }
                 }
             },
             this.subform
