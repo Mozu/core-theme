@@ -14,14 +14,14 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             return String.Format("site:{0}-{1}", siteId, key);
         }
 
-        public static string GetCatalogCacheKey(this System.Runtime.Caching.ObjectCache cache, int tenantId, int siteId)
+        public static string GetCatalogCacheKey(this System.Runtime.Caching.ObjectCache cache, int tenantId, int catalogId)
         {
-            return String.Format("tenant:{0}-catalog:{1}", tenantId, siteId);
+            return String.Format("tenant:{0}-catalog:{1}", tenantId, catalogId);
         }
 
-        public static string GetCatalogCacheKey(this System.Runtime.Caching.ObjectCache cache, int tenantId, int siteId, string key)
+        public static string GetCatalogCacheKey(this System.Runtime.Caching.ObjectCache cache, int tenantId, int catalogId, string key)
         {
-            return String.Format("tenant:{0}-catalog:{1}-{2}", tenantId, siteId, key);
+            return String.Format("tenant:{0}-catalog:{1}-{2}", tenantId, catalogId, key);
         }
 
         public static string GetTenantCacheKey(this System.Runtime.Caching.ObjectCache cache, int siteId)
