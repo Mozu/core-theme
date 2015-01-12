@@ -15,6 +15,12 @@ Ext.define('Taco.model.CustomerAttribute', {
     supportsDisplayGroup: function () {
         return true;
     },
+    supportsValueType: function () {
+        return true;
+    },
+    supportsDeprecatedFields: function () {
+        return false;
+    },
     allowProductDataType: function () {
         return false;
     },

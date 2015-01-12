@@ -101,7 +101,12 @@ Ext.define('Taco.model.Attribute', {
     supportsDisplayGroup: function () {
         return false;
     },
-
+    supportsValueType: function () {
+        return false;
+    },
+    supportsDeprecatedFields: function () {
+        return false;
+    },
     allowProductDataType: function () {
         return true;
     },
