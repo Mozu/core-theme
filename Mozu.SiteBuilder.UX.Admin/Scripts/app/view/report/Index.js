@@ -332,12 +332,15 @@ Ext.define('Taco.view.report.Index', {
                 var obj = Ext.JSON.decode(response.responseText);
                 if (!obj || !obj.items) return;
                 var dashboardLocation = obj.items;
-
+                
                 if (Taco.app.context.getSiteId()) {
                     dashboardLocation = dashboardLocation + '&SiteId=' + Taco.app.context.getSiteId();
                 } else {
                     dashboardLocation += '&SiteId=all';
                 }
+                //dashboardLocation = dashboardLocation.replace('reporting.mozu-qa.com', 'AUS01NPHPBIR01.prod.mozu.com');
+                //dashboardLocation = dashboardLocation.replace('reporting.mozu-qa.com', 'aus02ndbrst01.dev.volusion.com');
+                //console.log(dashboardLocation);                
                 //2168, 2169
                 if (!dashboardLocation) return;
                 var iFrameChild = Ext.create('Ext.ux.IFrame', {
@@ -348,8 +351,6 @@ Ext.define('Taco.view.report.Index', {
                 });
                 me.dashboardPanel.add(iFrameChild);
                 me.dashboardPanel.doLayout();
-
-                //console.log(dashboardLocation);
             }
         });
        

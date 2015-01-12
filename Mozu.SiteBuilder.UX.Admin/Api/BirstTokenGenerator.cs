@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -34,10 +35,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public async Task<string> GenerateDashboardUri()
         {
+            //"https://reporting.mozu-qa.com/SSO.aspx",//"https://aus02ndbrst01.dev.volusion.com/SSO.aspx",//
             var token = await GenerateToken();
-
             return string.Format(
-                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dev%2520Dashboard&birst.page=Secure%2520Log-In%2520Test&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
+                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dev%2520Dashboard&birst.page=Start%2520Here&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
                     _settings.AppSettings(SSO_URL_KEY),
                     token
                 );
@@ -64,7 +65,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private string FormatBirstTokenGeneratorUri(int tenantId)
         {
+            //"https://reporting.mozu-qa.com/TokenGenerator.aspx",//"https://aus02ndbrst01.dev.volusion.com/TokenGenerator.aspx",//
             // tenantId = 2106;
+            // 1055
             return string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=TenantId%3D{4}",
                 _settings.AppSettings(TOKEN_URL_KEY),
                 _settings.AppSettings(USER_KEY),
