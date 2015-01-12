@@ -11,26 +11,28 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.ServiceModel.Web;
+using Mozu.SiteBuilder.Mvc.Themes;
+using Mozu.SiteBuilder.UX.Models.Settings;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/widgetdefinition", SuppressDescriptorGeneration = true)]
     public class WidgetDefinitionController : BaseController
     {
-        private readonly SiteContext _siteContext;
-        
-      
+        private readonly IThemeRepository _themeRepository;
 
-        public WidgetDefinitionController(SiteContext   siteContext   )
+
+        public WidgetDefinitionController(IThemeRepository themeRepository)
         {
-            _siteContext = siteContext;
-           
+            _themeRepository = themeRepository;
+            //  _siteContext = siteContext;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public Response<List<WidgetDefinition>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public Response<List<WidgetDefinition>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string themeId= null)
         {
-            var defs = _siteContext.Theme.Widgets;
+            var theme = _themeRepository.GetTheme(new ThemeSelection() { Id = themeId });
+            var defs = theme.Widgets;
 
             return List2(defs.ToList());
         }

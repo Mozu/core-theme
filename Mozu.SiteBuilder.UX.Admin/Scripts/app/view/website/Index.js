@@ -683,16 +683,20 @@ Ext.define('Taco.view.website.Index', {
     },
 
     navigate: function (config) {
+        
         var parser = document.createElement('a');
         parser.href = config.url;
-
-        if ((parser.hostname ||'').toLowerCase() !== ( window.location.hostname || '').toLowerCase()) {
+   
+        if (parser.hostname && (parser.hostname ).toLowerCase() !== ( window.location.hostname || '').toLowerCase() ) {
             Ext.Msg.alert('Attention', 'editing of url [<b><a href="' + parser.href + '" target="_blank">' + parser.href + '</a></b>] not supported');
-            
             return;
         }
 
         config.url = parser.pathname + parser.search;
+
+        if (config.url.length && config.url[0] !== '/') {
+            config.url = '/' + config.url;
+        }
 
         this.fireEvent('navigatestart', this, config);
         //  this.showHideButtons([]);
@@ -712,17 +716,16 @@ Ext.define('Taco.view.website.Index', {
         }
 
     },
-    onNavigationChange:function (navStore,navRecord) {
+    onNavigationChange:function () {
         this.reloadPage();
     },
     reloadPage: function () {
 
-        var curPath,
-            win = this.iframe.getWin();
+        var win = this.iframe.getWin();
 
         if (win && win.location.pathname && this.url )
         {
-            if (win.location.pathname.toLowerCase().indexOf(this.url.toLowerCase()) === 0 && win.document.readyState != 'complete') {
+            if (win.location.pathname.toLowerCase().indexOf(this.url.toLowerCase()) === 0 && win.document.readyState !== 'complete') {
                 return;
             }
             if (win.location.pathname.toLowerCase().indexOf(this.url.toLowerCase()) === -1 ) {
@@ -767,7 +770,7 @@ Ext.define('Taco.view.website.Index', {
             this.chorizoEditor.hideDropZones();
         }
 
-        window.addEventListener("resize", function (e) {
+        window.addEventListener("resize", function () {
             // have to delay because browsers throw this event before the resize finishes.
             setTimeout(function(){
                 me.resizeIframeSpacers(me.getWidthForFrameAndSpacers.call(me), me.resolutionOverride);
@@ -874,6 +877,7 @@ Ext.define('Taco.view.website.Index', {
                 entityEditor = this.entityEditors.findCustomEditor(def.get('customEditor'));
             
                 try {
+                    /*jslint evil: true */
                     widgetEditForm = eval(entityEditor.get('code'));
 
                 } catch (e) {
@@ -933,6 +937,7 @@ Ext.define('Taco.view.website.Index', {
                 entityEditor = this.entityEditors.findCustomEditor(def.get('customEditor'));
 
                 try {
+                    /*jslint evil: true */
                     widgetEditForm = eval(entityEditor.get('code'));
 
                 } catch (e) {
@@ -970,7 +975,7 @@ Ext.define('Taco.view.website.Index', {
                 }
             });
         } else {
-            callbackWrapper(ret, cfg);
+            callbackWrapper(null, cfg);
         }
     },
 

@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -127,6 +128,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly HttpRequestMessage _requestMessage;
         private readonly ISettings _settings;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
@@ -135,6 +137,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
+            _requestMessage = requestMessage;
             _settings = settings;
             _mobileDetectionProvider = mobileDetectionProvider;
             _context = context;
@@ -181,8 +184,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             get { return _context.Request.Cookies; }
         }
 
+        private string _themeId;
 
-    public bool IsDebugMode 
+
+        //used to serialize out the themid to the page.   Sitecontext is still kinda the canonical loc, but since based on user agent ... needs to be lesser client cached page context 
+        public string ThemeId
+        {
+            get
+            {
+                if (_themeId == null)
+                {
+                   _themeId = this._requestMessage.Resolve<SiteContext>().ThemeId;
+                }
+                return _themeId;
+            }
+        }
+
+        public bool IsDebugMode 
         {
             get { return _apiContext.IsDebugMode; }
         }

@@ -41,129 +41,124 @@ Ext.define('Taco.view.fileManager.Index', {
     allowNavigation: false,
 
     gridPanelConf: {
-        stateful:true,
+        stateful: true,
         stateId: "statefulFileManagerGrid",
         columns: [{
-            sortable:false,
-                xtype: 'templatecolumn',
-                header: 'Image',
-                stateId: 'ImageColumn',
-                tpl: [
-                    '<div class="taco-basegrid-thumbnail">',
-                    '<tpl if="localthumbnail">',
-                    '<img height="60" src="{localthumbnail}">',
-                    '<tpl elseif="thumbnail && fileSize">',
-                    '<img height="60" src="{thumbnail}?size=60" />',
-                    '</tpl>',
-                    '</div>'
-                ]
-            }, {
-                text: 'Name',
-                stateId: "name",
-                editor: {
-                    xtype: 'taco.textfield',
-                    listeners: {
-                        aftersetvalue: function (field, val) {
-                            var index = val.lastIndexOf('.');
+            sortable: false,
+            xtype: 'templatecolumn',
+            header: 'Image',
+            stateId: 'ImageColumn',
+            tpl: [
+                '<div class="taco-basegrid-thumbnail">',
+                '<tpl if="localthumbnail">',
+                '<img height="60" src="{localthumbnail}">',
+                '<tpl elseif="thumbnail && fileSize">',
+                '<img height="60" src="{thumbnail}?size=60" />',
+                '</tpl>',
+                '</div>'
+            ]
+        }, {
+            text: 'Name',
+            stateId: "name",
+            editor: {
+                xtype: 'taco.textfield',
+                listeners: {
+                    aftersetvalue: function(field, val) {
+                        var index = val.lastIndexOf('.');
 
-                            if (index < 1) {
-                                return;
-                            }
-
-                            field.suspendEvents(false);
-                            field.selectText(0, index);
-
-                            Ext.defer(function () {
-                                field.resumeEvents();
-                            }, 100);
-
+                        if (index < 1) {
+                            return;
                         }
-                    }
-                },
-                dataIndex: 'name',
-                width: 260
-            },
-            {
-                text: 'Tags', sortable: false,
-                dataIndex: 'tags',
-                stateId: "tags",
-                renderer: function (value, metaData, record) {
-                    return (Ext.isEmpty(value) ? ['...'] : value).join(', ');
-                },
-                flex: 1,
 
-                editor: {
-                    xtype: 'boxselect',
-                    // width: 22,
-                    hideTrigger: true,
-                    triggerOnClick: false,
-                    forceSelection: false,
-                    createNewOnEnter: true,
-                    createNewOnBlur: true,
-                    queryMode: 'local',
-                    store: ['a','aa'],  //tbd get tag store data driven
-               
-                }            
-            },
-            {
-                text: 'Date Modified',
-                dataIndex: 'dateModified',
-                stateId: "dateModified",
-                width: 150,
-                renderer: function (val) {
-                    return Ext.Date.format(val, 'M j, Y g:i a');
-                }
-            }, {
-                text: 'Type', 
-                sortable: false,
-                dataIndex: 'fileType',
-                stateId: "fileType",
-                align: 'right',
-                renderer: function (val) {
-                    return val.toUpperCase();
-                }
-            }, {
-                text: 'Size',
-                sortable: false,
-                stateId: "fileSize",
-                dataIndex: 'fileSize',
-                align: 'right'
-            },
-            {
-                xtype: 'taco.menucolumn',
-                sortable: false,                
-                text: 'Actions',
-                menuItems: [{
-                        text: 'Delete',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Product',
-                            behavior: 'destroy'
-                        },
-                        menuColumnHandler: 'destroyMenuColumnHandler'
-                },
-                {
-                    text: 'Get Url',
-                    menuColumnHandler: function () {
-                        window.prompt('Copy to clipboard: Ctrl+C, Enter', 'http://' + window.Taco.cdnPrefix + '/'+ Taco.app.context.getTenantId() +'-m'+Taco.app.context.getMasterCatalogId() + '/cms/files/f2d7bf5a-b0ec-4e33-8713-eb5b792bcceb');
+                        field.suspendEvents(false);
+                        field.selectText(0, index);
+
+                        Ext.defer(function() {
+                            field.resumeEvents();
+                        }, 100);
+
                     }
                 }
-                ]
+            },
+            dataIndex: 'name',
+            width: 260
+        }, {
+            text: 'Tags',
+            sortable: false,
+            dataIndex: 'tags',
+            stateId: "tags",
+            renderer: function(value) {
+                return (Ext.isEmpty(value) ? ['...'] : value).join(', ');
+            },
+            flex: 1,
+
+            editor: {
+                xtype: 'boxselect',
+                // width: 22,
+                hideTrigger: true,
+                triggerOnClick: false,
+                forceSelection: false,
+                createNewOnEnter: true,
+                createNewOnBlur: true,
+                queryMode: 'local',
+                store: ['a', 'aa'], //tbd get tag store data driven
+
+            }
+        }, {
+            text: 'Date Modified',
+            dataIndex: 'dateModified',
+            stateId: "dateModified",
+            width: 150,
+            renderer: function(val) {
+                return Ext.Date.format(val, 'M j, Y g:i a');
+            }
+        }, {
+            text: 'Type',
+            sortable: false,
+            dataIndex: 'fileType',
+            stateId: "fileType",
+            align: 'right',
+            renderer: function(val) {
+                return val.toUpperCase();
+            }
+        }, {
+            text: 'Size',
+            sortable: false,
+            stateId: "fileSize",
+            dataIndex: 'fileSize',
+            align: 'right'
+        }, {
+            xtype: 'taco.menucolumn',
+            sortable: false,
+            text: 'Actions',
+            menuItems: [{
+                text: 'Delete',
+                requiredBehaviors: {
+                    model: 'Taco.model.Product',
+                    behavior: 'destroy'
+                },
+                menuColumnHandler: 'destroyMenuColumnHandler'
+            }, {
+                text: 'Get Url',
+                menuColumnHandler: function(item, eventData) {
+                    window.prompt('Copy to clipboard: Ctrl+C, Enter', 'http://' + window.Taco.cdnPrefix + '/' + Taco.app.context.getTenantId() + '-m' + Taco.app.context.getMasterCatalogId() + '/cms/files/' + eventData.record.getId());
+                }
             }]
+        }]
     },
 
-    initComponent: function () {
+    initComponent: function() {
         var editor;
 
         this.header = {
-            actions: [
-                {
-                    xtype: 'tacofilefield',
-                    text: 'Upload',
-                    listeners: {
-                        filechange: this.onUploadFile,
-                        scope: this
-                    }
-                }]
+            actions: [{
+                xtype: 'tacofilefield',
+                text: 'Upload',
+                listeners: {
+                    filechange: this.onUploadFile,
+                    scope: this
+                }
+            }]
         };
 
         this.callParent(arguments);
@@ -184,20 +179,20 @@ Ext.define('Taco.view.fileManager.Index', {
         editor = this.down('grid').plugins[0];
 
         //hack to properlty align the stoopid save cancel buttons next under the editors.
-        editor.on('beforeedit', function (editor) {
+        editor.on('beforeedit', function(editor) {
             if (!editor.getEditor().rendered) {
                 editor.getEditor().layout.align = 'top';
             }
         });
 
-        editor.on('validateedit', function (ed, context) {
+        editor.on('validateedit', function(ed, context) {
 
             //hack to get around the editor reading the enter keydown event before the boxselect can
-            if (context.field == 'tags' && context.newValues["tags"] != ed.approvedValue) {
+            if (context.field === 'tags' && context.newValues.tags !== ed.approvedValue) {
 
-                Ext.defer(function () {
-                    if (ed.getEditor().down('[name=\'tags\']').getValue() == context.newValues["tags"]) {
-                        ed.approvedValue = context.newValues["tags"];
+                Ext.defer(function() {
+                    if (ed.getEditor().down('[name=\'tags\']').getValue() === context.newValues.tags) {
+                        ed.approvedValue = context.newValues.tags;
                         ed.completeEdit();
                     }
                 }, 500);
@@ -211,14 +206,18 @@ Ext.define('Taco.view.fileManager.Index', {
 
     },
 
-    initFileDrop: function (cmp) {
+    initFileDrop: function(cmp) {
         var bodyEl = cmp.body.el;
 
         bodyEl.on({
             scope: this,
-            dragenter: function (e) { Taco.app.DragDropZone.allowDrop(); },
-            dragleave: function (e) { Taco.app.DragDropZone.disallowDrop(); },
-            drop: function (e) {
+            dragenter: function() {
+                Taco.app.DragDropZone.allowDrop();
+            },
+            dragleave: function() {
+                Taco.app.DragDropZone.disallowDrop();
+            },
+            drop: function(e) {
                 var files = e.browserEvent.dataTransfer.files;
 
                 e.stopPropagation();
@@ -231,17 +230,17 @@ Ext.define('Taco.view.fileManager.Index', {
     },
 
     //removes create operations and returns false if 
-    onBeforeSyncStore: function (operations) {
+    onBeforeSyncStore: function(operations) {
         delete operations.create;
         return operations.update || operations.destroy;
 
     },
 
-    validateFiles: function (fileList) {
+    validateFiles: function(fileList) {
         var allowedMediaTypes = ['image', 'video'];
         var invalidFiles = [];
 
-        Ext.each(fileList, function (file) {
+        Ext.each(fileList, function(file) {
             var mediaType = file.type.split('/')[0];
             if (allowedMediaTypes.indexOf(mediaType) === -1) {
                 invalidFiles.push(file.name);

@@ -41,9 +41,11 @@
             });
 
             this.$body = this.$modal.find('.mz-cms-body');
-
+           
             this.controller().findWidgetTypeDefinitions( window, function(widgets) {
-                
+                //somehow the callback might fire twice??? so clear out the existing widgets.
+                me.$body.empty();
+
                 $.each(widgets, function(i, widget) {
                     me.$body.append(me.buildWidget(widget));
                     me.widgetIconDefinitions[widget.id] = widget.icon;
