@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         protected override async Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, NDjango.Interfaces.IContext context)
         {
             var result = new ProcessTagResult(context);
-            var cache = context.Resolve<IContextAwareStorefrontCache>();
+            var cache = context.Resolve<ILiveModeOnlyCache>();
 
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault("includeFacets", false);

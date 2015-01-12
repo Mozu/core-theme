@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, SiteContext  siteContext, IContextAwareStorefrontCache cache)
+        public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, SiteContext  siteContext, ILiveModeOnlyCache cache)
         {
 
             _serializer = new JsonSerializer()
@@ -209,7 +209,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         private DateTime? _ts;
         private Task<DateTime> _getTimeStamp;
-        private readonly IContextAwareStorefrontCache _cache;
+        private readonly ILiveModeOnlyCache _cache;
 
         public Task<DateTime> GetTimeStamp(string themeId)
         {

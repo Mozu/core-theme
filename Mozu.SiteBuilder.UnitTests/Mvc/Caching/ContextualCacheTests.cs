@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
             var key = new Random().Next().ToString();
             backingCache.Set(key, 5);
 
-            var contextCache = new ContextAwareStorefrontCache(context, pageCtx, () => partialCacheEnabled, backingCache);
+            var contextCache = new LiveModeOnlyCache(context, pageCtx, () => partialCacheEnabled, backingCache);
             var cachedItem = contextCache.Get<int?>(key);
             Assert.AreEqual((cachedItem == null), expectedNull); 
         }

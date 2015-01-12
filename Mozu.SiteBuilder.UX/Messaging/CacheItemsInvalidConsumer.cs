@@ -1,7 +1,7 @@
 ﻿using Burrows;
 using Mozu.Core.Messaging.Consume;
-using Mozu.Core.Messaging.Contracts;
 using Mozu.Core.Messaging.Contracts.Product.Events;
+using Mozu.Core.Messaging.Contracts.Search.Events;
 using Mozu.SiteBuilder.Mvc.Caching;
 
 namespace Mozu.SiteBuilder.UX.Messaging
@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
         Consumes<IProductEvent>.All, 
         Consumes<ICategoryEvent>.All,
         Consumes<IDiscountEvent>.All,
-        Consumes<CacheItemsInvalidConsumer.ISolrEnqueue>.All
+        Consumes<ISearchIndexUpdated>.All
    
     {
         private readonly IStorefrontCacheControl _storefrontCacheControl;
@@ -58,21 +58,13 @@ namespace Mozu.SiteBuilder.UX.Messaging
         }
 
         //TODO: update when we have the new solr enqueue messaging
-        public void Consume(ISolrEnqueue message)
+        public void Consume(ISearchIndexUpdated message)
         {
             if (message.MessagePublishingContext.CatalogId.HasValue)
             {
                 _storefrontCacheControl.InvalidateCatalog(message.MessagePublishingContext.TenantId, message.MessagePublishingContext.CatalogId.Value);
             }
-            if (message.MessagePublishingContext.SiteId.HasValue)
-            {
-                _storefrontCacheControl.InvalidateSite(message.MessagePublishingContext.SiteId.Value);
-            }
-        }
-
-        public interface ISolrEnqueue : IEntityEvent
-        {
-            
+            _storefrontCacheControl.InvalidateSite(message.SiteId);
         }
     }
 }

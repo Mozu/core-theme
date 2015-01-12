@@ -64,8 +64,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.Register(
                 c =>
-                    new ContextAwareStorefrontCache(c.Resolve<IApiContext>(), c.Resolve<PageContext>(), () => GetEnablePartialCache(c.Resolve<SiteContext>()), c.Resolve<IStorefrontCache>()))
-                .As<IContextAwareStorefrontCache>();
+                    new LiveModeOnlyCache(c.Resolve<IApiContext>(), c.Resolve<PageContext>(), () => GetEnablePartialCache(c.Resolve<SiteContext>()), c.Resolve<IStorefrontCache>()))
+                .As<ILiveModeOnlyCache>();
         }
 
         private static bool GetEnablePartialCache(SiteContext ctx)

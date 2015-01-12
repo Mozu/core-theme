@@ -4,16 +4,16 @@ using Mozu.SiteBuilder.UX.Models;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
-    public interface IContextAwareStorefrontCache : IStorefrontCache { }
+    public interface ILiveModeOnlyCache : IStorefrontCache { }
     
-    public class ContextAwareStorefrontCache : IContextAwareStorefrontCache
+    public class LiveModeOnlyCache : ILiveModeOnlyCache
     {
         private readonly IApiContext _apiContext;
         private readonly IEditableContext _pageContext;
         private readonly Func<bool> _siteContextPartialCacheFunc;
         private readonly IStorefrontCache _backingCache;
 
-        public ContextAwareStorefrontCache(IApiContext apiContext, IEditableContext pageContext, Func<bool> siteContextPartialCacheFunc, IStorefrontCache backingCache)
+        public LiveModeOnlyCache(IApiContext apiContext, IEditableContext pageContext, Func<bool> siteContextPartialCacheFunc, IStorefrontCache backingCache)
         {
             _apiContext = apiContext;
             _pageContext = pageContext;
