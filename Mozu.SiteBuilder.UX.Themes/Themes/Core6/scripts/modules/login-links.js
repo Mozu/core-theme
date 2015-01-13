@@ -1,7 +1,7 @@
 ﻿/**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore'], function ($, api, Hypr, _) {
+define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _) {
 
     var usePopovers = function() {
         return !Modernizr.mq('(max-width: 480px)');
@@ -208,33 +208,23 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     });
 
 
-    if (polyfillPlaceholders) {
-        require(['vendor/jquery-placeholder/jquery.placeholder'], setup);
-    } else {
-        setup();
-    }
-
-
-    function setup() {
-
-        $(document).ready(function() {
-            $docBody = $(document.body);
-            $('[data-mz-action="login"]').each(function() {
-                var popover = new LoginPopover();
-                popover.init(this);
-                $(this).data('mz.popover', popover);
-            });
-            $('[data-mz-action="signup"]').each(function() {
-                var popover = new SignupPopover();
-                popover.init(this);
-                $(this).data('mz.popover', popover);
-            });
-            $('[data-mz-action="launchforgotpassword"]').each(function() {
-                var popover = new LoginPopover();
-                popover.init(this);
-                $(this).data('mz.popover', popover);
-            });
+    $(document).ready(function() {
+        $docBody = $(document.body);
+        $('[data-mz-action="login"]').each(function() {
+            var popover = new LoginPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
         });
-    }
+        $('[data-mz-action="signup"]').each(function() {
+            var popover = new SignupPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="launchforgotpassword"]').each(function() {
+            var popover = new LoginPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });
+    });
 
 });

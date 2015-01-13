@@ -19,6 +19,7 @@ modules/cart-monitor.js
 modules/contextify.js
 shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery
 shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery
+vendor/jquery-placeholder/jquery.placeholder.js
 modules/login-links.js
 modules/models-address.js
 modules/models-price.js

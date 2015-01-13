@@ -646,6 +646,7 @@
     <Content Include="Themes\Core5\scripts\vendor\bootstrap\js\scrollspy.js" />
     <Content Include="Themes\Core5\scripts\vendor\bootstrap\js\tooltip.js" />
     <Content Include="Themes\Core5\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
+    <Content Include="Themes\Core5\scripts\vendor\jquery-placeholder\jquery.placeholder.js" />
     <Content Include="Themes\Core5\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core5\scripts\vendor\jquery.cookie\jquery.cookie.js" />
     <Content Include="Themes\Core5\scripts\vendor\jquery.tools.dateinput.js" />
@@ -792,6 +793,7 @@
     <Content Include="Themes\Core6\scripts\vendor\bootstrap\js\scrollspy.js" />
     <Content Include="Themes\Core6\scripts\vendor\bootstrap\js\tooltip.js" />
     <Content Include="Themes\Core6\scripts\vendor\jquery-colorbox\jquery.colorbox.js" />
+    <Content Include="Themes\Core6\scripts\vendor\jquery-placeholder\jquery.placeholder.js" />
     <Content Include="Themes\Core6\scripts\vendor\jquery-scrollto.js" />
     <Content Include="Themes\Core6\scripts\vendor\jquery.cookie\jquery.cookie.js" />
     <Content Include="Themes\Core6\scripts\vendor\jquery.tools.dateinput.js" />
@@ -2219,6 +2221,7 @@
     <Content Include="Themes\Core4\templates\back-office\packing-slip.hypr" />
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-attributes.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-password.hypr.live" />
+    <Content Include="Themes\Core5\stylesheets\back-office.less" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
