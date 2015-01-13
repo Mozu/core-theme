@@ -3,7 +3,7 @@
  */
  Ext.define('Taco.view.website.settings.facets.Facets', {
      extend: 'Taco.core.ux.form.Form',
-     requires: ['Taco.core.ux.form.field.MultiSelect', 'Taco.view.website.settings.facets.FacetRangeQueryForm'],
+     requires: ['Taco.core.ux.form.field.MultiSelect', 'Taco.view.website.settings.facets.FacetEditForm'],
 
      title: "Facets",
      ui: "subform",
@@ -11,7 +11,7 @@
      cls: Taco.baseCSSPrefix + 'sidebar-modal-facets',
 
      cancelChanges: function() {
-         for (var f in this.rangeQueryForms) {
+         for (var f in this.rangeEditForms) {
              f.reset();
          }
          this.reset();
@@ -20,7 +20,7 @@
      
      persistFormValues: function () {
          var me = this;
-         Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
+         Ext.iterate(me.rangeEditForms, function (sourceId, form) {
              form.persistFormValues();
          });
 
@@ -30,12 +30,12 @@
      
 
 
-     createRangeQueryForm: function(record, isShowing) {
+     createRangeEditForm: function(record, isShowing) {
          var me = this,
              rId = record.get('sourceId'),
-             rangeQueryForm = me.rangeQueryForms[rId];
+             rangeEditForm = me.rangeEditForms[rId];
 
-         rangeQueryForm = me.rangeQueryForms[rId] = Ext.create('Taco.view.website.settings.facets.FacetRangeQueryForm', {
+         rangeEditForm = me.rangeEditForms[rId] = Ext.create('Taco.view.website.settings.facets.FacetEditForm', {
              record: record,
              renderTo: Ext.dom.Query.selectNode('[data-for-sourceid="' + rId + '"]'),
              hidden: !isShowing,
@@ -49,14 +49,14 @@
              }
          });
          me.updateLayout();
-         return rangeQueryForm;
+         return rangeEditForm;
      },
 
-     preserveRangeQueryForm: function(form) {
+     preserveRangeEditForm: function(form) {
          var wasHidden = form.isHidden(),
              record = form.record;
          form.destroy();
-         this.createRangeQueryForm(record, !wasHidden);
+         this.createRangeEditForm(record, !wasHidden);
      },
 
      initComponent: function () {
@@ -158,9 +158,7 @@
                              '<span class="x-boundlist-item-name">{sourceName}</span>',
                              '<span class="x-boundlist-item-type">{sourceType}</span>',
                          '</span>',
-                         '<tpl if="allowsRangeQuery">',
                              '<span class="x-boundlist-item-action x-boundlist-item-settings">Settings </span>',
-                         '</tpl>',
                          '<tpl if="!isvalid">',
                              '<span class="x-boundlist-item-action x-boundlist-item-problem">Problem </span>',
                          '</tpl>',
@@ -177,9 +175,9 @@
                              switch (e.target.className.split('-').pop()) {
                                  case 'close':
                                      rId = record.get('sourceId');
-                                     if (me.rangeQueryForms[rId]) {
-                                         me.rangeQueryForms[rId].destroy();
-                                         delete me.rangeQueryForms[rId];
+                                     if (me.rangeEditForms[rId]) {
+                                         me.rangeEditForms[rId].destroy();
+                                         delete me.rangeEditForms[rId];
                                      }
                                      configuredFacetsStore.remove(record);
                                      // me.fireEvent('savablestatechange', me.form, me.facetSetStore.isDirty());
@@ -187,29 +185,29 @@
                                      break;
                                  case 'settings':
                                      rId = record.get('sourceId');
-                                     var rangeQueryForm = me.rangeQueryForms[rId];
-                                     if (!rangeQueryForm) rangeQueryForm = me.createRangeQueryForm(record);
-                                     if (rangeQueryForm.isHidden()) {
-                                         rangeQueryForm.show();
+                                     var rangeEditForm = me.rangeEditForms[rId];
+                                     if (!rangeEditForm) rangeEditForm = me.createRangeEditForm(record);
+                                     if (rangeEditForm.isHidden()) {
+                                         rangeEditForm.show();
                                      } else {
-                                         rangeQueryForm.hide();
+                                         rangeEditForm.hide();
                                      }
                                      me.updateLayout();
                                      break;
                              }
                          },
                          itemupdate: function (record) {
-                             var rangeQueryForm = me.rangeQueryForms[record.get('sourceId')];
-                             if (rangeQueryForm) {
-                                 me.preserveRangeQueryForm(rangeQueryForm);
+                             var rangeEditForm = me.rangeEditForms[record.get('sourceId')];
+                             if (rangeEditForm) {
+                                 me.preserveRangeEditForm(rangeEditForm);
                              }
                          }
                      }
                  },
                  listeners: {
                      drop: function () {
-                         for (var rId in me.rangeQueryForms) {
-                             me.preserveRangeQueryForm(me.rangeQueryForms[rId]);
+                         for (var rId in me.rangeEditForms) {
+                             me.preserveRangeEditForm(me.rangeEditForms[rId]);
                          }
                          // me.fireEvent('savablestatechange', me, me.facetSetStore.isDirty());
                      }
@@ -223,13 +221,13 @@
 
          window.facets = this;
 
-         this.rangeQueryForms = {};
+         this.rangeEditForms = {};
 
          //this.form = {
          //    layout: 'vbox',
          //    autoScroll: true,
          //    beforeSave: function () {
-         //        Ext.iterate(me.rangeQueryForms, function (sourceId, form) {
+         //        Ext.iterate(me.rangeEditForms, function (sourceId, form) {
          //            form.updateForm();
          //        });
          //    }

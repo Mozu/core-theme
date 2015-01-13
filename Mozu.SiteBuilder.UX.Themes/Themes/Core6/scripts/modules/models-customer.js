@@ -41,7 +41,31 @@
     });
 
     var CustomerAttribute = Backbone.MozuModel.extend({
-        mozuType: 'customerattribute'
+        mozuType: 'customerattribute',
+        validation: {
+            values: {
+                fn: function (values, fieldName, fields) {
+                    var inputType = fields.inputType;
+                    var messages = Backbone.Validation.messages;
+                    var rules = fields.validation;
+                    var value = values[0];
+
+                    if (inputType === 'TextBox') {
+                        if (rules.maxStringLength && value.length > rules.maxStringLength) return format(messages.maxLength, fields.adminName, rules.maxStringLength);
+                        if (rules.minStringLength && value.length < rules.minStringLength) return messages.minLength;
+                        // todo: apply regex if present
+                    }
+
+                    function format () {
+                        var args = Array.prototype.slice.call(arguments),
+                            text = args.shift();
+                        return text.replace(/\{(\d+)\}/g, function (match, number) {
+                            return typeof args[number] !== 'undefined' ? args[number] : match;
+                        });
+                    }
+                }
+            }
+        }
     });
 
     var CustomerContact = Backbone.MozuModel.extend({
@@ -188,10 +212,15 @@
                         var fqn = def.attributeFQN;
 
                         if (values[fqn]) {
-                            /*jshint -W069 */
-                            def.values = values[fqn]['values'];
-                            def.attributeDefinitionId = values[fqn]['attributeDefinitionId'];
+                            def.values = values[fqn].values;
+                            def.attributeDefinitionId = values[fqn].attributeDefinitionId;
                         }
+                    });
+                    // sort attributes, putting checkboxes first
+                    defs.data.items.sort(function (a, b) {
+                        if (a.inputType === 'YesNo') return -1;
+                        else if (b.inputType === 'YesNo') return 1;
+                        else return 0;
                     });
                     // write fully-hydrated attributes to the model
                     attributesCollection.reset(defs.data.items);
@@ -404,7 +433,6 @@
             });
         },
         updateAttribute: function (attributeFQN, attributeDefinitionId, values) {
-            console.log(arguments);
             this.apiUpdateAttribute({
                 attributeFQN: attributeFQN,
                 attributeDefinitionId: attributeDefinitionId,

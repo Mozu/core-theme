@@ -33,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.SourceId, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Id : null))
                   .ForMember(x => x.SourceName, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Name : null))
                   .ForMember(x => x.SourceType, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Type : null))
+                  .ForMember(x => x.SourceDataType, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.DataType : null))
                   .ForMember(x => x.ValidityIsValid, op => op.ResolveUsing(x => (x.Validity != null && x.Validity.IsValid) ))
                   .ForMember(x => x.AllowsRangeQuery, op => op.ResolveUsing(x =>(x.Source != null && x.Source.AllowsRangeQuery) ))
                   .ForMember(x => x.ValidityReasonCode, op => op.ResolveUsing(dc => (dc.Validity != null) ? dc.Validity.ReasonCode : null)) 
@@ -42,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // To data contract
             Mapper.CreateMap<Facet, DC.Facet>()
                   .ForMember(x => x.Source, op => op.ResolveUsing(x => new DC.FacetSource {Id = x.SourceId, Name = x.SourceName, Type = x.SourceType}))
-                  .ForMember(x => x.FacetType, op => op.ResolveUsing(x => x.RangeQueries != null && x.RangeQueries.Count > 0 ? "RangeQuery" : "Value"))
+                  //.ForMember(x => x.FacetType, op => op.ResolveUsing(x => x.RangeQueries != null && x.RangeQueries.Count > 0 ? "RangeQuery" : "Value"))
                  //todo: confirm FacetValidity mapping Greg Murray on 2014-01-24
                  .ForMember( x=> x.Validity , op=> op.Ignore())
                   //.ForMember(dc => dc.Validity, op => op.ResolveUsing(x => new DC.FacetValidity()

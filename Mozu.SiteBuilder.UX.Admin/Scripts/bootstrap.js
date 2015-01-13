@@ -1684,8 +1684,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.website.entityAdapters.TemplateEntityAdapter": [],
   "Taco.view.website.misc.ExternalLinkEditor": [],
   "Taco.view.website.settings.CatalogSeo": [],
+  "Taco.view.website.settings.facets.FacetEditForm": [],
   "Taco.view.website.settings.facets.FacetRangeQuery": [],
-  "Taco.view.website.settings.facets.FacetRangeQueryForm": [],
   "Taco.view.website.settings.facets.FacetRangeQueryGroup": [],
   "Taco.view.website.settings.facets.Facets": [],
   "Taco.view.website.widgetEditors.AddThis": [],
@@ -3987,11 +3987,11 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.website.entityAdapters.TemplateEntityAdapter": [],
   "Taco.view.website.misc.ExternalLinkEditor": [],
   "Taco.view.website.settings.CatalogSeo": [],
+  "Taco.view.website.settings.facets.FacetEditForm": [
+    "taco.rangeeditform"
+  ],
   "Taco.view.website.settings.facets.FacetRangeQuery": [
     "widget.taco.rangequery"
-  ],
-  "Taco.view.website.settings.facets.FacetRangeQueryForm": [
-    "taco.rangequeryform"
   ],
   "Taco.view.website.settings.facets.FacetRangeQueryGroup": [
     "widget.taco.rangequerygroup"
