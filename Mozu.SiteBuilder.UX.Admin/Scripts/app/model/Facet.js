@@ -31,7 +31,8 @@ Ext.define('Taco.model.Facet', {
     }, {
         name: 'facetType',
         type: 'string',
-        useNull: true
+        useNull: true,
+        defaultValue: 'Value'
     }, {
         name: 'order',
         type: 'int',

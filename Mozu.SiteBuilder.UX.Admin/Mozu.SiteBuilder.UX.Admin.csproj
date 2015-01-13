@@ -1036,7 +1036,7 @@
     <Content Include="Scripts\app\view\website\entityAdapters\DocumentEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\ProductEntityAdapter.js" />
     <Content Include="Scripts\app\view\website\settings\facets\FacetRangeQuery.js" />
-    <Content Include="Scripts\app\view\website\settings\facets\FacetRangeQueryForm.js" />
+    <Content Include="Scripts\app\view\website\settings\facets\FacetEditForm.js" />
     <Content Include="Scripts\app\view\website\settings\facets\FacetRangeQueryGroup.js" />
     <Content Include="Scripts\app\view\website\settings\facets\Facets.js" />
     <Content Include="Scripts\app\view\website\Tree.js" />
