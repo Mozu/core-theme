@@ -12,19 +12,18 @@ Ext.define('Taco.model.Discount', {
     },
     idProperty: 'id',
     fields: [{
-        name: 'id',
-        type: 'int'
-    }, {
-        name: 'name',
-        type: 'string'
-    }, {
-        name: 'friendlyDescription',
-        type: 'string'
-    }, {
-        name: 'scope',
-        type: 'string'
-    },
-        {
+            name: 'id',
+            type: 'int'
+        }, {
+            name: 'name',
+            type: 'string'
+        }, {
+            name: 'friendlyDescription',
+            type: 'string'
+        }, {
+            name: 'scope',
+            type: 'string'
+        },{
             name: 'target',
             type: 'string'
         },
@@ -239,6 +238,12 @@ Ext.define('Taco.model.Discount', {
         return me.customerSegmentStore;
     },
 
+    // manipulate a record that is set to be duplicated prior to loading it in the view. Called by app\core\Controller.js
+    beforeDuplicate: function () {
+        var suffix = " - copy";
+        this.data.name = this.data.name + suffix;
+        this.commit();
+    },
     proxy: {
         type: 'ajaxproxy',
         api: {

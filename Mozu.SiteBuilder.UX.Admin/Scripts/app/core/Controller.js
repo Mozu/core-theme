@@ -158,6 +158,8 @@ Ext.define('Taco.core.Controller', {
                 success: function () {
                     Taco.app.setLoading(false);
                     
+                    record.raw = undefined;
+
                     // do any class specific modifications to the source model that is being cloned
                     if (record.beforeDuplicate) {
                         record.beforeDuplicate();
@@ -185,6 +187,9 @@ Ext.define('Taco.core.Controller', {
             model.load(id, {
                 success: function (record) {
                     Taco.app.setLoading(false);
+
+                    record.raw = undefined;
+
                     // do any class specific modifications to the source model that is being cloned                    
                     if (record.beforeDuplicate) {
                         record.beforeDuplicate();

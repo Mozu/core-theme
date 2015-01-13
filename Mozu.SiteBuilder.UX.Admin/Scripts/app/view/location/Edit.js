@@ -12,11 +12,57 @@ Ext.define('Taco.view.location.Edit', {
     formCls: 'Taco.view.location.Form',
     
     initComponent: function () {
-        
+        var me = this;
+
+        this.additionalActions = [{
+            xtype: 'button',
+            itemId: 'moreButton',
+            ui: 'action',
+            scale: 'medium',
+            text: 'More',
+            menuAlign: 'tr-br?',
+            menu: {
+                plain: true,
+                shadow: false,
+                items: [{
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Location',
+                        behavior: 'create'
+                    },
+                    handler: function (item) {
+                        var record = me.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+
+                        Taco.app.StateManager.attemptNavigate('locations/duplicate/' + record.getId(), metaData);
+                    }
+                }]
+            }
+        }];
+
+
         this.callParent(arguments);
+
+
+
 
         this.form.on('savesuccess', function() {
             
         });
+    },
+    afterDuplicate: function () {
+        Taco.app.fireEvent('setmessage', "Please enter a code.", 'info');
+        
+        this.mon(this, 'afterrender', function () {
+
+            var codeField = this.form.findField("code");
+            if (codeField) {
+                codeField.validate()
+            }
+
+        }, this);
+
     }
 });
