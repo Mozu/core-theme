@@ -141,6 +141,8 @@ Ext.define('Taco.view.website.Tree', {
                         metaData = record.raw.metaData,
                         items;
 
+                    this.url = url;
+
                     if (e.getTarget('.taco-website-tree-menu-trigger', 10)) {
                         items = this.getMenuItems(record, this);
                         this.menu.removeAll();
@@ -200,10 +202,19 @@ Ext.define('Taco.view.website.Tree', {
              
 
              
-             },
+            },
+            drop: function(node, data, overModel, dropPosition, eOpts) {
+                var selModel = this.getSelectionModel(),
+                    navItems = me.store.tree.nodeHash,
+                    current = me.getCurrentNode.call(me, navItems);
+                
+                selModel.deselect(data.records[0]);
+                selModel.select(current);
+            },
             nodedragover: {
                 scope: this,
                 fn: function (targetNode, position, dragData) {
+                    console.log(dragData)
                     var roots = ['_unlinked', '_navigation', '_templates'],
                         sourceId = dragData.records[0].getId(),
                         targetId = targetNode.getId(),
@@ -327,16 +338,22 @@ Ext.define('Taco.view.website.Tree', {
     showNavState: function(records, success) {
         var me = this,
             navItems = this.store.tree.nodeHash,
+            current = this.getCurrentNode.call(this, navItems);
+       
+            me.selectPath(current.getPath());
+    },
+    getCurrentNode: function(navItems){
+
+        var me = this,
             current;
 
         Object.keys(navItems).forEach( function(k) {
-
             if (navItems[k] && navItems[k].data.url === me.url) {
                 current = me.getStore().getNodeById(navItems[k].data.id);
-                me.selectPath(current.getPath());
-            } 
-            
+            }   
         });
+
+        return current;
     },
     showLinkEditor: function (record, parentRecord) {
         var me = this;
