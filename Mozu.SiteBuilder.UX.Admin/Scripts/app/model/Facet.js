@@ -22,6 +22,10 @@ Ext.define('Taco.model.Facet', {
         type: 'string',
         useNull: true
     }, {
+        name: 'sourceDataType',
+        type: 'string',
+        useNull: true
+    }, {
         name: 'allowsRangeQuery',
         type: 'boolean'
     }, {
@@ -59,8 +63,51 @@ Ext.define('Taco.model.Facet', {
         type: 'auto',
         useNull: true,
         defaultValue:[]
+    }, {
+        name: 'valueSortType',
+        type: 'string',
+        useNull: true,
+        defaultValue: 'CountDescending'
+    }],
+
+    getFacetSortingStore: function () {
+        var valAscDisplay,
+            valDescDisplay,
+            dataTypeLower = this.get('sourceDataType') ? this.get('sourceDataType').toLowerCase() : 'string';
+
+        switch (dataTypeLower) {
+            case 'number':
+                valAscDisplay = 'Numerical: Low to High';
+                valDescDisplay = 'Numerical: High to Low';
+                break;
+            case 'date':
+                valAscDisplay = 'Date: Recent to Old';
+                valDescDisplay = 'Date: Old to Recent';
+                break;
+            default:
+                valAscDisplay = 'Alphabetical: A to Z';
+                valDescDisplay = 'Alphabetical: Z to A';
+        }
+
+        return Ext.create('Ext.data.Store', {
+            fields: ['id', "name"],
+            data: [
+                {
+                    id: "CountAscending",
+                    name: "Facet Count: Low to High"
+                }, {
+                    id: "CountDescending",
+                    name: "Facet Count: High to Low"
+                }, {
+                    id: "ValuesAscending",
+                    name: valAscDisplay
+                }, {
+                    id: "ValuesDescending",
+                    name: valDescDisplay
+                }
+            ]
+        });
     }
-    ]
 
     
 });

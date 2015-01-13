@@ -269,9 +269,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.13.2\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.14.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.14.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.14.5\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.14.6\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -2205,6 +2205,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Themes\.jshintrc" />
+    <Content Include="Themes\.jshintignore" />
     <Content Include="Themes\Core6\stylesheets\back-office.less" />
     <Content Include="Themes\Core6\templates\back-office\base.hypr" />
     <Content Include="Themes\Core6\templates\back-office\order-details.hypr" />

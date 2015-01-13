@@ -1,6 +1,6 @@
 ﻿define(['modules/jquery-mozu', 'hyprlive', 'underscore', 'modules/api', 'shim!vendor/bootstrap/js/affix[jquery=jQuery]', 'shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]'], function ($, Hypr, _, api) {
     if (!Modernizr.mq('(max-width: 800px)')) {
-        var gutterWidth = parseInt(Hypr.getThemeSetting('gutterWidth'));
+        var gutterWidth = parseInt(Hypr.getThemeSetting('gutterWidth'), 10);
         $(document).ready(function () {
             $('[data-mz-scrollnav]').each(function () {
                 var $this = $(this),

@@ -24,10 +24,12 @@ Ext.define('Taco.view.customers.subform.Information', {
                 createDate: new Date()
             };
 
-        var isAnonymous = this.record.get('isAnonymous');
+        var isAnonymous = true;
 
+        var titleString = '';
         if (this.record) {
-            var titleString = 'Customer ID: ' + this.record.getId();
+            isAnonymous = this.record.get('isAnonymous');
+            titleString = 'Customer ID: ' + this.record.getId();
             if (!isAnonymous) {
                 titleString += '  |  Shopper ID: ' + this.record.get('userName');
             }
@@ -87,7 +89,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             handler: function () {
                 var id = this.record.getId();
                 Ext.MessageBox.show({
-                    title: 'Reset Passowrd',
+                    title: 'Reset Password',
                     // pushes the buttons to the right to be consistant with our dialog ux.
                     rightJustifyButtons: true,
                     // reverses the order of the buttons
@@ -169,10 +171,25 @@ Ext.define('Taco.view.customers.subform.Information', {
                 allowOnlyWhitespace: false
             }, {
                 xtype: 'textfield',
-                padding: '0 0 16 0',
                 name: 'emailAddress',
                 fieldLabel: 'Email',
                 allowOnlyWhitespace: false
+            }, {
+                xtype: 'textfield',
+                name: 'userName',
+                fieldLabel: 'User Name',
+                disabled: isAnonymous,
+                maxLength: 180,
+                hidden: !this.record,
+                allowOnlyWhitespace: isAnonymous
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                padding: '0 0 16 0',
+                width: '100%'
             }, {
                 xtype: 'checkboxfield',
                 name: 'isAnonymous',
@@ -215,6 +232,15 @@ Ext.define('Taco.view.customers.subform.Information', {
                     '</table>',
                     '<div>Customer Since: <span data-handle="customer-since">{createDate:date("m/d/Y")}</span></div>'
                 ]
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                padding: '71 0 5 0',
+                width: '100%',
+                hidden: !this.record
             }, {
                 xtype: 'container',
                 layout: {

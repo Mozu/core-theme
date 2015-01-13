@@ -225,8 +225,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     },
                     InputType = Enum.GetName(typeof(AttributeInputType), source.InputType),
                     DataType = Enum.GetName(typeof(AttributeDataType), source.DataType),
-                    ValueType = Enum.GetName(typeof(AttributeValueType), source.ValueType),
-                  
+                    // force to admin entered if not provided.
+                    //todo: Stewart Noll on 2015-01-12 remove when order attribute work is done
+                    ValueType = source.ValueType == AttributeValueType.Unknown ? Enum.GetName(typeof(AttributeValueType), AttributeValueType.AdminEntered) : Enum.GetName(typeof(AttributeValueType), source.ValueType),
                 };
 
                 return destination;

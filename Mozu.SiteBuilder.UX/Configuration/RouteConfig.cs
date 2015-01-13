@@ -363,21 +363,21 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "Logout",
                 "logout",
                 new {controller = "Auth", action = "LogOut"},
-                new {acceptConstraint = new AcceptConstraint("text/html", true)});
+                new {acceptConstraint = new AcceptConstraint("application/json", false)});
 
 
             routes.MapHttpRoute(
                 "AJAX Login",
                 "user/login",
                 new {controller = "Auth", action = "AjaxLogin"},
-                new {acceptConstraint = new AcceptConstraint("text/html", false)});
+                new {acceptConstraint = new AcceptConstraint("application/json", true)});
 
 
             routes.MapHttpRoute(
                 "Login",
                 "user/login",
                 new {controller = "Auth", action = "Login"},
-                new {acceptConstraint = new AcceptConstraint("text/html", true)});
+                new {acceptConstraint = new AcceptConstraint("application/json", false)});
 
             routes.MapHttpRoute(
                 "refresh tokens",
@@ -391,21 +391,21 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "AjaxCreateAccount",
                 "user/create",
                 new {controller = "Auth", action = "AjaxCreateAccount"},
-                new {acceptConstraint = new AcceptConstraint("text/html", false)});
+                new {acceptConstraint = new AcceptConstraint("application/json", true)});
 
 
             routes.MapHttpRoute(
                 "CreateAccount",
                 "user/create",
                 new {controller = "Auth", action = "CreateAccount"},
-                new {acceptConstraint = new AcceptConstraint("text/html", true)});
+                new {acceptConstraint = new AcceptConstraint("application/json", false)});
 
 
             routes.MapHttpRoute(
                 "AjaxResetPassword",
                 "user/resetpassword",
                 new {controller = "Auth", action = "AjaxResetPassword"},
-                new {acceptConstraint = new AcceptConstraint("text/html", false)});
+                new {acceptConstraint = new AcceptConstraint("application/json", true)});
 
 
             

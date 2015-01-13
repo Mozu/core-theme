@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //"https://reporting.mozu-qa.com/SSO.aspx",//"https://aus02ndbrst01.dev.volusion.com/SSO.aspx",//
             var token = await GenerateToken();
             return string.Format(
-                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dev%2520Dashboard&birst.page=Start%2520Here&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=borderless&birst.filterLayout=left",
+                "{0}?BirstSSOToken={1}&birst.module=dashboard&birst.dashboard=Dev%2520Dashboard&birst.page=Start%2520Here&birst.helpURL=&birst.exportZoom=2&birst.embedded=true&birst.hideDashboardNavigation=true&birst.hideDashboardPrompts=true&birst.openPageForEdit=false&birst.viewMode=full&birst.filterLayout=left",
                     _settings.AppSettings(SSO_URL_KEY),
                     token
                 );

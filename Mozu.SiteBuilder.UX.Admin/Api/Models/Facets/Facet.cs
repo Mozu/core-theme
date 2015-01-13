@@ -38,6 +38,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SourceType { get; set; }
+        
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string SourceDataType { get; set; }
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string FacetType { get; set; }
@@ -62,9 +65,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "validityCode")]
         public string ValidityReasonCode { get; set; }
 
-
-
-
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "ranges")]
         public List<FacetRangeQuery> RangeQueries { get; set; }
 
@@ -72,7 +72,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? AllowsRangeQuery { get; set; }
 
-       
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string ValueSortType { get; set; }       
     }
     
     public class FacetRangeQuery

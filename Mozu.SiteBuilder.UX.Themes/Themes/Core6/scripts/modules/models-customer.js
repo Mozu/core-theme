@@ -293,7 +293,7 @@
                 fn: function(value) {
                     if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
-            },
+            }
         },
         defaults: {
             editingCard: {},
