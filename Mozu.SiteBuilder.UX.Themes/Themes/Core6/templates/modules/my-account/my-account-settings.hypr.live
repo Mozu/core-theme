@@ -53,6 +53,7 @@
         {% if editing and attribute.valueType !== "AdminEntered" %}
           <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
             data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
+          <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
         {% else %}
           <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
         {% endif %}

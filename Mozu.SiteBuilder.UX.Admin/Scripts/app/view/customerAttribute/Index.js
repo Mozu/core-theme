@@ -28,12 +28,6 @@ Ext.define('Taco.view.customerAttribute.Index', {
             flex: 1,
             minWidth: 120
         }, {
-            dataIndex: 'isRequired',
-            stateId: 'isRequired',
-            text: 'Required',
-            flex: 1,
-            minWidth: 120
-        }, {
             dataIndex: 'displayGroup',
             stateId: 'displayGroup',
             text: 'Display Group',

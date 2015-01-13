@@ -33,35 +33,34 @@
         constructor: function () {
             EditableView.apply(this, arguments);
             this.editing = false;
+            this.invalidFields = {};
         },
         initialize: function () {
             return this.model.getAttributes().then(function (customer) {
-                var attributes = customer.get('attributes');
-                var inputTypes = ['YesNo', 'List', 'Date', 'TextBox', 'TextArea'];
-
-                attributes.each(function (attribute) {
+                customer.get('attributes').each(function (attribute) {
                     attribute.set('attributeDefinitionId', attribute.get('id'));
                 });
-                attributes.comparator = function (a, b) {
-                    if (inputTypes.indexOf(a.inputType) < inputTypes.indexOf(b.inputType)) {
-                        return -1;
-                    } else if (inputTypes.indexOf(a.inputType) > inputTypes.indexOf(b.inputType)) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                };
-                attributes.sort();
 
                 return customer;
             });
         },
         updateAttribute: function (e) {
+            var self = this;
             var attributeFQN = e.currentTarget.getAttribute('data-mz-attribute');
             var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
             var nextValue = attribute.get('inputType') === 'YesNo' ? $(e.currentTarget).prop('checked') : $(e.currentTarget).val();
 
             attribute.set('values', [nextValue]);
+            attribute.validate('values', {
+                valid: function (view, attr, error) {
+                    self.$('[data-mz-attribute="' + attributeFQN + '"]').removeClass('is-invalid')
+                        .next('[data-mz-validationmessage-for="' + attr + '"]').text('');
+                },
+                invalid: function (view, attr, error) {
+                    self.$('[data-mz-attribute="' + attributeFQN + '"]').addClass('is-invalid')
+                        .next('[data-mz-validationmessage-for="' + attr + '"]').text(error);
+                }
+            });
         },
         startEdit: function (event) {
             event.preventDefault();
@@ -70,22 +69,23 @@
         },
         cancelEdit: function () {
             this.editing = false;
-            this.render();
+            this.afterEdit();
         },
         finishEdit: function () {
             var self = this;
 
             this.doModelAction('apiUpdate').then(function () {
-                console.log('update succeeded', arguments);
                 self.editing = false;
             }).otherwise(function () {
-                console.log('update failed', arguments);
                 self.editing = true;
+            }).ensure(function () {
+                self.afterEdit();
             });
+        },
+        afterEdit: function () {
+            var self = this;
 
-            this.render();
-            this.initialize().then(function (customer) {
-                console.log(customer.get('attributes').pluck('inputType'));
+            self.initialize().ensure(function () {
                 self.render();
             });
         }
