@@ -64,14 +64,25 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.Register(
                 c =>
-                    new LiveModeOnlyCache(c.Resolve<IApiContext>(), c.Resolve<PageContext>(), () => GetEnablePartialCache(c.Resolve<SiteContext>()), c.Resolve<IStorefrontCache>()))
-                .As<ILiveModeOnlyCache>();
+                    {
+                        var scGetter = c.Resolve<Func<SiteContext>>();
+                        var apiContext = c.Resolve<IApiContext>();
+                        var pc = c.Resolve<PageContext>();
+                        var sfc = c.Resolve<IStorefrontCache>();
+
+                        return new LiveModeOnlyCacheInternal(apiContext, pc, () =>  GetEnablePartialCache(scGetter), sfc);
+                    }).As<ILiveModeOnlyCache>().InstancePerRequest();
         }
 
-        private static bool GetEnablePartialCache(SiteContext ctx)
+        private static bool GetEnablePartialCache(Func<SiteContext> ctx)
         {
-            var val = ctx.ThemeSettings["enablePartialCaching"];
-            return Convert.ToBoolean(val);
+            var sc = ctx();
+            if (sc.Init().IsCompleted)
+            {
+                var val = sc.ThemeSettings["enablePartialCaching"];
+                return Convert.ToBoolean(val);
+            }
+            return true;
         }
 
         private static void RegisterThemeInfrastructure(ContainerBuilder builder)

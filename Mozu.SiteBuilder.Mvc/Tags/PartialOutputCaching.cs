@@ -279,7 +279,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             private ArgumentCollection ProcessArguments(Walker walker)
             {
                 var arguments = new ArgumentCollection();
-                var kwords = ((SimpleTagBase)Tag).KeyWords ?? EmptyStringArray;
+                var kwords = ((OutputCachingTag)Tag).KeyWords ?? EmptyStringArray;
                 arguments.AddRange(_blockToken.Args.Select(arg => TagHandling.GenerateTagArgument(walker, _parsingContext, arg, kwords)));
                 return arguments;
             }
