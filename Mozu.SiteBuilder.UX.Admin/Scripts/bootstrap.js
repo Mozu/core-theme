@@ -6,19 +6,14 @@
  */
 Ext.Loader.addClassPathMappings({
   "Ext": "ext/src",
-  "Ext.DomHelper": "ext/src/dom/Helper.js",
-  "Ext.DomQuery": "ext/src/dom/Query.js",
-  "Ext.EventObjectImpl": "ext/src/EventObject.js",
   "Ext.Msg": "ext/src/window/MessageBox.js",
-  "Ext.Supports": "ext/src/Support.js",
-  "Ext.core.DomHelper": "ext/src/dom/Helper.js",
-  "Ext.core.DomQuery": "ext/src/dom/Query.js",
   "Ext.ux.form.field.BoxSelect": "ux/boxselect/form/field/BoxSelect.js",
-  "Ext.ux.layout.component.field.BoxSelectField": "ux/boxselect/layout/component/field/BoxSelectField.js",
+  "Ext.ux.layout.component.field.BoxSelectField": "ux/boxselect/form/field/BoxSelect.js",
   "MyReader": "app/view/report/Index.js",
   "Taco": "app",
   "Taco.Application": "app/application.js",
   "Taco.core.CTemplate": "app/core/util/CTemplate.js",
+  "Taco.core.data.AjaxProxy": "app/core/AjaxProxy.js",
   "Taco.core.ux.form.field.BaseImageField.ImageModal": "app/core/ux/form/field/BaseImageField.js",
   "Taco.core.ux.form.field.Code": "app/core/ux/form/field/code.js",
   "Taco.core.ux.form.field.CodeLayout": "app/core/ux/form/field/code.js",
@@ -1689,8 +1684,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.website.entityAdapters.TemplateEntityAdapter": [],
   "Taco.view.website.misc.ExternalLinkEditor": [],
   "Taco.view.website.settings.CatalogSeo": [],
+  "Taco.view.website.settings.facets.FacetEditForm": [],
   "Taco.view.website.settings.facets.FacetRangeQuery": [],
-  "Taco.view.website.settings.facets.FacetRangeQueryForm": [],
   "Taco.view.website.settings.facets.FacetRangeQueryGroup": [],
   "Taco.view.website.settings.facets.Facets": [],
   "Taco.view.website.widgetEditors.AddThis": [],
@@ -3992,11 +3987,11 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.website.entityAdapters.TemplateEntityAdapter": [],
   "Taco.view.website.misc.ExternalLinkEditor": [],
   "Taco.view.website.settings.CatalogSeo": [],
+  "Taco.view.website.settings.facets.FacetEditForm": [
+    "taco.rangeeditform"
+  ],
   "Taco.view.website.settings.facets.FacetRangeQuery": [
     "widget.taco.rangequery"
-  ],
-  "Taco.view.website.settings.facets.FacetRangeQueryForm": [
-    "taco.rangequeryform"
   ],
   "Taco.view.website.settings.facets.FacetRangeQueryGroup": [
     "widget.taco.rangequerygroup"

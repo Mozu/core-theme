@@ -81,7 +81,7 @@ Ext.define('Taco.model.Facet', {
                 valAscDisplay = 'Numerical: Low to High';
                 valDescDisplay = 'Numerical: High to Low';
                 break;
-            case 'date':
+            case 'datetime':
                 valAscDisplay = 'Date: Recent to Old';
                 valDescDisplay = 'Date: Old to Recent';
                 break;
