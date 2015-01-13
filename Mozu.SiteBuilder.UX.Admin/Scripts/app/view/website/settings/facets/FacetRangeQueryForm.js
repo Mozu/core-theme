@@ -16,21 +16,29 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
     initComponent: function () {
         var me = this;
 
-        me.displayStyle = Ext.widget('radiogroup', {
-            fieldLabel: 'Display Style',
-            labelAlign: 'top',
-            labelStyle: 'padding-top: 5px;',
-            columns: 2,
-            height: 50,
-            items: [{
-                boxLabel: 'Values',
-                name: 'facetType',
-                inputValue: 'Value'
-            }, {
-                boxLabel: 'Range',
-                name: 'facetType',
-                inputValue: 'RangeQuery'
-            }]
+        me.valueDisplayStyle = Ext.widget({
+            xtype: 'radio',
+            name: 'facetType',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Values',
+            inputValue: 'Value',
+            flex: 1,
+            checked: this.record.get('facetType') === 'Value'
+        });
+
+        me.rangeDisplayStyle = Ext.widget({
+            xtype: 'radio',
+            name: 'facetType',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Range',
+            inputValue: 'RangeQuery',
+            flex: 1,
+            checked: this.record.get('facetType') !== 'Value',
+            listeners: {
+                change: function (rg, newValue) {
+                    me.displayRangeQueryFields(newValue);
+                }
+            }
         });
 
         me.numRanges = Ext.widget('selectfield', {
@@ -83,15 +91,38 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
             }
         });
 
-        this.items = [
-            me.displayStyle,
-            me.numRanges,
-            me.rangeQueries
-        ];
-
-        me.displayStyle.on('change', function (rg, newValue) {
-            me.displayRangeQueryFields(newValue.facetType !== "Value");
+        me.valueSort = Ext.widget('combobox', {
+            xtype: 'combobox',
+            name: 'valueSortType',
+            fieldLabel: 'Facet Order',
+            width: 240,
+            valueField: 'id',
+            displayField: 'name',
+            queryMode: 'local',
+            valueNotFoundText: 'not found',
+            editable: false,
+            forceSelection: true,
+            hidden: (me.record.get('facetType') === 'RangeQuery'),
+            store: me.record.getFacetSortingStore()
         });
+
+        this.items = [{
+            xtype: 'fieldcontainer',
+            fieldLabel: 'Display Style',
+            labelAlign: 'top',
+            labelStyle: 'padding-top: 5px;',
+            layout: 'hbox',
+            defaults: {
+                layout: '50%'
+            },
+            hidden: !me.record.get('allowsRangeQuery'),
+            items: [me.valueDisplayStyle, me.rangeDisplayStyle]
+            },
+            //me.displayStyle,
+            me.numRanges,
+            me.rangeQueries,
+            me.valueSort
+        ];
 
         me.rangeQueries.relayEvents(me.numRanges, ['select']);
 
@@ -106,15 +137,10 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
         me.loadRecord(me.record);
         // me.resetSavableState();
 
-        var displayStyleValue = me.displayStyle.getValue();
-
-        if (!displayStyleValue || !displayStyleValue.facetType) {
-            // the radiogroup appears to not be super amazing at keeping only one radio selected at a time
-            // TODO: find a better way of getting a default value into a radiogroup
-            me.displayStyle.setValue('RangeQuery');
-        } else {
-            me.displayRangeQueryFields(displayStyleValue.facetType !== "Value");
+        if (me.record.get('facetType') === 'RangeQuery') {
+            me.displayRangeQueryFields(true);
         }
+
     },
 
     displayRangeQueryFields: function(yes) {
@@ -125,11 +151,15 @@ Ext.define('Taco.view.website.settings.facets.FacetRangeQueryForm', {
                 this.rangeQueries.setValue(this.cachedRangeQueries);
                 delete this.cachedRangeQueries;
             }
+            this.valueSort.hide();
+            this.valueSort.setValue(null);
         } else {
             this.numRanges.hide();
             this.rangeQueries.hide();
             this.cachedRangeQueries = this.rangeQueries.getValue();
             this.rangeQueries.setValue([]);
+            this.valueSort.setValue('CountDescending');
+            this.valueSort.show();
         }
         this.fireEvent('heightchange');
     }
