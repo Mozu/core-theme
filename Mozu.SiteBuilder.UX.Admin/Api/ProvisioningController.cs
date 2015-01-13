@@ -1,26 +1,19 @@
 ﻿using System;
-using System.Threading;
-using Autofac.Core;
-using AutoMapper.Impl;
-using Jolt;
-using Mozu.Core.Api.Contracts.Client;
-using Mozu.Core.Api.Contracts.Provisioning;
-using Mozu.Core.Api.Routing;
-using Mozu.Core.Behaviors;
-using Mozu.Provisioning.Contracts;
-using Mozu.Provisioning.Contracts.Clients;
-using Mozu.Reporting.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
+using Mozu.Provisioning.Contracts;
+using Mozu.Provisioning.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
-using Newtonsoft.Json.Linq;
+using Constants = Mozu.Tenant.Contracts.Constants;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -28,18 +21,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProvisioningController : BaseController
     {
         private readonly IProvisioningWebApiClient _provisioningWebApiClient;
-        private readonly ISitesWebApiClient _sitesWebApiClient;
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
 
 
-        public ProvisioningController(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient provisioningWebApiClient, Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient )
+        public ProvisioningController(IProvisioningWebApiClient provisioningWebApiClient, ITenantsWebApiClient tenantsWebApiClient)
         {
             _provisioningWebApiClient = provisioningWebApiClient;
-            _sitesWebApiClient = sitesWebApiClient;
-
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
         }
-        //137
+        
         public class ProvisionRequest{
             public int  MasterCatalogId{ get; set; }
             public string    SiteName { get; set; }
@@ -63,80 +53,81 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "sites")]
-        public async Task<Response<List<Mozu.Tenant.Contracts.Site >>> GetSites()
+        public async Task<Response<List<Site>>> GetSites()
         {
-          
-            var tenantInfo = (await _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId, false)).ReadAsSync();
-            var sites = tenantInfo.Sites;
-            return this.List2(sites);
+            var tenantInfo = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
+            var activeMcs = tenantInfo.MasterCatalogs.Where(IsActive);
+            var activeMCIds = activeMcs.Select(Id<BaseTenantEntityInternal, int>).ToArray();
+            var activeCatIds = activeMcs.SelectMany(x => x.Catalogs).Where(IsActive).Select(Id<BaseTenantEntityInternal, int>).ToArray();
+            var activeSites = tenantInfo.Sites.Where(x => activeMCIds.Contains(x.MasterCatalogId.GetValueOrDefault()) && activeCatIds.Contains(x.CatalogId.GetValueOrDefault())).ToList();
+            return List2(activeSites);
         }
-
-
-
 
         [HttpGetRoute(UriTemplate = "catalogs")]
         public async Task<Response<List<Provisionable>>> GetCatalogs()
         {
-            var tenantInfo = (await _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId, false)).ReadAsSync();
-            var res = new Provisionable()
-                      {
-                          Path = "/",
-                          Expanded = true
-                      };
-            res.Items = tenantInfo.MasterCatalogs.Select(mc =>
+            var tenantInfo = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
+            var res = new Provisionable
             {
-                var mcNode = new Provisionable
-                             {
-
-                                 Name = mc.Name,
-                                 DefaultLocaleCode = mc.DefaultLocaleCode,
-                                 DefaultCurrencyCode = mc.DefaultCurrencyCode,
-                                 Expanded = true,
-                                 Id = mc.Id,
-                                 ItemType = "mastercatalog",
-                                 Path = "/"+ mc.Id ,
-                                 Status = mc.Status ,
-                                 Leaf = mc.Catalogs == null || mc.Catalogs.Count == 0,
-                               
-                             };
-                if (mc.Catalogs != null)
+                Path = "/",
+                Expanded = true,
+                Items = tenantInfo.MasterCatalogs.Where(IsActive).Select(mc =>
                 {
-                    mcNode.Items = mc.Catalogs.Select(cat =>
-                        new Provisionable
-                        {
+                    var mcNode = new Provisionable
+                    {
+                        Name = mc.Name,
+                        DefaultLocaleCode = mc.DefaultLocaleCode,
+                        DefaultCurrencyCode = mc.DefaultCurrencyCode,
+                        Expanded = true,
+                        Id = mc.Id,
+                        ItemType = "mastercatalog",
+                        Path = "/" + mc.Id,
+                        Status = mc.Status,
+                        Leaf = mc.Catalogs == null || mc.Catalogs.Count == 0,
+                    };
+                    if (mc.Catalogs != null)
+                    {
+                        mcNode.Items = mc.Catalogs.Where(IsActive).Select(cat =>
+                            new Provisionable
+                            {
+                                Name = cat.Name,
+                                MasterCatalogId = cat.MasterCatalogId,
+                                DefaultLocaleCode = cat.DefaultLocaleCode,
+                                DefaultCurrencyCode = cat.DefaultCurrencyCode,
+                                Expanded = false,
+                                Id = cat.Id,
+                                Status = mc.Status,
+                                ItemType = "catalog",
+                                Path = "/" + mc.Id + "/" + cat.Id,
+                                Leaf = true
+                            }).ToList();
+                    }
+                    return mcNode;
+                }).ToList()
+            };
+            return List2(res.Items);
+        }
 
-                            Name = cat.Name,
-                            MasterCatalogId = cat.MasterCatalogId ,
-                            DefaultLocaleCode = cat.DefaultLocaleCode,
-                            DefaultCurrencyCode = cat.DefaultCurrencyCode,
-                            Expanded = false,
-                            Id = cat.Id,
-                            Status = mc.Status,
-                            ItemType = "catalog",
-                            Path =  "/" + mc.Id + "/" + cat.Id ,
-                            Leaf = true
-                        }).ToList();
-                }
-                return mcNode;
+        private static bool IsActive<T>(T entity) where T : BaseTenantEntityInternal
+        {
+            return entity.Status.EqualsIgnoreCase(Constants.TenantProvisioningState.ACTIVE) && !entity.IsDeleted;
+        }
 
-
-
-            }).ToList();
-            return this.List2(res.Items);
-
-
+        private static TId Id<T, TId>(T entity) where T : IIdentifiable<TId>
+        {
+            return entity.Id;
         }
 
         [HttpPostRoute(UriTemplate = "RenameEntity")]
         public async Task<bool> RenameEntity(Provisionable entity)
         {
-            var tenant = (await _tenantsWebApiClient.GetTenantInternal(this.SbApiContext.TenantId)).ReadAsSync();
+            var tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
         
             if (entity.ItemType == "site")
             {
                 var site = tenant.Sites.First(x => x.Id == entity.Id);
                 site.Name = entity.Name;
-                var res = await _tenantsWebApiClient.UpdateSite(this.SbApiContext.TenantId, entity.Id, site);
+                var res = await _tenantsWebApiClient.UpdateSite(SbApiContext.TenantId, entity.Id, site);
                 
 
              
