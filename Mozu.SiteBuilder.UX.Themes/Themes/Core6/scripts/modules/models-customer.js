@@ -212,8 +212,8 @@
                         var fqn = def.attributeFQN;
 
                         if (values[fqn]) {
-                            def.values = values[fqn]['values'];
-                            def.attributeDefinitionId = values[fqn]['attributeDefinitionId'];
+                            def.values = values[fqn].values;
+                            def.attributeDefinitionId = values[fqn].attributeDefinitionId;
                         }
                     });
                     // sort attributes, putting checkboxes first
