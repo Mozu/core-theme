@@ -87,7 +87,7 @@ Ext.define('Taco.view.customers.subform.Information', {
             handler: function () {
                 var id = this.record.getId();
                 Ext.MessageBox.show({
-                    title: 'Reset Passowrd',
+                    title: 'Reset Password',
                     // pushes the buttons to the right to be consistant with our dialog ux.
                     rightJustifyButtons: true,
                     // reverses the order of the buttons
