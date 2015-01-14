@@ -51,7 +51,7 @@
         <table class="grid">
             <thead><tr>
                 <th>Code</th>
-                <th>Product</th>
+                <th>Products</th>
                 <th>Fulfillment</th>
                 <th>Price</th>
                 <th>Qty</th>
@@ -167,15 +167,9 @@
             </table>
         </div>
     {% endif %}
-    {% if model.fulfillmentInfo.shippingMethodName || (model.packages && model.packages.length) || (model.pickups && model.pickups.length) %}
+	{% if model.fulfillmentInfo.shippingMethodName or (model.packages and model.packages.length) or (model.pickups and model.pickups.length) %}
         <div class="section section-fulfillment">
             <h2>Fulfillment</h2>
-            {% if model.fulfillmentInfo.shippingMethodName %}
-                <table class="grid">
-                <thead><tr><th>Customer Selected Shipping Method</th></tr><thead>
-                <tbody><tr><td>{{ model.fulfillmentInfo.shippingMethodName }}</td></tr></tbody>
-                </table>
-            {% endif %}
             {% if model.packages && model.packages.length %}
             <div class="subsection-wrapper">
                 <h3>Shipping</h3>
@@ -197,32 +191,53 @@
                             {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
                             {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
                             <div>{{ model.fulfillmentInfo.fulfillmentContact.email }}</div>
-                        </td><td>
-                            <div class="label">Shipping Method</div>
-                            <div>
-                                {% if package.shippingMethodCode == model.fulfillmentInfo.shippingMethodCode %}{{ model.fulfillmentInfo.shippingMethodName }}
-                                {% else %}{{ package.shippingMethodCode }}
-                                {% endif %}
-                            </div>
-                        </td><td>
-                            <div class="label">Packaging Type</div>
-                            <div>{{ package.packagingType }}</div>
-                        </td><td>
-                            <div class="label">Tracking Number</div>
-                            <div>{{ package.trackingNumber }}</div>
                         </td>
+						<td>
+							<table>
+								<tbody>
+									<tr>
+										<td>
+											<div class="label">Shipping Method</div>
+											<div>
+												{% if package.shippingMethodCode == model.fulfillmentInfo.shippingMethodCode %}{{ model.fulfillmentInfo.shippingMethodName }}
+												{% else %}{{ package.shippingMethodCode }}
+												{% endif %}
+											</div>
+										</td><td>
+											<div class="label">Packaging Type</div>
+											<div>{{ package.packagingType }}</div>
+										</td><td>
+											<div class="label">Tracking Number</div>
+											<div>{{ package.trackingNumber }}</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="label">Total Weight</div>
+											<div>{{ package.measurements.weight.value }} {{ package.measurements.weight.unit }}</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
                     </tr><tr>
                         <td colspan="4"><table class="grid">
                             <thead><tr>
-                                <th>Product Code</th>
+                                <th>Code</th>
+                                <th>Products</th>
+                                <th>Weight</th>
                                 <th>Quantity</th>
                             </tr></thead>
                             <tbody>
                             {% for packageItem in package.items %}
-                            <tr>
-                                <td>{{ packageItem.productCode }}</td>
-                                <td>{{ packageItem.quantity }}</td>
-                            </tr>
+								{% with model.items|findwhere('product.productCode', packageItem.productCode) as currentItem %}
+								<tr>
+									<td>{{ packageItem.productCode }}</td>
+									<td>{{ currentItem.product.name }}</td>
+									<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
+									<td>{{ packageItem.quantity }}</td>
+								</tr>
+								{% endwith%}
                             {% endfor %}
                             </tbody>
                         </table></td>
@@ -250,15 +265,21 @@
                     </tr><tr>
                         <td colspan="4"><table class="grid">
                             <thead><tr>
-                                <th>Product Code</th>
+                                <th>Code</th>
+                                <th>Products</th>
+                                <th>Weight</th>
                                 <th>Quantity</th>
                             </tr></thead>
                             <tbody>
-                            {% for pickupItem in items %}
-                            <tr>
-                                <td>{{ pickupItem.productCode }}</td>
-                                <td>{{ pickupItem.quantity }}</td>
-                            </tr>
+                            {% for pickupItem in pickup.items %}
+								{% with model.items|findwhere('product.productCode', pickupItem.productCode) as currentItem %}
+								<tr>
+									<td>{{ pickupItem.productCode }}</td>
+									<td>{{ currentItem.product.name }}</td>
+									<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
+									<td>{{ pickupItem.quantity }}</td>
+								</tr>
+								{% endwith%}
                             {% endfor %}
                             </tbody>
                         </table></td>
