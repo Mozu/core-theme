@@ -34,7 +34,7 @@
             {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
             {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
             {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
-            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}, {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}{% if  model.fulfillmentInfo.fulfillmentContact.address.cityOrTown && model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince %}, {% endif %} {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
             {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
             {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
             {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
