@@ -56,7 +56,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             var result = new ProcessTagResult(context);
             var sbContext = context.SiteBuilderApiContext();
-            var cache = context.Resolve<IStorefrontCache>();
 
             string template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
 
@@ -78,25 +77,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 docIds = tempCol.Cast<object>().Where(x => x != null).Select(x => x.ToString()).ToList();
                 query = string.Join( ", or", docIds.Select(x => string.Format("ID eq \"{0}\"", x)));
-                ;
             }
             if (!string.IsNullOrEmpty(id))
             {
                 query = string.Format("id eq \"{0}\"", id);
             }
             var service = context.Resolve<IDocumentListWebApiClient>();
-
-
-
-
-
-            PageContext pageContext = context.PageContext();
-            SiteContext siteContext = context.SiteContext();
-            var searchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
-            HttpRequestBase request = context.HttpContext().Request;
-            var searchQuery = new StringBuilder();
-         
-          
+            var siteContext = context.SiteContext();
+            var request = context.HttpContext().Request;
 
             if (pageWithUrl)
             {
@@ -122,20 +110,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             dynamic res = null;
 
-            if (docIds != null && docIds.Count==0)
+            if (docIds != null && docIds.Any())
             {
-            
-                //res = (dynamic)(await service.GetViewDocument(documentListName: list, viewName:view, documentId: docIds[0]));
-            }
-            else
-            {
-                res = (dynamic)(await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));    
+                res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex);    
             }
             
-
-
-
-
             object  model = null;
             if (res.HasException)
             {
@@ -150,16 +129,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                model = res.ReadAsSync();
             }
 
-          
-
             result.Template = template;
-
             result.Context = context.add(new Tuple<string, object>("model", model));
-          
-
             return result;
         }
-
-
     }
 }

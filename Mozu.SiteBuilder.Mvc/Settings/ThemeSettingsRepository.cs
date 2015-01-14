@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, SiteContext  siteContext, IStorefrontCache cache)
+        public ThemeSettingsRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, SiteContext  siteContext, ILiveModeOnlyCache cache)
         {
 
             _serializer = new JsonSerializer()
@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             _docWebApiClient = docWebApiClient;
             _cmsService = cmsService;
             _siteContext = siteContext;
-          //  _cache = cache;
+            _cache = cache;
         }
 
 
@@ -127,30 +127,25 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         private Task<JObject> _getInstanceValues;
         public Task<JObject> GetInstanceValues(string themeId)
         {
+            var key = typeof(List<ThemeRuntimeSetting>) + themeId;
 
-            //todo: add back to cache when cms is added.
+            var cachedResult = _cache.Get<Tuple<DateTime, JObject, byte[]>>(key);
+            if (cachedResult != null )
+            {
+                var tcs = new TaskCompletionSource<JObject>();
+                Etag = cachedResult.Item3;
+                tcs.SetResult(cachedResult.Item2 ?? new JObject());
+                _ts = cachedResult.Item1;
+                return tcs.Task  ;
+            }
 
-            //var key = typeof(List<ThemeRuntimeSetting>) + themeId;
-
-            //var cachedResult = _cache.Get<Tuple<DateTime, JObject, byte[]>>(key);
-            //if (cachedResult != null )
-            //{
-            //    var tcs = new TaskCompletionSource<JObject>();
-            //    this.Etag = cachedResult.Item3;
-            //    tcs.SetResult(cachedResult.Item2 ?? new JObject());
-            //    _ts = cachedResult.Item1;
-            //    return tcs.Task  ;
-            //}
-
-            //if (_getInstanceValues == null)
-            //{
-            _getInstanceValues = _cmsService.GetByPath2("siteSettings@mozu", this.GetFileName(themeId)).ContinueWith<JObject>(
+            _getInstanceValues = _cmsService.GetByPath2("siteSettings@mozu", GetFileName(themeId)).ContinueWith(
                     res =>
                     {
                         JObject value = null;
                         if (res.Result.ResponseMessage.IsSuccessStatusCode)
                         {
-                            this.Etag = res.Result.ETagBytes();
+                            Etag = res.Result.ETagBytes();
                            
                             var doc = res.Result.ReadAsSync();
 
@@ -158,18 +153,17 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
                             value = doc.Get<JObject>("data");
 
-                            //  _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag ));
+                            _cache.Set(key, new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, Etag));
                         }
                         else
                         {
                             _ts = DateTime.Today;
                             this.Etag = new byte[0];
-                          //    _cache.Set(key,new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag));
+                            _cache.Set(key, new Tuple<DateTime, JObject, byte[]>(_ts.Value, value, this.Etag));
 
                         }
                         return value ?? new JObject();
                     });
-          //  }
             return _getInstanceValues;
 
         }
@@ -185,7 +179,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             }
             else
             {
-                return this.GetInstanceValues(themeId).ContinueWith<ThemeRuntimeSettingsCollection>(task =>
+                return GetInstanceValues(themeId).ContinueWith(task =>
                     {
 
                         JObject values = task.Result;
@@ -215,14 +209,12 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         private DateTime? _ts;
         private Task<DateTime> _getTimeStamp;
+        private readonly ILiveModeOnlyCache _cache;
 
         public Task<DateTime> GetTimeStamp(string themeId)
         {
-            if (_getTimeStamp == null)
-            {
-
-                _getTimeStamp = GetInstanceValues(themeId).ContinueWith(x => _ts.Value );
-            }
+            if (_getTimeStamp != null) return _getTimeStamp;
+            _getTimeStamp = GetInstanceValues(themeId).ContinueWith(x => _ts.Value );
             return _getTimeStamp;
         }
 

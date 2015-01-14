@@ -7,15 +7,16 @@ using Mozu.Core.Configuration;
 using Mozu.Location.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
-
 
 using NDjango;
 using NDjango.FiltersCS;
@@ -35,11 +36,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<MozuVirtualPathProvider>().As<IMozuVirtualPathProvider>().InstancePerRequest();
             
             //contexts
-            builder.RegisterType<Contexts.ClientApiContext>().InstancePerRequest();
-            builder.RegisterType<Contexts.NavigationContext>().InstancePerRequest();
-            builder.RegisterType<Contexts.PageContext>().InstancePerRequest();
-            builder.RegisterType<Contexts.SiteContext>().InstancePerRequest();
-            builder.RegisterType<Contexts.PageContext>().As<IEditableContext>().InstancePerRequest();
+            builder.RegisterType<ClientApiContext>().InstancePerRequest();
+            builder.RegisterType<NavigationContext>().InstancePerRequest();
+            builder.RegisterType<PageContext>().InstancePerRequest();
+            builder.RegisterType<SiteContext>().InstancePerRequest();
+            builder.RegisterType<PageContext>().As<IEditableContext>().InstancePerRequest();
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerRequest();
 
             builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerRequest();
@@ -60,7 +61,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<FileSystemContentRetriever>().As<IThemeContentRetriever>();
 
             builder.RegisterType<ExceptionContextLogWrapper>();
+            builder.RegisterType<LiveModeOnlyCacheInternal>().As<ILiveModeOnlyCache>().InstancePerRequest();
+         
         }
+
+      
 
         private static void RegisterThemeInfrastructure(ContainerBuilder builder)
         {
