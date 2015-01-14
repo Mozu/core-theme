@@ -124,6 +124,13 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     return Uncached(walker);
                 }
 
+                object epc = siteCtx.ThemeSettings["enablePartialCaching"];
+                if (!Convert.ToBoolean(epc))
+                {
+                    return Uncached(walker);
+                }
+
+
                 var viewPath = _blockToken.Location.TemplateName;
                 var loc = _blockToken.Location.Offset;
                 var key = string.Format("{0}{1}{2}{3}{4}{5}", string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)), apiCtx.SiteId, siteCtx.HashString, viewPath, loc, (pageCtx.IsSecure ? "1" : "0"));

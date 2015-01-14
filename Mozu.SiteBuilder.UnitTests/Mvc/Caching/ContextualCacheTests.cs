@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
     {
         [TestCaseSource("Cases")]
         [Test]
-        public void When_Context_Is_In_Edit_Mode_Nothing_Is_Cached(bool isEditMode, DataViewModeType dvm, bool partialCacheEnabled, bool expectedNull)
+        public void When_Context_Is_In_Edit_Mode_Nothing_Is_Cached(bool isEditMode, DataViewModeType dvm,  bool expectedNull)
         {
             var pageCtx = Substitute.For<IEditableContext>();
             pageCtx.IsEditMode.Returns(isEditMode);
@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
             var key = new Random().Next().ToString();
             backingCache.Set(key, 5);
 
-            var contextCache = new LiveModeOnlyCacheInternal(context, pageCtx, () => partialCacheEnabled, backingCache);
+            var contextCache = new LiveModeOnlyCacheInternal(context, pageCtx,  backingCache);
             var cachedItem = contextCache.Get<int?>(key);
             Assert.AreEqual((cachedItem == null), expectedNull); 
         }
@@ -37,12 +37,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
         private readonly IEnumerable<object[]> Cases =
             from isEditMode in Bools
             from dvm in Dvms
-            from partialCacheEnabled in Bools
+            //from partialCacheEnabled in Bools
             select
                 new object[]
                 {
-                    isEditMode, dvm, partialCacheEnabled,
-                    isEditMode || dvm == DataViewModeType.Pending || partialCacheEnabled
+                    isEditMode, dvm,
+                    isEditMode || dvm == DataViewModeType.Pending 
                 };
     }
 

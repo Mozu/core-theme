@@ -10,21 +10,21 @@ namespace Mozu.SiteBuilder.Mvc.Caching
     {
         private readonly IApiContext _apiContext;
         private readonly IEditableContext _pageContext;
-        private readonly Func<bool> _siteContextPartialCacheFunc;
+        
         private readonly IStorefrontCache _backingCache;
 
-        public LiveModeOnlyCacheInternal(IApiContext apiContext, IEditableContext pageContext, Func<bool> siteContextPartialCacheFunc, IStorefrontCache backingCache)
+        public LiveModeOnlyCacheInternal(IApiContext apiContext, IEditableContext pageContext, IStorefrontCache backingCache)
         {
             _apiContext = apiContext;
             _pageContext = pageContext;
-            _siteContextPartialCacheFunc = siteContextPartialCacheFunc;
+            
 
             _backingCache = backingCache;
         }
 
         public T Get<T>(string key, CacheScope scope = CacheScope.Site)
         {
-            if(CachingIsDisabled(_pageContext, _apiContext, _siteContextPartialCacheFunc)) return default(T);
+            if(CachingIsDisabled(_pageContext, _apiContext)) return default(T);
             return  _backingCache.Get<T>(key, scope);
         }
 
@@ -33,12 +33,11 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             _backingCache.Set(key, value, scope);
         }
 
-        private static bool CachingIsDisabled(IEditableContext pageCtx, IApiContext apiCtx, Func<bool> getSiteContextPartialCacheFunc )
+        private static bool CachingIsDisabled(IEditableContext pageCtx, IApiContext apiCtx )
         {
             return
                 pageCtx.IsEditMode ||
-                apiCtx.DataViewMode == DataViewModeType.Pending ||
-                getSiteContextPartialCacheFunc();
+                apiCtx.DataViewMode == DataViewModeType.Pending;
         }
     }
 }
