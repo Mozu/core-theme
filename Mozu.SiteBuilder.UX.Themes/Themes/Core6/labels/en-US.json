@@ -33,7 +33,7 @@
   "sendEmail"            : "Send Email",
   "productCode"          : "Product Code",
   "remove"               : "Remove",
-  "delete"               : "Delete",
+  "del"                  : "Delete",
   "edit"                 : "Edit",
   "next"                 : "Next",
   "submit"               : "Submit",
