@@ -30,6 +30,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         public void Set(string key, object value, CacheScope scope = CacheScope.Site)
         {
+            if (CachingIsDisabled(_pageContext, _apiContext)) return; // don't want to corrupt the cache with 'pending' stuff from a consumer.
             _backingCache.Set(key, value, scope);
         }
 
