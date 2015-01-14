@@ -7,23 +7,33 @@ Target "mybindings" (fun _ ->
     Bindings.updateBindings Environment.CurrentDirectory
 )
 
-Target "Help" (fun _ ->
-    Mozu.printHelp()
+Target "clean" (fun _ ->
+    !! "**/bin/*"
+    ++ "**/obj/*"
+    -- "packages/**"
+    -- "**/node_modules/**"
+    -- "lib/**"
+    -- "**/Scripts/**"
+    |> DeleteDirs
 )
 
 Target "restore" (fun _ -> 
     RestorePackages()
 )
 
-Target "build" (fun _ -> 
-    let msbuildParams p = 
-        {p with
-            Properties = [ "configuration", "Release" 
-                           "BuildingInsideVisualStudio", "true" ]
-            Targets = ["Build"]
-            Verbosity = Some MSBuildVerbosity.Quiet }
+let build inVS = 
+    let buildParams p : MSBuildParams =
+        {p with Properties = [ "configuration", "Release"
+                               "BuildingInsideVisualStudio", inVS |> string ] }  
 
-    build msbuildParams "Mozu.SiteBuilder.sln"
+    build buildParams "Mozu.SiteBuilder.sln"
+
+Target "cs" (fun _ -> 
+    build true
+)
+
+Target "js" (fun _ -> 
+    build false
 )
 
 let testDlls = 
@@ -37,5 +47,6 @@ Target "test" (fun _ ->
     testDlls
     |> NUnitParallel nunitParams
 )
-"clean" ==> "build" ==> "test"
-RunTargetOrDefault "build"
+"clean" ==> "restore" ==> "cs" ==> "test"
+"clean" ==> "restore" ==> "js"
+RunTargetOrDefault "cs"
