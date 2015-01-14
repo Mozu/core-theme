@@ -214,7 +214,6 @@ Ext.define('Taco.view.website.Tree', {
             nodedragover: {
                 scope: this,
                 fn: function (targetNode, position, dragData) {
-                    console.log(dragData)
                     var roots = ['_unlinked', '_navigation', '_templates'],
                         sourceId = dragData.records[0].getId(),
                         targetId = targetNode.getId(),
@@ -338,9 +337,10 @@ Ext.define('Taco.view.website.Tree', {
     showNavState: function(records, success) {
         var me = this,
             navItems = this.store.tree.nodeHash,
-            current = this.getCurrentNode.call(this, navItems);
-       
-            me.selectPath(current.getPath());
+            current = this.getCurrentNode.call(me, navItems);
+
+        if (current) me.selectPath(current.getPath());
+
     },
     getCurrentNode: function(navItems){
 
