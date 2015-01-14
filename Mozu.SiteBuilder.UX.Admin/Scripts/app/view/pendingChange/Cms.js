@@ -8,7 +8,7 @@ Ext.define('Taco.view.pendingChange.Cms', {
         'Taco.store.CmsDocumentDrafts',
         'Taco.core.ux.grid.MenuColumn'
     ],
-
+   
     typeName: 'Pending Content Changes',
     modelName: 'Taco.model.CmsDocumentDraft',
     store: { type: 'Taco.store.CmsDocumentDrafts' },
@@ -46,8 +46,8 @@ Ext.define('Taco.view.pendingChange.Cms', {
             scale: 'medium',
             text: 'Discard All',
             scope: this,
-            handler: function () {
-                this.discardAll();
+            handler: function (button) {
+                button.up('contentcontainer').discardAll();
             }
         }, {
             xtype: 'splitbutton',
