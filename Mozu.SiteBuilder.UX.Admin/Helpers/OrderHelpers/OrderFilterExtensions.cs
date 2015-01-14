@@ -8,6 +8,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
     internal static class OrderFilterExtensions
     {
         private const string ORDERNUMBER = "OrderNumber";
+        private const string EMAIL = "email";
         private const string BILLINGCONTACTFIRSTNAME = "billinginfo.billingcontact.firstname";
         private const string BILLINGCONTACTLASTNAMEORSURNAME = "billinginfo.billingcontact.lastnameorsurname";
         private const string FULFILLMENTCONTACTFIRSTNAME = "fulfillmentinfo.fulfillmentcontact.firstname";
@@ -105,8 +106,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTFIRSTNAME);
                 case "lastname":
                     return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME, FULFILLMENTCONTACTLASTNAMEORSURNAME);
-                case "emailAddress":
-                    return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME, FULFILLMENTCONTACTLASTNAMEORSURNAME);
+                case "emailaddress":
+                    return string.Format("({1} eq {0})", filter.value, EMAIL);
                 case "customerid":
                     return string.Format("( CustomerAccountId  eq {0} )", filter.value);
                 case "ordertype":
