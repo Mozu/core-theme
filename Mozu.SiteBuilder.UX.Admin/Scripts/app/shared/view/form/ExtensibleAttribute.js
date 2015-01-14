@@ -19,7 +19,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
-                    value: date
+                    value: date,
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
                 }];
             },
             'TextArea': function (ptAttribute, values) {
@@ -32,7 +33,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     width: '100%',
                     rows: 12,
                     resizable: true,
-                    resizeHandles: 's'
+                    resizeHandles: 's',
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
                 }];
             },
             'YesNo': function (ptAttribute, values) {
@@ -40,7 +42,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     xtype: 'checkboxfield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
-                    checked: values[0]
+                    checked: values[0],
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
                 }];
             },
             'List': function (ptAttribute, values) {
@@ -64,7 +67,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                             {name: 'value', type: 'string'}
                         ],
                         data: ptAttribute.get('values')
-                    })
+                    }),
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
                 }];
             },
             'TextBox': function (ptAttribute, values) {
@@ -75,7 +79,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     fieldLabel: ptAttribute.get('name'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: (values && values.length) ? values[0] : null,
-                    width: '100%'
+                    width: '100%',
+                    disabled: ptAttribute.get('valueType') === 'ShopperEntered'
                 }];
             },
             'productPicker': function (ptAttribute, values) {
@@ -85,7 +90,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('name'),
                         width: 600,
-                        value: values
+                        value: values,
+                        disabled: ptAttribute.get('valueType') === 'ShopperEntered'
                     }
                 ];
             }

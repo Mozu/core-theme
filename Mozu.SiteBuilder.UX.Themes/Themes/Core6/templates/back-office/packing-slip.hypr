@@ -50,15 +50,18 @@
             <th>Shipping Method</th>
         </tr></thead>
         <tbody><tr>
-            <td>
-                {% for payment in order.payments %}
+            <td>{% for payment in order.payments %}
                 {% if payment.status != "Voided" %}
-                <div>{{ payment.paymentType }}<div>
+                    {% if payment.paymentType == "Check" %}Check{% endif %}
+                    {% if payment.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}
+                    {% if payment.paymentType == "StoreCredit" %}{{ labels.storeCredit }}{% endif %}
+                    {% if payment.paymentType == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
+                    {% if payment.paymentType == "Paypal" %}{{ labels.payPal }}{% endif %}
+                    {% if payment.paymentType == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
+                    {% if not forloop.last %}, {% endif %}
                 {% endif %}
-                {% endfor %}
-            </td><td>
-                {{ model.shippingMethodName }}
-            </td>
+            {% endfor %}</td>
+            <td>{{ model.shippingMethodName }}</td>
         </tr></tbody>
     </table>
     <table class="grid">
@@ -66,17 +69,22 @@
             <th>Product Code</th>
             <th>Product Name</th>
             <th>Quantity</th>
+            <th>Price</th>
         </tr></thead>
         <tbody>
         {% for item in model.items %}
+			{% for orderItem in order.items %}
+			{% if orderItem.product.productCode == item.productCode %}
             <tr>
                 <td>{{ item.productCode }}</td>
-                <td>{{ item.productName }}</td>
+                <td>{{ orderItem.product.name }}</td>
                 <td>{{ item.quantity }}</td>
+                <td>${{ orderItem.product.price.price }}</td>
             </tr>
+			{% endif %}
+			{% endfor %}
         {% endfor %}</tbody>
     </table>
 </td></tr></tbody>
 </table>
-
 {% endblock body-content %}

@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode)
         {
-            ServiceClientResponse<ProductRuntime.Contracts.Product> res = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", PageContext.IsEditMode);
+            ServiceClientResponse<ProductRuntime.Contracts.Product> res = await _productClient.GetProduct(productCode, null, "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404:true);
 
             if (!res.ResponseMessage.IsSuccessStatusCode)
             {

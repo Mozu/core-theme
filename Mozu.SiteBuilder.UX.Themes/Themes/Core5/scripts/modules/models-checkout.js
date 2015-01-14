@@ -934,13 +934,13 @@
                 this.isLoading(true);
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
                     me.set('couponCode', '');
-                    var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
+                    var allDiscounts = me.get('orderDiscounts').concat('shippingDiscounts').concat('handlingDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts'))).concat(_.flatten(_.pluck(me.get('items'), 'shippingDiscounts')));
                     var lowerCode = code.toLowerCase();
                     if (!allDiscounts || !_.find(allDiscounts, function(d) {
                         return d.couponCode.toLowerCase() === lowerCode;
                     })) {
                         me.trigger('error', {
-                            message: Hypr.getLabel('promoCodeError', code)
+                            message: 'grr2'
                         });
                     }
                     me.isLoading(false);
