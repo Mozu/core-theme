@@ -69,14 +69,20 @@
             <th>Product Code</th>
             <th>Product Name</th>
             <th>Quantity</th>
+            <th>Price</th>
         </tr></thead>
         <tbody>
         {% for item in model.items %}
+			{% for orderItem in order.items %}
+			{% if orderItem.product.productCode == item.productCode %}
             <tr>
                 <td>{{ item.productCode }}</td>
-                <td>{{ item.productName }}</td>
+                <td>{{ orderItem.product.name }}</td>
                 <td>{{ item.quantity }}</td>
+                <td>${{ orderItem.product.price.price }}</td>
             </tr>
+			{% endif %}
+			{% endfor %}
         {% endfor %}</tbody>
     </table>
 </td></tr></tbody>

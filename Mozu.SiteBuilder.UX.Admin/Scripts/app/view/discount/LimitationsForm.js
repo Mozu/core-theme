@@ -82,7 +82,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.couponCodeBox = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
-                align: 'bottom'
+                align: 'top'
             },
             hidden: !(this.record.get('couponCode') || this.record.get('requiresCoupon')),
             items: [

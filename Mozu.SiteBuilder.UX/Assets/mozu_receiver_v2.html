@@ -91,7 +91,11 @@
                     }
 
                     xhr.onreadystatechange = function() {
-                        postMessage([xhr.readyState, xhr.status, xhr.responseText].join(messageDelimiter));
+                        try {
+                            postMessage([xhr.readyState, xhr.status, xhr.responseText].join(messageDelimiter));
+                        } catch (e) {
+                            // this will fail in IE8 until readyState is 4, which is fine
+                        }
                     }
 
                     try {

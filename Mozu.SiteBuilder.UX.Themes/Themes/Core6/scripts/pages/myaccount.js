@@ -93,6 +93,11 @@
 
     var PasswordView = EditableView.extend({
         templateName: 'modules/my-account/my-account-password',
+        autoUpdate: [
+            'oldPassword',
+            'password',
+            'confirmPassword'
+        ],
         startEditPassword: function () {
             this.editing.password = true;
             this.render();

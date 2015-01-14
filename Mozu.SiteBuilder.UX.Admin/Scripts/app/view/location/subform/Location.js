@@ -75,7 +75,8 @@ Ext.define('Taco.view.location.subform.Location', {
             name: 'shippingOriginContact',
             width: 400,
             fieldLabel: 'Shipping Origin Contact',
-            allowOnlyWhitespace: false,
+            //allowOnlyWhitespace: false,
+            allowBlank:false,
             validator: function (value) {
                 // check for required fields;
                 if (value && value.phoneNumber && value.companyOrOrganization) {
@@ -151,7 +152,8 @@ Ext.define('Taco.view.location.subform.Location', {
 
         me.addressView = Ext.create('Taco.shared.view.field.Address', {
             name: "address",
-            allowOnlyWhitespace: false
+            //allowOnlyWhitespace: false
+            allowBlank:false
 
             // extra components to be inserted after the edit button
             

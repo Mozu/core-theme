@@ -33,4 +33,50 @@ Ext.define('Taco.view.discount.Edit', {
             });
         }
     },
+    initComponent: function () {
+        var me = this;
+
+        this.additionalActions = [{
+            xtype: 'button',
+            itemId: 'moreButton',
+            ui: 'action',
+            scale: 'medium',
+            text: 'More',
+            menuAlign: 'tr-br?',
+            menu: {
+                plain: true,
+                shadow: false,
+                items: [{
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Discount',
+                        behavior: 'create'
+                    },
+                    handler: function (item) {
+                        var record = me.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+
+                        Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
+                    }
+                }]
+            }
+        }];
+
+        this.callParent(arguments)
+    },
+    afterDuplicate: function () {        
+        if (this.record.get("couponCode")) {
+            Taco.app.fireEvent('setmessage', "Please change the coupon code. Coupon codes must be unique", 'info');
+            this.mon(this, 'afterrender', function () {
+
+                var couponCode = this.form.findField("couponCode");
+                if (couponCode) {
+                    couponCode.markInvalid("Coupon codes must be unique")
+                }
+
+            }, this);
+        }
+    }
 });

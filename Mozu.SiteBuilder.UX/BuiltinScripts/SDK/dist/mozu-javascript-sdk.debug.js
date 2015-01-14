@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-01-13
+ * Mozu JavaScript SDK - v0.3.0 - 2015-01-14
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -5040,7 +5040,7 @@ var process=require("__browserify_process");
                             }, xhr, e);
                         }
                     }
-                    if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                    if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304 || xhr.status === 1223) { // IE8 reports 204 as 1223
                         success(json, xhr);
                     } else {
                         failure(json || {
