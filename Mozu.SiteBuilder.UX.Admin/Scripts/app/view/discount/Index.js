@@ -140,6 +140,39 @@ Ext.define('Taco.view.discount.Index', {
             text: 'Used',
             width: 80,
             hidden: false
+        },{
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            flex: 1,
+            menuItems: [
+                {
+                    text: 'Edit',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Discount',
+                        behavior: 'update'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        var record = eventData.record;
+                        Ext.defer(function () {
+                            Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
+                        }, 1, this);
+                    }
+                },{
+                    text: 'Duplicate',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Discount',
+                        behavior: 'create'
+                    },
+                    menuColumnHandler: function (item, eventData) {
+                        var record = eventData.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+
+                        Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
+                    }
+                }
+            ]
         }
         /*
 

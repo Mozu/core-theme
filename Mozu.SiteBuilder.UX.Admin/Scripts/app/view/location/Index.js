@@ -21,6 +21,8 @@ Ext.define('Taco.view.location.Index', {
     
     store: { type: 'Taco.store.Locations' },
 
+    
+
    
     useTilePanel: false,
     //launchEditorOnClick: false,
@@ -110,36 +112,72 @@ Ext.define('Taco.view.location.Index', {
         selModel: {},
         stateful: true,
         stateId: 'statefulLocationsGrid',
-        columns: [{
-            dataIndex: 'code',
-            stateId: 'code',
-            width: 150,
-            text: 'Code'
+        columns: [
+            {
+                dataIndex: 'code',
+                stateId: 'code',
+                width: 150,
+                text: 'Code'
 
-        }, {
-            dataIndex: 'name',
-            stateId: 'name',
-            width:200,
-            text: 'Name'
+            }, {
+                dataIndex: 'name',
+                stateId: 'name',
+                width:200,
+                text: 'Name'
            
-        }, {
-            width: 200,
-            text: "Location Types",
-            dataIndex: 'locationTypes',
-            stateId: 'locationTypes',
-            xtype: "templatecolumn",
-            tpl: [
-                '<tpl for="locationTypes">',
-                    '<tpl if="xindex &gt; 1">, </tpl>{name}',
-                '</tpl>'
-            ]
-        }, {
-            dataIndex: 'addressToString',
-            stateId: 'address',
-            text: 'Address',
-            flex:1
+            }, {
+                width: 200,
+                text: "Location Types",
+                dataIndex: 'locationTypes',
+                stateId: 'locationTypes',
+                xtype: "templatecolumn",
+                tpl: [
+                    '<tpl for="locationTypes">',
+                        '<tpl if="xindex &gt; 1">, </tpl>{name}',
+                    '</tpl>'
+                ]
+            }, {
+                dataIndex: 'addressToString',
+                stateId: 'address',
+                text: 'Address',
+                flex:1
 
-        }]
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: [
+                    {
+                        text: 'Edit',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Location',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            var record = eventData.record;
+                            Ext.defer(function () {
+                                Taco.core.StateManager.attemptNavigate('locations/edit/' + record.getId(), { complexMetaData: { record: record } });
+                            }, 1, this);
+
+                        }
+                    },{
+                        text: 'Duplicate',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Location',
+                            behavior: 'create'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            var record = eventData.record,
+                                metaData = {
+                                    id: record.getId()
+                                };
+
+                            Taco.app.StateManager.attemptNavigate('locations/duplicate/' + record.getId(), metaData);
+                        }
+                    }
+                ]
+
+            }
+        ]
     }
 
    

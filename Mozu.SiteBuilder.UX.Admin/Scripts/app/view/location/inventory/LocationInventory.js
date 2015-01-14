@@ -135,6 +135,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     xtype: "numberfield",
                     hideTrigger: true,
                     defaultValue: 0,
+                    minValue:0,
                     mouseWheelEnabled: false,
                     selectOnFocus: true,
                     allowBlank: false
@@ -264,9 +265,11 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     editor: {
                         xtype: "taco-locationpickerfield",
                         editableOnCreateOnly: false,
-                        autoSelectFirstRecord:false,
+                        autoSelectFirstRecord: false,
+                        forceSelection: true,
+                        editable: false,
                         msgTarget: "qtip",                        
-                        allowBlank: true,
+                        allowBlank: false,
                         onEditorShow: function (field, editor, context) {
                             // need to add the locationCode to the locationInventory;
                             
@@ -295,8 +298,6 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                                     existingRecord = store.findRecord('locationCode', locationCode),
                                     // the column to set focus in when opening the editor;                                    
                                     columnHeader = grid.getTopLevelVisibleColumnManager().getHeaderById("stockOnHand");
-
-                                    
 
                                     // check to see if a record already exists in the current store data with this product code;
                                     // note that this does not check the service for an existing record that is not loaded in the current page of the store;

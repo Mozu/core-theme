@@ -223,6 +223,16 @@ Ext.define('Taco.model.Location', {
         Ext.Ajax.request(config);
     },
     
+    beforeDuplicate: function () {
+        var suffix = " - copy";
+
+        this.raw = undefined
+        this.set("code", "");
+        this.data.name = this.data.name + suffix;
+
+        this.commit();
+    },
+
     // fulfillmentTypes are hard coded in the backend services.
     getFulfillmentTypes: function () {
         return [

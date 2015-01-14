@@ -21,22 +21,61 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
     
     initComponent: function () {
         var me = this, isAddressEmpty = true;
-        this.shipFromCombo = Ext.create('Ext.form.field.ComboBox', {
+        
+
+
+        // need to define the store seperate from the combo so that the combo gets a paging toolbar. 
+        var locationStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.Locations',
+            pageSize: 10,
+            autoLoad: true,
+            remoteFilter: false
+        })
+
+        this.shipFromCombo = Ext.create('Ext.form.field.ComboBox', {        
             name: 'shippingLocationCode',
-            width:300,
+            width: 300,
+
+            // this enables the combo to call the service when the field initializes to retrieve the displayField value for the current valueField;
+            autoFetchDisplayValue: true,
+
+
             fieldLabel: 'Shipping From',
-            editable: false,
-            forceSelection: true,
-            queryMode: 'local',
+            editable: false,            
+            forceSelection: true,            
             displayField: 'name',
             valueField: 'code',
             allowBlank: true,
-            store: Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.Locations',
-                autoLoad: true,
-                remoteFilter: false
-            })
+            enableKeyboardPaging: true,
+            store: locationStore,
+            pageSize: 10,
+            listConfig: {
+             //   cls: "location-picker-menu",
+                maxWidth: "400",
+                // Custom rendering template for each item
+               // getInnerTpl: function () {
+               //     return "<span class='name'>{name}</span> <span class='code'>{code}</span>"
+               // },
+
+                // this is an override that hides the paging toolbar when the list only contains a single page of results;
+                refresh: function () {
+                    var me = this,
+                        toolbar = me.pagingToolbar;
+
+                    Ext.view.View.prototype.refresh.call(me);
+                    if (me.rendered && toolbar && toolbar.rendered && !me.preserveScrollOnRefresh) {
+                        me.el.appendChild(toolbar.el);
+                        if (me.getStore().getTotalCount() <= me.pageSize) me.el.last().hide();
+                        else me.el.last().show();
+                    }
+                }
+            }
         });
+
+
+
+
+        
 
         // note there are two different boxSelects. Dont' use the other one. your welcome.
         me.locationTypeIds = Ext.create('Ext.ux.form.field.BoxSelect', {
