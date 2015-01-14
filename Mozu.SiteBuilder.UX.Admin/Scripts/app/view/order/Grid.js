@@ -77,7 +77,7 @@ Ext.define('Taco.view.order.Grid', {
         
     initComponent: function () {
         var me = this;
-        
+        debugger;
         // need to override the createButtonCfg;
         me.createButtonCfg = me.getCreateButtonConfig();
 

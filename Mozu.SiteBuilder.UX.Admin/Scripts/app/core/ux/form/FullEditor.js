@@ -1,6 +1,7 @@
 ﻿Ext.define('Taco.core.ux.form.FullEditor', {
     //extend: 'Taco.core.ux.content.Container',
     extend: 'Ext.panel.Panel',
+    requires: ['Taco.core.ux.plugins.NextPrevious'],
     mixins: {
         editorwrapper: 'Taco.core.ux.form.EditorWrapper',
         navHeader: 'Taco.core.ux.mixins.NavHeader',
@@ -16,19 +17,36 @@
     showIndexOnCancel: true,
 
     autoScroll: true,
-    
-
+        
+    enableNextPrevious: false,
 
     initComponent: function () {
-        var me = this;
+        var me = this
         
         this.cls = this.cls || "";
         this.cls += " taco-fulleditor ";
+
+        
 
         if (this.enableNavHeader) {
             //initialize the content navigation toolbar.
             this.mixins.navHeader.init.apply(this);
         }
+        
+
+        // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
+        if (this.enableNextPrevious == true) {
+            this.plugins = this.plugins || [];
+
+            var nextPreviousConfig = Ext.applyIf(this.nextPreviousCfg, {
+                ptype: "nextprevious",
+                enableNextPrevious: this.enableNextPrevious
+            })
+            
+
+            this.plugins.push(nextPreviousConfig);
+        };
+        
 
 
         this.mixins.editorwrapper.constructor.call(this, {});

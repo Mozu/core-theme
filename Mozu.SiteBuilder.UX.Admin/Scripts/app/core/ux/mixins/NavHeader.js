@@ -295,9 +295,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
         }
 
-
-
-
+        
         // Allows class with mixin to insert additional actions. Code copied from EditorWrapper;
         Ext.each(this.additionalActions, function (additionalAction) {
             var beforeItemId = additionalAction.beforeItemId,
@@ -326,12 +324,14 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             items: me.actions
         }
 
+        me.actionToolbar = Ext.widget(actionToolbar);
+
         // if we have no title, the toolbar needs to flex to fill the entire container.
         if (this.title == false) {
             actionToolbar.flex = 1;
         }
 
-        Ext.Array.push(conf.items, actionToolbar);
+        Ext.Array.push(conf.items, me.actionToolbar);
 
         me.navHeader = Ext.widget(conf);
 

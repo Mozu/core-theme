@@ -748,12 +748,12 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
     <Content Include="Scripts\app\core\ux\mixins\LaunchEditor.js" />
     <Content Include="Scripts\app\core\ux\mixins\Permissions.js" />
     <Content Include="Scripts\app\core\ux\mixins\NavHeader.js" />
-    <Content Include="Scripts\app\core\ux\mixins\Navigable.js" />
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Pageable.js" />

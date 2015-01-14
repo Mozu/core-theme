@@ -32,6 +32,16 @@
     
     formCls: 'Taco.view.product.Form',
 
+    enableNextPrevious: true,
+
+    nextPreviousCfg: {
+        store: "Taco.store.Products",
+        sourceStore: "Taco.store.ProductGrid",
+        buttonType: "arrows",
+        buttonPosition: "left" // valid values: "left". "right", or an integer (index position)
+    },
+
+
     // state property of the form that gets set to true whtn the form and its child panels get dirtied. 
     // note that isDirty seems to always return true. Which necessitated this work around;  The manageInventory button in the inventory subform checks this value before navigating to the inventory view.
     // Todo: figure out why the isDirty is always true and generalize the isDirty Prompt for reuse rathaer than part of the inventory subform.

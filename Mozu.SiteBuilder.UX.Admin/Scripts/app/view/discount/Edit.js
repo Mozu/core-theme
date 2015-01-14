@@ -33,6 +33,16 @@ Ext.define('Taco.view.discount.Edit', {
             });
         }
     },
+
+    enableNextPrevious: true,
+
+    nextPreviousCfg: {
+        store: "Taco.store.Discounts",
+        sourceStore: "Taco.store.Discounts",
+        buttonType: "arrows",
+        buttonPosition:"left" // valid values: "left". "right", or an integer (index position)
+    },
+
     initComponent: function () {
         var me = this;
 
