@@ -202,7 +202,7 @@
             var self = this;
             var attributesCollection = this.get('attributes');
 
-            return this.apiGetAttributes().then(function (cc) {
+            return this.apiGetAttributes({pageSize:100}).then(function (cc) {
                 // transform attributes into key-value pairs, to avoid multiple lookups
                 var values = _.reduce(cc.data.items, function (a, b) {
                     a[b.fullyQualifiedName] = {
