@@ -1297,14 +1297,25 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
         }
 
         if ((skipLoad !== true) && (unknownValues.length > 0) && (me.queryMode === 'remote')) {
-            var params = {};
+            var params = {},
+                pageSize = me.store.pageSize > unknownValues.length ? me.store.pageSize : unknownValues.length;
+            
             params[me.valueParam || me.valueField] = unknownValues.join(me.delimiter);
             me.store.load({
-                params: params,
+                limit: pageSize,
+                params: pageSize,
                 callback: function() {
                     if (me.itemList) {
                         me.itemList.unmask();
                     }
+                    Ext.Array.each(unknownValues, function (unknownValue) {
+                        if (!me.store.getById(unknownValue)) {
+                            var newRecordCfg = {};
+                            newRecordCfg[me.valueParam || me.valueField] = unknownValue;
+                            newRecordCfg[me.displayField || me.valueParam || me.valueField] = '{' + unknownValue + '}';
+                            me.store.add([newRecordCfg]);
+                        }
+                    })
                     me.setValue(value, doSelect, true);
                     me.autoSize();
                     me.lastQuery = false;
