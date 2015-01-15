@@ -53,10 +53,28 @@
                 <th>Code</th>
                 <th>Products</th>
                 <th>Fulfillment</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Item Total</th>
+                <th class="currency-column">Price</th>
+                <th class="quantity-column">Qty</th>
+                <th class="currency-column">Item Total</th>
             </tr></thead>
+            <tfoot class="order-totals-breakdown">
+                <tr>
+                    <td colspan="5">Subtotal</td>
+                    <td>{{ model.discountedSubtotal|currency }}</td>
+                </tr><tr>
+                    <td colspan="5">Tax</td>
+                    <td>{{ model.taxTotal|currency }}</td>
+                </tr><tr>
+                    <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
+                    <td>{{ model.shippingTotal|currency }}</td>
+                </tr><tr>
+                    <td colspan="5">Adjustments</td>
+                    <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
+                </tr><tr>
+                    <td colspan="5">Total</td>
+                    <td>{{ model.total|currency }}</td>
+                </tr>
+            </tfoot>
             <tbody>
             {% for item in model.items %}
                 <tr>
@@ -75,9 +93,9 @@
                         {% endfor %}
                     </td>
                     <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
-                    <td>{{ item.unitPrice.extendedAmount|currency }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.subtotal|currency }}</td>
+                    <td class="currency-column">{{ item.unitPrice.extendedAmount|currency }}</td>
+                    <td class="quantity-column">{{ item.quantity }}</td>
+                    <td class="currency-column">{{ item.subtotal|currency }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -214,7 +232,6 @@
 									<tr>
 										<td>
 											<div class="label">Total Weight</div>
-                                            {% dump package %}
 											<div>{{ package.measurements.weight.value }} {{ package.measurements.weight.unit }}</div>
 										</td>
 									</tr>
