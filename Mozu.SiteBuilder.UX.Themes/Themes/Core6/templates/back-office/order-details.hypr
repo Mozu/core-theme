@@ -176,8 +176,8 @@
                 <table class="subsection"><tbody>
                 {% for package in model.packages %}
                     <tr>
-                        <td colspan="2">Package #{{ forloop.counter }}</td>
-                        <td colspan="2">Status: {{ package.status }}</td>
+                        <td>Package #{{ forloop.counter }}</td>
+                        <td><span class="label">Status:</span> {{ package.status }}</td>
                     </tr><tr>
                         <td>
                             <div class="label">Ship To</div>
@@ -214,6 +214,7 @@
 									<tr>
 										<td>
 											<div class="label">Total Weight</div>
+                                            {% dump package %}
 											<div>{{ package.measurements.weight.value }} {{ package.measurements.weight.unit }}</div>
 										</td>
 									</tr>
@@ -260,7 +261,9 @@
                             <div>{{ pickup.fulfillmentLocationCode }}</div>
                         </td><td>
                             <div class="label">Pickup Date</div>
-                            <div>{{ pickup.fulfillmentDate|date("m/d/Y") }}</div>
+                            {% if pickup.fulfillmentDate %}
+                                <div>{{ pickup.fulfillmentDate|date("m/d/Y") }}</div>
+                            {% endif %}
                         </td>
                     </tr><tr>
                         <td colspan="4"><table class="grid">
