@@ -336,7 +336,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 Expanded = false,
                 Expandable = true,
                 Index = 101,
-                Name = "Orders Templates",
+                Name = "Order Templates",
                 ParentId = SUPER_ROOT_NODE_NAME,
                 IsHidden = false
             };
