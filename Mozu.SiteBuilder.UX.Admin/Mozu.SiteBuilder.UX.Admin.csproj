@@ -2634,9 +2634,6 @@
       <AdminScriptsBuildSourceTempFiles Include="$(ProjectDir)Scripts\build\temp\**\*.*" />
     </ItemGroup>
     <Delete Files="@(AdminScriptsBuildSourceTempFiles)" />
-    <ItemGroup>
-      <Content Include="Scripts\build\**\*.*" />
-    </ItemGroup>
   </Target>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
