@@ -13,6 +13,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
         private const string BILLINGCONTACTLASTNAMEORSURNAME = "billinginfo.billingcontact.lastnameorsurname";
         private const string FULFILLMENTCONTACTFIRSTNAME = "fulfillmentinfo.fulfillmentcontact.firstname";
         private const string FULFILLMENTCONTACTLASTNAMEORSURNAME = "fulfillmentinfo.fulfillmentcontact.lastnameorsurname";
+        private const string BILLINGCONTACTEMAIL = "billinginfo.billingcontact.email";
+        private const string FULFILLMENTCONTACTEMAIL = "fulfillmentinfo.fulfillmentcontact.email";
         private const string BILLINGCONTACTADDRESS = "billinginfo.billingcontact.address";
 
 
@@ -107,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "lastname":
                     return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME, FULFILLMENTCONTACTLASTNAMEORSURNAME);
                 case "emailaddress":
-                    return string.Format("({1} eq {0})", filter.value, EMAIL);
+                    return string.Format("(({1} cont {0}) or ({2} cont {0}) or ({3} cont {0}))", filter.value, EMAIL, FULFILLMENTCONTACTEMAIL, BILLINGCONTACTEMAIL);
                 case "customerid":
                     return string.Format("( CustomerAccountId  eq {0} )", filter.value);
                 case "ordertype":
