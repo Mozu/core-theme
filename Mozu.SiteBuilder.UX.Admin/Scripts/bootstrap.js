@@ -968,6 +968,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.util.RangeFilter": [],
   "Taco.core.util.TextSelection": [],
   "Taco.core.util.UploadManager": [],
+  "Taco.core.util.Validation": [
+    "TacoValidation"
+  ],
   "Taco.core.ux.BaseCardPanel": [],
   "Taco.core.ux.BaseGrid": [],
   "Taco.core.ux.BoxReorderer": [],
@@ -2803,6 +2806,7 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Taco.core.util.TextSelection": [],
   "Taco.core.util.UploadManager": [],
+  "Taco.core.util.Validation": [],
   "Taco.core.ux.BaseCardPanel": [
     "widget.basecardpanel"
   ],

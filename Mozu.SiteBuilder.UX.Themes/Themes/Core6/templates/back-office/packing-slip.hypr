@@ -50,17 +50,20 @@
             <th>Shipping Method</th>
         </tr></thead>
         <tbody><tr>
-            <td>{% for payment in order.payments %}
-                {% if payment.status != "Voided" %}
-                    {% if payment.paymentType == "Check" %}Check{% endif %}
-                    {% if payment.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}
-                    {% if payment.paymentType == "StoreCredit" %}{{ labels.storeCredit }}{% endif %}
-                    {% if payment.paymentType == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
-                    {% if payment.paymentType == "Paypal" %}{{ labels.payPal }}{% endif %}
-                    {% if payment.paymentType == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
-                    {% if not forloop.last %}, {% endif %}
-                {% endif %}
-            {% endfor %}</td>
+            <td>
+                {% regroup order.payments by paymentType as payment_types %}
+                {% for type in payment_types %}
+                    {% regroup type.list by status as payment_statuses %}
+                        {% if not forloop.first %}, {% endif %}
+                        {% if type.grouper == "Check" %}Check{% endif %}
+                        {% if type.grouper == "CreditCard" %}{{ labels.creditCard }}{% endif %}
+                        {% if type.grouper == "StoreCredit" %}{{ labels.storeCredit }}{% endif %}
+                        {% if type.grouper == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
+                        {% if type.grouper == "Paypal" %}{{ labels.payPal }}{% endif %}
+                        {% if type.grouper == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
+                    
+                {% endfor %}
+            </td>
             <td>{{ model.shippingMethodName }}</td>
         </tr></tbody>
     </table>

@@ -48,13 +48,10 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 name: 'lastName',
                 fieldLabel: 'Customer Last Name'
             },
-/*
-            needs db index!!
             {
                 name: 'emailAddress',
-                fieldLabel: 'Shopper Email Address'
+                fieldLabel: 'Customer Email Address'
             },
-*/
             {
                 xtype: 'combobox',
                 name: 'site',

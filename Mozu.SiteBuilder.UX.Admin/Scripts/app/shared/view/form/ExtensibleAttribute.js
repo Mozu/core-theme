@@ -72,16 +72,32 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                 }];
             },
             'TextBox': function (ptAttribute, values) {
-                
-                return [{
+                var cfg = {
                     xtype: 'textfield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('name'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: (values && values.length) ? values[0] : null,
                     width: '100%',
+                    hideTrigger: true,
+                    mouseWheelEnabled: false,
                     disabled: ptAttribute.get('valueType') === 'ShopperEntered'
-                }];
+                };
+
+                if (ptAttribute.get('dataType') === 'Number') {
+                    cfg.xtype = 'numberfield';
+                    cfg.rawToValue = function (rawValue) {
+                        var value = isNaN(rawValue) ? null : parseFloat(Ext.Number.toFixed(parseFloat(rawValue), 2));
+                        value = isNaN(value) ? '' : value;
+
+                        if (value === null) {
+                            value = rawValue || null;
+                        }
+                        return value;
+                    };
+                }
+
+                return [cfg];
             },
             'productPicker': function (ptAttribute, values) {
                 return [

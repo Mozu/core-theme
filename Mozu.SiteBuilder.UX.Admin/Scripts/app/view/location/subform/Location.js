@@ -10,7 +10,8 @@ Ext.define('Taco.view.location.subform.Location', {
         'Taco.shared.view.modal.Address',
         'Taco.shared.view.field.Address',
         'Taco.core.ux.form.field.EditableDisplayField',
-        'Taco.core.ux.form.PhoneNumberField'
+        'Taco.core.ux.form.PhoneNumberField',
+        'Taco.core.util.Validation'
     ],
 
     ui: 'subform', // gives the form the correct ux    
@@ -211,7 +212,9 @@ Ext.define('Taco.view.location.subform.Location', {
                 readOnly: me.record.get("code"),
                 width: 300,
                 fieldLabel: 'Code',
-                allowOnlyWhitespace: false
+                allowOnlyWhitespace: false,
+                maxLength: 100,
+                validator: Taco.core.util.Validation.validateSeoFriendlyText
             }, {
                 // note: may need to convert this to a checkbox of on/off toggle if the service supports undelete. TBD
                 xtype: "displayfield",
