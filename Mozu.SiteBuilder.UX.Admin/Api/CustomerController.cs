@@ -393,8 +393,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private Task<ServiceClientResponse<DC.CustomerAttribute>[]> ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
             var attributeTasks = new List<Task<ServiceClientResponse<DC.CustomerAttribute>>>();
-
-            var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
+            var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Where(attribute => attribute.Values != null && attribute.Values.All(o => o != null)).Select(attr => attr.FullyQualifiedName);
             var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
 
             var createdAttributeIds = custAttrIds.Except(existingAttrIds).ToList();
