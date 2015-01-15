@@ -53,7 +53,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups) ? extFilter.ResponseGroups : (extFilter.SearchType == "global" || extFilter.SearchType == "picker" ? "min" : "ProductInCatalogs,Min,Price");
 
+
+            if (extFilter != null)
+            {
+                var pcs = (extFilter.QueryString["productCode"] ??string.Empty).Split (',').Length;
+
+                    if (pagingParams.pageSize < pcs)
+                    {
+                        pagingParams.pageSize =pcs;
+                    }
+                
+            }
+
             string filter = extFilter.ToFilterString();
+
 
             if (!String.IsNullOrEmpty(extFilter.ShowProductUsages))
             {
