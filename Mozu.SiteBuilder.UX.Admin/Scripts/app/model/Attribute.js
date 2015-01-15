@@ -104,7 +104,10 @@ Ext.define('Taco.model.Attribute', {
     supportsValueType: function () {
         return false;
     },
-    supportsDeprecatedFields: function () {
+    supportsIsRequired: function () {
+        return false;
+    },
+    supportsIsVisible: function () {
         return false;
     },
     allowProductDataType: function () {
