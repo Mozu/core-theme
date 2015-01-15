@@ -33,7 +33,7 @@ Ext.define('Taco.core.util.Validation', {
      * @returns if passes validation then returns true, else returns error string
      */
     validateSeoFriendlyText : function(value) {
-        var seoFriendlyRegex = TacoValidation.getSeoFriendlyRegex(),
+        var seoFriendlyRegex = Taco.core.util.Validation.getSeoFriendlyRegex(),
             isValid = !value || seoFriendlyRegex.test(value);
         if (!isValid) {
             return 'Invalid format: no spaces or special characters are allowed except hyphens, underscores, parentheses, and periods, but may not end with a period.';
