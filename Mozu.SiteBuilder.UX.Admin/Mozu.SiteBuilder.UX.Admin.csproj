@@ -723,6 +723,7 @@
     <Content Include="Scripts\app\core\data\cache\ProxyCache.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
+    <Content Include="Scripts\app\core\util\Validation.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
