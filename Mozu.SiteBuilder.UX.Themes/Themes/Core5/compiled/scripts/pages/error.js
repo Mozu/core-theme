@@ -1,1 +1,0 @@
-require(["jquery"],function(e){e(".mz-errordetail-expander").click(function(){e(this).toggleClass("is-expanded").next().toggleClass("is-expanded")})}),define("pages/error",function(){});
