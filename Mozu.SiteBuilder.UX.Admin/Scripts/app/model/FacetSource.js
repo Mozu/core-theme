@@ -14,6 +14,10 @@ Ext.define('Taco.model.FacetSource', {
         type: 'string',
         useNull: true
     }, {
+        name: 'sourceDataType',
+        type: 'string',
+        useNull: true
+    }, {
         name: 'sourceName',
         type: 'string',
         useNull: true,

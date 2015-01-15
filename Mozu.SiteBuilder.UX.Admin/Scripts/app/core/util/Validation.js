@@ -4,7 +4,6 @@
  * */
 Ext.define('Taco.core.util.Validation', {
     singleton: true,
-    alternateClassName: ['TacoValidation'],
 
     constructor: function(config) {
         this.initConfig(config);
