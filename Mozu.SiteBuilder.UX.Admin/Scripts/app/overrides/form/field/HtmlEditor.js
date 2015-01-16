@@ -58,7 +58,14 @@ Ext.define('Taco.overrides.form.field.HtmlEditor', {
     },
 
     initEditor: function () {
+
+        if (this.isDestroyed) {
+            return;
+        }
+
+
         var doc = this.getDoc();
+        
         // prevent the tab key from changing the field contend when the iframeEl is active; Tab Key will move to the next field in the form;
         Ext.EventManager.on(doc, 'keydown', function (e, t) {
             if (e.getKey() == Ext.EventObject.TAB) {

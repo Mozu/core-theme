@@ -35,10 +35,11 @@
     enableNextPrevious: true,
 
     nextPreviousCfg: {
-        store: "Taco.store.Products",
-        sourceStore: "Taco.store.ProductGrid",
-        buttonType: "arrows",
-        buttonPosition: "left" // valid values: "left". "right", or an integer (index position)
+        store: "Taco.store.ProductGrid",
+        stateId: "statefulProductGrid",
+        nextButtonTipTpl: "Next Product <div style='padding-top:10px;'>{productName}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
+        previousButtonTipTpl: "Previous Product <div style='padding-top:10px;'>{productName}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
+        url: "/products/edit/"
     },
 
 
@@ -104,6 +105,7 @@
                     style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
                 }, {
                     text: 'Duplicate',
+                    disabled: me.record.phantom,
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
                         behavior: 'create'
