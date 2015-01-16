@@ -11,12 +11,11 @@
             clearFilters: false,
             contextLevel: 's',
             clearSort: false,
-            autoLoad: true,
-        },
-        
+            autoLoad: true
+        },        
         remoteSort: true,
         sortInfo: {
             field: 'name',
-            direction: 'asc' | 'desc'
+            direction: 'asc' || 'desc'
         }
     });

@@ -1108,6 +1108,14 @@
                     return doSaveCard();
                 }
             },
+            setFulfillmentContactEmail: function () {
+                var fulfillmentEmail = this.get('fulfillmentInfo.fulfillmentContact.email'),
+                    orderEmail = this.get('email');
+
+                if (!fulfillmentEmail) {
+                    this.set('fulfillmentInfo.fulfillmentContact.email', orderEmail);
+                }
+            },
             syncBillingAndCustomerEmail: function () {
                 var billingEmail = this.get('billingInfo.billingContact.email'),
                     customerEmail = this.get('emailAddress') || require.mozuData('user').email;
@@ -1208,6 +1216,7 @@
                 }
 
                 this.syncBillingAndCustomerEmail();
+                this.setFulfillmentContactEmail();
 
                 if (nonStoreCreditTotal > 0 && this.validate()) {
                     this.isSubmitting = false;
