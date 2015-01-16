@@ -240,7 +240,7 @@ Ext.define('Taco.model.Discount', {
 
     // manipulate a record that is set to be duplicated prior to loading it in the view. Called by app\core\Controller.js
     beforeDuplicate: function () {
-        var suffix = " - copy";
+        var suffix = " - Copy";
         this.data.name = this.data.name + suffix;
         this.commit();
     },
