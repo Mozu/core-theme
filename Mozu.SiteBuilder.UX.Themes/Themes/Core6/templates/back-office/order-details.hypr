@@ -61,17 +61,37 @@
                 <tr>
                     <td colspan="5">Subtotal</td>
                     <td>{{ model.discountedSubtotal|currency }}</td>
-                </tr><tr>
+                </tr>
+                {% for discount in model.orderDiscounts %}
+                    <tr>
+                        <td colspan="5">Discount ({{ discount.discount.name }})</td>
+                        <td>({{ discount.impact|currency }})</td>
+                    </tr>
+                {% endfor %}
+                {% if model.storeCredit and model.storeCredit > 0 %}
+                    <tr>
+                        <td colspan="5">Store Credit</td>
+                        <td>({{ model.storeCredit|currency }})</td>
+                    </tr>
+                {% endif %}
+                <tr>
                     <td colspan="5">Tax</td>
                     <td>{{ model.taxTotal|currency }}</td>
                 </tr><tr>
                     <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
                     <td>{{ model.shippingTotal|currency }}</td>
-                </tr><tr>
+                </tr>
+                {% if model.feeTotal > 0 %}
+                    <tr>
+                        <td colspan="5">Handling Fees</td>
+                        <td>{{ model.feeTotal|currency }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
                     <td colspan="5">Adjustments</td>
                     <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
                 </tr><tr>
-                    <td colspan="5">Total</td>
+                    <td colspan="5">Order Total</td>
                     <td>{{ model.total|currency }}</td>
                 </tr>
             </tfoot>
