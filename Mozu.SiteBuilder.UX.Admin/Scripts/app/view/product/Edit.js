@@ -32,6 +32,17 @@
     
     formCls: 'Taco.view.product.Form',
 
+    enableNextPrevious: true,
+
+    nextPreviousCfg: {
+        store: "Taco.store.ProductGrid",
+        stateId: "statefulProductGrid",
+        nextButtonTipTpl: "Next Product <div style='padding-top:10px;'>{productName}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
+        previousButtonTipTpl: "Previous Product <div style='padding-top:10px;'>{productName}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
+        url: "/products/edit/"
+    },
+
+
     // state property of the form that gets set to true whtn the form and its child panels get dirtied. 
     // note that isDirty seems to always return true. Which necessitated this work around;  The manageInventory button in the inventory subform checks this value before navigating to the inventory view.
     // Todo: figure out why the isDirty is always true and generalize the isDirty Prompt for reuse rathaer than part of the inventory subform.
@@ -94,6 +105,7 @@
                     style: "border:0px;height:1px;background-color:#ccc;margin:6px 0px;"
                 }, {
                     text: 'Duplicate',
+                    disabled: me.record.phantom,
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
                         behavior: 'create'

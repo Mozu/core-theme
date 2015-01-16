@@ -137,6 +137,14 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         if (!isLineItem) {
             this.maxRedemptionsPerOrder.setValue(null);
         }
+    },
+
+    onDestroy: function () {
+        var me = this;
+
+        me.clearListeners();
+
+        this.callParent(arguments);
     }
 
     

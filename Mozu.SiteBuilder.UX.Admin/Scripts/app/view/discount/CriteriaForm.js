@@ -610,5 +610,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.setVisible(isLineItem || appliesToShipping);
         this.setProductCategoryContainerVisibility(isLineItem);
         this.setShippingListVisibility(appliesToShipping);
+    },
+
+    onDestroy: function () {
+        var me = this;
+
+        me.clearListeners();
+
+        this.callParent(arguments);
     }
 });

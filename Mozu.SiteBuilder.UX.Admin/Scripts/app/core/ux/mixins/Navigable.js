@@ -13,6 +13,11 @@
   after the view loads it deselects the active item in the nav.
   It appears to be related to updates to the form fields but I couldn't isolate the issue;
 
+
+
+
+  // Note: this mixin has been depricated;
+
 */
 
 

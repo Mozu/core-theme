@@ -335,10 +335,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         });
 
         Ext.defer(function () {
-            this.categoryList.on({
-                change: this.onProductsCategoriesChange,
-                scope: this
-            });
+
+            this.mon(this.categoryList, "change", this.onProductsCategoriesChange, this);
+            //this.categoryList.on({
+            //    change: this.onProductsCategoriesChange,
+            //    scope: this
+            //});
         }, 3000, this);
 
         this.categoriesBox = Ext.create('Ext.container.Container', {
@@ -469,7 +471,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     },
 
     onProductsCategoriesChange: function (delayed) {
-
+        // need to avoid this getting called after the view is destoryed. 
+        if (this.isDestroyed) {
+            return;
+        }
 
         var categoryList = this.categoryList.getValue(),
             productList = this.productList.getValue(),
@@ -552,5 +557,13 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     setFieldVisibility: function (isLineItem) {
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);
+    },
+
+    onDestroy: function () {
+        var me = this;
+
+        me.clearListeners();
+
+        this.callParent(arguments);
     }
 });

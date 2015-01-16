@@ -224,7 +224,7 @@ Ext.define('Taco.model.Location', {
     },
     
     beforeDuplicate: function () {
-        var suffix = " - copy";
+        var suffix = " - Copy";
 
         this.raw = undefined
         this.set("code", "");

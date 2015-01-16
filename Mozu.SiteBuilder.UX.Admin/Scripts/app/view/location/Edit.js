@@ -26,6 +26,7 @@ Ext.define('Taco.view.location.Edit', {
                 shadow: false,
                 items: [{
                     text: 'Duplicate',
+                    disabled: me.record.phantom,
                     requiredBehaviors: {
                         model: 'Taco.model.Location',
                         behavior: 'create'

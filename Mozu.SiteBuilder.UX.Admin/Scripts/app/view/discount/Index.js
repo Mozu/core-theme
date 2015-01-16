@@ -11,7 +11,7 @@ Ext.define('Taco.view.discount.Index', {
     ],
     modelName: 'Taco.model.Discount',
     store: {
-        type: 'Taco.store.Discounts'
+        type: 'Taco.store.DiscountGrid'
     },
     editorName: 'Taco.view.discount.Edit',
     typeName: 'Discount',

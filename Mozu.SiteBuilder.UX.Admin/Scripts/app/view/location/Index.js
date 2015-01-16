@@ -116,12 +116,14 @@ Ext.define('Taco.view.location.Index', {
             {
                 dataIndex: 'code',
                 stateId: 'code',
+                sortable:false,
                 width: 150,
                 text: 'Code'
 
             }, {
                 dataIndex: 'name',
                 stateId: 'name',
+                sortable: false,
                 width:200,
                 text: 'Name'
            
@@ -129,6 +131,7 @@ Ext.define('Taco.view.location.Index', {
                 width: 200,
                 text: "Location Types",
                 dataIndex: 'locationTypes',
+                sortable: false,
                 stateId: 'locationTypes',
                 xtype: "templatecolumn",
                 tpl: [
@@ -140,6 +143,7 @@ Ext.define('Taco.view.location.Index', {
                 dataIndex: 'addressToString',
                 stateId: 'address',
                 text: 'Address',
+                sortable: false,
                 flex:1
 
             }, {

@@ -88,7 +88,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     cfg.xtype = 'numberfield';
                     cfg.rawToValue = function (rawValue) {
                         var value = isNaN(rawValue) ? null : parseFloat(Ext.Number.toFixed(parseFloat(rawValue), 2));
-                        value = isNaN(value) ? '' : value;
+                        value = isNaN(value) ? 0 : value;
 
                         if (value === null) {
                             value = rawValue || null;

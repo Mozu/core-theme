@@ -76,5 +76,13 @@ Ext.define('Taco.view.discount.Form', {
 
     onAfterRender: function () {
         this.setFieldVisibility();
+    },
+
+    onDestroy: function () {
+        var me = this;
+
+        me.clearListeners();
+
+        this.callParent(arguments);
     }
 });
