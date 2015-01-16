@@ -103,7 +103,7 @@
                         <div class="product-name">{{ item.product.name }}</div>
                         {% for option in item.product.options %}
                             <div class="product-option">
-                                <em class="product-option-label">[option]</em>TODO: {{ option.value }}
+                                <em class="product-option-label">[option]</em> {{ option.value }}
                             </div>
                         {% endfor %}
                         {% for product in item.product.bundledProducts %}
@@ -281,13 +281,8 @@
 											{% with model.items|findwhere('product.variationProductCode', packageItem.productCode) as currentVariantItem %}
 												
 												{% if currentVariantItem %}
-												
 												<td>
-													{% for option in currentVariantItem.product.options %}
-														<div class="product-option">
-															<em class="product-option-label">[option]</em> {{ option.value }}
-														</div>
-													{% endfor %}
+													<div class="product-name">{{ currentVariantItem.product.name }}</div>
 												</td>
 												<td>{{ currentVariantItem.product.measurements.weight.value }} {{ currentVariantItem.product.measurements.weight.unit }}</td>
 												
@@ -360,13 +355,8 @@
 											{% with model.items|findwhere('product.variationProductCode', pickupItem.productCode) as currentVariantItem %}
 												
 												{% if currentVariantItem %}
-												
 												<td>
-													{% for option in currentVariantItem.product.options %}
-														<div class="product-option">
-															<em class="product-option-label">[option]</em> {{ option.value }}
-														</div>
-													{% endfor %}
+													<div class="product-name">{{ currentVariantItem.product.name }}</div>
 												</td>
 												<td>{{ currentVariantItem.product.measurements.weight.value }} {{ currentVariantItem.product.measurements.weight.unit }}</td>
 												
