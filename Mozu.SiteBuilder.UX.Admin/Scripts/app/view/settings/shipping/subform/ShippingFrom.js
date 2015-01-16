@@ -28,6 +28,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
         var locationStore = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Locations',
             pageSize: 10,
+            createOnly:true,
             autoLoad: true,
             remoteFilter: false
         })
