@@ -268,14 +268,49 @@
                             </tr></thead>
                             <tbody>
                             {% for packageItem in package.items %}
-								{% with model.items|findwhere('product.productCode', packageItem.productCode) as currentItem %}
 								<tr>
 									<td>{{ packageItem.productCode }}</td>
-									<td>{{ currentItem.product.name }}</td>
-									<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
+									{% with model.items|findwhere('product.productCode', packageItem.productCode) as currentItem %}
+										{% if currentItem %}
+										<td>
+											<div class="product-name">{{ currentItem.product.name }}</div>
+										</td>
+										<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
+
+										{% else %}
+											{% with model.items|findwhere('product.variationProductCode', packageItem.productCode) as currentVariantItem %}
+												
+												{% if currentVariantItem %}
+												
+												<td>
+													{% for option in currentVariantItem.product.options %}
+														<div class="product-option">
+															<em class="product-option-label">[option]</em> {{ option.value }}
+														</div>
+													{% endfor %}
+												</td>
+												<td>{{ currentVariantItem.product.measurements.weight.value }} {{ currentVariantItem.product.measurements.weight.unit }}</td>
+												
+												{% else %}
+
+													{% for item in model.items %}
+														{% if item.product.bundledProducts %}
+															{% for bproduct in item.product.bundledProducts %}
+																{% if bproduct.productCode == packageItem.productCode %}
+
+																<td><div class="product-name">{{ bproduct.name }}</div></td>
+																<td>{{ bproduct.measurements.weight.value }} {{ bproduct.measurements.weight.unit }}</td>
+																
+																{% endif %}
+															{% endfor %}
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+											{% endwith%}
+										{% endif %}
+									{% endwith%}
 									<td>{{ packageItem.quantity }}</td>
 								</tr>
-								{% endwith%}
                             {% endfor %}
                             </tbody>
                         </table></td>
@@ -310,13 +345,49 @@
                                 <th>Weight</th>
                                 <th>Quantity</th>
                             </tr></thead>
-                            <tbody>
-                            {% for pickupItem in pickup.items %}
+                            <tbody>{% for pickupItem in pickup.items %}
 								{% with model.items|findwhere('product.productCode', pickupItem.productCode) as currentItem %}
 								<tr>
 									<td>{{ pickupItem.productCode }}</td>
-									<td>{{ currentItem.product.name }}</td>
-									<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
+									{% with model.items|findwhere('product.productCode', pickupItem.productCode) as currentItem %}
+										{% if currentItem %}
+										<td>
+											<div class="product-name">{{ currentItem.product.name }}</div>
+										</td>
+										<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
+
+										{% else %}
+											{% with model.items|findwhere('product.variationProductCode', pickupItem.productCode) as currentVariantItem %}
+												
+												{% if currentVariantItem %}
+												
+												<td>
+													{% for option in currentVariantItem.product.options %}
+														<div class="product-option">
+															<em class="product-option-label">[option]</em> {{ option.value }}
+														</div>
+													{% endfor %}
+												</td>
+												<td>{{ currentVariantItem.product.measurements.weight.value }} {{ currentVariantItem.product.measurements.weight.unit }}</td>
+												
+												{% else %}
+
+													{% for item in model.items %}
+														{% if item.product.bundledProducts %}
+															{% for bproduct in item.product.bundledProducts %}
+																{% if bproduct.productCode == pickupItem.productCode %}
+
+																<td><div class="product-name">{{ bproduct.name }}</div></td>
+																<td>{{ bproduct.measurements.weight.value }} {{ bproduct.measurements.weight.unit }}</td>
+																
+																{% endif %}
+															{% endfor %}
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+											{% endwith%}
+										{% endif %}
+									{% endwith%}
 									<td>{{ pickupItem.quantity }}</td>
 								</tr>
 								{% endwith%}
