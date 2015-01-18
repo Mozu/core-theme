@@ -67,11 +67,11 @@ Ext.define('Taco.core.ux.form.field.Code', {
 
             me.editor.setFontSize('16px');
 
-            //me.editor.setOptions({
-            //    enableBasicAutocompletion: true, 
-            //    enableSnippets: true,
-            //    enableLiveAutocompletion: false, 
-            //});
+            me.editor.setOptions({
+                enableBasicAutocompletion: true, 
+                enableSnippets: true,
+                enableLiveAutocompletion: false, 
+            });
 
             //    
 
