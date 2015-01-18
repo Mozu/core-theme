@@ -5,7 +5,7 @@
         s = function () {
             var e = "eq|ne|gt|ge|lt|le|in|cont|sw|and|or",
                 t = "true|false|null",
-               // n = "near",
+                n = "near",
                 r = this.createKeywordMapper({
                     "support.function": n,
                     keyword: e,
