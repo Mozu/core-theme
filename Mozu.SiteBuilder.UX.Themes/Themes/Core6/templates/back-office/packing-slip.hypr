@@ -71,21 +71,51 @@
         <thead><tr>
             <th>Product Code</th>
             <th>Product Name</th>
-            <th>Quantity</th>
             <th>Price</th>
+            <th>Quantity</th>
         </tr></thead>
         <tbody>
         {% for item in model.items %}
-			{% for orderItem in order.items %}
-			{% if orderItem.product.productCode == item.productCode %}
             <tr>
                 <td>{{ item.productCode }}</td>
-                <td>{{ orderItem.product.name }}</td>
+                
+				{% with order.items|findwhere('product.productCode', item.productCode) as currentItem %}
+					{% if currentItem %}
+					<td>
+						<div class="product-name">{{ currentItem.product.name }}</div>
+					</td>
+					<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
+
+					{% else %}
+						{% with order.items|findwhere('product.variationProductCode', item.productCode) as currentVariantItem %}
+												
+							{% if currentVariantItem %}
+							<td>
+								<div class="product-name">{{ currentVariantItem.product.name }}</div>
+							</td>
+							<td>{{ currentVariantItem.product.measurements.weight.value }} {{ currentVariantItem.product.measurements.weight.unit }}</td>
+												
+							{% else %}
+
+								{% for orderitem in order.items %}
+									{% if orderitem.product.bundledProducts %}
+										{% for bproduct in orderitem.product.bundledProducts %}
+											{% if bproduct.productCode == item.productCode %}
+
+											<td><div class="product-name">{{ bproduct.name }}</div></td>
+											<td>{{ bproduct.measurements.weight.value }} {{ bproduct.measurements.weight.unit }}</td>
+																
+											{% endif %}
+										{% endfor %}
+									{% endif %}
+								{% endfor %}
+							{% endif %}
+						{% endwith%}
+					{% endif %}
+				{% endwith%}
+
                 <td>{{ item.quantity }}</td>
-                <td>${{ orderItem.product.price.price }}</td>
             </tr>
-			{% endif %}
-			{% endfor %}
         {% endfor %}</tbody>
     </table>
 </td></tr></tbody>
