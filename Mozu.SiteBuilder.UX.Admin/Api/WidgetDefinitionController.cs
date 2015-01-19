@@ -21,17 +21,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IThemeRepository _themeRepository;
 
-
-        public WidgetDefinitionController(IThemeRepository themeRepository)
+        SiteContext _siteContext;
+        public WidgetDefinitionController(IThemeRepository themeRepository, SiteContext siteContext)
         {
             _themeRepository = themeRepository;
-            //  _siteContext = siteContext;
+            _siteContext = siteContext;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public Response<List<WidgetDefinition>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string themeId= null)
+        public Response<List<WidgetDefinition>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string themeId)
         {
-            var theme = _themeRepository.GetTheme(new ThemeSelection() { Id = themeId });
+            Theme theme = null;
+            if (string.IsNullOrEmpty(themeId))
+            {
+                theme = _siteContext.Theme;
+            }
+            else
+            {
+                theme = _themeRepository.GetTheme(new ThemeSelection() { Id = themeId });
+            }
+            
             var defs = theme.Widgets;
 
             return List2(defs.ToList());
