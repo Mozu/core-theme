@@ -103,8 +103,11 @@
             return !!(attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo && values && this.get('shopperEnteredValue'));
         },
         isValidValue: function() {
-            var value = this.get('value') || this.get('shopperEnteredValue');
+            var value = this.getValueOrShopperEnteredValue();
             return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || _.contains(this.legalValues, value));
+        },
+        getValueOrShopperEnteredValue: function () {
+            return this.get('value') || (this.get('value') === 0) ? this.get('value') : this.get('shopperEnteredValue');
         },
         isConfigured: function() {
             var attributeDetail = this.get('attributeDetail');
