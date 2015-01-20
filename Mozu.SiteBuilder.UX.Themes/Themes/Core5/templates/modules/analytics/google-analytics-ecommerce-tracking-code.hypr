@@ -13,13 +13,23 @@
   {% for item in model.items %}
   _gaq.push(['_addItem',
   '{{ model.orderNumber }}',
-  '{{ item.product.productCode }}',
+  '{{ item.product.variationProductCode|default(item.product.productCode) }}',
   '{{ item.product.name }}',
-  '',
-  '{{ item.price.price }}',
+  '{{ item.product.categories|first|prop('id') }}',
+  '{{ item.unitPrice.extendedAmount }}',
   '{{ item.quantity }}'
-
   ]);
+  {% for discount in item.productDiscounts %}{% if not discount.excluded %}
+  _gaq.push(['_addItem',
+  '{{ model.orderNumber }}',
+  '{{ discount.discount.id }}',
+  '{{ discount.discount.name }}',
+  'Product Discount for {{ item.product.variationProductCode|default(item.product.productCode) }}',
+  '-{{ discount.impactPerUnit }}',
+  '{{ discount.discountQuantity }}'
+  ]);
+  {% endif %}{% endfor %}
+  
   {% endfor %}
 
   _gaq.push(['_trackTrans']);

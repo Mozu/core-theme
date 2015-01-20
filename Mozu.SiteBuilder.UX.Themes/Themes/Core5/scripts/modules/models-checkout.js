@@ -160,7 +160,7 @@
                     allowInvalidAddresses = HyprLiveContext.locals.siteContext.generalSettings.allowInvalidAddresses;
                 this.isLoading(true);
                 var addr = this.get('address');
-                this.setFulfillmentContactEmail();
+                order.setFulfillmentContactEmail();
                 var completeStep = function () {
                     order.messages.reset();
                     order.syncApiModel();

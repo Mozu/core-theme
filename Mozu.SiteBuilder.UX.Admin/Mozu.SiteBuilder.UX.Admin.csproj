@@ -1317,6 +1317,7 @@
     <Content Include="Scripts\resources\lib\ace\snippets\snippets.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\soy_template.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\space.js" />
+    <Content Include="Scripts\resources\lib\ace\snippets\mozufilter.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\sql.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\stylus.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\svg.js" />
