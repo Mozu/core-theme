@@ -969,6 +969,7 @@ Ext.define('Taco.view.website.Index', {
                         Ext.fly(body).setStyle('cursor', 'wait');
                         Ext.Ajax.request({
                             url: '/Widgets/preview',
+                            headers: { 'x-vol-dataview-mode': 'Pending' },
                             jsonData: jsonData,
                             callback: function () {
                                 Ext.fly(body).setStyle('cursor', 'auto');
