@@ -251,7 +251,8 @@ Ext.define('Taco.platter.fields.MultiProduct', {
     initComponent: function() {
         this.initDeps();
         this.callParent(arguments);
-    }
+    },
+    multiSelect: true
 });
 
 Ext.define('Taco.platter.fields.Category', {
@@ -272,7 +273,8 @@ Ext.define('Taco.platter.fields.MultiCategory', {
     initComponent: function() {
         this.initDeps();
         this.callParent(arguments);
-    }
+    },
+    multiSelect: true
 });
 
 Ext.define('Taco.platter.fields.Discount', {
