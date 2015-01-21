@@ -1102,6 +1102,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.core.ux.mixins.RowEditable": [],
   "Taco.core.ux.mixins.Searchable": [],
   "Taco.core.ux.picker.DateTime": [],
+  "Taco.core.ux.plugins.NextPrevious": [],
   "Taco.core.ux.tab.Panel": [],
   "Taco.core.ux.tab.Picker": [],
   "Taco.core.ux.tab.Tab": [],
@@ -1327,6 +1328,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.store.CustomerSegments": [],
   "Taco.store.Customers": [],
   "Taco.store.CustomersPicker": [],
+  "Taco.store.DiscountGrid": [],
   "Taco.store.Discounts": [],
   "Taco.store.DomesticShippingRates": [],
   "Taco.store.Entities": [],
@@ -3145,6 +3147,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.core.ux.picker.DateTime": [
     "widget.datetimepicker"
   ],
+  "Taco.core.ux.plugins.NextPrevious": [
+    "plugin.nextprevious"
+  ],
   "Taco.core.ux.tab.Panel": [
     "widget.taco.tabpanel"
   ],
@@ -3463,6 +3468,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.store.CustomerSegments": [],
   "Taco.store.Customers": [],
   "Taco.store.CustomersPicker": [],
+  "Taco.store.DiscountGrid": [],
   "Taco.store.Discounts": [],
   "Taco.store.DomesticShippingRates": [],
   "Taco.store.Entities": [],
