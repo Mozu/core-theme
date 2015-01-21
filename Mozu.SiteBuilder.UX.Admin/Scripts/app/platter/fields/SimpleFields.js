@@ -76,7 +76,7 @@ Ext.define('Taco.platter.SimpleField', {
 });
 
 Ext.define('Taco.platter.fields.DateTime', {
-    extend: 'Taco.core.ux.picker.DateTime',
+    extend: 'Taco.core.ux.form.DateTime',
     format: 'c',
     altFormats:"m/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|c",
     alias: ['widget.mz-input-date'],
@@ -116,7 +116,7 @@ Ext.define('Taco.platter.fields.HtmlEditor', {
 
 Ext.define('Taco.platter.fields.TextArea', {
     extend: 'Ext.form.field.TextArea',
-    alias: ['widget.mz-input-richtext'],
+    alias: ['widget.mz-input-textarea'],
     mixins: ['Taco.platter.SimpleField'],
     initComponent: function() {
         this.initDeps();
@@ -251,7 +251,8 @@ Ext.define('Taco.platter.fields.MultiProduct', {
     initComponent: function() {
         this.initDeps();
         this.callParent(arguments);
-    }
+    },
+    multiSelect: true
 });
 
 Ext.define('Taco.platter.fields.Category', {
@@ -272,7 +273,8 @@ Ext.define('Taco.platter.fields.MultiCategory', {
     initComponent: function() {
         this.initDeps();
         this.callParent(arguments);
-    }
+    },
+    multiSelect: true
 });
 
 Ext.define('Taco.platter.fields.Discount', {
