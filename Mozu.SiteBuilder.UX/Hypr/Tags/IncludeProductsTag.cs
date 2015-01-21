@@ -87,8 +87,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     productCodes = ((string)productCodes).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 }
 
-                productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
 
+                productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
                 if (productCodesFilters.Length == 0)
                 {
                     result.Template = null;
@@ -128,6 +128,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     startIndex = tmp;
                 }
+            }
+            else
+            {
+                if (pageSize == 15)
+                {
+                    pageSize = productCodesFilters.Length;
+                }
+                
             }
             
             if (includeFacets && categoryId.HasValue)
