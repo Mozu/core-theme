@@ -23,7 +23,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
-
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -139,22 +139,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 wishlist.Items = wishlistItemsTask.Result.ReadAsSync().Items;
             }
 
-            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            var jAccount = JObject.FromObject(account, jSerializer);
+            var jAccount = account.ToJObject();
 
-            jAccount.Add("orderHistory", JObject.FromObject(orderHistory, jSerializer));
-            jAccount.Add("returnHistory", JObject.FromObject(returnHistory, jSerializer));
+            jAccount.Add("orderHistory", orderHistory.ToJObject());
+            jAccount.Add("returnHistory", returnHistory.ToJObject());
             jAccount.Add("hasSavedCards", cards.Items.Count > 0);
             jAccount.Add("hasSavedContacts", account.Contacts.Count > 0);
-            jAccount.Add("cards", JArray.FromObject(cards.Items, jSerializer));
+            jAccount.Add("cards", cards.Items.ToJArray());
             if (credits.Items.Count > 0)
             {
-                jAccount.Add("credits", JArray.FromObject(credits.Items, jSerializer));
+                jAccount.Add("credits", credits.Items.ToJArray());
                 jAccount.Add("totalCreditAmount", credits.Items.Select(c => c.CurrentBalance).Aggregate((x, y) => x + y));
             }
 
             if (wishlist != null) {
-                var wishlistObj = JObject.FromObject(wishlist, jSerializer);
+                var wishlistObj = wishlist.ToJObject();
                 wishlistObj.Add("hasItems", wishlist.Items.Count() > 0);
                 jAccount.Add("wishlist", wishlistObj);
             }

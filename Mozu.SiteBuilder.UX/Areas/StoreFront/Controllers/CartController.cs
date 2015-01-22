@@ -19,10 +19,11 @@ using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiClient;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.Core.Extensions;
+using Newtonsoft.Json.Serialization;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -81,33 +82,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var cart = (await _cartClient.GetOrCreateCart()).ReadAsAsync().Result;
             LocationCollection locations = null;
-            if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP))
+            if (cart.Items != null && cart.Items.Any(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
             {
                 locations = (await _locationClient.GetInStorePickupLocations(0, null, null, BuildLocationsFilter(cart.Items.Select(x => x.FulfillmentLocationCode).Distinct().ToList()))).ReadAsSync();
             }
 
-
-
-            var cartVM = Mapper.Map<Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.Cart>(cart);
-
-            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            var jCart = JObject.FromObject(cartVM, jSerializer);
-
-            var jItems = (JArray)jCart["items"];
-            if (locations != null)
-            {
-                for (int i = 0; i < cartVM.Items.Count; i++)
-                {
-                    if (cartVM.Items[i].FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP)
-                    {
-                        var location = locations.Items.Find(x => x.Code == cartVM.Items[i].FulfillmentLocationCode);
-                        if (location != null)
-                        {
-                            ((JObject)jItems[i]).Add("fulfillmentLocationName", location.Name);
-                        }
-                    }
-                }
-            }
+            var cartVM = CreateCartWithLocations(cart, locations);
+            var jCart = cartVM.ToJObject(new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
             if (error != null)
             {
@@ -118,7 +99,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 else
                 {
-                    messages.Add(JObject.FromObject(new { message = error.Message }, jSerializer));
+                    messages.Add(new { message = error.Message }.ToJObject());
                 }
                 jCart.Add("messages", messages);
             }
@@ -126,6 +107,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("cart", jCart); // Mapper.Map<VMCart>(cart));
         }
 
+        private Models.StoreFront.Commerce.Cart CreateCartWithLocations(Cart cart, LocationCollection locations)
+        {
+            var cartbase = Mapper.Map<Models.StoreFront.Commerce.Cart>(cart);
+            if (locations != null && locations.Items.Any())
+            {
+                foreach (var cartItem in cartbase.Items.Where(item => item.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
+                {
+                    var location = locations.Items.FirstOrDefault(x => x.Code.EqualsIgnoreCase(cartItem.FulfillmentLocationCode));
+                    if (location != null) cartItem.FulfillmentLocationName = location.Name;
+                }
+            }
+            return cartbase;
+        }
 
         public class CheckoutModel
         {

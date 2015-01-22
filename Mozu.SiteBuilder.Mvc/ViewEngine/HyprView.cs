@@ -8,6 +8,9 @@ using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using NDjango.Interfaces;
 using NDjango.Misc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -55,25 +58,27 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         private static void AddClientApiContextData(Dictionary<string, object> requestContext, ClientApiContext clientApiContext)
         {
-            requestContext["apiContext"] = clientApiContext;
+            requestContext["apiContext"] = clientApiContext.ToJObject();
         }
 
         private static void AddNavigationContextData(Dictionary<string, object> requestContext, NavigationContext navigationContext)
         {
-            requestContext["navigation"] = navigationContext;
+            requestContext["navigation"] = navigationContext.ToJObject();
         }
 
         private static void AddSiteContextData(Dictionary<string, object> requestContext, SiteContext siteContext)
         {
-            requestContext["siteContext"] = siteContext;
-            requestContext["themeSettings"] = siteContext.ThemeSettings;
-            requestContext["labels"] = siteContext.Labels;
+            var jSiteContext = siteContext.ToJObject();
+            requestContext["siteContext"] = jSiteContext;
+            requestContext["themeSettings"] = jSiteContext["themeSettings"];
+            requestContext["labels"] = jSiteContext["labels"];
         }
 
         private static void AddPageContextData(Dictionary<string, object> requestContext, PageContext pageContext)
         {
-            requestContext["pageContext"] = pageContext;
-            requestContext["user"] = pageContext.User;
+            var jPageContext = pageContext.ToJObject();
+            requestContext["pageContext"] = jPageContext;
+            requestContext["user"] = jPageContext["user"];
         }
 
         private static void AddViewContextData(Dictionary<string, object> requestContext, HyprViewContext viewContext)
@@ -87,15 +92,11 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
             requestContext["templateVariables"] = viewContext.HttpContext.Items["templateVariables"];
             requestContext["_vc"] = viewContext;
-            requestContext["model"] = viewContext.ViewData.Model;
+            requestContext["model"] = requestContext["pageModel"] = viewContext.ViewData.Model;
             
             if (viewContext.ParentActionViewContext != null)
             {
                 requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
-            }
-            else
-            {
-                requestContext["pageModel"] = viewContext.ViewData.Model;
             }
 
             requestContext["ViewData"] = viewContext.ViewData;

@@ -23,6 +23,7 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -238,19 +239,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             model.IPAddress = ipAddress;
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            var jOrder = JObject.FromObject(model, jSerializer);
+            var jOrder = model.ToJObject();
 
             var isFulfillmentInfoRequired = model.Items.Exists(
                     x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
 
             jOrder.Add("requiresFulfillmentInfo", isFulfillmentInfoRequired);
-            jOrder.Add("requiresDigitalFulfillmentContact", model.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.DIGITAL));
+            jOrder.Add("requiresDigitalFulfillmentContact", model.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.DIGITAL));
 
             if (account != null)
             {
-                JObject accountJson = JObject.FromObject(account, jSerializer);
-                accountJson.Add("cards", JArray.FromObject(cards.Items, jSerializer));
-                accountJson.Add("credits", JArray.FromObject(credits.Items, jSerializer));
+                var accountJson = account.ToJObject();
+                accountJson.Add("cards", cards.Items.ToJArray());
+                accountJson.Add("credits", credits.Items.ToJArray());
                 jOrder.Add("customer", accountJson);
             }
 
@@ -277,13 +278,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
                 }
 
-                var asm = JArray.FromObject(methods ?? new List<ShippingRate>(0), jSerializer);
+                var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
                 JObject si = (JObject)jOrder["fulfillmentInfo"];
                 si.Add("availableShippingMethods", asm);
-                //jOrder.Add("AvailableShippingMethods", asm);
-                //ViewData["availableShippingMethods"] = _orderWebApiClient.GetAvailableShipmentMethods(id).Result.ReadAsSync();
             }
-           
 
             return View("checkout", jOrder);
         }
@@ -300,7 +298,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
             var orderTask = _orderWebApiClient.GetOrder(orderId);
-            var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             Order order = null;
             await Task.WhenAll(locTask, orderTask);
             if (orderTask.Result.ResponseMessage.IsSuccessStatusCode)
@@ -323,10 +320,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             };
-           
-
-
-
 
 
             if (order == null)
@@ -335,7 +328,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (!CompletedOrderStates.Contains(order.Status)) return Redirect("/checkout/" + order.Id);
             Mozu.Location.Contracts.LocationCollection locations = null;
 
-            if (order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP))
+            if (order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
             {
                 //var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
                 var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
@@ -343,9 +336,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 locations = locationsTask.ReadAsSync();
             }
 
-            JObject jOrder = JObject.FromObject(order, jSerializer);
+            var jOrder = order.ToJObject();
 
-            jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP));
+            jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP));
 
             if (locations != null)
             {
@@ -353,7 +346,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 for (int i = 0; i < order.Items.Count; i++)
                 {
-                    if (order.Items[i].FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP)
+                    if (order.Items[i].FulfillmentMethod == FulfillmentMethodConst.SHIP)
                     {
                         var location = locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode);
                         if (location != null)
@@ -366,7 +359,5 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
             return View("confirmation", jOrder);
         }
-
-       
     }
 }

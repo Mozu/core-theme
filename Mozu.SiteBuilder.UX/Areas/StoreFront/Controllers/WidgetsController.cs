@@ -10,6 +10,7 @@ using System.IO;
 using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.Core;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -47,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var view = _viewEngine.FindModuleView("widgets/" + def.DisplayTemplate);
             if (view != null)
             {
-                var viewContext = new HyprViewContext(Request, new ViewDataDictionary {Model = wpd});
+                var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd.ToJObject() });
                 await view.AsyncRender(viewContext, tw);
                 RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }

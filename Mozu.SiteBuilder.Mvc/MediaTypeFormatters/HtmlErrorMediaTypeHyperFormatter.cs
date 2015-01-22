@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -7,14 +6,12 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using Autofac;
-using Magnum.Extensions;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.Mvc.Logging;
-using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
@@ -87,15 +84,15 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                     return tcs.Task;
                 }
             }
-                
 
 
 
-           
-            
+
+
+
             var viewDataDictionary = new ViewDataDictionary()
             {
-                Model = model
+                Model = model.ToJObject()
             };
 
 

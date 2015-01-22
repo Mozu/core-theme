@@ -7,6 +7,7 @@ using Autofac;
 using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -65,14 +66,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return context.ViewContext().LifetimeScope.ResolveOptional<T>();
         }
 
-        public static  Task AsyncRender(this NDjango.Interfaces.IContext context, string viewName, object model, TextWriter writer)
+        public static Task AsyncRender<TModel>(this NDjango.Interfaces.IContext context, string viewName, TModel model, TextWriter writer)
         {
             var viewContext = context.ViewContext();
             var viewEngine = viewContext.LifetimeScope.Resolve<HyprViewEngine>();
             var view = viewEngine.FindModuleView(viewName);
             var viewData = new ViewDataDictionary
             {
-                Model = model
+                Model = model.ToJObject()
             };
 
             var hvc = new HyprViewContext(viewContext.RequestMessage, viewData, viewContext);

@@ -12,11 +12,11 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
+    using NDjango.Interfaces;
 
-    [NDjango.Interfaces.Name("currency")]
+    [Name("currency")]
     
-    public class CurrencyFilter : NDjango.Interfaces.IFilterWithContext 
+    public class CurrencyFilter : IFilterWithContext
     {
         public object DefaultValue
         {
@@ -34,38 +34,49 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             throw new NotImplementedException();
         }
 
-        public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, NDjango.Interfaces.IContext context)
+        public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {
             if (value == null)
             {
                 return string.Empty;
             }
-            var siteContext = context.SiteContext();
-            var format = "C" + parameter.FirstOrDefault();
-            var convertable = value as IConvertible;
-            var formatProvider = value as IFormatProvider ?? System.Threading.Thread.CurrentThread.CurrentCulture;
 
-            if (convertable != null)
+            var numberFormat = GetNumberFormat(context);
+            var format = "C" + parameter.FirstOrDefault();
+            if (value is IConvertible)
             {
+                var formatProvider = value as IFormatProvider ?? System.Threading.Thread.CurrentThread.CurrentCulture;
                 try
                 {
-                    return convertable.ToDecimal(formatProvider).ToString(format, siteContext.NumberFormat);
+                    return (value as IConvertible).ToDecimal(formatProvider).ToString(format, numberFormat);
                 }
                 catch
                 {
                     return string.Empty;
                 }
-                    
             }
-            
-            decimal d;
-            if (Decimal.TryParse(value.ToString(), out d))
+            else
             {
-                return d.ToString(format, siteContext.NumberFormat);
+                decimal d;
+                if (decimal.TryParse(value.ToString(), out d))
+                {
+                    return d.ToString(format, numberFormat);
+                }
             }
-
           
             return string.Empty;
+        }
+
+        private IFormatProvider GetNumberFormat(IContext context)
+        {
+            try
+            {
+                return context.SiteContext().NumberFormat;
+            }
+            catch (Exception)
+            {
+                return NumberFormatInfo.InvariantInfo;
+            }
         }
     }
 }

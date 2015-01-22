@@ -19,6 +19,8 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Runtime.Serialization.Json;
+    using Newtonsoft.Json;
+
 
     /// <summary>
     /// TODO: Update summary.
@@ -207,6 +209,28 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 return null;
 
             return self.Substring(leftIndex, rightIndex - leftIndex);
+        }
+
+        /// <summary>
+        /// serializes and parses the object into a JObject
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="serSettings">If not provided, uses CaseInsensitiveJsonSerializerSettings.Default</param>
+        /// <returns></returns>
+        public static JObject ToJObject(this object self, JsonSerializerSettings serSettings = null)
+        {
+            return JObject.FromObject(self, JsonSerializer.CreateDefault(serSettings ?? CaseInsensitiveJsonSerializerSettings.Default));
+        }
+
+        /// <summary>
+        /// serializes and parses the object into a JObject
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="serSettings">If not provided, uses CaseInsensitiveJsonSerializerSettings.Default</param>
+        /// <returns></returns>
+        public static JArray ToJArray(this object self, JsonSerializerSettings serSettings = null)
+        {
+            return JArray.FromObject(self, JsonSerializer.CreateDefault(serSettings ?? CaseInsensitiveJsonSerializerSettings.Default));
         }
     }
 }

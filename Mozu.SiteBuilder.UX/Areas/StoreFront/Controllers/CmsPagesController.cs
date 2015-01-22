@@ -283,7 +283,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            var result = View(template, vm);
+            var result = View(template, vm.ToJObject());
 
             
             return this.Request.CreateResponse(HttpStatusCode.OK, result);

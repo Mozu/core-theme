@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
-using System.Web.UI;
-using Mozu.SiteBuilder.Mvc.Configuration;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
 using NDjango;
@@ -47,11 +45,15 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         {
             public string Name { get; set; }
             public string Template { get; set; }
-            public object[] Context { get; set; }
+            public Dictionary<string, object> Context { get; set; }
             public object Expected { get; set; }
             public override string ToString()
             {
                 return Name;
+            }
+            public TestDescriptor()
+            {
+                Context = new Dictionary<string, object>();
             }
         }
 
@@ -79,12 +81,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
         private static Dictionary<string, object> SetupContext(TestDescriptor desc)
         {
-            var dict = new Dictionary<string, object>();
-            if (desc.Context == null) return dict;
-
-            for (int i = 0; i <= desc.Context.Length - 2; i += 2)
-                dict.Add(desc.Context[i].ToString(), desc.Context[i + 1]);
-
+            var dict = desc.Context == null ? new Dictionary<string, object>() : desc.Context;
+            
             //add viewContextNode
             var hyprviewcontext = new HyprViewContext(null, null, null);
             dict.Add("_vc", hyprviewcontext);

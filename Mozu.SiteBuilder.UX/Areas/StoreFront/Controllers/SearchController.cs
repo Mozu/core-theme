@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -150,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             };
 
-            return View(searchPageType, pc);
+            return View(searchPageType, pc.ToJObject());
             
             //if (pc.TotalCount > 0)
             //{

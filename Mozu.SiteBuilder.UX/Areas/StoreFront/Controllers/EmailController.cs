@@ -36,6 +36,7 @@ using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Mozu.SiteBuilder.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -137,9 +138,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic , id, StringComparison.OrdinalIgnoreCase));
                 if (emailTypeInfo.ModelType == typeof (Order))
                 {
-                    var ser = new JsonSerializerSettings();
-                    ser.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    var str = JsonConvert.SerializeObject(model, ser);
+                    var str = JsonConvert.SerializeObject(model, CaseInsensitiveJsonSerializerSettings.Default);
                     model = Convert(str, emailTypeInfo);    
                 }
                 

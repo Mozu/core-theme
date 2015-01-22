@@ -15,6 +15,8 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Commerce
             get;
             set;
         }
+
+        public string FulfillmentLocationName { get; set; }
     }
 
     public class Product : Mozu.CommerceRuntime.Contracts.Products.Product
