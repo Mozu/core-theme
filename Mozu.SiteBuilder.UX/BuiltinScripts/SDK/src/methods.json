@@ -431,7 +431,7 @@
     "order": {
         "template": "{+orderService}{id}",
         "includeSelf": true,
-        "create": {
+        "create-from-cart": {
             "template": "{+orderService}{?cartId*}",
             "shortcutParam": "cartId",
             "noBody": true
