@@ -1,6 +1,6 @@
 ﻿/**
  * @class Taco.core.ux.mixins.LaunchEditor 
- * View Mixin that provides the ability to automatically launch the editor when the user selects an item in the grid
+ * View Mixin that provides the ability to automatically launch the editor when the user cts an item in the grid
  * to include this mixin in your class:
 
         mixins: {
@@ -41,6 +41,14 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
         };
 
         if (this.launchEditorOnClick) {
+            // treat enter key as a click;
+            me.mon(me, 'itemkeydown', function (view, record, item, index, e, eOpts) {
+                var metaData = null;
+                if (e.getKey() == e.ENTER && !me.enableRowEditing) {                    
+                    me.launchEditor(record, metaData);
+                }
+            }, me);
+
             me.mon(me, 'cellclick', this.onCellClick, me)
         }
     },
