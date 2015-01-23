@@ -618,6 +618,7 @@
     <Content Include="App_Data\51Degrees.mobi-Premium-2014.02.28.dat" />
     <Content Include=".jshintignore" />
     <Content Include=".jshintrc" />
+    <Content Include="BuiltinScripts\SDK\src\methods.json" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
