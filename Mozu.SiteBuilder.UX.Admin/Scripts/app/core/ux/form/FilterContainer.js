@@ -122,8 +122,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 specialkey: {
                     scope: this,
                     fn: function (field, e) {
-                        if (e.getKey() === e.ENTER) {
-                            field.up('window').primaryHandler();
+                        if (e.getKey() === e.ENTER) {                            
+                            var picker = (field.getPicker) ? field.getPicker() : null;
+                            
+                            if (picker && picker.isVisible()) {                                
+                                // ignore enter key when the combo has a picker that is visible. enter key will select a value in picker
+                            } else {
+                                field.up('window').primaryHandler();
+                            }
                         }
                     }
                 }
@@ -293,8 +299,11 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                     primaryText: 'Filter',
                     draggable: false,
                     ui: 'dialog',
-                    modal: false,
-                    items: this.getAdvancedForm(),
+                    // had to override the layout on this becuase invalidattion messages in the forms was causing a scroll to happen.
+                    // see: http://www.sencha.com/forum/showthread.php?184206-Change-in-validation-state-causes-form-to-scroll/page2
+                    layout: {type: 'vbox', align: 'stretch'},
+                    modal: false,                    
+                    items:this.getAdvancedForm(),
                     listeners: {
                         show: {
                             scope: this,
@@ -356,7 +365,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         var simple = this.down('#textFilter');
         var jsonValue = this.parseTextFilterValue(simple);
         var collapseIf;
-
+        
         if (dialog.rendered && !dialog.isDestroyed) {
             collapseIf = this.collapseIf;
 
@@ -457,6 +466,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             form = this.modal.getForm();
             comboFields = form.query('combo');
 
+            // clear out any previuos values left in the form;
+            form.getForm().reset(true);
+            // reload the values using the current state pulled from the search box.
             form.getForm().setValues(values);
 
             if (!Ext.isEmpty(comboFields)) {

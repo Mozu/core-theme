@@ -15,6 +15,7 @@ Ext.define('Taco.overrides.form.field.Base', {
         if (this.rendered) {            
             var labelEl = this.labelEl;
             if (labelEl) {
+                debugger;
                 // need to find the label and add/remove the css cls
                 if (allowBlank === false) {
                     //   this.labelClsExtra = 'x-form-item-required';

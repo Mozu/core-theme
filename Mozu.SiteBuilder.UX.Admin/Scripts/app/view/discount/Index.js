@@ -1,6 +1,16 @@
 ﻿/**
 * The Discount list (grid) view
 */
+
+Ext.define('Taco.view.discount.Index', {
+    extend: 'Taco.view.discount.Grid',
+    alias: 'widget.discountlist'    
+});
+
+
+/*
+
+
 Ext.define('Taco.view.discount.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: 'widget.discountlist',
@@ -174,25 +184,25 @@ Ext.define('Taco.view.discount.Index', {
                 }
             ]
         }
-        /*
+        
 
-        // BUG:  15695
-        // http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/15695
-        // (Simeon K.) delete of discounts causes orders that had that discount to spontaneously combust. Poof! Removing delete action trigger until we have a better solution;
+        //// BUG:  15695
+        //// http://tfs.ads.volusion.com:8080/tfs/VNext/Mozu/_workitems/edit/15695
+        //// (Simeon K.) delete of discounts causes orders that had that discount to spontaneously combust. Poof! Removing delete action trigger until we have a better solution;
 
-        , {
-            xtype: 'taco.menucolumn',
-            text: 'Actions',
-            menuItems:[{
-                text: 'Delete',
-                requiredBehaviors: {
-                    model: 'Taco.model.Discount',
-                    behavior:'destroy'
-                },
-                menuColumnHandler: 'destroyMenuColumnHandler'
-            }]
-        }
-        */
+        //, {
+        //    xtype: 'taco.menucolumn',
+        //    text: 'Actions',
+        //    menuItems:[{
+        //        text: 'Delete',
+        //        requiredBehaviors: {
+        //            model: 'Taco.model.Discount',
+        //            behavior:'destroy'
+        //        },
+        //        menuColumnHandler: 'destroyMenuColumnHandler'
+        //    }]
+        //}
+        
         
         
         ]
@@ -202,9 +212,9 @@ Ext.define('Taco.view.discount.Index', {
         this.callParent(arguments);
     },
 
-    /**
-    * Handler for the list item click event
-    */
+    
+    // Handler for the list item click event
+    
     onItemClick: function (view, record, elm, index, e) {
         // console.log(e.target);
         if (e.target.className === 'taco-launch-editor') {
@@ -221,3 +231,4 @@ Ext.define('Taco.view.discount.Index', {
         return;
     }
 });
+*/

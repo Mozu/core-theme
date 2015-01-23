@@ -7,12 +7,42 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
 {
     internal static class DiscountFilterExtensions
     {
+        private const string ID_PROPERTY = "id";
         private const string NAME_PROPERTY = "content.name";
-        private const string PRODUCT_CODE_PROPERTY = "target.products.code";
         private const string REQUIRE_COUPON_PROPERTY = "requireCoupon";
         private const string START_DATE_PROPERTY = "startDate";
         private const string END_DATE_PROPERTY = "endDate";
+        private const string COUPON_CODE_PROPERTY = "couponcode";
+        private const string STATUS_PROPERTY = "status"; // Active, Ended, All // Service is missing this one.
+        private const string AMOUNT_PROPERTY = "amount"; // int
+        private const string TYPE_PROPERTY = "amounttype"; // Percentage, Amount, Free
+        
+        private const string LEVEL_PROPERTY = "scope";  // Order, Lineitem
+        private const string USAGE_COUNT_PROPERTY = "CurrentRedemptionCount";
+        private const string INCLUDE_ALL_PRODUCTS_PROPERTY = "includeallproducts"; // True, False
+        private const string MAX_REDEMPTIONS_PROPERTY = "maxredemptions"; // int
+        private const string CURRENT_REDEMPTION_COUNT_PROPERTY = "currentredemptioncount"; // int
+        private const string CREATE_DATE_PROPERTY = "createdate"; // int
+        private const string CREATED_BY_PROPERTY = "createdby"; // str
+        private const string UPDATE_DATE_PROPERTY = "updatedate"; // date
+        private const string UPDATE_BY_PROPERTY = "updateby"; // str
 
+        // Target Criteria
+        private const string TARGET_TYPE_PROPERTY = "target.type"; // Shipping, Product
+        private const string TARGET_PRODUCT_CODE_PROPERTY = "target.products.code";
+        private const string TARGET_PRODUCTS_ID_PROPERTY = "target.products.id"; // ????
+        private const string TARGET_CATEGORIES_ID_PROPERTY = "target.categories.id"; // ????
+        private const string TARGET_MINIMUM_LIFETIME_VALUE_AMOUNT_PROPERTY = "target.minimumlifetimevalueamount"; // ????
+        private const string TARGET_SHIPPING_METHODS_CODE_PROPERTY = "target.shippingmethods.code";
+        private const string TARGET_SHIPPING_ZONES_PROPERTY = "target.shippingzones.zone";
+        private const string TARGET_CUSTOMER_GROUPS_ID_PROPERTY = "target.customergroups.id";  // ??
+        
+        //Conditions
+        private const string CONDITIONS_PRODUCTS_PRODUCTID_PROPERTY = "conditions.productid";  // ??
+        private const string CONDITIONS_CATEGORIES_CATEGORYID_PROPERTY = "conditions.categoryid";  // ??
+
+        
+        
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
         /// </summary>
@@ -23,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
 
 
             StringBuilder sb = new StringBuilder();
-            foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
+            foreach (var filter in extFilter.Where(x => x.value != null && !string.IsNullOrEmpty(x.value.ToString())))
             {
 
                 var filterString = GetFilter(filter.value, filter);
@@ -45,16 +75,87 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
             //return String.Join(" and ", extFilter./*.Where(f => !String.Equals(f.property, "validondate", StringComparison.InvariantCultureIgnoreCase)).*/Select(GetFilter));
         }
 
+
+        /*
+         
+        private const string COUPON_CODE = "couponcode";
+        private const string STATUS = "status"; // Active, Ended // Service is missing this one.
+        private const string TYPE = "amounttype"; // Percentage, Amount, Free
+        private const string EFFECT = "target.type"; // Shipping, Product
+        private const string LEVEL = "scope";  // Order, Lineitem
+        private const string USAGE_COUNT = "CurrentRedemptionCount";                
+        private const string START_DATE = "startdate";        
+        private const string END_DATE = "enddate";
+         */
         private static string GetFilter(object value, FilterCollectionItem filter)
         {
             switch (filter.property.ToLowerInvariant())
             {
+                case "all":
+                    //todo add regex check for 10$, $10, 50% in search terms and convert to ammount, and type.
+                    return String.Format("{0} cont \"{2}\" or {1} cont \"{2}\"", NAME_PROPERTY, COUPON_CODE_PROPERTY, filter.value);
                 case "name":
                     return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.value);
+                case "id":
+                    return String.Format("{0} cont \"{1}\"", ID_PROPERTY, filter.value);
+                case "couponcode":
+                    return String.Format("{0} cont \"{1}\"", COUPON_CODE_PROPERTY, filter.value);
+                case "status":
+                    return String.Format("{0} eq \"{1}\"", STATUS_PROPERTY, filter.value);
+                case "amount":
+                    return String.Format("{0} eq \"{1}\"", AMOUNT_PROPERTY, filter.value);
+                case "type":
+                    return String.Format("{0} eq \"{1}\"", TYPE_PROPERTY, filter.value);
+                case "effect":
+                    return String.Format("{0} eq \"{1}\"", TARGET_TYPE_PROPERTY, filter.value);
+                case "level":
+                    return String.Format("{0} eq \"{1}\"", LEVEL_PROPERTY, filter.value);
+                case "usagecountfrom":
+                    return String.Format("{0} ge \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);
+                case "usagecountto":
+                    return String.Format("{0} le \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);
+                case "startdatefrom":
+                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, filter.value);
+                case "startdateto":
+                    return String.Format("{0} le \"{1}\"", START_DATE_PROPERTY, filter.value);
+                case "enddatefrom":
+                    return String.Format("{0} ge \"{1}\"", END_DATE_PROPERTY, filter.value);
+                case "enddateto":
+                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, filter.value);
                 case "requirecoupon":
                     return String.Format("{0} eq {1}", REQUIRE_COUPON_PROPERTY, filter.value);
                 case "productcode":
-                    return String.Format("{0} eq \"{1}\"", PRODUCT_CODE_PROPERTY, filter.value);
+                    return String.Format("{0} eq \"{1}\"", TARGET_PRODUCT_CODE_PROPERTY, filter.value);
+                case "includeallproducts":
+                    return String.Format("{0} eq \"{1}\"", INCLUDE_ALL_PRODUCTS_PROPERTY, filter.value);
+                case "maxredemptions":
+                    return String.Format("{0} eq \"{1}\"", MAX_REDEMPTIONS_PROPERTY, filter.value);
+                case "currentredemptioncount":
+                    return String.Format("{0} eq \"{1}\"", CURRENT_REDEMPTION_COUNT_PROPERTY, filter.value);
+                case "createdate":
+                    return String.Format("{0} eq \"{1}\"", CREATE_DATE_PROPERTY, filter.value);
+                case "createby":
+                    return String.Format("{0} eq \"{1}\"", CREATED_BY_PROPERTY, filter.value);
+                case "updatedate":
+                    return String.Format("{0} eq \"{1}\"", UPDATE_DATE_PROPERTY, filter.value);
+                case "updateby":
+                    return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);                
+                case "productsid":
+                    return String.Format("{0} eq \"{1}\"", TARGET_PRODUCTS_ID_PROPERTY, filter.value);
+                case "categoriesid":
+                    return String.Format("{0} eq \"{1}\"", TARGET_CATEGORIES_ID_PROPERTY, filter.value);
+                case "minimumlifetimevalueamount":
+                    return String.Format("{0} eq \"{1}\"", TARGET_MINIMUM_LIFETIME_VALUE_AMOUNT_PROPERTY, filter.value);
+                case "shippingmethodscode":
+                    return String.Format("{0} eq \"{1}\"", TARGET_SHIPPING_METHODS_CODE_PROPERTY, filter.value);
+                case "shippingzones":
+                    return String.Format("{0} eq \"{1}\"", TARGET_SHIPPING_ZONES_PROPERTY, filter.value);
+                case "customergroupsid":
+                    return String.Format("{0} eq \"{1}\"", TARGET_CUSTOMER_GROUPS_ID_PROPERTY, filter.value);
+                case "conditionsproductid":
+                    return String.Format("{0} eq \"{1}\"", CONDITIONS_PRODUCTS_PRODUCTID_PROPERTY, filter.value);
+                case "conditionscategoryid":
+                    return String.Format("{0} eq \"{1}\"", CONDITIONS_CATEGORIES_CATEGORYID_PROPERTY, filter.value);
                 case "validondate":
                     return String.Format("{0} lt \"{2}\" and ({1} gt \"{2}\" or {1} eq null)", START_DATE_PROPERTY, END_DATE_PROPERTY, filter.value);
                 default:
