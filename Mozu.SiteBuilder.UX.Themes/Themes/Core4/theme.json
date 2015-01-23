@@ -888,46 +888,6 @@
         "icon": "/resources/admin/widgets/13_social.png",
         "validPageTypes":["*"]
     }, {
-        "id": "facebook_comments",
-        "displayName": "Facebook Comments",
-        "displayTemplate": "social/facebookComments",
-        "icon": "/resources/admin/widgets/24_facebook_comments.png",
-        "editViewFields": [{
-            "xtype": "slider",
-            "fieldLabel": "Number of posts to display",
-            "labelSeparator": "",
-            "labelAlign": "top",
-            "name": "count",
-            "value": 2,
-            "width": 250,
-            "increment": 1,
-            "minValue": 1,
-            "maxValue": 10
-        }, {
-            "xtype": "fieldcontainer",
-            "fieldLabel": "Color scheme",
-            "labelSeparator": "",
-            "labelAlign": "top",
-            "defaultType": "radiofield",
-            "defaults": {
-                "flex": 1,
-                "name": "theme"
-            },
-            "items": [{
-                "boxLabel": "Light",
-                "inputValue": "light"
-            }, {
-                "boxLabel": "Dark",
-                "inputValue": "dark"
-            }]
-        }],
-        "defaultConfig": {
-            "count": 5,
-            "theme": "light"
-        },
-        "category": "social",
-        "validPageTypes":["*"]
-    }, {
         "id": "deal-of-the-day",
         "category": "catalog",
         "displayName": "Deal of the Day",
