@@ -51,7 +51,7 @@ Ext.define('Taco.view.order.Grid', {
         
         quickFilterData: [
             [{ orderStatus: 'Open' }, 'Open Orders'],
-            [{ paymentstatus: 'Unpaid', orderStatus: 'Open' }, 'Unpaid Orders'],
+            [{ paymentstatus: 'Unpaid,Pending', orderStatus: 'Open' }, 'Unpaid Orders'],
             [{ paymentstatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
             [{ orderStatus: 'Pending', ordertype: 'Offline' }, 'Pending Orders'], 
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
