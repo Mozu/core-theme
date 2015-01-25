@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-01-14
+ * Mozu JavaScript SDK - v0.3.0 - 2015-01-23
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3658,7 +3658,7 @@ module.exports=
     "order": {
         "template": "{+orderService}{id}",
         "includeSelf": true,
-        "create": {
+        "create-from-cart": {
             "template": "{+orderService}{?cartId*}",
             "shortcutParam": "cartId",
             "noBody": true

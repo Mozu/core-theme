@@ -1,5 +1,5 @@
 ﻿{% if item.discountedTotal || item.discountedTotal == 0 %}
-	{% if discountPresent and item.discountedTotal < item.subtotal %} 
+	{% if item.discountedTotal < item.subtotal %} 
 		<span class="mz-item-rowtotal is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}>	{{ item.subtotal|currency }}</span>
 		{% for productDiscount in item.productDiscounts %}
 			<div class="mz-item-discount">
