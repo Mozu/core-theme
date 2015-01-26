@@ -42,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
             {
                 statements = statements.Concat(new[] { string.Format("({0})", defaultStatus) });
             }
+
             return string.Join(" and ", statements);
         }
 
@@ -71,6 +72,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 }
                 case "paymentstatus":
                 {
+                    if (filter.value.ToString().ToLower() == "unpaid,pending")
+                    {
+                        return "(paymentstatus.in  eq \"Unpaid,Pending\")";
+                    }
                     return "paymentstatus eq " + filter.value;;
                 }
                 case "fulfillmentstatus":
