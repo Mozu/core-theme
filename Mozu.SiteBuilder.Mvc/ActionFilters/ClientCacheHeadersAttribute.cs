@@ -35,10 +35,17 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             get;
             set;
         }
+
+        public bool ForceRevalidate
+        {
+            get;
+            set;
+        }
        
         public ClientCacheHeadersAttribute()
         {
             ConfigKey = "default";
+            ForceRevalidate = false;
             AllowCrossOrigin = true;
         }
 
@@ -63,10 +70,21 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             {
                 var cache = actionExecutedContext.Response.Headers.CacheControl = actionExecutedContext.Response.Headers.CacheControl ?? new CacheControlHeaderValue();
 
-                var cacheDuration = TimeSpan.FromSeconds(duration);
+                if (ForceRevalidate)
+                {
+                    cache.NoStore = true;
+                    cache.NoCache = true;
+                    cache.MustRevalidate = true;
+                }
+                else
+                {
 
-                cache.MaxAge = cacheDuration;
-                cache.Public = true;
+                    var cacheDuration = TimeSpan.FromSeconds(duration);
+
+                    cache.MaxAge = cacheDuration;
+                    cache.Public = true;
+                }
+
                 if (AllowCrossOrigin)
                 {
                     actionExecutedContext.Response.Headers.TryAddWithoutValidation("Access-Control-Allow-Origin", new string[] {"*"});
