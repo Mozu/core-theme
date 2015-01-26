@@ -51,12 +51,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<FacetSet>>> UpdateFacetSet(FacetSet set )
         {
             var facets = AutoMapper.Mapper.Map<List<DC.Facet>>(set.Configured.Where(x => x.CategoryId == set.CategoryId).ToList() );
+            var inheritedFacets = AutoMapper.Mapper.Map<List<DC.Facet>>(set.Configured.Where(x => x.CategoryId != set.CategoryId).ToList());
             facets.ForEach(f => f.Order = facets.IndexOf(f) + 1);
             var serverFacets = ((await _facetWebApiClient.GetFacetCategoryList(set.CategoryId)).ReadAsSync().Configured ?? new List<DC.Facet>()).Where(x => x.CategoryId == set.CategoryId).ToList();
 
             var newFacets = facets.Where(x => !x.FacetId.HasValue).Select(x => _facetWebApiClient.AddFacet(x)).ToList();
-            var updateFacets = facets.Where(x => x.FacetId.HasValue).Select(x => _facetWebApiClient.UpdateFacet( x, x.FacetId)).ToList();
             var deleteFacets = serverFacets.Where(x => !facets.Any(y => x.FacetId == y.FacetId)).Select(x=>_facetWebApiClient.DeleteFacetById( x.FacetId )).ToList();
+
+            facets.AddRange(inheritedFacets);
+            var updateFacets = facets.Where(x => x.FacetId.HasValue).Select(x => _facetWebApiClient.UpdateFacet(x, x.FacetId)).ToList();
+            
 
             if (newFacets.Count > 0)
             {
