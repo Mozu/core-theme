@@ -28,7 +28,7 @@
                 <div>{{ order.billingInfo.billingContact.address.cityOrTown }}, {{ order.billingInfo.billingContact.address.stateOrProvince }} {{ order.billingInfo.billingContact.address.postalOrZipCode }}</div>
                 {% if order.billingInfo.billingContact.phoneNumbers.home %}<div>{{ order.billingInfo.billingContact.phoneNumbers.home }} (home)</div>{% endif %}
                 {% if order.billingInfo.billingContact.phoneNumbers.work %}<div>{{ order.billingInfo.billingContact.phoneNumbers.work }} (work)</div>{% endif %}
-                {% if order.billingInfo.billingContact.phoneNumbers.mobile %}<div>{{ order.billingInfo.billingContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+               {% if order.billingInfo.billingContact.phoneNumbers.mobile %}<div>{{ order.billingInfo.billingContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
                 <div>{{ order.billingInfo.billingContact.email }}</div>
             </td><td>
                 <div>{{ order.fulfillmentInfo.fulfillmentContact.firstName }} {{ order.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
@@ -61,7 +61,7 @@
                         {% if type.grouper == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
                         {% if type.grouper == "Paypal" %}{{ labels.payPal }}{% endif %}
                         {% if type.grouper == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
-                    
+                   
                 {% endfor %}
             </td>
             <td>{{ model.shippingMethodName }}</td>
@@ -71,50 +71,82 @@
         <thead><tr>
             <th>Product Code</th>
             <th>Product Name</th>
-            <th>Price</th>
             <th>Quantity</th>
+            <th>Weight</th>
         </tr></thead>
         <tbody>
-        {% for item in model.items %}
+        {% for item in model.items %} <!-- model represents the package -->
             <tr>
                 <td>{{ item.productCode }}</td>
-                
-				{% with order.items|findwhere('product.productCode', item.productCode) as currentItem %}
-					{% if currentItem %}
-					<td>
-						<div class="product-name">{{ currentItem.product.name }}</div>
-					</td>
-					<td>{{ currentItem.product.measurements.weight.value }} {{ currentItem.product.measurements.weight.unit }}</td>
-
-					{% else %}
-						{% with order.items|findwhere('product.variationProductCode', item.productCode) as currentVariantItem %}
-												
-							{% if currentVariantItem %}
-							<td>
-								<div class="product-name">{{ currentVariantItem.product.name }}</div>
-							</td>
-							<td>{{ currentVariantItem.product.measurements.weight.value }} {{ currentVariantItem.product.measurements.weight.unit }}</td>
-												
-							{% else %}
-
-								{% for orderitem in order.items %}
-									{% if orderitem.product.bundledProducts %}
-										{% for bproduct in orderitem.product.bundledProducts %}
-											{% if bproduct.productCode == item.productCode %}
-
-											<td><div class="product-name">{{ bproduct.name }}</div></td>
-											<td>{{ bproduct.measurements.weight.value }} {{ bproduct.measurements.weight.unit }}</td>
-																
-											{% endif %}
-										{% endfor %}
-									{% endif %}
-								{% endfor %}
-							{% endif %}
-						{% endwith%}
-					{% endif %}
-				{% endwith%}
-
-                <td>{{ item.quantity }}</td>
+               
+                           {% with order.items|findwhere('product.productCode', item.productCode) as currentItem %}
+                                 {% if currentItem %}
+                                 <td>
+                                        <div class="product-name">{{ currentItem.product.name }}</div>
+                                 </td>
+ 
+                                 <td>{{ item.quantity }}</td>
+                                 <td>
+                                 <span>
+                                 <script type="text/javascript">
+                                        // do as we say, not as we do
+                                        // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                        var value = Number({{ currentItem.product.measurements.weight.value }}),
+                                               quantity = Number({{ item.quantity }});
+                                        document.write(quantity * value);
+                                 </script>
+                                 </span> {{ currentItem.product.measurements.weight.unit }}
+                                 </td>
+ 
+                                 {% else %}
+                                        {% with order.items|findwhere('product.variationProductCode', item.productCode) as currentVariantItem %}
+                                                                               
+                                               {% if currentVariantItem %}
+                                               <td>
+                                                     <div class="product-name">{{ currentVariantItem.product.name }}</div>
+                                               </td>
+ 
+                                               <td>{{ item.quantity }}</td>
+                                               <td>
+                                               <span>
+                                                     <script type="text/javascript">
+                                                            // do as we say, not as we do
+                                                            // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                            var value = Number({{ currentVariantItem.product.measurements.weight.value }}),
+                                                                   quantity = Number({{  item.quantity }});
+                                                            document.write(quantity * value);
+                                                            </script>
+                                                     </span> {{ currentVariantItem.product.measurements.weight.unit }}
+                                               </td>
+                                                                               
+                                               {% else %}
+ 
+                                                     {% for orderitem in order.items %}
+                                                            {% if orderitem.product.bundledProducts %}
+                                                                   {% for bproduct in orderitem.product.bundledProducts %}
+                                                                         {% if bproduct.productCode == item.productCode %}
+ 
+                                                                          <td><div class="product-name">{{ bproduct.name }}</div></td>
+                                                                          <td>{{ item.quantity }}</td>
+                                                                         <td>
+                                                                                <span>
+                                                                                      <script type="text/javascript">
+                                                                                      // do as we say, not as we do
+                                                                                      // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                                                       var value = Number({{ bproduct.measurements.weight.value }}),
+                                                                                             quantity = Number({{  item.quantity }});
+                                                                                      document.write(quantity * value);
+                                                                                      </script>
+                                                                                </span> {{ bproduct.measurements.weight.unit }}
+                                                                         </td>
+                                                                         {% endif %}
+                                                                   {% endfor %}
+                                                            {% endif %}
+                                                     {% endfor %}
+                                               {% endif %}
+                                        {% endwith%}
+                                 {% endif %}
+                           {% endwith%}
             </tr>
         {% endfor %}</tbody>
     </table>
