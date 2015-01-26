@@ -145,6 +145,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [System.Web.Http.HttpGet]
+        [ClientCacheHeaders(ForceRevalidate = true)]
         public async Task<ActionResult> Index(string orderId)
         {
             var pc = this.PageContext;
