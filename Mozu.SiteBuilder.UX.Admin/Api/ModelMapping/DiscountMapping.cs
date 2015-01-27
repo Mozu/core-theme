@@ -62,6 +62,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IncludeAllProducts, opt => opt.ResolveUsing(x => (x.Target != null)
                     ? x.Target.IncludeAllProducts
                     : null))
+
+                .ForMember(x => x.ExcludeItemsWithExistingProductDiscounts, opt => opt.ResolveUsing(x => (x.Target != null)
+                    ? x.Target.ExcludeItemsWithExistingProductDiscounts
+                    : null))
+
+                .ForMember(x => x.ExcludeItemsWithExistingShippingDiscounts, opt => opt.ResolveUsing(x => (x.Target != null)
+                    ? x.Target.ExcludeItemsWithExistingShippingDiscounts
+                    : null))
+
                 .ForMember(x => x.MinimumLifetimeValueAmount, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.MinimumLifetimeValueAmount
                     : null))
@@ -106,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? x.Conditions.MaxRedemptionCount
                     : null))
                 .ForMember(x => x.MaximumRedemptionsPerOrder, opt => opt.ResolveUsing(dc => (dc.Conditions != null)
-                    ? dc.Conditions.MaximumRedemptionsPerOrder
+                    ? dc.MaximumRedemptionsPerOrder
                     : null))
                 .ForMember(x => x.StartDate, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.StartDate
@@ -161,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DoesNotApplyToSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToSalePrice))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content.Name))
                 .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content.FriendlyDescription))
-                .ForMember(x => x.MaximumDiscountValuePerOrder, op => op.ResolveUsing(dc => dc.MaximumDiscountValuePerOrder));
+                .ForMember(x => x.MaximumDiscountValuePerOrder, op => op.ResolveUsing(dc => dc.MaximumDiscountImpactPerOrder));
             
                 
             // To data contract
@@ -188,7 +197,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                MinimumOrderAmount = x.MinimumOrderAmount == 0 ? null : x.MinimumOrderAmount,
                                                                                MinimumLifetimeValueAmount = x.MinimumLifetimeValueAmount == 0 ? null : x.MinimumLifetimeValueAmount,
                                                                                MaxRedemptionCount = x.MaxRedemptionCount,                                                                             
-                                                                               MaximumRedemptionsPerOrder = x.MaximumRedemptionsPerOrder,
                                                                                StartDate = x.StartDate,
                                                                                ExpirationDate = x.ExpirationDate,
                                                                                RequiresCoupon = x.RequiresCoupon,
@@ -196,7 +204,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            }))
                 .ForMember(x => x.Target, opt => opt.ResolveUsing(x => new DC.DiscountTarget
                                                                        {
-                                                                           Type = x.Target,
+                                                                           Type = x.Target,                                                                           
+                                                                           ExcludeItemsWithExistingShippingDiscounts = x.ExcludeItemsWithExistingShippingDiscounts,
+                                                                           ExcludeItemsWithExistingProductDiscounts = x.ExcludeItemsWithExistingProductDiscounts,
                                                                            MaximumQuantityPerRedemption = ((x.Categories.IsNullOrEmpty() && x.Products.IsNullOrEmpty()) || ! x.MaximumQuantityPerRedemption.HasValue)
                                                                             ? (int?)null 
                                                                             : Math.Max(x.MaximumQuantityPerRedemption.Value, 1),
@@ -205,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
                                                                            Products = (x.Products ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
                                                                            ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod { Code = _ }).ToList(),
-                                                                          ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),
+                                                                          ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),                                                                          
                                                                            IncludeAllProducts = x.IncludeAllProducts,
                                                                        }))
                 .AfterMap((s, d) =>
