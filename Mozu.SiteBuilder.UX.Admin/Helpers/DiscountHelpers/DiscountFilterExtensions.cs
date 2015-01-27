@@ -115,13 +115,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 case "usagecountto":
                     return String.Format("{0} le \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);
                 case "startdatefrom":
-                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, filter.value);
+                    return String.Format("{0} gt \"{1}\"", START_DATE_PROPERTY, filter.value);
                 case "startdateto":
-                    return String.Format("{0} le \"{1}\"", START_DATE_PROPERTY, filter.value);
+                    return String.Format("{0} lt \"{1}\"", START_DATE_PROPERTY, filter.value);
                 case "enddatefrom":
-                    return String.Format("{0} ge \"{1}\"", END_DATE_PROPERTY, filter.value);
+                    return String.Format("{0} gt \"{1}\"", END_DATE_PROPERTY, filter.value);
                 case "enddateto":
-                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, filter.value);
+                    return String.Format("{0} lt \"{1}\"", END_DATE_PROPERTY, filter.value);
                 case "requirecoupon":
                     return String.Format("{0} eq {1}", REQUIRE_COUPON_PROPERTY, filter.value);
                 case "productcode":
