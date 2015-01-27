@@ -712,12 +712,12 @@ Ext.define('Taco.view.attribute.Form', {
             }, {
                 xtype: 'checkboxfield',
                 name: 'isRequired',
-                hidden: !this.record.supportsDeprecatedFields(),
+                hidden: !this.record.supportsIsRequired(),
                 boxLabel: 'This attribute is required'
             }, {
                 xtype: 'checkboxfield',
                 name: 'isVisible',
-                hidden: !this.record.supportsDeprecatedFields(),
+                hidden: !this.record.supportsIsVisible(),
                 boxLabel: 'Show in website'
             }, {
                 xtype: 'combobox',

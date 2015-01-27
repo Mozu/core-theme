@@ -1303,7 +1303,7 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
             params[me.valueParam || me.valueField] = unknownValues.join(me.delimiter);
             me.store.load({
                 limit: pageSize,
-                params: pageSize,
+                params: params,
                 callback: function() {
                     if (me.itemList) {
                         me.itemList.unmask();

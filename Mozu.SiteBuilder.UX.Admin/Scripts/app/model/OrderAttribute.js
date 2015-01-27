@@ -18,8 +18,11 @@ Ext.define('Taco.model.OrderAttribute', {
     supportsValueType: function () {
         return false;
     },
-    supportsDeprecatedFields: function () {
-        return true;
+    supportsIsRequired: function () {
+        return false;
+    },
+    supportsIsVisible: function () {
+        return false;
     },
     allowProductDataType: function () {
         return false;

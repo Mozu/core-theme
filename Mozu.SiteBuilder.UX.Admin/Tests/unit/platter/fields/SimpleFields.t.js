@@ -66,41 +66,41 @@ StartTest(function (t) {
             
              m.form.add({
                  xtype: 'mz-input-text',
-                 name: 'text',
+                 name: 'mz-input-text',
                  fieldLabel: 'text',
                  allowBlank: false,
                  width:600
              });
              m.form.add({
                  xtype: 'mz-input-code',
-                 name: 'text',
+                 name: 'mz-input-code',
                  fieldLabel: 'mz-input-code',
                  allowBlank: false,
                  width: 600
              });
              m.form.add({
                  xtype: 'mz-input-date',
-                 name: 'text',
+                 name: 'mz-input-date',
                  fieldLabel: 'mz-input-date',
                  allowBlank: false,
                  width: 600
              });
              m.form.add({
                  xtype: 'mz-input-richtext',
-                 name: 'text',
+                 name: 'mz-input-richtext',
                  fieldLabel: 'mz-input-richtext',
                  allowBlank: false,
                  width: 600
              });
              m.form.add({
                  xtype: 'mz-input-number',
-                 name: 'num',
+                 name: 'mz-input-number',
                  fieldLabel: 'mz-input-number',
                  allowBlank: false,
              });
              m.form.add({
                  xtype: 'mz-input-dropdown',
-                 name: 'dropdown',
+                 name: 'mz-input-dropdown',
                  fieldLabel: 'dropdown',
                  allowBlank:false,
                  store: [
@@ -110,66 +110,66 @@ StartTest(function (t) {
              });
              m.form.add({
                  xtype: 'mz-input-image',
-                 name: 'image',
+                 name: 'mz-input-image',
                  fieldLabel: 'mz-input-image',
              });
              m.form.add({
                  xtype: 'mz-input-image-nostyle',
-                 name: 'imageBasic',
+                 name: 'mz-input-image-nostyle',
                  fieldLabel: 'mz-input-image-nostyle',
              });
              m.form.add({
                  xtype: 'mz-input-imageurl',
-                 name: 'imageurl',
+                 name: 'mz-input-imageurl',
                  fieldLabel: 'mz-input-imageurl',
              });
 
              m.form.add({
                  xtype: 'mz-input-product',
-                 name: 'product',
+                 name: 'mz-input-product',
                  fieldLabel: 'mz-input-product',
              });
 
              m.form.add({
                  xtype: 'mz-input-productmulti',
-                 name: 'productmulti',
+                 name: 'mz-input-productmulti',
                  fieldLabel: 'mz-input-productmulti',
              });
 
 
              m.form.add({
                  xtype: 'mz-input-category',
-                 name: 'category',
+                 name: 'mz-input-category',
                  fieldLabel: 'mz-input-category',
              });
 
              m.form.add({
                  xtype: 'mz-input-categorymulti',
-                 name: 'categorymulti',
+                 name: 'mz-input-categorymulti',
                  fieldLabel: 'mz-input-categorymulti',
              });
 
              m.form.add({
                  xtype: 'mz-input-discount',
-                 name: 'discount',
+                 name: 'mz-input-discount',
                  fieldLabel: 'mz-input-discount',
              });
 
              m.form.add({
                  xtype: 'mz-input-discountmulti',
-                 name: 'discountmulti',
+                 name: 'mz-input-discountmulti',
                  fieldLabel: 'mz-input-discountmulti',
              });
 
              m.form.add({
                  xtype: 'mz-input-navnode',
-                 name: 'navnode',
+                 name: 'mz-input-navnode',
                  fieldLabel: 'mz-input-navnode',
              });
 
              m.form.add({
                  xtype: 'mz-input-navnodemulti',
-                 name: 'navnodemulti',
+                 name: 'mz-input-navnodemulti',
                  fieldLabel: 'mz-input-navnodemulti',
              });
 
@@ -178,8 +178,25 @@ StartTest(function (t) {
                  html:'<div style="height:100px;"></div>'
                  
              });
+            var date = new Date();
+            var testDateStr = Ext.util.Format.date(date, "c");
+           
+            m.form.getForm().setValues({
+                'mz-input-date': testDateStr,
+                'mz-input-categorymulti':[2, 29]
+            });
+        
 
-            next();
+            var vals = m.form.getValues(false, false, false, true);
+            var catMulti = m.form.getForm().findField('mz-input-categorymulti');
+       
+            t.isLessOrEqual(vals['mz-input-date'] - date, 100, ' date set correctly');
+            t.waitFor(function () {
+                    return Ext.Array.equals(catMulti.getValue(), [2, 29]);
+                },
+                next,
+                2000);
+            
 
 
 

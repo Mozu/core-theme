@@ -194,5 +194,13 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
     appliesToShipping: function () {
         return this.targetTypeInput.getValue() === 'Shipping';
-        }
+    },
+
+    onDestroy: function () {
+        var me = this;
+
+        me.clearListeners();
+
+        this.callParent(arguments);
+    }
 });

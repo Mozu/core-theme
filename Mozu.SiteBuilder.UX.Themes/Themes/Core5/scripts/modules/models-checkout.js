@@ -160,6 +160,7 @@
                     allowInvalidAddresses = HyprLiveContext.locals.siteContext.generalSettings.allowInvalidAddresses;
                 this.isLoading(true);
                 var addr = this.get('address');
+                order.setFulfillmentContactEmail();
                 var completeStep = function () {
                     order.messages.reset();
                     order.syncApiModel();
@@ -1108,6 +1109,14 @@
                     return doSaveCard();
                 }
             },
+            setFulfillmentContactEmail: function() {
+                var fulfillmentEmail = this.get('fulfillmentInfo.fulfillmentContact.email'),
+                    customerEmail = this.get('emailAddress');
+
+                if (!fulfillmentEmail) {
+                    this.set('fulfillmentInfo.fulfillmentContact.email', customerEmail);
+                }
+            },
             syncBillingAndCustomerEmail: function () {
                 var billingEmail = this.get('billingInfo.billingContact.email'),
                     customerEmail = this.get('emailAddress') || require.mozuData('user').email;
@@ -1208,6 +1217,7 @@
                 }
 
                 this.syncBillingAndCustomerEmail();
+                this.setFulfillmentContactEmail();
 
                 if (nonStoreCreditTotal > 0 && this.validate()) {
                     this.isSubmitting = false;

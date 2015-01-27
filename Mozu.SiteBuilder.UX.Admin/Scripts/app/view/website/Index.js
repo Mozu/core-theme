@@ -295,8 +295,7 @@ Ext.define('Taco.view.website.Index', {
 
         this.controller = Taco.app.controllers.get('Website');
         this.url = this.options && this.options.startUrl ? '/' + this.options.startUrl : '/';
-        this.widgetDefinitions = Taco.core.data.StoreManager.getOrCreate("Taco.store.WidgetDefinitions");
-
+        
         navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
 
         productStore = Ext.create('Taco.store.ProductComboBox', {
@@ -569,6 +568,18 @@ Ext.define('Taco.view.website.Index', {
         this.fireEvent('activecardchanged', this, cmp);
         
     },
+    
+    getWidgetDefinitions: function () {
+        var themeId = this.getPageContext().themeId;
+        var store = Taco.core.data.StoreManager.getOrCreate({
+            id: 'Taco.store.WidgetDefinitions' + themeId,
+            type: 'Taco.store.WidgetDefinitions',
+            themeId: themeId
+        });
+        return store;
+        
+
+    },
     getCardPanel: function () {
         this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
         return this.cardpanel;
@@ -828,7 +839,7 @@ Ext.define('Taco.view.website.Index', {
 
     onWidgetDrop: function (cfg) {
         var pageContext = this.getPageContext(),
-            def = this.widgetDefinitions.getById(cfg.widgetTypeId),
+            def = this.getWidgetDefinitions().getById(cfg.widgetTypeId),
             body = this.iframe.getDoc().body,
             jsonData = {
                 zoneScope: 'page',
@@ -911,7 +922,7 @@ Ext.define('Taco.view.website.Index', {
 
     onWidgetEdit: function (cfg) {
         var pageContext = this.getPageContext(),
-            def = this.widgetDefinitions.getById(cfg.data.definitionId),
+            def =  this.getWidgetDefinitions().getById(cfg.data.definitionId),
             body = this.iframe.getDoc().body,
             jsonData = {
                 zoneScope: 'page',
@@ -958,6 +969,7 @@ Ext.define('Taco.view.website.Index', {
                         Ext.fly(body).setStyle('cursor', 'wait');
                         Ext.Ajax.request({
                             url: '/Widgets/preview',
+                            headers: { 'x-vol-dataview-mode': 'Pending' },
                             jsonData: jsonData,
                             callback: function () {
                                 Ext.fly(body).setStyle('cursor', 'auto');

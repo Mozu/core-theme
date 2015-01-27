@@ -135,6 +135,9 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                         }, {
                             name: "Pending",
                             id: "Pending"
+                        }, {
+                            name: "Unpaid,Pending",
+                            id:"Unpaid,Pending"
                         }
                     ]
                 })

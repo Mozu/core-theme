@@ -33,9 +33,20 @@ Ext.define('Taco.view.discount.Edit', {
             });
         }
     },
+
+    enableNextPrevious: true,
+
+    nextPreviousCfg: {
+        store: "Taco.store.DiscountGrid",
+        url: "/discounts/edit/",
+        nextButtonTipTpl: "Next Discount <div style='padding-top:10px;'>{name}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
+        previousButtonTipTpl: "Previous Discount <div style='padding-top:10px;'>{name}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
+        stateId: "statefulDiscountsGrid"
+    },
+
     initComponent: function () {
         var me = this;
-
+        
         this.additionalActions = [{
             xtype: 'button',
             itemId: 'moreButton',
@@ -48,6 +59,7 @@ Ext.define('Taco.view.discount.Edit', {
                 shadow: false,
                 items: [{
                     text: 'Duplicate',
+                    disabled : me.record.phantom,
                     requiredBehaviors: {
                         model: 'Taco.model.Discount',
                         behavior: 'create'
@@ -78,5 +90,13 @@ Ext.define('Taco.view.discount.Edit', {
 
             }, this);
         }
+    },
+
+    onDestroy: function () {
+        var me = this;
+
+        me.clearListeners();
+
+        this.callParent(arguments);
     }
 });

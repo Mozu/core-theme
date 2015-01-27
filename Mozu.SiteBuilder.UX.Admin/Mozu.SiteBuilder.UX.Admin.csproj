@@ -748,12 +748,12 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
     <Content Include="Scripts\app\core\ux\mixins\LaunchEditor.js" />
     <Content Include="Scripts\app\core\ux\mixins\Permissions.js" />
     <Content Include="Scripts\app\core\ux\mixins\NavHeader.js" />
-    <Content Include="Scripts\app\core\ux\mixins\Navigable.js" />
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Pageable.js" />
@@ -839,6 +839,8 @@
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
+    <Content Include="Scripts\app\store\DiscountGrid.js" />
+    <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\States2.js" />
     <Content Include="Scripts\app\store\Currencies.js" />
     <Content Include="Scripts\app\store\CustomerGrid.js" />
@@ -1315,6 +1317,7 @@
     <Content Include="Scripts\resources\lib\ace\snippets\snippets.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\soy_template.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\space.js" />
+    <Content Include="Scripts\resources\lib\ace\snippets\mozufilter.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\sql.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\stylus.js" />
     <Content Include="Scripts\resources\lib\ace\snippets\svg.js" />
@@ -2368,7 +2371,6 @@
     <Content Include="Scripts\app\store\NavigationTreeNodes.js" />
     <Content Include="Scripts\app\store\States.js" />
     <Content Include="Scripts\app\store\CountryComboBox.js" />
-    <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\DomesticShippingRates.js" />
     <Content Include="Scripts\app\store\InternationalShippingRates.js" />
     <Content Include="Scripts\app\store\ProductComboBox.js" />

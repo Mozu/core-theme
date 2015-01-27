@@ -9,7 +9,7 @@ Ext.define('Taco.core.util.Validation', {
         this.initConfig(config);
     },
     config: {
-        seoFriendlyRegex : /^[a-z0-9-_/.()]*[a-z0-9-_()]$/i
+        seoFriendlyRegex : /^[a-z0-9-_\.()]*[a-z0-9-_()]$/i
     },
 
     /*  a utility method to store recurring regex and other validation functions.

@@ -108,13 +108,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
             }
 
-            dynamic res = null;
-
-            if (docIds != null && docIds.Any())
-            {
-                res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex);    
-            }
             
+            var res = (dynamic)(await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
+            
+            
+       
             object  model = null;
             if (res.HasException)
             {
