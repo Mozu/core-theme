@@ -371,22 +371,46 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             fieldLabel: 'Maximum Quantity Per Redemption'
         });
 
+        this.excludeLineItemProductDiscounts = Ext.create('Ext.form.FieldContainer', {
+            width: 600,
+            margin: '10 0 0 0',
+            fieldLabel:"Exclude products that have line item discounts for the following types:",
+            items: [
+                {
+                    xtype: 'checkbox',
+                    name: 'excludeLineItemProductDiscountsShipping',
+                    boxLabel: 'Shipping',
+                    width: 300,
+                    value: this.record.get('excludeLineItemProductDiscountsShipping') !== true
+                },
+                {
+                    xtype: 'checkbox',
+                    name: 'excludeLineItemProductDiscountsProduct',
+                    boxLabel: 'Product',
+                    width: 300,
+                    value: this.record.get('excludeLineItemProductDiscountsProduct') !== true
+                },
+            ]
+        })
+
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
 
-            items: [{
-                xtype: 'container',
-                layout: {
-                    type: 'hbox'
-                },
-                width: 600,
-                margin: '10 0 0 0',
-                items: [
-                    this.includeAllProductsInput,
-                    this.appliesToSaleProducts
-                ]
-            },
+            items: [
+                {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    width: 600,
+                    margin: '10 0 0 0',
+                    items: [
+                        this.includeAllProductsInput,
+                        this.appliesToSaleProducts
+                    ]
+                },                
                 this.includeSpecificProductsInput,
+                this.excludeLineItemProductDiscounts,
                 this.productsBox,
                 this.categoriesBox,
                 {
@@ -596,19 +620,42 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     //todo: gm split prodCat containter into include and exclude. On includeAll checked, then only show exclude.
     setProductCategoryContainerVisibility: function (isLineItem) {
-        this.productCategoryContainer.setVisible(isLineItem);        
+        //this.productCategoryContainer.setVisible(isLineItem);
+        //always visible now
+        this.productCategoryContainer.setVisible(true);       
+
+        //reset the hidden fields
         if (!isLineItem) {
             this.includeSpecificProductsInput.setValue(true);
             this.categoryList.setValue('');
             this.productList.setValue('');
-            this.excludeCategoryList.setValue('');
-            this.productExcludeList.setValue('');
+            //this.excludeCategoryList.setValue('');
+            //this.productExcludeList.setValue('');
         }
+
+        this.excludeLineItemProductDiscounts.setVisible(!isLineItem);        
+
+        // setup line item;
+        
+        this.includeAllProductsInput.setVisible(isLineItem)
+        this.appliesToSaleProducts.setVisible(true)
+
+        this.includeSpecificProductsInput.setVisible(isLineItem)
+        this.productsBox.setVisible(isLineItem)
+        this.categoriesBox.setVisible(isLineItem)
+
+        this.excludeCategoriesBox.setVisible(true)
+        this.productsExcludeBox.setVisible(true)
+        this.maximumQuantityPerRedemptionTB.setVisible(isLineItem)
+
+
     },
 
-    setFieldVisibility: function (isLineItem, appliesToShipping) {        
-        this.setVisible(isLineItem || appliesToShipping);
-        this.setProductCategoryContainerVisibility(isLineItem);
+    setFieldVisibility: function (isLineItem, appliesToShipping) {
+        //always visible now;
+        this.setVisible(true);
+        //this.setVisible(isLineItem || appliesToShipping);
+        this.setProductCategoryContainerVisibility(isLineItem);        
         this.setShippingListVisibility(appliesToShipping);
     },
 
