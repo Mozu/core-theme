@@ -45,6 +45,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// </summary>
         public bool? ExcludeItemsWithExistingShippingDiscounts { get; set; }
 
+
+        //MaximumDiscountImpactPerOrder
+        public decimal? MaximumDiscountImpactPerOrder { get; set; }
+
+
         /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
