@@ -18,6 +18,7 @@ user.app.config
 
 *ncrunch*
 *.ide
+.vs
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
