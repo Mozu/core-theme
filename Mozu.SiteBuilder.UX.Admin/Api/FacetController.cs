@@ -38,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var res = (await _facetWebApiClient.GetFacetCategoryList(id)).ReadAsSync();
 
+            res.Configured = _inheritedFacetHelper.FilterInheritedFacetsThatAreOverriden(res.Configured, id);
 
             var ret = AutoMapper.Mapper.Map<FacetSet>(res);
 

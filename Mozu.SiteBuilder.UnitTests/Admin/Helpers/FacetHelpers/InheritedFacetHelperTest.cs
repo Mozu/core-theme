@@ -134,6 +134,34 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Helpers.FacetHelpers
             Assert.That(actual.FirstOrDefault(x => x.FacetId == 15), Is.Not.Null, "same as inherited with values");
         }
 
+        [Test]
+        public void ShouldFilterInheritedFacetsThatAreOverriden()
+        {
+            //arrange
+            var configured = new List<DC.Facet>
+                {
+                    CreateFacet(facetId: 8, isHidden: false, rangeQueryCount: 0, categoryId: _currentCategoryId), //current cateogry
+
+                    //overriden
+                    CreateFacet(facetId: 11, isHidden: false, rangeQueryCount: 3, overrideFacetId: 1,
+                        categoryId: _currentCategoryId), //diff range count
+
+                    //inherited
+                    CreateFacet(facetId: 1, isHidden: false, rangeQueryCount: 5), //should be removed
+                    CreateFacet(facetId: 2, isHidden: false, rangeQueryCount: 5)
+            };
+            var sut = new InheritedFacetHelper();
+
+            //act
+            var actual = sut.FilterInheritedFacetsThatAreOverriden(configured, _currentCategoryId);
+
+            //assert
+            Assert.That(actual.Count, Is.EqualTo(3), "should return 3, but returned " + actual.Count);
+            Assert.That(actual.FirstOrDefault(x => x.FacetId == 8), Is.Not.Null, "normal facet");
+            Assert.That(actual.FirstOrDefault(x => x.FacetId == 11), Is.Not.Null, "overriden");
+            Assert.That(actual.FirstOrDefault(x => x.FacetId == 2), Is.Not.Null, "inherited but not overriden");   
+        }
+
 
 
 

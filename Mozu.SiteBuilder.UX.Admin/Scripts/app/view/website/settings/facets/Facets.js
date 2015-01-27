@@ -123,19 +123,23 @@
                      cls: 'x-boundlist-draggable',
                      itemTpl: new Ext.XTemplate(
                      '<span class="x-boundlist-item-contents">',
-                         '<span class="x-boundlist-item-drag">Drag </span>',
+                         '<tpl if="!this.isInherited(categoryId) && !this.isOverriden(overrideFacetId)">',
+                            '<span class="x-boundlist-item-drag">Drag </span>',
+                         '</tpl>',
                          '<span class="x-boundlist-item-content">',
                          '<span class="x-boundlist-item-type">{sourceName}</span>',
-                         '<tpl if="!this.isInherited(categoryId)">',
-                             '<span class="x-boundlist-item-name">{sourceType}</span>',
-                         '<tpl else>',
+                         '<tpl if="this.isInherited(categoryId)">',
                              '<span class="x-boundlist-item-name">Inherited {sourceType}</span>',
+                         '<tpl elseif="this.isOverride(overrideFacetId)">',
+                             '<span class="x-boundlist-item-name">Overriden {sourceType}</span>',
+                         '<tpl else>',
+                             '<span class="x-boundlist-item-name">{sourceType}</span>',
                          '</tpl>',
                          '<span class="x-boundlist-item-action x-boundlist-item-settings">Settings </span>',
                          '<tpl if="!isvalid">',
                              '<span class="x-boundlist-item-action x-boundlist-item-problem">Problem </span>',
                          '</tpl>',
-                         '<tpl if="!this.isInherited(categoryId)">',
+                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
                             '<span class="x-boundlist-item-action x-boundlist-item-close">Close </span>',
                         '</tpl>',
                      '<div class="x-facet-ranges" data-for-sourceid="{sourceId}"></div>',
@@ -148,8 +152,10 @@
                              },
                              isOverridden: function (overrideFacetId) {
                                  return overrideFacetId !== null;
+                             },
+                             isNormal: function(catId, overrideFacetId) {
+                                 return (catId === thisCategoryId && !overrideFacetId);
                              }
-                             
                          }
                      ),
                      listeners: {
