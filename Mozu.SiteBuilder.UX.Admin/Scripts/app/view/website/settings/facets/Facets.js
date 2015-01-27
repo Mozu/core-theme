@@ -103,15 +103,6 @@
                  }
              });
 
-             var inheritedFacetsStore = Ext.create('Ext.data.Store', {
-                 model: 'Taco.model.Facet'
-             });
-             inheritedFacetsStore.add(configuredFacetsStore.queryBy(function (record, id) {
-                 return thisCategoryId !== record.get('categoryId');
-             }).getRange());
-
-             configuredFacetsStore.filter("categoryId", thisCategoryId);
-
              configuredFacetsStore.on({
                  remove: function (s, record) {
                      availableFacetsStore.add(record.raw);
@@ -119,27 +110,6 @@
              });
 
              var times = {};
-
-             me.inheritedFacetsView = Ext.create('Taco.core.ux.form.field.MultiSelect', {
-                 name: 'inheritedFacets',
-                 width: 250,
-                 store: inheritedFacetsStore,
-                 ignoreSelectChange: true,
-                 listConfig: {
-                     disableSelection: true,
-                     cls: 'x-boundlist-undraggable',
-                     itemTpl: new Ext.XTemplate(
-                         '<span class="x-boundlist-item-contents">',
-                             '<span class="x-boundlist-item-drag">Drag </span>',
-                             '<span class="x-boundlist-item-content">',
-                                 '<span class="x-boundlist-item-name">{sourceName}</span>',
-                                 '<span class="x-boundlist-item-type">{sourceType}</span>',
-                             '</span>',
-                             // '<span class="x-boundlist-item-action x-boundlist-item-hide">Hide </span>',
-                         '</span>'
-                     )
-                 }
-             });
 
              me.configuredFacetsView = Ext.create('Taco.core.ux.form.field.MultiSelect', {
                  name: 'facets',
@@ -153,21 +123,40 @@
                      cls: 'x-boundlist-draggable',
                      itemTpl: new Ext.XTemplate(
                      '<span class="x-boundlist-item-contents">',
-                         '<span class="x-boundlist-item-drag">Drag </span>',
+                         '<tpl if="!this.isInherited(categoryId) && !this.isOverriden(overrideFacetId)">',
+                            '<span class="x-boundlist-item-drag">Drag </span>',
+                         '</tpl>',
                          '<span class="x-boundlist-item-content">',
-                             '<span class="x-boundlist-item-name">{sourceName}</span>',
-                             '<span class="x-boundlist-item-type">{sourceType}</span>',
-                         '</span>',
-                             '<span class="x-boundlist-item-action x-boundlist-item-settings">Settings </span>',
+                         '<span class="x-boundlist-item-type">{sourceName}</span>',
+                         '<tpl if="this.isInherited(categoryId)">',
+                             '<span class="x-boundlist-item-name">Inherited {sourceType}</span>',
+                         '<tpl elseif="this.isOverride(overrideFacetId)">',
+                             '<span class="x-boundlist-item-name">Overriden {sourceType}</span>',
+                         '<tpl else>',
+                             '<span class="x-boundlist-item-name">{sourceType}</span>',
+                         '</tpl>',
+                         '<span class="x-boundlist-item-action x-boundlist-item-settings">Settings </span>',
                          '<tpl if="!isvalid">',
                              '<span class="x-boundlist-item-action x-boundlist-item-problem">Problem </span>',
                          '</tpl>',
-                         '<span class="x-boundlist-item-action x-boundlist-item-close">Close </span>',
-                     '</span>',
+                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
+                            '<span class="x-boundlist-item-action x-boundlist-item-close">Close </span>',
+                        '</tpl>',
                      '<div class="x-facet-ranges" data-for-sourceid="{sourceId}"></div>',
                      '<tpl if="!isvalid">',
                          '<p class="x-facet-validityreason">{validityCode}</p>',
-                     '</tpl>'
+                     '</tpl>',
+                         {
+                             isInherited: function (catId) {
+                                 return catId !== thisCategoryId;
+                             },
+                             isOverridden: function (overrideFacetId) {
+                                 return overrideFacetId !== null;
+                             },
+                             isNormal: function(catId, overrideFacetId) {
+                                 return (catId === thisCategoryId && !overrideFacetId);
+                             }
+                         }
                      ),
                      listeners: {
                          itemclick: function (list, record, item, index, e) {
@@ -213,8 +202,8 @@
                      }
                  }
              });
-             me.configuredFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.selectedItemCls = me.inheritedFacetsView.boundList.overItemCls = 'dummy';
-             me.add([me.availableFacetsDropdown, me.inheritedFacetsView, me.configuredFacetsView]);
+             me.configuredFacetsView.boundList.selectedItemCls = 'dummy';
+             me.add([me.availableFacetsDropdown, me.configuredFacetsView]);
          }
 
          this.facetSetStore = this.record.getFacetSets();

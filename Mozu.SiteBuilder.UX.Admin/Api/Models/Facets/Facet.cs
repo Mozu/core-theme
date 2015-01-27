@@ -54,10 +54,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Facets
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? OverrideFacetId { get; set; }
 
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "isInheritedHidden")]
         public bool IsHidden { get; set; }
-
-       
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "isvalid")]
         public bool ValidityIsValid { get; set; }

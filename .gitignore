@@ -53,5 +53,6 @@ Mozu.SiteBuilder.UX.Admin/ext-*
 # thanks greg
 TestResult.xml
 Mozu.SiteBuilder.UX.Themes/Themes/*/compiled/*
+Mozu.SiteBuilder.UX.Themes/Themes/reptar
 *.log
 Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js

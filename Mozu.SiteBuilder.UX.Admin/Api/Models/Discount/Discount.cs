@@ -35,6 +35,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
      
         public bool? IncludeAllProducts { get; set; }
 
+        /// <summary>
+        /// prevents application of order level discounts when an line item has a product line item discount applied
+        /// </summary>
+        public bool? ExcludeItemsWithExistingProductDiscounts { get; set; }
+        
+        /// <summary>
+        /// prevents application of order level discounts when an line item has a shipping line item discount applied
+        /// </summary>
+        public bool? ExcludeItemsWithExistingShippingDiscounts { get; set; }
+
+
+        //MaximumDiscountImpactPerOrder
+        public decimal? MaximumDiscountImpactPerOrder { get; set; }
 
 
         /// <summary>

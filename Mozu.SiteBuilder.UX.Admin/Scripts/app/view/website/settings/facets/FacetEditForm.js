@@ -16,6 +16,28 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
     initComponent: function () {
         var me = this;
 
+        me.inheritedVisible = Ext.widget({
+            xtype: 'radio',
+            name: 'isInheritedHidden',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Show',
+            inputValue: false,
+            flex: 1,
+            //disabled: me.record.isInherited(),
+            checked: !me.record.get('isInheritedHidden')
+        });
+
+        me.inheritedHide = Ext.widget({
+            xtype: 'radio',
+            name: 'isInheritedHidden',
+            persistSelectedValueOnly: true,
+            boxLabel: 'Hide',
+            inputValue: true,
+            flex: 1,
+            //disabled: this.record.isInherited(),
+            checked: me.record.get('isInheritedHidden') === true
+        });
+
         me.valueDisplayStyle = Ext.widget({
             xtype: 'radio',
             name: 'facetType',
@@ -23,6 +45,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             boxLabel: 'Values',
             inputValue: 'Value',
             flex: 1,
+            disabled: this.record.isInherited(),
             checked: this.record.get('facetType') === 'Value'
         });
 
@@ -33,6 +56,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             boxLabel: 'Range',
             inputValue: 'RangeQuery',
             flex: 1,
+            disabled: this.record.isInherited(),
             checked: this.record.get('facetType') !== 'Value',
             listeners: {
                 change: function (rg, newValue) {
@@ -48,6 +72,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             labelAlign: 'top',
             labelStyle: 'padding-top: 5px;',
             hidden: true,
+            //disabled: this.record.isInherited(),
             // isDirty: function() {
             //     return false;
             // },
@@ -75,6 +100,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             xtype: 'taco.rangequerygroup',
             name: 'ranges',
             hidden: true,
+            //disabled: this.record.isInherited(),
             listeners: {
                 show: {
                     scope: this,
@@ -107,16 +133,27 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
         });
 
         this.items = [{
-            xtype: 'fieldcontainer',
-            fieldLabel: 'Display Style',
-            labelAlign: 'top',
-            labelStyle: 'padding-top: 5px;',
-            layout: 'hbox',
-            defaults: {
-                layout: '50%'
-            },
-            hidden: !me.record.get('allowsRangeQuery'),
-            items: [me.valueDisplayStyle, me.rangeDisplayStyle]
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Inherited Display',
+                labelAlign: 'top',
+                labelStyle: 'padding-top: 5px;',
+                layout: 'hbox',
+                defaults: {
+                    layout: '50%'
+                },
+                hidden: !me.record.isInherited(),
+                items: [me.inheritedVisible, me.inheritedHide]
+            },{
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Display Style',
+                labelAlign: 'top',
+                labelStyle: 'padding-top: 5px;',
+                layout: 'hbox',
+                defaults: {
+                    layout: '50%'
+                },
+                hidden: !me.record.get('allowsRangeQuery'),
+                items: [me.valueDisplayStyle, me.rangeDisplayStyle]
             },
             //me.displayStyle,
             me.numRanges,
@@ -140,6 +177,14 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
         if (me.record.get('facetType') === 'RangeQuery') {
             me.displayRangeQueryFields(true);
         }
+
+        if (!me.record.get('isInheritedHidden')) {
+            me.inheritedVisible.setValue(true);
+        } else {
+            me.inheritedHide.setValue(true);
+        }
+
+        //me.inheritedVisible.setValue(!me.record.get('isInheritedHidden'));
 
     },
 
