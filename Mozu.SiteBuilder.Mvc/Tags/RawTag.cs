@@ -5,19 +5,22 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System;
     using System.Text;
     using NDjango.Interfaces;
-    
+    using Microsoft.FSharp.Collections;
+    using NDjango.FiltersCS.Compatibility;
+    using System.Collections.Generic;
+
     [NDjango.ParserNodes.Description("sets varaible s in the current scope")]
     [Name("set_var")]
     public class SetVarTag : SimpleTagBase
     {
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
             var name = arguments[0].TokenValue;
             var value = arguments[1].Value;
 
-            context.add2(new Tuple<string, object>(name, value));
-            return new ProcessTagResult(context) {Buffer = "", Template = null};
+            return WalkResultHelpers.ContextAdditions(new Dictionary<string, object> { { name, value } }).ToFSharpList();
+
         }
     }
 
@@ -68,11 +71,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
             public string Text { get; set; }
 
-            public override Walker walk(ITemplateManager manager, Walker walker)
+            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
             {
-                walker = new Walker(walker.parent, walker.nodes, Text, walker.bufferIndex, walker.context);
-
-                return base.walk(manager, walker);
+                return WalkResultHelpers.Buffer(Text).ToFSharpList();
             }
         }
     }

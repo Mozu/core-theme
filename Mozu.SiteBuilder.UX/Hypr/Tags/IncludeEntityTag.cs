@@ -20,6 +20,7 @@ using NDjango;
 using NDjango.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -57,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [Name("include_entities")]
     public class IncludeEntitiesTag : SimpleTagBaseAsync
     {
-        protected override async Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, IContext context)
+        protected override async Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var result = new ProcessTagResult(context);
             var sbContext = context.SiteBuilderApiContext();
@@ -141,9 +142,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         };
             }
 
-            result.Template = template;
-            result.Context = context.add(new Tuple<string, object>("model", model));
-            return result;
+            var dict = new Dictionary<string, object> { { "model", model } };
+            var nodes = getTemplateFunction(template).Nodes;
+            return new[] { WalkResultHelpers.ContextAdditions(dict), WalkResultHelpers.Nodes(nodes) };
         }
     }
 }

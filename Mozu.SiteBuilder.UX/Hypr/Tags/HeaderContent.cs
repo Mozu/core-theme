@@ -3,6 +3,9 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Tags;
 using NDjango.Interfaces;
+using System.Collections.Generic;
+using System;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -16,12 +19,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     public class HeaderContent : SimpleTagBase
     {
         private const string extended_header_content = "extended_header_content";
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var cmsContext = context.PageContext().CmsContext;
             if (cmsContext == null)
             {
-                return new ProcessTagResult(context){Buffer = null, Template = null};
+                return Enumerable.Empty<WalkResult>();
             }
 
             var strings =
@@ -35,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     sb.Append(s);
                 }
-                return new ProcessTagResult(context){Buffer = sb.ToString(), Template = null};
+                return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
             }
         }
     }

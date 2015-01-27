@@ -5,8 +5,11 @@
 // -----------------------------------------------------------------------
 
 using NDjango.Interfaces;
-using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using NDjango.FiltersCS.Compatibility;
+using System;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -26,11 +29,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return string.Format("<pre>{0}\r\n{1}</pre>", model.GetType().FullName, json);
         }
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
+
             return arguments.Count == 0
-                ? new ProcessTagResult(context) {Buffer = String.Empty, Template = String.Empty}
-                : new ProcessTagResult(context) {Buffer = Process(arguments[0].Value), Template = String.Empty};
+                ? Enumerable.Empty<WalkResult>()
+                : WalkResultHelpers.Buffer(Process(arguments[0].Value)).ToFSharpList();
         }
     }
 }

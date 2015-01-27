@@ -15,12 +15,13 @@ using System.Web;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using Newtonsoft.Json.Linq;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags.Data
 {
     
     [Obsolete]
-    [NDjango.Interfaces.Name("cms_data_attributes")]
+    [Name("cms_data_attributes")]
     public class CmsDataAttributesTag : SimpleTagBase
     {
         static string Convert(Dictionary<String,object> mmd)
@@ -83,32 +84,29 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
         }
 
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
             var isEditmode = context.PageContext().IsEditMode;
-
-            if (!isEditmode)
-                return new ProcessTagResult(context){Buffer = null, Template = null};
+            if (!isEditmode) return Enumerable.Empty<WalkResult>();
 
             Dictionary<string, object> mmd = null;
 
             var exp = arguments[0].TokenValue;
             var dotParts = exp.Split('.');
             var entry = context.tryfind(dotParts[0]);
-            if (entry == null || entry.Value == null) return new ProcessTagResult(context){Buffer = null, Template = null};
+            if (entry == null || entry.Value == null) return Enumerable.Empty<WalkResult>();
             
             var extractor = entry.Value as ICmsMetaDataExtrator;
-            if (extractor == null) return new ProcessTagResult(context) {Buffer = null, Template = null};
-            
+            if (extractor == null) return Enumerable.Empty<WalkResult>();
+
             mmd = extractor.GetCmsModelMetadata(exp);
             if (arguments.Count > 1)
             {
                 mmd["fieldType"] = arguments[1].TokenValue;
             }
 
-            return mmd == null
-                ? new ProcessTagResult(context) {Buffer = null, Template = null}
-                : new ProcessTagResult(context) {Buffer = Convert(mmd), Template = null};
+            if(mmd == null) return Enumerable.Empty<WalkResult>();
+            return WalkResultHelpers.Buffer(Convert(mmd)).ToFSharpList();
         }
     }
 }

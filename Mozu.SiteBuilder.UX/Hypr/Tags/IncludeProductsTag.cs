@@ -7,6 +7,9 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using System.Collections.Generic;
+using NDjango.Interfaces;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -46,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [NDjango.Interfaces.Name("include_products")]
     public class IncludeProductsTag : SimpleTagBaseAsync
     {
-        protected override async Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, NDjango.Interfaces.IContext context)
+        protected override async Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, NDjango.Interfaces.IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var result = new ProcessTagResult(context);
             var cache = context.Resolve<ILiveModeOnlyCache>();
@@ -92,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 if (productCodesFilters.Length == 0)
                 {
                     result.Template = null;
-                    return result;
+                    return Enumerable.Empty<WalkResult>();
                 }
                 else
                 {
@@ -176,9 +179,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
                 cache.Set(cacheKey, pc);
             }
-            result.Template = template;
-            result.Context = context.add(new Tuple<string, object>("model", pc));
-            return result;
+
+            var dict = new Dictionary<string, object> { { "model", pc } };
+            var nodes = getTemplateFunction(template).Nodes;
+
+            return new[] { WalkResultHelpers.ContextAdditions(dict), WalkResultHelpers.Nodes(nodes) };
         }
     }
 }

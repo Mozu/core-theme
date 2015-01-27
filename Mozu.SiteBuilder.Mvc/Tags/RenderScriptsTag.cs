@@ -11,6 +11,8 @@ using System.Web;
 using NDjango;
 using NDjango.Interfaces;
 using Newtonsoft.Json;
+using System;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -39,14 +41,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             tw.WriteLine("</script>");
         }
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             
             var scriptsArray = (HashSet<string>)context.HttpContext().Items["scripts"];
-            if (scriptsArray == null) return new ProcessTagResult(context){Buffer = null, Template = null};
+            if (scriptsArray == null) return Enumerable.Empty<WalkResult>();
 
             var model = string.Join(",", scriptsArray.Select(x => "'" + x + "'"));
-            return new ProcessTagResult(context){Buffer = model, Template = null};
+            return new[] { WalkResultHelpers.Buffer(model) };
         }
     }
 }

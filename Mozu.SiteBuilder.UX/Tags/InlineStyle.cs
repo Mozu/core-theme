@@ -4,6 +4,8 @@ using System.Net.Http;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 using NDjango.Interfaces;
+using System.Collections.Generic;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.UX.Tags
 {
@@ -13,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Tags
     [Name("inline_style")]
     public class InlineStyle : SimpleTagBase
     {
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             try
             {
@@ -25,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Tags
                 var result = controller.Stylesheets(path);
                 if (result.StatusCode != HttpStatusCode.OK)
                 {
-                    return new ProcessTagResult(context){Buffer = "error rendering stylesheet " + path, Template = null};
+                    return new[] {WalkResultHelpers.Buffer("error rendering stylesheet " + path)};
                 }
 
                 var oc = result.Content as ObjectContent<ResourceController.MozuVirtualFileResult>;
@@ -36,13 +38,13 @@ namespace Mozu.SiteBuilder.UX.Tags
                     stream.Position = 0;
                     using (var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8))
                     {
-                        return new ProcessTagResult(context) {Buffer = sr.ReadToEnd(), Template = null};
+                        return new[] { WalkResultHelpers.Buffer(sr.ReadToEnd()) };
                     }
                 }
             }
             catch (Exception e)
             {
-                return new ProcessTagResult(context){Buffer = "error rendering stylesheet", Template = null};
+                return new[] { WalkResultHelpers.Buffer("error rendering stylesheet") };
             }
         }
     }

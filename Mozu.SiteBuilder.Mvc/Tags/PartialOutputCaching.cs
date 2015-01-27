@@ -17,11 +17,11 @@ using Mozu.Core;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
 using NDjango;
 using NDjango.Interfaces;
 using NDjango.Misc;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         public virtual bool is_header_tag { get; set; }
 
 
-        protected virtual Walker Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
+        protected virtual FSharpList<WalkResult> Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
         {
             return tagNode.Walk(templateManager, walker);
         }
@@ -94,12 +94,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 get { return (OutputCachingTag) Tag; }
             }
 
-            Walker IHyprNode.Walk(ITemplateManager templateManager, Walker walker)
+            FSharpList<WalkResult> IHyprNode.Walk(ITemplateManager templateManager, Walker walker)
             {
                 return base.walk(templateManager, walker);
             }
 
-            public override Walker walk(ITemplateManager manager, Walker walker)
+            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
             {
                 var apiCtx = walker.context.Resolve<ISiteBuilderApiContext>();
                 var siteCtx = walker.context.Resolve<SiteContext>();
@@ -140,11 +140,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
                 if (output.Length == 1)
                 {
-                    return StringWalker(walker, output[0]);
+                    return StringWalker(output[0]);
                 }
                 else
                 {
-                    return ChildNodeWalker(walker, output);
+                    return ChildNodeWalker(output);
                 }
             }
 
@@ -199,20 +199,20 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 return output;
             }
 
-            private Walker ChildNodeWalker(Walker walker, string[] output)
+            private FSharpList<WalkResult> ChildNodeWalker(string[] output)
             {
                 var walkerNodes = output.Select(x => (INodeImpl) new CachedNode {Token = Token, Buffer = x}).ToFSharpList();
-                return new Walker(new FSharpOption<Walker>(walker), walkerNodes, string.Empty, 0, walker.context);
+                return WalkResultHelpers.Nodes(walkerNodes).ToFSharpList();
             }
 
-            private static Walker StringWalker(Walker walker, string output)
+            private static FSharpList<WalkResult> StringWalker(string output)
             {
-                return new Walker(new FSharpOption<Walker>(walker), FSharpList<INodeImpl>.Empty, output, 0, walker.context);
+                return WalkResultHelpers.Buffer(output).ToFSharpList();
             }
 
-            private Walker Uncached(Walker parent)
+            private FSharpList<WalkResult> Uncached(Walker parent)
             {
-                return new Walker(new FSharpOption<Walker>(parent), _childNodes, string.Empty, 0, parent.context);
+                return WalkResultHelpers.Nodes(_childNodes).ToFSharpList();
             }
 
             private static string[] Render(TemplateRenderer renderer)
@@ -274,10 +274,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     get; set;
                 }
                 public string Buffer { get; set; }
-                public Walker walk(ITemplateManager manager, Walker walker)
+                public FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
                 {
-                    walker.buffer = Buffer;
-                    return walker;
+                    return WalkResultHelpers.Buffer(Buffer).ToFSharpList();
                 }
             }
 

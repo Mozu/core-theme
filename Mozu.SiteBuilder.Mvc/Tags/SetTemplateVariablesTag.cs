@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using NDjango.Interfaces;
+using System.Collections.Generic;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
-    /// <summary>
-    ///
-    /// </summary>
     [Obsolete]
     [NDjango.ParserNodes.Description("tbd")]
     [Name("set")]
@@ -18,17 +17,20 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             set { ; }
         }
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var httpContext = context.HttpContext();
             var ht = (System.Collections.Hashtable)httpContext.Items["templateVariables"];
+
+            var dict = new Dictionary<string, object>();
+
             foreach (var arg in arguments.Where(arg => arg.ArgumentType == TagArgument.ArgumentTypes.NamedArgument))
             {
-                context = context.add(new Tuple<string, object>(arg.Name, arg.Value));
+                dict.Add(arg.Name, arg.Value);
                 ht[arg.Name] = arg.Value;
             }
 
-            return new ProcessTagResult(context) {Buffer = null, Template = null};
+            return new[] { WalkResultHelpers.ContextAdditions(dict) };
         }
     }
 }

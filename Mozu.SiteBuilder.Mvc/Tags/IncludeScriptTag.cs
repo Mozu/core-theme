@@ -7,6 +7,7 @@
 using NDjango.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -20,7 +21,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [Name("require_script")]
     public class IncludeScriptTag : SimpleTagBase
     {
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             if (arguments.Count != 1) throw new InvalidOperationException("includescript takes only 1 arg");
             
@@ -31,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
             scripts.Add(arguments[0].Value.ToString());
 
-            return new ProcessTagResult(context){Buffer = null, Template = null};
+            return Enumerable.Empty<WalkResult>();
         }
     }
 }

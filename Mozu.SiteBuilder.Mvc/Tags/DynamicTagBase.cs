@@ -11,6 +11,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System.Linq;
     using NDjango.Interfaces;
     using System.Reflection;
+    using NDjango.FiltersCS.Compatibility;
+
 
     //todo remove reflection... get cache of name params 
     public abstract class DynamicTagBase : SimpleTagBase
@@ -24,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
         }
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
             Arguments = arguments;
             Context = context;
@@ -37,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 if (IsParamMatch(arguments, pVals, parms))
                 {
                     var buffer = Invoke(arguments, ref context, pVals);
-                    return new ProcessTagResult(context){Buffer = buffer, Template = null};
+                    return WalkResultHelpers.Buffer(buffer).ToFSharpList();
                 }
                 pVals.Clear();
             }

@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using Mozu.Content.Contracts.Clients;
-using Mozu.Core.Api.Contracts.Client;
-using Mozu.ProductRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Caching;
-using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Tags;
-using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using NDjango;
 using NDjango.Interfaces;
-using Newtonsoft.Json;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -52,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [Name("include_documents")]
     public class IncludeContentTag : SimpleTagBaseAsync
     {
-        protected override async Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, IContext context)
+        protected override async Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var result = new ProcessTagResult(context);
             var sbContext = context.SiteBuilderApiContext();
@@ -127,9 +119,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                model = res.ReadAsSync();
             }
 
-            result.Template = template;
-            result.Context = context.add(new Tuple<string, object>("model", model));
-            return result;
+            var dict = new Dictionary<string, object> { { "model", model } };
+            var nodes = getTemplateFunction(template).Nodes;
+            return new[] { WalkResultHelpers.ContextAdditions(dict), WalkResultHelpers.Nodes(nodes) };
         }
     }
 }

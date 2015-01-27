@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using NDjango.Interfaces;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -35,33 +36,25 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [Name("include")]
     public class IncludeTag : SimpleTagBase
     {
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
             var templateName = (string)arguments[0].Value;
-            var additionalState = new List<Tuple<string, object>>();
+            var additionalState = new Dictionary<string, object>();
             if (arguments.Count > 1)
             {
                 if (arguments[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
                 {
-                    additionalState.Add(new Tuple<string, object>("model", templateName));
+                    additionalState.Add("model", templateName);
                 }
             }
 
-            additionalState.AddRange(
-                arguments
-                .Where(x => x.ArgumentType == TagArgument.ArgumentTypes.NamedArgument)
-                .Select(a => new Tuple<string, object>(a.Name, a.Value)));
-
-            foreach (var kvp in additionalState)
-            {
-                if (context.tryfind(kvp.Item1) != null)
-                {
-                    context = context.remove(kvp.Item1);
-                }
-                context = context.add(kvp);
+            foreach (var item in arguments.Where(x => x.ArgumentType == TagArgument.ArgumentTypes.NamedArgument)) {
+                additionalState.Add(item.Name, item.Value);
             }
 
-            return new ProcessTagResult(context){Buffer = null, Template = templateName};
+            var nodes = getTemplateFunc(templateName).Nodes;
+
+            return new [] { WalkResultHelpers.ContextAdditions(additionalState), WalkResultHelpers.Nodes(nodes) };
         }
     }
 }

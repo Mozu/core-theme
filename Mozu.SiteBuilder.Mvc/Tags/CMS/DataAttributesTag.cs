@@ -15,6 +15,7 @@ using System.Web;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using Mozu.SiteBuilder.UX.Models.ModelMetaData;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags.Data
 {
@@ -76,12 +77,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
             return name;
         }
         
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {
             var isEditmode = context.PageContext().IsEditMode;
-
-            if (!isEditmode)
-                return new ProcessTagResult(context){Buffer = null, Template = null};
+            if (!isEditmode) return Enumerable.Empty<WalkResult>();
 
             var obj = arguments[0].Value;
             Dictionary<string, object> mmd = null;
@@ -196,12 +195,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags.Data
             }
             if (mmd == null)
             {
-                //todo:refactor away from mmd
                 System.Diagnostics.Debug.WriteLine("refactor away from mmd");
+                return Enumerable.Empty<WalkResult>();
             }
-            return mmd != null
-                ? new ProcessTagResult(context) {Buffer = Convert(mmd), Template = null}
-                : new ProcessTagResult(context) {Buffer = null, Template = null};
+
+            return WalkResultHelpers.Buffer(Convert(mmd)).ToFSharpList();
         }
     }
 }

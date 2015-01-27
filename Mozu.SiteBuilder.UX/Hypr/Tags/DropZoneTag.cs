@@ -14,6 +14,8 @@ using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using NDjango.Interfaces;
 using Newtonsoft.Json.Linq;
+using NDjango.FiltersCS.Compatibility;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -53,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     {
         const string  Format = "\t\t<script type=\"text/javascript\" src=\"{1}/admin/scripts/chorizo/{0}.js\"></script>\r\n";
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var pageContext = context.PageContext();
             var cdnHost = Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
@@ -69,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css\">\r", cdn);
                 if (!isEditmode)
                 {
-                    return new ProcessTagResult(context){Buffer = sb.ToString(), Template = null};
+                    return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
                 }
 
                 sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css\">");
@@ -86,7 +88,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 sb.AppendFormat(Format, "targets", cdn);
                 sb.AppendFormat(Format, "widgets", cdn);
                 sb.AppendFormat(Format, "editor", cdn);
-                return new ProcessTagResult(context){Buffer = sb.ToString(), Template = null};
+
+
+                return new[] { WalkResultHelpers.Buffer(sb.ToString()) }; 
             }
         }
     }
@@ -125,7 +129,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             public string id { get; set; }
             public string scope { get; set; }
         }
-        protected override async System.Threading.Tasks.Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments, IContext context)
+        protected override async System.Threading.Tasks.Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var processResult = new ProcessTagResult(context);
             
@@ -186,9 +190,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
              
 
 
-            isEditmode = isEditmode && string.Equals(scopeString, pageContext.EditMode.GetValueOrDefault(EditModes.page ).ToString(), StringComparison.OrdinalIgnoreCase);
+            isEditmode = isEditmode && scopeString.EqualsIgnoreCase(pageContext.EditMode.GetValueOrDefault(EditModes.page).ToString());
 
-            var zoneRuntimeData = (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? null : pageContext.CmsContext.RuntimeData.FirstOrDefault(x => zoneScope == x.Scope && string.Equals(x.Id, zoneId, StringComparison.OrdinalIgnoreCase));
+            var zoneRuntimeData = 
+                    (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? 
+                    null : 
+                    pageContext.CmsContext.RuntimeData.FirstOrDefault(x => zoneScope == x.Scope && x.Id.EqualsIgnoreCase(zoneId));
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
@@ -369,12 +376,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     //}
                 }
                 sb.Append("</div>");
-
-                //buffer = sb.ToString();
-                processResult.Buffer = sb.ToString();
-                processResult.Context = context;
+                return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
             }
-            return processResult;
         }
 
 
@@ -385,10 +388,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 return false;
             }
-            var hs = (System.Collections.Generic.HashSet<string>) httpContext.Items[HTTPCONTEXTKEY];
+            var hs = (HashSet<string>) httpContext.Items[HTTPCONTEXTKEY];
             if (hs == null)
             {
-                httpContext.Items[HTTPCONTEXTKEY] = hs = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                httpContext.Items[HTTPCONTEXTKEY] = hs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             }
             if (hs.Contains(zoneId))
             {

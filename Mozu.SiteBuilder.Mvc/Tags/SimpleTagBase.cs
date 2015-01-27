@@ -10,11 +10,15 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.FSharp.Collections;
     using NDjango.Interfaces;
-    
+    using Microsoft.FSharp.Control;
+    using System.Threading;
+    using NDjango.FiltersCS.Compatibility;
+
     public interface IHyprNode
     {
-        Walker Walk(ITemplateManager manager, Walker walker);
+        FSharpList<WalkResult> Walk(ITemplateManager templateManager, Walker walker);
     }
  
     /// <summary>
@@ -47,7 +51,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return tokens;
         }
 
-        protected abstract ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context);
+        protected abstract IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc);
 
         protected virtual ArgumentCollection.ParseStrategy ArgumentParserStrategy { get; set; }
         
@@ -64,59 +68,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             readonly IParsingContext _parsingContext;
             readonly Lexer.BlockToken _blockToken;
 
-            public override Walker walk(ITemplateManager manager, Walker walker)
+            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
             {
                 var arguments = ProcessArguments(walker);
                 if (TagBase.ArgumentParserStrategy != null)
                 {
                     arguments = TagBase.ArgumentParserStrategy(arguments);
                 }
-                var res = TagBase.ProcessTag(arguments, walker.context);
-                if (arguments.OutputVariableName != null)
-                {
-                    if (arguments.OutputValue == null)
-                    {
-                        arguments.OutputValue = res.Buffer;
-                        res.Buffer = string.Empty;
-                    }
-                    res.Context = res.Context.add(new Tuple<string, object>(arguments.OutputVariableName, arguments.OutputValue));
-                }
-                
-                //TODO: solidify the output states of the ProcessTag call.  They seem to be one or more of:
-                ///     Wrote to a buffer
-                ///     Render the following template
-                ///     walk me
-                /// and it would be helpful to make that more explicit.
-                var walked = false;
-                if (!string.IsNullOrEmpty(res.Buffer))
-                {
-                    res.Buffer = string.IsNullOrEmpty(walker.buffer) ? res.Buffer : walker.buffer + res.Buffer;
-                    walker = new Walker(walker.parent, walker.nodes, res.Buffer, walker.bufferIndex, res.Context);
-                    walker = TagBase.Walk(arguments, res.Context, manager, walker, this);
-                    walked = true;
-                }
-                if (!string.IsNullOrEmpty(res.Template))
-                {
-                    ITemplate template;
-                    try
-                    {
-                       template =  manager.GetTemplate(res.Template);
-                    }
-                    catch (Exception  ex )
-                    {
-                        throw new RenderingException(ex.Message, Token, null);
-                    }
 
-                    walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, res.Context);
-                    walker = TagBase.Walk(arguments, res.Context, manager, walker, this);
-                    walked = true;
-                    
-                }
-                if (!walked)
-                {
-                    walker = TagBase.Walk(arguments, res.Context, manager, walker, this);
-                }
-                return walker;
+                var outputs = new List<WalkResult>();
+
+                return TagBase.ProcessTag(arguments, walker.context, name => manager.GetTemplate(name)).ToFSharpList();
             }
 
             static readonly string[] EmptyStringArray = new string[0];
@@ -128,7 +90,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 return arguments;
             }
 
-            Walker IHyprNode.Walk(ITemplateManager templateManager, Walker walker)
+            FSharpList<WalkResult> IHyprNode.Walk(ITemplateManager templateManager, Walker walker)
             {
                 return base.walk( templateManager, walker);
             }
@@ -136,7 +98,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public virtual bool is_header_tag { get; set; }
 
-        protected virtual Walker Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
+        protected virtual FSharpList<WalkResult> Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
         {
             return tagNode.Walk( templateManager, walker); 
         }
@@ -341,7 +303,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             readonly Lexer.BlockToken _blockToken;
 
 
-            public async Task<Walker> asyncWalk(ITemplateManager manager, Walker walker)
+            public FSharpAsync<FSharpList<WalkResult>> asyncWalk(ITemplateManager manager, Walker walker)
             {
                 var arguments = ProcessArguments(walker);
                 if (TagBase.ArgumentParserStrategy != null)
@@ -349,55 +311,13 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     arguments = TagBase.ArgumentParserStrategy(arguments);
                 }
                 var ctx = walker.context;
-                
-                var result = await TagBase.ProcessTagAsync(arguments, ctx).ConfigureAwait(false);
-                var buffer = result.Buffer;
-                var templateName = result.Template;
-                ctx = result.Context;
-                if (arguments.OutputVariableName != null)
-                {
-                    if (arguments.OutputValue == null)
-                    {
-                        arguments.OutputValue = buffer;
-                        buffer = string.Empty;
-                    }
-                    ctx = ctx.add(new Tuple<string, object>(arguments.OutputVariableName, arguments.OutputValue));
-                }
-                var walked = false;
-                if (!string.IsNullOrEmpty(buffer))
-                {
-                    buffer = string.IsNullOrEmpty(walker.buffer) ? buffer : walker.buffer + buffer;
-                    walker = new Walker(walker.parent, walker.nodes, buffer, walker.bufferIndex, ctx);
-                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
-                    walked = true;
-                }
-                if (!string.IsNullOrEmpty(templateName))
-                {
-                    ITemplate template;
-                    try
-                    {
-                        template = manager.GetTemplate(templateName);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new RenderingException(ex.Message, Token, null);
-                    }
 
-                    walker = new Walker(new FSharpOption<Walker>(walker), template.Nodes, walker.buffer, walker.bufferIndex, ctx);
-                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
-                    walked = true;
-
-                }
-                if (!walked)
-                {
-                    walker = TagBase.Walk(arguments, ctx, manager, walker, this);
-                }
-                return walker;
+                return FSharpAsync.AwaitTask(TagBase.ProcessTagAsync(arguments, ctx, name => manager.GetTemplate(name)).ContinueWith(t => t.Result.ToFSharpList()));
             }
 
-            public override Walker walk(ITemplateManager manager, Walker walker)
+            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
             {
-                var res = asyncWalk(manager, walker).ConfigureAwait(false).GetAwaiter().GetResult();
+                var res = FSharpAsync.RunSynchronously(asyncWalk(manager, walker), FSharpOption<int>.None, FSharpOption<CancellationToken>.None);
                 return res;
             }
 
@@ -411,7 +331,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 return arguments;
             }
 
-            Walker IHyprNode.Walk(ITemplateManager templateManager, Walker walker)
+            FSharpList<WalkResult> IHyprNode.Walk(ITemplateManager templateManager, Walker walker)
             {
                 return base.walk(templateManager, walker);
             }
@@ -419,11 +339,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public virtual bool is_header_tag { get; set; }
         
-        protected virtual Walker Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
+        protected virtual FSharpList<WalkResult> Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
         {
             return tagNode.Walk(templateManager, walker);
         }
         
-        protected abstract Task<ProcessTagResult> ProcessTagAsync(ArgumentCollection arguments,  IContext ctx);
+        protected abstract Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments,  IContext ctx, Func<string, ITemplate> getTemplateFunction);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using Mozu.SiteBuilder.Mvc.Localization;
 using NDjango.Interfaces;
+using NDjango.FiltersCS.Compatibility;
+using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -8,7 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [Name("localize")]
     public class LocalizeTag: SimpleTagBase 
     {
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string,ITemplate> getTemplateFunction)
         {
             var repo = context.Resolve<ILocalizationRepository>();
             var colKey = (string)arguments[0].Value;
@@ -20,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             }
             var buffer = repo.Get(colKey, key) ?? defaultValue;
 
-            return new ProcessTagResult(context){Buffer = buffer, Template = null};
+            return WalkResultHelpers.Buffer(buffer).ToFSharpList();
         }
     }
 }

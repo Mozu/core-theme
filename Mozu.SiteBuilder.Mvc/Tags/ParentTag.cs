@@ -26,6 +26,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using NDjango.Interfaces;
 
     using System.Web.Routing;
+    using Microsoft.FSharp.Collections;
+
 
 
 
@@ -64,7 +66,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             //var arr = ParamFilters.ToArray();
 
             var nodeImpl = new TagNodeImpl(parsingContext, blockToken, this);
-            var resp = new PerformRespnose(nodeImpl, parsingContext, tokenList);
+            var resp = new PerformResponse(nodeImpl, parsingContext, tokenList);
             return resp;
 
         }
@@ -107,15 +109,10 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             IParsingContext ParsingContext;
             NDjango.Lexer.BlockToken BlockToken;
 
-            public override Walker walk(ITemplateManager manager, Walker walker)
+            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
             {
               
-                var ctx = walker.context;
-
-
-
-              
-           
+                var ctx = walker.context;            
                 var block = walker.context.tryfind("block");
                 if (block == null)
                 {
@@ -123,23 +120,15 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
 
                 var super = _superProperty.GetValue(block.Value ) as NDjango.ParserNodes.TagNode;
-
-                
                 return super.walk(manager, walker);
-
-
-
             }
-
-            
-         
         }
 
         public virtual bool is_header_tag { get; set; }
 
-        public class PerformRespnose : Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
+        public class PerformResponse : Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
         {
-            public PerformRespnose(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<NDjango.Lexer.Token> tokenList)
+            public PerformResponse(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<NDjango.Lexer.Token> tokenList)
                 : base(nodeImpl, parseContext, tokenList)
             {
 
@@ -147,7 +136,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         }
 
 
-        protected virtual Walker Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
+        protected virtual FSharpList<WalkResult> Walk(ArgumentCollection arguments, IContext context, ITemplateManager templateManager, Walker walker, IHyprNode tagNode)
         {
             return tagNode.Walk( templateManager, walker);
           

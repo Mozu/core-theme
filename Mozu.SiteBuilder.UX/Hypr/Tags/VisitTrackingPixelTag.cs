@@ -1,6 +1,8 @@
 ﻿using System;
 using Mozu.SiteBuilder.Mvc.Tags;
 using NDjango.Interfaces;
+using System.Linq;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -11,13 +13,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [Name("visitor_tracking_pixel")]
     public class VisitorTrackingPixelTag : SimpleTagBase
     {
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override System.Collections.Generic.IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var visit = context.PageContext().Visit;
-            if (visit == null) return new ProcessTagResult(context){Buffer = null, Template = null};
+            if (visit == null) return Enumerable.Empty<WalkResult>();
 
-            var buffer = String.Format("<img data-mztp src=\"/_mzblank.gif?r={0}\" alt=\"\"/>", System.Web.HttpUtility.UrlEncode(visit.VisitId));
-            return new ProcessTagResult(context){Buffer = buffer, Template = null};
+            var buffer = string.Format("<img data-mztp src=\"/_mzblank.gif?r={0}\" alt=\"\"/>", System.Web.HttpUtility.UrlEncode(visit.VisitId));
+            return new[] { WalkResultHelpers.Buffer(buffer) };
         }
     }
 }

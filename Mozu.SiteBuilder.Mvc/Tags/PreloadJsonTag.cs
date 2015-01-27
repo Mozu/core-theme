@@ -4,6 +4,8 @@ using Mozu.SiteBuilder.Mvc.ObjectPools;
 using NDjango.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Collections.Generic;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -20,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     /// </code>
     /// 
     /// </summary>
-    [NDjango.Interfaces.Name("preload_json")]
+    [Name("preload_json")]
     public class PreloadJsonTag : SimpleTagBase
     {
         // we want to use the settings the rest of the site uses, but with additional escape handling.
@@ -35,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     return JsonSerializer.Create(settings);
                 });
 
-        protected override ProcessTagResult ProcessTag(ArgumentCollection arguments, IContext context)
+        protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var model = arguments[0].Value;
             var name = arguments[1].Value;
@@ -48,7 +50,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     lazySer.Value.Serialize(writer, model);
                 }
                 sb.Append("</script>");
-                return new ProcessTagResult(context){Buffer = sb.ToString(), Template = null};
+
+
+                return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
             }
         }
     }
