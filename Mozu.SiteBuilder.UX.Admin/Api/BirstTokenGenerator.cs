@@ -66,9 +66,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private string FormatBirstTokenGeneratorUri(int tenantId)
         {
-            /*
+            
             //Leaving here right now, so we can debug quickly since these items work
-            tenantId = 6294;
+            //tenantId = 6294;
+            /*tenantId = 2300;
             return string.Format("{0}?username={1}&ssopassword={2}&BirstSpaceId={3}&birst.sessionVars=TenantId%3D{4}",
                "https://reporting.mozu-qa.com/TokenGenerator.aspx",// _settings.AppSettings(TOKEN_URL_KEY),
                 "reportuserqa@mozu.com", //_settings.AppSettings(USER_KEY),
