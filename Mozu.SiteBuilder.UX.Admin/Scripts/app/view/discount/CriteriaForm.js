@@ -371,24 +371,24 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             fieldLabel: 'Maximum Quantity Per Redemption'
         });
 
-        this.excludeLineItemProductDiscounts = Ext.create('Ext.form.FieldContainer', {
+        this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer', {
             width: 600,
             margin: '10 0 0 0',
-            fieldLabel:"Exclude products that have line item discounts for the following types:",
+            fieldLabel: "Exclude products that have line item discounts for the following types:",
             items: [
                 {
                     xtype: 'checkbox',
-                    name: 'excludeLineItemProductDiscountsShipping',
+                    name: 'excludeItemsWithExistingShippingDiscounts',
                     boxLabel: 'Shipping',
                     width: 300,
-                    value: this.record.get('excludeLineItemProductDiscountsShipping') !== true
+                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
                 },
                 {
                     xtype: 'checkbox',
-                    name: 'excludeLineItemProductDiscountsProduct',
+                    name: 'excludeItemsWithExistingProductDiscounts',
                     boxLabel: 'Product',
                     width: 300,
-                    value: this.record.get('excludeLineItemProductDiscountsProduct') !== true
+                    value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
                 },
             ]
         })
@@ -410,7 +410,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     ]
                 },                
                 this.includeSpecificProductsInput,
-                this.excludeLineItemProductDiscounts,
+                this.excludeLineItemDiscounts,
                 this.productsBox,
                 this.categoriesBox,
                 {
@@ -631,9 +631,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.productList.setValue('');
             //this.excludeCategoryList.setValue('');
             //this.productExcludeList.setValue('');
+        } else {
+            // order level
+            this.findField("excludeItemsWithExistingShippingDiscounts").setValue(false)
+            this.findField("excludeItemsWithExistingProductDiscounts").setValue(false)
         }
 
-        this.excludeLineItemProductDiscounts.setVisible(!isLineItem);        
+        this.excludeLineItemDiscounts.setVisible(!isLineItem);
 
         // setup line item;
         
@@ -651,10 +655,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     },
 
-    setFieldVisibility: function (isLineItem, appliesToShipping) {
-        //always visible now;
-        this.setVisible(true);
-        //this.setVisible(isLineItem || appliesToShipping);
+    setFieldVisibility: function (isLineItem, appliesToShipping) {        
+        // always visible now. shows for order and lineItem
+        this.setVisible(true);        
         this.setProductCategoryContainerVisibility(isLineItem);        
         this.setShippingListVisibility(appliesToShipping);
     },
