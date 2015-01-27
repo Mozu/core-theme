@@ -12,6 +12,7 @@ using ProductType = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product.Prod
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api.Models.Attributes
 {
+    [Category("Mapping")]
     [TestFixture]
     public class ModelTests
     {

@@ -25,6 +25,7 @@ using System.IO;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Mvc
 {
+    [Category("Hypr")]
     [TestFixture]
     public class Resources
     {

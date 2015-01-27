@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Themes
 {
+    [Category("Hypr")]
     [TestFixture]
     public class ThemeFactoryTests
     {

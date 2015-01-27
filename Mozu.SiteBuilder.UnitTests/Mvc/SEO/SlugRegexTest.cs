@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Mozu.SiteBuilder.Mvc.SEO;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 {
+    [Category("QueryString")]
     [TestFixture]
     public class SlugRegexTest
     {

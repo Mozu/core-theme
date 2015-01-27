@@ -14,6 +14,7 @@ using NSubstitute;
 
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api
 {
+    [Category("QueryString")]
     [TestFixture]
     public class SecureCapabilityConfigUrlTest
     {

@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Caching
 {
+    [Category("Caching")]
     [TestFixture]
     public class ContextualCacheTests
     {

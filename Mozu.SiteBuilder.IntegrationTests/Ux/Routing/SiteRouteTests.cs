@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Ux.Routing
             // _cartWebApiClient = Substitute.For<ICartWebApiClient>();
         }
 
-        [Test]
+        [Ignore, Test]
         public void DoStuff()
         {
 

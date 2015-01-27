@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
 
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api.Models
 {
+    [Category("QueryString")]
     [TestFixture]
     public class PagingParametersTests
     {

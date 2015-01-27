@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
 {
+    [Category("Hypr")]
     [TestFixture]
 
     public class RequireScriptTests : TemplateTestBase

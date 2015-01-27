@@ -5,8 +5,10 @@ using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
 {
+    [Category("Mapping")]
     public class AdminMappingTest
     {
+
         [TestFixtureSetUp]
         public void FixtureSetup()
         {

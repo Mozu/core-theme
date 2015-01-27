@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using DCprod = Mozu.ProductAdmin.Contracts;
 using DCloc = Mozu.Location.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Api;
@@ -16,6 +11,7 @@ using Mozu.SiteBuilder.UnitTests.Extensions;
 
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api
 {
+    [Category("Inventory")]
     [TestFixture]
     public class LocationInventoryControllerTest
     {

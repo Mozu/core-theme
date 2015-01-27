@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
 {
+    [Category("Hypr")]
     [TestFixture]
     public class GetProductAttributeTests : TemplateTestBase
     {

@@ -10,6 +10,7 @@ using NUnit.Framework;
 
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Localization
 {
+    [Category("Mapping")]
     [TestFixture]
     public class LocalizedAttributeMappingTest
     {

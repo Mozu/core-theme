@@ -12,6 +12,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
 {
     [TestFixture]
+    [Category("Mapping")]
     public class CustomerContactMappingTest
     {
         private static DC.CustomerContact dcTest = new DC.CustomerContact {

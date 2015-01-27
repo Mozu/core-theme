@@ -7,6 +7,7 @@ using Should;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Admin.Api
 {
+    [Category("QueryString")]
     public class PagingParamatersRequestHandlersTests
     {
         [Test]

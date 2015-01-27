@@ -17,6 +17,8 @@ using Owin;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Siesta
 {
+
+    [Category("Siesta")]
     internal class SiestaRunner
     {
         private readonly AutoResetEvent _autoResetEvent = new AutoResetEvent(true);
