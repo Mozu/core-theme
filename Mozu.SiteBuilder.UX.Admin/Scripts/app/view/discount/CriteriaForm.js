@@ -378,18 +378,18 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             items: [
                 {
                     xtype: 'checkbox',
-                    name: 'excludeItemsWithExistingShippingDiscounts',
-                    boxLabel: 'Shipping',
-                    width: 300,
-                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
-                },
-                {
-                    xtype: 'checkbox',
                     name: 'excludeItemsWithExistingProductDiscounts',
-                    boxLabel: 'Product',
+                    boxLabel: 'Line Item Product Discounts',
                     width: 300,
                     value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
-                },
+                }, {
+                    xtype: 'checkbox',
+                    name: 'excludeItemsWithExistingShippingDiscounts',
+                    boxLabel: 'Line Item Shipping Discounts',
+                    width: 300,
+                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
+                }
+                
             ]
         })
 
