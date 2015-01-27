@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using AutoMapper.Internal;
 using Mozu.Core.Extensions;
-using Mozu.ShippingRuntime.Contracts;
 using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.FacetHelpers
@@ -58,6 +57,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.FacetHelpers
                     join inheritSrv in inheritedServer on cli.OverrideFacetId equals inheritSrv.FacetId
                     where DoFacetsMatch(cli, inheritSrv)
                     select cli).ToList();
+        }
+
+        public List<DC.Facet> FilterInheritedFacetsThatAreOverriden(List<DC.Facet> configuredFacets, int currentCategoryId)
+        {
+            return configuredFacets.Where(
+                x => x.CategoryId == currentCategoryId || configuredFacets.All(y => y.OverrideFacetId != x.FacetId)).ToList();
         }
 
         private bool DoFacetsMatch(DC.Facet cli, DC.Facet srv)
