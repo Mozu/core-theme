@@ -660,6 +660,8 @@
     <Compile Include="Helpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountPagingParametersExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
+    <Compile Include="Helpers\FacetHelpers\IInheritedFacetHelper.cs" />
+    <Compile Include="Helpers\FacetHelpers\InheritedFacetHelper.cs" />
     <Compile Include="Helpers\LocalizedContentHelpers\LocalizedContentFilterExtensions.cs" />
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />

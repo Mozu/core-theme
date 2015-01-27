@@ -72,7 +72,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             labelAlign: 'top',
             labelStyle: 'padding-top: 5px;',
             hidden: true,
-            disabled: this.record.isInherited(),
+            //disabled: this.record.isInherited(),
             // isDirty: function() {
             //     return false;
             // },
@@ -100,7 +100,7 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             xtype: 'taco.rangequerygroup',
             name: 'ranges',
             hidden: true,
-            disabled: this.record.isInherited(),
+            //disabled: this.record.isInherited(),
             listeners: {
                 show: {
                     scope: this,

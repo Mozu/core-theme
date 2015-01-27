@@ -19,14 +19,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.FacetHelpers
         {
             return (from cli in inheritedClient
                 join srv in inheritedServer on cli.FacetId equals srv.FacetId
-                where cli.IsHidden  || ("RangeQuery".EqualsIgnoreCase(cli.FacetType) && !doRangeQueriesMatch(cli.RangeQueries, srv.RangeQueries))
+                where !DoFacetsMatch(cli, srv)
                 select new DC.Facet
                 {
                     CategoryId = currentCategoryId,
-                    FacetId = cli.FacetId,
                     IsHidden = cli.IsHidden,
                     FacetType = cli.FacetType,
                     Order = cli.Order,
+                    OverrideFacetId = cli.FacetId,
                     RangeQueries = cli.RangeQueries,
                     Source = cli.Source,
                     Validity = cli.Validity,
@@ -43,27 +43,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.FacetHelpers
             return (from cli in overrideClient
                     join overSrv in overrideServer on cli.FacetId equals overSrv.FacetId
                     join inheritSrv in inheritedServer on cli.OverrideFacetId equals inheritSrv.FacetId
-                    where cli.IsHidden != overSrv.IsHidden || 
-                            ("RangeQuery".EqualsIgnoreCase(cli.FacetType) && !doRangeQueriesMatch(cli.RangeQueries, overSrv.RangeQueries))
-                        && (cli.IsHidden != inheritSrv.IsHidden 
-                            || ("RangeQuery".EqualsIgnoreCase(cli.FacetType) && !doRangeQueriesMatch(cli.RangeQueries, overSrv.RangeQueries)) )
+                    where !DoFacetsMatch(cli, overSrv) && !DoFacetsMatch(cli, inheritSrv)
                     select cli).ToList();
         }
 
+        
         /// <summary>
         /// delete = override && matches inherited
         /// </summary>
         /// <returns></returns>
         public List<DC.Facet> GetOverridenFacetsToDelete(List<DC.Facet> overrideClient, List<DC.Facet> inheritedServer)
         {
-            throw new NotImplementedException();
+            return (from cli in overrideClient
+                    join inheritSrv in inheritedServer on cli.OverrideFacetId equals inheritSrv.FacetId
+                    where DoFacetsMatch(cli, inheritSrv)
+                    select cli).ToList();
         }
-        
-        private bool doRangeQueriesMatch(List<DC.FacetRangeQuery> cli, List<DC.FacetRangeQuery> server)
+
+        private bool DoFacetsMatch(DC.Facet cli, DC.Facet srv)
+        {
+            return cli.IsHidden == srv.IsHidden &&
+                   (!IsRangeQuery(cli.FacetType) || DoRangeQueriesMatch(cli.RangeQueries, srv.RangeQueries));
+        }
+
+        private static bool IsRangeQuery(string facetType)
+        {
+            return "RangeQuery".EqualsIgnoreCase(facetType);
+        }
+
+        private bool DoRangeQueriesMatch(List<DC.FacetRangeQuery> cli, List<DC.FacetRangeQuery> server)
         {
             if (cli.IsNullOrEmpty() && server.IsNullOrEmpty())
             {
                 return true;
+            }
+
+            if (cli.IsNullOrEmpty() && !server.IsNullOrEmpty() || (!cli.IsNullOrEmpty() && server.IsNullOrEmpty()))
+            {
+                return false;
             }
 
             if (cli.Count != server.Count)
