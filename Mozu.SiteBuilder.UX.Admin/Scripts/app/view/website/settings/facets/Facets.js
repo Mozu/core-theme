@@ -109,7 +109,6 @@
                  }
              });
 
-             var times = {};
 
              me.configuredFacetsView = Ext.create('Taco.core.ux.form.field.MultiSelect', {
                  name: 'facets',
@@ -123,7 +122,7 @@
                      cls: 'x-boundlist-draggable',
                      itemTpl: new Ext.XTemplate(
                      '<span class="x-boundlist-item-contents">',
-                         '<tpl if="!this.isInherited(categoryId) && !this.isOverriden(overrideFacetId)">',
+                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
                             '<span class="x-boundlist-item-drag">Drag </span>',
                          '</tpl>',
                          '<span class="x-boundlist-item-content">',

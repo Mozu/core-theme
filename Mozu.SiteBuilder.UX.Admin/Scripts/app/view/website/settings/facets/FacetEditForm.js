@@ -16,28 +16,46 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
     initComponent: function () {
         var me = this;
 
-        me.inheritedVisible = Ext.widget({
-            xtype: 'radio',
-            name: 'isInheritedHidden',
-            persistSelectedValueOnly: true,
-            boxLabel: 'Show',
-            inputValue: false,
-            flex: 1,
-            //disabled: me.record.isInherited(),
-            checked: !me.record.get('isInheritedHidden')
-        });
+        var buildInheritedDisplay = function(isInheritedHidden) {
+            me.inheritedVisible = Ext.widget({
+                xtype: 'radio',
+                name: 'isInheritedHidden',
+                persistSelectedValueOnly: true,
+                boxLabel: 'Show',
+                inputValue: false,
+                flex: 1,
+                checked: !isInheritedHidden
+            });
+            me.inheritedHide = Ext.widget({
+                xtype: 'radio',
+                name: 'isInheritedHidden',
+                persistSelectedValueOnly: true,
+                boxLabel: 'Hide',
+                inputValue: true,
+                flex: 1,
+                checked: isInheritedHidden === true
+            });
+            return {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Inherited Display',
+                labelAlign: 'top',
+                labelStyle: 'padding-top: 5px;',
+                layout: 'hbox',
+                defaults: {
+                    layout: '50%'
+                },
+                items: [me.inheritedVisible, me.inheritedHide]
+            }
+        }
 
-        me.inheritedHide = Ext.widget({
-            xtype: 'radio',
-            name: 'isInheritedHidden',
-            persistSelectedValueOnly: true,
-            boxLabel: 'Hide',
-            inputValue: true,
-            flex: 1,
-            //disabled: this.record.isInherited(),
-            checked: me.record.get('isInheritedHidden') === true
-        });
-
+        var setInheritedDisplayCheckbox = function(isInheritedHidden) {
+            if (!isInheritedHidden) {
+                me.inheritedVisible.setValue(true);
+            } else {
+                me.inheritedHide.setValue(true);
+            }
+        }
+        
         me.valueDisplayStyle = Ext.widget({
             xtype: 'radio',
             name: 'facetType',
@@ -72,7 +90,6 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             labelAlign: 'top',
             labelStyle: 'padding-top: 5px;',
             hidden: true,
-            //disabled: this.record.isInherited(),
             // isDirty: function() {
             //     return false;
             // },
@@ -100,7 +117,6 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             xtype: 'taco.rangequerygroup',
             name: 'ranges',
             hidden: true,
-            //disabled: this.record.isInherited(),
             listeners: {
                 show: {
                     scope: this,
@@ -128,22 +144,18 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             valueNotFoundText: 'not found',
             editable: false,
             forceSelection: true,
+            disabled: me.record.isInherited(),
             hidden: (me.record.get('facetType') === 'RangeQuery'),
             store: me.record.getFacetSortingStore()
         });
 
-        this.items = [{
-                xtype: 'fieldcontainer',
-                fieldLabel: 'Inherited Display',
-                labelAlign: 'top',
-                labelStyle: 'padding-top: 5px;',
-                layout: 'hbox',
-                defaults: {
-                    layout: '50%'
-                },
-                hidden: !me.record.isInherited(),
-                items: [me.inheritedVisible, me.inheritedHide]
-            },{
+        if (!me.record.isInherited()) {
+            this.items = [];
+        } else {
+            this.items = [ buildInheritedDisplay(me.record.get('isInheritedHidden')) ];
+        }
+        
+        this.items.push({
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Display Style',
                 labelAlign: 'top',
@@ -155,11 +167,10 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
                 hidden: !me.record.get('allowsRangeQuery'),
                 items: [me.valueDisplayStyle, me.rangeDisplayStyle]
             },
-            //me.displayStyle,
             me.numRanges,
             me.rangeQueries,
             me.valueSort
-        ];
+        );
 
         me.rangeQueries.relayEvents(me.numRanges, ['select']);
 
@@ -178,13 +189,9 @@ Ext.define('Taco.view.website.settings.facets.FacetEditForm', {
             me.displayRangeQueryFields(true);
         }
 
-        if (!me.record.get('isInheritedHidden')) {
-            me.inheritedVisible.setValue(true);
-        } else {
-            me.inheritedHide.setValue(true);
+        if (me.record.isInherited()) {
+            setInheritedDisplayCheckbox(me.record.get('isInheritedHidden'));
         }
-
-        //me.inheritedVisible.setValue(!me.record.get('isInheritedHidden'));
 
     },
 
