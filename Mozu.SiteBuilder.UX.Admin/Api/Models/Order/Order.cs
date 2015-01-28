@@ -53,6 +53,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public DateTime UpdateDate { get; set; }
 
+        public DateTime? SubmittedDate { get; set; }
+
         public int? CustomerId { get; set; }
 
         public Contact BillingContact { get; set; }
