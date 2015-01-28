@@ -140,7 +140,7 @@
                 {% for payment in model.payments %}
                     {% if payment.status != "Voided" %}
                     <tr>
-                        <td>{{ payment.auditInfo.createDate|date("m/d/Y") }}</td>
+                        <td>{{ payment.auditInfo.createDate|date("m/d/Y HH:m:ss K") }}</td>
                         <td>{{ payment.status }}</td>
                         {% if payment.paymentType == "CreditCard" %}
                             <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
@@ -187,7 +187,7 @@
                 <tbody>
                     {% if model.shopperNotes.comments %}
                         <tr>
-                            <td>{{ model.submittedDate | date("m/d/Y g:i a") }}</td>
+                            <td>{{ model.submittedDate | date("m/d/Y HH:m:ss K") }}</td>
                             <td>Customer</td>
                             <td>Shopper Notes</td>
                             <td>{{ model.shopperNotes.comments }}</td>
@@ -195,7 +195,7 @@
                     {% endif %}
                     {% if model.shopperNotes.giftMessage %}
                         <tr>
-                            <td>{{ model.submittedDate | date("m/d/Y g:i a") }}</td>
+                            <td>{{ model.submittedDate | date("m/d/Y HH:m:ss K") }}</td>
                             <td>Customer</td>
                             <td>Gift Message</td>
                             <td>{{ model.shopperNotes.giftMessage }}</td>
