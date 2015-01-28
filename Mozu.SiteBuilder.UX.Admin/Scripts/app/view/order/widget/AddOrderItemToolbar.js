@@ -87,9 +87,14 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             scale:"medium",
             fieldBodyCls: "order-addproducttoolbar-cell",            
             text: "Add",
+            itemId: 'addButton',
             disabled: true,            
             width: this.gridColumns[5].width,
-            handler: this.save,
+            handler: function () {
+                // the handler also gets called, when the enter key is hit. But there is already a handler for enter, so we cancel it
+                if (arguments[1].keyCode != 13)
+                    this.save();
+            },
             scope:this,
             value: ""
         });
@@ -289,7 +294,9 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                 //down: function (e) {},
                 //left: function (e) {},
                 //right: function (e) {},
-                enter: this.save,
+                enter: function () {
+                    this.save();
+                },
                 //esc: this.reset,
                 scope: this
             });
