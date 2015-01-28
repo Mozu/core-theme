@@ -334,14 +334,19 @@ Ext.define('Taco.view.report.Index', {
                 var dashboardLocation = obj.items;
                 
                 if (Taco.app.context.getSiteId()) {
-                    dashboardLocation = dashboardLocation + '&SiteId=' + Taco.app.context.getSiteId();
+                    dashboardLocation = dashboardLocation + '&Site.SiteId=' + Taco.app.context.getSiteId();
                 } else {
-                    dashboardLocation += '&SiteId=all';
+                    dashboardLocation += '&Site.SiteId=all';
                 }
-                //dashboardLocation = dashboardLocation.replace('reporting.mozu-qa.com', 'AUS01NPHPBIR01.prod.mozu.com');
-                //dashboardLocation = dashboardLocation.replace('reporting.mozu-qa.com', 'aus02ndbrst01.dev.volusion.com');
-                //console.log(dashboardLocation);                
-                //2168, 2169
+                
+                //Leaving here right now, so we can debug quickly since these items work
+
+                //dashboardLocation = dashboardLocation + '&Site.SiteId=7905'; //14.11k
+
+                //dashboardLocation = dashboardLocation + '&Site.SiteId=8939'; //172.18k
+
+                //dashboardLocation = dashboardLocation + '&Site.SiteId=all'; //186.29k
+                
                 if (!dashboardLocation) return;
                 var iFrameChild = Ext.create('Ext.ux.IFrame', {
                     itemId: 'dashboardIframe',
