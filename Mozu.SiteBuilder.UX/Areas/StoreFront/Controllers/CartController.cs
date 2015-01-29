@@ -27,6 +27,7 @@ using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiCl
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
+    [ClientCacheHeaders(ForceRevalidate = true)]
     public class CartController : BaseApiController
     {
         private readonly ICartWebApiClient _cartClient;
@@ -75,7 +76,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             return (await RenderCartViewWithMessage(null));
         }
-
 
         private async Task<ActionResult> RenderCartViewWithMessage(Exception error)
         {

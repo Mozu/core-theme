@@ -1045,7 +1045,6 @@
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\misc\pickels.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\addthis.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\social\facebookcomments.hypr" />
     <Content Include="Themes\Core4\theme-ui.json" />
     <Content Include="Themes\Core4\theme.json" />
   </ItemGroup>
@@ -1861,9 +1860,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\Widgets\social\addthis.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\social\facebookcomments.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\theme-ui.json" />

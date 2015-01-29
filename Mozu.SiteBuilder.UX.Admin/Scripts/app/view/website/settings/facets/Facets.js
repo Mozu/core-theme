@@ -109,7 +109,6 @@
                  }
              });
 
-             var times = {};
 
              me.configuredFacetsView = Ext.create('Taco.core.ux.form.field.MultiSelect', {
                  name: 'facets',
@@ -123,17 +122,19 @@
                      cls: 'x-boundlist-draggable',
                      itemTpl: new Ext.XTemplate(
                      '<span class="x-boundlist-item-contents">',
-                         '<tpl if="!this.isInherited(categoryId) && !this.isOverriden(overrideFacetId)">',
+                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
                             '<span class="x-boundlist-item-drag">Drag </span>',
                          '</tpl>',
                          '<span class="x-boundlist-item-content">',
-                         '<span class="x-boundlist-item-type">{sourceName}</span>',
-                         '<tpl if="this.isInherited(categoryId)">',
-                             '<span class="x-boundlist-item-name">Inherited {sourceType}</span>',
+                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
+                             '<span class="x-boundlist-item-type">{sourceName}</span>',
+                             '<span class="x-boundlist-item-name">{sourceType}</span>',
                          '<tpl elseif="this.isOverride(overrideFacetId)">',
+                             '<span class="x-boundlist-item-type">{sourceName}</span>',
                              '<span class="x-boundlist-item-name">Overriden {sourceType}</span>',
                          '<tpl else>',
-                             '<span class="x-boundlist-item-name">{sourceType}</span>',
+                             '<span class="x-boundlist-item-type">{sourceName}</span>',
+                             '<span class="x-boundlist-item-name-inherited">Inherited {sourceType}</span>',
                          '</tpl>',
                          '<span class="x-boundlist-item-action x-boundlist-item-settings">Settings </span>',
                          '<tpl if="!isvalid">',
