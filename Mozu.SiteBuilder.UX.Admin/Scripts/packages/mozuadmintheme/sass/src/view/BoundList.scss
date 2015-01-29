@@ -121,8 +121,14 @@
     display: block;
 }
 
-.#{$prefix}boundlist-item-type {
+.#{$prefix}boundlist-item-name-inherited {
     color: $color-neutral-70;
+    font-size: px-to-rem(12px);
+    font-style: italic;
+    display: block;
+}
+
+.#{$prefix}boundlist-item-type {
     display: block;
     font-size: px-to-rem(12px);
     text-transform: uppercase;
