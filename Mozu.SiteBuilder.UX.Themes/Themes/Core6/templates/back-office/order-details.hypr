@@ -98,7 +98,7 @@
             <tbody>
             {% for item in model.items %}
                 <tr>
-                    <td>{{ item.product.productCode }}</td>
+                    <td>{% if item.product.variationProductCode %}{{ item.product.variationProductCode }}{% else %}{{ item.product.productCode }}{% endif %}</td>
                     <td>
                         <div class="product-name">{{ item.product.name }}</div>
                         {% for option in item.product.options %}
