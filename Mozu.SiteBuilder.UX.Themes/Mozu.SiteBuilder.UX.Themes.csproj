@@ -2218,6 +2218,7 @@
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-attributes.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-password.hypr.live" />
     <Content Include="Themes\Core5\stylesheets\back-office.less" />
+    <Content Include="Themes\Core4\stylesheets\back-office.less" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
