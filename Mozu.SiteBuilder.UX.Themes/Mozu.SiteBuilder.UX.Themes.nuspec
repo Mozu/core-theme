@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Mozu.SiteBuilder.UX.Themes</id>
+    <title>Mozu Storefront Themes</title>
+    <authors>Mozu</authors>
+    <owners>Volusion, Inc.</owners>
+    <licenseUrl>http://example.com</licenseUrl>
+    <projectUrl>http://example.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Mozu Storefront Themes</description>
+    <iconUrl>http://www.gravatar.com/avatar/419634e3493eead56e7aab22abb8aef8.png</iconUrl>
+    <releaseNotes />
+    <version>0.0.0.0</version>
+  </metadata>
+  <files>
+      <file src="Themes/**/*" target ="" />
+  </files>
+</package>

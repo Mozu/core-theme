@@ -9,6 +9,7 @@
     <projectUrl>http://example.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The Mozu Admin Experience</description>
+    <iconUrl>http://www.gravatar.com/avatar/419634e3493eead56e7aab22abb8aef8.png</iconUrl>
     <releaseNotes />
     <version>0.0.0.0</version>
   </metadata>
