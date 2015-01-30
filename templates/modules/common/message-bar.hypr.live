@@ -1,4 +1,4 @@
-<div class="mz-messagebar" data-mz-message-bar>
+﻿<div class="mz-messagebar" data-mz-message-bar>
     {% if model.length > 0 %}
     <ul class="is-showing mz-errors">
         {% for msg in model %}

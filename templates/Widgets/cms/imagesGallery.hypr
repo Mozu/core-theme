@@ -1,4 +1,4 @@
-{% require_script "modules/images-gallery" %}
+﻿{% require_script "modules/images-gallery" %}
 
 <div class="mz-image-gallery mz-{{Model.config.type}} mz-align-{{Model.config.alignment}}"
     

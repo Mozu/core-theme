@@ -1,4 +1,4 @@
-require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor) {
 
     var CheckoutStepView = Backbone.MozuView.extend({
         edit: function () {
@@ -140,7 +140,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
-            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
         },
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
@@ -246,9 +246,18 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             // override adding the isLoading class so the apply button 
             // doesn't go loading whenever other parts of the order change
         },
-        initialize: function() {
+        initialize: function () {
+            var me = this;
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
             this.codeEntered = !!this.model.get('couponCode');
+            this.$el.on('keypress', 'input', function (e) {
+                if (e.which === 13) {
+                    if (me.codeEntered) {
+                        me.handleEnterKey();
+                    }
+                    return false;
+                }
+            });
         },
         onEnterCouponCode: function (model, code) {
             if (code && !this.codeEntered) {

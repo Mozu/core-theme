@@ -1,11 +1,11 @@
-require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages", "modules/jquery-dateinput-localized"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews) {
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
         autoUpdate: ['quantity'],
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
-            "blur [data-mz-product-option]": "onOptionChange",
+            "blur [data-mz-product-option]": "onOptionChange"
         },
         render: function () {
             var me = this;

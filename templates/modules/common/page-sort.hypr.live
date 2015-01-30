@@ -1,4 +1,4 @@
-<label class="mz-pagingcontrols-pagesort-label">
+﻿<label class="mz-pagingcontrols-pagesort-label">
   <span class="mz-paging-sorttitle">{{ labels.sortBy }}:</span>
   <select data-mz-value="sortBy" class="mz-pagingcontrols-pagesort-dropdown" autocomplete="off">
     {% block sort-types %}

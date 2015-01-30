@@ -1,4 +1,4 @@
-define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
 
 
     var pageContext = require.mozuData('pagecontext'),
@@ -40,12 +40,46 @@ define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'module
         };
     });
 
+    var CustomerAttribute = Backbone.MozuModel.extend({
+        mozuType: 'customerattribute',
+        validation: {
+            values: {
+                fn: function (values, fieldName, fields) {
+                    var inputType = fields.inputType;
+                    var messages = Backbone.Validation.messages;
+                    var rules = fields.validation;
+                    var value = values[0];
+
+                    if (inputType === 'TextBox') {
+                        if (rules.maxStringLength && value.length > rules.maxStringLength) return format(messages.maxLength, fields.adminName, rules.maxStringLength);
+                        if (rules.minStringLength && value.length < rules.minStringLength) return format(messages.minLength, fields.adminName, rules.minStringLength);
+                        if (rules.maxNumericValue && value > rules.maxNumericValue) return format(messages.max, fields.adminName, rules.maxNumericValue);
+                        if (rules.minNumericValue && value < rules.minNumericValue) return format(messages.min, fields.adminName, rules.minNumericValue);
+                    } else if (inputType === 'TextArea') {
+                        if (rules.maxStringLength && value.length > rules.maxStringLength) return format(messages.maxLength, fields.adminName, rules.maxStringLength);
+                        if (rules.minStringLength && value.length < rules.minStringLength) return format(messages.minLength, fields.adminName, rules.minStringLength);
+                    } else if (inputType === 'Date') {
+                        if (rules.maxDateTime && Date.parse(value) > Date.parse(rules.maxDateTime)) return format(messages.max, fields.adminName, Date.parse(rules.maxDateTime));
+                        if (rules.minDateTime && Date.parse(value) < Date.parse(rules.minDateTime)) return format(messages.min, fields.adminName, Date.parse(rules.minDateTime));
+                    }
+
+                    function format () {
+                        var args = Array.prototype.slice.call(arguments),
+                            text = args.shift();
+                        return text.replace(/\{(\d+)\}/g, function (match, number) {
+                            return typeof args[number] !== 'undefined' ? args[number] : match;
+                        });
+                    }
+                }
+            }
+        }
+    });
 
     var CustomerContact = Backbone.MozuModel.extend({
         mozuType: 'contact',
         relations: {
             address: AddressModels.StreetAddress,
-            phoneNumbers: AddressModels.PhoneNumbers,
+            phoneNumbers: AddressModels.PhoneNumbers
         },
         validation: {
             firstName: {
@@ -149,7 +183,11 @@ define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'module
         hasSavedContacts: function() {
             var contacts = this.get('contacts');
             return contacts && contacts.length > 0;
-        },        relations: {
+        },
+        relations: {
+            attributes: Backbone.Collection.extend({
+                model: CustomerAttribute
+            }),
             contacts: Backbone.Collection.extend({
                 model: CustomerContact
             }),
@@ -159,6 +197,44 @@ define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'module
             credits: Backbone.Collection.extend({
                 model: PaymentMethods.DigitalCredit
             })
+        },
+        getAttributes: function () {
+            var self = this;
+            var attributesCollection = this.get('attributes');
+
+            return this.apiGetAttributes({pageSize:100}).then(function (cc) {
+                // transform attributes into key-value pairs, to avoid multiple lookups
+                var values = _.reduce(cc.data.items, function (a, b) {
+                    a[b.fullyQualifiedName] = {
+                        values: b.values,
+                        attributeDefinitionId: b.attributeDefinitionId
+                    };
+                    return a;
+                }, {});
+
+                // get all attribute definitions
+                return self.apiGetAttributeDefinitions().then(function (defs) {
+                    // merge attribute values into definitions
+                    _.each(defs.data.items, function (def) {
+                        var fqn = def.attributeFQN;
+
+                        if (values[fqn]) {
+                            def.values = values[fqn].values;
+                            def.attributeDefinitionId = values[fqn].attributeDefinitionId;
+                        }
+                    });
+                    // sort attributes, putting checkboxes first
+                    defs.data.items.sort(function (a, b) {
+                        if (a.inputType === 'YesNo') return -1;
+                        else if (b.inputType === 'YesNo') return 1;
+                        else return 0;
+                    });
+                    // write fully-hydrated attributes to the model
+                    attributesCollection.reset(defs.data.items);
+                    self.trigger('sync', cc.data);
+                    return self;
+                });
+            });
         },
         getPrimaryContactOfType: function (typeName) {
             return this.get('contacts').find(function (contact) {
@@ -224,7 +300,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'module
                 fn: function(value) {
                     if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
-            },
+            }
         },
         defaults: {
             editingCard: {},
@@ -309,6 +385,9 @@ define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'module
                 return self.getCards();
             });
         },
+        deleteMultipleCards: function(ids) {
+            return this.apiModel.api.all.apply(this.apiModel.api, ids.map(_.bind(this.apiModel.deletePaymentCard, this.apiModel))).then(_.bind(this.getCards, this));
+        },
         getCards: function () {
             var self = this;
             var cardsCollection = this.get('cards');
@@ -361,6 +440,13 @@ define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'module
         updateAcceptsMarketing: function(yes) {
             return this.apiUpdate({
                 acceptsMarketing: yes
+            });
+        },
+        updateAttribute: function (attributeFQN, attributeDefinitionId, values) {
+            this.apiUpdateAttribute({
+                attributeFQN: attributeFQN,
+                attributeDefinitionId: attributeDefinitionId,
+                values: values
             });
         },
         toJSON: function (options) {

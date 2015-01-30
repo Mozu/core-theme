@@ -1,4 +1,4 @@
-{% extends "modules/common/item-listing" %}
+﻿{% extends "modules/common/item-listing" %}
 
 {% block module-classes %}mz-itemlisting-autocomplete mz-itemlisting-autocomplete-product{% endblock module-classes %}
 

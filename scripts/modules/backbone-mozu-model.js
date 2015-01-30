@@ -1,4 +1,4 @@
-define([
+﻿define([
     "modules/jquery-mozu",
     "underscore",
     "modules/api",
@@ -32,7 +32,7 @@ define([
             'delete': 'del'
         };
 
-        var MozuModel = Backbone.MozuModel = Backbone.Model.extend(_.extend({}, Backbone.Validation.mixin,
+        var modelProto = _.extend({}, Backbone.Validation.mixin,
 
             /** @lends MozuModel.prototype */
         {
@@ -42,16 +42,6 @@ define([
              * @param {object} json A JSON representation of the model to preload into the MozuModel. If you create a new MozuModel with no arguments, its attributes will be blank.
              * @augments external:Backbone.Model
              */
-            constructor: function(conf) {
-                this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
-                Backbone.Model.apply(this, arguments);
-                if (this.mozuType) this.initApiModel(conf);
-                if (this.handlesMessages) {
-                    this.initMessages();
-                } else {
-                    this.passErrors();
-                }
-            },
 
 
             /**
@@ -118,7 +108,7 @@ define([
              * @param {string} attr The name, or dot-separated path, of the property to return.
              * @returns {Object} The value of the named attribute, and `undefined` if it was never set.
              */
-            get: function (attr) {
+            get: function(attr) {
                 var prop = attr.split('.'), ret = this, level;
                 while (ret && (level = prop.shift())) ret = Backbone.Model.prototype.get.call(ret, level);
                 if (!ret && this.relations && (attr in this.relations)) {
@@ -132,7 +122,7 @@ define([
             setRelation: function(attr, val, options) {
                 var relation = this.attributes[attr],
                     id = this.idAttribute || "id";
-                
+
                 if (!("parse" in options)) options.parse = true;
 
                 //if (options.unset && relation) delete relation.parent;
@@ -198,7 +188,7 @@ define([
              * @param {string} propName The name, or dot-separated path, of the property to return.
              * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
              */
-            set: function (key, val, options) {
+            set: function(key, val, options) {
                 var attr, attrs, unset, changes, silent, changing, prev, current;
                 if (!key && key !== 0) return this;
 
@@ -279,15 +269,15 @@ define([
                 this._changing = false;
                 return this;
             },
-            initApiModel: function (conf) {
+            initApiModel: function(conf) {
                 var me = this;
                 this.apiModel = api.createSync(this.mozuType, _.extend({}, _.result(this, 'defaults') || {}, conf));
                 if (!this.apiModel || !this.apiModel.on) return;
-                this.apiModel.on('action', function () {
+                this.apiModel.on('action', function() {
                     me.isLoading(true);
                     me.trigger('request');
                 });
-                this.apiModel.on('sync', function (rawJSON) {
+                this.apiModel.on('sync', function(rawJSON) {
                     me.isLoading(false);
                     if (rawJSON) {
                         me._isSyncing = true;
@@ -296,17 +286,17 @@ define([
                     }
                     me.trigger('sync', rawJSON);
                 });
-                this.apiModel.on('spawn', function (rawJSON) {
+                this.apiModel.on('spawn', function(rawJSON) {
                     me.isLoading(false);
                 });
-                this.apiModel.on('error', function (err) {
+                this.apiModel.on('error', function(err) {
                     me.isLoading(false);
                     me.trigger('error', err);
                 });
-                this.on('change', function () {
+                this.on('change', function() {
                     if (!me._isSyncing) {
                         var changedAttributes = me.changedAttributes();
-                        _.each(changedAttributes, function (v, k, l) {
+                        _.each(changedAttributes, function(v, k, l) {
                             if (v && typeof v.toJSON === "function")
                                 l[k] = v.toJSON();
                         });
@@ -350,26 +340,26 @@ define([
              * @memberof MozuModel.prototype
              */
 
-            initMessages: function () {
+            initMessages: function() {
                 var me = this;
                 me.messages = new MessageModels.MessagesCollection();
-                me.hasMessages = function () {
+                me.hasMessages = function() {
                     return me.messages.length > 0;
                 };
                 me.helpers.push('hasMessages');
-                me.on('error', function (err) {
+                me.on('error', function(err) {
                     if (err.items && err.items.length) {
                         me.messages.reset(err.items);
                     } else {
                         me.messages.reset([err]);
                     }
                 });
-                me.on('sync', function (raw) {
+                me.on('sync', function(raw) {
                     if (!raw || !raw.messages || raw.messages.length === 0) me.messages.reset();
                 });
-                _.each(this.relations, function (v, key) {
+                _.each(this.relations, function(v, key) {
                     var relInstance = me.get(key);
-                    if (relInstance) me.listenTo(relInstance, 'error', function (err) {
+                    if (relInstance) me.listenTo(relInstance, 'error', function(err) {
                         me.trigger('error', err);
                     });
                 });
@@ -380,11 +370,11 @@ define([
                     return self;
                 });
             },
-            sync: function (method, model, options) {
+            sync: function(method, model, options) {
                 method = methodMap[method] || method;
-                model.apiModel[method](model.attributes).then(function (model) {
+                model.apiModel[method](model.attributes).then(function(model) {
                     options.success(model.data);
-                }, function (error) {
+                }, function(error) {
                     options.error(error);
                 });
             },
@@ -395,7 +385,7 @@ define([
              * @returns {boolean} True if the model is currently loading.
              * @param {boolean} flag Set this to true to trigger a `loadingchange` event.
              */
-            isLoading: function (yes, opts) {
+            isLoading: function(yes, opts) {
                 if (arguments.length === 0) return !!this._isLoading;
                 this._isLoading = yes;
                 // firefox bfcache fix
@@ -409,7 +399,7 @@ define([
                 }
                 if (!opts || !opts.silent) this.trigger('loadingchange', yes);
             },
-            getHelpers: function () {
+            getHelpers: function() {
                 return this.helpers;
             },
 
@@ -439,17 +429,17 @@ define([
              * @param {boolean} options.ensureCopy Ensure that the returned JSON is a complete in-memory copy of the attributes, with no references. Use this helper if you're going to transform the JSON.
              * @returns {object}
              */
-            toJSON: function (options) {
+            toJSON: function(options) {
                 var attrs = _.clone(this.attributes);
                 if (options && options.helpers) {
-                    _.each(this.getHelpers(), function (helper) {
+                    _.each(this.getHelpers(), function(helper) {
                         attrs[helper] = this[helper]();
                     }, this);
                     if (this.hasMessages) attrs.messages = this.messages.toJSON();
                     if (this.validation) attrs.isValid = this.isValid(options.forceValidation);
                 }
 
-                _.each(this.relations, function (rel, key) {
+                _.each(this.relations, function(rel, key) {
                     if (_.has(attrs, key)) {
                         attrs[key] = attrs[key].toJSON(options);
                     }
@@ -457,7 +447,25 @@ define([
 
                 return (options && options.ensureCopy) ? JSON.parse(JSON.stringify(attrs)) : attrs;
             }
-        }), {
+        });
+
+        // we have to attach the constructor to the prototype via direct assignment,
+        // because iterative extend methods don't work on the 'constructor' property
+        // in IE8
+
+        modelProto.constructor = function(conf) {
+            this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
+            Backbone.Model.apply(this, arguments);
+            if (this.mozuType) this.initApiModel(conf);
+            if (this.handlesMessages) {
+                this.initMessages();
+            } else {
+                this.passErrors();
+            }
+        };
+
+
+        var MozuModel = Backbone.MozuModel = Backbone.Model.extend(modelProto, {
             /**
              * Create a mozuModel from any preloaded JSON present for this type.
              * @example
@@ -478,7 +486,7 @@ define([
             },
             DataTypes: {
                 "Int": function (val) {
-                    val = parseInt(val);
+                    val = parseInt(val, 10);
                     return isNaN(val) ? 0 : val;
                 },
                 "Float": function (val) {

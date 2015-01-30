@@ -1,4 +1,4 @@
-{% extends "email/email" %}
+﻿{% extends "email/email" %}
 
 {% block body-content %}
     <br>

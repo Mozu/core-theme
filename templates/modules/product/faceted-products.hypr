@@ -1,4 +1,4 @@
-<script type="text/json" id="data-mz-preload-facetedproducts">
+﻿<script type="text/json" id="data-mz-preload-facetedproducts">
 {
 	"facets": {% json model.facets %}, 
 	"currentPage": {{ model.currentPage }},

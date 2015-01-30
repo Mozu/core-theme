@@ -1,4 +1,4 @@
-define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/api'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, Api) {
+﻿define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews) {
     
     var EditableView = Backbone.MozuView.extend({
         constructor: function () {
@@ -17,44 +17,87 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
                 };
             var operation = this.model[action](payload);
             if (operation && operation.then) {
-                operation.then(renderAlways,renderAlways);
+                operation.then(renderAlways, renderAlways);
                 return operation;
             }
         }
     });
-        
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
         autoUpdate: [
             'firstName',
             'lastName',
-            //'primaryBillingContact.phoneNumbers.home',
-            'oldPassword',
-            'password',
-            'confirmPassword',
             'acceptsMarketing'
         ],
-        updateAcceptsMarketing: function(e) {
-            var yes = $(e.currentTarget).prop('checked');
-            this.model.set('acceptsMarketing', yes);
-            this.model.updateAcceptsMarketing(yes);
+        constructor: function () {
+            EditableView.apply(this, arguments);
+            this.editing = false;
+            this.invalidFields = {};
         },
-        startEditName: function () {
-            this.editing.name = true;
-            this.render();
-        },
-        cancelEditName: function() {
-            this.editing.name = false;
-            this.render();
-        },
-        finishEditName: function() {
-            var self = this;
-            this.doModelAction('updateName').otherwise(function() {
-                self.editing.name = true;
+        initialize: function () {
+            return this.model.getAttributes().then(function (customer) {
+                customer.get('attributes').each(function (attribute) {
+                    attribute.set('attributeDefinitionId', attribute.get('id'));
+                });
+
+                return customer;
             });
-            this.editing.name = false;
         },
+        updateAttribute: function (e) {
+            var self = this;
+            var attributeFQN = e.currentTarget.getAttribute('data-mz-attribute');
+            var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
+            var nextValue = attribute.get('inputType') === 'YesNo' ? $(e.currentTarget).prop('checked') : $(e.currentTarget).val();
+
+            attribute.set('values', [nextValue]);
+            attribute.validate('values', {
+                valid: function (view, attr, error) {
+                    self.$('[data-mz-attribute="' + attributeFQN + '"]').removeClass('is-invalid')
+                        .next('[data-mz-validationmessage-for="' + attr + '"]').text('');
+                },
+                invalid: function (view, attr, error) {
+                    self.$('[data-mz-attribute="' + attributeFQN + '"]').addClass('is-invalid')
+                        .next('[data-mz-validationmessage-for="' + attr + '"]').text(error);
+                }
+            });
+        },
+        startEdit: function (event) {
+            event.preventDefault();
+            this.editing = true;
+            this.render();
+        },
+        cancelEdit: function () {
+            this.editing = false;
+            this.afterEdit();
+        },
+        finishEdit: function () {
+            var self = this;
+
+            this.doModelAction('apiUpdate').then(function () {
+                self.editing = false;
+            }).otherwise(function () {
+                self.editing = true;
+            }).ensure(function () {
+                self.afterEdit();
+            });
+        },
+        afterEdit: function () {
+            var self = this;
+
+            self.initialize().ensure(function () {
+                self.render();
+            });
+        }
+    });
+
+    var PasswordView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-password',
+        autoUpdate: [
+            'oldPassword',
+            'password',
+            'confirmPassword'
+        ],
         startEditPassword: function () {
             this.editing.password = true;
             this.render();
@@ -67,25 +110,13 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
                 }, 250);
             }, function() {
                 self.editing.password = true;
-            });
-            this.editing.password = false;
-        },
-        cancelEditPassword: function() {
-            this.editing.password = false;
-            this.render();
-        }
-        //startEditPhone: function() {
-        //    this.editing.phone = true;
-        //    this.render();
-        //},
-        //finishEditPhone: function() {
-        //    this.doModelAction('savePrimaryBillingContact');
-        //    this.editing.phone = false;
-        //},
-        //cancelEditPhone: function() {
-        //    this.editing.phone = false;
-        //    this.render();
-        //}
+        });
+        this.editing.password = false;
+    },
+    cancelEditPassword: function() {
+        this.editing.password = false;
+        this.render();
+    }
     });
 
     var WishListView = EditableView.extend({
@@ -281,7 +312,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
             'editingContact.isBillingContact',
             'editingContact.isPrimaryBillingContact',
             'editingContact.isShippingContact',
-            'editingContact.isPrimaryShippingContact',
+            'editingContact.isPrimaryShippingContact'
             ],
         renderOnChange: [
             'editingContact.address.countryCode',
@@ -315,10 +346,25 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
         },
         beginDeleteContact: function (e) {
             var self = this,
-                id = e.currentTarget.getAttribute('data-mz-contact'),
-                contact = this.model.get('contacts').get(id);
-            if (window.confirm(Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')))) {
-                this.doModelAction('deleteContact', id);
+                contact = this.model.get('contacts').get(e.currentTarget.getAttribute('data-mz-contact')),
+                associatedCards = this.model.get('cards').where({ contactId: contact.id }),
+                windowMessage = Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')),
+                doDeleteContact = function() {
+                    return self.doModelAction('deleteContact', contact.id);
+                },
+                go = doDeleteContact;
+
+
+            if (associatedCards.length > 0) {
+                windowMessage += ' ' + Hypr.getLabel('confirmDeleteContact2');
+                go = function() {
+                    return self.doModelAction('deleteMultipleCards', _.pluck(associatedCards, 'id')).then(doDeleteContact);
+                };
+               
+            }
+
+            if (window.confirm(windowMessage)) {
+                return go();
             }
         }
     });
@@ -340,6 +386,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
         var accountModel = window.accountModel = CustomerModels.EditableCustomer.fromCurrent();
 
         var $accountSettingsEl = $('#account-settings'),
+            $passwordEl = $('#password-section'),
             $orderHistoryEl = $('#account-orderhistory'),
             $returnHistoryEl = $('#account-returnhistory'),
             $paymentMethodsEl = $('#account-paymentmethods'),
@@ -353,6 +400,11 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
         var accountViews = window.accountViews = {
             settings: new AccountSettingsView({
                 el: $accountSettingsEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            password: new PasswordView({
+                el: $passwordEl,
                 model: accountModel,
                 messagesEl: $messagesEl
             }),
@@ -398,40 +450,17 @@ define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-
                 messagesEl: $messagesEl
             })
         };
-
-        var wishlist;
-
-        if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled) {
-            wishlist = accountModel.get('wishlist');
-
-            accountViews.wishList = new WishListView({
-                el: $wishListEl,
-                model: wishlist,
-                messagesEl: $messagesEl
-            });
-        }
+            
+        
+        if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled) accountViews.wishList = new WishListView({
+            el: $wishListEl,
+            model: accountModel.get('wishlist'),
+            messagesEl: $messagesEl
+        });
 
         // TODO: upgrade server-side models enough that there's no delta between server output and this render,
         // thus making an up-front render unnecessary.
         _.invoke(window.accountViews, 'render');
-
-        // inventory data for configurable products in the wishlist is inaccurate on initial load/render
-        // retrieving new data for each product and re-rendering the wishlist is *technically* a solution
-        // #shame
-        if (wishlist) {
-            Api.all.apply(Api, wishlist.get('items').map(function (item) {
-                var product = item.get('product');
-                var options = product.get('options').map(function (opt) {
-                    return { attributeFQN: opt.get('attributeFQN'), value: opt.get('value') };
-                });
-
-                return options.length === 0 ? product : product.apiConfigure({ options: options }, { useExistingInstances: true }).then(function (nextProduct) {
-                    item.set('product', nextProduct.data);
-                });
-            })).then(function () {
-                accountViews.wishList.render();
-            });
-        }
 
     });
 });

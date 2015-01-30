@@ -1,4 +1,4 @@
-{% extends "modules/common/item-listing" %}
+﻿{% extends "modules/common/item-listing" %}
 
 {% block item-details %}
   {% parent %}
@@ -6,9 +6,7 @@
 <div class="mz-itemlisting-price">{{ labels.price }}: {{ model.product.price.price|currency }}</div>
 {% endblock %}
 {% block item-listing-actions %}
-    {% if model.product.purchasableState.isPurchasable !== false %}
     <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="addItemToCart" data-mz-item-id="{{ model.id }}">{{ labels.addToCart }}</a>
-    {% endif %}
     <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="beginRemoveItem" data-mz-item-id="{{ model.id }}">{{ labels.removeFromWishlist }}</a>
 {% endblock item-listing-actions %}
 {% block item-listing-extras %}

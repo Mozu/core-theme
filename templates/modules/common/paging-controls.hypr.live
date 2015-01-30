@@ -1,4 +1,4 @@
-<label class="mz-pagingcontrols-pagesize-label">
+﻿<label class="mz-pagingcontrols-pagesize-label">
   <span class="mz-paging-title">{{ labels.show }}:</span>
   <select data-mz-value="pageSize" class="mz-pagingcontrols-pagesize-dropdown" autocomplete="off">
     {% block page-sizes %}

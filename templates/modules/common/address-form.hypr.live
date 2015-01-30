@@ -1,4 +1,4 @@
-{% block address-form %}
+﻿{% block address-form %}
     <div class="mz-l-formfieldgroup-row mz-addressform-firstname">
         <div class="mz-l-formfieldgroup-cell">
             <label for="firstname">{{ labels.firstName }}<span class="is-required"> *</span></label>
@@ -82,9 +82,17 @@
         <div class="mz-l-formfieldgroup-cell">
             <select data-mz-value="{{ addresscontext }}address.stateOrProvince">
                 <option></option>
-                {% for state in themeSettings.usStates %}
-                    <option {% if model.address.stateOrProvince == state.abbreviation %}selected="selected"{% endif %} value="{{ state.abbreviation }}">{{ state.name }}</option>
+
+                {% if states && states.length > 0 %}
+                {% for state in states %}
+                    <option {% if model.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
                 {% endfor %}
+                {% else %}
+                {% for state in pageContext.billingStates %}
+                    <option {% if model.address.stateOrProvince == state.key %}selected="selected"{% endif %} value="{{ state.key }}">{{ state.value }}</option>
+                {% endfor %}
+                {% endif %}
+
             </select>
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.stateOrProvince"></span>
         </div>

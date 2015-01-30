@@ -1,4 +1,4 @@
-{% block credit-card-form %}
+﻿{% block credit-card-form %}
     <div class="mz-l-formfieldgroup-row mz-payment-credit-card-type-row">
         <div class="mz-l-formfieldgroup-cell">
             <label for="mz-payment-credit-card-type">{{ labels.cardType }}<span class="is-required"> *</span>:</label>
@@ -19,7 +19,7 @@
         <option value="DISCOVER" {% if model.paymentOrCardType == "DISCOVER" %}selected="selected"{% endif %}>{{ labels.ccDiscover }}</option>
         {% endif %}
     </select>
-            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}paymentOrCardType"</span>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}paymentOrCardType"></span>
         </div>
     </div>
     <div class="mz-l-formfieldgroup-row mz-payment-credit-card-number-row">

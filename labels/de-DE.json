@@ -1,4 +1,4 @@
-{
+﻿{
 
     "dateFormat": "j.n.Y",
 
@@ -237,12 +237,12 @@
     "viewOrderHistory"   : "View Auftrags Geschichte",
     "changePassword"   : "Kennwort ändern",
     "shipped"   : "Versand",
-    "trackPackage"   : "Track Package",
     "return"   : "Rückkehr",
     "returns"   : "Retouren",
     "refund"   : "Rückerstattung",
     "replace"   : "ersetzen",
     "returnOrReplace"   : "Rückkehr oder ersetzt Artikel",
+    "trackPackage"      : "Verfolgen das Paket",
     "returnRequestDate"    : "Zurück Anforderungsdatum",
     "addNewCard"   : "In neue Karte",
     "noSavedCards"   : "Sie haben keine gespeicherten Zahlungsmethoden.",

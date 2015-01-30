@@ -1,4 +1,4 @@
-/* jshint undef: true */
+﻿/* jshint undef: true */
 /* global YT */
 define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
     function($) {
@@ -47,7 +47,7 @@ define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
             
             $button = $this.find('.mz-cms-video-play').on('click', function() {
                 $player = $this.find('.mz-cms-video-player').css({
-                    opacity: 1,
+                    opacity: 1
                 });
 
                 $button.css('opacity', 0);

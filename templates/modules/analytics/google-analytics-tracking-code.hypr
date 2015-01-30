@@ -1,4 +1,4 @@
-<script type="text/javascript">
+﻿<script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', '{{ siteContext.generalSettings.googleAnalyticsCode }}']);
     _gaq.push(['_trackPageview']);

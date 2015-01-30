@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+﻿module.exports = function(grunt) {
 
     grunt.initConfig({
 
@@ -16,7 +16,7 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            default: [
+            "default": [
                 'theme.json',
                 'theme-ui.json',
                 'labels/**/*.json',
@@ -24,6 +24,7 @@ module.exports = function(grunt) {
                 'scripts/**/*.js'
             ],
             options: {
+                es3: true,
                 ignores: ['scripts/vendor/**/*.js'],
                 globals: {
                     console: true,

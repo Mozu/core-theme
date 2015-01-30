@@ -1,1 +1,1 @@
-View the full release notes for the Mozu Core Theme at the [Mozu Developer Center](http://info.mozu.com/rs/volusion/images/Mozu-ReleaseNotes-q42014.pdf).
+View the full release notes for the Mozu Core Theme at the [Mozu Developer Center](http://developer.mozu.com).

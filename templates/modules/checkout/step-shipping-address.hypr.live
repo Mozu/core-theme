@@ -1,4 +1,4 @@
-    <h3 class="mz-formstep-header">
+﻿    <h3 class="mz-formstep-header">
         {{ labels.shippingInformation }}
         {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
           <button class="mz-button mz-button-small mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</button>
@@ -16,10 +16,10 @@
       {% if model.requiresFulfillmentInfo  %}
       <div class="mz-formstep-fields mz-l-formfieldgroup">
         {% if model.contacts %}
-          {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
+        {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
         {% else %}
-          {% include "modules/common/address-form" with countries=pageContext.shippingCountries %}
-        {% endif %}        
+        {% include "modules/common/address-form" with countries=pageContext.shippingCountries states=pageContext.shippingStates %}
+        {% endif %}
       </div>
       {% endif %}
       

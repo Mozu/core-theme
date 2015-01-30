@@ -1,4 +1,4 @@
-<div class="mz-itemlisting {% block module-classes %}{% endblock module-classes %}">
+﻿<div class="mz-itemlisting {% block module-classes %}{% endblock module-classes %}">
   {% block item-listing-prefix %}
   {% endblock item-listing-prefix %}
   {% block item-listing-image %}

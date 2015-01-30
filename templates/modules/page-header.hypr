@@ -1,4 +1,4 @@
-<header class="mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %}">
+﻿<header class="mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %}">
    {% block store-branding %}
         {% include "modules/page-header/store-branding" %}
     {% endblock store-branding %}

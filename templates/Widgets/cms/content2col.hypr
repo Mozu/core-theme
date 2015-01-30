@@ -1,4 +1,4 @@
-<table {% data_attributes Model%}>
+﻿<table {% data_attributes Model%}>
   <tr>
     <td>
       <h1 {% data_attributes Model.Properties.Title %}> {{Model.Properties.Title}}</h1>

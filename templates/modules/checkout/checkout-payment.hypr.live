@@ -1,4 +1,4 @@
-<div class="mz-checkout-payment">
+﻿<div class="mz-checkout-payment">
                 <h4 class="mz-checkout-paymenttitle"><strong>{% if model.amountCollected > 0 %}{{ model.amountCollected|currency }}{% else %}{{ model.amountRequested|currency }}{% endif %}</strong> &mdash; {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }} {% endif %}{% if model.billingInfo.paymentType == "PaypalExpress" %} {{ labels.payPal }} {% endif %}{% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}{% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}</h4>
                 <dl class="mz-propertylist">
                     {% if model.billingInfo.billingContact.email %}

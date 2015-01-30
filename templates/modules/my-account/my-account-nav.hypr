@@ -1,4 +1,4 @@
-<nav class="mz-scrollnav" id="account-nav" data-mz-scrollnav="{{ navtarget }}">
+﻿<nav class="mz-scrollnav" id="account-nav" data-mz-scrollnav="{{ navtarget }}">
     <ul class="mz-scrollnav-list nav">
         <li class="mz-scrollnav-item">
             <a class="mz-scrollnav-link" href="#settings">

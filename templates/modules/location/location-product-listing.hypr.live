@@ -1,4 +1,4 @@
-{% extends "modules/product/product-listing" %}
+﻿{% extends "modules/product/product-listing" %}
 
 {% block module-classes %} mz-productlisting-forlocation {% endblock module-classes %}
 

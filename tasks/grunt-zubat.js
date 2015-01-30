@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 module.exports = function (grunt) {
     grunt.registerMultiTask('zubat', 'Compile theme JS files using Zubat.', function () {

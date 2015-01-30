@@ -1,4 +1,4 @@
-<div class="mz-checkout-digitalcredit mz-l-stack-section">
+﻿<div class="mz-checkout-digitalcredit mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalCredits }}</h4>
   <div class="mz-l-formfieldgroup-cell">
     <label for="digital-credit-code">{{ labels.digitalCreditCode }}: </label>

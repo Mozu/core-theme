@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'underscore', "hyprlive", "modules/backbone-mozu", "modules/models-product"], function($, _, Hypr, Backbone, ProductModels) {
+﻿define(['modules/jquery-mozu', 'underscore', "hyprlive", "modules/backbone-mozu", "modules/models-product"], function($, _, Hypr, Backbone, ProductModels) {
 
     var FacetValue = Backbone.MozuModel.extend({
         idAttribute: 'value'

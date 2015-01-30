@@ -1,4 +1,4 @@
-    {{ model.firstName }} {{ model.lastNameOrSurname }}<br />
+﻿    {{ model.firstName }} {{ model.lastNameOrSurname }}<br />
     {{ model.address.address1 }}<br />
     {% if model.address.address2 %}
         {{ model.address.address2 }}<br />

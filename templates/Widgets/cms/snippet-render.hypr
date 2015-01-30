@@ -1,4 +1,4 @@
-{% if model.items %}
+﻿{% if model.items %}
 	<div class="mz-snippetList {% block module-classes %}{% endblock module-classes %}">
 
     <ul class="mz-snippetList-list {% block list-classes %}{% endblock list-classes %}">

@@ -1,4 +1,4 @@
-{% autoescape on %}
+﻿{% autoescape on %}
 {% block doctype %}
 <!doctype html>
 {% endblock doctype %}

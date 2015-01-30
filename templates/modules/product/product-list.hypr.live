@@ -1,4 +1,4 @@
-<div class="mz-productlist {% block module-classes %}{% endblock module-classes %}">
+﻿<div class="mz-productlist {% block module-classes %}{% endblock module-classes %}">
     {% if model.items %}
     <ul class="mz-productlist-list {% block list-classes %}{% endblock list-classes %}">
         {% for prod in model.items %}

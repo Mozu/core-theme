@@ -1,3 +1,3 @@
-{% extends "modules/common/item-price" %}
+﻿{% extends "modules/common/item-price" %}
 
 {% block crossedout-inline-style %}style="text-decoration: line-through;"{% endblock crossedout-inline-style %}

@@ -1,4 +1,4 @@
-<div class="mz-paymentmethod {% block module-classes %}{% endblock module-classes %}">
+﻿<div class="mz-paymentmethod {% block module-classes %}{% endblock module-classes %}">
     <div class="mz-paymentmethod-actions">
       {% block payment-method-actions %}
       {% endblock payment-method-actions %}

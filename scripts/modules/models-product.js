@@ -1,4 +1,4 @@
-define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+﻿define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -17,7 +17,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
         initialize: function() {
             var me = this;
             _.defer(function() {
-                if (me.collection) me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
+                me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
             });
 
             var equalsThisValue = function(fvalue, newVal) {
@@ -117,8 +117,11 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             return !!(attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo && values && this.get('shopperEnteredValue'));
         },
         isValidValue: function() {
-            var value = this.get('value') || this.get('shopperEnteredValue');
+            var value = this.getValueOrShopperEnteredValue();
             return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || (this.get('isMultiValue') ? !_.difference(_.map(value, function(v) { return v.toString(); }), this.legalValues).length : _.contains(this.legalValues, value.toString())));
+        },
+        getValueOrShopperEnteredValue: function() {
+            return this.get('value') || (this.get('value') === 0) ? this.get('value') : this.get('shopperEnteredValue');
         },
         isConfigured: function() {
             var attributeDetail = this.get('attributeDetail');
@@ -142,7 +145,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                     biscuit.push(this.toJSON());
                 } else {
                     fqn = this.get('attributeFQN');
-                    value = this.get('value') || this.get('shopperEnteredValue');
+                    value = this.getValueOrShopperEnteredValue();
                     attributeDetail = this.get('attributeDetail');
                     valueKey = attributeDetail.valueType === ProductOption.Constants.ValueTypes.ShopperEntered ? "shopperEnteredValue" : "value";
                     if (attributeDetail.dataType === "Number") value = parseFloat(value);
@@ -354,7 +357,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             FulfillmentMethods: {
                 SHIP: "Ship",
                 PICKUP: "Pickup",
-                DIGITAL: "Digital",
+                DIGITAL: "Digital"
             },
             // for catalog instead of commerce
             FulfillmentTypes: {

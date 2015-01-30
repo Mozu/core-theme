@@ -1,4 +1,4 @@
-<div class="mz-locationlisting mz-locationlisting-forproduct {% if model.quantity == 0 %}is-disabled{% endif %}">
+﻿<div class="mz-locationlisting mz-locationlisting-forproduct {% if model.quantity == 0 %}is-disabled{% endif %}">
     <div class="mz-locationlisting-locationdetails">
         <h4 class="mz-locationlisting-name">{{ model.name }}</h4>
         <div class="mz-addresssummary">

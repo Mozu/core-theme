@@ -1,0 +1,451 @@
+﻿{% extends "back-office/base" %}
+{% block body-content %}
+<table class="mz-printable-order mz-printable-order-details">
+<thead class="header"><tr>
+    <th class="company-info">
+        <div class="company-name">{{ customContent.companyName }}</div>
+        <div class="company-contacts">{{ customContent.companyAddress }}</div>
+        <div class="company-url">{{ customContent.websiteUrl }}</div>
+    </th>
+    <th class="order-essentials">
+        <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date("m/d/Y H:i:s K") }}</span></div>
+    </th>
+</tr></thead>
+<tbody><tr><td colspan="4">
+    <div class="section section-contacts"><table class="panes"><tbody><tr>
+        <td class="billing-address">
+            <div class="label">Bill To</div>
+            <div>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</div>
+            <div>{{ model.billingInfo.billingContact.address.address1 }}</div>
+            {% if model.billingInfo.billingContact.address.address2 %}<div>{{ model.billingInfo.billingContact.address.address2 }}</div>{% endif %}
+            {% if model.billingInfo.billingContact.address.address3 %}<div>{{ model.billingInfo.billingContact.address.address3 }}</div>{% endif %}
+            {% if model.billingInfo.billingContact.address.address4 %}<div>{{ model.billingInfo.billingContact.address.address4 }}</div>{% endif %}
+            <div>{{ model.billingInfo.billingContact.address.cityOrTown }}, {{ model.billingInfo.billingContact.address.stateOrProvince }} {{ model.billingInfo.billingContact.address.postalOrZipCode }}</div>
+            {% if model.billingInfo.billingContact.phoneNumbers.home %}<div>{{ model.billingInfo.billingContact.phoneNumbers.home }} (home)</div>{% endif %}
+            {% if model.billingInfo.billingContact.phoneNumbers.work %}<div>{{ model.billingInfo.billingContact.phoneNumbers.work }} (work)</div>{% endif %}
+            {% if model.billingInfo.billingContact.phoneNumbers.mobile %}<div>{{ model.billingInfo.billingContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+            <div>{{ model.billingInfo.billingContact.email }}</div>
+        </td>
+        <td class="shipping-address">
+            <div class="label">Ship To</div>
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
+            {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}{% if  model.fulfillmentInfo.fulfillmentContact.address.cityOrTown && model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince %}, {% endif %} {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
+            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
+            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+            <div>{{ model.fulfillmentInfo.fulfillmentContact.email }}</div>
+        </td>
+        <td class="order-totals">
+            <div class="label">Totals</div>
+            <div class="price-total">{{ model.total|currency }}</div>
+            <div class="item-total">{% if model.itemsOrdered %}{{ model.itemsOrdered }} items{% endif %}</div>
+        </td>
+    </tr></tbody></table></div>
+    <div class="section section-orderitems">
+        <h2>Items Ordered</h2>
+        <table class="grid">
+            <thead><tr>
+                <th>Code</th>
+                <th>Products</th>
+                <th>Fulfillment</th>
+                <th class="currency-column">Price</th>
+                <th class="quantity-column">Qty</th>
+                <th class="currency-column">Item Total</th>
+            </tr></thead>
+            <tfoot class="order-totals-breakdown">
+                <tr>
+                    <td colspan="5">Subtotal</td>
+                    <td>{{ model.discountedSubtotal|currency }}</td>
+                </tr>
+                {% for discount in model.orderDiscounts %}
+                    <tr>
+                        <td colspan="5">Discount ({{ discount.discount.name }})</td>
+                        <td>({{ discount.impact|currency }})</td>
+                    </tr>
+                {% endfor %}
+                {% if model.storeCredit and model.storeCredit > 0 %}
+                    <tr>
+                        <td colspan="5">Store Credit</td>
+                        <td>({{ model.storeCredit|currency }})</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="5">Tax</td>
+                    <td>{{ model.taxTotal|currency }}</td>
+                </tr><tr>
+                    <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
+                    <td>{{ model.shippingTotal|currency }}</td>
+                </tr>
+                {% if model.feeTotal > 0 %}
+                    <tr>
+                        <td colspan="5">Handling Fees</td>
+                        <td>{{ model.feeTotal|currency }}</td>
+                    </tr>
+                {% endif %}
+                {% if model.adjustment and model.adjustment.amount != 0 %}
+                    <tr>
+                        <td colspan="5">Adjustments</td>
+                        <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="5">Order Total</td>
+                    <td>{{ model.total|currency }}</td>
+                </tr>
+            </tfoot>
+            <tbody>
+            {% for item in model.items %}
+                <tr>
+                    <td>{% if item.product.variationProductCode %}{{ item.product.variationProductCode }}{% else %}{{ item.product.productCode }}{% endif %}</td>
+                    <td>
+                        <div class="product-name">{{ item.product.name }}</div>
+                        {% for option in item.product.options %}
+                            <div class="product-option">
+                                <em class="product-option-label">[option]</em> {{ option.value }}
+                            </div>
+                        {% endfor %}
+                        {% for product in item.product.bundledProducts %}
+                            <div class="bundled-product">
+                                <em class="product-option-label">[includes]</em>{{ product.productCode }} - {{ product.name }} (Qty. {{ product.quantity }})
+                            </div>
+                        {% endfor %}
+                    </td>
+                    <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
+                    <td class="currency-column">{{ item.unitPrice.extendedAmount|currency }}</td>
+                    <td class="quantity-column">{{ item.quantity }}</td>
+                    <td class="currency-column">{{ item.subtotal|currency }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="section section-payment">
+        <h2>Payment Details</h2>
+        {% if not(model.payments) %}
+            <p class="message">No payment details were provided.</p>
+        {% endif %}
+        {% if model.payments.length > 0 %}
+            <table class="grid">
+                <thead><tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Info</th>
+                    <th>Exp Date</th>
+                    <th>Amount</th>
+                </tr></thead>
+                <tbody>
+                {% for payment in model.payments %}
+                    {% if payment.status != "Voided" %}
+                    <tr>
+                        <td>{{ payment.auditInfo.createDate|date("m/d/Y H:i:s K") }}</td>
+                        <td>{{ payment.status }}</td>
+                        {% if payment.paymentType == "CreditCard" %}
+                            <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
+                            <td>{{ payment.billingInfo.card.cardNumberPartOrMask }}</td>
+                            <td>{% if payment.billingInfo.card.expireMonth %}{{ payment.billingInfo.card.expireMonth }}/{{ payment.billingInfo.card.expireYear }}{% endif %}</td>
+                        {% else %}
+                            {% if payment.paymentType == "Check" %}
+                                <td>Check</td>
+                                <td>
+                                {% for interaction in payment.interactions %}
+                                    {% if interaction.interactionType == "Captured" %}{% endif %}
+                                {% endfor %}
+                                </td>
+                                <td>N/A</td>
+                            {% endif %}
+                            {% if payment.paymentType == "StoreCredit" %}
+                                <td>Gift Card/Store Credit</td>
+                                <td>{{ payment.billingInfo.storeCreditCode }}</td>
+                                <td>N/A</td>
+                            {% endif %}
+                        {% endif %}
+                        <td>
+                            {% if payment.amountCollected > 0 %}{{ payment.amountCollected | currency }}
+                            {% else %}{{ payment.amountRequested | currency }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    {% if model.shopperNotes %}
+        <div class="section section-notes">
+            <h2>Notes</h2>
+            <table class="grid">
+                <thead><tr>
+                    <th>Date</th>
+                    <th>Author</th>
+                    <th>Comment Type</th>
+                    <th>Message</th>
+                </tr></thead>
+                <tbody>
+                    {% if model.shopperNotes.comments %}
+                        <tr>
+                            <td>{{ model.submittedDate | date("m/d/Y H:i:s K") }}</td>
+                            <td>Customer</td>
+                            <td>Shopper Notes</td>
+                            <td>{{ model.shopperNotes.comments }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if model.shopperNotes.giftMessage %}
+                        <tr>
+                            <td>{{ model.submittedDate | date("m/d/Y H:i:s K") }}</td>
+                            <td>Customer</td>
+                            <td>Gift Message</td>
+                            <td>{{ model.shopperNotes.giftMessage }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    {% if model.fulfillmentInfo.shippingMethodName or (model.packages and model.packages.length) or (model.pickups and model.pickups.length) %}
+        <div class="section section-fulfillment">
+            <h2>Fulfillment</h2>
+            {% if model.packages && model.packages.length %}
+            <div class="subsection-wrapper">
+                <h3>Shipping</h3>
+                <table class="subsection"><tbody>
+                {% for package in model.packages %}
+                    <tr>
+                        <td>Package #{{ forloop.counter }}</td>
+                        <td><span class="label">Status:</span> {{ package.status }}</td>
+                    </tr><tr>
+                        <td>
+                            <div class="label">Ship To</div>
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
+                            {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}, {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
+                            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
+                            {% if model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ model.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                            <div>{{ model.fulfillmentInfo.fulfillmentContact.email }}</div>
+                        </td>
+                        <td>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="label">Shipping Method</div>
+                                            <div>
+                                                {% if package.shippingMethodCode == model.fulfillmentInfo.shippingMethodCode %}{{ model.fulfillmentInfo.shippingMethodName }}
+                                                {% else %}{{ package.shippingMethodCode }}
+                                                {% endif %}
+                                            </div>
+                                        </td><td>
+                                            <div class="label">Packaging Type</div>
+                                            <div>{{ package.packagingType }}</div>
+                                        </td><td>
+                                            <div class="label">Tracking Number</div>
+                                            <div>{{ package.trackingNumber }}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="label">Total Weight</div>
+                                            <div>{{ package.measurements.weight.value }} {{ package.measurements.weight.unit }}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr><tr>
+                        <td colspan="4"><table class="grid">
+                            <thead><tr>
+                                <th>Code</th>
+                                <th>Products</th>
+                                <th>Weight</th>
+                                <th>Quantity</th>
+                            </tr></thead>
+                            <tbody>
+                            {% for packageItem in package.items %}
+                                <tr>
+                                    <td>{{ packageItem.productCode }}</td>
+                                    {% with model.items|findwhere('product.productCode', packageItem.productCode) as currentItem %}
+                                        {% if currentItem %}
+                                        <td>
+                                            <div class="product-name">{{ currentItem.product.name }}</div>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <script type="text/javascript">
+                                                    // do as we say, not as we do
+                                                    // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                    var value = Number({{ currentItem.product.measurements.weight.value }}),
+                                                        quantity = Number({{ packageItem.quantity }});
+                                                    document.write(quantity * value);
+                                                </script>
+                                            </span> {{ currentItem.product.measurements.weight.unit }}
+                                        </td>
+                                        {% else %}
+                                            {% with model.items|findwhere('product.variationProductCode', packageItem.productCode) as currentVariantItem %}
+                                                {% if currentVariantItem %}
+                                                <td>
+                                                    <div class="product-name">{{ currentVariantItem.product.name }}</div>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        <script type="text/javascript">
+                                                            // do as we say, not as we do
+                                                            // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                            var value = Number({{ currentVariantItem.product.measurements.weight.value }}),
+                                                                quantity = Number({{  packageItem.quantity }});
+                                                            document.write(quantity * value);
+                                                        </script>
+                                                    </span> {{ currentVariantItem.product.measurements.weight.unit }}
+                                                </td>
+                                                {% else %}
+                                                    {% for item in model.items %}
+                                                        {% if item.product.bundledProducts %}
+                                                            {% for bproduct in item.product.bundledProducts %}
+                                                            {% if bproduct.productCode == packageItem.productCode %}
+                                                                <td><div class="product-name">{{ bproduct.name }}</div></td>
+                                                                <td>
+                                                                    <span>
+                                                                        <script type="text/javascript">
+                                                                            // do as we say, not as we do
+                                                                            // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                                            var value = Number({{ bproduct.measurements.weight.value }}),
+                                                                                quantity = Number({{  packageItem.quantity }});
+                                                                            document.write(quantity * value);
+                                                                        </script>
+                                                                    </span> {{ bproduct.measurements.weight.unit }}
+                                                                </td>
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endwith%}
+                                        {% endif %}
+                                    {% endwith%}
+                                    <td>{{ packageItem.quantity }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table></td>
+                    </tr>
+                {% endfor %}
+                </tbody></table>
+            </div>
+            {% endif %}
+            {% if model.pickups && model.pickups.length %}
+            <div class="subsection-wrapper">
+                <h3>In-Store Pickup</h3>
+                {% for pickup in model.pickups %}
+                <table class="subsection"><tbody>
+                    <tr>
+                        <td>Pickup #{{ forloop.counter }}</td>
+                        <td>Status: {{ pickup.status }}</td>
+                    </tr><tr>
+                        <td>
+                            <div class="label">Location</div>
+                            <div>{{ pickup.fulfillmentLocationCode }}</div>
+                        </td><td>
+                            <div class="label">Pickup Date</div>
+                            {% if pickup.fulfillmentDate %}
+                                <div>{{ pickup.fulfillmentDate|date("m/d/Y") }}</div>
+                            {% endif %}
+                        </td>
+                    </tr><tr>
+                        <td colspan="4"><table class="grid">
+                            <thead><tr>
+                                <th>Code</th>
+                                <th>Products</th>
+                                <th>Weight</th>
+                                <th>Quantity</th>
+                            </tr></thead>
+                            <tbody>{% for pickupItem in pickup.items %}
+                                {% with model.items|findwhere('product.productCode', pickupItem.productCode) as currentItem %}
+                                <tr>
+                                    <td>{{ pickupItem.productCode }}</td>
+                                    {% with model.items|findwhere('product.productCode', pickupItem.productCode) as currentItem %}
+                                        {% if currentItem %}
+                                        <td>
+                                            <div class="product-name">{{ currentItem.product.name }}</div>
+                                        </td>
+                                        <td>
+                                        <span>
+                                            <script type="text/javascript">
+                                                // do as we say, not as we do
+                                                // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                var value = Number({{ currentItem.product.measurements.weight.value }}),
+                                                    quantity = Number({{ pickupItem.quantity }});
+                                                document.write(quantity * value);
+                                            </script>
+                                        </span> {{ currentItem.product.measurements.weight.unit }}</td>
+                                        {% else %}
+                                            {% with model.items|findwhere('product.variationProductCode', pickupItem.productCode) as currentVariantItem %}
+                                            {% if currentVariantItem %}
+                                                <td>
+                                                    <div class="product-name">{{ currentVariantItem.product.name }}</div>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        <script type="text/javascript">
+                                                            // do as we say, not as we do
+                                                            // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                            var value = Number({{ currentVariantItem.product.measurements.weight.value }}),
+                                                                quantity = Number({{  pickupItem.quantity }});
+                                                            document.write(quantity * value);
+                                                        </script>
+                                                    </span> {{ currentVariantItem.product.measurements.weight.unit }}
+                                                </td>
+                                                
+                                                {% else %}
+
+                                                    {% for item in model.items %}
+                                                        {% if item.product.bundledProducts %}
+                                                            {% for bproduct in item.product.bundledProducts %}
+                                                                {% if bproduct.productCode == pickupItem.productCode %}
+
+                                                                <td><div class="product-name">{{ bproduct.name }}</div></td>
+                                                                <td>
+                                                                    <span>
+                                                                        <script type="text/javascript">
+                                                                            // do as we say, not as we do
+                                                                            // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
+                                                                            var value = Number({{ bproduct.measurements.weight.value }}),
+                                                                                quantity = Number({{  pickupItem.quantity }});
+                                                                            document.write(quantity * value);
+                                                                        </script>
+                                                                    </span> {{ bproduct.measurements.weight.unit }}
+                                                                </td>
+                                                                
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endwith%}
+                                        {% endif %}
+                                    {% endwith%}
+                                    <td>{{ pickupItem.quantity }}</td>
+                                </tr>
+                                {% endwith%}
+                            {% endfor %}
+                            </tbody>
+                        </table></td>
+                    </tr>
+                </tbody></table>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</td></tr></tbody>
+</table>
+
+{% endblock body-content %}

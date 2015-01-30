@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Extends the third-party jQuery Tools DatePicker widget to be internationalized
  * with Mozu text labels.
  */

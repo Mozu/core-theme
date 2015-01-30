@@ -1,4 +1,4 @@
-{% extends "page" %}
+﻿{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.yourAccount %} - {% parent %}{% endblock title-tag-content %}
 
@@ -30,6 +30,11 @@
         <a id="settings"></a>
         <div class="mz-l-stack-section mz-accountsettings" id="account-settings">
             {% include "modules/my-account/my-account-settings" %}
+        </div>
+
+        <a id="password"></a>
+        <div class="mz-l-stack-section mz-passwordsection" id="password-section">
+            {% include "modules/my-account/my-account-password" %}
         </div>
 
         {% if siteContext.generalSettings.isWishlistCreationEnabled %}

@@ -1,4 +1,4 @@
-<div {% data_attributes Model%}>
+﻿<div {% data_attributes Model%}>
     <table style="width:100%"   width="100%" >
         <tr>
             {%for col in Model.config.columns %}

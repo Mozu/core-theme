@@ -1,4 +1,4 @@
-  {% extends "email/email" %}
+﻿  {% extends "email/email" %}
 
   {% block body-content %}
     <br>
@@ -30,26 +30,24 @@
             </tr>
         </thead>
         {% for packageItem in package.items %}
-            {% for item in model.items %}
-                {% if packageItem.productCode == item.product.productCode or packageItem.productCode == item.product.variationProductCode %}
-                <tbody class="mz-ordersummary-package">
-                    <tr class="mz-ordersummary-line mz-ordersummary-line-item">
-                        <td>{{ packageItem.quantity }}</td>
-                        <td class="mz-ordersummary-item-product">
-                            {{ item.product.name }}
-                            {% if item.product.productUsage == 'Bundle' %}
-                            <dl class="mz-propertylist">
-                            {% for bundledProduct in item.product.bundledProducts %}
-                            <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                            <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                            {% endfor %}
-                            </dl>
-                            {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-                {% endif %}
-            {% endfor %}
+         
+            <tbody class="mz-ordersummary-package">
+                <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                    <td>{{ packageItem.quantity }}</td>
+                    <td class="mz-ordersummary-item-product">
+                        {{ packageItem.product.name }}
+                        {% if packageItem.product.productUsage == 'Bundle' %}
+                        <dl class="mz-propertylist">
+                        {% for bundledProduct in packageItem.product.bundledProducts %}
+                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                        {% endfor %}
+                        </dl>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+       
         {% endfor %}
     </table>
     {% endfor %}

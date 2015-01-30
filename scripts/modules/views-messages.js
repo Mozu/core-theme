@@ -1,9 +1,9 @@
-define(['modules/jquery-mozu','underscore','backbone','hyprlive'], function($, _, Backbone, Hypr) {
+﻿define(['modules/jquery-mozu','underscore','backbone','hyprlive'], function($, _, Backbone, Hypr) {
     // because mozuviews need mozumessageviews and mozumessageviews extend mozuviews, we're risking circular reference problems.
     // we fix this by making a factory method that extends the mozu message view only when asked.
     // this avoids the circular reference problem by not asking for backbone-mozuview until we know it's been provided.
     var MozuMessagesView,
-        offset = parseInt(Hypr.getThemeSetting('gutterWidth')) || 10;
+        offset = parseInt(Hypr.getThemeSetting('gutterWidth'), 10) || 10;
     return function(opts) {
         if (!MozuMessagesView) MozuMessagesView = Backbone.MozuView.extend({
             templateName: 'modules/common/message-bar',

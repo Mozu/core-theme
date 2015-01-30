@@ -1,4 +1,4 @@
-<h3 class="mz-l-stack-sectiontitle">{{ labels.accountYourWishlist }}</h3>
+﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.accountYourWishlist }}</h3>
 
 <div class="mz-accountwishlist-list">
   {% if model.hasItems %}

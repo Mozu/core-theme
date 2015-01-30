@@ -1,4 +1,4 @@
-<div class="mz-ordersummary-checkout">
+﻿<div class="mz-ordersummary-checkout">
     <h3 class="mz-formstep-header">
         {{ labels.orderSummary }}
         <button class="mz-button mz-button-small" data-mz-action="editCart">{{ labels.edit }}</button>

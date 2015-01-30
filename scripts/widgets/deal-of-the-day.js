@@ -1,4 +1,4 @@
-define(
+﻿define(
     ['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, _, api, Backbone, ProductModels) {
         $(function () {

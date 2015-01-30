@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'underscore', 'modules/api', 'modules/backbone-mozu', 'shim!vendor/jquery-colorbox/jquery.colorbox[jquery=jQuery]>jQuery'],
+﻿define(['modules/jquery-mozu', 'underscore', 'modules/api', 'modules/backbone-mozu', 'shim!vendor/jquery-colorbox/jquery.colorbox[jquery=jQuery]>jQuery'],
     function ($, _, api, Backbone) {
         $('[data-mz-cms-image]').each(function (index, ci) {
             ci = $(ci);

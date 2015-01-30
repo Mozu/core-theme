@@ -1,4 +1,4 @@
-<footer class="mz-pagefooter">
+﻿<footer class="mz-pagefooter">
     {% dropzone "footer" scope="site" %}
     <div class="mz-pagefooter-copyright" id="copyright">
         <span class="mz-pagefooter-copyrighttext">
