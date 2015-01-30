@@ -1,9 +1,0 @@
-{
-  "name": "mozu-core-theme",
-  "version": "4.1.0",
-  "ignore": [
-    "/.*",
-    "tasks"
-  ],
-  "main": "*"
-}

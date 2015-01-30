@@ -30,7 +30,10 @@ define(['modules/jquery-mozu','shim!vendor/underscore>_','modules/backbone-mozu'
             var newSize = parseInt($(e.currentTarget).val()),
             currentSize = this.model.get('pageSize');
             if (isNaN(newSize)) throw new SyntaxError("Cannot set page size to a non-number!");
-            if (newSize !== currentSize) this.model.set('pageSize', newSize);
+            if (newSize !== currentSize) {
+                this.model.set('pageSize', newSize);
+                this.model.set("startIndex", 0);
+            }
         }
     });
 

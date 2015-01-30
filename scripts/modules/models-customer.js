@@ -291,6 +291,9 @@
                 return self.getCards();
             });
         },
+        deleteMultipleCards: function(ids) {
+            return this.apiModel.api.all.apply(this.apiModel.api, ids.map(_.bind(this.apiModel.deletePaymentCard, this.apiModel))).then(_.bind(this.getCards, this));
+        },
         getCards: function () {
             var self = this;
             var cardsCollection = this.get('cards');

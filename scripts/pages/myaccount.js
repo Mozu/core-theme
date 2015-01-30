@@ -301,12 +301,27 @@
             this.model.endEditContact();
             this.render();
         },
-        beginDeleteContact: function (e) {
+        beginDeleteContact: function(e) {
             var self = this,
-                id = e.currentTarget.getAttribute('data-mz-contact'),
-                contact = this.model.get('contacts').get(id);
-            if (confirm(Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')))) {
-                this.doModelAction('deleteContact', id);
+                contact = this.model.get('contacts').get(e.currentTarget.getAttribute('data-mz-contact')),
+                associatedCards = this.model.get('cards').where({ contactId: contact.id }),
+                windowMessage = Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')),
+                doDeleteContact = function() {
+                    return self.doModelAction('deleteContact', contact.id);
+                },
+                go = doDeleteContact;
+
+
+            if (associatedCards.length > 0) {
+                windowMessage += ' ' + Hypr.getLabel('confirmDeleteContact2');
+                go = function() {
+                    return self.doModelAction('deleteMultipleCards', _.pluck(associatedCards, 'id')).then(doDeleteContact);
+                };
+
+            }
+
+            if (window.confirm(windowMessage)) {
+                return go();
             }
         }
     });

@@ -1,4 +1,4 @@
-define([
+﻿define([
     "modules/jquery-mozu",
     "shim!vendor/underscore>_",
     "hyprlive",

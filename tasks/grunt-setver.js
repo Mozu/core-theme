@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 module.exports = function (grunt) {
     grunt.registerMultiTask('setver', 'Update all version information.', function () {
         var childProcess = require('child_process'),
