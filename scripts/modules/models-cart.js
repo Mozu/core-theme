@@ -1,4 +1,4 @@
-define(['underscore', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
+﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
 
     var CartItemProduct = Backbone.MozuModel.extend({
         helpers: ['mainImage'],

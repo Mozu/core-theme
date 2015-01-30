@@ -4,7 +4,7 @@
         templateName: "modules/cart/cart-table",
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
-                newQuantity = parseInt($qField.val()),
+                newQuantity = parseInt($qField.val(), 10),
                 id = $qField.data('mz-cart-item'),
                 item = this.model.get("items").get(id);
 

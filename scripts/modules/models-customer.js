@@ -45,7 +45,7 @@
         mozuType: 'contact',
         relations: {
             address: AddressModels.StreetAddress,
-            phoneNumbers: AddressModels.PhoneNumbers,
+            phoneNumbers: AddressModels.PhoneNumbers
         },
         validation: {
             firstName: {
@@ -224,7 +224,7 @@
                 fn: function(value) {
                     if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
-            },
+            }
         },
         defaults: {
             editingCard: {},
@@ -308,6 +308,9 @@
             return this.apiModel.deletePaymentCard(id).then(function () {
                 return self.getCards();
             });
+        },
+        deleteMultipleCards: function(ids) {
+            return this.apiModel.api.all.apply(this.apiModel.api, ids.map(_.bind(this.apiModel.deletePaymentCard, this.apiModel))).then(_.bind(this.getCards, this));
         },
         getCards: function () {
             var self = this;

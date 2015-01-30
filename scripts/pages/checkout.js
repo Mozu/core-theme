@@ -140,7 +140,7 @@
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
-            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
         },
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
@@ -246,9 +246,18 @@
             // override adding the isLoading class so the apply button 
             // doesn't go loading whenever other parts of the order change
         },
-        initialize: function() {
+        initialize: function () {
+            var me = this;
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
             this.codeEntered = !!this.model.get('couponCode');
+            this.$el.on('keypress', 'input', function (e) {
+                if (e.which === 13) {
+                    if (me.codeEntered) {
+                        me.handleEnterKey();
+                    }
+                    return false;
+                }
+            });
         },
         onEnterCouponCode: function (model, code) {
             if (code && !this.codeEntered) {

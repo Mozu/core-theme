@@ -1,15 +1,17 @@
 ﻿/**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore'], function ($, api, Hypr, _) {
+define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _) {
 
-    var usePopovers = function () {
+    var usePopovers = function() {
         return !Modernizr.mq('(max-width: 480px)');
     },
     returnFalse = function () {
         return false;
     },
-    $docBody;
+    $docBody,
+
+    polyfillPlaceholders = !('placeholder' in $('<input>')[0]);
 
     var DismissablePopover = function () { };
 
@@ -44,6 +46,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.$parent = this.popoverInstance.tip();
             this.bindListeners(true);
             this.$el.off('click', this.createPopover);
+            if (polyfillPlaceholders) {
+                this.$parent.find('[placeholder]').placeholder({ customClass: 'mz-placeholder' });
+            }
         },
         createPopover: function (e) {
             // in the absence of JS or in a small viewport, these links go to the login page.
@@ -86,6 +91,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
     var LoginPopover = function() {
         DismissablePopover.apply(this, arguments);
+        this.login = _.debounce(this.login, 150);
+        this.retrievePassword = _.debounce(this.retrievePassword, 150);
     };
     LoginPopover.prototype = new DismissablePopover();
     $.extend(LoginPopover.prototype, {
@@ -103,6 +110,10 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             DismissablePopover.prototype.onPopoverShow.apply(this, arguments);
             this.panelWidth = this.$parent.find('.mz-l-slidebox-panel').first().outerWidth();
             this.$slideboxOuter = this.$parent.find('.mz-l-slidebox-outer');
+
+            if (this.$el.hasClass('mz-forgot')){
+                this.slideRight();
+            }
         },
         handleEnterKey: function (e) {
             if (e.which === 13) {
@@ -120,7 +131,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         },
         slideRight: function () {
             this.$slideboxOuter.css('left', -this.panelWidth);
-        },        slideLeft: function () {
+        },
+        slideLeft: function () {
             this.$slideboxOuter.css('left', 0);
         },
         login: function () {
@@ -146,6 +158,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
     var SignupPopover = function() {
         DismissablePopover.apply(this, arguments);
+        this.signup = _.debounce(this.signup, 150);
     };
     SignupPopover.prototype = new DismissablePopover();
     $.extend(SignupPopover.prototype, LoginPopover.prototype, {
@@ -195,15 +208,20 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     });
 
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $docBody = $(document.body);
-        $('[data-mz-action="login"]').each(function () {
+        $('[data-mz-action="login"]').each(function() {
             var popover = new LoginPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
         });
-        $('[data-mz-action="signup"]').each(function () {
+        $('[data-mz-action="signup"]').each(function() {
             var popover = new SignupPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="launchforgotpassword"]').each(function() {
+            var popover = new LoginPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
         });

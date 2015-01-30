@@ -19,6 +19,11 @@
             // reference in .getOrder to exist;
             initStep: function () {
                 var me = this;
+                this.next = (function(next) {
+                    return _.debounce(function() {
+                        if (!me.isLoading()) next.call(me);
+                    }, 750, true);
+                })(this.next);
                 var order = me.getOrder();
                 me.calculateStepStatus();
                 me.listenTo(order, "error", function () {
@@ -110,7 +115,7 @@
                 return this.parent.parent;
             },
             choose: function (e) {
-                var idx = parseInt($(e.currentTarget).val());
+                var idx = parseInt($(e.currentTarget).val(), 10);
                 if (idx !== -1) {
                     var addr = this.get('address');
                     var valAddr = addr.get('candidateValidatedAddresses')[idx];
@@ -155,6 +160,7 @@
                     allowInvalidAddresses = HyprLiveContext.locals.siteContext.generalSettings.allowInvalidAddresses;
                 this.isLoading(true);
                 var addr = this.get('address');
+                order.setFulfillmentContactEmail();
                 var completeStep = function () {
                     order.messages.reset();
                     order.syncApiModel();
@@ -473,7 +479,7 @@
                 var previousAmount = digitalCredit.get('creditAmountApplied');
                 var previousEnabledState = digitalCredit.get('isEnabled');
 
-                if (!creditAmountToApply) {
+                if (!creditAmountToApply && creditAmountToApply !== 0) {
                     creditAmountToApply = self.getMaxCreditToApply(digitalCredit, self);
                 }
                 
@@ -627,6 +633,7 @@
                 }
                 me.isLoading(true);
                 return me.retrieveDigitalCredit(customer, creditCode, me).then(function() {
+                    me.isLoading(false);
                     return me;
                 });
             },
@@ -825,7 +832,7 @@
                 fn: function (value) {
                     if (this.attributes.createAccount && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
                 }
-            },
+            }
         };
 
         if (Hypr.getThemeSetting('requireCheckoutAgreeToTerms')) {
@@ -905,7 +912,7 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'finalPaymentReconcile', 'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
 
 
@@ -928,13 +935,13 @@
                 this.isLoading(true);
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
                     me.set('couponCode', '');
-                    var allDiscounts = me.get('orderDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts')));
+                    var allDiscounts = me.get('orderDiscounts').concat('shippingDiscounts').concat('handlingDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts'))).concat(_.flatten(_.pluck(me.get('items'), 'shippingDiscounts')));
                     var lowerCode = code.toLowerCase();
                     if (!allDiscounts || !_.find(allDiscounts, function(d) {
                         return d.couponCode.toLowerCase() === lowerCode;
                     })) {
                         me.trigger('error', {
-                            message: Hypr.getLabel('promoCodeError', code)
+                            message: 'grr2'
                         });
                     }
                     me.isLoading(false);
@@ -949,12 +956,10 @@
                     errorHandled = false;
                 order.isLoading(false);
                 if (!error || !error.items || error.items.length === 0) {
-                    error = error.message ? {
-                        items: [error]
-                    } : {
+                    error = {
                         items: [
                             {
-                                message: Hypr.getLabel('unknownError')
+                                message: error.message || Hypr.getLabel('unknownError')
                             }
                         ]
                     };
@@ -1075,8 +1080,11 @@
                     billingContact = billingInfo.get('billingContact').toJSON(),
                     card = billingInfo.get('card'),
                     doSaveCard = function () {
-                        order.cardsSaved = order.cardsSaved || {};
-                        var method = order.cardsSaved[card.get('id')] ? 'updateCard' : 'addCard';
+                        order.cardsSaved = order.cardsSaved || customer.get('cards').reduce(function(saved, card) {
+                            saved[card.id] = true;
+                            return saved;
+                        }, {});
+                        var method = order.cardsSaved[card.get('id') || card.get('paymentServiceCardId')] ? 'updateCard' : 'addCard';
                         card.set('contactId', billingContact.id);
                         return customer.apiModel[method](card.toJSON()).then(function (card) {
                             order.cardsSaved[card.data.id] = true;
@@ -1099,6 +1107,14 @@
                     return saveBillingContactFirst().then(doSaveCard);
                 } else {
                     return doSaveCard();
+                }
+            },
+            setFulfillmentContactEmail: function() {
+                var fulfillmentEmail = this.get('fulfillmentInfo.fulfillmentContact.email'),
+                    customerEmail = this.get('emailAddress');
+
+                if (!fulfillmentEmail) {
+                    this.set('fulfillmentInfo.fulfillmentContact.email', customerEmail);
                 }
             },
             syncBillingAndCustomerEmail: function () {
@@ -1125,9 +1141,59 @@
             isSavingNewCustomer: function() {
                 return this.get("createAccount") && !this.customerCreated;
             },
+            finalPaymentReconcile: function() {
+
+                var order = this,
+                    total = this.get('total'),
+                    activePayments = this.apiModel.getActivePayments(),
+                    currentPayment = this.apiModel.getCurrentPayment(),
+                    billingInfo,
+                    difference = Math.round((_.reduce(activePayments, function(sum, payment) { return sum + payment.amountRequested; }, 0) - total) * 100) / 100,
+                    deferred;
+
+                if (difference === 0) {
+                    // no recalculation necessary, simply return a fulfilled promise to continue
+                    deferred = api.defer();
+                    deferred.resolve(true);
+                    return deferred.promise;
+                } else {
+                    billingInfo = order.get('billingInfo');
+                    if (!currentPayment || activePayments.length > 1 || currentPayment.paymentType === "PaypalExpress" || difference < 0) {
+                        // if store credits or PayPal are being used,
+                        // or multiple payments are active,
+                        // or the order total has increased,
+                        // void all payments and ask the shopper to recalculate payment manually
+                        return api.all.apply(api, activePayments.map(function(payment) { return order.apiVoidPayment(payment.id); })).then(function() {
+                            order.get('customer.credits').each(function(credit) {
+                                // blank out cached credits manually
+                                credit.set({
+                                    isEnabled: false,
+                                    creditAmountApplied: 0,
+                                    remainingBalance: credit.get('currentBalance')
+                                });
+                            });
+                            return billingInfo.loadCustomerDigitalCredits();
+                        }).then(function() {
+                            billingInfo.clear();
+                            billingInfo.stepStatus('incomplete');
+                            throw new Error(Hypr.getLabel("recalculatePayments"));
+                        });
+                    } else {
+                        // in the simplest, most common case, where the order total has reduced and only one
+                        // payment method is active, then we can automatically deduct the difference
+                        return order.apiVoidPayment(currentPayment.id).then(function() {
+                            currentPayment.amountRequested = total;
+                            billingInfo.set(currentPayment);
+                            return billingInfo.applyPayment();
+                        });
+                    }
+                }
+
+            },
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
+                    billingContact = billingInfo.get('billingContact'),
                     isSameBillingShippingAddress = billingInfo.get('isSameBillingShippingAddress'),
                     isSavingCreditCard = false,
                     isSavingNewCustomer = this.isSavingNewCustomer(),
@@ -1146,7 +1212,12 @@
 
                 this.isSubmitting = true;
 
+                if (requiresBillingInfo && !billingContact.isValid()) {
+                    billingContact.set(this.apiModel.getCurrentPayment().billingInfo.billingContact); // reconcile the empty address after we got back from paypal and possibly other situations
+                }
+
                 this.syncBillingAndCustomerEmail();
+                this.setFulfillmentContactEmail();
 
                 if (nonStoreCreditTotal > 0 && this.validate()) {
                     this.isSubmitting = false;
@@ -1180,7 +1251,7 @@
                     }
                 }
                
-                process.push(this.apiCheckout);
+                process.push(this.finalPaymentReconcile, this.apiCheckout);
                 
                 api.steps(process).then(this.onCheckoutSuccess, this.onCheckoutError);
 

@@ -30,6 +30,9 @@
         "id": "email-orderconfirmation",
         "path": "email-orderconfirmation.js"
     }, {
+        "id": "back-office@mozu",
+        "path": "back-office.js"
+    }, {
         "id": "email@mozu",
         "path": "email.js",
         "documentLists": [
@@ -122,6 +125,20 @@
         "template": "email/giftcard-created",
         "title": "Gift Card Created"
     }],
+    "backOfficeTemplates": [
+        {
+            "id": "order-details",
+            "title": "Order Details",
+            "template": "back-office/order-details",
+            "customEditor": "back-office@mozu"
+        },
+        {
+            "id": "packing-slip",
+            "title": "Packing Slip",
+            "template": "back-office/packing-slip",
+            "customEditor": "back-office@mozu"
+        }
+    ],
     "pageTypes": [{
         "documentType": "web_page",
         "entityType": "webpage",
@@ -850,48 +867,6 @@
         }],
         "icon": "/resources/admin/widgets/13_social.png",
         "id": "addthis",
-        "validPageTypes": [
-            "*"
-        ]
-    }, {
-        "category": "social",
-        "defaultConfig": {
-            "count": 5,
-            "theme": "light"
-        },
-        "displayName": "Facebook Comments",
-        "displayTemplate": "social/facebookComments",
-        "editViewFields": [{
-            "fieldLabel": "Number of posts to display",
-            "increment": 1,
-            "labelAlign": "top",
-            "labelSeparator": "",
-            "maxValue": 10,
-            "minValue": 1,
-            "name": "count",
-            "value": 2,
-            "width": 250,
-            "xtype": "slider"
-        }, {
-            "defaultType": "radiofield",
-            "defaults": {
-                "flex": 1,
-                "name": "theme"
-            },
-            "fieldLabel": "Color scheme",
-            "items": [{
-                "boxLabel": "Light",
-                "inputValue": "light"
-            }, {
-                "boxLabel": "Dark",
-                "inputValue": "dark"
-            }],
-            "labelAlign": "top",
-            "labelSeparator": "",
-            "xtype": "fieldcontainer"
-        }],
-        "icon": "/resources/admin/widgets/24_facebook_comments.png",
-        "id": "facebook_comments",
         "validPageTypes": [
             "*"
         ]

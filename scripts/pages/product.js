@@ -5,7 +5,7 @@
         autoUpdate: ['quantity'],
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
-            "blur [data-mz-product-option]": "onOptionChange",
+            "blur [data-mz-product-option]": "onOptionChange"
         },
         render: function () {
             var me = this;

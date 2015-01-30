@@ -16,7 +16,7 @@
             }
         },
         jshint: {
-            default: [
+            "default": [
                 'theme.json',
                 'theme-ui.json',
                 'labels/**/*.json',
@@ -24,6 +24,7 @@
                 'scripts/**/*.js'
             ],
             options: {
+                es3: true,
                 ignores: ['scripts/vendor/**/*.js'],
                 globals: {
                     console: true,

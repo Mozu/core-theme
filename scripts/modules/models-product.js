@@ -117,8 +117,11 @@
             return !!(attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo && values && this.get('shopperEnteredValue'));
         },
         isValidValue: function() {
-            var value = this.get('value') || this.get('shopperEnteredValue');
+            var value = this.getValueOrShopperEnteredValue();
             return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || (this.get('isMultiValue') ? !_.difference(_.map(value, function(v) { return v.toString(); }), this.legalValues).length : _.contains(this.legalValues, value.toString())));
+        },
+        getValueOrShopperEnteredValue: function () {
+            return this.get('value') || (this.get('value') === 0) ? this.get('value') : this.get('shopperEnteredValue');
         },
         isConfigured: function() {
             var attributeDetail = this.get('attributeDetail');
@@ -142,7 +145,7 @@
                     biscuit.push(this.toJSON());
                 } else {
                     fqn = this.get('attributeFQN');
-                    value = this.get('value') || this.get('shopperEnteredValue');
+                    value = this.getValueOrShopperEnteredValue();
                     attributeDetail = this.get('attributeDetail');
                     valueKey = attributeDetail.valueType === ProductOption.Constants.ValueTypes.ShopperEntered ? "shopperEnteredValue" : "value";
                     if (attributeDetail.dataType === "Number") value = parseFloat(value);
@@ -352,7 +355,7 @@
             FulfillmentMethods: {
                 SHIP: "Ship",
                 PICKUP: "Pickup",
-                DIGITAL: "Digital",
+                DIGITAL: "Digital"
             },
             // for catalog instead of commerce
             FulfillmentTypes: {

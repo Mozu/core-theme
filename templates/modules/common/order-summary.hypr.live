@@ -12,7 +12,7 @@
               <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
                     <td class="mz-ordersummary-item-product">
                       {{ item.product.name }}
-                      {% if item.product.productUsage == 'Bundle' %}
+                      {% if item.product.bundledProducts.length %}
                       <dl class="mz-propertylist">
                         {% for bundledProduct in item.product.bundledProducts %}
                         <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
