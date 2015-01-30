@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Web;
@@ -394,6 +395,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
 
             return Single2( Mapper.Map<Order>(dcOrder) );
+        }
+
+        public class ResendConfirmationEmailArgs
+        {
+            public string OrderId { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "resendconfirmationemail")]
+        public async Task<HttpResponseMessage> ResendConfirmationEmail(ResendConfirmationEmailArgs args)
+        {
+            (await _orderWebApiClient.ResendOrderConfirmationEmail(args.OrderId)).ReadAsSync();
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }
