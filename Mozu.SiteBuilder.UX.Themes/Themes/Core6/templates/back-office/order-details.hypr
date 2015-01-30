@@ -87,10 +87,13 @@
                         <td>{{ model.feeTotal|currency }}</td>
                     </tr>
                 {% endif %}
+                {% if model.adjustment and model.adjustment.amount != 0 %}
+                    <tr>
+                        <td colspan="5">Adjustments</td>
+                        <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
+                    </tr>
+                {% endif %}
                 <tr>
-                    <td colspan="5">Adjustments</td>
-                    <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
-                </tr><tr>
                     <td colspan="5">Order Total</td>
                     <td>{{ model.total|currency }}</td>
                 </tr>
@@ -98,7 +101,7 @@
             <tbody>
             {% for item in model.items %}
                 <tr>
-                    <td>{{ item.product.productCode }}</td>
+                    <td>{% if item.product.variationProductCode %}{{ item.product.variationProductCode }}{% else %}{{ item.product.productCode }}{% endif %}</td>
                     <td>
                         <div class="product-name">{{ item.product.name }}</div>
                         {% for option in item.product.options %}
