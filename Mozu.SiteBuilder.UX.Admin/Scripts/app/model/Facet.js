@@ -46,8 +46,8 @@ Ext.define('Taco.model.Facet', {
         type: 'int',
         useNull: true
     }, {
-        name: 'isHidden',
-        type: 'int',
+        name: 'isInheritedHidden',
+        type: 'boolean',
         useNull: true
     }, {
         name: 'isvalid',
@@ -70,6 +70,10 @@ Ext.define('Taco.model.Facet', {
         useNull: true,
         defaultValue: 'CountDescending'
     }],
+
+    isInherited: function() {
+        return this.get('categoryId') !== this.get('categoryId2');
+    },
 
     getFacetSortingStore: function () {
         var valAscDisplay,

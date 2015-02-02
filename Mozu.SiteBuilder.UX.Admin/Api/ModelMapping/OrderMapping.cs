@@ -70,6 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.SubmittedDate, op => op.ResolveUsing(dc => dc.SubmittedDate))
                 .ForMember(x => x.CustomerId, op => op.ResolveUsing(dc => dc.CustomerAccountId))
                 .ForMember(x => x.BillingContact, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.BillingContact != null 
                     ? dc.BillingInfo.BillingContact : null))

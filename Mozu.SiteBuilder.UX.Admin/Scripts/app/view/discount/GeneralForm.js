@@ -187,6 +187,10 @@ Ext.define('Taco.view.discount.GeneralForm', {
         
         this.callParent(arguments);
     },
+
+    isOrder: function () {
+        return this.scopeTypeInput.getValue() === 'Order';
+    },
     
     isLineItem: function () {
         return this.scopeTypeInput.getValue() === 'LineItem';

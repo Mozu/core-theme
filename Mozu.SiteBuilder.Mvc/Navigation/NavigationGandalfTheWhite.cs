@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Logging;
+using Mozu.ProductRuntime.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -129,8 +130,12 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         return cached;
                 }
 
+                var displayedCategories = (categories != null && categories.Items != null)
+                    ? categories.Items.Where(x => x.IsDisplayed).ToList()
+                    : new List<Category>();
                 int numpages = pages != null && pages.Items != null ? pages.Items.Count : 0;
-                int numcats = categories != null && categories.Items != null ? categories.Items.Count : 0;
+
+                int numcats = displayedCategories.Count;
                 int numNavset = navset != null ? navset.Count : 0;
                 var masterList = new SuperNavigationNodeList(numpages + numcats + numNavset + 2);
                 masterList.ETag = etag;
@@ -158,7 +163,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 });
 
                 // build the masterlist. Step 1: put the top level categories in.
-                var allCats = GetAllCategoriesFromTree(categories.Items);
+                var allCats = GetAllCategoriesFromTree(displayedCategories);
 
                 masterList.AddRange(allCats);
 
@@ -270,7 +275,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 return null;
 
             List<SuperNavigationNode> returnList = new List<SuperNavigationNode>(inputList.Count * 2);
-            foreach (var cat in inputList)
+            foreach (var cat in inputList.Where(x => x.IsDisplayed))
             {
                 returnList.Add(
                     new SuperNavigationNode {

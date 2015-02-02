@@ -40,7 +40,13 @@ Ext.define('Taco.view.order.Grid', {
     
     title: "Orders",
 
-    store: { type: 'Taco.store.Orders' },  
+    store: { 
+        type: 'Taco.store.Orders',
+        sorters: [{
+            property: 'submittedDate',
+            direction: 'DESC'
+        }],
+    },  
 
     autoScroll: true,
 
@@ -260,12 +266,21 @@ Ext.define('Taco.view.order.Grid', {
                     minWidth: 100,
                     width: 100
                 }, {
-                    stateId: 'createDate',
-                    dataIndex: 'createDate',
-                    text: 'Order Date',
+                    stateId: 'submittedDate',
+                    dataIndex: 'submittedDate',
+                    text: 'Submitted Date',
                     flex: 1,
                     minWidth: 180,
                     xtype: 'datecolumn',
+                    format: 'M d Y g:ia'
+                }, {
+                    stateId: 'createDate',
+                    dataIndex: 'createDate',
+                    text: 'Create Date',
+                    flex: 1,
+                    minWidth: 180,
+                    xtype: 'datecolumn',
+                    hidden: true,
                     format: 'M d Y g:ia'
                 }, {
                     stateId: 'firstName',

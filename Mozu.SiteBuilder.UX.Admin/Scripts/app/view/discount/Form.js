@@ -66,9 +66,14 @@ Ext.define('Taco.view.discount.Form', {
 
     setFieldVisibility: function () {
         var isLineItem = this.general.isLineItem(),
+            isOrder = this.general.isOrder(),
             appliesToShipping  = this.general.appliesToShipping();
-
-        this.criteria.setFieldVisibility(isLineItem, appliesToShipping);
+        
+        // only show the target criteria form if the discount applies to combo has a selection
+        if (isOrder || isLineItem) {
+            this.criteria.setFieldVisibility(isLineItem, appliesToShipping);
+        }
+        
         this.conditions.setFieldVisibility(isLineItem, appliesToShipping);
         this.limitations.setFieldVisibility(isLineItem, appliesToShipping);
         this.loadNavItems();

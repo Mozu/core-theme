@@ -8,6 +8,7 @@ Ext.define('Taco.view.discount.Grid', {
     requires: [
         'Taco.model.Discount',
         'Taco.store.DiscountGrid',
+        'Taco.view.discount.AdvancedSearchForm',
         'Ext.Date',
         'Taco.store.TargetedShippingMethods',
         'Ext.form.Panel',

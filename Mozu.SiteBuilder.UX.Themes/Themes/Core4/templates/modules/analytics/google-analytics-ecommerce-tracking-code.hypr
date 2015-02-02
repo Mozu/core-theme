@@ -13,7 +13,7 @@
     {% for item in model.items %}
     _gaq.push(['_addItem',
     '{{ model.orderNumber }}',
-    '{{ item.product.variationProductCode|default(item.product.productCode) }}',
+    'product-{{ item.product.variationProductCode|default(item.product.productCode) }}-itemid-{{ item.id }}',
     '{{ item.product.name }}',
     '{{ item.product.categories|first|prop('id') }}',
     '{{ item.unitPrice.extendedAmount }}',
@@ -22,7 +22,7 @@
     {% for discount in item.productDiscounts %}{% if not discount.excluded %}
     _gaq.push(['_addItem',
     '{{ model.orderNumber }}',
-    '{{ discount.discount.id }}',
+    'discount-{{ discount.discount.id }}-product-{{ item.product.variationProductCode|default(item.product.productCode) }}-itemid-{{ item.id }}',
     '{{ discount.discount.name }}',
     'Product Discount for {{ item.product.variationProductCode|default(item.product.productCode) }}',
     '-{{ discount.impactPerUnit }}',

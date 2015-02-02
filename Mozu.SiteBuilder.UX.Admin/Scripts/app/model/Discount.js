@@ -99,6 +99,16 @@ Ext.define('Taco.model.Discount', {
             name: "doesNotApplyToSalePrice",
             type: 'bool'
         },
+
+        {
+            name: "excludeItemsWithExistingProductDiscounts",
+            type: 'bool'
+        },
+
+        {
+            name: "excludeItemsWithExistingShippingDiscounts",
+            type: 'bool'
+        },
         {
             name: "customerSegments",
             type: 'auto',

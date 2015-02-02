@@ -1,4 +1,4 @@
-﻿define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+define(["modules/jquery-mozu", "shim!vendor/underscore>_", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -278,4 +278,3 @@
     };
 
 });
-

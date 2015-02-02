@@ -251,7 +251,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                     type: 'hbox'
                 },
                 items: [{
-                    xtype: 'datefield',
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",
                     name: 'endDateFrom',
@@ -261,7 +261,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                     html: 'to',
                     margin: '0 10'
                 }, {
-                    xtype: 'datefield',
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",
                     name: 'endDateTo',

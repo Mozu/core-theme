@@ -119,6 +119,11 @@ Ext.define('Taco.model.Order', {
                 useNull: true,
                 dateFormat: 'c'
         }, {
+                name: 'submittedDate',
+                type: 'date',
+                useNull: true,
+                dateFormat: 'c'
+        }, {
                 name: 'customerId',
                 type: 'int',
                 useNull: true
