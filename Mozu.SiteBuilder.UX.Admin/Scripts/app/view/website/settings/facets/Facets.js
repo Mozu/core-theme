@@ -129,7 +129,7 @@
                          '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
                              '<span class="x-boundlist-item-type">{sourceName}</span>',
                              '<span class="x-boundlist-item-name">{sourceType}</span>',
-                         '<tpl elseif="this.isOverride(overrideFacetId)">',
+                         '<tpl elseif="this.isOverriden(overrideFacetId)">',
                              '<span class="x-boundlist-item-type">{sourceName}</span>',
                              '<span class="x-boundlist-item-name">Overriden {sourceType}</span>',
                          '<tpl else>',
