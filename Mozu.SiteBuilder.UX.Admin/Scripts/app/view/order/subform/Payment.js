@@ -158,16 +158,17 @@ Ext.define('Taco.view.order.subform.Payment', {
         }
     },
 
-    initHeader: function (){
+    initHeader: function () {
         var me = this,
-           orderStatus = me.record.get('orderStatus'),
-           canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
-           paymentAuthInfo = me.record.get('authorizationInfo'),
-           total = paymentAuthInfo.totalAmount,
-           amountCollected = paymentAuthInfo && paymentAuthInfo.amountCollected,
-           paymentStatus = "Unpaid";
+            orderStatus = me.record.get('orderStatus'),
+            canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
+            paymentAuthInfo = me.record.get('authorizationInfo'),
+            total = paymentAuthInfo.totalAmount,
+            amountCollected = paymentAuthInfo && paymentAuthInfo.amountCollected,
+            paymentStatus = "Unpaid",
+            orderTotal = me.record.get('total');
 
-        if (amountCollected > 0  && amountCollected >= total) paymentStatus = "Fully Paid";
+        if ((amountCollected > 0 && amountCollected >= total) || (orderStatus === 'Completed' && orderTotal == 0 )) paymentStatus = "Fully Paid";
         if (amountCollected < total && amountCollected > 0) paymentStatus = "Partially Paid";
 
         this.setHeaderTitle('<span class="label">Status:</span><span data-handle="order-payment-status">' + paymentStatus + '</span>');
