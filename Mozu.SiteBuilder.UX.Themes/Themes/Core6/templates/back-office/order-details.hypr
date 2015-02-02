@@ -106,7 +106,7 @@
                         <div class="product-name">{{ item.product.name }}</div>
                         {% for option in item.product.options %}
                             <div class="product-option">
-                                <em class="product-option-label">[option]</em> {{ option.value }}
+                                <em class="product-option-label">[option]</em>{{ option.name }}: {{ option.value }}
                             </div>
                         {% endfor %}
                         {% for product in item.product.bundledProducts %}

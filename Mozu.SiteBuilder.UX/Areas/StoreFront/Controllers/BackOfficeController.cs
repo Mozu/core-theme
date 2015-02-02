@@ -51,11 +51,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var order = await GetOrderWithCustomToken(orderId, token);
 
+            PopulateOptionNames(order);
+
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("order-details"));
             if (template == null)
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find order details template for the current Theme.");
 
             return await RenderWithContext(template, order);
+        }
+
+        /// <summary>
+        /// This is a temporary fix to gaurantee the option names are set before rendering the template.  If not already
+        /// set the name is set to the text appended after '~' on the fqn with the assumption that this is actually the
+        /// name.  This covers 99% of the cases but the true fix is to fix order records in mongo.
+        /// </summary>
+        /// <param name="order"></param>
+        private static void PopulateOptionNames(DC.Order order)
+        {
+            if (order.Items == null) return;
+            foreach (var item in order.Items.Where(i => i.Product != null && !i.Product.Options.IsNullOrEmpty()))
+            {
+                foreach (var optionWithoutName in item.Product.Options.Where(o => o.Name.IsNullOrEmpty()))
+                {
+                    var parts = optionWithoutName.AttributeFQN.Split('~');
+                    optionWithoutName.Name = parts.Length == 2 ? parts[1] : optionWithoutName.AttributeFQN;
+                }
+            }
         }
 
         /// <summary>
