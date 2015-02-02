@@ -907,6 +907,7 @@
     <Content Include="Scripts\app\view\discount\Grid.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
+    <Content Include="Scripts\app\view\order\modal\Refund.js" />
     <Content Include="Scripts\app\view\order\modal\BulkActionMessage.js" />
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />

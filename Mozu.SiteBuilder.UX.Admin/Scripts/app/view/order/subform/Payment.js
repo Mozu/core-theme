@@ -5,6 +5,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     extend: 'Taco.view.order.subform.Subform',
     alias: 'widget.taco-orderpayment',
     requires: [
+        'Taco.view.order.modal.Refund',
         'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.ApplyCheck',
@@ -37,8 +38,20 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     initComponent: function (eOpts) {
         var me = this;
+        var record = this.record;
 
         this.tools = [
+            Ext.widget('button', {
+                ui: 'action',
+                scale: 'medium',
+                text: 'Refund',
+                margin: '0 10 0 0',
+                handler: function () {
+                    Ext.create('Taco.view.order.modal.Refund', {
+                        order: record
+                    });
+                }
+            }),
             me.addPaymentButton = Ext.widget('splitbutton', {
                 text: 'Add Payment',
                 handler: function() {
