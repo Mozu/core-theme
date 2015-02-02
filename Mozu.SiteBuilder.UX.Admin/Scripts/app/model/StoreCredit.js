@@ -87,5 +87,75 @@ Ext.define('Taco.model.StoreCredit', {
             successProperty: 'success',
             messageProperty: "message"
         }
+    },
+
+    /**
+        * service call to resend a return email
+        * @param {Object} config  A configuration object     
+        * config object:
+        * 
+           {
+               jsonData: {
+                   orderId: '987654321',               
+               }
+           }
+
+        *
+        */
+    resendEmail: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/customer/resendcreditcreatedemail',
+            method: 'POST'
+        });
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || 'Error resending email';
+        this.addErrorHandling(config);
+        Ext.Ajax.request(config);
+    },
+    resendEmail: function (config) {
+        var me = this,
+            config = config || {},
+            url = '/admin/app/customer/resendcreditcreatedemail',
+            confirmTpl = config.confirmTpl || new Ext.XTemplate([
+                '<p>Successfully resent e-mail</p>'
+            ]),
+            confirmData = config.confirmData || me.data,
+            confirmSuccess = config.confirmSuccess || true,
+            msg,
+            confirmFn = Ext.emptyFn;
+
+        Ext.apply(config, {
+            method: 'POST',
+            code: config.code|| me.getId(),
+            url: url
+        });
+        
+        if (confirmSuccess) {
+            confirmFn = function () {
+                msg = confirmTpl.apply(confirmData);
+                Taco.MessageBox.show({
+                    title: 'Resend E-mail',
+                    buttons: Ext.Msg.OK,
+                    msg: msg
+                });
+            }
+        }
+
+
+        if (config.success) {            
+           confirmFn = Ext.Function.createInterceptor(config.success, confirmFn)
+        }
+
+        Ext.apply(config, {
+            success: confirmFn
+        });
+
+        
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || 'Error resending email';
+        this.addErrorHandling(config);
+        
+        Ext.Ajax.request(config);
     }
 });

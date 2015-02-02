@@ -176,7 +176,12 @@ Ext.define('Taco.view.order.subform.Detail', {
         this.callParent(arguments);
     },
         
-    
+    resendEmail : function (){
+        var me = this;
+        me.record.resendEmail({
+
+        });
+    },
     
     editOrder: function (focusAfterCloseCmp) {
         var me = this,
@@ -387,9 +392,12 @@ Ext.define('Taco.view.order.subform.Detail', {
             canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
             canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')),
+            canSendEmail = !Ext.Array.contains(['Pending'], me.record.get('orderStatus')),
             acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
             editOrderButton = this.down("#editOrderButton");
+            resendEmailButton = this.down("#resendEmailButton");
+
 
         if (acceptOrderButton) {
             acceptOrderButton.setVisible(canAccept);
@@ -400,6 +408,9 @@ Ext.define('Taco.view.order.subform.Detail', {
         if (editOrderButton) {
             editOrderButton.setDisabled(!canEdit);
         }
+
+        
+        resendEmailButton.setVisible(canSendEmail);
     },
 
     getButtonActions: function () {
@@ -408,6 +419,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
             canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')),
+            canSendEmail = !Ext.Array.contains(['Pending'], me.record.get('orderStatus')),
             buttons;
         
         buttons = [
@@ -446,7 +458,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 },
                 handler: me.openPrintWindow,
                 scope: me
-            },{
+            }, {
                 text: 'Edit Details',
                 xtype: "button",
                 ui: "action",
@@ -455,6 +467,15 @@ Ext.define('Taco.view.order.subform.Detail', {
                 handler: this.editOrder,
                 scope: me,
                 disabled: !canEdit
+            }, {
+                text: 'Resend Email',
+                xtype: "button",
+                ui: "action",
+                itemId: "resendEmailButton",
+                scale: "medium",
+                handler: this.resendEmail,
+                scope: me,
+                hidden: !canSendEmail
             }
         ];
 

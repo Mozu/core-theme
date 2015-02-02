@@ -205,9 +205,13 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             hidden: this.packageData.status === 'Fulfilled',
             handler: this.handleCancel
         }, {
-            text: 'Mark as Shipped',            
+            text: 'Mark as Shipped',
             hidden: this.packageData.status === 'Fulfilled',
             handler: this.handleMarkAsShipped
+        }, {
+            text: 'Resend Email',
+            hidden: this.packageData.status !== 'Fulfilled',
+            handler: this.resendEmail
         }];
 
 
@@ -228,6 +232,10 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         this.collapsedActions = [{
             text: 'Print Packing Slip',
             handler: this.handlePrintPackingSlip
+        }, {
+            text: 'Resend Email',
+            hidden: this.packageData.status !== 'Fulfilled',
+            handler: this.resendEmail
         }];
 
         this.callParent(arguments);
@@ -356,5 +364,12 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         });
 
         return ret;
+    },
+    resendEmail: function () {
+        var me = this;
+        me.record.resendEmail({
+            packageId : me.packageData.id,
+            type:"shipment"
+        })
     }
 });
