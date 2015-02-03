@@ -42,7 +42,8 @@ Ext.define('Taco.view.website.misc.ExternalLinkEditor', {
             if (this.parentRecord && !Ext.Array.contains(this.parentRecord.childNodes, this.record)) {
                 this.parentRecord.appendChild(this.record);
             }
-            this.saveSuccess()
+            this.saveSuccess();
+            this.record.getOwnerTree().getStore().load();
         }, this);
 
         this.callParent(arguments);
