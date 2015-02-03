@@ -135,7 +135,7 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'upload from computer',
+            text: 'Upload File',
             scope: this,
             handler: function () {
                 this.uploadButton.fileInputEl.dom.click();
@@ -161,9 +161,18 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'upload from file manager',
+            text: 'Pick from File Manager',
             scope: this,
             handler: this.onAssociatorClick
+        });
+
+        this.urlManagerAction = Ext.widget({
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
+            text: 'Link to URL',
+            scope: this,
+            handler: this.onUrlAssociatorClick
         });
 
         this.items = [
@@ -172,7 +181,9 @@ Ext.define('Taco.shared.view.field.Image', {
             this.uploadButton,
             this.uploadAction,
             { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
-            this.fileManagerAction
+            this.fileManagerAction,
+            { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
+            this.urlManagerAction
         ];
        
         this.callParent(arguments);
@@ -462,6 +473,19 @@ Ext.define('Taco.shared.view.field.Image', {
         
     },
 
+    onUrlAssociatorClick: function () {
+        
+        var associator = Ext.create('Taco.shared.view.modal.ImageUrlManager', {});
+
+        this.mon(associator, {
+            savesuccess: {
+                scope: this,
+                fn: 'onUrlAssociatorSave'
+            }
+        });
+        
+    },
+
     onSelectedImagesDataChanged: function () {
         var value = [];
 
@@ -536,6 +560,10 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onAssociatorSave: function (associator, selectedRecords) {
+        this.selectedImages.add(selectedRecords);
+    },
+
+    onUrlAssociatorSave: function (associator, selectedRecords) {
         this.selectedImages.add(selectedRecords);
     },
 

@@ -1304,6 +1304,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.shared.view.form.ExtensibleAttribute": [],
   "Taco.shared.view.modal.Address": [],
   "Taco.shared.view.modal.ImageMetadata": [],
+  "Taco.shared.view.modal.ImageUrlManager": [],
   "Taco.shared.view.modal.StoreCredit": [],
   "Taco.shared.view.modal.Wishlist": [],
   "Taco.store.AccountUsers": [],
@@ -1441,11 +1442,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "Taco.view.customers.subform.StoreCredit": [],
   "Taco.view.customers.subform.Subform": [],
   "Taco.view.dashboard.Index": [],
+  "Taco.view.discount.AdvancedSearchForm": [],
   "Taco.view.discount.ConditionsForm": [],
   "Taco.view.discount.CriteriaForm": [],
   "Taco.view.discount.Edit": [],
   "Taco.view.discount.Form": [],
   "Taco.view.discount.GeneralForm": [],
+  "Taco.view.discount.Grid": [],
   "Taco.view.discount.Index": [],
   "Taco.view.discount.LimitationsForm": [],
   "Taco.view.entityManager.DynamicFormContainer": [],
@@ -3373,7 +3376,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.mz-input-text"
   ],
   "Taco.platter.fields.TextArea": [
-    "widget.mz-input-richtext"
+    "widget.mz-input-textarea"
   ],
   "Taco.platter.forms.CategoryEditorForm": [
     "widget.mz-form-category",
@@ -3444,6 +3447,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.taco-address-modal"
   ],
   "Taco.shared.view.modal.ImageMetadata": [],
+  "Taco.shared.view.modal.ImageUrlManager": [],
   "Taco.shared.view.modal.StoreCredit": [],
   "Taco.shared.view.modal.Wishlist": [],
   "Taco.store.AccountUsers": [],
@@ -3601,6 +3605,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.taco.customer.subform"
   ],
   "Taco.view.dashboard.Index": [],
+  "Taco.view.discount.AdvancedSearchForm": [],
   "Taco.view.discount.ConditionsForm": [
     "widget.taco-discount-conditions"
   ],
@@ -3612,6 +3617,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Taco.view.discount.GeneralForm": [
     "widget.taco-discount-general"
   ],
+  "Taco.view.discount.Grid": [],
   "Taco.view.discount.Index": [
     "widget.discountlist"
   ],
