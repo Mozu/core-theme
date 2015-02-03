@@ -514,6 +514,7 @@
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
     <Compile Include="Api\OrderAttributeController.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
+    <Compile Include="Api\OrderRefundController.cs" />
     <Compile Include="Api\ProductAvailableInventoryHelper.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
     <Compile Include="Api\SiteRoutesController.cs" />

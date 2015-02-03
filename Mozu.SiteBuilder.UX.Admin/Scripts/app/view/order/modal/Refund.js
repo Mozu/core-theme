@@ -45,7 +45,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         if (!prevState) return;
 
         var form = this.getForm();
-        var refundAmountField = form.getForm().findField('refundAmount');
+        var refundAmountField = form.getForm().findField('amount');
         var excessGroup = this.down('#allowExcessCreditGroup');
         var isCreditCard = nextState.method === 'CreditCard';
         var isExcess = nextState.proposed > nextState.collected;
@@ -250,7 +250,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     },
                     items: [{
                         xtype: 'currencyfield',
-                        name: 'refundAmount',
+                        name: 'amount',
                         fieldLabel: 'Refund Amount',
                         hideTrigger: true,
                         mouseWheelEnabled: false,
@@ -311,7 +311,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     }]
                 }, {
                     xtype: 'textarea',
-                    name: 'notes',
+                    name: 'reason',
                     fieldLabel: 'Notes',
                     width: 500,
                     rows: 2,
@@ -337,11 +337,15 @@ Ext.define('Taco.view.order.modal.Refund', {
     },
 
     doSave: function () {
-        var me = this;
-        var values = this.getForm().getValues();
-        var refund = {};
-
+        var values = this.getForm().getValues()
         console.log(values);
+
+        this.order.createRefund(values, {
+            success: function () {
+                this.saveSuccess();
+            },
+            scope: this
+        });
 
         // if (values.refundMethod === 'CreditCard') {
         //     this.order.refundPayment({
