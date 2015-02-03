@@ -25,6 +25,11 @@ Ext.define('Taco.view.order.subform.Payment', {
     // optional override of the title to be used in Tabs.
     tabTitle:"Payments",
 
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
+
     config : {
         // order model
         originalRecord : null,
@@ -80,7 +85,41 @@ Ext.define('Taco.view.order.subform.Payment', {
         me.initUI();
         
         
-        me.items = [me.bodyCont];
+        me.items = [me.bodyCont, {
+            xtype: 'grid',
+            title: 'Refunds',
+            margin: '10 0 0 0',
+            emptyText: 'There are no refunds to display',
+            viewConfig: {
+                deferEmptyText: false
+            },
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: ['date', 'amount', 'method', 'notes', 'user'],
+                data: []
+            }),
+            columns: [{
+                dataIndex: 'date',
+                text: 'Date',
+                flex: 1
+            }, {
+                dataIndex: 'amount',
+                text: 'Amount',
+                flex: 1
+            }, {
+                dataIndex: 'method',
+                text: 'Payment Method',
+                flex: 2
+            }, {
+                dataIndex: 'notes',
+                text: 'Notes',
+                flex: 2
+            }, {
+                dataIndex: 'user',
+                text: 'User',
+                flex: 1
+            }]
+        }];
+
         this.callParent(arguments);
         this.addEvents(['rerender']);
     },
