@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (model != null)
             {
                 var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic , id, StringComparison.OrdinalIgnoreCase));
-                if (emailTypeInfo.ModelType == typeof (Order))
+                if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof (Order))
                 {
                     var str = JsonConvert.SerializeObject(model, CaseInsensitiveJsonSerializerSettings.Default);
                     model = Convert(str, emailTypeInfo);    
