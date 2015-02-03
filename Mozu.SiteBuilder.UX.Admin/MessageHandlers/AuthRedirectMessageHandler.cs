@@ -61,13 +61,8 @@ namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
                         var message = new HttpResponseMessage(HttpStatusCode.Redirect);
                         message.Headers.Location = new Uri(redir);
                         return message;
-
-                        res.Headers.Location = new Uri("/admin/FedLogin", UriKind.Relative);
-                        return res;
                     }
-                    {
-                        return x.Result;
-                    }
+                    return x.Result;
                 });
         }
     }

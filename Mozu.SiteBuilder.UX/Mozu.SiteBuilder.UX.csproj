@@ -238,38 +238,41 @@
     </Reference>
     <Reference Include="Mozu.Core, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.ClientCodeGen">
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.Api.ClientCodeGen.exe</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.Api.ClientCodeGen.exe</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.ProjectorCodeGen">
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.Api.ProjectorCodeGen.exe</HintPath>
+    <Reference Include="Mozu.Core.Api.ProjectorCodeGen, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.Api.ProjectorCodeGen.exe</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.Caching.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.CodeBlocks">
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.CodeBlocks.dll</HintPath>
+    <Reference Include="Mozu.Core.CodeBlocks, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.CodeBlocks.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.14.5\lib\net45\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.FilterParsing">
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.FilterParsing.dll</HintPath>
+    <Reference Include="Mozu.Core.FilterParsing, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.FilterParsing.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Messaging, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -281,18 +284,19 @@
     </Reference>
     <Reference Include="Mozu.Core.Mongo, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.Mongo.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.ThirdParty.Mapping">
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502091329moz-s\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
+    <Reference Include="Mozu.Core.ThirdParty.Mapping, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.1-dev1502111943moz-s\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.15.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -346,13 +350,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.13.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.13.4\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.17.1-dev1502041514-s\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.13.1\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.17.1-dev1502041514-s\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Tenant.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -417,6 +421,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
@@ -503,6 +509,7 @@
     <Compile Include="Hypr\Tags\VisitTrackingPixelTag.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MessageHandlers\ViewRestrictionHandler.cs" />
     <Compile Include="Messaging\CacheItemsInvalidConsumer.cs" />
     <Compile Include="Messaging\VisitEventPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

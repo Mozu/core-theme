@@ -40,9 +40,10 @@ namespace Mozu.SiteBuilder.UX.Admin
             _provisioningWebApiClient = provisioningWebApiClient;
         }
 
-        public Task<GeneralSettings> ReadSettings()
+        public async Task<GeneralSettings> ReadSettings()
         {
-            return  _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => Mapper.Map<GeneralSettings>(x.Result.ReadAsSync()));
+            var result = await _generalSettingsWebApiClient.GetGeneralSettings();
+            return Mapper.Map<GeneralSettings>(result.ReadAsSync());
         }
 
         //public IEnumerable<IPBlock> GetIPBlocks()

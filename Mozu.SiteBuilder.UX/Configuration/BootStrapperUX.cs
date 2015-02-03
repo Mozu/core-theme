@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Serialization;
+using Mozu.SiteBuilder.UX.MessageHandlers;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -24,6 +25,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
+            httpConfiguration.MessageHandlers.Add(new ViewRestrictionHandler());
             httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
             httpConfiguration.MessageHandlers.Add(new FourHundredMessageHandler());
             

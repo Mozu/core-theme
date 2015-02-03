@@ -50,9 +50,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             
             builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
             
-
-            builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
-
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().As<ISiteBuilderApiContext>().InstancePerLifetimeScope()
                 .WithProperty("CmsDraftState", "latest");
           //  builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerLifetimeScope();
@@ -124,49 +121,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             }).As<IProductCategoryRuntimeWebApiClient>();
 
 
-
             builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX.Admin"))
                 .As<IPublisher>().SingleInstance();
-
-
-
-            // TODO: This binding will be unnecessary once the DocumentWebApiClient works better.
-            //builder.RegisterType<InSessionDocumentWebApiClient>().As<IMoreAwesomeDocumentWebApiClient>();
-
-            // TODO: This binding will be unnecessary once the ProductTypeApiClient is implemented.
-            //builder.RegisterType<InMemoryProductTypeWebApiClient>().As<IMoreAwesomeProductTypeWebApiClient>();
-
-            // TODO: This binding will be unnecessary once the AttributeWebApiClient is implemented.
-            //builder.RegisterType<InMemoryAttributeWebApiClient>().As<IMoreAwesomeAttributeWebApiClient>();
         }
-
-
-
-
-
-        class SbApiContextBuilder : IApiContextBuilder
-        {
-            private static int PublishBehavorID = new PublishPreviewBehavior().Id;
-
-            public IApiContext BuildApiContext(IApiContext apiContext_, System.Net.Http.HttpRequestMessage request)
-            {
-                var apiContext = request.LifetimeScope().Resolve<IApiContext>();
-                var sbApiContext = apiContext as SiteBuilderApiContext ;
-
-               
-                
-                // if user can view pending mode, default to pending mode.
-               
-                if (sbApiContext != null && sbApiContext.UserClaims != null && sbApiContext.UserClaims.BehaviorIds != null && sbApiContext.UserClaims.BehaviorIds.Contains(PublishBehavorID))
-                {
-                    sbApiContext.DataViewMode = DataViewModeType.Pending;
-                }
-                return apiContext;
-
-            }
-        }
-
-
-       
     }
 }

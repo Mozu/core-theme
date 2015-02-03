@@ -31,7 +31,7 @@
                              {
                                  baseCSSPrefix = "taco-",
                                  testHarnessMode = Context.Request["testHarnessMode"] == "true",
-                                 adminRelPath = @Url.Content("~"),
+                                 adminRelPath = Url.Content("~"),
                                  cdnPrefix = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost"),
                                  User = new
                                             {
@@ -58,7 +58,7 @@
     
 
     window.Taco.adminAppPath = window.location.protocol + "//" + window.location.host + '@Url.Content("~")';
-    @if (ViewData["useGoogleAnalytics"] as string == "true")
+    @if (@ViewData["useGoogleAnalytics"] as string == "true")
     {
         @Html.Raw("window.Taco.googleAnalyticsAccountId = \"" + @ViewData["googleAnalyticsAccount"] + "\";")
         ;

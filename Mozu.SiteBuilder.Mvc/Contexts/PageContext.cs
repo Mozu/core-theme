@@ -147,7 +147,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             HandledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
 
             IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
-            Now = apiContext.Now;
+            Now = apiContext.Now.Value;
             if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
                 this.Url = values.FirstOrDefault();

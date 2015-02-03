@@ -24,7 +24,8 @@ Target "restore" (fun _ ->
 let build inVS = 
     let buildParams p : MSBuildParams =
         {p with Properties = [ "configuration", "Release"
-                               "BuildingInsideVisualStudio", inVS |> string ] }  
+                               "BuildingInsideVisualStudio", inVS |> string ]
+                Verbosity = Some MSBuildVerbosity.Quiet }  
 
     build buildParams "Mozu.SiteBuilder.sln"
 
@@ -45,8 +46,8 @@ Target "test" (fun _ ->
         {NUnitDefaults with 
             Framework = "net-4.5" }
     testDlls
-    |> NUnitParallel nunitParams
+    |> NUnit nunitParams
 )
 "clean" ==> "restore" ==> "cs" ==> "test"
-"clean" ==> "restore" ==> "js"
+"restore" ==> "js"
 RunTargetOrDefault "cs"

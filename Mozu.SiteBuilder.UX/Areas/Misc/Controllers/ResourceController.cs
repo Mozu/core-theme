@@ -263,7 +263,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public HttpResponseMessage Stylesheets(string pathinfo, bool debug = false, string dv= null)
         {
-            ((Mozu.Core.ApiContext) this.SbApiContext).DataViewMode = Convert(dv);
+            SbApiContext.SetDataMode(Convert(dv));
             
             return Path.GetExtension(pathinfo) == ".less" ? 
                 Less(pathinfo, debug) : // TODO: set debug to false later
@@ -473,7 +473,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public HttpResponseMessage HyprContextAction( string dv= null)
         {
-            ((Mozu.Core.ApiContext) this.SbApiContext).DataViewMode = Convert(dv);
+            SbApiContext.SetDataMode(Convert(dv));
             var ctx = new Dictionary<string, object>();
             var locals = new Dictionary<string, object>();
             var siteContext = new Dictionary<string, object>();

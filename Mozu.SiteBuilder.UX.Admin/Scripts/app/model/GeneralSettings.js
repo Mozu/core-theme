@@ -34,13 +34,16 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "templateSiteId", "type": "integer", "useNull": true },
         { "name": "siteTimeFormat", "type": "string", "useNull": true },
         { "name": "siteTimeZone", "type": "string", "useNull": true },
-        { "name": "websiteName", "type": "string", "useNull": true },        
+        { "name": "websiteName", "type": "string", "useNull": true }, 
 
+        //viewToggle
+        { "name": "isRequiredLoginForLiveEnabled", "type": "boolean", "useNull": false},
+        { "name": "isRequiredLoginForStagingEnabled", "type": "boolean", "useNull": false},       
 
         // new fields not in Json
         { "name": "channelId", "type": "string" },
-        {   "name": "catalogId", 
-            "type": "string" ,
+        { "name": "catalogId", 
+          "type": "string" ,
             convert: function (value, record) {
                 return Taco.app.context.getSite().catalogId;
             }

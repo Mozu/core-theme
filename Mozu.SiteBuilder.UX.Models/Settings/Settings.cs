@@ -97,7 +97,11 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     [DataContract]
     public class GeneralSettings
     {
-   
+
+        public GeneralSettings()
+        {
+            //ViewModeToggles = new ViewModeToggles();
+        }
         //moved to site def in tenant. not editable
         //[DataMember(Name = "isMozuWebSite")]
         //public bool IsMozuWebSite { get; set; }
@@ -207,7 +211,21 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "isAddressValidationEnabled")*/]
         public bool? IsAddressValidationEnabled { get; set; }
 
+        [DataMember]
+        public bool? IsRequiredLoginForLiveEnabled { get; set; }
+        [DataMember]
+        public bool? IsRequiredLoginForStagingEnabled { get; set; }
+        //public ViewModeToggles ViewModeToggles { get; set; }
          
+    }
+
+    public class ViewModeToggles {
+
+        [DataMember]
+        public bool IsRequiredLoginForLiveEnabled { get; set; }
+
+        [DataMember]
+        public bool IsRequiredLoginForStagingEnabled { get; set; }
     }
 
     public class ThemeSelection

@@ -1,27 +1,19 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Web;
 using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Behaviors;
 using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
-
-using Constants = Mozu.Core.Api.Contracts.Constants;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -31,27 +23,19 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly ISettings _settings;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly HttpRequestMessage _httpRequestMessage;
-        
-
-        internal const string COOKIENAME = "SBCONTEXT";
-        internal const string DEBUGCOOKIENAME = "SBD";
-        internal const string NOWCOOKIENAME = "MZ_NOW";
-
 
         public bool IsDebugMode { get; set; }
-        public SiteBuilderApiContext( ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage)
+        public SiteBuilderApiContext( ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage, IDataViewModeFinderOuter dvmGetter, IEditModeFinderOuter editModeGetter)
             : base()
         {
-            
-
             TenantId = -1;
             _cookieProvider = cookieProvider;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
             _httpRequestMessage = httpRequestMessage;
 
-            DataViewMode = DataViewModeType.NoneSet ;
-            IsEditMode = false;
+            DataViewMode = dvmGetter.GetDataViewMode();
+            IsEditMode = editModeGetter.IsEditMode();
 
             Load();
             if ( !this.MasterCatalogId.HasValue )
@@ -59,16 +43,16 @@ namespace Mozu.SiteBuilder.Mvc
                this.MasterCatalogId = this.MasterCatalogId;
             }
             LoadUser();
-            ValidateUser();
-            ValidateDataMode();
+            ValidateUser();                  
             SetDebugMode();
-            SetNowValue();
+            this.Now = new Lazy<DateTime>(GetNowValue);
+            
         }
 
         private void SetDebugMode()
         {
             var isDebugMode = false;
-            var cookie = _cookieProvider.GetRequestCookie(DEBUGCOOKIENAME);
+            var cookie = _cookieProvider.GetRequestCookie(Constants.DEBUGCOOKIENAME);
             if (cookie != null)
             {
                 isDebugMode = cookie.Value == "t";
@@ -78,19 +62,19 @@ namespace Mozu.SiteBuilder.Mvc
             {
                 isDebugMode = string.Equals(val, Boolean.TrueString , StringComparison.OrdinalIgnoreCase);
 
-                cookie =new HttpCookie(DEBUGCOOKIENAME, isDebugMode ? "t" : "f");
+                cookie =new HttpCookie(Mvc.Constants.DEBUGCOOKIENAME, isDebugMode ? "t" : "f");
                 if (!isDebugMode)
                 {
                     cookie.Expires = DateTime.MinValue;
                 }
                 
-                _cookieProvider.SaveResponseCookie(DEBUGCOOKIENAME,cookie);
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGCOOKIENAME, cookie);
 
             }
             this.IsDebugMode = isDebugMode;
         }
 
-        private void SetNowValue()
+        private DateTime GetNowValue()
         {
             var now = RoundMinueteToLowest10(DateTime.UtcNow);
             if (this.DataViewMode == DataViewModeType.Pending)
@@ -103,22 +87,22 @@ namespace Mozu.SiteBuilder.Mvc
                     if (DateTime.TryParse(val, out temp))
                     {
                         now = temp;
-                        cookie = new HttpCookie(NOWCOOKIENAME, now.ToUniversalTime().ToString("o"));
+                        cookie = new HttpCookie(Constants.NOWCOOKIENAME, now.ToUniversalTime().ToString("o"));
                     }
                     else
                     {
-                        cookie = new HttpCookie(NOWCOOKIENAME, "");
+                        cookie = new HttpCookie(Constants.NOWCOOKIENAME, "");
                         cookie.Expires = DateTime.MinValue;
                     }
 
 
-                    _cookieProvider.SaveResponseCookie(NOWCOOKIENAME, cookie);
+                    _cookieProvider.SaveResponseCookie(Constants.NOWCOOKIENAME, cookie);
 
                 }
                 else
                 {
 
-                    cookie = _cookieProvider.GetRequestCookie(NOWCOOKIENAME);
+                    cookie = _cookieProvider.GetRequestCookie(Constants.NOWCOOKIENAME);
                     if (cookie != null)
                     {
 
@@ -130,7 +114,7 @@ namespace Mozu.SiteBuilder.Mvc
                     }
                 }
             }
-            this.Now = now;
+            return now;
         }
 
         private static DateTime RoundMinueteToLowest10(DateTime now)
@@ -191,48 +175,16 @@ namespace Mozu.SiteBuilder.Mvc
         }
         private static int PublishBehavorID = new PublishPreviewBehavior().Id;
 
-        void ValidateDataMode()
-        {
-            if (DataViewMode== DataViewModeType.NoneSet && 
-                ScopeType == UserScopeType.Tenant && 
-                UserClaims != null && UserClaims.BehaviorIds != null && UserClaims.BehaviorIds.Contains(PublishBehavorID))
-            {
-                DataViewMode = DataViewModeType.Pending;
-            }
-
-
-
-            if (ScopeType != UserScopeType.Shopper 
-                || this.DataViewMode != DataViewModeType.Pending)
-            {
-                return;
-            }
-            //if (this.AdminUserClaim == null)
-            //{
-            //    throw new System.Web.Http.HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized)
-            //                                                    {
-            //                                                        ReasonPhrase = "Unauthorized to preview site.  Must be logged in as admin"
-            //                                                    });
-            //}
-             if (this.UserClaims == null)
-             {
-                 return;
-              
-             }
-            if (this.UserClaims.BehaviorIds == null)
-            {
-                this.UserClaims.BehaviorIds = new int[0];
-            }
-            if (!this.UserClaims.BehaviorIds.Contains(PublishBehavorID))
-            {
-                this.UserClaims.BehaviorIds = this.UserClaims.BehaviorIds.Concat(new int[] { PublishBehavorID }).ToArray();
-            }
-        }
-
         bool ValidateUser()
         {
             string bagVal;
             int tmpInt;
+
+            if (this.UserClaims != null && this.UserClaims.BehaviorIds == null)
+            {
+                this.UserClaims.BehaviorIds = new int[0];
+            }
+
             if (this.UserClaims == null)
             {
                 this.HasInvalidCredentials = true;
@@ -280,30 +232,7 @@ namespace Mozu.SiteBuilder.Mvc
 
         public void Load()
         {
-          //  this.LocaleCode = "en-US";
-          //  this.CurrencyCode = "usd";
-
-
-
-
-
             IEnumerable<string> values;
-            if (_httpRequestMessage.GetQueryNameValuePairs().Any(x => string.Equals(x.Key, "IsEditMode", StringComparison.OrdinalIgnoreCase) && x.Value == "true"))
-            {
-                this.IsEditMode = true;
-                this.DataViewMode = DataViewModeType.Pending;
-            }
-            else
-            {
-
-                if (_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE, out values))
-                {
-                    this.DataViewMode = (DataViewModeType)Enum.Parse(typeof(DataViewModeType), values.First());
-                }
-
-            }
-
-
             if (_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.TENANT, out values))
             {
                 this.InitFromHeaders(_httpRequestMessage.Headers);
@@ -331,8 +260,6 @@ namespace Mozu.SiteBuilder.Mvc
                 LoadFromCookie(_cookieProvider);
             }
 
-
-
             if (string.IsNullOrEmpty(this.LocaleCode) && this.SiteId.HasValue)
             {
                 Site site = g_SiteIdSiteLookup.GetOrAdd(this.SiteId.Value, LookupSiteById );
@@ -340,19 +267,13 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     LocaleCode = site.DefaultLocaleCode;
                     CurrencyCode = site.DefaultCurrencyCode;
-
                 }
             }
-           
-            
-
-
-
         }
 
         private void LoadFromCookie(ICookieProvider cookieProvider)
         {
-            var cookie = cookieProvider.GetRequestCookie(COOKIENAME);
+            var cookie = cookieProvider.GetRequestCookie(Mvc.Constants.COOKIENAME);
             if (cookie != null && cookie.HasKeys)
             {
                 int tmpInt;
@@ -384,20 +305,9 @@ namespace Mozu.SiteBuilder.Mvc
                 if (!string.IsNullOrEmpty(cookie["currency"]))
                 {
                     this.CurrencyCode = cookie["currency"];
-                } 
-                DataViewModeType dataViewModeType;
-                if (Enum.TryParse<DataViewModeType>(cookie["dataview"], true, out dataViewModeType))
-                {
-                    this.DataViewMode = dataViewModeType;
                 }
             }
         }
-
-
-
-
-
-
 
         Site LookupSiteByDomain(string host)
         {
@@ -430,25 +340,8 @@ namespace Mozu.SiteBuilder.Mvc
           
         }
 
-
-
-
-
-
         public void SetUser(LightweightUserClaims user)
         {
-            if (this.DataViewMode == DataViewModeType.Pending)
-            {
-                if ( user != null && (user.BehaviorIds == null || !user.BehaviorIds.Contains( PublishBehavorID) ))
-                {
-                    if (user.BehaviorIds == null)
-                    {
-                        user.BehaviorIds = new int[0];
-                    }
-                    user.BehaviorIds = user.BehaviorIds.Concat(new int[] { PublishBehavorID }).ToArray();
-                    
-                }
-            }
             this.UserClaims = user;
         }
 
@@ -457,7 +350,7 @@ namespace Mozu.SiteBuilder.Mvc
         public bool HasInvalidCredentials { get; set; }
 
         public LightweightUserClaims AdminUserClaim { get; set; }
-        public DateTime Now { get; private set; }
+        public Lazy<DateTime> Now { get; private set; }
 
         public void SetDataMode(DataViewModeType dataViewMode)
         {
@@ -467,6 +360,10 @@ namespace Mozu.SiteBuilder.Mvc
 
     public static class Constants
     {
-        public  const string DefaultTheme = "Core6";
+        public const string DefaultTheme = "Core6";
+        public const string COOKIENAME = "SBCONTEXT";
+        public const string DEBUGCOOKIENAME = "SBD";
+		public const string NOWCOOKIENAME = "MZ_NOW";
+
     }
 }

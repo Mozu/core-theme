@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Newtonsoft.Json;
+using GDC = Mozu.SiteSettings.General.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -20,6 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
+
+            Mapper.CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
+                .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
+                .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled));
+            Mapper.CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
+                .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
+                .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
 
             Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.IPBlock, UX.Admin.Api.Models.GeneralSettings.IPBlock>();
             Mapper.CreateMap<UX.Admin.Api.Models.GeneralSettings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>()

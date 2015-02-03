@@ -40,6 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<ClientApiContext>().InstancePerRequest();
             builder.RegisterType<NavigationContext>().InstancePerRequest();
             builder.RegisterType<PageContext>().InstancePerRequest();
+            builder.RegisterType<SiteContext>().As<ISiteContext>().InstancePerRequest();
             builder.RegisterType<SiteContext>().InstancePerRequest();
             builder.RegisterType<PageContext>().As<IEditableContext>().InstancePerRequest();
             builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerRequest();
@@ -63,7 +64,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<ExceptionContextLogWrapper>();
             builder.RegisterType<LiveModeOnlyCacheInternal>().As<ILiveModeOnlyCache>().InstancePerRequest();
-         
+            builder.RegisterType<DataViewModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();
+            builder.RegisterType<EditModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();         
         }
 
       

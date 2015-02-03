@@ -19,6 +19,7 @@ user.app.config
 *ncrunch*
 *.ide
 .vs
+TestResults/
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/

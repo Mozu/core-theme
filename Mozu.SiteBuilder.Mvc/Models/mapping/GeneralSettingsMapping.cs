@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.UX.Models.Settings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Stact.Routing.Nodes;
+using GDC = Mozu.SiteSettings.General.Contracts;
 using DC = Mozu.SiteSettings.Order.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
@@ -39,7 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
           
 
-            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>()
+            Mapper.CreateMap<GDC.GeneralSettings, GeneralSettings>()
                 //ignores
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
@@ -75,10 +76,25 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                         return Deserialize(x.TabletTheme);
                     }
                     return null;
-                }));
+                }))
+                .ForMember(m => m.IsRequiredLoginForLiveEnabled, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForLive))
+                .ForMember(m => m.IsRequiredLoginForStagingEnabled, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForPending));
+            Mapper.CreateMap<GDC.General.ViewAuthorizations, GeneralSettings>()
+                .ForMember(x => x.IsRequiredLoginForLiveEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForLive))
+                .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForPending));
+
+            Mapper.CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
+                .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
+                .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled));
+            Mapper.CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
+                .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
+                .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
+            Mapper.CreateMap<GeneralSettings, GDC.General.ViewAuthorizations>()
+                .ForMember(x => x.RequireAuthForLive, opt => opt.ResolveUsing((GeneralSettings gs) => gs.IsRequiredLoginForLiveEnabled))
+                .ForMember(x => x.RequireAuthForPending, opt => opt.ResolveUsing((GeneralSettings gs) => gs.IsRequiredLoginForStagingEnabled));
 
             //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
-            Mapper.CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
+            Mapper.CreateMap<GeneralSettings, GDC.GeneralSettings>()
                 //ignores
                 .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
                 .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
@@ -87,7 +103,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.Theme, op => op.ResolveUsing(x => Serialize(x.DesktopTheme)))
                 .ForMember(dc => dc.MobileTheme, op => op.ResolveUsing(x => (x.MobileTheme == null || string.IsNullOrEmpty(x.MobileTheme.Id)) ? null : Serialize(x.MobileTheme)))
                 .ForMember(dc => dc.TabletTheme, op => op.ResolveUsing(x => (x.TabletTheme == null || string.IsNullOrEmpty(x.TabletTheme.Id)) ? null : Serialize(x.TabletTheme)))
-                .ForMember(dc => dc.TemplateSiteId, op => op.ResolveUsing(x => x.TemplateSiteId));
+                .ForMember(dc => dc.TemplateSiteId, op => op.ResolveUsing(x => x.TemplateSiteId))
+                .ForMember(dc => dc.ViewAuthorizations, opt => opt.ResolveUsing((GeneralSettings x) => Mapper.Map<GDC.General.ViewAuthorizations>(x)));
+                
            
         }
         static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");

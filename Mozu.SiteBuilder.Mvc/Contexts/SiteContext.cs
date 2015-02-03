@@ -10,11 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
-using Magnum.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
-using Mozu.Core.Api.Contracts;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Settings;
 using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
@@ -28,12 +25,34 @@ using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using CheckoutSettings = Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings;
-using Constants = Mozu.Core.Api.Contracts.Constants;
 using Theme = Mozu.SiteBuilder.Mvc.Themes.Theme;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
-    public class SiteContext
+    public interface ISiteContext
+    {
+        bool SiteExists { get; set; }
+        int TenantId { get; }
+        int SiteId { get; }
+        byte[] Hash { get; }
+        string HashString { get; }
+        Dictionary<string, string> Labels { get; set; }
+        string ThemeId { get; }
+        GeneralSettings GeneralSettings { get; set; }
+        CheckoutSettings CheckoutSettings { get; set; }
+        ThemeRuntimeSettingsCollection ThemeSettings { get; set; }
+        Theme Theme { get; set; }
+        bool IsEditMode { get; set; }
+        string CdnPrefix { get; set; }
+        string SecureHost { get; set; }
+        bool SupportsInStorePickup { get; set; }
+        SiteDomains Domains { get; set; }
+        Core.Money.Currency CurrencyInfo { get; set; }
+        NumberFormatInfo NumberFormat { get; set; }
+        Task Init();
+
+    }
+    public class SiteContext : ISiteContext
     {
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         internal const string COOKIENAME = "SBCONTEXT";

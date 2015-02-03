@@ -25,26 +25,36 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
             ISettings settings = Substitute.For<ISettings>();
             IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
+            var dvm = Substitute.For<IDataViewModeFinderOuter>();
+            dvm.GetDataViewMode().Returns(Core.DataViewModeType.Pending);
+            var edit = Substitute.For<IEditModeFinderOuter>();
+            edit.IsEditMode().Returns(false);
             HttpRequestMessage request = Substitute.For<HttpRequestMessage>();
-            request.Headers.Add("x-vol-dataview-mode", "Pending");
+
             request.RequestUri = new Uri("http://foo.com/?mz_now=2012-11-10");
-            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, request);
-            Assert.AreEqual(ctx.Now.Year, 2012);
-            Assert.AreEqual(ctx.Now.Month, 11);
-            Assert.AreEqual(ctx.Now.Day, 10);
+            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, request, dvm, edit);
+            
+            var now = ctx.Now.Value;
+            Assert.AreEqual(now.Year, 2012);
+            Assert.AreEqual(now.Month, 11);
+            Assert.AreEqual(now.Day, 10);
 
         }
         [Test]
-        public void Catn_Set_Now_override_In_Live_Via_QS()
+        public void Can_Set_Now_override_In_Live_Via_QS()
         {
             ICookieProvider cookieProvider = Substitute.For<ICookieProvider>();
 
             ISettings settings = Substitute.For<ISettings>();
             IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
             HttpRequestMessage request = Substitute.For<HttpRequestMessage>();
+            var dvm = Substitute.For<IDataViewModeFinderOuter>();
+            dvm.GetDataViewMode().Returns(Core.DataViewModeType.Live);
+            var edit = Substitute.For<IEditModeFinderOuter>();
+            edit.IsEditMode().Returns(false);
             request.RequestUri = new Uri("http://foo.com/?mz_now=2012-11-10");
-            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, request);
-            Assert.AreNotEqual(ctx.Now.Year, 2012);
+            var ctx = new Mozu.SiteBuilder.Mvc.SiteBuilderApiContext(cookieProvider, settings, auth, request, dvm, edit);
+            Assert.AreNotEqual(ctx.Now.Value.Year, 2012);
 
         }
 

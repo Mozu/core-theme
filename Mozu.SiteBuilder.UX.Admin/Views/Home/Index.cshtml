@@ -1,14 +1,14 @@
 ﻿@{
     Layout = "";
     var cookie = Context.Request.Cookies.Get("taco-asset-location");
-    var assetServer = cookie != null && cookie.Value != null ? System.Web.HttpUtility.UrlDecode(cookie.Value) : "";
+    var assetServer = cookie != null && cookie.Value != null ? HttpUtility.UrlDecode(cookie.Value) : "";
     var cssPath = assetServer+ Url.Content("~/Scripts/build/resources/Taco-all.css");
     var appPath = assetServer + Url.Content("~/Scripts/app");
     var uxPath = assetServer + Url.Content("~/Scripts/ux");
     var extPath = assetServer + Url.Content("~/Scripts/ext/src");
     var icoPath = assetServer + Url.Content("~/Scripts/resources/favicon.ico");
-    var bootStrapPath = assetServer + @Url.Content("~/Scripts/bootstrap.js");
-    var appJsPath = assetServer + @Url.Content("~/Scripts/app/app.js");
+    var bootStrapPath = assetServer + Url.Content("~/Scripts/bootstrap.js");
+    var appJsPath = assetServer + Url.Content("~/Scripts/app/app.js");
 
     var extLib = assetServer + Url.Content("~/Scripts/ext/" + ViewData["extlib"]);
     var extLocale = assetServer + Url.Content("~/Scripts/ext/locale/" + ViewData["extlocalefile"]);

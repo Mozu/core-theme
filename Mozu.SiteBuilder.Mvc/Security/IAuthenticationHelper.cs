@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
         string GetAdminRefreshToken();
 
 
-
+        void ClearStorefrontTokens();
         void SaveStoreFrontRefreshToken(string token, DateTime? expiryTime);
 
         string GetStoreFrontRefreshToken();

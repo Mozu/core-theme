@@ -1,39 +1,27 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AuthenticationHelper.cs" company="Microsoft">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using System.Globalization;
-using System.Net.Http;
-using System.Security.Principal;
-using System.Threading;
-using System.Web.Security;
-using Mozu.Core.Api.Contracts;
+﻿using System.Net.Http;
 using Mozu.Core.Settings;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
 namespace Mozu.SiteBuilder.Mvc.Security
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    
-    using System.Web;
-    using System.ComponentModel;
-    using Mozu.Core;
-  
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class AuthenticationHelper : IAuthenticationHelper
     {
-        private readonly ISettings _settings;
-        ////public static String COOKIENAME = "sbAuth";
-        //private HttpContextBase _httpContext;
-        private const string AccessToken = "at";
-        private const string ProfileToken = "pt";
+        readonly ISettings _settings;
+        const string AccessToken = "at";
+        const string ProfileToken = "pt";
+        readonly string AdminAccessTokenCookieName;
+        readonly string StoreFrontAccessTokenCookieName;
+        readonly string AdminRefreshCookieName;
+        readonly string StoreFrontRefershCookieName;
+        readonly bool ForceSSL;
+        readonly ICookieProvider CookieProvider;
+
         public AuthenticationHelper(ICookieProvider provider, ISettings settings, HttpRequestMessage httpRequestMessage)
         {
             _settings = settings;
@@ -42,9 +30,9 @@ namespace Mozu.SiteBuilder.Mvc.Security
             AdminAccessTokenCookieName = "sb-admin-at-" + env;
             StoreFrontAccessTokenCookieName = "sb-sf-at-" + env;
             StoreFrontRefershCookieName = "sb-sf-rt-" + env;
-            AdminRefershCookieName = "mzrt-" + env;
+            AdminRefreshCookieName = "mzrt-" + env;
 
-            bool handledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, httpRequestMessage);
+            bool handledByProxy = IsheaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, httpRequestMessage);
 
             ForceSSL = settings.CoreSettings.IsSSLValidationEnabled && handledByProxy;
             CookieProvider = provider;
@@ -55,8 +43,6 @@ namespace Mozu.SiteBuilder.Mvc.Security
             IEnumerable<string> values;
             if (requestMessage.Headers.TryGetValues(headerName, out values))
             {
-
-
                 bool ret;
                 var val = values.FirstOrDefault();
                 if (bool.TryParse(val, out ret))
@@ -67,29 +53,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
                 return val == "1";
             }
             return false;
-            ;
         }
-
-        public string AdminAccessTokenCookieName { get; set; }
-
-        public string StoreFrontAccessTokenCookieName { get; set; }
-
-        public string AdminRefershCookieName { get; set; }
-
-        public string StoreFrontRefershCookieName { get; set; }
-
-        public bool ForceSSL { get; set; }
-
-
-        public ICookieProvider CookieProvider { get; set; }
-
-
-      
-
-
-
-
-        
 
         void IAuthenticationHelper.SaveAdminAccessToken(string accessToken)
         {
@@ -122,13 +86,9 @@ namespace Mozu.SiteBuilder.Mvc.Security
             return null;
         }
 
-     
-
-
-
         string IAuthenticationHelper.GetAdminRefreshToken()
         {
-            var cookie = CookieProvider.GetRequestCookie(AdminRefershCookieName);
+            var cookie = CookieProvider.GetRequestCookie(AdminRefreshCookieName);
             if (cookie != null && cookie.HasKeys )
             {
                 return cookie["Token"];
@@ -173,6 +133,12 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
 
             CookieProvider.SaveResponseCookie(StoreFrontAccessTokenCookieName, cookie);
+        }
+
+        void IAuthenticationHelper.ClearStorefrontTokens()
+        {
+            (this as IAuthenticationHelper).SaveStoreFrontAccessToken(null, null);
+            (this as IAuthenticationHelper).SaveStoreFrontRefreshToken(null, DateTime.Now);
         }
     }
 }
