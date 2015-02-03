@@ -1,32 +1,32 @@
-﻿<script>
+﻿<script type="text/javascript">
     _gaq.push(['_addTrans',
-    '{{ model.orderNumber }}',
-    '{{ siteContext.generalSettings.websiteName }}',
-    '{{ model.total }}',
-    '{{ model.taxTotal }}',
-    '{{ model.shippingTotal }}',
-    '{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}',
-    '{{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }}',
+    '{{ model.orderNumber|escapejs }}',
+    '{{ siteContext.generalSettings.websiteName|escapejs }}',
+    '{{ model.total|escapejs}}',
+    '{{ model.taxTotal|escapejs }}',
+    '{{ model.shippingTotal|escapejs }}',
+    '{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown|escapejs }}',
+    '{{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince|escapejs }}',
     'USA'
     ]);
 
     {% for item in model.items %}
     _gaq.push(['_addItem',
-    '{{ model.orderNumber }}',
-    'product-{{ item.product.variationProductCode|default(item.product.productCode) }}-itemid-{{ item.id }}',
-    '{{ item.product.name }}',
-    '{{ item.product.categories|first|prop('id') }}',
-    '{{ item.unitPrice.extendedAmount }}',
-    '{{ item.quantity }}'
+    '{{ model.orderNumber|escapejs }}',
+    'product-{{ item.product.variationProductCode|default(item.product.productCode)|escapejs }}-itemid-{{ item.id|escapejs }}',
+    '{{ item.product.name|escapejs }}',
+    '{{ item.product.categories|first|prop('id')|escapejs }}',
+    '{{ item.unitPrice.extendedAmount|escapejs }}',
+    '{{ item.quantity|escapejs }}'
     ]);
     {% for discount in item.productDiscounts %}{% if not discount.excluded %}
     _gaq.push(['_addItem',
-    '{{ model.orderNumber }}',
-    'discount-{{ discount.discount.id }}-product-{{ item.product.variationProductCode|default(item.product.productCode) }}-itemid-{{ item.id }}',
-    '{{ discount.discount.name }}',
-    'Product Discount for {{ item.product.variationProductCode|default(item.product.productCode) }}',
-    '-{{ discount.impactPerUnit }}',
-    '{{ discount.discountQuantity }}'
+    '{{ model.orderNumber|escapejs }}',
+    'discount-{{ discount.discount.id|escapejs }}-product-{{ item.product.variationProductCode|default(item.product.productCode)|escapejs }}-itemid-{{ item.id|escapejs }}',
+    '{{ discount.discount.name|escapejs }}',
+    'Product Discount for {{ item.product.variationProductCode|default(item.product.productCode)|escapejs }}',
+    '-{{ discount.impactPerUnit|escapejs }}',
+    '{{ discount.discountQuantity|escapejs }}'
     ]);
     {% endif %}{% endfor %}
 
