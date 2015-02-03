@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-01-23
+ * Mozu JavaScript SDK - v0.3.0 - 2015-02-03
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3422,6 +3422,25 @@ module.exports=
             "template": "{+orderService}?cartId={id}",
             "returnType": "order",
             "noBody": true,
+            "includeSelf": true
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons",
             "includeSelf": true
         }
     },
