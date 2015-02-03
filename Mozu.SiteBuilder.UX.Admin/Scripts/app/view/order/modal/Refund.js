@@ -337,7 +337,7 @@ Ext.define('Taco.view.order.modal.Refund', {
     },
 
     doSave: function () {
-        var values = this.getForm().getValues()
+        var values = this.getForm().getValues();
         console.log(values);
 
         this.order.createRefund(values, {
