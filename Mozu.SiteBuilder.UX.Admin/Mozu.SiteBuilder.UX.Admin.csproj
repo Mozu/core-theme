@@ -1055,7 +1055,6 @@
     <Content Include="Scripts\app\view\website\widgetEditors\FeaturedProducts.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\HorizontalRule.js" />
     <Content Include="Scripts\app\view\website\widgetEditors\v2\Image.js" />
-    <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\chorizo\Build\layout.css" />
     <Content Include="Scripts\chorizo\Build\chorizo.css" />
     <Content Include="Scripts\chorizo\Build\siteBuilder.js" />
@@ -1500,7 +1499,6 @@
     <Content Include="Scripts\.sencha\app\package.defaults.properties" />
     <Content Include="Scripts\.sencha\app\package.properties" />
     <Content Include="Scripts\.sencha\app\production.defaults.properties" />
-    <Content Include="Scripts\bootstrap.json" />
     <Content Include="Scripts\makeTfsBuild.bat" />
     <Content Include="Scripts\sass\etc\sprites\_icons.scss" />
     <Content Include="Scripts\sass\etc\sprites\_dashboard.scss" />
