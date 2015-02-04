@@ -391,7 +391,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             canSendEmail = !Ext.Array.contains(['Pending'], me.record.get('orderStatus')),
             acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
-            editOrderButton = this.down("#editOrderButton");
+            editOrderButton = this.down("#editOrderButton"),
             resendEmailButton = this.down("#resendEmailButton");
 
 
