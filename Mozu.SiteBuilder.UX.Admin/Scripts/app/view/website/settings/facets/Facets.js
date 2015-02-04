@@ -122,16 +122,16 @@
                      cls: 'x-boundlist-draggable',
                      itemTpl: new Ext.XTemplate(
                      '<span class="x-boundlist-item-contents">',
-                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
+                         '<tpl if="this.isRegularFacet(categoryId, isOverridden)">',
                             '<span class="x-boundlist-item-drag">Drag </span>',
                          '</tpl>',
                          '<span class="x-boundlist-item-content">',
-                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
+                         '<tpl if="this.isRegularFacet(categoryId, isOverridden)">',
                              '<span class="x-boundlist-item-type">{sourceName}</span>',
                              '<span class="x-boundlist-item-name">{sourceType}</span>',
-                         '<tpl elseif="this.isOverriden(overrideFacetId)">',
+                         '<tpl elseif="isOverridden">',
                              '<span class="x-boundlist-item-type">{sourceName}</span>',
-                             '<span class="x-boundlist-item-name">Overriden {sourceType}</span>',
+                             '<span class="x-boundlist-item-name-overridden">Overridden {sourceType}</span>',
                          '<tpl else>',
                              '<span class="x-boundlist-item-type">{sourceName}</span>',
                              '<span class="x-boundlist-item-name-inherited">Inherited {sourceType}</span>',
@@ -140,7 +140,7 @@
                          '<tpl if="!isvalid">',
                              '<span class="x-boundlist-item-action x-boundlist-item-problem">Problem </span>',
                          '</tpl>',
-                         '<tpl if="this.isNormal(categoryId, overrideFacetId)">',
+                         '<tpl if="this.isRegularFacet(categoryId, isOverridden)">',
                             '<span class="x-boundlist-item-action x-boundlist-item-close">Close </span>',
                         '</tpl>',
                      '<div class="x-facet-ranges" data-for-sourceid="{sourceId}"></div>',
@@ -148,14 +148,11 @@
                          '<p class="x-facet-validityreason">{validityCode}</p>',
                      '</tpl>',
                          {
-                             isInherited: function (catId) {
+                             isInheritedFacet: function (catId) {
                                  return catId !== thisCategoryId;
                              },
-                             isOverridden: function (overrideFacetId) {
-                                 return overrideFacetId !== null;
-                             },
-                             isNormal: function(catId, overrideFacetId) {
-                                 return (catId === thisCategoryId && !overrideFacetId);
+                             isRegularFacet: function (catId, isOverridden) {
+                                 return (!this.isInheritedFacet(catId) && !isOverridden);
                              }
                          }
                      ),
