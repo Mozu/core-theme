@@ -306,5 +306,30 @@ Ext.define('Taco.model.Return', {
             },
             scope: this
         });
+    },
+
+    /**
+        * service call to resend a return email
+        * @param {Object} config  A configuration object     
+        * config object:
+        * 
+           {
+               jsonData: {
+                   orderId: '987654321',               
+               }
+           }
+
+        *
+        */
+    resendEmail: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/return/email/resend',
+            method: 'POST'
+        });
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || 'Error resending email';
+        this.addErrorHandling(config);
+        Ext.Ajax.request(config);
     }
 });

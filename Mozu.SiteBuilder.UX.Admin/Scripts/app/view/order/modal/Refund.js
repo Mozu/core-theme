@@ -45,7 +45,8 @@ Ext.define('Taco.view.order.modal.Refund', {
         if (!prevState) return;
 
         var form = this.getForm();
-        var refundAmountField = form.getForm().findField('refundAmount');
+        var refundAmountField = form.getForm().findField('amount');
+        var excessGroup = this.down('#allowExcessCreditGroup');
         var isCreditCard = nextState.method === 'CreditCard';
         var isExcess = nextState.proposed > nextState.collected;
 
@@ -60,9 +61,9 @@ Ext.define('Taco.view.order.modal.Refund', {
         refundAmountField.validate();
 
         // show or hide the excess store credit "override" checkbox
-        this.down('#allowExcessCreditGroup').setVisible(isExcess && !isCreditCard).setDisabled(isCreditCard || !isExcess);
-        this.down('#allowExcessCreditGroup').validate();
-        this.down('#excessCreditError').update();
+        excessGroup.setVisible(isExcess && !isCreditCard).setDisabled(isCreditCard || !isExcess);
+        excessGroup.validate();
+        this.down('#excessCreditError').update(nextState);
     },
 
     initComponent: function () {
@@ -249,7 +250,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     },
                     items: [{
                         xtype: 'currencyfield',
-                        name: 'refundAmount',
+                        name: 'amount',
                         fieldLabel: 'Refund Amount',
                         hideTrigger: true,
                         mouseWheelEnabled: false,
@@ -285,22 +286,33 @@ Ext.define('Taco.view.order.modal.Refund', {
                     }, {
                         xtype: 'component',
                         itemId: 'excessCreditError',
+                        height: 30,
+                        padding: '9 0 7 30',
+                        data: {},
                         tpl: [
-                            '<tpl if="true">',
-                                'Amount must be less than or equal to {[this.getSuggestedRefund()]}',
+                            '<tpl if="method == \'CreditCard\'">',
+                                '<tpl if="this.getSuggestedRefund(proposed)">',
+                                    'Amount must be less than or equal to {[this.getSuggestedRefund(values.proposed)]}',
+                                '</tpl>',
                             '</tpl>',
                             {
-                                getSuggestedRefund: function () {
-                                    console.log(me.suggestRefund());
-                                    return me.suggestRefund();
+                                getSuggestedRefund: function (proposed) {
+                                    var refund = me.suggestRefund();
+                                    
+                                    return proposed > refund ? me.order.formatCurrency(refund) : false;
                                 }
                             }
-                        ]
+                        ],
+                        style: {
+                            'color': '#666',
+                            'font-size': '14px',
+                            'line-height': '1'
+                        }
                     }]
                 }, {
                     xtype: 'textarea',
-                    name: 'refundReason',
-                    fieldLabel: 'Reason',
+                    name: 'reason',
+                    fieldLabel: 'Notes',
                     width: 500,
                     rows: 2,
                     margin: 0
@@ -313,6 +325,10 @@ Ext.define('Taco.view.order.modal.Refund', {
         this.callParent(arguments);
     },
 
+    onBoxReady: function () {
+        this.addCls('taco-refund-modal');
+    },
+
     suggestRefund: function () {
         var state = this.getModalState();
         var payment = state.payment;
@@ -320,42 +336,29 @@ Ext.define('Taco.view.order.modal.Refund', {
         return payment ? payment.amountCollected - payment.amountCredited : state.collected - state.refunded;
     },
 
-    onBoxReady: function () {
-        this.addCls('taco-refund-modal');
-    },
-
     doSave: function () {
-        console.log(this.getForm().getValues());
+        var values = this.getForm().getValues();
+        console.log(values);
 
-        // var refunds = [];
+        this.order.createRefund(values, {
+            success: function () {
+                this.saveSuccess();
+            },
+            scope: this
+        });
 
-        // if (this.creditCardRadio.getValue()) {
-        //     this.store.each(function (item) {
-        //         if (item.get('amountToRefund') > 0) {
-        //             refunds.push({
-        //                 amount: item.get('amountToRefund'),
-        //                 orderPaymentId: item.getId()
-        //             });
-        //         }
-        //     }, this);
-
-        //     if (!refunds.length) {
-        //         this.close();
-        //         return;
-        //     }
-
-        //     this.record.refundPayments({
-        //         returnId: this.record.getId(),
-        //         refunds: refunds,
+        // if (values.refundMethod === 'CreditCard') {
+        //     this.order.refundPayment({
+        //         paymentId: values.creditCard,
+        //         amount: values.refundAmount,
         //         success: function () {
         //             this.saveSuccess();
         //         },
         //         scope: this
         //     });
         // } else {
-        //     this.record.createStoreCredit({
-        //         returnId: this.record.getId(),
-        //         amount: this.storeCreditPanel.getValues().refundAmount,
+        //     this.order.createStoreCredit({
+        //         amount: values.refundAmount,
         //         success: function () {
         //             this.saveSuccess();
         //         },

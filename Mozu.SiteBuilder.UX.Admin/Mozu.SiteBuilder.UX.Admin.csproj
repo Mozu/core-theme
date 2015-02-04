@@ -514,6 +514,7 @@
     <Compile Include="Api\Models\RuntimeProductOption.cs" />
     <Compile Include="Api\OrderAttributeController.cs" />
     <Compile Include="Api\OrderDiscountController.cs" />
+    <Compile Include="Api\OrderRefundController.cs" />
     <Compile Include="Api\ProductAvailableInventoryHelper.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
     <Compile Include="Api\SiteRoutesController.cs" />
@@ -747,6 +748,7 @@
     <Content Include="Scripts\app\core\ux\form\FilterContainer.js" />
     <Content Include="Scripts\app\core\ux\form\PhoneNumberField.js" />
     <Content Include="Scripts\app\core\ux\form\SplitEditor.js" />
+    <Content Include="Scripts\app\core\ux\form\ResendEmailButton.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />

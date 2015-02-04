@@ -402,7 +402,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
         }
         [HttpPostRoute(UriTemplate = "resendconfirmationemail")]
-        public async Task<HttpResponseMessage> ResendConfirmationEmail(ResendConfirmationEmailArgs args)
+        public async Task<Response<Order>> ResendConfirmationEmail(ResendConfirmationEmailArgs args)
         {
             var action = new DCo.OrderAction()
             {
@@ -410,8 +410,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             (await _orderWebApiClient.ResendOrderConfirmationEmail(args.OrderId, action)).ReadAsSync();
-
-            return Request.CreateResponse(HttpStatusCode.OK);
+            
+            return this.EmptySingle2<Order>();
         }
     }
 }

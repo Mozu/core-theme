@@ -395,6 +395,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     initReturnActions: function () {
+
         return Ext.create('Ext.toolbar.Toolbar', {
             defaults: {
                 xtype: 'button',
@@ -460,6 +461,80 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                             }
                         }
                     }
+                }
+            }, {
+                xtype:"resendemailbutton",
+                itemId: "resendEmailButton",
+                text: "Resend Email",
+                emailUrl: '/admin/app/return/resendemail',
+                handler: Ext.emptyFn,
+                listeners: {
+                    menushow: function (button, menu) {
+                        var status = this.record.get("status");
+                        //iterate the child items and enable them and disable them based on the status of the rma entity;
+                        Ext.Array.each(menu.items.items, function (item) {                            
+                            var isEnabled = Ext.Array.contains(item.enabledWhen, status);                            
+                            item.setVisible(isEnabled);
+                        })
+                    },
+                    scope: this
+                },
+                menu: {
+                    plain: true,
+                    shadow: false,
+                    items: [
+                        {
+                            text: "RMA Created",
+                            jsonData: {
+                                returnIds: [this.record.getId()],
+                                actionName: "Create"
+                            },
+                            enabledWhen: ["Created", "Authorized", "Pending", "Received","Refunded"]
+                            
+                        }, {
+                            text: "RMA Authorized",
+                            jsonData: {
+                                returnIds: [this.record.getId()],
+                                actionName: "Authorize"
+                            },
+                            enabledWhen: ["Created", "Authorized", "Pending", "Received", "Refunded"]
+                        }, {
+                            text: "RMA Received",
+                            jsonData: {
+                                returnIds: [this.record.getId()],
+                                actionName: "Receive"
+                            },
+                            enabledWhen: ["Received", "Refunded"]
+                        }, {
+                            text: "RMA Refunded",
+                            jsonData: {
+                                returnIds: [this.record.getId()],
+                                actionName: "Refund"
+                            },
+                            enabledWhen: ["Refunded", "Closed"]
+                        }, {
+                            text: "RMA Rejected",
+                            jsonData: {
+                                returnIds: [this.record.getId()],
+                                actionName: "Reject" 
+                            },
+                            enabledWhen: ["Rejected"]
+                        }, {
+                            text: "RMA Closed",
+                            jsonData: {
+                                returnIds: [this.record.getId()],
+                                actionName: "Close"
+                            },
+                            enabledWhen: ["Closed"]
+                        }, {
+                            text: "RMA Cancelled",
+                            jsonData: {
+                                returnIds: [this.record.getId()],
+                                actionName: "Cancel"
+                            },
+                            enabledWhen: ["Cancelled"]
+                        }
+                    ]
                 }
             }],
             listeners: {
@@ -613,6 +688,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     updateReturnActions: function () {
         var record = this.getRecord();
         var validActions = record.get('availableActions');
+
+        validActions.push("resendEmailButton");
 
         // remove the Refund action if the return type is not Refund
         if (record.get('type') === 'Replace') {
