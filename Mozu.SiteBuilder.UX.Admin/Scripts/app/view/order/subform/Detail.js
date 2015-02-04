@@ -12,7 +12,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         'Taco.view.order.widget.OrderItemGrid',
         'Taco.view.order.modal.EditOrderDetail',
         'Taco.shared.view.form.ExtensibleAttribute',
-        'Taco.view.order.subform.InternalNotes'
+        'Taco.view.order.subform.InternalNotes',
+        'Taco.core.ux.form.ResendEmailButton'
     ],
     alias: 'widget.taco-orderdetail',
     itemId: 'orderDetailPanel',
@@ -176,12 +177,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         this.callParent(arguments);
     },
         
-    resendEmail : function (){
-        var me = this;
-        me.record.resendEmail({
-
-        });
-    },
+    
     
     editOrder: function (focusAfterCloseCmp) {
         var me = this,
@@ -467,14 +463,14 @@ Ext.define('Taco.view.order.subform.Detail', {
                 handler: this.editOrder,
                 scope: me,
                 disabled: !canEdit
-            }, {
-                text: 'Resend Email',
-                xtype: "button",
-                ui: "action",
+            },{
+                xtype: 'resendemailbutton',
                 itemId: "resendEmailButton",
-                scale: "medium",
-                handler: this.resendEmail,
-                scope: me,
+                margin: '0 0 0 10',
+                emailUrl: '/admin/app/order/resendconfirmationemail',
+                jsonData: {
+                    orderId: this.record.getId()
+                },
                 hidden: !canSendEmail
             }
         ];

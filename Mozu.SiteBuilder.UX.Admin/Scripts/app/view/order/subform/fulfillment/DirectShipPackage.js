@@ -3,7 +3,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
     requires: [
         'Taco.view.order.subform.fulfillment.Grid',
-        'Taco.view.order.modal.OverrideTotalWeight'
+        'Taco.view.order.modal.OverrideTotalWeight',
+        'Taco.core.ux.form.ResendEmailButton'
     ],
 
     initComponent: function () {
@@ -209,9 +210,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             hidden: this.packageData.status === 'Fulfilled',
             handler: this.handleMarkAsShipped
         }, {
-            text: 'Resend Email',
-            hidden: this.packageData.status !== 'Fulfilled',
-            handler: this.resendEmail
+            xtype: 'resendemailbutton',
+            margin: '0 0 0 10',            
+            emailUrl: '/admin/app/order/shipping/package/resendshipmentemail',
+            jsonData: {
+                orderId: this.record.getId(),
+                packageId: this.packageData.id
+            },
+            hidden: this.packageData.status !== 'Fulfilled'
         }];
 
 
@@ -233,9 +239,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             text: 'Print Packing Slip',
             handler: this.handlePrintPackingSlip
         }, {
-            text: 'Resend Email',
-            hidden: this.packageData.status !== 'Fulfilled',
-            handler: this.resendEmail
+            xtype: 'resendemailbutton',
+            margin: '0 0 0 10',
+            emailUrl: '/admin/app/order/shipping/package/resendshipmentemail',
+            jsonData: {
+                orderId: this.record.getId(),
+                packageId: this.packageData.id
+            },
+            hidden: this.packageData.status !== 'Fulfilled'
         }];
 
         this.callParent(arguments);
@@ -364,12 +375,5 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         });
 
         return ret;
-    },
-    resendEmail: function () {
-        var me = this;
-        me.record.resendEmail({
-            packageId : me.packageData.id,
-            type:"shipment"
-        })
     }
 });

@@ -202,11 +202,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "resendemail")]
-        public async Task<HttpResponseMessage> SendRMAEmail(DCr.ReturnAction action)
+        public async Task<Response<Return>> SendRMAEmail(DCr.ReturnAction action)
         {
             await (await _returnWebApiClient.ResendReturnEmail(action)).ReadAsAsync();
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return this.EmptySingle2<Return>();
         }
     }
 }

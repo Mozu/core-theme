@@ -346,13 +346,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string PackageId { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipping/package/resendshipmentemail")]
-        public async Task<HttpResponseMessage> ResendShipmentFulfillmentEmail(ResendShipmentFulfillmentEmailArgs args)
+        public async Task<Response<Order>> ResendShipmentFulfillmentEmail(ResendShipmentFulfillmentEmailArgs args)
         {
             await (await _orderWebApiClient.ResendPackageFulfillmentEmail(args.OrderId, args.PackageId)).ReadAsAsync();
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return this.EmptySingle2<Order>();
         }
-
+        
         private Task DeletePackageInternal(string orderId, DCs.Package package)
         {
             if (package.ShipmentId != null)

@@ -557,11 +557,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string Code { get; set; }
         }
         [HttpPostRoute(UriTemplate = "resendcreditcreatedemail")]
-        public async Task<HttpResponseMessage> ResendCreditCreatedEmail(ResendCreditCreatedEmailArgs args)
+        public async Task<Response<Credit>> ResendCreditCreatedEmail(ResendCreditCreatedEmailArgs args)
         {
             await (await _creditWebApiClient.ResendCreditCreatedEmail(args.Code)).ReadAsAsync();
-
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return this.EmptySingle2<Credit>();
         }
     }
 }

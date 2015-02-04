@@ -748,6 +748,7 @@
     <Content Include="Scripts\app\core\ux\form\FilterContainer.js" />
     <Content Include="Scripts\app\core\ux\form\PhoneNumberField.js" />
     <Content Include="Scripts\app\core\ux\form\SplitEditor.js" />
+    <Content Include="Scripts\app\core\ux\form\ResendEmailButton.js" />
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
