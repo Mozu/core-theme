@@ -18,7 +18,6 @@ Ext.define('Taco.model.AccountUser', {
             name: 'activity', type: 'string', convert: function (value, record) {
                 var date = new Date(value);
                 if (date instanceof Date && !isNaN(date.valueOf())) {
-                    console.log(date);
                     return 'Last Login ' + date.toLocaleString();
                 }
                 return value;
@@ -31,7 +30,8 @@ Ext.define('Taco.model.AccountUser', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/app/account/users/list'
+            read: '/admin/app/account/users/list',
+            destroy: 'admin/app/account/users/delete'
         },
         reader: {
             type: 'json',
