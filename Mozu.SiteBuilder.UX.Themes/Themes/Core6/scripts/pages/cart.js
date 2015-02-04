@@ -33,14 +33,68 @@
         }
     });
 
-    $(document).ready(function () {
+    var CouponView = Backbone.MozuView.extend({
+        templateName: 'modules/common/coupon-code-field',
+        handleLoadingChange: function (isLoading) {
+            // override adding the isLoading class so the apply button 
+            // doesn't go loading whenever other parts of the order change
+        },
+        initialize: function () {
+            var me = this;
+            this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
+            this.codeEntered = !!this.model.get('couponCode');
+            this.$el.on('keypress', 'input', function (e) {
+                if (e.which === 13) {
+                    if (me.codeEntered) {
+                        me.handleEnterKey();
+                    }
+                    return false;
+                }
+            });
+        },
+        onEnterCouponCode: function (model, code) {
+            if (code && !this.codeEntered) {
+                this.codeEntered = true;
+                this.$el.find('button').prop('disabled', false);
+            }
+            if (!code && this.codeEntered) {
+                this.codeEntered = false;
+                this.$el.find('button').prop('disabled', true);
+            }
+        },
+        autoUpdate: [
+            'couponCode'
+        ],
+        addCoupon: function (e) {
+            // add the default behavior for loadingchanges
+            // but scoped to this button alone
+            var self = this;
+            this.$el.addClass('is-loading');
+            this.model.addCoupon().ensure(function () {
+                self.$el.removeClass('is-loading');
+                self.model.unset('couponCode');
+                self.render();
+            });
+        },
+        handleEnterKey: function () {
+            this.addCoupon();
+        }
+    });
+
+    $(document).ready(function() {
 
         var cartModel = CartModels.Cart.fromCurrent(),
-            cartView = new CartView({
-                el: $('#cart'),
-                model: cartModel,
-                messagesEl: $('[data-mz-message-bar]')
-            });
+            cartViews = {
+                cartView: new CartView({
+                    el: $('#cart'),
+                    model: cartModel,
+                    messagesEl: $('[data-mz-message-bar]')
+                }),
+                couponCode: new CouponView({
+                    el: $('#coupon-code-field'),
+                    model: cartModel
+                })
+            };
 
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);
@@ -51,7 +105,7 @@
             CartMonitor.setCount(cartModel.count());
         });
 
-        window.cartView = cartView;
+        window.cartView = cartViews;
 
         CartMonitor.setCount(cartModel.count());
 

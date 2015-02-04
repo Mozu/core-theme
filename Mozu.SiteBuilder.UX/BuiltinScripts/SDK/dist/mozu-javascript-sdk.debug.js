@@ -4151,14 +4151,30 @@ module.exports = ApiReference;
 //# sourceUrl=src/types/cart.js
 
 var utils = require('../utils');
-module.exports = {
-    count: function () {
-        var items = this.prop('items');
-        if (!items || !items.length) return 0;
-        return utils.reduce(items, function (total, item) { return total + item.quantity; }, 0);
-    }
-};
-},{"../utils":35}],25:[function(require,module,exports){
+var errors = require('../errors');
+module.exports = (function () {
+
+    errors.register({
+        'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
+    });
+
+    return {
+        count: function () {
+            var items = this.prop('items');
+            if (!items || !items.length) return 0;
+            return utils.reduce(items, function (total, item) { return total + item.quantity; }, 0);
+        },
+        addCoupon: function (couponCode) {
+            var self = this;
+            return this.applyCoupon(couponCode).then(function () {
+                return self.get();
+            }, function (reason) {
+                errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
+            });
+        }
+    };
+}());
+},{"../errors":16,"../utils":35}],25:[function(require,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
