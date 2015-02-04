@@ -50,6 +50,13 @@ Ext.define('Taco.model.Facet', {
         type: 'boolean',
         useNull: true
     }, {
+        name: 'isOverridden',
+        type: 'boolean',
+        convert: function (v, record) {
+            return record.get('overrideFacetId') !== null;
+        },
+        persist: false
+    }, {
         name: 'isvalid',
         type: 'boolean',
         useNull: true
