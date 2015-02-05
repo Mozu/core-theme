@@ -2,6 +2,21 @@
 
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
+        initialize: function () {
+            var me = this;
+
+            //setup coupon code text box enter.
+            this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
+            this.codeEntered = !!this.model.get('couponCode');
+            this.$el.on('keypress', 'input', function (e) {
+                if (e.which === 13) {
+                    if (me.codeEntered) {
+                        me.handleEnterKey();
+                    }
+                    return false;
+                }
+            });
+        },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
                 newQuantity = parseInt($qField.val(), 10),
@@ -30,26 +45,12 @@
             // return false;
             this.model.isLoading(true);
             // the rest is done through a regular HTTP POST
-        }
-    });
-
-    var CouponView = Backbone.MozuView.extend({
-        templateName: 'modules/common/coupon-code-field',
-        handleLoadingChange: function (isLoading) {
-            // override adding the isLoading class so the apply button 
-            // doesn't go loading whenever other parts of the order change
         },
-        initialize: function () {
-            var me = this;
-            this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
-            this.codeEntered = !!this.model.get('couponCode');
-            this.$el.on('keypress', 'input', function (e) {
-                if (e.which === 13) {
-                    if (me.codeEntered) {
-                        me.handleEnterKey();
-                    }
-                    return false;
-                }
+        addCoupon: function () {
+            var self = this;
+            this.model.addCoupon().ensure(function () {
+                self.model.unset('couponCode');
+                self.render();
             });
         },
         onEnterCouponCode: function (model, code) {
@@ -65,17 +66,6 @@
         autoUpdate: [
             'couponCode'
         ],
-        addCoupon: function (e) {
-            // add the default behavior for loadingchanges
-            // but scoped to this button alone
-            var self = this;
-            this.$el.addClass('is-loading');
-            this.model.addCoupon().ensure(function () {
-                self.$el.removeClass('is-loading');
-                self.model.unset('couponCode');
-                self.render();
-            });
-        },
         handleEnterKey: function () {
             this.addCoupon();
         }
@@ -85,15 +75,13 @@
 
         var cartModel = CartModels.Cart.fromCurrent(),
             cartViews = {
+
                 cartView: new CartView({
                     el: $('#cart'),
                     model: cartModel,
                     messagesEl: $('[data-mz-message-bar]')
-                }),
-                couponCode: new CouponView({
-                    el: $('#coupon-code-field'),
-                    model: cartModel
                 })
+
             };
 
         cartModel.on('ordercreated', function (order) {
