@@ -288,7 +288,7 @@ Ext.define('Taco.view.productType.Form', {
             store: this.attributeStore,
             width: 240,
             margin: '0 40 0 0',
-            displayField: 'name',
+            displayField: 'adminName',
             valueField: 'id',
             maxSelections: 1,
             listConfig: {
@@ -353,7 +353,7 @@ Ext.define('Taco.view.productType.Form', {
             store: attributeStore,
             width: 240,
             margin: '0 40 0 0',
-            displayField: 'attributeFQN',
+            displayField: 'adminName',
             valueField: 'attributeFQN',
             maxSelections: 1,
             listConfig: {

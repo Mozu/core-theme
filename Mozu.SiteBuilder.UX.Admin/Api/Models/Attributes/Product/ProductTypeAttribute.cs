@@ -27,8 +27,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
 
         public string InputType { get; set; }
 
-        public string AttributeName { get; set; }
+        public string AdminName { get; set; }
 
+        public string AttributeName { get; set; }
 
         public List<AttributeMetadataItem> AttributeMetadata { get; set; }
 

@@ -323,13 +323,12 @@ Ext.define('Taco.view.product.variant.Grid', {
         var summaryTpl = new Ext.XTemplate(
                 '<tpl for="options">',
                     '<div style="padding-bottom:5px;">',
-                    '{[this.getAttributeLabel(values)]} : {value}',
+                    '{[this.getAttributeAdminLabel(values)]} : {value}',
                     '</div>',
                 '</tpl>',
                 {
-                    getAttributeLabel: function (values) {
-                        var name = me.findAttributeName(values.attributeFQN);
-                        return name
+                    getAttributeAdminLabel: function (values) {
+                        return me.findAttributeAdminName(values.attributeFQN);
                     }
                 }
             );
@@ -361,7 +360,7 @@ Ext.define('Taco.view.product.variant.Grid', {
 
             
             var attribute = this.findAttribute(option.attributeFQN),
-                attributeText = attribute.get('attributeName'),
+                attributeText = attribute.get('adminName'),
                 attributeValues = attribute.get('selectedValues'),
                 attributeId = attribute.getId(),
                 optionHasValuesSelected = option.values.length;
@@ -813,10 +812,9 @@ Ext.define('Taco.view.product.variant.Grid', {
         return this.productType.getOptions().findRecord('attributeFQN', attributeFQN, 0, false, false, true);
     },
 
-    findAttributeName: function (attributeFQN) {        
+    findAttributeAdminName: function (attributeFQN) {        
         var attribute = this.productType.getOptions().findRecord('attributeFQN', attributeFQN, 0, false, false, true);        
-        var name = attribute.get("attributeName");
-        return name
+        return attribute.get("adminName");
     },
 
     addSaveTasks: function (tasks, updateRecord, saveRecord) {

@@ -104,7 +104,7 @@
                     }
                 }, {
                     xtype: 'component',
-                    html: '<b>' + ptAttribute.get('attributeName') + "</b>"
+                    html: '<b>' + ptAttribute.get('adminName') + "</b>"
                 },
                 
                  { xtype: 'tbfill' },
