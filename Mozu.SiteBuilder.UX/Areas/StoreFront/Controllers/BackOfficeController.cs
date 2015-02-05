@@ -79,9 +79,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             foreach (var package in order.Packages)
             {
-                IEnumerable<PackageItem> t = package.Items.Select(i => GetDetailedPackageItem(i, order));
-                package.Items = t.ToList();
+                PopulatePackageDetails(package, order);
             }
+        }
+
+        private void PopulatePackageDetails(Package package, DC.Order order)
+        {
+            if (package == null) return;
+
+            IEnumerable<PackageItem> t = package.Items.Select(i => GetDetailedPackageItem(i, order));
+            package.Items = t.ToList();
         }
         
         private void PopulatePickupDetails(DC.Order order)
@@ -190,6 +197,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             var jo = Newtonsoft.Json.Linq.JObject.FromObject(package, ser);
+
+            PopulatePackageDetails(package, order);
 
             ViewData["order"] = order;
             return await RenderWithContext(template, package);
