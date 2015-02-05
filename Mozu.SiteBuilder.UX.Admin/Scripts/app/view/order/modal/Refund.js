@@ -346,24 +346,5 @@ Ext.define('Taco.view.order.modal.Refund', {
             },
             scope: this
         });
-
-        // if (values.refundMethod === 'CreditCard') {
-        //     this.order.refundPayment({
-        //         paymentId: values.creditCard,
-        //         amount: values.refundAmount,
-        //         success: function () {
-        //             this.saveSuccess();
-        //         },
-        //         scope: this
-        //     });
-        // } else {
-        //     this.order.createStoreCredit({
-        //         amount: values.refundAmount,
-        //         success: function () {
-        //             this.saveSuccess();
-        //         },
-        //         scope: this
-        //     });
-        // }
     }
 });

@@ -185,12 +185,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     // fill out OrderSummary and AuthorizationInfo object
 
-                    decimal totalAmount, amountCollected, balance;
+                    decimal totalAmount, amountCollected, balance, amountRefunded;
                     int totalItemCount, unshippedItemCount = 0, shippedItemCount = 0, unpickedupItemCount=0, pickedupItemCount = 0, digitallyFulfilledItemCount, fulfilledItemCount, unfulfilledItemCount;
 
                     totalAmount = dc.Total.GetValueOrDefault(0);
                     amountCollected = dc.TotalCollected;
                     balance = totalAmount - amountCollected;
+                    amountRefunded = dc.Refunds != null ? dc.Refunds.Sum(r => r.Amount) : 0;
 
                     totalItemCount =
                         (from i in order.Items
@@ -240,6 +241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         TotalAmount = totalAmount,
                         AmountCollected = amountCollected,
                         Balance = balance,
+                        AmountRefunded = amountRefunded,
                         TotalItemCount = totalItemCount,
                         ShippedItemCount = shippedItemCount,
                         UnshippedItemCount = unshippedItemCount,

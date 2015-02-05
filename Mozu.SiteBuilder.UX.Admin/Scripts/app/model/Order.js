@@ -7,6 +7,8 @@ Ext.define('Taco.model.Order', {
     'Taco.model.Return',
     'Taco.model.ShippingMethod',
     'Taco.model.InternalNote',
+    'Taco.model.OrderPayment',
+    'Taco.model.OrderRefund',
     'Taco.store.ShippingMethods',
     'Ext.data.association.HasOne'
     ],
@@ -817,6 +819,11 @@ Ext.define('Taco.model.Order', {
             type: 'hasMany',
             model: 'Taco.model.OrderPayment',
             name: 'payments',
+            reader: 'json'
+        }, {
+            type: 'hasMany',
+            model: 'Taco.model.OrderRefund',
+            name: 'refunds',
             reader: 'json'
         }, {
             type: 'hasMany',
@@ -2270,6 +2277,10 @@ Ext.define('Taco.model.Order', {
         var data = Ext.apply({}, refund, {
             orderId: this.getId()
         });
+
+        options.errorMsg = options.errorMsg || 'Error saving refund.';
+        this.addErrorHandling(options);
+
         Ext.Ajax.request(Ext.apply({}, options, {
             url: '/admin/app/order/refunds',
             method: 'POST',
