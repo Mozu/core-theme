@@ -1,9 +1,13 @@
 Core4 Changelog
 ===============
 
+v4.2.1
+------
+* Put back the CHANGELOG.md and the bower.json file, which caused build problems when removed.
+
 v4.2.0
 ------
-* Release notes have moved to the [Developer Center](http://developer.mozu.com).
+* Release notes in the [Developer Center](http://developer.mozu.com).
 
 v4.0.7
 ------
