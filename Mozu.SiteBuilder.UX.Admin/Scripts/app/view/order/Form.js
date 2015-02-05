@@ -15,7 +15,8 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.subform.Payment',        
         'Taco.view.order.subform.Return',        
         'Taco.view.order.subform.InternalNotes',
-        'Taco.view.order.subform.Fulfillment'
+        'Taco.view.order.subform.Fulfillment',
+        'Taco.view.order.subform.AuditLog'
     ],
 
     model: 'Taco.model.Order',
@@ -107,6 +108,11 @@ Ext.define('Taco.view.order.Form', {
             // need to adjust the visibility of subforms based on the progression of data entry in phone orders
             if (me.isHeaderDataComplete()) {
                 //this.formContainer.show()
+                // remove the audit log from the tab panels, this will be readded later!
+                if (this.auditLogPanel.rendered) {
+                    this.formContainer.remove(this.auditLogPanel);
+                }
+
                 navUpdateRequired = true;
                 if (!this.orderDetailPanel.rendered) {
                     this.formContainer.add(this.orderDetailPanel);
@@ -118,6 +124,10 @@ Ext.define('Taco.view.order.Form', {
                         this.formContainer.add(this.paymentPanel);
                         navUpdateRequired = true;
                     }
+                }
+
+                if (!this.auditLogPanel.rendered) {
+                    this.formContainer.add(this.auditLogPanel);
                 }
             } else {
                 navUpdateRequired = true;
@@ -146,6 +156,10 @@ Ext.define('Taco.view.order.Form', {
         this.updateTitleData();
         // update the superclasses title logic.
         this.initTitle();
+
+        if (this.auditLogPanel) {
+            this.auditLogPanel.auditLogGrid.refreshAuditLog();
+        }
     },
 
     buildForm: function () {
@@ -175,7 +189,9 @@ Ext.define('Taco.view.order.Form', {
             
         items.push(this.headerCmp);
                 
-        this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg))
+        this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg));
+
+        this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', Ext.apply({}, subformCfg));
         
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
         if ((me.record.get("orderType")=="Online") || me.isHeaderDataComplete()) {
@@ -200,6 +216,11 @@ Ext.define('Taco.view.order.Form', {
         // adding the header data check here because there are instances of old data that lack shipping and billing contact.
         if ((me.record.get("orderType") == "Online") || (this.isEdit() && me.isHeaderDataComplete())) {
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg));
+        }
+
+        // we always show for online orders. for offline orders we need hide the audit panel until the header is filled out.
+        if ((me.record.get("orderType") == "Online") || me.isHeaderDataComplete()) {
+            items.push(this.auditLogPanel);
         }
 
         this.items = items;

@@ -765,6 +765,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\AuditLog.js" />
     <Content Include="Scripts\app\model\State.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\Card.js" />
@@ -844,6 +845,7 @@
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
+    <Content Include="Scripts\app\store\AuditLog.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\States2.js" />
@@ -912,9 +914,11 @@
     <Content Include="Scripts\app\view\discount\Grid.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
-    <Content Include="Scripts\app\view\order\modal\Refund.js" />
+    <Content Include="Scripts\app\view\order\modal\AuditLogInfo.js" />
     <Content Include="Scripts\app\view\order\modal\BulkActionMessage.js" />
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
+    <Content Include="Scripts\app\view\order\subform\AuditLog.js" />
+    <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
@@ -1536,6 +1540,7 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.ttf" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.woff" />
     <Content Include="Scripts\sass\src\core\ux\browser\SearchList.scss" />
+    <Content Include="Scripts\app\mocks\auditlog.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
