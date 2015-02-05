@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
+using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
@@ -15,6 +20,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.TestData;
+using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 
@@ -51,13 +57,105 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var order = await GetOrderWithCustomToken(orderId, token);
 
-            PopulateOptionNames(order);
+            PopulateDataForTemplate(order);
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("order-details"));
             if (template == null)
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find order details template for the current Theme.");
 
             return await RenderWithContext(template, order);
+        }
+
+        private void PopulateDataForTemplate(DC.Order order)
+        {
+            PopulateOptionNames(order);
+            PopulatePackageDetails(order);
+            PopulatePickupDetails(order);
+        }
+
+        private void PopulatePackageDetails(DC.Order order)
+        {
+            if (order.Packages == null) return;
+
+            foreach (var package in order.Packages)
+            {
+                IEnumerable<PackageItem> t = package.Items.Select(i => GetDetailedPackageItem(i, order));
+                package.Items = t.ToList();
+            }
+        }
+        
+        private void PopulatePickupDetails(DC.Order order)
+        {
+            if (order.Pickups == null) return;
+
+            foreach (var pickup in order.Pickups)
+            {
+                IEnumerable<PickupItem> t = pickup.Items.Select(i => GetDetailPickupItem(i, order));
+                pickup.Items = t.ToList();
+            }
+        }
+
+        private DetailedPackageItem GetDetailedPackageItem(PackageItem packageItem, DC.Order order)
+        {
+            var result = Mapper.Map<DetailedPackageItem>(packageItem);
+            var product = FindProduct(packageItem.ProductCode, order);
+            result.ProductName = product.Name;
+            if (product.Weight != null)
+            {
+                result.AdjustedWeight = CalculateAdjustedWeight(product, packageItem.Quantity);
+            }
+            return result;
+        }
+
+        private DetailedPickupItem GetDetailPickupItem(PickupItem pickupItem, DC.Order order)
+        {
+            var result = Mapper.Map<DetailedPickupItem>(pickupItem);
+            var product = FindProduct(pickupItem.ProductCode, order);
+            result.ProductName = product.Name;
+            if (product.Weight != null)
+            {
+                result.AdjustedWeight = CalculateAdjustedWeight(product, pickupItem.Quantity);
+            }
+            return result;
+        }
+
+        private static Measurement CalculateAdjustedWeight(SimpleProduct product, int quantity)
+        {
+            return new Measurement { Unit = product.Weight.Unit, Value = product.Weight.Value * quantity };
+        }
+
+        /// <summary>
+        /// Finds the product, product variant, or bundled product from an order's lineitems.
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        private static SimpleProduct FindProduct(string productCode, DC.Order order)
+        {
+            var simpleProduct = new SimpleProduct();
+            foreach (var item in order.Items)
+            {
+                if (item.Product.ProductCode == productCode || item.Product.VariationProductCode == productCode)
+                {
+                    simpleProduct.Weight = item.Product.Measurements.Weight;
+                    simpleProduct.Name = item.Product.Name;
+                    break;
+                }
+                var bundledProduct = item.Product.BundledProducts.FirstOrDefault(bp => bp.ProductCode.Equals(productCode));
+                if (bundledProduct != null)
+                {
+                    simpleProduct.Weight = bundledProduct.Measurements.Weight;
+                    simpleProduct.Name = bundledProduct.Name;
+                    break;
+                }
+            }
+            return simpleProduct;
+        }
+
+        internal class SimpleProduct
+        {
+            public Measurement Weight { get; set; }
+            public string Name { get; set; }
         }
 
         /// <summary>
