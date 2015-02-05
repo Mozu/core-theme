@@ -100,10 +100,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var result = Mapper.Map<DetailedPackageItem>(packageItem);
             var product = FindProduct(packageItem.ProductCode, order);
             result.ProductName = product.Name;
-            if (product.Weight != null)
-            {
-                result.AdjustedWeight = CalculateAdjustedWeight(product, packageItem.Quantity);
-            }
+            result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, packageItem.Quantity);
             return result;
         }
 
@@ -112,16 +109,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var result = Mapper.Map<DetailedPickupItem>(pickupItem);
             var product = FindProduct(pickupItem.ProductCode, order);
             result.ProductName = product.Name;
-            if (product.Weight != null)
-            {
-                result.AdjustedWeight = CalculateAdjustedWeight(product, pickupItem.Quantity);
-            }
+            result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, pickupItem.Quantity);
             return result;
         }
 
-        private static Measurement CalculateAdjustedWeight(SimpleProduct product, int quantity)
+        private static Measurement CalculateAdjustedWeight(Measurement weight, int quantity)
         {
-            return new Measurement { Unit = product.Weight.Unit, Value = product.Weight.Value * quantity };
+            if (weight == null || !weight.Value.HasValue) return null;
+            return new Measurement { Unit = weight.Unit, Value = Decimal.Round(weight.Value.Value * quantity, 1) };
         }
 
         /// <summary>
