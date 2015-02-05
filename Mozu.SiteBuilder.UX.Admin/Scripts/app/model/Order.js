@@ -398,6 +398,12 @@ Ext.define('Taco.model.Order', {
             defaultValue: []
         },
         {
+            name: 'refunds',
+            type: 'auto',
+            useNull: true,
+            defaultValue: []
+        },
+        {
             name: 'unpackagedItems',
             type: 'array',
             defaultValue: []
@@ -2258,6 +2264,17 @@ Ext.define('Taco.model.Order', {
             }
         });
         Ext.Ajax.request(config);
+    },
+
+    createRefund: function (refund, options) {
+        var data = Ext.apply({}, refund, {
+            orderId: this.getId()
+        });
+        Ext.Ajax.request(Ext.apply({}, options, {
+            url: '/admin/app/order/refunds',
+            method: 'POST',
+            jsonData: data
+        }));
     },
 
     getInternalNotes: function () {

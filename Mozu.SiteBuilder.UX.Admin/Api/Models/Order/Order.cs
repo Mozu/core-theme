@@ -115,6 +115,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public List<OrderPayment> Payments { get; set; }
 
+        public List<OrderRefund> Refunds { get; set; }
+
         public List<OrderPackage> Packages { get; set; }
 
         public List<OrderDigitalPackage> DigitalPackages { get; set; }
