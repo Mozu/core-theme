@@ -173,19 +173,16 @@ Ext.define('Taco.view.account.Users', {
                             text: 'Delete',
                             handler: function (item, event) {
                                 if (item.scope.basegrid.selModel.getSelection()[0].get('type') == 'user') {
-                                    //item.scope.basegrid.selModel.getSelection()[0].destroy();
+                                    item.scope.basegrid.selModel.getSelection()[0].destroy();
                                 } else {
-                                    me.setLoading(true);
                                     Ext.Ajax.request({
                                         url: "/admin/app/account/invitations/delete",
                                         method: 'post',
                                         jsonData: item.scope.basegrid.selModel.getSelection()[0].data,
                                         success: function () {
-                                            me.setLoading(false);
                                             item.scope.basegrid.store.reload();
                                         },
                                         failure: function (resp) {
-                                            me.setLoading(false);
                                             var json = Ext.decode(resp.responseText, true);
                                             Taco.app.fireEvent('setmessage', json.message, 'error');
                                         }

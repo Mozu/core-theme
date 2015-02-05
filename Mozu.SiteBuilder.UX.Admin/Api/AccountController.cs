@@ -198,7 +198,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             
             var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "Roles")).ReadAsSync().Items;
-            var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync().Items;
+            var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
             var invitations = Mapper.Map<List<Invitation>>(invites);
             foreach (var invitation in invitations)
             {
