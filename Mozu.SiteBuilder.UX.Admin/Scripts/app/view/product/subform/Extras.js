@@ -119,7 +119,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                 typeAhead: false,
                 valueField: 'attributeFQN',
                 itemId: 'extraAdder',
-                displayField: 'attributeName',
+                displayField: 'adminName',
                 emptyText: 'Add Extra',
 
                 maxWidth: 200,
@@ -170,7 +170,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                 field = this.findField(extra.fieldName);
                 pExtra.set('values', [
                     {
-                        value: extra.ptAttribute.get('attributeName'),
+                        value: extra.ptAttribute.get('adminName'),
                         deltaPrice: parseFloat(field.getValue()) || 0
                     }
                 ]);
@@ -266,7 +266,7 @@ Ext.define('Taco.view.product.subform.Extras', {
             xtype: 'panel',
             cls: 'taco-attribute-form' + requiredCls,
             ui: 'subform-section-child',
-            title: ptAttribute.get('attributeName'),
+            title: ptAttribute.get('adminName'),
             margin: '10 0 10 0',
             bodyPadding: '0 10 10 10',            
             tools: [
@@ -317,7 +317,7 @@ Ext.define('Taco.view.product.subform.Extras', {
 
             pExtra.set('values', [
                 {
-                    value: ptAttribute.get('attributeName'),
+                    value: ptAttribute.get('adminName'),
                     deltaPrice: 0,
                     createdByThom: true
                 }

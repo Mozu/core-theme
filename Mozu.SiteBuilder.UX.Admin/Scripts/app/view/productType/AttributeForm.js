@@ -107,6 +107,7 @@
         this.record.set('isRequired', this.findField('isRequired').getValue());
         this.record.set('dataType', this.selectedAttribute.get('dataType'));
         this.record.set('attributeName', this.selectedAttribute.get('name'));
+        this.record.set('adminName', this.selectedAttribute.get('adminName'));
         this.record.set('inputType', this.selectedAttribute.get('inputType'));
 
         switch (this.selectedAttribute.get('inputType')) {
@@ -127,7 +128,7 @@
         this.attributeStore.clearFilter();
         this.attributeStore.filter(filter);
         this.attributeStore.sort({
-            property: 'name',
+            property: 'adminName',
             direction: 'ASC'
         });
         
@@ -138,7 +139,7 @@
             fieldLabel: 'Attribute',
             store: this.attributeStore,
             minWidth: this.containerWidth,
-            displayField: 'name',
+            displayField: 'adminName',
             height: 300,
             ignoreParentFormTracking: true,
             valueField: 'id',

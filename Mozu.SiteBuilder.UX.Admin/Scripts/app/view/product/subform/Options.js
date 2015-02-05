@@ -117,7 +117,7 @@ Ext.define('Taco.view.product.subform.Options', {
             }
 
             ret.push("<div class='option-item' style='padding-bottom:10px;'>");
-            ret.push(attribute.get('attributeName') + ' - ');
+            ret.push(attribute.get('adminName') + ' - ');
 
             Ext.each(option.get('values'), function (val, i) {
                 var value = Ext.Array.findBy(attribute.get('selectedValues'), function (item) {

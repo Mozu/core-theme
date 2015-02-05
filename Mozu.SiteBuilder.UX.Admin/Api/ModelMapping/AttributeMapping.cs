@@ -100,6 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DataType, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.DataType : null))
                 .ForMember(x => x.InputType, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.InputType : null))
                 .ForMember(x => x.AttributeMetadata, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null) ? dc.AttributeDetail.AttributeMetadata : null))
+                .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AttributeDetail != null ? dc.AttributeDetail.AdminName : null))
                 .ForMember(x => x.AttributeName, opt => opt.ResolveUsing(dc => (dc.AttributeDetail != null && dc.AttributeDetail.Content != null) 
                         ? dc.AttributeDetail.Content.Name 
                         : (dc.AttributeDetail != null) 
@@ -114,6 +115,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.AttributeDetail, opt => opt.ResolveUsing(x => new DC.Attribute
                 {
                     AttributeFQN = x.AttributeFQN,
+                    AdminName = x.AdminName,
                     AttributeCode = x.AttributeName,
                     VocabularyValues = Mapper.Map<List<DC.AttributeVocabularyValue>>(x.AllValues),
                     DataType = x.DataType,

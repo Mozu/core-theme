@@ -105,7 +105,8 @@ function SetupModesAndViewForCreateTests (t, next, m) {
         ],
         "dataType": "ProductCode",
         "inputType": "List",
-        "attributeName": "prod extra 1"
+        "attributeName": "prod extra 1",
+        "adminName": "prod extra 1"
     });
 
 
