@@ -17,7 +17,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                 return [{
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('name'),
+                    fieldLabel: ptAttribute.get('adminName'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: date,
                     disabled: ptAttribute.get('valueType') === 'ShopperEntered'
@@ -26,7 +26,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
             'TextArea': function (ptAttribute, values) {
                 return [{
                     xtype: 'textareafield',
-                    fieldLabel: ptAttribute.get('name'),
+                    fieldLabel: ptAttribute.get('adminName'),
                     name: this.getFieldName(ptAttribute),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value:(values && values.length) ? values[0] : null,
@@ -41,7 +41,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                 return [{
                     xtype: 'checkboxfield',
                     name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('name'),
+                    fieldLabel: ptAttribute.get('adminName'),
                     checked: values[0],
                     disabled: ptAttribute.get('valueType') === 'ShopperEntered'
                 }];
@@ -50,7 +50,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                 return [{
                     xtype: ptAttribute.get('allowMulti') ? 'taco.field.multiselect' : 'selectfield',
                     name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('name'),
+                    fieldLabel: ptAttribute.get('adminName'),
                     displayField: 'value',
                     valueField: 'id',
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
@@ -75,7 +75,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                 var cfg = {
                     xtype: 'textfield',
                     name: this.getFieldName(ptAttribute),
-                    fieldLabel: ptAttribute.get('name'),
+                    fieldLabel: ptAttribute.get('adminName'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value: (values && values.length) ? values[0] : null,
                     width: '100%',
@@ -104,7 +104,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     {
                         xtype: 'taco.field.product',
                         name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('name'),
+                        fieldLabel: ptAttribute.get('adminName'),
                         width: 600,
                         value: values,
                         disabled: ptAttribute.get('valueType') === 'ShopperEntered'

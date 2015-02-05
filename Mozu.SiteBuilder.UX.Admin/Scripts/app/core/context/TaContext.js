@@ -47,10 +47,12 @@ Ext.define('Taco.core.context.TaContext', {
             }
             console.error('AJAX Exception', 'View in Logzu', url);
 
-            errObj = Ext.decode(resp.responseText);
-            if (errObj && errObj.message) {
-                Taco.app.fireEvent('setmessage', errObj.message, 'error');
-            }
+            // commenting this out since its causing two error messages to fire in the app. 
+            // need to add error messaging for the specific use cases rather than globally.
+            //errObj = Ext.decode(resp.responseText);
+            //if (errObj && errObj.message) {
+            //    Taco.app.fireEvent('setmessage', errObj.message, 'error');
+            //}
 
         }, this);
 

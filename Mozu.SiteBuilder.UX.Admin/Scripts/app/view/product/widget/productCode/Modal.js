@@ -167,7 +167,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
 
             this.product.getOptions().each(function (option, index) {
                 var attribute = this.findAttribute(option),
-                    attributeText = attribute.get('attributeName'),
+                    attributeText = attribute.get('adminName'),
                     attributeValues = attribute.get('selectedValues'),
                     attributeId = attribute.getId();
 

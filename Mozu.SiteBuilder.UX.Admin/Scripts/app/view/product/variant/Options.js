@@ -36,7 +36,7 @@ Ext.define('Taco.view.product.variant.Options', {
             fields.push({
                 xtype: 'taco.field.multiselect',
                 height: 450,
-                fieldLabel: option.get('attributeName'),
+                fieldLabel: option.get('adminName'),
                 option: option,
                 store: store,
                 displayField: 'value',
@@ -128,12 +128,12 @@ Ext.define('Taco.view.product.variant.Options', {
 
     },
 
-    findAttributeName: function (record) {
+    findAttributeAdminName: function (record) {
         var option = this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'), 0, false, false, true);
 
         if (!option) return;
 
-        return option.get('attributeName');
+        return option.get('adminName');
     },
 
     getOptionValues: function (attributeFQN) {

@@ -9,7 +9,7 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date("m/d/Y") }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date("m/d/Y H:i:s K") }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
@@ -87,10 +87,13 @@
                         <td>{{ model.feeTotal|currency }}</td>
                     </tr>
                 {% endif %}
+                {% if model.adjustment and model.adjustment.amount != 0 %}
+                    <tr>
+                        <td colspan="5">Adjustments</td>
+                        <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
+                    </tr>
+                {% endif %}
                 <tr>
-                    <td colspan="5">Adjustments</td>
-                    <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
-                </tr><tr>
                     <td colspan="5">Order Total</td>
                     <td>{{ model.total|currency }}</td>
                 </tr>
@@ -98,7 +101,7 @@
             <tbody>
             {% for item in model.items %}
                 <tr>
-                    <td>{{ item.product.productCode }}</td>
+                    <td>{% if item.product.variationProductCode %}{{ item.product.variationProductCode }}{% else %}{{ item.product.productCode }}{% endif %}</td>
                     <td>
                         <div class="product-name">{{ item.product.name }}</div>
                         {% for option in item.product.options %}
@@ -140,7 +143,7 @@
                 {% for payment in model.payments %}
                     {% if payment.status != "Voided" %}
                     <tr>
-                        <td>{{ payment.auditInfo.createDate|date("m/d/Y") }}</td>
+                        <td>{{ payment.auditInfo.createDate|date("m/d/Y H:i:s K") }}</td>
                         <td>{{ payment.status }}</td>
                         {% if payment.paymentType == "CreditCard" %}
                             <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
@@ -187,7 +190,7 @@
                 <tbody>
                     {% if model.shopperNotes.comments %}
                         <tr>
-                            <td>{{ model.submittedDate | date("m/d/Y g:i a") }}</td>
+                            <td>{{ model.submittedDate | date("m/d/Y H:i:s K") }}</td>
                             <td>Customer</td>
                             <td>Shopper Notes</td>
                             <td>{{ model.shopperNotes.comments }}</td>
@@ -195,7 +198,7 @@
                     {% endif %}
                     {% if model.shopperNotes.giftMessage %}
                         <tr>
-                            <td>{{ model.submittedDate | date("m/d/Y g:i a") }}</td>
+                            <td>{{ model.submittedDate | date("m/d/Y H:i:s K") }}</td>
                             <td>Customer</td>
                             <td>Gift Message</td>
                             <td>{{ model.shopperNotes.giftMessage }}</td>

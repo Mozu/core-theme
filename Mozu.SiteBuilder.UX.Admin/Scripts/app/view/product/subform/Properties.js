@@ -27,7 +27,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     {
                         xtype: 'datefield',
                         name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('attributeName'),
+                        fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         value: (values && values.length) ? values[0] : null
                     }
@@ -38,7 +38,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     {
                         xtype: 'textareafield',
                         name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('attributeName'),
+                        fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         value: (values && values.length) ? values[0] : null,
                         width: 600,
@@ -53,7 +53,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     {
                         xtype: 'checkboxfield',
                         name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('attributeName'),
+                        fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         checked: (values && values.length) ? values[0] : null
                     }
@@ -65,7 +65,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     {
                         xtype: allowMulti ? 'taco.field.multiselect' : 'combobox',
                         name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('attributeName'),
+                        fieldLabel: ptAttribute.get('adminName'),
                         displayField: 'value',
                         valueField: 'id',
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
@@ -86,7 +86,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     {
                         xtype: 'textfield',
                         name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('attributeName'),
+                        fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         value: (values && values.length) ? values[0] : null,
                         width: 400
@@ -98,7 +98,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                     {
                         xtype: 'taco.field.product',
                         name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('attributeName'),
+                        fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
                         width: 400,
                         value: values

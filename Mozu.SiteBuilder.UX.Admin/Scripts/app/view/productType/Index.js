@@ -54,15 +54,15 @@ Ext.define('Taco.view.productType.Index', {
             tpl: new Ext.XTemplate(
                 '<tpl if="this.hasAttributes(options)"><div>',
                     '<span class="label">Options: </span>',
-                    '<span>{[Ext.Array.pluck(values.options, "attributeFQN").join(",")]}</span>',
+                    '<span>{[Ext.Array.pluck(values.options, "adminName").join(",")]}</span>',
                 '</div></tpl>',
                 '<tpl if="this.hasAttributes(extras)"><div>',
                     '<span class="label">Extras: </span>',
-                    '<span>{[Ext.Array.pluck(values.extras, "attributeFQN").join(",")]}</span>',
+                    '<span>{[Ext.Array.pluck(values.extras, "adminName").join(",")]}</span>',
                 '</div></tpl>',
                 '<tpl if="this.hasAttributes(properties)"><div>',
                     '<span class="label">Properties: </span>',
-                    '<span>{[Ext.Array.pluck(values.properties, "attributeFQN").join(", ")]}</span>',
+                    '<span>{[Ext.Array.pluck(values.properties, "adminName").join(", ")]}</span>',
                 '</div></tpl>',
                 {
                     hasAttributes: function (attributeType) {

@@ -180,6 +180,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? null
                     : x.Amount))
                 .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new DC.DiscountLocalizedContent {Name = x.Name, FriendlyDescription = x.FriendlyDescription}))
+                .ForMember(x => x.MaximumDiscountImpactPerOrder, opt => opt.ResolveUsing(x => x.MaximumDiscountValuePerOrder))
                 .ForMember(x => x.Conditions, opt => opt.ResolveUsing(x => new DC.DiscountCondition
                                                                            {
                                                                                IncludedCategories = (x.DiscountConditionCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.CategoryDiscountCondition {CategoryId = _}).ToList(),

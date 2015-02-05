@@ -66,6 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var inheritedServerFacet = configuredServerFacets.Where(x => x.CategoryId != set.CategoryId && x.OverrideFacetId == null).ToList();
             var overridenServerFacet = configuredServerFacets.Where(x => x.OverrideFacetId != null).ToList();
 
+            //look into sending above 3 calls using return Task.WhenAll(catTask, pageTask, navTask).ContinueWith(t =>
             await AddFacets(set, facets, inheritedClientFacets, inheritedServerFacet);
             await UpdateFacets(facets, overridenClientFacets, overridenServerFacet, inheritedServerFacet);
             await DeleteFacets(serverFacets, facets, overridenClientFacets, inheritedServerFacet);

@@ -22,6 +22,17 @@ Ext.define('Taco.view.account.Users', {
         me.store = Ext.create('Taco.store.AccountUsers', {
             autoLoad: true
         });
+
+        //quick hack bc there's no paging, also this is slated to be refactored
+        //BF 2/4/15
+        me.store.on('load', function () {
+            this.filter(function (rec) {
+                if (rec.get('activity') != 'Declined') {
+                    return rec;
+                }
+            });
+        });
+
         me.roles = Ext.create('Taco.store.Roles', {
             autoLoad: true
         });
@@ -153,6 +164,35 @@ Ext.define('Taco.view.account.Users', {
                 renderer: function (value) {
                     return value === 'Pending' ? value + ' <a href="#" class="resend-user-invite">Resend</a>' : value;
                 }
+                }, {
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    stateId: 'actionsColumn',
+                    menuItems: [
+                        {
+                            text: 'Delete',
+                            handler: function (item, event) {
+                                if (item.scope.basegrid.selModel.getSelection()[0].get('type') == 'user') {
+                                    item.scope.basegrid.selModel.getSelection()[0].destroy();
+                                } else {
+                                    Ext.Ajax.request({
+                                        url: "/admin/app/account/invitations/delete",
+                                        method: 'post',
+                                        jsonData: item.scope.basegrid.selModel.getSelection()[0].data,
+                                        success: function () {
+                                            item.scope.basegrid.store.reload();
+                                        },
+                                        failure: function (resp) {
+                                            var json = Ext.decode(resp.responseText, true);
+                                            Taco.app.fireEvent('setmessage', json.message, 'error');
+                                        }
+                                    });
+                                }
+
+                            },
+                            scope: me
+                        }
+                    ]
                 }],
 
             plugins: [cellEditing],

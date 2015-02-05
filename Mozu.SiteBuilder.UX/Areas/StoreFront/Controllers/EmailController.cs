@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,7 +13,6 @@ using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
-using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
@@ -34,7 +32,6 @@ using Newtonsoft.Json;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.SEO;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.Mvc;
 
@@ -97,6 +94,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (GiftCardEmailOrderCredit),
                                                Topic = Topics.GiftCardCreated
+                                           },
+                                           new EmailTypeInfo
+                                           {
+                                                ModelType = typeof(Mozu.Customer.Contracts.CustomerAccount),
+                                                Topic = Topics.NewUserCreated
+                                           },
+                                           new EmailTypeInfo
+                                           {
+                                                ModelType = typeof(Mozu.Customer.Contracts.CustomerAccount),
+                                                Topic = Topics.PasswordReset
                                            }
                                    };
         }

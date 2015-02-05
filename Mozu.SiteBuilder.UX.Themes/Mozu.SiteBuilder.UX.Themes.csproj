@@ -198,9 +198,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.13.2\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.13.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.13.6\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.15.1\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -250,9 +250,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.ThirdParty.Contracts.1.13.2\lib\net45\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Customer.Contracts, Version=1.14.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Customer.Contracts, Version=1.15.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.14.5\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.15.2\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.InstalledApplications.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -1045,7 +1045,6 @@
     <Content Include="Themes\Core4\templates\Widgets\misc\instock-request.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\misc\pickels.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\social\addthis.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\social\facebookcomments.hypr" />
     <Content Include="Themes\Core4\theme-ui.json" />
     <Content Include="Themes\Core4\theme.json" />
   </ItemGroup>
@@ -1863,9 +1862,6 @@
     <Content Include="Themes\Core5\templates\Widgets\social\addthis.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\social\facebookcomments.hypr" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Themes\Core5\theme-ui.json" />
   </ItemGroup>
   <ItemGroup>
@@ -2147,6 +2143,7 @@
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-attributes.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-password.hypr.live" />
     <Content Include="Themes\Core5\stylesheets\back-office.less" />
+    <Content Include="Themes\Core4\stylesheets\back-office.less" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

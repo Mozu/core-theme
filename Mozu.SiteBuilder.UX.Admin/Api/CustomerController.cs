@@ -22,6 +22,7 @@ using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
 using DC = Mozu.Customer.Contracts;
 
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/customer", SuppressDescriptorGeneration = true)]
@@ -59,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
             var segments = (await _customerSegmentWebApiClient.GetSegments(startIndex: pagingParameters.startIndex, pageSize: pagingParameters.pageSize)).ReadAsSync();
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments.Items, (int)segments.TotalCount));
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments.Items,(int)segments.TotalCount));
         }
 
         [HttpPostRoute(UriTemplate = "segments/create")]
@@ -78,32 +79,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public int SegmentId { get; set; }
             public string Method { get; set; }
             public List<int> Customers { get; set; }
-
+            
         }
 
-        [HttpPostRoute(UriTemplate = "segments/batch")]
+       [HttpPostRoute(UriTemplate = "segments/batch")]
         public async Task<HttpResponseMessage> Batch(SegmentBatchUpdate update)
         {
-            if (update.Method == "add")
-            {
-                var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentId));
-                if (!res.ResponseMessage.IsSuccessStatusCode)
-                {
-                    throw res.ReadException();
-                }
-                return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
-            }
+           if (update.Method == "add")
+           {
+               var res = (await _customerSegmentWebApiClient.AddSegmentAccounts(update.Customers, update.SegmentId));
+               if (! res.ResponseMessage.IsSuccessStatusCode)
+               {
+                   throw res.ReadException();
+               }
+               return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
+           }
 
-            if (update.Method == "remove")
-            {
-                var res = (await _customerSegmentWebApiClient.DeleteSegmentAccounts(update.Customers, update.SegmentId));
-                if (!res.ResponseMessage.IsSuccessStatusCode)
-                {
-                    throw res.ReadException();
-                }
-                return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
-            }
-            throw new NotImplementedException("unknown batch mode");
+           if (update.Method == "remove")
+           {
+               var res = (await _customerSegmentWebApiClient.DeleteSegmentAccounts( update.Customers, update.SegmentId));
+               if (!res.ResponseMessage.IsSuccessStatusCode)
+               {
+                   throw res.ReadException();
+               }
+               return this.Request.CreateResponse(HttpStatusCode.OK, this.EmptyList2<int>());
+           }
+           throw new NotImplementedException("unknown batch mode");
         }
 
 
@@ -111,15 +112,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> DeleteSegments(List<DC.CustomerSegment> segments)
         {
 
-            var tasks = segments.Select(x => _customerSegmentWebApiClient.DeleteSegment(x.Id)).ToList();
+            var tasks = segments.Select(x => _customerSegmentWebApiClient.DeleteSegment(x.Id )).ToList();
             await Task.WhenAll(tasks);
 
-            foreach (var task in tasks.Where(x => !x.Result.ResponseMessage.IsSuccessStatusCode))
+            foreach (var task in tasks.Where(x=> !x.Result.ResponseMessage.IsSuccessStatusCode ))
             {
                 throw task.Result.ReadException();
             }
-
-
+          
+           
 
             return this.Request.CreateResponse(HttpStatusCode.OK, new List<int>());
 
@@ -141,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous= null)
         {
             int customerId;
             if (pagingParameters.id != null)
@@ -177,8 +178,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 isAnonymous = !excludeAnonymous;
             }
-
-
+                
+               
 
             int? qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?)3 : (int?)null;
             var sort = pagingParameters.sort.ToSortString();
@@ -232,13 +233,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var contactsDeleteTasks = contactsTuple.Item2;
                 var attrTasks = ManageAttributes(dcCust, dcExistingCustomer);
                 var segmentTasks = ManageSegments(dcCust, dcExistingCustomer);
-
+                
                 await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, segmentTasks);
                 IfTaskHasExceptionThenThrow(contactsManagementTasks);
                 IfTaskHasExceptionThenThrow(contactsDeleteTasks);
                 IfTaskHasExceptionThenThrow(attrTasks);
                 IfTaskHasExceptionThenThrow(segmentTasks);
-
+ 
                 await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
 
                 var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
@@ -341,214 +342,225 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-    private Task<ServiceClientResponse<StreamContent>[]> ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
-    {
-
-        var groupManagementTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
-        dcExistingCustomer.Segments = dcExistingCustomer.Segments ?? new List<DC.CustomerSegment>();
-        var existingGroups = dcExistingCustomer.Segments.Select(x => x.Id).ToList();
-        var newGroups = dcCustomer.Segments.Select(x => x.Id).ToList();
-
-        var groupsToAdd = newGroups.Except(existingGroups);
-        var groupsToDel = existingGroups.Except(newGroups);
-
-        groupManagementTasks.AddRange(groupsToAdd.Select(x => _customerSegmentWebApiClient.AddSegmentAccounts(new List<int> { dcCustomer.Id }, x)));
-        groupManagementTasks.AddRange(groupsToDel.Select(x => _customerSegmentWebApiClient.DeleteSegmentAccounts(new List<int> { dcCustomer.Id }, x)));
-
-        return Task.WhenAll(groupManagementTasks);
-    }
-
-
-
-    /// <summary>
-    /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
-    /// </summary>
-    private Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>> ManageContacts(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
-    {
-        var contactManagementTasks = new List<Task<ServiceClientResponse<DC.CustomerContact>>>();
-        var contactDeleteTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
-
-        if (dcCustomer != null && dcCustomer.Contacts != null && dcExistingCustomer != null && dcExistingCustomer != null)
+        private Task<ServiceClientResponse<StreamContent>[]> ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
-            var comparer = new ContactIdEqualityComparer();
-            var contactsToUpdate = dcCustomer.Contacts.Intersect(dcExistingCustomer.Contacts, comparer).ToList();
-            var contactsToAdd = dcCustomer.Contacts.Except(dcExistingCustomer.Contacts, comparer).ToList();
-            var contactsToDel = dcExistingCustomer.Contacts.Except(dcCustomer.Contacts, comparer).ToList();
 
-            contactManagementTasks.AddRange(contactsToUpdate.Select(con => _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id)));
-            contactManagementTasks.AddRange(contactsToAdd.Select(con => _customerWebApiClient.AddAccountContact(con, con.AccountId)));
-            contactDeleteTasks.AddRange(contactsToDel.Select(con => _customerWebApiClient.DeleteAccountContact(con.AccountId, con.Id)));
+            var groupManagementTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
+            dcExistingCustomer.Segments = dcExistingCustomer.Segments ?? new List<DC.CustomerSegment>();
+            var existingGroups = dcExistingCustomer.Segments .Select(x => x.Id).ToList();
+            var newGroups = dcCustomer.Segments.Select(x => x.Id).ToList();
+
+            var groupsToAdd = newGroups.Except(existingGroups);
+            var groupsToDel = existingGroups.Except(newGroups);
+
+            groupManagementTasks.AddRange(groupsToAdd.Select(x => _customerSegmentWebApiClient.AddSegmentAccounts( new List<int>{ dcCustomer.Id} , x)));
+            groupManagementTasks.AddRange(groupsToDel.Select(x => _customerSegmentWebApiClient.DeleteSegmentAccounts( new List<int>{ dcCustomer.Id} , x)));
+
+            return Task.WhenAll(groupManagementTasks);
         }
 
-        var managementResults = Task.WhenAll(contactManagementTasks);
-        var deleteResults = Task.WhenAll(contactDeleteTasks);
-        return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
 
-    }
 
-    /// <summary>
-    /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
-    /// </summary>
-    private Task<ServiceClientResponse<DC.CustomerAttribute>[]> ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
-    {
-        var attributeTasks = new List<Task<ServiceClientResponse<DC.CustomerAttribute>>>();
-        var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Where(attribute => attribute.Values != null && attribute.Values.All(o => o != null)).Select(attr => attr.FullyQualifiedName);
-        var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
-
-        var createdAttributeIds = custAttrIds.Except(existingAttrIds).ToList();
-        var updatedAttributeIds = custAttrIds.Intersect(existingAttrIds).ToList();
-
-        if (createdAttributeIds.Count > 0)
+        /// <summary>
+        /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
+        /// </summary>
+        private Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>> ManageContacts(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
-            attributeTasks.AddRange(dcCustomer.Attributes.Where(a => createdAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.AddAccountAttribute(a, dcCustomer.Id)));
-        }
-        if (updatedAttributeIds.Count > 0)
-        {
-            attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName))
-                .Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName)));
-        }
+            var contactManagementTasks = new List<Task<ServiceClientResponse<DC.CustomerContact>>>();
+            var contactDeleteTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
 
-        return Task.WhenAll(attributeTasks);
-    }
-
-
-    [HttpGetRoute(UriTemplate = "cards/list")]
-    public async Task<Response<List<DC.Card>>> GetCards([FromUri]int? customerId = null)
-    {
-        if (!customerId.HasValue)
-            throw new ArgumentException("No customerId provided.");
-
-        var result = (await _customerWebApiClient.GetAccountCards(customerId.Value)).ReadAsSync();
-
-        var x = result.Items;
-        return List2(x, (int)result.TotalCount);
-    }
-
-
-    [HttpGetRoute(UriTemplate = "credits/list")]
-    public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]FilterCollection extFilter = null, [FromUri]PagingParamaters pagingParams = null, [FromUri]int? customerId = null)
-    {
-        string filter = null;
-
-        int impermanence;
-        if (extFilter.TryGetValue<int>("customerId", out impermanence))
-            customerId = impermanence;
-
-        if (id != null)
-            filter = string.Format("Code eq \"{0}\"", id);
-        if (customerId != null)
-            filter = string.Format("CustomerId eq {0}", customerId);
-
-        int? startIndex = pagingParams.startIndex;
-        int? pageSize = pagingParams.pageSize ?? 20;
-
-        var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, filter: filter));
-
-        if (dcitemTask.HasException)
-        {
-            throw dcitemTask.ReadException();
-        }
-
-        var dcitem = dcitemTask.ReadAsSync();
-        var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
-        //todo get all ids and make one query;
-        Hashtable custLookups = new Hashtable();
-        foreach (var cred in vmitem)
-        {
-            if (cred.CustomerId.HasValue)
+            if (dcCustomer != null && dcCustomer.Contacts != null && dcExistingCustomer != null && dcExistingCustomer != null)
             {
-                var customer = (DC.CustomerAccount)custLookups[cred.CustomerId.Value];
-                if (customer == null)
-                {
-                    var cres = (await _customerWebApiClient.GetAccount(cred.CustomerId));
-                    if (cres.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        customer = cres.ReadAsSync();
-                    }
-                }
-                custLookups[cred.CustomerId] = customer;
-                if (customer != null)
-                {
-                    cred.Customer = Mapper.Map<Mozu.SiteBuilder.UX.Admin.Api.Models.Customer>(customer);
-                }
+                var comparer = new ContactIdEqualityComparer();
+                var contactsToUpdate = dcCustomer.Contacts.Intersect(dcExistingCustomer.Contacts, comparer).ToList();
+                var contactsToAdd = dcCustomer.Contacts.Except(dcExistingCustomer.Contacts, comparer).ToList();
+                var contactsToDel = dcExistingCustomer.Contacts.Except(dcCustomer.Contacts, comparer).ToList();
+
+                contactManagementTasks.AddRange(contactsToUpdate.Select(con => _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id)));
+                contactManagementTasks.AddRange(contactsToAdd.Select(con => _customerWebApiClient.AddAccountContact(con, con.AccountId)));
+                contactDeleteTasks.AddRange(contactsToDel.Select(con => _customerWebApiClient.DeleteAccountContact(con.AccountId, con.Id)));
             }
 
+            var managementResults = Task.WhenAll(contactManagementTasks);
+            var deleteResults = Task.WhenAll(contactDeleteTasks);
+            return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
+
         }
 
-        return List2(vmitem, dcitem.TotalCount);
-    }
-
-    [HttpPostRoute(UriTemplate = "credits/create")]
-    public async Task<Response<Credit>> AddCredit(Credit credit)
-    {
-        var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
-        dcitem.InitialBalance = dcitem.CurrentBalance;
-        dcitem.CurrencyCode = "USD";
-        dcitem = (await _creditWebApiClient.AddCredit(dcitem)).ReadAsSync();
-        return Single2(Mapper.Map<Credit>(dcitem));
-    }
-
-    [HttpPostRoute(UriTemplate = "credits/edit")]
-    public async Task<Response<Credit>> EditCredit(Credit credit)
-    {
-        var existingItem = (await _creditWebApiClient.GetCredit(credit.Code)).ReadAsSync();
-        var adjustment = credit.CurrentBalance - existingItem.CurrentBalance;
-        if (adjustment != 0)
+        /// <summary>
+        /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
+        /// </summary>
+        private Task<ServiceClientResponse<DC.CustomerAttribute>[]> ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
-            await _creditWebApiClient.AddTransaction(credit.Code, new CreditTransaction()
+            var attributeTasks = new List<Task<ServiceClientResponse<DC.CustomerAttribute>>>();
+            var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Where(attribute => attribute.Values != null && attribute.Values.All(o => o != null)).Select(attr => attr.FullyQualifiedName);
+            var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
+
+            var createdAttributeIds = custAttrIds.Except(existingAttrIds).ToList();
+            var updatedAttributeIds = custAttrIds.Intersect(existingAttrIds).ToList();
+
+            if (createdAttributeIds.Count > 0)
             {
-                TransactionType = adjustment > 0 ? "Credit" : "Debit",
-                ImpactAmount = adjustment
-            });
+                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => createdAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.AddAccountAttribute(a, dcCustomer.Id)));
+            }
+            if (updatedAttributeIds.Count > 0)
+            {
+                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName))
+                    .Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName)));
+            }
+
+            return Task.WhenAll(attributeTasks);
         }
 
-        var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
-        // dcitem.CurrencyCode = "USD";
-        //dcitem.CreditType = dcitem.CreditType "StoreCredit";
-        //dcitem.CurrentBalance = 
 
-        dcitem = (await _creditWebApiClient.UpdateCredit(dcitem, dcitem.Code)).ReadAsSync();
-        return Single2(Mapper.Map<Credit>(dcitem));
-    }
-
-    [HttpPostRoute(UriTemplate = "credits/delete")]
-    public async Task<Response<Credit>> DeleteCredit(Credit credit)
-    {
-        (await _creditWebApiClient.DeleteCredit(credit.Code)).ReadAsSync();
-
-        return EmptySingle2<Credit>();
-    }
-
-    [HttpGetRoute(UriTemplate = "credits/{code}/transactions/list")]
-    public async Task<HttpResponseMessage> GetCreditTransactions(string code)
-    {
-        var resp = (await _creditWebApiClient.GetTransactions(code)).ReadAsSync();
-        return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items));
-    }
-
-    [HttpGetRoute(UriTemplate = "{accountId}/resetpassword")]
-    public async Task<HttpResponseMessage> ResetPassword(int accountId)
-    {
-        var result = (await _customerWebApiClient.SendPasswordResetEmail(accountId));
-        if (result.HasException)
+        [HttpGetRoute(UriTemplate = "cards/list")]
+        public async Task<Response<List<DC.Card>>> GetCards([FromUri]int? customerId = null)
         {
-            throw result.ReadException();
+            if (!customerId.HasValue)
+                throw new ArgumentException("No customerId provided.");
+
+            var result = (await _customerWebApiClient.GetAccountCards(customerId.Value)).ReadAsSync();
+
+            var x = result.Items;
+            return List2(x, (int)result.TotalCount);
         }
 
-        return Request.CreateResponse(HttpStatusCode.OK);
-    }
 
-    [HttpGetRoute(UriTemplate = "{accountId}/unlock")]
-    public async Task<HttpResponseMessage> Unlock(int accountId)
-    {
-        var result = (await _customerWebApiClient.PerformCustomerAccountAction(accountId,
-                        new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.UNLOCK_ACCOUNT }));
-        if (result.HasException)
+        [HttpGetRoute(UriTemplate = "credits/list")]
+        public async Task<Response<List<Credit>>> GetCredits([FromUri]string id = null, [FromUri]FilterCollection extFilter = null, [FromUri]PagingParamaters pagingParams = null, [FromUri]int? customerId = null)
         {
-            throw result.ReadException();
+            string filter = null;
+
+            int impermanence;
+            if (extFilter.TryGetValue<int>("customerId", out impermanence))
+                customerId = impermanence;
+
+            if (id != null)
+                filter = string.Format("Code eq \"{0}\"", id);
+            if (customerId != null)
+                filter = string.Format("CustomerId eq {0}", customerId);
+
+            int? startIndex = pagingParams.startIndex;
+            int? pageSize = pagingParams.pageSize ?? 20;
+
+            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, filter: filter));
+
+            if (dcitemTask.HasException)
+            {
+                throw dcitemTask.ReadException();
+            }
+
+            var dcitem = dcitemTask.ReadAsSync();
+            var vmitem = Mapper.Map<List<Credit>>(dcitem.Items);
+            //todo get all ids and make one query;
+            Hashtable custLookups = new Hashtable();
+            foreach (var cred in vmitem)
+            {
+                if (cred.CustomerId.HasValue)
+                {
+                    var customer = (DC.CustomerAccount)custLookups[cred.CustomerId.Value];
+                    if (customer == null)
+                    {
+                        var cres = (await _customerWebApiClient.GetAccount(cred.CustomerId));
+                        if (cres.ResponseMessage.IsSuccessStatusCode)
+                        {
+                            customer = cres.ReadAsSync();
+                        }
+                    }
+                    custLookups[cred.CustomerId] = customer;
+                    if (customer != null)
+                    {
+                        cred.Customer = Mapper.Map<Mozu.SiteBuilder.UX.Admin.Api.Models.Customer>(customer);
+                    }
+                }
+
+            }
+
+            return List2(vmitem, dcitem.TotalCount);
         }
 
-        return Request.CreateResponse(HttpStatusCode.OK);
+        [HttpPostRoute(UriTemplate = "credits/create")]
+        public async Task<Response<Credit>> AddCredit(Credit credit)
+        {
+            var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+            dcitem.InitialBalance = dcitem.CurrentBalance;
+            dcitem.CurrencyCode = "USD";
+            dcitem = (await _creditWebApiClient.AddCredit(dcitem)).ReadAsSync();
+            return Single2(Mapper.Map<Credit>(dcitem));
+        }
+
+        [HttpPostRoute(UriTemplate = "credits/edit")]
+        public async Task<Response<Credit>> EditCredit(Credit credit)
+        {
+            var existingItem = (await _creditWebApiClient.GetCredit(credit.Code)).ReadAsSync();
+            var adjustment = credit.CurrentBalance - existingItem.CurrentBalance;
+            if (adjustment != 0)
+            {
+                await _creditWebApiClient.AddTransaction(credit.Code, new CreditTransaction()
+                {
+                    TransactionType = adjustment > 0 ? "Credit" : "Debit",
+                    ImpactAmount = adjustment
+                });
+            }
+
+            var dcitem = Mapper.Map<DC.Credit.Credit>(credit);
+           // dcitem.CurrencyCode = "USD";
+            //dcitem.CreditType = dcitem.CreditType "StoreCredit";
+            //dcitem.CurrentBalance = 
+
+            dcitem = (await _creditWebApiClient.UpdateCredit(dcitem, dcitem.Code)).ReadAsSync();
+            return Single2(Mapper.Map<Credit>(dcitem));
+        }
+
+        [HttpPostRoute(UriTemplate = "credits/delete")]
+        public async Task<Response<Credit>> DeleteCredit(Credit credit)
+        {
+            (await _creditWebApiClient.DeleteCredit(credit.Code)).ReadAsSync();
+
+            return EmptySingle2<Credit>();
+        }
+
+        [HttpGetRoute(UriTemplate = "credits/{code}/transactions/list")]
+        public async Task<HttpResponseMessage> GetCreditTransactions(string code)
+        {
+            var resp = (await _creditWebApiClient.GetTransactions(code)).ReadAsSync();
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(resp.Items));
+        }
+
+        [HttpGetRoute(UriTemplate = "{accountId}/resetpassword")]
+        public async Task<HttpResponseMessage> ResetPassword(int accountId)
+        {
+            var result = (await _customerWebApiClient.SendPasswordResetEmail(accountId));
+            if (result.HasException)
+            {
+                throw result.ReadException();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGetRoute(UriTemplate = "{accountId}/unlock")]
+        public async Task<HttpResponseMessage> Unlock(int accountId)
+        {
+            var result = (await _customerWebApiClient.PerformCustomerAccountAction(accountId,
+                            new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.UNLOCK_ACCOUNT }));
+            if (result.HasException)
+            {
+                throw result.ReadException();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        public class ResendCreditCreatedEmailArgs
+        {
+            public string Code { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "resendcreditcreatedemail")]
+        public async Task<Response<Credit>> ResendCreditCreatedEmail(ResendCreditCreatedEmailArgs args)
+        {
+            await (await _creditWebApiClient.ResendCreditCreatedEmail(args.Code)).ReadAsAsync();
+            return this.EmptySingle2<Credit>();
+        }
     }
-}
 }

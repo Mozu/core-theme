@@ -478,10 +478,6 @@ Ext.define('Taco.core.data.Model', {
     addErrorHandling: function (config) {
         var me = this;
 
-        if (!config.scope) {
-            console.warn("addErrorHandling expects to have 'scope' as a member of the config;")
-        }
-
         if (config.showMask) {
             Taco.app.viewPort.setLoading(true);
         }

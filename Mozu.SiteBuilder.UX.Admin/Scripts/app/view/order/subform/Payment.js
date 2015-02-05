@@ -5,6 +5,7 @@ Ext.define('Taco.view.order.subform.Payment', {
     extend: 'Taco.view.order.subform.Subform',
     alias: 'widget.taco-orderpayment',
     requires: [
+        'Taco.view.order.modal.Refund',
         'Taco.view.order.modal.CreditPayment',
         'Taco.view.order.modal.RequestCheck',
         'Taco.view.order.modal.ApplyCheck',
@@ -24,6 +25,11 @@ Ext.define('Taco.view.order.subform.Payment', {
     // optional override of the title to be used in Tabs.
     tabTitle:"Payments",
 
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
+
     config : {
         // order model
         originalRecord : null,
@@ -37,8 +43,20 @@ Ext.define('Taco.view.order.subform.Payment', {
 
     initComponent: function (eOpts) {
         var me = this;
+        var record = this.record;
 
         this.tools = [
+            Ext.widget('button', {
+                ui: 'action',
+                scale: 'medium',
+                text: 'Refund',
+                margin: '0 10 0 0',
+                handler: function () {
+                    Ext.create('Taco.view.order.modal.Refund', {
+                        order: record
+                    });
+                }
+            }),
             me.addPaymentButton = Ext.widget('splitbutton', {
                 text: 'Add Payment',
                 handler: function() {
@@ -67,7 +85,41 @@ Ext.define('Taco.view.order.subform.Payment', {
         me.initUI();
         
         
-        me.items = [me.bodyCont];
+        me.items = [me.bodyCont, {
+            xtype: 'grid',
+            title: 'Refunds',
+            margin: '10 0 0 0',
+            emptyText: 'There are no refunds to display',
+            viewConfig: {
+                deferEmptyText: false
+            },
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: ['date', 'amount', 'method', 'notes', 'user'],
+                data: []
+            }),
+            columns: [{
+                dataIndex: 'date',
+                text: 'Date',
+                flex: 1
+            }, {
+                dataIndex: 'amount',
+                text: 'Amount',
+                flex: 1
+            }, {
+                dataIndex: 'method',
+                text: 'Payment Method',
+                flex: 2
+            }, {
+                dataIndex: 'notes',
+                text: 'Notes',
+                flex: 2
+            }, {
+                dataIndex: 'user',
+                text: 'User',
+                flex: 1
+            }]
+        }];
+
         this.callParent(arguments);
         this.addEvents(['rerender']);
     },
@@ -145,16 +197,17 @@ Ext.define('Taco.view.order.subform.Payment', {
         }
     },
 
-    initHeader: function (){
+    initHeader: function () {
         var me = this,
-           orderStatus = me.record.get('orderStatus'),
-           canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
-           paymentAuthInfo = me.record.get('authorizationInfo'),
-           total = paymentAuthInfo.totalAmount,
-           amountCollected = paymentAuthInfo && paymentAuthInfo.amountCollected,
-           paymentStatus = "Unpaid";
+            orderStatus = me.record.get('orderStatus'),
+            canAddPayment = orderStatus !== 'Completed' && orderStatus !== "PendingReview",
+            paymentAuthInfo = me.record.get('authorizationInfo'),
+            total = paymentAuthInfo.totalAmount,
+            amountCollected = paymentAuthInfo && paymentAuthInfo.amountCollected,
+            paymentStatus = "Unpaid",
+            orderTotal = me.record.get('total');
 
-        if (amountCollected > 0  && amountCollected >= total) paymentStatus = "Fully Paid";
+        if ((amountCollected > 0 && amountCollected >= total) || (orderStatus === 'Completed' && orderTotal == 0 )) paymentStatus = "Fully Paid";
         if (amountCollected < total && amountCollected > 0) paymentStatus = "Partially Paid";
 
         this.setHeaderTitle('<span class="label">Status:</span><span data-handle="order-payment-status">' + paymentStatus + '</span>');

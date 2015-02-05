@@ -3,7 +3,8 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
     requires: [
         'Taco.view.order.subform.fulfillment.Grid',
-        'Taco.view.order.modal.OverrideTotalWeight'
+        'Taco.view.order.modal.OverrideTotalWeight',
+        'Taco.core.ux.form.ResendEmailButton'
     ],
 
     initComponent: function () {
@@ -205,9 +206,18 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             hidden: this.packageData.status === 'Fulfilled',
             handler: this.handleCancel
         }, {
-            text: 'Mark as Shipped',            
+            text: 'Mark as Shipped',
             hidden: this.packageData.status === 'Fulfilled',
             handler: this.handleMarkAsShipped
+        }, {
+            xtype: 'resendemailbutton',
+            margin: '0 0 0 10',            
+            emailUrl: '/admin/app/order/shipping/package/resendshipmentemail',
+            jsonData: {
+                orderId: this.record.getId(),
+                packageId: this.packageData.id
+            },
+            hidden: this.packageData.status !== 'Fulfilled'
         }];
 
 
@@ -228,6 +238,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
         this.collapsedActions = [{
             text: 'Print Packing Slip',
             handler: this.handlePrintPackingSlip
+        }, {
+            xtype: 'resendemailbutton',
+            margin: '0 0 0 10',
+            emailUrl: '/admin/app/order/shipping/package/resendshipmentemail',
+            jsonData: {
+                orderId: this.record.getId(),
+                packageId: this.packageData.id
+            },
+            hidden: this.packageData.status !== 'Fulfilled'
         }];
 
         this.callParent(arguments);

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -197,6 +199,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List2(retList);
+        }
+
+        [HttpPostRoute(UriTemplate = "resendemail")]
+        public async Task<Response<Return>> SendRMAEmail(DCr.ReturnAction action)
+        {
+            await (await _returnWebApiClient.ResendReturnEmail(action)).ReadAsAsync();
+
+            return this.EmptySingle2<Return>();
         }
     }
 }

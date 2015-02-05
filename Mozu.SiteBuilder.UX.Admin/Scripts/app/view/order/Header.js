@@ -162,7 +162,10 @@ Ext.define('Taco.view.order.Header', {
                             '<tr>',
                                 '<td>Collected:</td>',
                                 '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</td>',
-                            '</tr><tr>',
+                            '</tr><tpl if="orderSummary.amountRefunded &gt; 0"><tr>',
+                                '<td>Refunded:</td>',
+                                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountRefunded)]}</td>',
+                            '</tr></tpl><tr>',
                                 '<td>Balance:</td>',
                                 '<td>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</td>',
                             '</tr>',
@@ -184,7 +187,7 @@ Ext.define('Taco.view.order.Header', {
                     '</td>',
                 '</tr>',
 
-                '<tplelse>',
+                '<tpl else>',
 
                 '<tr>',
                     '<td>',

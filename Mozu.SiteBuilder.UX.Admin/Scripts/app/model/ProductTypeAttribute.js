@@ -5,6 +5,7 @@ Ext.define('Taco.model.ProductTypeAttribute', {
     extend: 'Taco.core.data.Model',
     fields: [
         { name: 'attributeFQN', type: 'string' },
+        { name: 'adminName', type: 'string' },
         { name: 'productTypeId', type: 'auto' },
         { name:'index', type: 'int' },
         { name: 'isLocked', type: 'boolean', defaultValue: false },
