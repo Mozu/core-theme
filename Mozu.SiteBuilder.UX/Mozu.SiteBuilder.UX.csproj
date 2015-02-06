@@ -425,6 +425,8 @@
     <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
+    <Compile Include="Areas\StoreFront\Models\DetailedPackageItem.cs" />
+    <Compile Include="Areas\StoreFront\Models\DetailedPickupItem.cs" />
     <Compile Include="Configuration\ApplicationConstants.cs" />
     <Compile Include="Configuration\RouteConfig.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
@@ -578,7 +580,6 @@
   <ItemGroup>
     <Folder Include="Areas\Misc\ModelMapping\" />
     <Folder Include="Areas\Misc\Views\Shared\" />
-    <Folder Include="Areas\StoreFront\Models\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
     <Folder Include="Hypr\Et\" />
     <Folder Include="Tags\CMS\" />
