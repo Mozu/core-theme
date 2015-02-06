@@ -279,6 +279,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public decimal Total { get; set; }
 
+        /// <summary>
+        /// Total amount issued in refunds.
+        /// </summary>
+        public decimal AmountRefunded { get; set; }
+
         #endregion
 
         public Customer Customer { get; set; }

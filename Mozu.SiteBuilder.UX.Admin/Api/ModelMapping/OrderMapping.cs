@@ -117,6 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingTotal, op => op.ResolveUsing(dc => dc.ShippingTotal))
                 .ForMember(x => x.TaxTotal, op => op.ResolveUsing(dc => dc.TaxTotal))
                 .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
+                .ForMember(x => x.AmountRefunded, op => op.ResolveUsing(dc => dc.AmountRefunded))
 
                 .ForMember(x => x.IsDraft, op => op.ResolveUsing(dc => dc.IsDraft ?? false ))
                 .ForMember(x => x.HasDraft, op => op.ResolveUsing(dc => dc.HasDraft ?? false))
@@ -158,6 +159,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
                 .AfterMap(MapAvailableBulkActions)
+                .AfterMap(InterpolateRefundsIntoPaymentInteractions)
                 .AfterMap((dc, order) =>
                 {
                     if (order.Packages == null)
@@ -185,13 +187,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     // fill out OrderSummary and AuthorizationInfo object
 
-                    decimal totalAmount, amountCollected, balance, amountRefunded;
+                    decimal totalAmount, amountCollected, balance;
                     int totalItemCount, unshippedItemCount = 0, shippedItemCount = 0, unpickedupItemCount=0, pickedupItemCount = 0, digitallyFulfilledItemCount, fulfilledItemCount, unfulfilledItemCount;
 
                     totalAmount = dc.Total.GetValueOrDefault(0);
                     amountCollected = dc.TotalCollected;
                     balance = totalAmount - amountCollected;
-                    amountRefunded = dc.Refunds != null ? dc.Refunds.Sum(r => r.Amount) : 0;
 
                     totalItemCount =
                         (from i in order.Items
@@ -241,7 +242,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         TotalAmount = totalAmount,
                         AmountCollected = amountCollected,
                         Balance = balance,
-                        AmountRefunded = amountRefunded,
                         TotalItemCount = totalItemCount,
                         ShippedItemCount = shippedItemCount,
                         UnshippedItemCount = unshippedItemCount,
@@ -453,6 +453,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // ship package
             if (dc.Packages != null && dc.Packages.Count == 1 && dc.Packages[0].AvailableActions.Contains(SHIP))
                 order.AvailableBulkActions.Add(SHIP);
+        }
+
+        /// <summary>
+        /// Inject transactions from refunds into Order.Payments for consistency in the view.
+        /// A transaction of type "Credit" on the refund will be named to type "Refund".
+        /// </summary>
+        private void InterpolateRefundsIntoPaymentInteractions(OrdersDC.Order dc, Order order)
+        {
+            foreach (var p in order.Payments)
+            {
+                var correspondingRefund = dc.Refunds.FirstOrDefault(r => r.Payment != null && r.Payment.Id == p.Id);
+                if (correspondingRefund == null) continue;
+
+                var uncopiedInteractions = correspondingRefund.Payment.Interactions.Where(i => !p.Interactions.Any(pi => pi.Id == i.Id)).ToList();
+                if (uncopiedInteractions.Count == 0) continue;
+
+                foreach (var refundInteraction in uncopiedInteractions) {
+                    var riMapped = Mapper.Map<PaymentInteraction>(refundInteraction);
+                    if (riMapped.InteractionType == "Credit") {
+                        riMapped.InteractionType = "Refund";
+                    }
+                    var indexToInsertAt = p.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
+                    p.Interactions.Insert(indexToInsertAt, riMapped);
+                }
+            }
         }
 
         private void Map_DcOrderItem_to_OrderItem()

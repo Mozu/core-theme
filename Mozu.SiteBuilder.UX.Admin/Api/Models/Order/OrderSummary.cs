@@ -20,11 +20,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal Balance { get; set; }
 
         /// <summary>
-        /// Sum of all refunds applied to this order.
-        /// </summary>
-        public decimal AmountRefunded { get; set; }
-
-        /// <summary>
         /// remaining balance
         /// </summary>
         public int TotalItemCount { get; set; }

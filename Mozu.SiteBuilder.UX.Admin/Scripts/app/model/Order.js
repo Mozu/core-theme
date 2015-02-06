@@ -294,7 +294,13 @@ Ext.define('Taco.model.Order', {
             name: 'total',
             type: 'float',
             useNull: true
-        }, {
+        },
+        {
+            name: 'amountRefunded',
+            type: 'float',
+            useNull: true
+        },
+        {
             name: 'returnStatus',
             type: 'string',
             useNull: true,
