@@ -7,7 +7,7 @@
     '{{ model.shippingTotal }}',
     '{{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}',
     '{{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }}',
-    'USA'
+    '{{ model.fulfillmentInfo.fulfillmentContact.address.countryCode|escapejs }}'
     ]);
 
     {% for item in model.items %}
