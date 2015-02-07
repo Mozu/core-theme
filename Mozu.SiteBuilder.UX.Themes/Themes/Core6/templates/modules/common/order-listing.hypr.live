@@ -7,6 +7,10 @@
             <dd>{{ model.orderNumber }}</dd>
             <dt>{{ labels.total }}</dt>
             <dd>{{ model.total|currency }}</dd>
+            {% if model.amountRefunded > 0 %}
+              <dt>{{ labels.refund }}</dt>
+              <dd>{{ model.amountRefunded|currency }}</dd>
+            {% endif %}
             {% block order-shipped-to %}
             {% if model.fulfillmentInfo.fulfillmentContact %}
             <dt>{{ labels.shippedTo }}</dt>

@@ -348,7 +348,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "shipping/package/resendshipmentemail")]
         public async Task<Response<Order>> ResendShipmentFulfillmentEmail(ResendShipmentFulfillmentEmailArgs args)
         {
-            await (await _orderWebApiClient.ResendPackageFulfillmentEmail(args.OrderId, args.PackageId)).ReadAsAsync();
+            var fullfilmentAciton = new DCs.FulfillmentAction
+            {
+                ActionName = DCs.FulfillmentAction.FulfillmentActionNameConst.SHIP,
+                PackageIds = (new[] { args.PackageId }).ToList()
+            };
+
+            await (await _orderWebApiClient.ResendPackageFulfillmentEmail(args.OrderId, fullfilmentAciton)).ReadAsAsync();
 
             return this.EmptySingle2<Order>();
         }

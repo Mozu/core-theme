@@ -115,6 +115,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public List<OrderPayment> Payments { get; set; }
 
+        public List<OrderRefund> Refunds { get; set; }
+
         public List<OrderPackage> Packages { get; set; }
 
         public List<OrderDigitalPackage> DigitalPackages { get; set; }
@@ -276,6 +278,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Final price of the order.
         /// </summary>
         public decimal Total { get; set; }
+
+        /// <summary>
+        /// Total amount issued in refunds.
+        /// </summary>
+        public decimal AmountRefunded { get; set; }
 
         #endregion
 

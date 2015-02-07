@@ -93,28 +93,33 @@ Ext.define('Taco.view.order.subform.Payment', {
             viewConfig: {
                 deferEmptyText: false
             },
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['date', 'amount', 'method', 'notes', 'user'],
-                data: []
-            }),
+            store: this.record.refunds(),
             columns: [{
-                dataIndex: 'date',
+                xtype: 'datecolumn',
+                dataIndex: 'createDate',
                 text: 'Date',
-                flex: 1
+                flex: 1,
+                format: 'Y-m-d H:i:s'
             }, {
                 dataIndex: 'amount',
                 text: 'Amount',
-                flex: 1
+                flex: 1,
+                renderer: function (value, meta, record) {
+                    return me.record.formatCurrency(value);
+                }
             }, {
-                dataIndex: 'method',
+                dataIndex: 'payment',
                 text: 'Payment Method',
-                flex: 2
+                flex: 2,
+                renderer: function (value, meta, record) {
+                    return value.paymentType;
+                }
             }, {
-                dataIndex: 'notes',
+                dataIndex: 'reason',
                 text: 'Notes',
                 flex: 2
             }, {
-                dataIndex: 'user',
+                dataIndex: 'createdBy',
                 text: 'User',
                 flex: 1
             }]

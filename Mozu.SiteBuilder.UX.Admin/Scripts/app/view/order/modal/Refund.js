@@ -51,7 +51,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         var isExcess = nextState.proposed > nextState.collected;
 
         // show or hide the credit card field and its help text
-        form.getForm().findField('creditCard').setVisible(isCreditCard).setDisabled(!isCreditCard);
+        form.getForm().findField('paymentId').setVisible(isCreditCard).setDisabled(!isCreditCard);
         this.down('#amountAvailable').update(nextState);
 
         // set a hard maximum on the refund amount if refunding a credit card
@@ -180,7 +180,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     height: 30,
                     items: [{
                         xtype: 'combobox',
-                        name: 'creditCard',
+                        name: 'paymentId',
                         width: 200,
                         margin: 0,
                         hidden: true,
@@ -346,24 +346,5 @@ Ext.define('Taco.view.order.modal.Refund', {
             },
             scope: this
         });
-
-        // if (values.refundMethod === 'CreditCard') {
-        //     this.order.refundPayment({
-        //         paymentId: values.creditCard,
-        //         amount: values.refundAmount,
-        //         success: function () {
-        //             this.saveSuccess();
-        //         },
-        //         scope: this
-        //     });
-        // } else {
-        //     this.order.createStoreCredit({
-        //         amount: values.refundAmount,
-        //         success: function () {
-        //             this.saveSuccess();
-        //         },
-        //         scope: this
-        //     });
-        // }
     }
 });

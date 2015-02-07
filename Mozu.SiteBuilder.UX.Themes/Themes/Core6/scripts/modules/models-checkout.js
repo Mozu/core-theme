@@ -934,7 +934,11 @@
                 this.isLoading(true);
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
                     me.set('couponCode', '');
-                    var allDiscounts = me.get('orderDiscounts').concat('shippingDiscounts').concat('handlingDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts'))).concat(_.flatten(_.pluck(me.get('items'), 'shippingDiscounts')));
+                    
+                    var productDiscounts = _.flatten(_.pluck(_.pluck(me.get('items').models, 'attributes'), 'productDiscounts'));
+                    var shippingDiscounts = _.flatten(_.pluck(_.pluck(me.get('items').models, 'attributes'), 'shippingDiscounts'));
+
+                    var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts);
                     var lowerCode = code.toLowerCase();
                     if (!allDiscounts || !_.find(allDiscounts, function(d) {
                         return d.couponCode.toLowerCase() === lowerCode;
