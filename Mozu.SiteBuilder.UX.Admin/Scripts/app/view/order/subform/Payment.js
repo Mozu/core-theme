@@ -41,7 +41,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         return this.record.payments().queryBy(function(payment) { return payment.get('status') !== "Voided"; }).last();
     },
 
-    initComponent: function (eOpts) {
+    initComponent: function () {
         var me = this;
         var record = this.record;
 
@@ -129,6 +129,25 @@ Ext.define('Taco.view.order.subform.Payment', {
                     return Ext.String.format('{0} {1}', user.firstName, user.lastName);
                 },
                 flex: 1
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: [{
+                    text: 'Resend Email',
+                    menuColumnHandler: function (item, eventData) {
+                        var cfg = {
+                            jsonData: {
+                                refundId: eventData.record.get('id')
+                            }
+                        };
+
+                        if (record.resendEmailReturn) {
+                            record.resendEmailReturn(cfg);
+                        } else {
+                            console.log(cfg);
+                        }
+                    }
+                }]
             }]
         }];
 
