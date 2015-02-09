@@ -132,7 +132,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         ccStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.OrderPayment',
             data: store.queryBy(function (record) {
-                return record.get('paymentType') === 'CreditCard';
+                return record.get('paymentType') === 'CreditCard' && record.get('amountCollected') - (record.get('amountCredited') || 0) > 0;
             }).getRange()
         });
 
@@ -342,6 +342,7 @@ Ext.define('Taco.view.order.modal.Refund', {
 
         this.order.createRefund(values, {
             success: function () {
+                this.order.reload();
                 this.saveSuccess();
             },
             scope: this

@@ -121,6 +121,13 @@ Ext.define('Taco.view.order.subform.Payment', {
             }, {
                 dataIndex: 'createdBy',
                 text: 'User',
+                renderer: function(value) {
+                    var user = Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.id === value; });
+
+                    if (!user) return ' ';
+
+                    return Ext.String.format('{0} {1}', user.firstName, user.lastName);
+                },
                 flex: 1
             }]
         }];
