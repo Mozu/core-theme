@@ -128,6 +128,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     break;
 
                 }
+                case "refund.created":
+                {
+                    RefundEmail(req.email);
+                    break;
+                }
                 case "return.authorized":
                 case "return.rejected":
                 case "return.closed":
@@ -195,6 +200,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        void RefundEmail(string email)
+        {
+            var orders = TestDataBroker.GetFileContents<Order>("refund.created");
+            foreach (var order in orders)
+            {
+                SendRefundEmail(order, "refund.created", email);
+            }
+            if (orders.Count() == 0)
+            {
+                throw new Exception("no test data found for refund.created");
+            }
+        }
+        
         void ReturnEmail(string email, string id)
         {
             var returns = TestDataBroker.GetFileContents<ReturnEmail>(id);
@@ -518,6 +536,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                               To = new Dictionary<string, string> {{toEmail, toEmail}},
                                           }
                           };
+
+            SetSenderData(message.EmailData);
+
+            _publisher.Publish(message);
+        }
+
+        public void SendRefundEmail(Order order, string topicName, string toEmail)
+        {
+            var message = new SendOrderEmail
+            {
+                OrderId = order.Id,
+                MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(order.AuditInfo.CreateBy, order.CustomerAccountId),
+                EmailData = new EmailData
+                {
+                    RendererServiceId = ServiceIdRenderEmailTenant,
+                    Topic = topicName,
+                    Content = JsonConvert.SerializeObject(order),
+                    To = new Dictionary<string, string> { { toEmail, toEmail } },
+                }
+            };
 
             SetSenderData(message.EmailData);
 

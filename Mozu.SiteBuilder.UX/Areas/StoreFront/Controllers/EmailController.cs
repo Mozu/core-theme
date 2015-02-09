@@ -88,6 +88,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (Order),
+                                               Topic = Topics.RefundCreated
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Order),
                                                Topic = Topics.OrderEmailTopic
                                            },
                                        new EmailTypeInfo
@@ -388,6 +393,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ReturnAuthorized = "return.authorized";
             public const string ReturnRejected = "return.rejected";
             public const string ReturnClosed = "return.closed";
+            public const string RefundCreated = "refund.created";
             public const string InStockNotification = "product.instock";
             public const string GiftCardCreated = "giftcard.created";
         }
