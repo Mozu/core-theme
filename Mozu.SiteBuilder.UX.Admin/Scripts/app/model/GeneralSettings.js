@@ -37,8 +37,8 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "websiteName", "type": "string", "useNull": true }, 
 
         //viewToggle
-        { "name": "isRequiredLoginForLiveEnabled", "type": "boolean", "useNull": false},
-        { "name": "isRequiredLoginForStagingEnabled", "type": "boolean", "useNull": false},       
+        { "name": "isRequiredLoginForLiveEnabled", "type": "boolean", "useNull": true },
+        { "name": "isRequiredLoginForStagingEnabled", "type": "boolean", "useNull": true }, 
 
         // new fields not in Json
         { "name": "channelId", "type": "string" },
