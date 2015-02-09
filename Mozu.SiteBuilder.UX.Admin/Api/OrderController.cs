@@ -396,22 +396,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2( Mapper.Map<Order>(dcOrder) );
         }
-
-        public class ResendConfirmationEmailArgs
-        {
-            public string OrderId { get; set; }
-        }
-        [HttpPostRoute(UriTemplate = "resendconfirmationemail")]
-        public async Task<Response<Order>> ResendConfirmationEmail(ResendConfirmationEmailArgs args)
-        {
-            var action = new DCo.OrderAction()
-            {
-                ActionName = DCo.OrderAction.OrderActionNameConst.SUBMIT_ORDER
-            };
-
-            (await _orderWebApiClient.ResendOrderConfirmationEmail(args.OrderId, action)).ReadAsSync();
-            
-            return this.EmptySingle2<Order>();
-        }
     }
 }

@@ -212,9 +212,9 @@
     <Reference Include="Mozu.AppDev.Contracts">
       <HintPath>..\packages\Mozu.AppDev.Contracts.1.13.10\lib\net45\Mozu.AppDev.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.15.6\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.15.8\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -492,6 +492,7 @@
     <Compile Include="Api\Models\Returns\ReturnItem.cs" />
     <Compile Include="Api\OrderBulkActionController.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />
+    <Compile Include="Api\OrderEmailController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />
     <Compile Include="Api\OrderPickupController.cs" />
