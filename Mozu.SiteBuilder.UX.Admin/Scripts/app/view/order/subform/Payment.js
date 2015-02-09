@@ -137,6 +137,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                     menuColumnHandler: function (item, eventData) {
                         var cfg = {
                             jsonData: {
+                                orderId: eventData.record.get('orderId'),
                                 refundId: eventData.record.get('id')
                             }
                         };
