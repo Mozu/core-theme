@@ -2194,18 +2194,18 @@ Ext.define('Taco.model.Order', {
 
 
     /**
- * service call to update the customer note.
- * @param {Object} config  A configuration object     
- * config object:
-    {
-        jsonData: {   
-            // include one or both adjustment types.
-            orderId: '987654321',
-            note: ''
+     * service call to update the customer note.
+     * @param {Object} config  A configuration object     
+     * config object:
+        {
+            jsonData: {   
+                // include one or both adjustment types.
+                orderId: '987654321',
+                note: ''
+            }
         }
-    }
- *
- */
+     *
+     */
     setCustomerNote: function (config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/setcustomernote',
@@ -2364,6 +2364,28 @@ Ext.define('Taco.model.Order', {
             Ext.Ajax.request(config);
         }
     },
+
+    
+    /**
+     * service call to resend the 
+     * @param {Object} config  A configuration object     
+     * config object:
+        {
+            jsonData: {   
+                refundId: '987654321'
+            }
+        }
+     *
+     */
+    resendRefundEmail: function(config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/refunds/resendemail',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     function () {
 
     });
