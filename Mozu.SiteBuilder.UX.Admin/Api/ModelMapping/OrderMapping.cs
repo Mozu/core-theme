@@ -476,6 +476,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                     var indexToInsertAt = p.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
                     p.Interactions.Insert(indexToInsertAt, riMapped);
+                    p.AmountCredited += riMapped.Amount.GetValueOrDefault();
                 }
             }
         }
