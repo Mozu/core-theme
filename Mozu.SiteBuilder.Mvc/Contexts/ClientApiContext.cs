@@ -258,7 +258,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         {
                              Id = "paypalExpress",
                              SkipRename= true,
-                            InternalUrl = settings.Urls("paypalExpressUrl")
+                            InternalUrl = settings.AppSettings("PaypalExpressUrl")
                         }
 
 
