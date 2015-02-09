@@ -55,7 +55,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         this.down('#amountAvailable').update(nextState);
 
         // set a hard maximum on the refund amount if refunding a credit card
-        refundAmountField.emptyText = this.suggestRefund();
+        refundAmountField.emptyText = this.suggestRefund().toFixed(2);
         refundAmountField.applyEmptyText();
         refundAmountField.setMaxValue(isCreditCard ? this.suggestRefund() : Number.MAX_VALUE);
         refundAmountField.validate();
@@ -73,7 +73,7 @@ Ext.define('Taco.view.order.modal.Refund', {
 
         this.setModalState({
             collected: this.order.get('authorizationInfo').amountCollected,
-            refunded: 0,
+            refunded: this.order.get('amountRefunded'),
             proposed: 0
         });
 
@@ -123,7 +123,11 @@ Ext.define('Taco.view.order.modal.Refund', {
                 resizable: false,
                 menuDisabled: true,
                 dataIndex: 'amountCredited',
-                renderer: function (value) {
+                renderer: function (value, metaData, record) {
+                    if (record.get('paymentType') === 'Check') {
+                        return '--';
+                    }
+
                     return me.order.formatCurrency(value);
                 }
             }]
@@ -154,7 +158,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     allowBlank: false,
                     items: [{
                         name: 'refundMethod',
-                        boxLabel: 'Credit Card',
+                        boxLabel: 'Direct Refund',
                         inputValue: 'CreditCard'
                     }, {
                         name: 'refundMethod',
@@ -201,13 +205,17 @@ Ext.define('Taco.view.order.modal.Refund', {
                             }
                         },
                         listeners: {
+                            beforehide: {
+                                scope: this,
+                                fn: function (field) {
+                                    field.clearValue();
+                                }
+                            },
                             show: {
                                 scope: this,
                                 fn: function (field) {
                                     if (ccStore.getCount() === 1) {
                                         field.setValue(ccStore.first());
-                                    } else {
-                                        field.clearValue();
                                     }
                                 }
                             },
@@ -256,7 +264,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                         mouseWheelEnabled: false,
                         allowBlank: false,
                         minValue: Number.MIN_VALUE,
-                        emptyText: this.suggestRefund(),
+                        emptyText: this.suggestRefund().toFixed(2),
                         msgTarget: 'side',
                         listeners: {
                             change: {
@@ -338,7 +346,6 @@ Ext.define('Taco.view.order.modal.Refund', {
 
     doSave: function () {
         var values = this.getForm().getValues();
-        console.log(values);
 
         this.order.createRefund(values, {
             success: function () {
