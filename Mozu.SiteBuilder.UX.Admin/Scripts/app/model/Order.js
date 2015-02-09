@@ -2301,34 +2301,30 @@ Ext.define('Taco.model.Order', {
             foreignProperty: 'orderId'
         });
     },
-    /**
-    * service call to resend an order email
-    * @param {Object} config  A configuration object     
-    * config object:
-    * 
-       {
-           jsonData: {
-               orderId: '987654321', // optional
 
-               confirmSuccess: false, // suppress the automatic confirmation
+    // service call to resend an order email
+    // @param {Object} config  A configuration object     
+    // config object:
+    //    {
+    //        jsonData: {
+    //            orderId: '987654321', // optional
 
-               confirmTpl: null, // optionaly pass in alternate confirmation XTemplate
+    //            confirmSuccess: false, // suppress the automatic confirmation
 
-               confirmData: null,  // optionaly pass in alternate confirmation data;  order record applied by default;
+    //            confirmTpl: null, // optionaly pass in alternate confirmation XTemplate
 
-               success: Ext.emptyFn, // optionaly pass in success callback
+    //            confirmData: null,  // optionaly pass in alternate confirmation data;  order record applied by default;
 
-               failure: Ext.emptyFn, // optionaly pass in failure callback
+    //            success: Ext.emptyFn, // optionaly pass in success callback
 
-               // required for reseding shipment notifications.                   
-               type:"shipment",
-               packageId: 'asdf' 
-           }
-       }
+    //            failure: Ext.emptyFn, // optionaly pass in failure callback
 
-    *
-    */
-    resendEmail: function (config) {            
+    //            // required for reseding shipment notifications.                   
+    //            type:"shipment",
+    //            packageId: 'asdf' 
+    //        }
+    //    }
+    resendEmail: function (config) {
         var me = this,
             config = config || {},
             url = (config.type && config.type === "shipment") ? '/admin/app/order/shipping/package/resendshipmentemail' : '/admin/app/order/resendconfirmationemail',
@@ -2339,44 +2335,39 @@ Ext.define('Taco.model.Order', {
             confirmSuccess = config.confirmSuccess || true,
             msg;
             
-            Ext.apply(config, {
-                method: 'POST',
-                orderId: config.orderId || me.getId(),
-                url: url
+        Ext.apply(config, {
+            method: 'POST',
+            orderId: config.orderId || me.getId(),
+            url: url
+        });
+
+        if (confirmSuccess) {
+            Ext.apply(config, {                   
+                success: function () {
+                    msg = confirmTpl.apply(confirmData);
+                    Taco.MessageBox.show({
+                        title: 'Resend E-mail',
+                        buttons: Ext.Msg.OK,
+                        msg: msg
+                    });
+                }
             });
-
-            if (confirmSuccess) {
-                Ext.apply(config, {                   
-                    success: function () {
-                        msg = confirmTpl.apply(confirmData);
-                        Taco.MessageBox.show({
-                            title: 'Resend E-mail',
-                            buttons: Ext.Msg.OK,
-                            msg: msg
-                        });
-                    }
-                });
-            }
-
-            // add in boilerplate error handling code;
-            config.errorMsg = config.errorMsg || 'Error resending email';
-            this.addErrorHandling(config);            
-            Ext.Ajax.request(config);
         }
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || 'Error resending email';
+        this.addErrorHandling(config);            
+        Ext.Ajax.request(config);
     },
 
-    
-    /**
-     * service call to resend the 
-     * @param {Object} config  A configuration object     
-     * config object:
-        {
-            jsonData: {   
-                refundId: '987654321'
-            }
-        }
-     *
-     */
+    // service call to resend the 
+    // @param {Object} config  A configuration object     
+    // config object:
+    // {
+    //     jsonData: {   
+    //         refundId: '987654321'
+    //     }
+    // }
     resendRefundEmail: function(config) {
         Ext.apply(config, {
             url: '/admin/app/order/refunds/resendemail',
@@ -2384,8 +2375,5 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
-    },
-
-    function () {
-
-    });
+    }
+});

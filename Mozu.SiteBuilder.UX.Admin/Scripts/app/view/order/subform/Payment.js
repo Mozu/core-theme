@@ -141,8 +141,8 @@ Ext.define('Taco.view.order.subform.Payment', {
                             }
                         };
 
-                        if (record.resendEmailReturn) {
-                            record.resendEmailReturn(cfg);
+                        if (record.resendRefundEmail) {
+                            record.resendRefundEmail(cfg);
                         } else {
                             console.log(cfg);
                         }
