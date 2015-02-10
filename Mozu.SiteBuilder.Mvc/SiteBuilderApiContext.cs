@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.Mvc
 
         internal const string COOKIENAME = "SBCONTEXT";
         internal const string DEBUGCOOKIENAME = "SBD";
-
+        internal const string NOWCOOKIENAME = "MZ_NOW";
 
 
         public bool IsDebugMode { get; set; }
@@ -62,6 +62,7 @@ namespace Mozu.SiteBuilder.Mvc
             ValidateUser();
             ValidateDataMode();
             SetDebugMode();
+            SetNowValue();
         }
 
         private void SetDebugMode()
@@ -87,6 +88,55 @@ namespace Mozu.SiteBuilder.Mvc
 
             }
             this.IsDebugMode = isDebugMode;
+        }
+
+        private void SetNowValue()
+        {
+            var now = RoundMinueteToLowest10(DateTime.UtcNow);
+            if (this.DataViewMode == DataViewModeType.Pending)
+            {
+                HttpCookie cookie;
+                DateTime temp;
+                var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_now", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+                if (val != null)
+                {
+                    if (DateTime.TryParse(val, out temp))
+                    {
+                        now = temp;
+                        cookie = new HttpCookie(NOWCOOKIENAME, now.ToUniversalTime().ToString("o"));
+                    }
+                    else
+                    {
+                        cookie = new HttpCookie(NOWCOOKIENAME, "");
+                        cookie.Expires = DateTime.MinValue;
+                    }
+
+
+                    _cookieProvider.SaveResponseCookie(NOWCOOKIENAME, cookie);
+
+                }
+                else
+                {
+
+                    cookie = _cookieProvider.GetRequestCookie(NOWCOOKIENAME);
+                    if (cookie != null)
+                    {
+
+                        if (DateTime.TryParse(cookie.Value, out temp))
+                        {
+                            now = temp;
+                        }
+
+                    }
+                }
+            }
+            this.Now = now;
+        }
+
+        private static DateTime RoundMinueteToLowest10(DateTime now)
+        {
+            now = new DateTime(now.Year, now.Month, now.Day, now.Hour, (int)Math.Floor((decimal)now.Minute / 10) * 10, 0, DateTimeKind.Utc);
+            return now;
         }
 
         private static System.Collections.Concurrent.ConcurrentDictionary<string, Site> g_domainSiteLookup = new ConcurrentDictionary<string, Site>(StringComparer.OrdinalIgnoreCase);
@@ -407,9 +457,7 @@ namespace Mozu.SiteBuilder.Mvc
         public bool HasInvalidCredentials { get; set; }
 
         public LightweightUserClaims AdminUserClaim { get; set; }
-
-
-
+        public DateTime Now { get; private set; }
 
         public void SetDataMode(DataViewModeType dataViewMode)
         {

@@ -8,7 +8,7 @@ namespace Mozu.SiteBuilder.Mvc
         bool IsEditMode { get; set; }
         bool IsDebugMode { get; set; }
         void SetUser(LightweightUserClaims user);
-
+        DateTime Now { get;  }
         void SetDataMode(Mozu.Core.DataViewModeType  dataViewMode);
     }
 }

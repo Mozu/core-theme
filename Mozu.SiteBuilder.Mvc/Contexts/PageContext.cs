@@ -147,7 +147,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             HandledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
 
             IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
-
+            Now = apiContext.Now;
             if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
             {
                 this.Url = values.FirstOrDefault();
@@ -406,5 +406,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public List<KeyValuePair<string, string>> BillingStates { get; set; }
         public List<KeyValuePair<string, string>> ShippingStates { get; set; }
+        public DateTime Now { get; set; }
     }
 }

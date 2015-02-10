@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// </summary>
     [ParserNodes.DescriptionAttribute("tbd")]
     [Name("include_documents")]
-    public class IncludeContentTag : SimpleTagBaseAsync
+    public class IncludeDocumentsTag : SimpleTagBaseAsync
     {
         protected override async Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
@@ -63,7 +63,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             var tempCol = arguments.GetValueOrDefault<IEnumerable>("ids");
             var id = arguments.GetValueOrDefault<string>("id");
-
+            var isEffectivityDated = arguments.GetValueOrDefault<bool>("effectivityDated", false);
+        
+            
             List <string> docIds = null;
             if (tempCol != null)
             {
@@ -77,6 +79,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var service = context.Resolve<IDocumentListWebApiClient>();
             var siteContext = context.SiteContext();
             var request = context.HttpContext().Request;
+           
 
             if (pageWithUrl)
             {
@@ -100,7 +103,20 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
             }
 
-            
+            if (isEffectivityDated)
+            {
+
+                var pageContext = context.PageContext ();
+                DateTime  now = pageContext.Now;
+                query = query ?? "";
+                if ( query.Length > 0 )
+                {
+                    query += " and ";
+                }
+                query += string.Format("properties.beginDate le {0} and properties.endDate ge {0}", now.ToUniversalTime().ToString("o"));
+            }
+            //and properties.endDate gt {1} and properties.beginDate lt {1} 
+
             var res = (dynamic)(await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
             
             
