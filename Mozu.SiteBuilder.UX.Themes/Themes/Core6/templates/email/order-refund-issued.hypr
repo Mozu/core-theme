@@ -8,14 +8,8 @@
 		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
 		-->
 
-		<dt>{{ labels.return }}</dt>
-		<dd>{{ model.returnNumber }}</dd>
-
 		<dt>{{ labels.orderDate }}:</dt>
-		<dd>{{ model.order.submittedDate }}</dd>
-
-		<dt>{{ labels.returnRequestDate }}</dt>
-		<dd>{{ model.rmaDeadline }}</dd>
+		<dd>{{ model.submittedDate }}</dd>
 	</dl>
 	<br />
 
@@ -32,23 +26,26 @@
 	<table class="mz-ordersummary">
         <thead>
             <tr>
-                <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
-                <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
+                <th class="mz-ordersummary-header-product">Refund Method</th>
+                <th>Amount Refunded</th>
             </tr>
 		</thead>
-		<tbody class="mz-ordersummary-lineitems">
-		{% for item in model.items %}
-			{% for reason in item.reasons %}
-			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
-				<td>{{ reason.quantity }}</td>
-				<td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
-			</tr>
-			{% endfor %}
+		<tbody>
+		{% for refund in model.refunds %}
+		<tr class="mz-ordersummary-line">
+			<td class="mz-ordersummary-item-product">
+			{% if refund.payment.paymentType == "CreditCard" %}
+				{{ refund.payment.cardType }} {{ refund.payment.cardNumber }}
+			{% else %}
+				{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}</td>
+			{% endif %}
+			<td>{{ refund.amount|currency }} {% dump refund.payment.billingInfo %} </td>
+		</tr>
 		{% endfor %}
 		</tbody>
     </table>
 
-	{{ labels.returnReceivedBlob2|safe }}
+	{{ labels.orderRefundBlob2|safe }}
 
 	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 
