@@ -43,13 +43,13 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
     // This must be a record and must be set so the data can be set properly.
     data: null,
 
-    initComponent: function (eOpts) {
+    initComponent: function(eOpts) {
         var me = this;
 
         // Update the title to reflect the data
         me.setTitle(me.data.get('subject'));
 
-        var orderObject = {orderNumber: me.orderNumber};
+        var orderObject = { orderNumber: me.orderNumber };
         // Set the items!
         var logHeader = Ext.create('Ext.container.Container', {
             width: '100%',
@@ -86,7 +86,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         me.callParent(arguments);
     },
 
-    createDataContainer: function (currentRecord) {
+    createDataContainer: function(currentRecord) {
         var recordData = currentRecord.data;
         var dataContainer = null;
 
@@ -96,57 +96,73 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             return null;
         }
 
-        switch(currentRecord.subjectType) {
+        switch (currentRecord.subjectType) {
             case 'Line Items':
-                {
-                    dataContainer = this.createLineItemInfo(recordData);
-                    break;
-                }
+            {
+                dataContainer = this.createLineItemInfo(recordData);
+                break;
+            }
             case 'Order Total':
-                {
-                    dataContainer = this.createOrderTotalInfo(recordData);
-                    break;
-                }
+            {
+                dataContainer = this.createOrderTotalInfo(recordData);
+                break;
+            }
             case 'Payment':
-                {
-                    dataContainer = this.createPaymentInfo(recordData, currentRecord.verb);
-                    break;
-                }
+            {
+                dataContainer = this.createPaymentInfo(recordData, currentRecord.verb);
+                break;
+            }
             case 'Order Shipping':
-                {
-                    dataContainer = this.createShippingInfo(recordData);
-                    break;
-                }
+            {
+                dataContainer = this.createShippingInfo(recordData);
+                break;
+            }
             case 'Coupon':
-                {
-                    dataContainer = this.createCouponInfo(recordData);
-                    break;
-                }
+            {
+                dataContainer = this.createCouponInfo(recordData);
+                break;
+            }
             case 'Items Shipped':
-                {
-                    dataContainer = this.createItemsShippedInfo(recordData);
-                    break;
+            {
+                dataContainer = this.createItemsShippedInfo(recordData);
+                break;
+            }
+            case 'RMA':
+            {
+                if (currentRecord.verb.toLowerCase() === 'created') {
+                    dataContainer = this.createNestedGrid(recordData);
+                } else if (currentRecord.verb.toLowerCase() === 'refunded') {
+                    dataContainer = this.createRMARefundInfo(recordData);
                 }
+                break;
+            }
+            case 'Replacement Order':
+            {
+                dataContainer = this.createNestedGrid(recordData);
+                break;
+            }
             case 'Order Status':
-                {
-                    dataContainer = Ext.create('Ext.container.Container', {
-                        padding: '20 0 0',
-                        items: [{
+            {
+                dataContainer = Ext.create('Ext.container.Container', {
+                    padding: '20 0 0',
+                    items: [
+                        {
                             flex: 1,
                             padding: '2 2',
                             data: recordData[0],
                             tpl: [
                                 '<div>New Status: {newValue}</div>'
                             ]
-                        }]
-                    });
-                    break;
-                }
+                        }
+                    ]
+                });
+                break;
+            }
             default:
-                {
-                    // Do Nothing!
-                    break;
-                }
+            {
+                // Do Nothing!
+                break;
+            }
         }
 
         return dataContainer;
@@ -158,7 +174,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
 
     createLineItemInfo: function(lineItemData) {
         var retVal = null;
-        var headerItems = {'productCode':'Product Code', 'quantity': 'Quantity', 'amount': 'Amount'};
+        var headerItems = { 'productCode': 'Product Code', 'quantity': 'Quantity', 'amount': 'Amount' };
         var dataColumns = [];
         var keyList = Object.keys(lineItemData[0]);
 
@@ -174,6 +190,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             });
         }
 
+        // TODO: make this amount show a currency.
         var dataStore = Ext.create('Ext.data.Store', {
             fields: keyList,
             proxy: {
@@ -202,35 +219,47 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
 
     createOrderTotalInfo: function(orderTotalData) {
         var retVal = null;
-        var itemsList = [];
-
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: orderTotalData[0],
-            tpl: [
-                '<div>Previous Total: {oldValue}</div>'
-            ]
-        });
-
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: orderTotalData[0],
-            tpl: [
-                '<div>Current Total: {newValue}</div>'
-            ]
-        });
 
         retVal = Ext.create('Ext.container.Container', {
             padding: '20 0 0',
-            items: itemsList
+            items: [{
+                flex: 1,
+                padding: '2 2',
+                data: orderTotalData[0],
+                tpl: [
+                    '<div>Previous Total: {[this.getCurrencyFormat(values.oldValue)]}</div>',
+                    '<div>Current Total: {[this.getCurrencyFormat(values.newValue)]}</div>',
+                    {
+                        getCurrencyFormat: function (v) {
+                            var retVal,
+                                isNegative;
+
+                            v = v - 0;
+
+                            if (v < 0) {
+                                isNegative = true;
+                                v = -v;
+                            }
+                            v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                            if (isNegative) {
+                                retVal = '(' + v + ')';
+                            } else {
+                                retVal = v;
+                            }
+
+                            return retVal;
+                        }
+                    }
+                ]
+            }]
         });
 
         return retVal;
     },
 
-    createPaymentInfo: function (paymentData, verb) {
+    createPaymentInfo: function(paymentData, verb) {
         var retVal = null;
         var itemsList = [];
 
@@ -259,7 +288,30 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             padding: '2 2',
             data: paymentData[0],
             tpl: [
-                '<div>Amount: {amount}</div>'
+                '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+                {
+                    getCurrencyFormat: function (v) {
+                        var retVal,
+                            isNegative;
+
+                        v = v - 0;
+
+                        if (v < 0) {
+                            isNegative = true;
+                            v = -v;
+                        }
+                        v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                        if (isNegative) {
+                            retVal = '(' + v + ')';
+                        } else {
+                            retVal = v;
+                        }
+
+                        return retVal;
+                    }
+                }
             ]
         });
 
@@ -271,31 +323,43 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         return retVal;
     },
 
-    createShippingInfo: function (shippingData) {
+    createShippingInfo: function(shippingData) {
         var retVal = null;
-        var itemsList = [];
-
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: shippingData[0],
-            tpl: [
-                '<div>Shipping Method: {shippingMethod}</div>'
-            ]
-        });
-
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: shippingData[0],
-            tpl: [
-                '<div>Amount: {value}</div>'
-            ]
-        });
 
         retVal = Ext.create('Ext.container.Container', {
             padding: '20 0 0',
-            items: itemsList
+            items: [{
+                flex: 1,
+                padding: '2 2',
+                data: shippingData[0],
+                tpl: [
+                    '<div>Shipping Method: {shippingMethod}</div>',
+                    '<div>Amount: {[this.getCurrencyFormat(values.value)]}</div>',
+                    {
+                        getCurrencyFormat: function (v) {
+                            var retVal,
+                                isNegative;
+
+                            v = v - 0;
+
+                            if (v < 0) {
+                                isNegative = true;
+                                v = -v;
+                            }
+                            v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                            if (isNegative) {
+                                retVal = '(' + v + ')';
+                            } else {
+                                retVal = v;
+                            }
+
+                            return retVal;
+                        }
+                    }
+                ]
+            }]
         });
 
         return retVal;
@@ -303,38 +367,19 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
 
     createCouponInfo: function(couponData) {
         var retVal = null;
-        var itemsList = [];
-
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: couponData[0],
-            tpl: [
-                '<div>Coupon Code: {couponCode}</div>'
-            ]
-        });
-
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: couponData[0],
-            tpl: [
-                '<div>Status: {couponStatus}</div>'
-            ]
-        });
-
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: couponData[0],
-            tpl: [
-                '<div>Value: {value}</div>'
-            ]
-        });
-
+        // Question, How do I make this Value field numerical or %?
         retVal = Ext.create('Ext.container.Container', {
             padding: '20 0 0',
-            items: itemsList
+            items: [{
+                flex: 1,
+                padding: '2 2',
+                data: couponData[0],
+                tpl: [
+                    '<div>Coupon Code: {couponCode}</div>',
+                    '<div>Status: {couponStatus}</div>',
+                    '<div>Value: {value}</div>'
+                ]
+            }]
         });
 
         return retVal;
@@ -361,20 +406,151 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             editMode: false,
             enableCellEditing: false,
             padding: '20 0 0',
-            columns: [{
-                text: "Product Code",
-                dataIndex: 'productCode',
-                draggable: false,
-                resizable: true,
-                flex: 1,
-                sortable: false,
-                menuDisabled: true
-            }],
+            columns: [
+                {
+                    text: 'Product Code',
+                    dataIndex: 'productCode',
+                    draggable: false,
+                    resizable: true,
+                    flex: 1,
+                    sortable: false,
+                    menuDisabled: true
+                }
+            ],
             store: dataStore,
             height: '100%',
             width: '100%'
         });
 
+        return retVal;
+    },
+
+    createRMARefundInfo: function(rmaRefundData) {
+        var retVal = null;
+
+        retVal = Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: {
+                flex: 1,
+                padding: '2 2',
+                data: rmaRefundData[0],
+                tpl: [
+                    '<div>RMA ID: {rmaID}</div>',
+                    '<div>Payment Transaction ID: {transactionId}</div>',
+                    '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+                    {
+                        getCurrencyFormat: function(v) {
+                            var retVal,
+                                isNegative;
+
+                            v = v - 0;
+
+                            if (v < 0) {
+                                isNegative = true;
+                                v = -v;
+                            }
+                            v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                            if (isNegative) {
+                                retVal = '(' + v + ')';
+                            } else {
+                                retVal = v;
+                            }
+
+                            return retVal;
+                        }
+                    }
+                ]
+            }
+        });
+
+        return retVal;
+    },
+
+    createNestedGrid: function(nestedData) {
+        var retVal = null;
+        var headerItems = { 'rmaId': 'RMA ID', 'orderNumber': 'Order Number', 'productCode': 'Product Code', 'amount': 'Amount' };
+        var keyList, dataColumns, containerItemList = [];
+
+        for (var m = 0; m < nestedData.length; ++m) {
+            dataColumns = [];
+            keyList = Object.keys(nestedData[m].productCodes[0]);
+
+            for (var i = 0; i < keyList.length; ++i) {
+                dataColumns.push({
+                    text: headerItems[keyList[i]],
+                    dataIndex: keyList[i],
+                    draggable: false,
+                    resizable: true,
+                    flex: 1,
+                    sortable: false,
+                    menuDisabled: true
+                });
+            }
+
+            // TODO: make this amount show a currency.
+            var dataStore = Ext.create('Ext.data.Store', {
+                fields: keyList,
+                proxy: {
+                    type: 'memory',
+                    reader: {
+                        type: 'json',
+                        root: 'items'
+                    }
+                }
+            });
+
+            dataStore.loadData(nestedData[m].productCodes);
+
+            var gridItem = Ext.create('Ext.grid.Panel', {
+                header: false,
+                editMode: false,
+                enableCellEditing: false,
+                padding: '20 0 0',
+                columns: dataColumns,
+                store: dataStore,
+                width: '60%'
+            });
+
+            // Push the created data into this container list, to be displayed!
+            containerItemList.push({
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align:'middle'
+                },
+                width: '100%',
+                padding: '5 0 5 0',
+                items: [
+                    {
+                        width: '30%',
+                        padding: '2 2',
+                        data: nestedData[m],
+                        tpl: [
+                            '<div>{[this.grabDisplayData(values)]}</div>',
+                            {
+                                grabDisplayData: function(values) {
+                                    if (Object.keys(values).indexOf('orderNumber') > -1) {
+                                        return '<div>Order Number: ' + values.orderNumber + '</div>';
+                                    } else {
+                                        return '<div>RMA ID: ' + values.rmaId + '</div>';
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    gridItem
+                ]
+            });
+        }
+        
+        retVal = Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            width: '100%',
+            items: containerItemList
+            });
+        
         return retVal;
     }
 });
