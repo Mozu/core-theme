@@ -19,9 +19,9 @@
   "handlingAmount": 0,
   "handlingTotal": 0,
   "fulfillmentStatus": "Fulfilled",
-  "submittedDate": "2014-01-07T02:53:50.746Z",
-  "closedDate": "2014-01-07T02:55:00.718Z",
-  "acceptedDate": "2014-01-07T02:53:51.653Z",
+  "submittedDate": "2014-01-08T02:53:50.746Z",
+  "closedDate": "2014-01-08T02:55:00.718Z",
+  "acceptedDate": "2014-01-08T02:53:51.653Z",
   "notes": [],
   "items": [
     {
@@ -416,7 +416,7 @@
     {
       "id": "e0e0f2970ba1477d90bda2ab0158872f",
       "shippingMethodCode": "fedex_FEDEX_2_DAY",
-      "shippingMethodName": "FedEx 2DayÂ®",
+      "shippingMethodName": "FedEx 2DayÂ",
       "packagingType": "CUSTOM",
       "status": "Fulfilled",
       "items": [
