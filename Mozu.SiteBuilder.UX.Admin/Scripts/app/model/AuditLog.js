@@ -15,19 +15,32 @@ Ext.define('Taco.model.AuditLog', {
             name: 'id',
             type: 'string'
         }, {
-            name: 'eventDate',
+            name: 'createDate',
             type: 'date',
             useNull: false,
             dateFormat: 'c'
         }, {
-            name: 'eventMsg',
+            name: 'subject',
             type: 'string',
             useNull: false
         }, {
-            name: 'user',
+            name: 'subjectType',
             type: 'string',
             useNull: false
+        }, {
+            name: 'verb',
+            type: 'string',
+            useNull: false
+        }, {
+            name: 'userDisplayName',
+            type: 'string',
+            useNull: false
+        }, {
+            name: 'data',
+            type: 'auto',
+            useNull: true
         }
+
     ],
     proxy: {
         type: 'ajaxproxy',
