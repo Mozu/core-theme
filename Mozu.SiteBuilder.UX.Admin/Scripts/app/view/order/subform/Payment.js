@@ -72,22 +72,10 @@ Ext.define('Taco.view.order.subform.Payment', {
             })
         ];
 
-        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
-
-        // after the record is reloaded we will need to refresh the ui
-        this.mon( this.record,"aftercommit", this.onRecordChange, this);
-        
-        // initialize the ui
-        // this will be called every time the record is updated
-        me.bodyCont = Ext.create('Ext.container.Container', {
-            items: []
-        });
-        me.initUI();
-        
-        
-        me.items = [me.bodyCont, {
-            xtype: 'grid',
+        this.refundGrid = Ext.create('Ext.grid.Panel', {
+            hidden: true,
             title: 'Refunds',
+            cls: 'taco-payments-refund-grid',
             margin: '10 0 0 0',
             emptyText: 'There are no refunds to display',
             viewConfig: {
@@ -117,7 +105,10 @@ Ext.define('Taco.view.order.subform.Payment', {
             }, {
                 dataIndex: 'reason',
                 text: 'Notes',
-                flex: 2
+                flex: 2,
+                renderer: function (value) {
+                    return Ext.String.htmlEncode(value);
+                }
             }, {
                 dataIndex: 'createdBy',
                 text: 'User',
@@ -144,16 +135,49 @@ Ext.define('Taco.view.order.subform.Payment', {
 
                         if (record.resendRefundEmail) {
                             record.resendRefundEmail(cfg);
-                        } else {
-                            console.log(cfg);
                         }
                     }
                 }]
             }]
-        }];
+        });
+
+        this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
+
+        // after the record is reloaded we will need to refresh the ui
+        this.mon( this.record,"aftercommit", this.onRecordChange, this);
+        
+        // initialize the ui
+        // this will be called every time the record is updated
+        me.bodyCont = Ext.create('Ext.container.Container', {
+            items: []
+        });
+        me.initUI();
+        
+        
+        me.items = [me.bodyCont, me.refundGrid];
 
         this.callParent(arguments);
         this.addEvents(['rerender']);
+
+        this.refundGrid.mon(this, {
+            boxready: {
+                scope: this,
+                fn: function () {
+                    this.refundGrid.setVisible(!!this.refundGrid.getStore().getCount());
+                }
+            },
+            rerender: {
+                scope: this,
+                fn: function () {
+                    var store = this.refundGrid.getStore();
+                    var refunds = this.record.refunds().getRange();
+
+                    store.removeAll();
+                    store.add(refunds);
+                    this.refundGrid.setVisible(!!store.getCount());
+                }
+            }
+        });
     },
 
     getNewPaymentActions: function() {

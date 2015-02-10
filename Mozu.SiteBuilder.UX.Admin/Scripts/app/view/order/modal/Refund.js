@@ -48,7 +48,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         var refundAmountField = form.getForm().findField('amount');
         var excessGroup = this.down('#allowExcessCreditGroup');
         var isCreditCard = nextState.method === 'CreditCard';
-        var isExcess = nextState.proposed > nextState.collected;
+        var isExcess = nextState.proposed > (nextState.collected - nextState.refunded);
 
         // show or hide the credit card field and its help text
         form.getForm().findField('paymentId').setVisible(isCreditCard).setDisabled(!isCreditCard);
@@ -340,8 +340,9 @@ Ext.define('Taco.view.order.modal.Refund', {
     suggestRefund: function () {
         var state = this.getModalState();
         var payment = state.payment;
+        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited : state.collected - state.refunded).toFixed(2));
 
-        return payment ? payment.amountCollected - payment.amountCredited : state.collected - state.refunded;
+        return suggestion > 0 ? suggestion : 0;
     },
 
     doSave: function () {
