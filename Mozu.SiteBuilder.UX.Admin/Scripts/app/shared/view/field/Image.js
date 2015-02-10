@@ -61,15 +61,30 @@ Ext.define('Taco.shared.view.field.Image', {
     allowMulti: true,
     thumbnailSize: 150,
     filters: null,
+    imageUrls: [],
     imageMetadata: null,
     isMetadataMerged: false,
     
     initComponent: function () {
-        this.selectedImages = Ext.create('Taco.shared.store.Files', {
+        var me = this;
 
+        this.mediaAssocationStore = Ext.create('Taco.store.MediaAssociations', {});
+
+        if (me.imageMetadata) {
+            me.imageUrls = Ext.Array.filter(me.imageMetadata, function (img) {
+                return !img.isStoredInCms;
+            });
+            me.mediaAssocationStore.loadData(me.imageUrls);
+            me.mediaAssocationStore.sort('sequence', 'ASC');
+        }
+
+        
+
+        this.selectedImages = Ext.create('Taco.shared.store.Files', {
+            
             listeners: {
                 datachanged: this.onSelectedImagesDataChanged,
-               
+
                 scope:this
             }
         });
@@ -103,7 +118,7 @@ Ext.define('Taco.shared.view.field.Image', {
             },
             hidden: true,
             selectedItemCls: 'selected',
-            store: this.selectedImages,
+            store: this.mediaAssocationStore,
             tpl :[ 
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
@@ -112,7 +127,11 @@ Ext.define('Taco.shared.view.field.Image', {
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
-                                '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
+                                '<tpl if="isStoredInCms">',
+                                  '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
+                                '<tpl else>',
+                                  '<div class="square" style="background-image:url(\'{url}\')" title="{alt:htmlEncode}">',
+                                '</tpl>',
                                     '<ul class="toolbar">',
                                         '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
                                         '<li class="remove" title="Remove">Remove</li>',
@@ -329,6 +348,7 @@ Ext.define('Taco.shared.view.field.Image', {
 
                 store.insert(index, records);
                 view.getSelectionModel().select(records);
+                this.updateFormField(store.data.items); 
             }
         });
     },
@@ -347,13 +367,31 @@ Ext.define('Taco.shared.view.field.Image', {
                 listeners: {
                     savesuccess: {
                         scope: this,
-                        fn: function (imgMetadataModal, imgMetadata) {
-                            this.onSelectedImagesDataChanged();
-                        }
+                        fn: this.onUpdatedProperties
                     }
                 }
             });
         }
+    },
+
+    onUpdatedProperties: function(imgMetadataModal, updatedMetadata) {
+        var existingImg;
+        if (updatedMetadata.get('isStoredInCms')) {
+            existingImg = this.selectedImages.getById(updatedMetadata.get('id'));
+            if (!existingImg) {
+                return;
+            }
+            existingImg.set('alt', updatedMetadata.get('alt'));
+        } else {
+            existingImg = Ext.Array.findBy(this.imageUrls, function(imgUrl) {
+                return (!(!imgUrl.id)) && imgUrl.id.toString() === updatedMetadata.get('id');
+            });
+            if (!existingImg) {
+                return;
+            }
+            existingImg.alt = updatedMetadata.get('alt');
+        }
+        this.onSelectedImagesDataChanged();
     },
 
     bindImageUpload: function () {
@@ -486,41 +524,105 @@ Ext.define('Taco.shared.view.field.Image', {
         
     },
 
-    onSelectedImagesDataChanged: function () {
-        var value = [];
+    mergeProductMetadataWithCms: function() {
+        var me = this,
+            foundImageIndex,
+            selectedImage;
 
-        //merge product/category images metadata with cms file data
         if (this.imageMetadata) {
-            for (var i = 0; i < this.imageMetadata.length; i++) {
-                var imgMeta = this.imageMetadata[i];
-                Ext.Array.every(this.selectedImages.data.items, function(selectImg) {
-                    if (imgMeta.cmsId === selectImg.get('cmsId') || imgMeta.cmsId === selectImg.get('name')) {
-                        if (!selectImg.get('isMerged')) {
-                            selectImg.set('alt', imgMeta.alt);
-                            selectImg.set('isMerged', true);
-                        }
-                        return false;
-                    }
-                    return true;
+            Ext.Array.each(this.imageMetadata, function(prodImgMetadata) {
+                foundImageIndex = me.selectedImages.findBy(function (cmsImg) {
+                    return (!cmsImg.get('isMerged') && (prodImgMetadata.cmsId === cmsImg.get('cmsId') || prodImgMetadata.cmsId === cmsImg.get('name')));
                 });
-            }
+                if (foundImageIndex !== -1) {
+                    selectedImage = me.selectedImages.getAt(foundImageIndex);
+                    selectedImage.set('alt', prodImgMetadata.alt);
+                    selectedImage.set('sequence', prodImgMetadata.sequence);
+                    selectedImage.set('isMerged', true);
+                }
+            });
         }
+    },
 
+    onSelectedImagesDataChanged: function () {
+        this.mergeProductMetadataWithCms();
+        return this.updateFormFieldWithImages();
+    },
+
+    updateFormFieldWithImages: function () {
+        var values = [],
+            sortedValues = [],
+            existingValue;
+
+
+
+        //this.mediaAssocationStore.each(function (record) {
+        //    values.push({
+        //        url: record.get('url'),
+        //        id: record.get('id'),
+        //        cmsId: record.get('cmsId'),
+        //        alt: record.get('alt'),
+        //        isUploaded: record.get('isStoredInCms') ? record.get('isUploaded') : true,
+        //        isMerged: record.get('isStoredInCms') ? record.get('isMerged') : true,
+        //        isStoredInCms: record.get('isStoredInCms'),
+        //        sequence: record.get('sequence')
+        //    });
+        //}, this);
+        
         this.selectedImages.each(function (record) {
-            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
+            values.push({
+                url: record.get('url'),
+                id: record.get('id'),
+                cmsId: record.get('cmsId'),
+                alt: record.get('alt'),
+                isUploaded: record.get('isStoredInCms') ? record.get('isUploaded') : true,
+                isMerged: record.get('isStoredInCms') ? record.get('isMerged') : true,
+                isStoredInCms: record.get('isStoredInCms'),
+                sequence: record.get('sequence')
+            });
         }, this);
 
-        if (value.length > 0) {
+        Ext.Array.each(this.imageUrls, function (imgUrl) {
+            existingValue = Ext.Array.findBy(values, function(val) {
+                return (imgUrl.id !== null && imgUrl.id.toString() === val.id);
+            });
+            if (!existingValue) {
+                values.push({
+                    url: imgUrl.url,
+                    id: imgUrl.id,
+                    cmsId: null,
+                    alt: imgUrl.alt,
+                    isUploaded: true,
+                    isMerged: true,
+                    isStoredInCms: false,
+                    sequence: imgUrl.sequence
+                });
+            }
+        });
+
+        sortedValues = Ext.Array.sort(values, function (val1, val2) {
+            return val1.sequence - val2.sequence;
+            //if (!val1.sequence && val1.sequence !== 0) {
+            //    return -1;
+            //} else if (!val2.sequence && val2.sequence !== 0) {
+
+        });
+        this.mediaAssocationStore.loadData(sortedValues);
+        //this.mediaAssocationStore.sort('sequence', 'ASC');
+        return this.updateFormField(sortedValues);
+    },
+
+    updateFormField: function(values) {
+        if (values.length > 0) {
             this.emptyDropZone.hide();
             this.imageView.show();
         } else {
             this.emptyDropZone.show();
             this.imageView.hide();
         }
-
-        return this.mixins.field.setValue.call(this, value);
+        return this.mixins.field.setValue.call(this, values);
     },
-    
+
     setValue: function (value) {
        
         if (!value ) {
@@ -563,8 +665,27 @@ Ext.define('Taco.shared.view.field.Image', {
         this.selectedImages.add(selectedRecords);
     },
 
-    onUrlAssociatorSave: function (associator, selectedRecords) {
-        this.selectedImages.add(selectedRecords);
+    onUrlAssociatorSave: function (associator, record) {
+        if (! record.imageUrl) {
+            return;
+        }
+        var existing = Ext.Array.findBy(this.imageUrls, function(existingItem) {
+            return (existingItem.url && existingItem.url.toLowerCase() === record.imageUrl.toLowerCase());
+        });
+        if (existing) {
+            return;
+        }
+
+        this.imageUrls.push({
+            alt: null,
+            cmsId: null,
+            id: null,
+            isUploaded: true,
+            isMerged: true,
+            isStoredInCms: false,
+            url: record.imageUrl
+        });
+        this.updateFormFieldWithImages();
     },
 
     onDestroy: function () {
