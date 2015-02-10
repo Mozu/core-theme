@@ -3,10 +3,8 @@
   {% block body-content %}
 
 	<dl class="mz-orderheader">
-	<!--
 		<dt>{{ labels.orderNo }}</dt>
-		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
-		-->
+		<dd>{{ model.orderNumber }}</dd>
 
 		<dt>{{ labels.orderDate }}:</dt>
 		<dd>{{ model.submittedDate }}</dd>
@@ -28,6 +26,7 @@
             <tr>
                 <th class="mz-ordersummary-header-product">Refund Method</th>
                 <th>Amount Refunded</th>
+				<th>Refund Date</th>
             </tr>
 		</thead>
 		<tbody>
@@ -40,12 +39,11 @@
 				{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}</td>
 			{% endif %}
 			<td>{{ refund.amount|currency }}</td>
+			<td>{{ refund.auditInfo.createDate }}</td>
 		</tr>
 		{% endfor %}
 		</tbody>
     </table>
-
-	{{ labels.orderRefundBlob2|safe }}
 
 	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 
