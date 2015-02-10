@@ -23,6 +23,11 @@
             {% include "modules/checkout/checkout-payment" with model=payment %}
             {% endif %}
             {% endfor %}
+			{% if model.total == 0 %}
+				{% with model.total|currency as total %}
+					<h4 class="mz-confirmation-nopaymentrequired">{{ labels.noPaymentWasRequired|string_format(total) }}</h4>
+				{% endwith %}
+			{% endif %}
         </div>
         {% if model.hasDirectShip %}
         <div class="mz-l-stack-section">
