@@ -417,7 +417,7 @@
           "AuditInfo":{  
 
           },
-          "StoreCreditCode":null
+          "StoreCreditCode":"CODE123"
         },
         "Status":"Credited",
         "Interactions":[  
@@ -475,7 +475,7 @@
 
         }
       },
-      "Amount":11.0,
+      "Amount":12.0,
       "AuditInfo":{  
         "UpdateDate":"2015-02-09T22:13:17.5433815Z",
         "CreateDate":"2015-02-09T22:13:17.5433815Z",

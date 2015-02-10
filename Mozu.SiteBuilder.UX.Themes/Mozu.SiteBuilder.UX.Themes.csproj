@@ -2146,6 +2146,9 @@
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-password.hypr.live" />
     <Content Include="Themes\Core5\stylesheets\back-office.less" />
     <Content Include="Themes\Core4\stylesheets\back-office.less" />
+    <Content Include="Themes\Core6\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core5\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core4\templates\email\order-refund-issued.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
