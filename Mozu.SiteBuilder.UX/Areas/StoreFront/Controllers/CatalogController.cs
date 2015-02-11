@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Json;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,6 +14,7 @@ using AutoMapper;
 using Autofac;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Serialization;
 using Mozu.Core.Extensions;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
@@ -30,6 +33,8 @@ using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRunti
 using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
 using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -53,6 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiCtx = apiCtx;
         }
 
+        [CodeBlockViewActionFilter(AfterSlotId = "storefront.filters.product.after")]
         [HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode)
         {
@@ -108,13 +114,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             await ContextInitilaztionTasks;
 
             string template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "product");
-            var  result = View(template, product);
-
+           
            
            
             
             SetCatalogContext( product );
+            var ser = new JsonSerializer();
+            ser.Converters.Add(new ExpandoObjectConverter());
+            ser.ContractResolver= new CamelCaseResolver();
+            var dynamicProd = Newtonsoft.Json.Linq.JObject.FromObject(product, ser).ToObject<ExpandoObject>(ser);
 
+           
+            //dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(json, converter);
+
+            var result = View(template, dynamicProd);
+            
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 

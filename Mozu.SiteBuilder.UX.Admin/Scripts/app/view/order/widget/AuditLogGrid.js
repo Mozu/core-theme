@@ -14,6 +14,8 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     ],
 
     modelName: 'Taco.model.AuditLog',
+    // This is used later and identifies the class to use for the modal.
+    modalName: 'Taco.view.order.modal.AuditLogInfo',
 
     enableNavHeader: false,
 
@@ -50,6 +52,9 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     // Is this needed?
     onCreate: Ext.emptyFn,
 
+    // This is the order number for this audit log grid.
+    orderNumber: -1,
+
     initComponent: function() {
         var me = this;
 
@@ -57,26 +62,35 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
         this.columns = me.getColumnConfig();
 
         me.callParent(arguments);
+        
+        // Change to itemClick
+        me.mon(me, 'cellclick', function(grid, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+            Ext.create('Taco.view.order.modal.AuditLogInfo', {
+                orderNumber: me.orderNumber,
+                autoShow: true,
+                scale: 'medium',
+                data: record
+        });
+        }, me);
     },
 
     // Method override from base class to configure the displayed columns.
-    getColumnConfig: function() {
-        var me = this;
+    getColumnConfig: function () {
+
         var columns = [{
             text: 'Date',
-            dataIndex: 'eventDate',
+            dataIndex: 'createDate',
             align: 'left',
             xtype: 'datecolumn',
             format: 'M d Y g:ia',
             draggable: false,
             resizable: true,
             minWidth: 180,
-            //flex: 1,
             sortable: true,
             menuDisabled: true
         }, {
             text: 'Event',
-            dataIndex: 'eventMsg',
+            dataIndex: 'subject',
             draggable: false,
             resizable: true,
             minWidth: 100,
@@ -85,11 +99,10 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             menuDisabled: true
         }, {
             text: 'User',
-            dataIndex: 'user',
+            dataIndex: 'userDisplayName',
             draggable: false,
             resizable: true,
             minWidth: 300,
-            //flex: 1,
             sortable: true,
             menuDisabled: true
         }];
@@ -98,8 +111,6 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     },
 
     refreshAuditLog: function () {
-        var date = new Date();
-        console.log('REFRESHING AUDIT LOG!!!' + date.toJSON());
         this.setLoading(true);
         var store = this.getStore();
         store.reload();
