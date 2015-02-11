@@ -4,6 +4,7 @@
 Ext.define('Taco.model.MediaAssociation', {
     extend: 'Ext.data.Model',
     fields: [
+        //todo: change to int?
         {
             name: 'id',
             type: 'string',
@@ -19,6 +20,11 @@ Ext.define('Taco.model.MediaAssociation', {
         }, {
             name: 'isUploaded',
             type: 'boolean'
+        }, {
+            name: 'progress',
+            type: 'number',
+            defaultValue: 1,
+            persist: false
         },{
             name: 'alt',
             type: 'string',
@@ -30,6 +36,10 @@ Ext.define('Taco.model.MediaAssociation', {
         }, {
             name: 'mediaType',
             type: 'string',
+            useNull: true
+        }, {
+            name: 'sequence',
+            type: 'int',
             useNull: true
         }
     ]
