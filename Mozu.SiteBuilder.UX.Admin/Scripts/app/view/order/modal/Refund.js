@@ -339,6 +339,16 @@ Ext.define('Taco.view.order.modal.Refund', {
                     width: 500,
                     rows: 2,
                     margin: 0
+                }, {
+                    xtype: 'checkboxgroup',
+                    itemId: 'allowSaveGroup',
+                    hidden: true,
+                    allowBlank: false,
+                    items: [{
+                        name: 'allowSave',
+                        boxLabel: 'Allow save',
+                        checked: true
+                    }]
                 }]
             }]
         }));
@@ -360,13 +370,28 @@ Ext.define('Taco.view.order.modal.Refund', {
         return suggestion > 0 ? suggestion : 0;
     },
 
+    toggleSave: function (enable) {
+        this.getForm().down('#allowSaveGroup').setValue({
+            allowSave: !!enable
+        });
+    },
+
     doSave: function () {
         var values = this.getForm().getValues();
 
+        this.toggleSave(false);
+        this.setLoading(true, this.body);
+
         this.order.createRefund(values, {
             success: function () {
+                this.toggleSave(true);
+                this.setLoading(false, this.body);
                 this.order.reload();
                 this.saveSuccess();
+            },
+            failure: function () {
+                this.toggleSave(true);
+                this.setLoading(false, this.body);
             },
             scope: this
         });
