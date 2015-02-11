@@ -136,7 +136,10 @@ Ext.define('Taco.view.order.modal.Refund', {
         ccStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.OrderPayment',
             data: store.queryBy(function (record) {
-                return record.get('paymentType') === 'CreditCard' && record.get('amountCollected') - (record.get('amountCredited') || 0) > 0;
+                return (
+                    Ext.Array.contains(['CreditCard', 'Paypal', 'PaypalExpress'], record.get('paymentType')) &&
+                    record.get('amountCollected') - (record.get('amountCredited') || 0) > 0
+                );
             }).getRange()
         });
 
@@ -194,14 +197,26 @@ Ext.define('Taco.view.order.modal.Refund', {
                         forceSelection: true,
                         queryMode: 'local',
                         displayField: 'cardNumber',
-                        displayTpl: '<tpl for=".">{[values.cardType]}: {[values.cardNumber]}</tpl>',
+                        displayTpl: [
+                            '<tpl for=".">',
+                                '<tpl if="paymentType == \'CreditCard\'">{[values.cardType]}: {[values.cardNumber]}',
+                                '<tpl else>{[values.paymentType]}: {[values.billingContact.email]}',
+                                '</tpl>',
+                            '</tpl>'
+                        ],
                         valueField: 'id',
                         emptyText: 'Select Card',
                         msgTarget: 'side',
                         store: ccStore,
                         listConfig: {
                             getInnerTpl: function (displayField) {
-                                return '{cardType}: {cardNumber}';
+                                var tpl = [
+                                    '<tpl if="paymentType == \'CreditCard\'">{cardType}: {cardNumber}',
+                                    '<tpl else>{paymentType}: {billingContact.email}',
+                                    '</tpl>'
+                                ].join('');
+
+                                return tpl;
                             }
                         },
                         listeners: {

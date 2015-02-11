@@ -475,7 +475,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         riMapped.InteractionType = "Refund";
                     }
                     var indexToInsertAt = p.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
-                    p.Interactions.Insert(indexToInsertAt, riMapped);
+                    p.Interactions.Insert(Math.Max(indexToInsertAt, 0), riMapped);
                     p.AmountCredited += riMapped.Amount.GetValueOrDefault();
                 }
             }
