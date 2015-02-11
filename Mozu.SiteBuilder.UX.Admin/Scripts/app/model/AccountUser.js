@@ -31,7 +31,7 @@ Ext.define('Taco.model.AccountUser', {
         type: 'ajaxproxy',
         api: {
             read: '/admin/app/account/users/list',
-            destroy: 'admin/app/account/users/delete'
+            destroy: '/admin/app/account/users/delete'
         },
         reader: {
             type: 'json',
