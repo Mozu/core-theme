@@ -2149,6 +2149,9 @@
     <Content Include="Themes\Core6\templates\email\order-refund-issued.hypr" />
     <Content Include="Themes\Core5\templates\email\order-refund-issued.hypr" />
     <Content Include="Themes\Core4\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core6\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core5\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\coupon-code-field.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
