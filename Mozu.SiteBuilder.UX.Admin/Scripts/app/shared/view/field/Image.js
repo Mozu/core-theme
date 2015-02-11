@@ -60,20 +60,24 @@ Ext.define('Taco.shared.view.field.Image', {
     cls: 'taco-image-field',
     allowMulti: true,
     thumbnailSize: 150,
-    filters: null,
-    imageUrls: [],
     imageMetadata: null,
     isMetadataMerged: false,
     
     initComponent: function () {
-        var me = this;
+        var me = this,
+            cmsFilter = [];
 
         this.mediaAssociationStore = Ext.create('Taco.store.MediaAssociations', {});
 
         if (me.imageMetadata) {
-            Ext.Array.each(me.imageMetadata, function (imgUrl) {
-                if (!imgUrl.isStoredInCms) {
-                    me.addUrlToMediaAssociationStore(imgUrl.id, imgUrl.url, imgUrl.alt, imgUrl.sequence);
+            Ext.Array.each(me.imageMetadata, function (img) {
+                if (!img.cmsId) {
+                    me.addUrlToMediaAssociationStore(img.id, img.url, img.alt, img.sequence);
+                } else {
+                    cmsFilter.push({
+                        property: 'id',
+                        value: img.cmsId
+                    });
                 }
             });
         }
@@ -86,9 +90,9 @@ Ext.define('Taco.shared.view.field.Image', {
             }
         });
 
-        if (this.filters) {
+        if (cmsFilter.length > 0) {
             this.selectedImages.load({
-                filters: this.filters
+                filters: cmsFilter
             });
         }
 
@@ -237,22 +241,23 @@ Ext.define('Taco.shared.view.field.Image', {
         });
     },
 
-    validateFiles: function (fileList) {
-        var allowedMediaTypes = ['image', 'video'],
-            invalidFiles = [];
+    //security defect, but commented out due to usage for csv files
+    //validateFiles: function (fileList) {
+    //    var allowedMediaTypes = ['image', 'video'],
+    //        invalidFiles = [];
 
-        Ext.each(fileList, function (file) {
-            var mediaType = file.type.split('/')[0];
-            if (allowedMediaTypes.indexOf(mediaType) === -1) {
-                invalidFiles.push(file.name);
-            }
-        });
-        if (invalidFiles.length > 0) {
-            Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
-            return false;
-        }
-        return true;
-    },
+    //    Ext.each(fileList, function (file) {
+    //        var mediaType = file.type.split('/')[0];
+    //        if (allowedMediaTypes.indexOf(mediaType) === -1) {
+    //            invalidFiles.push(file.name);
+    //        }
+    //    });
+    //    if (invalidFiles.length > 0) {
+    //        Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
+    //        return false;
+    //    }
+    //    return true;
+    //},
 
     onViewAfterRender: function () {
         var id = 'ImageFieldDD-' + Ext.id(),
@@ -501,13 +506,6 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onRemoveImageAssociation: function (record) {
-        var existingCmsImage;
-        if (record.get('isStoredInCms')) {
-            existingCmsImage = this.findCmsImage(record.get('cmsId'));
-            if (existingCmsImage != null) {
-                this.selectedImages.remove(existingCmsImage);
-            }
-        }
         this.mediaAssociationStore.remove(record); //todo: add listener to store for removed, added?
         this.updateFormFieldFromStore();
     },
@@ -579,14 +577,13 @@ Ext.define('Taco.shared.view.field.Image', {
         var values = [];
         this.mediaAssociationStore.each(function (record) {
             values.push({
-                url: record.get('url'),
                 id: record.get('id'),
                 cmsId: record.get('cmsId'),
-                alt: record.get('alt'),
-                isUploaded: record.get('isStoredInCms') ? record.get('isUploaded') : true,
-                progress: record.get('progress'),
-                isMerged: record.get('isStoredInCms') ? record.get('isMerged') : true,
                 isStoredInCms: record.get('isStoredInCms'),
+                isUploaded: record.get('isUploaded') ? record.get('isUploaded') : true,
+                progress: record.get('progress'),
+                alt: record.get('alt'),
+                url: record.get('url'),
                 sequence: record.get('sequence')
             });
         }, this);

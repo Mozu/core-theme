@@ -34,10 +34,6 @@ Ext.define('Taco.model.MediaAssociation', {
             type: 'string',
             useNull: true
         }, {
-            name: 'mediaType',
-            type: 'string',
-            useNull: true
-        }, {
             name: 'sequence',
             type: 'int',
             useNull: true
