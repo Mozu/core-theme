@@ -121,7 +121,8 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 data: [
                     ["Percentage", "Percentage"],
                     ["Dollar Amount", "Amount"],
-                    ["Free", "Free"]
+                    ["Free", "Free"],
+                    ["Fixed Price", "FixedPrice"]
                 ]
             }),
             listeners: {
