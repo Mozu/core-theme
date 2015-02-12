@@ -17,10 +17,25 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     title: 'Discount Limitations',
 
     initComponent: function () {
-        this.maxDiscountValue = Ext.create('Taco.core.ux.form.CurrencyField', {
+        this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'maximumDiscountValuePerOrder',
             itemId: 'maxDiscountValuePerOrder',
-            fieldLabel: "Maximum Discount Value",
+            fieldLabel: "Max Discount Value (per Order)",
+            forcePrecision: true,
+            labelAlign: 'top',
+            width: 240,
+            margin: "0px 20px 0px 0px",
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
+            align: 'right',
+            unitAtEnd: false,
+            minValue: 0,
+            hidden: this.record.get('scope') === 'LineItem'
+        });
+
+        this.maxDiscountLineItemValue = Ext.create('Taco.core.ux.form.CurrencyField', {
+            name: 'maximumDiscountValuePerLineItem',
+            itemId: 'maxDiscountValuePerLineItem',
+            fieldLabel: "Max Discount Value (per Line Item)",
             forcePrecision: true,
             labelAlign: 'top',
             width: 240,
@@ -120,8 +135,19 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 xtype: 'component',
                 html: 'Discount limitations specify the limit a coupon/discount can be redeemed.',
                 margin: '15 0 0 0'
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                width: 500,
+                defaults: {
+                    labelAlign: 'top',
+                    labelSeparator: ''
+                },
+                items: [this.maxDiscountOrderValue, this.maxDiscountLineItemValue]
             },
-            this.maxDiscountValue,
             this.redemptionContainer,            
             this.requiresCouponInput,
             this.couponCodeBox,
@@ -134,8 +160,11 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
     setFieldVisibility: function (isLineItem) {
         this.maxRedemptionsPerOrder.setVisible(isLineItem);
+        this.maxDiscountOrderValue.setVisible(!isLineItem);
         if (!isLineItem) {
             this.maxRedemptionsPerOrder.setValue(null);
+        } else {
+            this.maxDiscountOrderValue.setValue(null);
         }
     },
 

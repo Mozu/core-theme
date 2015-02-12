@@ -46,9 +46,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public bool? ExcludeItemsWithExistingShippingDiscounts { get; set; }
 
 
-        //MaximumDiscountImpactPerOrder
+        /// <summary>
+        /// Maximum impact this discount can apply to an order.
+        /// </summary>
+        [JsonProperty(PropertyName = "maximumDiscountValuePerOrder")]
         public decimal? MaximumDiscountImpactPerOrder { get; set; }
 
+        /// <summary>
+        /// Maximum impact this discount can apply on a single line item.
+        /// </summary>
+        [JsonProperty(PropertyName = "maximumDiscountValuePerLineItem")]
+        public decimal? MaximumDiscountImpactPerLineItem { get; set; }
 
         /// <summary>
         /// List of categories this discount applies to.
@@ -63,8 +71,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> ExcludedProducts { get; set; }
 
 
-
         public int? MaximumQuantityPerRedemption { get; set; }
+
         
         public int? MaximumRedemptionsPerOrder { get; set; }
         
@@ -95,10 +103,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<int> CustomerSegments { get; set; }
 
 
-        
-
-
-
         /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
@@ -120,16 +124,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         public List<string> ShippingZones { get; set; }
 
-
    
         public Decimal? MinimumOrderAmount { get; set; }
 
-
       
         public Decimal? MinimumLifetimeValueAmount { get; set; }
-
-
-        public Decimal? MaximumDiscountValuePerOrder { get; set; }
 
       
         public int? MaxRedemptionCount { get; set; }
