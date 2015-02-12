@@ -761,7 +761,7 @@
         ],
         "defaultConfig": {
             "template": "modules/product/product-list-carousel",
-            "attributeId": "Tenant~product-related",
+            "attributeId": "tenant~product-related",
             "title": "Other Items",
             "count": "4"
         },
