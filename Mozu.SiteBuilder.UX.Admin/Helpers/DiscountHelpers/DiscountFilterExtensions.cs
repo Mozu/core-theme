@@ -21,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
         private const string START_DATE_PROPERTY = "startDate";
         private const string END_DATE_PROPERTY = "endDate";
         private const string COUPON_CODE_PROPERTY = "couponcode";
-        private const string STATUS_PROPERTY = "status"; // Active, Ended, All // Service is missing this one.
+        private const string STATUS_PROPERTY = "status"; // Active, Ended, Scheduled, All // Service is missing this one.
         private const string AMOUNT_PROPERTY = "amount"; // int
         private const string TYPE_PROPERTY = "amounttype"; // Percentage, Amount, Free
 
@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
         private const string MAX_REDEMPTIONS_PROPERTY = "maxredemptions"; // int
         private const string CURRENT_REDEMPTION_COUNT_PROPERTY = "currentredemptioncount"; // int
         private const string CREATE_DATE_PROPERTY = "createdate"; // int
-        private const string CREATED_BY_PROPERTY = "createdby"; // str
+        private const string CREATED_BY_PROPERTY = "createby"; // str
         private const string UPDATE_DATE_PROPERTY = "updatedate"; // date
         private const string UPDATE_BY_PROPERTY = "updateby"; // str
 
@@ -101,10 +101,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
         /// </summary>
         private static string GetUnitPattern(NumberFormatInfo nfi, SymbolNames symbolName = SymbolNames.CurrencySymbol)
         {
-            string unitSymbol = (symbolName == SymbolNames.CurrencySymbol) ? nfi.CurrencySymbol : nfi.PercentSymbol;
+            // string unitSymbol = (symbolName == SymbolNames.CurrencySymbol) ? nfi.CurrencySymbol : nfi.PercentSymbol;
+            
+            // this version allows for any currency symbol. thank you microsoft;
+            string unitSymbol = (symbolName == SymbolNames.CurrencySymbol) ? @"\p{Sc}{1}" : nfi.PercentSymbol;
 
             bool symbolPrecedesIfPositive;
-
 
             if (symbolName == SymbolNames.CurrencySymbol)
             {
@@ -132,10 +134,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
 
             string decimalSeparator = (symbolName == SymbolNames.CurrencySymbol) ? nfi.CurrencyDecimalSeparator : nfi.PercentDecimalSeparator;
 
-            string pattern = Regex.Escape(symbolPrecedesIfPositive ? unitSymbol : "") +
+            //string pattern = Regex.Escape(symbolPrecedesIfPositive ? unitSymbol : "") +
+            //           @"\s*[-+]?" + "([0-9]{0,3}(" + groupSeparator + "[0-9]{3})*(" +
+            //           Regex.Escape(decimalSeparator) + "[0-9]+)?)" +
+            //           (!symbolPrecedesIfPositive ? unitSymbol : "");
+
+            string pattern = (symbolPrecedesIfPositive ? unitSymbol: "") +
                        @"\s*[-+]?" + "([0-9]{0,3}(" + groupSeparator + "[0-9]{3})*(" +
                        Regex.Escape(decimalSeparator) + "[0-9]+)?)" +
                        (!symbolPrecedesIfPositive ? unitSymbol : "");
+
 
             return pattern;
         }
@@ -156,7 +164,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 if (!amount.IsEmpty())
                 {
                     var parseAmount = Decimal.Parse(amount);
-                    retVal += String.Format(" or ({0} eq \"{1}\" and {2} eq {3}) ", AMOUNT_PROPERTY, parseAmount, TYPE_PROPERTY, type);
+                    retVal += String.Format(" or {0} eq '{1}' and {2} eq {3} ", AMOUNT_PROPERTY, parseAmount, TYPE_PROPERTY, type);
                 }
             }
 
@@ -168,11 +176,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    var searchKeywords = filter.value.ToString();
+
+                    var filterValue = filter.value.ToString();
                     var numberFormat = CultureInfo.GetCultureInfo(ctx.LocaleCode).NumberFormat;
                     var currencyPattern = GetUnitPattern(numberFormat);
                     var masterCurrencyPattern = GetUnitPattern(masterNumberFormat);
-
 
                     //testing euro pattern;
                     //var israelLocaleCode = CultureInfo.GetCultureInfo("he-IL");                    
@@ -181,38 +189,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                     //var germanNumberFormat = germanLocaleCode.NumberFormat;
                     //var masterCurrencyPattern = GetUnitPattern(germanNumberFormat);
 
-
-
                     var percentPattern = GetUnitPattern(numberFormat, SymbolNames.PercentSymbol);
                     var masterPercentPattern = GetUnitPattern(masterNumberFormat, SymbolNames.PercentSymbol);
 
-                    var retVal = String.Format("{0} cont \"{2}\" or {1} cont \"{2}\"", NAME_PROPERTY, COUPON_CODE_PROPERTY, filter.value);
+                    var retVal = String.Format("{0} cont '{2}' or {1} cont '{2}'", NAME_PROPERTY, COUPON_CODE_PROPERTY, filter.escapedValue);
+
+                    // Note: do not escape the value for the following currency and percent filters as the escaped version will cause propblems with the regex;
 
                     // check for currencies in the search string using the current site context;
-                    retVal += GetUnitMatches(searchKeywords, currencyPattern, DiscountTypes.Amount);
+                    retVal += GetUnitMatches(filterValue, currencyPattern, DiscountTypes.Amount);
 
                     // if the context's currency pattern varies from the master pattern we need to support both. criminy.
                     if (!currencyPattern.Equals(masterCurrencyPattern))
                     {
-                        retVal += GetUnitMatches(searchKeywords, masterCurrencyPattern, DiscountTypes.Amount);
+                        retVal += GetUnitMatches(filterValue, masterCurrencyPattern, DiscountTypes.Amount);
                     }
 
                     // check for percentages in the search string using the current site context;
-                    retVal += GetUnitMatches(searchKeywords, percentPattern, DiscountTypes.Percentage);
+                    retVal += GetUnitMatches(filterValue, percentPattern, DiscountTypes.Percentage);
 
                     // if the context's percent pattern varies from the master pattern we need to support both. 
                     if (!percentPattern.Equals(masterPercentPattern))
                     {
-                        retVal += GetUnitMatches(searchKeywords, masterPercentPattern, DiscountTypes.Percentage);
+                        retVal += GetUnitMatches(filterValue, masterPercentPattern, DiscountTypes.Percentage);
                     }
 
                     return retVal;
                 case "name":
-                    return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.value);
+                    return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.escapedValue);
                 case "id":
                     return String.Format("{0} cont \"{1}\"", ID_PROPERTY, filter.value);
                 case "couponcode":
-                    return String.Format("{0} cont \"{1}\"", COUPON_CODE_PROPERTY, filter.value);
+                    return String.Format("{0} cont \"{1}\"", COUPON_CODE_PROPERTY, filter.escapedValue);
                 case "status":
                     return String.Format("{0} eq \"{1}\"", STATUS_PROPERTY, filter.value);
                 case "amount":
@@ -228,13 +236,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 case "usagecountto":
                     return String.Format("{0} le \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);
                 case "startdatefrom":
-                    return String.Format("{0} gt \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return String.Format("{0} gt \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "startdateto":
-                    return String.Format("{0} lt \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return String.Format("{0} lt \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "enddatefrom":
-                    return String.Format("{0} gt \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return String.Format("{0} gt \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "enddateto":
-                    return String.Format("{0} lt \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return String.Format("{0} lt \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "requirecoupon":
                     return String.Format("{0} eq {1}", REQUIRE_COUPON_PROPERTY, filter.value);
                 case "productcode":
@@ -246,11 +254,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 case "currentredemptioncount":
                     return String.Format("{0} eq \"{1}\"", CURRENT_REDEMPTION_COUNT_PROPERTY, filter.value);
                 case "createdate":
-                    return String.Format("{0} eq \"{1}\"", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return String.Format("{0} eq \"{1}\"", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "createby":
                     return String.Format("{0} eq \"{1}\"", CREATED_BY_PROPERTY, filter.value);
                 case "updatedate":
-                    return String.Format("{0} eq \"{1}\"", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return String.Format("{0} eq \"{1}\"", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "updateby":
                     return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);
                 case "productsid":

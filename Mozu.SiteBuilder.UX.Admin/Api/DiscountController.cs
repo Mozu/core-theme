@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<Discount>(singleDiscount));
             }
 
-            string filter = "";
+            string filter = null;
             if (extFilter != null && extFilter.Count > 0)
             {
                 var tenant = (await _tenantClient.GetTenant(_ctx.TenantId)).ReadAsSync();
@@ -63,8 +63,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
             }
-                
-
             
 
             string sortBy = pagingParams.ToSort(_discountSortFormatter);
