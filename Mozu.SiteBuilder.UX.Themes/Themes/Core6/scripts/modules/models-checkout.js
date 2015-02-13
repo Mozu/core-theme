@@ -936,9 +936,10 @@
                     me.set('couponCode', '');
 
                     var productDiscounts = _.flatten(_.pluck(me.get('items'), 'productDiscounts'));
-                    var shippingDiscounts = _.flatten(_.pluck(me.get('items'), 'shippingDiscounts'));
+                    var shippingDiscounts = _.flatten(_.pluck(_.flatten(_.pluck(me.get('items'), 'shippingDiscounts')), 'discount'));
+                    var orderShippingDiscounts = _.flatten(_.pluck(me.get('shippingDiscounts'), 'discount'));
 
-                    var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts);
+                    var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts).concat(orderShippingDiscounts);
                     var lowerCode = code.toLowerCase();
                     if (!allDiscounts || !_.find(allDiscounts, function(d) {
                         return d.couponCode.toLowerCase() === lowerCode;
