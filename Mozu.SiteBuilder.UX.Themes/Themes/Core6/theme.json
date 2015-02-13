@@ -343,6 +343,20 @@
             "template": "login",
             "title": "Login",
             "userCreatable": false
+        },
+        {
+            "entityType": "signup",
+            "id": "signup",
+            "template": "signup",
+            "title": "Sign Up",
+            "userCreatable": false
+        },
+         {
+            "entityType": "forgotpassword",
+            "id": "forgotpassword",
+            "template": "forgot-password",
+            "title": "Forgot Password",
+            "userCreatable": false
         }
     ],
     "settings": {
