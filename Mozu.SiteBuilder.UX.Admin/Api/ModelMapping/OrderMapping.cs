@@ -463,10 +463,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             foreach (var p in order.Payments)
             {
-                var correspondingRefund = dc.Refunds.FirstOrDefault(r => r.Payment != null && r.Payment.Id == p.Id);
-                if (correspondingRefund == null) continue;
+                var correspondingRefunds = dc.Refunds.Where(r => r.Payment != null && r.Payment.Id == p.Id);
+                if (correspondingRefunds.Count() == 0) continue;
 
-                var uncopiedInteractions = correspondingRefund.Payment.Interactions.Where(i => !p.Interactions.Any(pi => pi.Id == i.Id)).ToList();
+                var uncopiedInteractions = correspondingRefunds.SelectMany(r => r.Payment.Interactions).Where(i => !p.Interactions.Any(pi => pi.Id == i.Id)).ToList();
                 if (uncopiedInteractions.Count == 0) continue;
 
                 foreach (var refundInteraction in uncopiedInteractions) {
