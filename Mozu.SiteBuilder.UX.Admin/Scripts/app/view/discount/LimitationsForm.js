@@ -28,8 +28,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             currencyCode: Taco.app.context.getCurrent().currencyCode,
             align: 'right',
             unitAtEnd: false,
-            minValue: 0,
-            hidden: this.record.get('scope') === 'LineItem'
+            minValue: 0
         });
 
         this.maxDiscountLineItemValue = Ext.create('Taco.core.ux.form.CurrencyField', {
@@ -42,7 +41,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             currencyCode: Taco.app.context.getCurrent().currencyCode,
             align: 'right',
             unitAtEnd: false,
-            minValue: 0
+            minValue: 0,
+            hidden: this.record.get('scope') === 'Order'
         });
 
 
@@ -160,11 +160,10 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
     setFieldVisibility: function (isLineItem) {
         this.maxRedemptionsPerOrder.setVisible(isLineItem);
-        this.maxDiscountOrderValue.setVisible(!isLineItem);
+        this.maxDiscountLineItemValue.setVisible(isLineItem);
         if (!isLineItem) {
             this.maxRedemptionsPerOrder.setValue(null);
-        } else {
-            this.maxDiscountOrderValue.setValue(null);
+            this.maxDiscountLineItemValue.setValue(null);
         }
     },
 

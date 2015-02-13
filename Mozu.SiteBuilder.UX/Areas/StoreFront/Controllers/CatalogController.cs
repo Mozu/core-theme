@@ -30,6 +30,7 @@ using IProductWebApiClient = Mozu.ProductRuntime.Contracts.Clients.IProductRunti
 using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
 using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using DC = Mozu.ProductRuntime.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -119,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<Models.StoreFront.Catalog.ProductCollection> ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
+        public async Task<UX.Models.StoreFront.Catalog.ProductCollection> ProductListing(int? categoryId = null, string sortBy = null, int? startIdx = null, int? itemsPerPage = null, List<object> productCodes = null, bool? includeFacets = null, bool? useUrlParams = null)
         {
             categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
             if (useUrlParams.GetValueOrDefault(false))
@@ -164,13 +165,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     string facetValueFilter = HttpRequestBase.QueryString["facetValueFilter"];
                     ProductSearchResult pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter)).ReadAsAsync();
-                    var pc = Mapper.Map<Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
+                    var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
                     return pc;
                 }
                 else
                 {
                     ProductCollection pcDC = await (await _productClient.GetProducts(filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, responseGroups: "Categories,Measurements,Properties,Options")).ReadAsAsync();
-                    var pc = Mapper.Map<Models.StoreFront.Catalog.ProductCollection>(pcDC);
+                    var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductCollection>(pcDC);
                     return pc;
                 }
 

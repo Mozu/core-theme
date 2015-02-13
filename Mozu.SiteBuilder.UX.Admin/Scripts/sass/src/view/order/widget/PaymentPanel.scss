@@ -1,154 +1,123 @@
-﻿// order payment 
-
-
-
-.#{$vprefix}orderform-payment { 
-	.seperator{
-		color:#cccccc;
-		padding:0px 7px 0px 7px;    
-	}
-
-  
-	// this is the header for the panel
-	.orderform-payment-statusRow{
-		padding:10px;
-
-		.statusField{
-			font-size: 1.9rem;
-			line-height: 2.9rem;    
+﻿.#{$vprefix}orderform-payment {
+	.#{$vprefix}payments-refund-grid {
+		.#{$prefix}panel-header-text-container {
+			font-size: 20px;
 		}
 	}
 
-	.orderform-payment-paymentDetails{
-		.authorizedCreditCard {        
-			.creditCard {}
-			.authorization{}
-		}
+    .seperator {
+        color: $color-neutral-80;
+        padding: 0px 7px 0px 7px;
+    }
 
-		> div {
-			float: left;
-			width: 50%;
-			box-sizing: border-box;
-			padding-right: 20px;
-		}
-					
-		.orderSummary{
-			.orderTotal{}
-				.Received{}
-				.balance{}
-			}
-			
-			.billingInformation{
-			padding:7px 0px 7px 0px ;
+    // this is the header for the panel
+    .orderform-payment-statusRow {
+        padding:10px;
 
-			.fullName{}
-			.address{}
-			.country{}
-			.phoneNumber{}
-		}
-	}
+        .statusField {
+            font-size: 1.9rem;
+            line-height: 2.9rem;
+        }
+    }
 
-	.#{$vprefix}orderform-payment-amounts-summary {	
-		display: table;
-		padding: 1rem;
-		h4 {
-			display: table-row;
-		}
+    .orderform-payment-paymentDetails {
+        & > div {
+            float: left;
+            width: 50%;
+            box-sizing: border-box;
+            padding-right: 20px;
+        }
+            
+        .billingInformation {
+            padding:7px 0px 7px 0px;
+        }
+    }
 
-		&-label {
-			display: table-cell;
-			text-align: left;
-			padding: 0 1rem 1rem 0;
-		}
+    .#{$vprefix}orderform-payment-amounts-summary {
+        display: table;
+        padding: 1rem;
 
-		&-value {
-			text-align: right;
-			display: table-cell;
-		}
-	}
+        h4 {
+            display: table-row;
+        }
 
+        &-label {
+            display: table-cell;
+            text-align: left;
+            padding: 0 1rem 1rem 0;
+        }
 
-	// the main body of information on the payment
-	.orderform-payment-main{
-		padding:10px ;
-	}
+        &-value {
+            text-align: right;
+            display: table-cell;
+        }
+    }
+
+    // the main body of information on the payment
+    .orderform-payment-main {
+        padding: 10px;
+    }
 
 
     // list of transaction history
+    .orderform-payment-transactionlist {
+        border-top: 1px solid $color-standard-border-dark;
 
-	
-    .orderform-payment-transactionlist {   
-	
-		border-top:1px solid #bfbfbf;
-	
+        .title {
+            padding: 10px;
+        }
 
-		.title {		    
-		    padding:10px;
-		}
+        .taco-history-collapsable {
+            .payment-transaction {
+                margin-left: 40px;
+            }
+        }
 
-		.taco-history-collapsable { 			
-			.payment-transaction {
-				margin-left:40px;
-			}
-		}
+        .previous-transaction {
+            display: block;
+        }
 
-		.previous-transaction {
-			display:block;
-		}
+        .collapsed {
+            .previous-transaction {
+                display: none;
+            }
+        }
+        
+        .body {
+            border-top: 1px solid $color-standard-border-dark;
+            margin: 0px 10px 0px 10px ;
 
-		.collapsed{
-			.previous-transaction {
-				display:none;
-			}
-		}
-		
-		
-		.body {
+            .togglebtn {
+                float: left;
+                width: 30px;
+                padding: 0px;
+                margin: 6px 0px 10px 0px;
+            }
 
-			border-top:1px solid #bfbfbf;
-			margin:0px 10px 0px 10px ;
+            .payment-transaction {
+                padding: 10px 0px 10px 0px;
+                border-color: $color-standard-border-dark;
+                border-style: solid;
+                border-width: 0px;
+                font-size: 1.4rem;
+                line-height: 1.9rem;
+                position: relative;
+            }
 
-			.togglebtn {
-				float:left;
-				width:30px;				
-				padding: 0px;
-				margin: 6px 0px 10px 0px;
-			}
+            .details {
+                .creditCard {
+                    white-space: nowrap;
+                }
+            }
 
-
-
-			.payment-transaction {
-				padding:10px 0px 10px 0px;				
-				border-color:#bfbfbf;
-				border-style:solid;
-				border-width:0px;
-				font-size: 1.4rem;
-				line-height: 1.9rem;
-				position:relative;
-			}
-
-			
-
-			
-		
-			.details{     
-				.creditCard{
-					white-space:nowrap
-				}
-			}
-
-			.paymentAction{
-				display:block;
-				float:right;
-				padding-left:30px;          
-				text-align:right;         
-				color:$color-action-link;
-				cursor:pointer;
-			}
-		}
-	}
+            .paymentAction {
+                display: block;
+                float: right;
+                padding-left: 30px;
+                text-align: right;
+                color: $color-action-link;
+                cursor: pointer;
+            }
+        }
+    }
 }
-
-
-
-

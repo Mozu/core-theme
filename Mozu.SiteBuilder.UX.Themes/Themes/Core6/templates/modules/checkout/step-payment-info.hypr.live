@@ -73,9 +73,11 @@
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-      {% include "modules/checkout/checkout-digital-credit" %}
-     
+
       {% if model.nonStoreCreditTotal > 0 %}
+      
+      {% include "modules/checkout/checkout-digital-credit" %}
+      
       <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
             <div class="mz-l-formfieldgroup">

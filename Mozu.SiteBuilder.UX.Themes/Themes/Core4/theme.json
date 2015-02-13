@@ -365,7 +365,14 @@
 		"properties": {
 		  "subject": "Order Confirmation #{model.orderNumber}"
 		}
-	  },
+	  }, {
+        "id": "refund.created",
+        "properties": {
+
+        },
+        "template": "email/order-refund-issued",
+        "title": "Refund Issued"
+     },
       {
         "id": "return.created",
         "title": "Return Created",

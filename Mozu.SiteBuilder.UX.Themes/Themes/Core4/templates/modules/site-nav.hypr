@@ -13,6 +13,7 @@
                     {% if link.items %}
                     <ul class="mz-sitenav-sub">
                         {% for sublink in link.items %}
+                          {% if not sublink.isHidden %}
                             <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
                                 <a class="mz-sitenav-link" href="{{sublink.url}}">{{sublink.name}}</a>
                               {%comment%}
@@ -20,14 +21,17 @@
                               {% if sublink.items %}
                                        <ul class="mz-sitenav-sub-sub">
                                             {% for subsublink in sublink.items %}
+                                              {% if not subsublink.isHidden %}
                                                 <li class="mz-sitenav-item">
                                                     <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name}}</a>
                                                 </li>
+                                              {% endif %}
                                             {% endfor %}
                                         </ul>
                               {% endif %}
                               {%endcomment%}
                             </li>
+                          {% endif %}
                         {% endfor %}
                     </ul>
                     {% endif %}
@@ -41,17 +45,19 @@
                 <a class="mz-sitenav-link" href="javascript:;">{{ labels.navMore }}</a>
                 <ul class="mz-sitenav-sub">
                     {% for sublink in navigation.tree %}
-                        {% if sublink.index >= themeSettings.maxTopLevelNavItems %}
+                      {% if not sublink.isHidden and sublink.index >= themeSettings.maxTopLevelNavItems %}
                         <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
-                                <a class="mz-sitenav-link" href="{{sublink.url}}">{{sublink.name}}</a>
+                            <a class="mz-sitenav-link" href="{{sublink.url}}">{{sublink.name}}</a>
                               {% if sublink.items %}
                               {%comment%}
                               <!-- uncoment out  this block to get 3rd laver of nav -->
                                        <ul class="mz-sitenav-sub-sub">
                                             {% for subsublink in sublink.items %}
+                                              {% if not subsublink.isHidden %}
                                                 <li class="mz-sitenav-item">
                                                     <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name}}</a>
                                                 </li>
+                                              {% endif %}
                                             {% endfor %}
                                         </ul>
 

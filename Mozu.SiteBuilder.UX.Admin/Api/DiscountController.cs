@@ -4,13 +4,16 @@ using System.Threading.Tasks;
 using System.Linq;
 using AutoMapper;
 using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core;
 using Mozu.Core.Api.Routing;
+using System.Globalization;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
 using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
+using Mozu.Tenant.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -22,14 +25,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IDiscountWebApiClient _discountWebClient;
         private readonly IDiscountSortFormatter _discountSortFormatter;
+        private IApiContext _ctx;
+        private readonly ITenantsWebApiClient _tenantClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public DiscountController(IDiscountWebApiClient discountWebClient, IDiscountSortFormatter discountSortFormatter)
+        public DiscountController(IDiscountWebApiClient discountWebClient, IDiscountSortFormatter discountSortFormatter, IApiContext ctx, ITenantsWebApiClient tenantClient)
         {
             _discountWebClient = discountWebClient;
             _discountSortFormatter = discountSortFormatter;
+            _ctx = ctx;
+            _tenantClient = tenantClient;
+
         }
 
         /// <summary>
@@ -45,7 +53,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<Discount>(singleDiscount));
             }
 
-            string filter = extFilter.ToFilterString();
+            string filter = null;
+            if (extFilter != null && extFilter.Count > 0)
+            {
+                var tenant = (await _tenantClient.GetTenant(_ctx.TenantId)).ReadAsSync();
+                var masterCat = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == _ctx.MasterCatalogId);
+                var defaultLocalCode = masterCat.DefaultLocaleCode;
+                var masterNumberFormat = CultureInfo.GetCultureInfo(defaultLocalCode).NumberFormat;
+
+                filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
+            }
+            
+
             string sortBy = pagingParams.ToSort(_discountSortFormatter);
 
             try

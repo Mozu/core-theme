@@ -9,6 +9,7 @@ using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
+using RefundsDC = Mozu.CommerceRuntime.Contracts.Refunds;
 using ShippingDC = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
@@ -29,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcShippingDiscount_to_ShippingDiscount();
             Map_DcPayment_to_OrderPayment();
             Map_DcPaymentInteraction_to_PaymentInteraction();
+            Map_DcRefund_to_Refund();
             Map_DcPackage_to_OrderPackage();
             Map_DcPackageItem_to_OrderPackageItem();
             Map_DcPickupItem_to_OrderPickupItem();
@@ -97,6 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus ))
                 .ForMember(x => x.PaymentStatus, op => op.ResolveUsing(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.ResolveUsing(dc => dc.Payments != null ? dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate) : null))
+                .ForMember(x => x.Refunds, op => op.ResolveUsing(dc => dc.Refunds))
                 .ForMember(x => x.Packages, op => op.ResolveUsing(dc => dc.Packages))
                 .ForMember(x => x.Pickups, op => op.ResolveUsing(dc => dc.Pickups))
                 .ForMember(x => x.DigitalPackages, op => op.ResolveUsing(dc => dc.DigitalPackages ?? new List<ShippingDC.DigitalPackage>()))
@@ -114,6 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingTotal, op => op.ResolveUsing(dc => dc.ShippingTotal))
                 .ForMember(x => x.TaxTotal, op => op.ResolveUsing(dc => dc.TaxTotal))
                 .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
+                .ForMember(x => x.AmountRefunded, op => op.ResolveUsing(dc => dc.AmountRefunded))
 
                 .ForMember(x => x.IsDraft, op => op.ResolveUsing(dc => dc.IsDraft ?? false ))
                 .ForMember(x => x.HasDraft, op => op.ResolveUsing(dc => dc.HasDraft ?? false))
@@ -155,6 +159,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
                 .AfterMap(MapAvailableBulkActions)
+                .AfterMap(InterpolateRefundsIntoPaymentInteractions)
                 .AfterMap((dc, order) =>
                 {
                     if (order.Packages == null)
@@ -450,6 +455,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 order.AvailableBulkActions.Add(SHIP);
         }
 
+        /// <summary>
+        /// Inject transactions from refunds into Order.Payments for consistency in the view.
+        /// A transaction of type "Credit" on the refund will be named to type "Refund".
+        /// </summary>
+        private void InterpolateRefundsIntoPaymentInteractions(OrdersDC.Order dc, Order order)
+        {
+            foreach (var p in order.Payments)
+            {
+                var correspondingRefund = dc.Refunds.FirstOrDefault(r => r.Payment != null && r.Payment.Id == p.Id);
+                if (correspondingRefund == null) continue;
+
+                var uncopiedInteractions = correspondingRefund.Payment.Interactions.Where(i => !p.Interactions.Any(pi => pi.Id == i.Id)).ToList();
+                if (uncopiedInteractions.Count == 0) continue;
+
+                foreach (var refundInteraction in uncopiedInteractions) {
+                    var riMapped = Mapper.Map<PaymentInteraction>(refundInteraction);
+                    if (riMapped.InteractionType == "Credit") {
+                        riMapped.InteractionType = "Refund";
+                    }
+                    var indexToInsertAt = p.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
+                    p.Interactions.Insert(Math.Max(indexToInsertAt, 0), riMapped);
+                    p.AmountCredited += riMapped.Amount.GetValueOrDefault();
+                }
+            }
+        }
+
         private void Map_DcOrderItem_to_OrderItem()
         {
             Mapper.CreateMap<ProductsDC.BundledProduct, BundledProduct>()
@@ -729,6 +760,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(x => x.CanEdit, op => op.Ignore()) //calc field returns IsManual
                 .ForMember(x => x.CanDelete, op => op.Ignore()) //ditto
+                ;
+        }
+
+        private void Map_DcRefund_to_Refund()
+        {
+            Mapper.CreateMap<RefundsDC.Refund, OrderRefund>()
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.OrderId, op => op.ResolveUsing(dc => dc.OrderId))
+                .ForMember(x => x.Reason, op => op.ResolveUsing(dc => dc.Reason))
+                .ForMember(x => x.Payment, op => op.ResolveUsing(dc => dc.Payment))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.CreatedBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : null))
                 ;
         }
 
