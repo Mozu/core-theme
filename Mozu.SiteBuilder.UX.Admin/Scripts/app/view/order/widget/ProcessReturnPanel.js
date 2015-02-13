@@ -504,7 +504,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                                 returnIds: [this.record.getId()],
                                 actionName: "Receive"
                             },
-                            enabledWhen: ["Received", "Refunded"]
+                            enabledWhen: ["Received"]
                         }, {
                             text: "RMA Refunded",
                             jsonData: {

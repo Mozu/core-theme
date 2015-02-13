@@ -196,6 +196,25 @@
             "returnType": "order",
             "noBody": true,
             "includeSelf": true
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons",
+            "includeSelf": true
         }
     },
     "cartitem": {

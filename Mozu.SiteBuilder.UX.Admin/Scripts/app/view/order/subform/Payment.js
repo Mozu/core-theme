@@ -41,7 +41,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         return this.record.payments().queryBy(function(payment) { return payment.get('status') !== "Voided"; }).last();
     },
 
-    initComponent: function (eOpts) {
+    initComponent: function () {
         var me = this;
         var record = this.record;
 
@@ -72,6 +72,75 @@ Ext.define('Taco.view.order.subform.Payment', {
             })
         ];
 
+        this.refundGrid = Ext.create('Ext.grid.Panel', {
+            hidden: true,
+            title: 'Refunds',
+            cls: 'taco-payments-refund-grid',
+            margin: '10 0 0 0',
+            emptyText: 'There are no refunds to display',
+            viewConfig: {
+                deferEmptyText: false
+            },
+            store: this.record.refunds(),
+            columns: [{
+                xtype: 'datecolumn',
+                dataIndex: 'createDate',
+                text: 'Date',
+                flex: 1,
+                format: 'Y-m-d H:i:s'
+            }, {
+                dataIndex: 'amount',
+                text: 'Amount',
+                flex: 1,
+                renderer: function (value, meta, record) {
+                    return me.record.formatCurrency(value);
+                }
+            }, {
+                dataIndex: 'payment',
+                text: 'Payment Method',
+                flex: 2,
+                renderer: function (value, meta, record) {
+                    return value.paymentType;
+                }
+            }, {
+                dataIndex: 'reason',
+                text: 'Notes',
+                flex: 2,
+                renderer: function (value) {
+                    return Ext.String.htmlEncode(value);
+                }
+            }, {
+                dataIndex: 'createdBy',
+                text: 'User',
+                renderer: function(value) {
+                    var user = Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) { return u.id === value; });
+
+                    if (!user) return ' ';
+
+                    return Ext.String.format('{0} {1}', user.firstName, user.lastName);
+                },
+                flex: 1
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                menuItems: [{
+                    text: 'Resend Email',
+                    menuColumnHandler: function (item, eventData) {
+                        var cfg = {
+                            jsonData: {
+                                orderId: eventData.record.get('orderId'),
+                                refundId: eventData.record.get('id')
+                            }
+                        };
+
+                        if (record.resendRefundEmail) {
+                            record.resendRefundEmail(cfg);
+                        }
+                    }
+                }]
+            }]
+        });
+
         this.cls = [this.cls, Taco.baseCSSPrefix + 'orderform-payment'].join(' ');
 
         // after the record is reloaded we will need to refresh the ui
@@ -85,43 +154,30 @@ Ext.define('Taco.view.order.subform.Payment', {
         me.initUI();
         
         
-        me.items = [me.bodyCont, {
-            xtype: 'grid',
-            title: 'Refunds',
-            margin: '10 0 0 0',
-            emptyText: 'There are no refunds to display',
-            viewConfig: {
-                deferEmptyText: false
-            },
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['date', 'amount', 'method', 'notes', 'user'],
-                data: []
-            }),
-            columns: [{
-                dataIndex: 'date',
-                text: 'Date',
-                flex: 1
-            }, {
-                dataIndex: 'amount',
-                text: 'Amount',
-                flex: 1
-            }, {
-                dataIndex: 'method',
-                text: 'Payment Method',
-                flex: 2
-            }, {
-                dataIndex: 'notes',
-                text: 'Notes',
-                flex: 2
-            }, {
-                dataIndex: 'user',
-                text: 'User',
-                flex: 1
-            }]
-        }];
+        me.items = [me.bodyCont, me.refundGrid];
 
         this.callParent(arguments);
         this.addEvents(['rerender']);
+
+        this.refundGrid.mon(this, {
+            boxready: {
+                scope: this,
+                fn: function () {
+                    this.refundGrid.setVisible(!!this.refundGrid.getStore().getCount());
+                }
+            },
+            rerender: {
+                scope: this,
+                fn: function () {
+                    var store = this.refundGrid.getStore();
+                    var refunds = this.record.refunds().getRange();
+
+                    store.removeAll();
+                    store.add(refunds);
+                    this.refundGrid.setVisible(!!store.getCount());
+                }
+            }
+        });
     },
 
     getNewPaymentActions: function() {

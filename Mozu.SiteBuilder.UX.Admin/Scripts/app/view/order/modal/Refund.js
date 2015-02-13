@@ -48,14 +48,14 @@ Ext.define('Taco.view.order.modal.Refund', {
         var refundAmountField = form.getForm().findField('amount');
         var excessGroup = this.down('#allowExcessCreditGroup');
         var isCreditCard = nextState.method === 'CreditCard';
-        var isExcess = nextState.proposed > nextState.collected;
+        var isExcess = nextState.proposed > (nextState.collected - nextState.refunded);
 
         // show or hide the credit card field and its help text
-        form.getForm().findField('creditCard').setVisible(isCreditCard).setDisabled(!isCreditCard);
+        form.getForm().findField('paymentId').setVisible(isCreditCard).setDisabled(!isCreditCard);
         this.down('#amountAvailable').update(nextState);
 
         // set a hard maximum on the refund amount if refunding a credit card
-        refundAmountField.emptyText = this.suggestRefund();
+        refundAmountField.emptyText = this.suggestRefund().toFixed(2);
         refundAmountField.applyEmptyText();
         refundAmountField.setMaxValue(isCreditCard ? this.suggestRefund() : Number.MAX_VALUE);
         refundAmountField.validate();
@@ -73,7 +73,7 @@ Ext.define('Taco.view.order.modal.Refund', {
 
         this.setModalState({
             collected: this.order.get('authorizationInfo').amountCollected,
-            refunded: 0,
+            refunded: this.order.get('amountRefunded'),
             proposed: 0
         });
 
@@ -123,7 +123,11 @@ Ext.define('Taco.view.order.modal.Refund', {
                 resizable: false,
                 menuDisabled: true,
                 dataIndex: 'amountCredited',
-                renderer: function (value) {
+                renderer: function (value, metaData, record) {
+                    if (record.get('paymentType') === 'Check') {
+                        return '--';
+                    }
+
                     return me.order.formatCurrency(value);
                 }
             }]
@@ -132,7 +136,10 @@ Ext.define('Taco.view.order.modal.Refund', {
         ccStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.OrderPayment',
             data: store.queryBy(function (record) {
-                return record.get('paymentType') === 'CreditCard';
+                return (
+                    Ext.Array.contains(['CreditCard', 'Paypal', 'PaypalExpress'], record.get('paymentType')) &&
+                    record.get('amountCollected') - (record.get('amountCredited') || 0) > 0
+                );
             }).getRange()
         });
 
@@ -154,7 +161,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     allowBlank: false,
                     items: [{
                         name: 'refundMethod',
-                        boxLabel: 'Credit Card',
+                        boxLabel: 'Direct Refund',
                         inputValue: 'CreditCard'
                     }, {
                         name: 'refundMethod',
@@ -180,7 +187,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     height: 30,
                     items: [{
                         xtype: 'combobox',
-                        name: 'creditCard',
+                        name: 'paymentId',
                         width: 200,
                         margin: 0,
                         hidden: true,
@@ -190,24 +197,40 @@ Ext.define('Taco.view.order.modal.Refund', {
                         forceSelection: true,
                         queryMode: 'local',
                         displayField: 'cardNumber',
-                        displayTpl: '<tpl for=".">{[values.cardType]}: {[values.cardNumber]}</tpl>',
+                        displayTpl: [
+                            '<tpl for=".">',
+                                '<tpl if="paymentType == \'CreditCard\'">{[values.cardType]}: {[values.cardNumber]}',
+                                '<tpl else>{[values.paymentType]}: {[values.billingContact.email]}',
+                                '</tpl>',
+                            '</tpl>'
+                        ],
                         valueField: 'id',
                         emptyText: 'Select Card',
                         msgTarget: 'side',
                         store: ccStore,
                         listConfig: {
                             getInnerTpl: function (displayField) {
-                                return '{cardType}: {cardNumber}';
+                                var tpl = [
+                                    '<tpl if="paymentType == \'CreditCard\'">{cardType}: {cardNumber}',
+                                    '<tpl else>{paymentType}: {billingContact.email}',
+                                    '</tpl>'
+                                ].join('');
+
+                                return tpl;
                             }
                         },
                         listeners: {
+                            beforehide: {
+                                scope: this,
+                                fn: function (field) {
+                                    field.clearValue();
+                                }
+                            },
                             show: {
                                 scope: this,
                                 fn: function (field) {
                                     if (ccStore.getCount() === 1) {
                                         field.setValue(ccStore.first());
-                                    } else {
-                                        field.clearValue();
                                     }
                                 }
                             },
@@ -256,7 +279,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                         mouseWheelEnabled: false,
                         allowBlank: false,
                         minValue: Number.MIN_VALUE,
-                        emptyText: this.suggestRefund(),
+                        emptyText: this.suggestRefund().toFixed(2),
                         msgTarget: 'side',
                         listeners: {
                             change: {
@@ -316,6 +339,16 @@ Ext.define('Taco.view.order.modal.Refund', {
                     width: 500,
                     rows: 2,
                     margin: 0
+                }, {
+                    xtype: 'checkboxgroup',
+                    itemId: 'allowSaveGroup',
+                    hidden: true,
+                    allowBlank: false,
+                    items: [{
+                        name: 'allowSave',
+                        boxLabel: 'Allow save',
+                        checked: true
+                    }]
                 }]
             }]
         }));
@@ -332,38 +365,35 @@ Ext.define('Taco.view.order.modal.Refund', {
     suggestRefund: function () {
         var state = this.getModalState();
         var payment = state.payment;
+        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited : state.collected - state.refunded).toFixed(2));
 
-        return payment ? payment.amountCollected - payment.amountCredited : state.collected - state.refunded;
+        return suggestion > 0 ? suggestion : 0;
+    },
+
+    toggleSave: function (enable) {
+        this.getForm().down('#allowSaveGroup').setValue({
+            allowSave: !!enable
+        });
     },
 
     doSave: function () {
         var values = this.getForm().getValues();
-        console.log(values);
+
+        this.toggleSave(false);
+        this.setLoading(true, this.body);
 
         this.order.createRefund(values, {
             success: function () {
+                this.toggleSave(true);
+                this.setLoading(false, this.body);
+                this.order.reload();
                 this.saveSuccess();
+            },
+            failure: function () {
+                this.toggleSave(true);
+                this.setLoading(false, this.body);
             },
             scope: this
         });
-
-        // if (values.refundMethod === 'CreditCard') {
-        //     this.order.refundPayment({
-        //         paymentId: values.creditCard,
-        //         amount: values.refundAmount,
-        //         success: function () {
-        //             this.saveSuccess();
-        //         },
-        //         scope: this
-        //     });
-        // } else {
-        //     this.order.createStoreCredit({
-        //         amount: values.refundAmount,
-        //         success: function () {
-        //             this.saveSuccess();
-        //         },
-        //         scope: this
-        //     });
-        // }
     }
 });

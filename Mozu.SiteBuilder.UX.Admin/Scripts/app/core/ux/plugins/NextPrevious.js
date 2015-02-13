@@ -128,7 +128,7 @@
             if (!sourceStoreExists) {
                 // need to get the sorters for the grid from data storage so that a newly created store here will match the default when loading the default grid.
                 state = Ext.state.Manager.get(this.stateId);
-                if ((state.storeState && state.storeState.sorters)) {
+                if ((state && state.storeState && state.storeState.sorters)) {
                     sorters = state.storeState.sorters;
                     Ext.apply(storeCfg, {
                         sorters: sorters

@@ -116,16 +116,17 @@
     }
 }
 
-.#{$prefix}boundlist-item-name {
+.#{$prefix}boundlist-item-name,
+.#{$prefix}boundlist-item-name-inherited,
+.#{$prefix}boundlist-item-name-overridden
+ {
     font-size: px-to-rem(12px);
     display: block;
 }
 
-.#{$prefix}boundlist-item-name-inherited {
-    color: $color-neutral-70;
-    font-size: px-to-rem(12px);
+.#{$prefix}boundlist-item-name-inherited,
+.#{$prefix}boundlist-item-name-overridden {
     font-style: italic;
-    display: block;
 }
 
 .#{$prefix}boundlist-item-type {

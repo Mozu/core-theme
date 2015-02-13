@@ -198,9 +198,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.13.2\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.15.1\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.15.8\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -2009,7 +2009,9 @@
     <Content Include="Themes\Core6\templates\modules\common\login-popover.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\message-bar.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\order-list.hypr.live" />
-    <Content Include="Themes\Core6\templates\modules\common\order-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\order-listing.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core6\templates\modules\common\order-summary.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\page-numbers.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\page-sort.hypr.live" />
@@ -2144,6 +2146,12 @@
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-password.hypr.live" />
     <Content Include="Themes\Core5\stylesheets\back-office.less" />
     <Content Include="Themes\Core4\stylesheets\back-office.less" />
+    <Content Include="Themes\Core6\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core5\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core4\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core6\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core5\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\coupon-code-field.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

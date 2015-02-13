@@ -25,12 +25,10 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
             {
                 name: 'keyword',
                 fieldLabel: 'Keyword Search',
-                name:"keyword"
             },            
             {
                 name: 'discountName',
                 fieldLabel: 'Discount Name',
-                name: "name"
             },
 
 
@@ -65,6 +63,9 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                             {
                                 name: "Active",
                                 id: "Active"
+                            }, {
+                                name: "Scheduled",
+                                id: "Scheduled"
                             }, {
                                 name: "Ended",
                                 id: "Ended"

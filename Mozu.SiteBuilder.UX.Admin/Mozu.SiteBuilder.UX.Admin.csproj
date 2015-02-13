@@ -212,9 +212,9 @@
     <Reference Include="Mozu.AppDev.Contracts">
       <HintPath>..\packages\Mozu.AppDev.Contracts.1.13.10\lib\net45\Mozu.AppDev.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.15.1\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.15.8\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -484,6 +484,7 @@
     <Compile Include="Api\Models\Order\OrderPickup.cs" />
     <Compile Include="Api\Models\Order\OrderPickupItem.cs" />
     <Compile Include="Api\Models\Order\BulkOrderRequest.cs" />
+    <Compile Include="Api\Models\Order\OrderRefund.cs" />
     <Compile Include="Api\Models\Order\OrderReturnItem.cs" />
     <Compile Include="Api\Models\Order\OrderSummary.cs" />
     <Compile Include="Api\Models\ProductModels\ProductCodeRename.cs" />
@@ -491,6 +492,7 @@
     <Compile Include="Api\Models\Returns\ReturnItem.cs" />
     <Compile Include="Api\OrderBulkActionController.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />
+    <Compile Include="Api\OrderEmailController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
     <Compile Include="Api\OrderInternalNotesController.cs" />
     <Compile Include="Api\OrderPickupController.cs" />
@@ -765,6 +767,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\OrderRefund.js" />
     <Content Include="Scripts\app\model\State.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\Card.js" />

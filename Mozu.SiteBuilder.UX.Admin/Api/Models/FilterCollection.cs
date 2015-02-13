@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models
@@ -32,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
     public class FilterCollection : List<FilterCollectionItem>
     {
+        
         public FilterCollection() : base() { }
         public FilterCollection(IEnumerable<FilterCollectionItem> col)
             : base(col)
@@ -151,6 +153,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public System.Collections.Specialized.NameValueCollection QueryString { get; set; }
 
         public string ResponseGroups { get; set; }
+
+        
     }
 
     public class SortingCollectionItem
@@ -175,6 +179,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
     }
     public class FilterCollectionItem
     {
+        private static Dictionary<string, string> _escapeMap;
+          
+        static FilterCollectionItem () {
+            _escapeMap = new Dictionary<string, string> {
+                { "^", "^^"},
+                { "'", "^'"},                
+                { "\"", "^\""},
+                { "[", "^[" },
+                { "]", "^]" },
+                { "{", "^{" },
+                { "}", "^}" },
+                { "(", "^(" },
+                { ")", "^)" }
+            };
+        }
+        
+        // need to escape the following characters:
+        // Special Characters: = '^', '\'', '"', '{','}',')','(' 
+        // Used as delimiters within expressions
+        // source: http://tfs.corp.volusion.com:8080/tfs/VNext/v2Mozu/_git/Mozu.Core#path=%2FMozu.Core.FilterParsing%2FFilterParser.cs&version=GBmaster&_a=contents
+        public string EscapeFilter(string stringValue)
+        {
+            if (stringValue != null)
+            {
+                foreach (KeyValuePair<string, string> pair in _escapeMap)
+                {
+                    stringValue = stringValue.Replace(pair.Key.ToString(), pair.Value.ToString());
+                }
+            }
+
+            return stringValue;
+        }
         public FilterCollectionItem ()
         {
             comparison = "eq";
@@ -185,6 +221,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public object  value
         {
             get;set;
+        }
+
+        public object escapedValue
+        {
+            get 
+            {
+                // need to escape the following characters:
+                // Special Characters: = '^', '\'', '"', '{','}',')','(' 
+                // Used as delimiters within expressions
+                // source: http://tfs.corp.volusion.com:8080/tfs/VNext/v2Mozu/_git/Mozu.Core#path=%2FMozu.Core.FilterParsing%2FFilterParser.cs&version=GBmaster&_a=contents
+                var stringValue = this.value as string;
+                
+                if (stringValue != null)
+                {
+                    stringValue = this.EscapeFilter(stringValue);
+                }
+
+                return stringValue;
+            }
         }
         public string field
         {
