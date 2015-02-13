@@ -34,7 +34,7 @@
 		<tr class="mz-ordersummary-line">
 			<td class="mz-ordersummary-item-product">
 			{% if refund.payment.paymentType == "CreditCard" %}
-				{{ refund.payment.cardType }} {{ refund.payment.cardNumber }}
+				{{ refund.payment.billingInfo.card.paymentOrCardType }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
 			{% else %}
 				{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}</td>
 			{% endif %}
