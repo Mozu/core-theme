@@ -17,20 +17,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     title: 'Discount Limitations',
 
     initComponent: function () {
-        this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'maximumDiscountValuePerOrder',
-            itemId: 'maxDiscountValuePerOrder',
-            fieldLabel: "Max Discount Value (per Order)",
-            forcePrecision: true,
-            labelAlign: 'top',
-            width: 240,
-            margin: "0px 20px 0px 0px",
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            align: 'right',
-            unitAtEnd: false,
-            minValue: 0
-        });
-
+        
         this.maxDiscountLineItemValue = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'maximumDiscountValuePerLineItem',
             itemId: 'maxDiscountValuePerLineItem',
@@ -38,6 +25,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             forcePrecision: true,
             labelAlign: 'top',
             width: 240,
+            margin: "0px 20px 0px 0px",
             currencyCode: Taco.app.context.getCurrent().currencyCode,
             align: 'right',
             unitAtEnd: false,
@@ -45,6 +33,18 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             hidden: this.record.get('scope') === 'Order'
         });
 
+        this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
+            name: 'maximumDiscountValuePerOrder',
+            itemId: 'maxDiscountValuePerOrder',
+            fieldLabel: "Max Discount Value (per Order)",
+            forcePrecision: true,
+            labelAlign: 'top',
+            width: 240,
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
+            align: 'right',
+            unitAtEnd: false,
+            minValue: 0
+        });
 
         this.redemptionLimits = Ext.create('Ext.form.field.Number', {
             name: 'maxRedemptionCount',
@@ -146,7 +146,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                     labelAlign: 'top',
                     labelSeparator: ''
                 },
-                items: [this.maxDiscountOrderValue, this.maxDiscountLineItemValue]
+                items: [this.maxDiscountLineItemValue, this.maxDiscountOrderValue]
             },
             this.redemptionContainer,            
             this.requiresCouponInput,
