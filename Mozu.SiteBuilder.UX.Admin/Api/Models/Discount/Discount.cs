@@ -55,8 +55,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// <summary>
         /// Maximum impact this discount can apply on a single line item.
         /// </summary>
-        [JsonProperty(PropertyName = "maximumDiscountValuePerLineItem")]
-        public decimal? MaximumDiscountImpactPerLineItem { get; set; }
+        [JsonProperty(PropertyName = "maximumDiscountValuePerRedemption")]
+        public decimal? MaximumDiscountImpactPerRedemption { get; set; }
 
         /// <summary>
         /// List of categories this discount applies to.

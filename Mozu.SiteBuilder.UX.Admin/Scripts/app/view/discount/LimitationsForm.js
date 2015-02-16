@@ -19,8 +19,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     initComponent: function () {
         
         this.maxDiscountLineItemValue = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'maximumDiscountValuePerLineItem',
-            itemId: 'maxDiscountValuePerLineItem',
+            name: 'maximumDiscountValuePerRedemption',
+            itemId: 'maxDiscountValuePerRedemption',
             fieldLabel: "Max Discount Value (per Redemption)",
             forcePrecision: true,
             labelAlign: 'top',
