@@ -169,8 +169,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     : dc.Amount))
                 .ForMember(x => x.DoesNotApplyToSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToSalePrice))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content.Name))
-                .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content.FriendlyDescription))
-                .ForMember(x => x.MaximumDiscountValuePerOrder, op => op.ResolveUsing(dc => dc.MaximumDiscountImpactPerOrder));
+                .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content.FriendlyDescription));
             
                 
             // To data contract
@@ -180,7 +179,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? null
                     : x.Amount))
                 .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new DC.DiscountLocalizedContent {Name = x.Name, FriendlyDescription = x.FriendlyDescription}))
-                .ForMember(x => x.MaximumDiscountImpactPerOrder, opt => opt.ResolveUsing(x => x.MaximumDiscountValuePerOrder))
                 .ForMember(x => x.Conditions, opt => opt.ResolveUsing(x => new DC.DiscountCondition
                                                                            {
                                                                                IncludedCategories = (x.DiscountConditionCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.CategoryDiscountCondition {CategoryId = _}).ToList(),

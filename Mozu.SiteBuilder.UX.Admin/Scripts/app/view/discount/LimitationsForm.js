@@ -17,10 +17,26 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     title: 'Discount Limitations',
 
     initComponent: function () {
-        this.maxDiscountValue = Ext.create('Taco.core.ux.form.CurrencyField', {
+        
+        this.maxDiscountLineItemValue = Ext.create('Taco.core.ux.form.CurrencyField', {
+            name: 'maximumDiscountValuePerLineItem',
+            itemId: 'maxDiscountValuePerLineItem',
+            fieldLabel: "Max Discount Value (per Redemption)",
+            forcePrecision: true,
+            labelAlign: 'top',
+            width: 240,
+            margin: "0px 20px 0px 0px",
+            currencyCode: Taco.app.context.getCurrent().currencyCode,
+            align: 'right',
+            unitAtEnd: false,
+            minValue: 0,
+            hidden: this.record.get('scope') === 'Order'
+        });
+
+        this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'maximumDiscountValuePerOrder',
             itemId: 'maxDiscountValuePerOrder',
-            fieldLabel: "Maximum Discount Value",
+            fieldLabel: "Max Discount Value (per Order)",
             forcePrecision: true,
             labelAlign: 'top',
             width: 240,
@@ -30,14 +46,13 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             minValue: 0
         });
 
-
         this.redemptionLimits = Ext.create('Ext.form.field.Number', {
             name: 'maxRedemptionCount',
             hideTrigger: true,
             width: 240,
             margin: "0px 20px 0px 0px",
-            fieldLabel: 'Total Number of Redemptions: ' + (this.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
-            emptyText: 'unlimited',
+            fieldLabel: 'Total Number of Redemptions ' + (this.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
+            emptyText: 'Unlimited',
             minValue: 0
         });
 
@@ -46,7 +61,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             itemId: 'maxRedemptionsPerOrder',
             hideTrigger: true,
             width: 240,
-            fieldLabel: 'Max Redemptions per Order',
+            fieldLabel: 'Max Redemptions (per Order)',
             hidden: this.record.get('scope') === 'Order',
             minValue: 0
         });
@@ -120,8 +135,19 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 xtype: 'component',
                 html: 'Discount limitations specify the limit a coupon/discount can be redeemed.',
                 margin: '15 0 0 0'
+            }, {
+                xtype: 'container',
+                layout: {
+                    type: 'hbox',
+                    align: 'bottom'
+                },
+                width: 500,
+                defaults: {
+                    labelAlign: 'top',
+                    labelSeparator: ''
+                },
+                items: [this.maxDiscountLineItemValue, this.maxDiscountOrderValue]
             },
-            this.maxDiscountValue,
             this.redemptionContainer,            
             this.requiresCouponInput,
             this.couponCodeBox,
@@ -134,8 +160,10 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
     setFieldVisibility: function (isLineItem) {
         this.maxRedemptionsPerOrder.setVisible(isLineItem);
+        this.maxDiscountLineItemValue.setVisible(isLineItem);
         if (!isLineItem) {
             this.maxRedemptionsPerOrder.setValue(null);
+            this.maxDiscountLineItemValue.setValue(null);
         }
     },
 

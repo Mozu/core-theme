@@ -1,6 +1,4 @@
-﻿
-
-/**
+﻿/**
  * @class  Taco.view.discount.GeneralForm
  * @author Travis Johnson
  * @description Dicounts General Form
@@ -14,8 +12,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
     title: 'General',
 
     initComponent: function() {
-
-        
+        var me = this;
 
         this.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
@@ -72,8 +69,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 ]
             }),
             listeners: {
-                change: function () {
+                change: function (myself, newVal) {
                     this.parentForm.setFieldVisibility();
+                    this.filterFixedPriceOptionWhenOrderProduct(newVal, null);
                 },
                 scope: this
             }
@@ -98,12 +96,30 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 ]
             }),
             listeners: {
-                change: function () {
+                change: function (myself, newVal) {
                     this.parentForm.setFieldVisibility();
+                    this.filterFixedPriceOptionWhenOrderProduct(null, newVal);
                 },
                 scope: this
             },
             value: "Product"
+        });
+
+        this.discountTypeData = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: ['name', 'value'],
+            data: [
+                { name: "Percentage", value: "Percentage" },
+                { name: "Dollar Amount", value: "Amount" },
+                { name: "Free", value: "Free" },
+                { name: 'Fixed Price', value: 'FixedPrice' }
+            ],
+            filters: [
+                function (item) {
+                    return (item.get('value') !== 'FixedPrice') ||
+                        (me.record.get('scope') === 'LineItem' || me.record.get('target') === 'Shipping');
+                }
+            ]
         });
 
         this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
@@ -113,18 +129,11 @@ Ext.define('Taco.view.discount.GeneralForm', {
             allowBlank: false,
             editable: false,
             forceSelection: true,
-            displayField: 'text',
+            displayField: 'name',
             valueField: 'value',
-            flex: 1,
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['text', 'value'],
-                data: [
-                    ["Percentage", "Percentage"],
-                    ["Dollar Amount", "Amount"],
-                    ["Free", "Free"],
-                    ["Fixed Price", "FixedPrice"]
-                ]
-            }),
+            width: 295,
+            store: this.discountTypeData,
+            queryMode: 'local',
             listeners: {
                 change: function (me, newV, oldV) {
                     if (newV == 'Percentage') {
@@ -149,9 +158,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
             name: 'amount',
             fieldLabel: 'Amount',
             minValue: 0,
-            width: 150,
-            forcePrecision:(this.record.get('amountType') === 'Amount'),
+            width: 295,
             margin: '0 0 0 10',
+            forcePrecision: (this.record.get('amountType') === 'Amount'),
             unitAtEnd: this.record.get('amountType') === 'Percentage' ? true : false,
             unitString: (this.record.get('amountType') === 'Percentage') ? '%' : Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol,
             hideTrigger: true,
@@ -185,20 +194,38 @@ Ext.define('Taco.view.discount.GeneralForm', {
             }
         ];
 
-        
         this.callParent(arguments);
     },
 
     isOrder: function () {
         return this.scopeTypeInput.getValue() === 'Order';
     },
-    
+
     isLineItem: function () {
         return this.scopeTypeInput.getValue() === 'LineItem';
     },
 
     appliesToShipping: function () {
         return this.targetTypeInput.getValue() === 'Shipping';
+    },
+
+    filterFixedPriceOptionWhenOrderProduct: function (appliesTo, affects) {
+        var isLineItem = appliesTo ? appliesTo === 'LineItem' : this.isLineItem(),
+            isShipping = affects ? affects === 'Shipping' : this.appliesToShipping();
+        if (isLineItem || isShipping) {
+            //add fixed price
+            this.discountTypeData.clearFilter(false);
+        } else {
+            //filter fixed price.
+            this.discountTypeData.filterBy(function(item) {
+                 return item.get('value') !== 'FixedPrice';
+            });
+
+            if (this.amountTypeInput.getValue() === 'FixedPrice') {
+                this.amountTypeInput.setValue('Percentage');
+                Taco.app.fireEvent('setmessage', 'Fixed Price is not applicable to Order Product discounts. Please choose another discount type.', 'warning');
+            }
+        }
     },
 
     onDestroy: function () {
