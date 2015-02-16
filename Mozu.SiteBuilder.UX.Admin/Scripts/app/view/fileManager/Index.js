@@ -52,10 +52,16 @@ Ext.define('Taco.view.fileManager.Index', {
                 '<div class="taco-basegrid-thumbnail">',
                 '<tpl if="localthumbnail">',
                 '<img height="60" src="{localthumbnail}">',
-                '<tpl elseif="thumbnail && fileSize">',
+                '<tpl elseif="thumbnail && fileSize && this.isImage(fileType)">',
                 '<img height="60" src="{thumbnail}?size=60" />',
                 '</tpl>',
-                '</div>'
+                '</div>',
+                {
+                    isImage: function(fileType) {
+                        var imageTypes = ['gif', 'jpeg', 'pjpeg', 'png', 'tiff', 'jpg'];
+                        return imageTypes.indexOf(fileType) !== -1;
+                    }
+                }
             ]
         }, {
             text: 'Name',
@@ -165,6 +171,9 @@ Ext.define('Taco.view.fileManager.Index', {
 
         this.mon(this.store, 'beforesync', this.onBeforeSyncStore, this);
 
+        this.mon(this.store, 'load', function() {
+            console.log(arguments)
+        }, this)
         this.on({
             boxready: {
                 scope: this,
