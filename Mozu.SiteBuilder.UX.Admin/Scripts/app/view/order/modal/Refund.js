@@ -124,7 +124,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 menuDisabled: true,
                 dataIndex: 'amountCredited',
                 renderer: function (value, metaData, record) {
-                    if (record.get('paymentType') === 'Check') {
+                    if (Ext.Array.contains(['Check', 'StoreCredit'], record.get('paymentType'))) {
                         return '--';
                     }
 
