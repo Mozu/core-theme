@@ -33,11 +33,18 @@
 		{% for refund in model.refunds %}
 		<tr class="mz-ordersummary-line">
 			<td class="mz-ordersummary-item-product">
-			{% if refund.payment.paymentType == "CreditCard" %}
-				{{ refund.payment.billingInfo.card.paymentOrCardType }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
-			{% else %}
-				{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}</td>
-			{% endif %}
+				{% if refund.payment.paymentType == "CreditCard" %}
+					{{ refund.payment.billingInfo.card.paymentOrCardType }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
+				{% else %}
+					{% if refund.payment.paymentType == "PaypalExpress" %}
+						{{ labels.payPal }}
+					{% else %}
+						{% if refund.payment.paymentType == "StoreCredit" %}
+							{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}
+						{% endif %}
+					{% endif %}
+				{% endif %}
+			</td>
 			<td>{{ refund.amount|currency }}</td>
 			<td>{{ refund.auditInfo.createDate }}</td>
 		</tr>
