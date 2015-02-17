@@ -24,6 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         private const string CURRENCYCODE_PROPERTY = "CurrencyCode";
         private const string CREATEBY_PROPERTY = "CreateBy";
         private const string UPDATEBY_PROPERTY = "UpdateBy";
+        private const string NAME_PROPERTY = "Name";
+        private const string EMAIL_PROPERTY = "Email";
 
 
 
@@ -205,6 +207,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return String.Format("{0} eq \"{1}\"", CREATEBY_PROPERTY, filter.value);
                 case "updateby":
                     return String.Format("{0} eq \"{1}\"", UPDATEBY_PROPERTY, filter.value);
+
+                // need service to add support for user name and user email address
+                //case "name":
+                //    return String.Format("{0} eq \"{1}\"", NAME_PROPERTY, filter.value);
+                //case "email":
+                //    return String.Format("{0} eq \"{1}\"", EMAIL_PROPERTY, filter.value);
+
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
