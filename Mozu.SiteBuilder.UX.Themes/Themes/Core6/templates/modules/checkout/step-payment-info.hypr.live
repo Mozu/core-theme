@@ -73,12 +73,12 @@
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-
+      
       {% if model.nonStoreCreditTotal > 0 %}
       
-      {% include "modules/checkout/checkout-digital-credit" %}
+        {% include "modules/checkout/checkout-digital-credit" %}
       
-      <div class="mz-l-stack-section">
+        <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
             <div class="mz-l-formfieldgroup">
                 {% if model.savedPaymentMethods %}
@@ -160,9 +160,16 @@
         </div>
         
         {% else %}
+        
+         {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
+         
+            {% include "modules/checkout/checkout-digital-credit" %}
+            
+         {% endif %}
+        
         <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
-        {% endif %}
-        {% if user.isAnonymous %}
+      {% endif %}
+      {% if user.isAnonymous %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingContact }}</h4>
             <div class="mz-l-formfieldgroup">
@@ -187,7 +194,7 @@
                 </div>
             </div>
         </div>
-        {% endif %}
+      {% endif %}
     </div>
 
     <div class="mz-formstep-next">
