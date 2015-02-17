@@ -51,11 +51,11 @@
         onEnterCouponCode: function (model, code) {
             if (code && !this.codeEntered) {
                 this.codeEntered = true;
-                this.$el.find('button').prop('disabled', false);
+                this.$el.find('#cart-coupon-code').prop('disabled', false);
             }
             if (!code && this.codeEntered) {
                 this.codeEntered = false;
-                this.$el.find('button').prop('disabled', true);
+                this.$el.find('#cart-coupon-code').prop('disabled', true);
             }
         },
         autoUpdate: [
