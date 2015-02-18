@@ -30,14 +30,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CapabilityController : BaseController
     {
         private readonly IApplicationsWebApiClient _applicationsWebApiClient;
+        private readonly ICapabilitiesWebApiClient _capabilitiesWebApiClient;
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private readonly ISecureCapabilityConfigUrlHelper _secureConfigUrlHelper;
         private readonly IApiContext _apiContext;
 	    private readonly IAppsWebApiClient _appsWebApiClient;
 
-	    public CapabilityController(IApplicationsWebApiClient applicationsWebApiClient, ITenantsWebApiClient tenantsWebApiClient, ISecureCapabilityConfigUrlHelper secureConfigUrlHelper, IApiContext apiContext , Mozu.AppDev.Contracts.Clients.IAppsWebApiClient  appsWebApiClient )
+	    public CapabilityController(IApplicationsWebApiClient applicationsWebApiClient, ICapabilitiesWebApiClient capabilitiesWebApiClient, ITenantsWebApiClient tenantsWebApiClient, ISecureCapabilityConfigUrlHelper secureConfigUrlHelper, IApiContext apiContext , Mozu.AppDev.Contracts.Clients.IAppsWebApiClient  appsWebApiClient )
         {
             _applicationsWebApiClient = applicationsWebApiClient;
+            _capabilitiesWebApiClient = capabilitiesWebApiClient;
             _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
             _secureConfigUrlHelper = secureConfigUrlHelper;
             _apiContext = apiContext;
@@ -169,6 +171,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.Request.CreateResponse(HttpStatusCode.OK, ret);
         }
 
-      
+        /**
+           * This checks to see if we have a tax capability enabled on this tenant for US.
+           */
+        [HttpGetRoute(UriTemplate = "checktaxcapability")]
+        public async Task<HttpResponseMessage> CheckForTax()
+        {
+            var capabilities = (await _capabilitiesWebApiClient.GetCapabilities()).ReadAsSync();
+            var result =
+                capabilities.Any(
+                    c =>
+                        c.Enabled.GetValueOrDefault() &&
+                        c.CapabilityType.Equals("TaxCalculator", StringComparison.OrdinalIgnoreCase) &&
+                        c.ActiveShoppingCountries != null &&
+                        c.ActiveShoppingCountries.Any(x => x.Equals("US", StringComparison.OrdinalIgnoreCase)));
+            return this.Request.CreateResponse(HttpStatusCode.OK, result);
+        }
     }
 }
