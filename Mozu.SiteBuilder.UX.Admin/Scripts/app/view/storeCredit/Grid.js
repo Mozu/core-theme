@@ -93,45 +93,69 @@ Ext.define('Taco.view.storeCredit.Grid', {
             dataIndex: 'creditType',
             stateId: 'creditType',
             text: 'Type',
-            minWidth: 120
+            sortable:false,
+            minWidth: 60
         } ,{
             dataIndex: 'initialBalance',
             stateId: 'initialBalance',
             text: 'Issued Amount',
-            flex: 1,
             renderer: function (value, metaData, record) {
                 return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
             },
-            minWidth: 120
+            width: 120
         }, {
             dataIndex: 'customer',
             stateId: 'customer',
             text: 'Customer',
+            sortable: false,
             flex: 1,
             minWidth: 120,
             renderer: function (customer) {
                 if (customer) {
-                    return customer.firstName + ' ' + customer.lastName + '(' + customer.id + ')';
+                    return '<span style="white-space:nowrap">' +customer.firstName + ' ' + customer.lastName + '(' + customer.id + ')</span>';
                 }
             }
         }, {
             dataIndex: 'activationDate',
             stateId: 'activationDate',
-            text: 'Date Issued',
-            flex: 1,
-            minWidth: 120,
+            text: 'Issued on',
+            width: 130,
             xtype: 'datecolumn',
-            format: 'M d g:ia'
+            format: 'n/j/Y g:i a',
+        }, {
+            dataIndex: 'expirationDate',
+            stateId: 'expirationDate',
+            text: 'Expires On',
+            width: 130,
+            hidden: true,
+            xtype: 'datecolumn',
+            format: 'n/j/Y g:i a',
+        }, {
+            dataIndex: 'createDate',
+            stateId: 'createDate',
+            text: 'Created On',
+            width: 130,
+            hidden: true,
+            xtype: 'datecolumn',
+            format: 'n/j/Y g:i a',
+        }, {
+            dataIndex: 'modifiedDate',
+            stateId: 'modifiedDate',
+            text: 'Updated On',
+            width: 130,
+            hidden: true,
+            xtype: 'datecolumn',
+            format: 'n/j/Y g:i a',
         }, {
             dataIndex: 'currentBalance',
             stateId: 'currentBalance',
             text: 'Current Balance',
-            flex: 1,
+            width: 120,
+            sortable: false,
             renderer: function (value, metaData, record) {
                 return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
                 
-            },
-            minWidth: 120
+            }
         }, {
             dataIndex: 'customerId',
             stateId: 'customerId',
@@ -143,6 +167,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
             dataIndex: 'customer',
             stateId: 'customerEmail',
             text: 'Customer Email',
+            sortable: false,
             flex: 1,
             minWidth: 120,
             hidden: true,

@@ -452,9 +452,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     filter += " and ";
                 }
                 filter += extFilter.ToCreditFilterString();
+
             }
 
-            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, filter: filter));
+            var sort = pagingParams.sort.ToSortString();
+
+            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, sortBy:sort, filter: filter));
 
             if (dcitemTask.HasException)
             {

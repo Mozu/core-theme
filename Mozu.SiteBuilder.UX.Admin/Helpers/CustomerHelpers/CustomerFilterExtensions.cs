@@ -197,10 +197,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return String.Format("{0} lt \"{1}\"", UPDATEDATE_PROPERTY, filter.value);
                 case "credittype":
                     return String.Format("{0} eq \"{1}\"", CREDITTYPE_PROPERTY, filter.value);
-                case "initialbalance":
-                    return String.Format("{0} eq \"{1}\"", INITIALBALANCE_PROPERTY, filter.value);
-                case "currentbalance":
-                    return String.Format("{0} eq \"{1}\"", CURRENTBALANCE_PROPERTY, filter.value);
+                case "initialbalancefrom":
+                    return String.Format("{0} ge \"{1}\"", INITIALBALANCE_PROPERTY, filter.value);
+                case "initialbalanceto":
+                    return String.Format("{0} le \"{1}\"", INITIALBALANCE_PROPERTY, filter.value);
+                case "currentbalancefrom":
+                    return String.Format("{0} ge \"{1}\"", CURRENTBALANCE_PROPERTY, filter.value);
+                case "currentbalanceto":
+                    return String.Format("{0} le \"{1}\"", CURRENTBALANCE_PROPERTY, filter.value);
                 case "currencycode":
                     return String.Format("{0} eq \"{1}\"", CURRENCYCODE_PROPERTY, filter.value);
                 case "createby":
