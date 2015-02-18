@@ -6,7 +6,11 @@
         protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/DataSimlet.js',
         protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/JsonSimlet.js',
         protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/SimManager.js',
-        '/admin/tests/sinon.js'
+        '/admin/tests/sinon.js',
+        {
+            instrument: true,
+            url:"customunit/view/Header.t.js"
+        }
     ];
 
 
@@ -15,6 +19,7 @@ Harness.configure({
     title: "SBAdmin Siesta Tests",
     waitForExtReady: true,
     autoCheckGlobals: false,
+    enableCodeCoverage: true,
     expectedGlobals: ['Ext', 'Taco'],
     testClass: Taco.TestClass.Core,
     preload: simAndSinPreloads,
@@ -214,7 +219,8 @@ Harness.start(
                 ]
 },
 
-            , {
+            , 
+            {
                 group: 'StateManager',
                 items: [
                     {
@@ -222,6 +228,17 @@ Harness.start(
                         waitForAppReady: false,
                         alsoPreload: [],
                         title: "App State Should Match URI"
+                    }
+                ]
+            },
+            {
+                group: 'SiteBuilder',
+                items: [
+                    {
+                        url: "customunit/view/Header.t.js",
+                        waitForAppReady: true,
+                        alsoPreload: [],
+                        title: 'SiteBuilder Header'
                     }
                 ]
             }
