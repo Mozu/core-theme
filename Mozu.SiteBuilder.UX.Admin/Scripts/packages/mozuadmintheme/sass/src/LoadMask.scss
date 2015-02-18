@@ -19,7 +19,8 @@
 }
 .#{$vprefix}loadmask-tax-msg {
     color: black;
-    font: normal 15px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;
+    line-height: 28px;
+    font: normal 20px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;
     background-color: transparent;
     border-color: transparent;
     .#{$prefix}mask-msg-inner {
@@ -31,6 +32,9 @@
     .#{$prefix}mask-msg-text {
         background-image: none;
         padding: 0px;
+        a {
+            text-decoration: underline;
+        }
     }
 }
 
