@@ -71,7 +71,7 @@ Ext.define('Taco.view.settings.tax.Form', {
             Ext.getCmp("contentView").setLoading({
                 useMsg: true,
                 msg: '<div style="text-align: center;">US tax settings are managed by your configured capabilities.<br>Please navigate <a href="/capability" class="redirectTax">here</a> to make any changes.</div>',
-                maskCls: 'x-mask',
+                maskCls: 'x-mask taco-loadmask-text',
                 msgCls: 'taco-loadmask-tax-msg',
                 listeners: {
                     click: {
