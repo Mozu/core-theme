@@ -120,7 +120,7 @@ Ext.define('Taco.model.Discount', {
             useNull: true
         },
         {
-            name: 'maximumDiscountValuePerLineItem',
+            name: 'maximumDiscountValuePerRedemption',
             type: 'float',
             useNull: true
         },
