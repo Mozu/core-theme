@@ -656,8 +656,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.appliesToSaleProducts.setVisible(true)
 
         this.includeSpecificProductsInput.setVisible(isLineItem)
-        this.productsBox.setVisible(isLineItem)
-        this.categoriesBox.setVisible(isLineItem)
+        //this.productsBox.setVisible(isLineItem)
+        //this.categoriesBox.setVisible(isLineItem)
 
         this.excludeCategoriesBox.setVisible(true)
         this.productsExcludeBox.setVisible(true)
