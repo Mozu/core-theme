@@ -93,7 +93,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
             dataIndex: 'creditType',
             stateId: 'creditType',
             text: 'Type',
-            sortable:false,
+            sortable:true,
             minWidth: 60
         } ,{
             dataIndex: 'initialBalance',
@@ -151,7 +151,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
             stateId: 'currentBalance',
             text: 'Current Balance',
             width: 120,
-            sortable: false,
+            sortable: true,
             renderer: function (value, metaData, record) {
                 return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
                 
