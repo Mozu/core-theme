@@ -50,13 +50,13 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
             yield return new HandlerTest()
             {
                 Name = "Shopper can't go through when pending locked down",
-                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsShopper(),
+                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsShopper().WithSiteId(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
             {
                 Name = "Shopper can't go through when live locked down",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper().WithSiteId(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
@@ -68,13 +68,13 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
             yield return new HandlerTest()
             {
                 Name = "Admin can't go through when locked down and no pending behavior",
-                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsAdmin().WithoutPermission(),
+                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsAdmin().WithoutPermission().WithSiteId(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
             {
                 Name = "Admin can't go through when live locked down and no permission",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WithoutPermission(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WithoutPermission().WithSiteId(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
@@ -191,6 +191,11 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
         public static AutoSubstitute WithDataViewMode(this AutoSubstitute container, DataViewModeType t)
         {
             return container.DoWithUpdate<ISiteBuilderApiContext>(ctx => ctx.DataViewMode.Returns(t));
+        }
+
+        public static AutoSubstitute WithSiteId(this AutoSubstitute container)
+        {
+            return container.DoWithUpdate<ISiteBuilderApiContext>(ctx => ctx.SiteId.Returns(1));
         }
 
         public static AutoSubstitute WithLoginPath(this AutoSubstitute container, string loginPath)
