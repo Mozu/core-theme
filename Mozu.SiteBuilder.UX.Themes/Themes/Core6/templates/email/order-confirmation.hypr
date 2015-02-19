@@ -39,7 +39,7 @@
                 </td>
             </tr>
 
-			{% endifequal %}
+			{% endifnotequal %}
         </tbody>
     </table>
 
