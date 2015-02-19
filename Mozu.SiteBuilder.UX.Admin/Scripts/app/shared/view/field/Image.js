@@ -129,7 +129,7 @@ Ext.define('Taco.shared.view.field.Image', {
                                 '<tpl if="isStoredInCms">',
                                   '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
                                 '<tpl else>',
-                                  '<div class="square" style="background-image:url(\'{url}\');background-size: contain;" title="{alt:htmlEncode}">',
+                                  '<div class="square" style="background-image:url(\'{url}\');background-size: 100%;" title="{alt:htmlEncode}">',
                                 '</tpl>',
                                     '<ul class="toolbar">',
                                         '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
