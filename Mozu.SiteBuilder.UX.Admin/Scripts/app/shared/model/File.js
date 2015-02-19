@@ -60,6 +60,11 @@ Ext.define('Taco.shared.model.File', {
             persist: false,
             defaultValue: false
         }, {
+            name: 'isStoredInCms',
+            type: 'boolean',
+            persist: false,
+            defaultValue: true
+        }, {
             name: 'localthumbnail',
             type: 'auto',
             useNull: true,
@@ -84,6 +89,7 @@ Ext.define('Taco.shared.model.File', {
             persist: false,
             convert: function fullName(v, record) {
                 var raw = record.raw || {};
+                if (raw.isStoredInCms === false) return v;
                 return v || (raw.localthumbnail || raw.imageUrl || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
             }
         },{

@@ -537,7 +537,22 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'taco.imagefield',
             //width: classDef.getBufferedWidth(),            
             width: fullFieldWidth,
-            imageMetadata: me.record.get('productImages')
+            imageMetadata: me.record.get('productImages'),
+            filters: (function () {
+                var existingImages = me.record.get('productImages'),
+                    result = [];
+                if (!existingImages || existingImages.length === 0) return null;
+                Ext.Array.each(existingImages, function (img) {
+                    if (img.isStoredInCms) {
+                        result.push({
+                            property: 'id',
+                            value: img.cmsId,
+                            alt: img.alt
+                        });
+                    }
+                });
+                return result;
+            }())
         };
 
         this.items = [
