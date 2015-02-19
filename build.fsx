@@ -44,10 +44,12 @@ let testDlls =
 Target "test" (fun _ ->
     let nunitParams p = 
         {NUnitDefaults with 
-            Framework = "net-4.5" }
+            Framework = "net-4.5" 
+            IncludeCategory = match hasBuildParam "siesta" with true -> "Siesta" | false -> "" }
     testDlls
     |> NUnit nunitParams
 )
-"clean" ==> "restore" ==> "cs" ==> "test"
-"restore" ==> "js"
+
+"clean" ==> "cs" ==> "test"
+
 RunTargetOrDefault "cs"
