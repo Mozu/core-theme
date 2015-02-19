@@ -214,10 +214,10 @@ Ext.define('Taco.view.discount.GeneralForm', {
             isShipping = affects ? affects === 'Shipping' : this.appliesToShipping();
         if (isLineItem || isShipping) {
             //add fixed price
-            this.discountTypeData.clearFilter(false);
+            this.amountTypeInput.store.clearFilter(false);
         } else {
             //filter fixed price.
-            this.discountTypeData.filterBy(function(item) {
+            this.amountTypeInput.store.filterBy(function(item) {
                  return (item.get('value') !== 'FixedPrice' && item.get('value') !== 'Free');
             });
 
