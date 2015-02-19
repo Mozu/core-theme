@@ -110,7 +110,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             fields: ['name', 'value'],
             data: [
                 { name: "Percentage", value: "Percentage" },
-                { name: "Dollar Amount", value: "Amount" },
+                { name: "Amount", value: "Amount" },
                 { name: "Free", value: "Free" },
                 { name: 'Fixed Price', value: 'FixedPrice' }
             ],
@@ -214,10 +214,10 @@ Ext.define('Taco.view.discount.GeneralForm', {
             isShipping = affects ? affects === 'Shipping' : this.appliesToShipping();
         if (isLineItem || isShipping) {
             //add fixed price
-            this.discountTypeData.clearFilter(false);
+            this.amountTypeInput.store.clearFilter(false);
         } else {
             //filter fixed price.
-            this.discountTypeData.filterBy(function(item) {
+            this.amountTypeInput.store.filterBy(function(item) {
                  return (item.get('value') !== 'FixedPrice' && item.get('value') !== 'Free');
             });
 
