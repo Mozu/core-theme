@@ -287,7 +287,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Siesta
             {
                 if (_notFounds.Contains(test.Name))
                 {
-                    Assert.Inconclusive("test not found:" + test.Name);
+                    Assert.Fail("test not found:" + test.Name);
                 }
                 else
                 {
