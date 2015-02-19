@@ -116,7 +116,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             ],
             filters: [
                 function (item) {
-                    return (item.get('value') !== 'FixedPrice') ||
+                    return (item.get('value') !== 'FixedPrice' && item.get('value') !== 'Free') ||
                         (me.record.get('scope') === 'LineItem' || me.record.get('target') === 'Shipping');
                 }
             ]
@@ -218,12 +218,12 @@ Ext.define('Taco.view.discount.GeneralForm', {
         } else {
             //filter fixed price.
             this.discountTypeData.filterBy(function(item) {
-                 return item.get('value') !== 'FixedPrice';
+                 return (item.get('value') !== 'FixedPrice' && item.get('value') !== 'Free');
             });
 
-            if (this.amountTypeInput.getValue() === 'FixedPrice') {
+            if (this.amountTypeInput.getValue() === 'FixedPrice' || this.amountTypeInput.getValue() === 'Free') {
                 this.amountTypeInput.setValue('Percentage');
-                Taco.app.fireEvent('setmessage', 'Fixed Price is not applicable to Order Product discounts. Please choose another discount type.', 'warning');
+                Taco.app.fireEvent('setmessage', 'The chosen discount type is not applicable to Order level discounts affecting products. Please choose another discount type.', 'warning');
             }
         }
     },
