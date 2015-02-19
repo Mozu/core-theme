@@ -266,7 +266,6 @@ Ext.define('Taco.model.Product', {
                 }
                 Ext.Array.forEach(v, function(img) {
                     img.alt = Ext.util.Format.htmlDecode(img.alt);
-                    img.isStoredInCms = !(!img.cmsId);
                 });
                 return v;
             },

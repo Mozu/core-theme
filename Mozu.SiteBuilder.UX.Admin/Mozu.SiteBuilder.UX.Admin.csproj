@@ -804,7 +804,6 @@
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\model\AuditLog.js" />
-    <Content Include="Scripts\app\model\MediaAssociation.js" />
     <Content Include="Scripts\app\model\State.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
     <Content Include="Scripts\app\model\Card.js" />
@@ -918,7 +917,6 @@
     <Content Include="Scripts\app\store\OrderGrid.js" />
     <Content Include="Scripts\app\store\ProductGrid.js" />
     <Content Include="Scripts\app\store\ProductPicker.js" />
-    <Content Include="Scripts\app\store\MediaAssociations.js" />
     <Content Include="Scripts\app\store\StatesStatic.js" />
     <Content Include="Scripts\app\store\ShippingMethods.js" />
     <Content Include="Scripts\app\store\LocationPickup.js" />

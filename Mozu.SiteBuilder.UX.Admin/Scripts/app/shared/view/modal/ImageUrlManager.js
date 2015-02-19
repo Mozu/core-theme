@@ -66,7 +66,7 @@ Ext.define('Taco.shared.view.modal.ImageUrlManager', {
             layout: {
                 type: 'vbox'
             },
-            items: [this.imageUrl, this.imagePreview, this.previewAction]
+            items: [this.imageUrl, this.previewAction, this.imagePreview]
         });
 
         this.items = [this.form];
@@ -103,9 +103,11 @@ Ext.define('Taco.shared.view.modal.ImageUrlManager', {
     },
     
     doSave: function () {
-        var data = this.form.getValues();
-        this.record.set(data);
-        this.saveSuccess(data);
+        //var me = this,
+        //    data = me.form.getValues();
+
+        //me.record.set(data);
+        //me.saveSuccess(me.record);
     }
 
 });
