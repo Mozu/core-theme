@@ -22,7 +22,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     initComponent: function () {
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'minimumOrderAmount',
-            fieldLabel: "Minimum Order Amount",  //(pre-discount)
+            fieldLabel: "Minimum Order Amount (pre-discount)",
             forcePrecision: true,
             labelAlign: 'top',
             width: 600,
