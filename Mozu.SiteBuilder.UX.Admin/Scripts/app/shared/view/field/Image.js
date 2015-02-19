@@ -68,20 +68,23 @@ Ext.define('Taco.shared.view.field.Image', {
     initComponent: function () {
         var me = this;
 
-        this.mediaAssociationStore = Ext.create('Taco.store.MediaAssociations', {});
+        this.mediaAssocationStore = Ext.create('Taco.store.MediaAssociations', {});
 
         if (me.imageMetadata) {
-            Ext.Array.each(me.imageMetadata, function (imgUrl) {
-                if (!imgUrl.isStoredInCms) {
-                    me.addUrlToMediaAssociationStore(imgUrl.id, imgUrl.url, imgUrl.alt, imgUrl.sequence);
-                }
+            me.imageUrls = Ext.Array.filter(me.imageMetadata, function (img) {
+                return !img.isStoredInCms;
             });
+            me.mediaAssocationStore.loadData(me.imageUrls);
+            me.mediaAssocationStore.sort('sequence', 'ASC');
         }
+
+        
 
         this.selectedImages = Ext.create('Taco.shared.store.Files', {
             
             listeners: {
-                load: this.onSelectedImagesLoaded,
+                datachanged: this.onSelectedImagesDataChanged,
+
                 scope:this
             }
         });
@@ -89,6 +92,8 @@ Ext.define('Taco.shared.view.field.Image', {
         if (this.filters) {
             this.selectedImages.load({
                 filters: this.filters
+                //,callback: function(images) {
+                //}
             });
         }
 
@@ -113,7 +118,7 @@ Ext.define('Taco.shared.view.field.Image', {
             },
             hidden: true,
             selectedItemCls: 'selected',
-            store: this.mediaAssociationStore,
+            store: this.mediaAssocationStore,
             tpl :[ 
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
@@ -143,7 +148,7 @@ Ext.define('Taco.shared.view.field.Image', {
             itemSelector: 'li.item'
         });
 
-        this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.onSelectedImageAdded, this);
+        this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.imageView.refresh, this.imageView);
 
         this.uploadAction = Ext.widget({
             xtype: 'button',
@@ -255,8 +260,7 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onViewAfterRender: function () {
-        var id = 'ImageFieldDD-' + Ext.id(),
-            me = this;
+        var id = 'ImageFieldDD-' + Ext.id();
 
         this.dragZone = Ext.create('Ext.view.DragZone', {
             view: this.imageView,
@@ -344,7 +348,7 @@ Ext.define('Taco.shared.view.field.Image', {
 
                 store.insert(index, records);
                 view.getSelectionModel().select(records);
-                me.updateFormFieldFromStore();
+                this.updateFormField(store.data.items); 
             }
         });
     },
@@ -353,7 +357,7 @@ Ext.define('Taco.shared.view.field.Image', {
         if (Ext.fly(e.target).hasCls('remove')) {
             e.stopPropagation();
             e.preventDefault();
-            this.onRemoveImageAssociation(record);
+            this.selectedImages.remove(record);
         }
         else if (Ext.fly(e.target).hasCls('alt-text')) {
             e.stopPropagation();
@@ -363,11 +367,31 @@ Ext.define('Taco.shared.view.field.Image', {
                 listeners: {
                     savesuccess: {
                         scope: this,
-                        fn: this.updateFormFieldFromStore
+                        fn: this.onUpdatedProperties
                     }
                 }
             });
         }
+    },
+
+    onUpdatedProperties: function(imgMetadataModal, updatedMetadata) {
+        var existingImg;
+        if (updatedMetadata.get('isStoredInCms')) {
+            existingImg = this.selectedImages.getById(updatedMetadata.get('id'));
+            if (!existingImg) {
+                return;
+            }
+            existingImg.set('alt', updatedMetadata.get('alt'));
+        } else {
+            existingImg = Ext.Array.findBy(this.imageUrls, function(imgUrl) {
+                return (!(!imgUrl.id)) && imgUrl.id.toString() === updatedMetadata.get('id');
+            });
+            if (!existingImg) {
+                return;
+            }
+            existingImg.alt = updatedMetadata.get('alt');
+        }
+        this.onSelectedImagesDataChanged();
     },
 
     bindImageUpload: function () {
@@ -500,41 +524,18 @@ Ext.define('Taco.shared.view.field.Image', {
         
     },
 
-    onRemoveImageAssociation: function (record) {
-        var existingCmsImage;
-        if (record.get('isStoredInCms')) {
-            existingCmsImage = this.findCmsImage(record.get('cmsId'));
-            if (existingCmsImage != null) {
-                this.selectedImages.remove(existingCmsImage);
-            }
-        }
-        this.mediaAssociationStore.remove(record); //todo: add listener to store for removed, added?
-        this.updateFormFieldFromStore();
-    },
-
-    findCmsImage: function(cmsId) {
-        var foundImageIndex = this.selectedImages.findBy(function(cmsImg) {
-            return (cmsId === cmsImg.get('cmsId') || cmsId === cmsImg.get('name'));
-        });
-        return (foundImageIndex !== -1) ? this.selectedImages.getAt(foundImageIndex) : null;
-    },
-
-    findCmsImageInAssociation: function (cmsId) {
-        var foundImageIndex = this.mediaAssociationStore.findBy(function(img) {
-            return (cmsId === img.get('cmsId') || cmsId === img.get('name'));
-        });
-        return (foundImageIndex !== -1) ? this.mediaAssociationStore.getAt(foundImageIndex) : null;
-    },
-    
-
     mergeProductMetadataWithCms: function() {
         var me = this,
+            foundImageIndex,
             selectedImage;
 
         if (this.imageMetadata) {
-            Ext.Array.each(this.imageMetadata, function (prodImgMetadata) {
-                selectedImage = me.findCmsImage(prodImgMetadata.cmsId);
-                if (selectedImage && !selectedImage.get('isMerged')) {
+            Ext.Array.each(this.imageMetadata, function(prodImgMetadata) {
+                foundImageIndex = me.selectedImages.findBy(function (cmsImg) {
+                    return (!cmsImg.get('isMerged') && (prodImgMetadata.cmsId === cmsImg.get('cmsId') || prodImgMetadata.cmsId === cmsImg.get('name')));
+                });
+                if (foundImageIndex !== -1) {
+                    selectedImage = me.selectedImages.getAt(foundImageIndex);
                     selectedImage.set('alt', prodImgMetadata.alt);
                     selectedImage.set('sequence', prodImgMetadata.sequence);
                     selectedImage.set('isMerged', true);
@@ -543,54 +544,72 @@ Ext.define('Taco.shared.view.field.Image', {
         }
     },
 
-    onSelectedImagesLoaded: function(store, records, successful) {
-        if (!successful) {
-            return false;
-        }
+    onSelectedImagesDataChanged: function () {
         this.mergeProductMetadataWithCms();
-        this.addCmsRecordToMediaAssociation(this.selectedImages.data.items);
-        return this.updateFormFieldFromStore();
+        return this.updateFormFieldWithImages();
     },
 
-    onSelectedImageAdded: function (eventData) {
-        this.addCmsRecordToMediaAssociation([eventData.document]);
-    },
+    updateFormFieldWithImages: function () {
+        var values = [],
+            sortedValues = [],
+            existingValue;
 
-    addCmsRecordToMediaAssociation: function (records) {
-        var me = this;
-        Ext.Array.each(records, function (item) {
 
-            me.mediaAssociationStore.addSorted({
-                id: null,
-                cmsId: item.get('cmsId'),
-                isStoredInCms: true,
-                isUploaded: true,
-                progress: 1,
-                alt: item.get('alt'),
-                url: item.get('url'),
-                sequence: item.get('sequence') ? item.get('sequence') : me.mediaAssociationStore.count() + 1
-            });
-        });
+
+        //this.mediaAssocationStore.each(function (record) {
+        //    values.push({
+        //        url: record.get('url'),
+        //        id: record.get('id'),
+        //        cmsId: record.get('cmsId'),
+        //        alt: record.get('alt'),
+        //        isUploaded: record.get('isStoredInCms') ? record.get('isUploaded') : true,
+        //        isMerged: record.get('isStoredInCms') ? record.get('isMerged') : true,
+        //        isStoredInCms: record.get('isStoredInCms'),
+        //        sequence: record.get('sequence')
+        //    });
+        //}, this);
         
-        this.updateFormFieldFromStore();
-    },
-
-    updateFormFieldFromStore: function() {
-        var values = [];
-        this.mediaAssociationStore.each(function (record) {
+        this.selectedImages.each(function (record) {
             values.push({
                 url: record.get('url'),
                 id: record.get('id'),
                 cmsId: record.get('cmsId'),
                 alt: record.get('alt'),
                 isUploaded: record.get('isStoredInCms') ? record.get('isUploaded') : true,
-                progress: record.get('progress'),
                 isMerged: record.get('isStoredInCms') ? record.get('isMerged') : true,
                 isStoredInCms: record.get('isStoredInCms'),
                 sequence: record.get('sequence')
             });
         }, this);
-        this.updateFormField(values);
+
+        Ext.Array.each(this.imageUrls, function (imgUrl) {
+            existingValue = Ext.Array.findBy(values, function(val) {
+                return (imgUrl.id !== null && imgUrl.id.toString() === val.id);
+            });
+            if (!existingValue) {
+                values.push({
+                    url: imgUrl.url,
+                    id: imgUrl.id,
+                    cmsId: null,
+                    alt: imgUrl.alt,
+                    isUploaded: true,
+                    isMerged: true,
+                    isStoredInCms: false,
+                    sequence: imgUrl.sequence
+                });
+            }
+        });
+
+        sortedValues = Ext.Array.sort(values, function (val1, val2) {
+            return val1.sequence - val2.sequence;
+            //if (!val1.sequence && val1.sequence !== 0) {
+            //    return -1;
+            //} else if (!val2.sequence && val2.sequence !== 0) {
+
+        });
+        this.mediaAssocationStore.loadData(sortedValues);
+        //this.mediaAssocationStore.sort('sequence', 'ASC');
+        return this.updateFormField(sortedValues);
     },
 
     updateFormField: function(values) {
@@ -604,7 +623,6 @@ Ext.define('Taco.shared.view.field.Image', {
         return this.mixins.field.setValue.call(this, values);
     },
 
-    //todo: figure out what to do here.
     setValue: function (value) {
        
         if (!value ) {
@@ -628,6 +646,8 @@ Ext.define('Taco.shared.view.field.Image', {
         }
 
         this.selectedImages.loadData(value);
+
+        return this.onSelectedImagesDataChanged();
     },
     
     getValue:function () {
@@ -641,38 +661,31 @@ Ext.define('Taco.shared.view.field.Image', {
         return val;
     },
 
-    onAssociatorSave: function (associator, fileManagerRecords) {
-        this.selectedImages.add(fileManagerRecords);
-        this.addCmsRecordToMediaAssociation(fileManagerRecords);
-    },
-
-    addUrlToMediaAssociationStore: function (id, url, alt, seq) {
-        this.mediaAssociationStore.addSorted({
-            id: id,
-            cmsId: null,
-            isStoredInCms: false,
-            isUploaded: true,
-            alt: alt,
-            url: url,
-            sequence: seq
-        });
+    onAssociatorSave: function (associator, selectedRecords) {
+        this.selectedImages.add(selectedRecords);
     },
 
     onUrlAssociatorSave: function (associator, record) {
-        var existingIndex;
-
         if (! record.imageUrl) {
             return;
         }
-
-        existingIndex = this.mediaAssociationStore.findBy(function (existingItem) {
-            return (existingItem.get('url') && existingItem.get('url').toLowerCase() === record.imageUrl.toLowerCase());
+        var existing = Ext.Array.findBy(this.imageUrls, function(existingItem) {
+            return (existingItem.url && existingItem.url.toLowerCase() === record.imageUrl.toLowerCase());
         });
-        if (existingIndex !== -1) {
+        if (existing) {
             return;
         }
-        this.addUrlToMediaAssociationStore(null, record.imageUrl, null, this.mediaAssociationStore.count()+1);
-        this.updateFormFieldFromStore();
+
+        this.imageUrls.push({
+            alt: null,
+            cmsId: null,
+            id: null,
+            isUploaded: true,
+            isMerged: true,
+            isStoredInCms: false,
+            url: record.imageUrl
+        });
+        this.updateFormFieldWithImages();
     },
 
     onDestroy: function () {

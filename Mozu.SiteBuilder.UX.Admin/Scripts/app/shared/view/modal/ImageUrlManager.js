@@ -104,6 +104,7 @@ Ext.define('Taco.shared.view.modal.ImageUrlManager', {
     
     doSave: function () {
         var data = this.form.getValues();
+        this.record.set(data);
         this.saveSuccess(data);
     }
 
