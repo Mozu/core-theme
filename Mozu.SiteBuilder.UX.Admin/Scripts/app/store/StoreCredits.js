@@ -4,7 +4,10 @@ Ext.define('Taco.store.StoreCredits', {
     pageSize: 50,
     remoteSort: true,
     remoteFilter: true,
-
+    sorters: [{
+        property: 'createDate',
+        direction: 'DESC'
+    }],
     statics: {
         createForCustomer: function(customerId, options) {
             var store, proxy;

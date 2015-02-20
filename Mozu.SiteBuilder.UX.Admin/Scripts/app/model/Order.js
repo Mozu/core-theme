@@ -2332,7 +2332,7 @@ Ext.define('Taco.model.Order', {
                 '<p>Successfully resent e-mail</p>'
             ]),
             confirmData = config.confirmData || me.data,
-            confirmSuccess = config.confirmSuccess || true,
+            confirmSuccess = (config.confirmSuccess==false) ? false :  true,
             msg;
             
         Ext.apply(config, {

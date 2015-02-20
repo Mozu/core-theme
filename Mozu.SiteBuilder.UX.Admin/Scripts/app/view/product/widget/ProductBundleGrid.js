@@ -23,16 +23,16 @@ Ext.define('Taco.view.product.widget.ProductBundleGrid', {
 
     hideSearchToolbar: true,
     //selType: 'cellmodel',
-    selModel: Ext.create('Ext.selection.CellModel', {
-        enableFieldTabbing: true
-        //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
-    }),
     width: "100%",
 
     initComponent: function () {
         var me = this;        
         
         Ext.apply(me, {
+            selModel: Ext.create('Ext.selection.CellModel', {
+                enableFieldTabbing: true
+                //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
+            }),
             viewConfig: {
                 deferEmptyText: false,
                 emptyText: "No items in this bundle",

@@ -443,7 +443,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
 
-            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, filter: filter));
+
+
+            if (extFilter != null && extFilter.Count > 0)
+            {
+                if (filter != null)
+                {
+                    filter += " and ";
+                }
+                filter += extFilter.ToCreditFilterString();
+
+            }
+
+            var sort = pagingParams.sort.ToSortString();
+
+            var dcitemTask = (await _creditWebApiClient.GetCredits(startIndex, pageSize, sortBy:sort, filter: filter));
 
             if (dcitemTask.HasException)
             {
