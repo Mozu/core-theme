@@ -4,7 +4,7 @@
     system = require('system'),
     baseDir = system.args[1],
     port = system.args[2],
-    url = "http://localhost:"+ port +"/admin/tests/index.html?phantom=true&include=fart&pageSize=1&page=0";
+    url = "http://localhost:"+ port +"/admin/tests/buildIndex.html?phantom=true&include=fart&pageSize=1&page=0";
 
 
 
