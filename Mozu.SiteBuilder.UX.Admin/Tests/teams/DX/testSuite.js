@@ -1,32 +1,5 @@
-var Harness = Siesta.Harness.Browser.ExtJS,
-    protoCal = window.location.protocol,
-    relPath = '../../',
-    simAndSinPreloads = [
-        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/SimXhr.js',
-        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/Simlet.js',
-        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/DataSimlet.js',
-        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/JsonSimlet.js',
-        protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/SimManager.js',
-        '/admin/tests/sinon.js',
-        {
-            instrument: true,
-            url: relPath + "customunit/view/Header.t.js"
-        }
-    ];
-
-Harness.configure({
-    title: "DX Siesta Tests",
-    waitForExtReady: true,
-    autoCheckGlobals: false,
-    enableCodeCoverage: true,
-    expectedGlobals: ['Ext', 'Taco'],
-    testClass: Taco.TestClass.Core,
-    preload: simAndSinPreloads,
-    hostPageUrl: relPath + 'homepages/Mystic.cshtml'
-
-});
-
-Harness.start({
+var relPath = (window.location.pathname !== '/admin/tests/buildIndex.html') ? '../../' : '',
+    DXTestObject = {
     group: 'SiteBuilder',
     expanded: true,
     items: [
@@ -54,4 +27,23 @@ Harness.start({
         }
 
     ]
-});
+};
+if (window.location.pathname !== '/admin/tests/buildIndex.html') {
+
+    var Harness = Siesta.Harness.Browser.ExtJS,
+        protoCal = window.location.protocol;
+
+    Harness.configure({
+        title: "DX Siesta Tests",
+        waitForExtReady: true,
+        autoCheckGlobals: false,
+        enableCodeCoverage: true,
+        expectedGlobals: ['Ext', 'Taco'],
+        testClass: Taco.TestClass.Core,
+        hostPageUrl: relPath + 'homepages/Mystic.cshtml'
+
+    });
+    
+    Harness.start(DXTestObject);
+
+}
