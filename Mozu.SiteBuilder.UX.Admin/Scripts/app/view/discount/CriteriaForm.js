@@ -60,12 +60,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
+
+        
         catStore = this.record.getCategoryStore();
         catStore.clearFilter(true);
         catStore.load();
 
         // reset the list's dirty state when its store first loads
-
         catStore.on({
             load: function () {
                 this.categoryList.resetOriginalValue();
@@ -140,6 +141,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 {
                     xtype: 'radio',
                     name: 'typeOfMinimumToEnforce',
+                    itemId: 'typeOfMinimumToEnforceCategories',
                     value: 'category',
                     handler: function (box, isChecked) {
                         toggleEnabledCriteriaQuantities(isChecked ? me.categoriesBox : me.productsBox);
@@ -152,11 +154,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
+                    emptyText:"1",
                     allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
                         change: function (f, newValue) {
+                            if (!newValue) {
+                                this.setValue(1);
+                            }
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
                         }
                     }
@@ -283,11 +289,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     hideTrigger: true,
                     width: 80,
                     minValue: 1,
+                    emptyText: "1",
                     allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
                         change: function (f, newValue) {
+                            if (!newValue) {
+                                this.setValue(1);
+                            }
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
                         }
                     }
@@ -623,12 +633,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         //this.productCategoryContainer.setVisible(isLineItem);
         //always visible now
         this.productCategoryContainer.setVisible(true);       
-
+        
         //reset the hidden fields
         if (!isLineItem) {
             this.includeSpecificProductsInput.setValue(true);
-            this.categoryList.setValue('');
-            this.productList.setValue('');
+            
+            //this.categoryList.setValue('');
+            //this.productList.setValue('');
             //this.excludeCategoryList.setValue('');
             //this.productExcludeList.setValue('');
         } else {
@@ -645,8 +656,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.appliesToSaleProducts.setVisible(true)
 
         this.includeSpecificProductsInput.setVisible(isLineItem)
-        this.productsBox.setVisible(isLineItem)
-        this.categoriesBox.setVisible(isLineItem)
+        //this.productsBox.setVisible(isLineItem)
+        //this.categoriesBox.setVisible(isLineItem)
 
         this.excludeCategoriesBox.setVisible(true)
         this.productsExcludeBox.setVisible(true)
@@ -660,6 +671,25 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.setVisible(true);        
         this.setProductCategoryContainerVisibility(isLineItem);        
         this.setShippingListVisibility(appliesToShipping);
+    },
+
+    beforeSave: function () {
+        var me = this;
+        // need to clear out the selected values from the disabled productlist and categorieslist;
+        var radio = me.down('#typeOfMinimumToEnforceCategories');
+        if (radio) {
+            var categoriesActive = radio.getValue();
+            // need to manually set the value on the record for the disabled field since a disabled field doesn't get its data is not updated automatically
+            if (categoriesActive) {
+                me.productList.setValue('');
+                me.record.set("products", []);
+            } else {
+                me.categoryList.setValue('');
+                me.record.set("categories", []);
+            }
+        }
+
+        return true;
     },
 
     onDestroy: function () {
