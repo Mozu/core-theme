@@ -42,6 +42,11 @@ Ext.define('Taco.model.StoreCredit', {
             dateFormat: 'c'
         },
         {
+            name: 'createdDate',
+            type: 'date',
+            dateFormat: 'c'
+        },
+        {
             name: 'currentBalance',
             type: 'float'
         },
@@ -102,17 +107,7 @@ Ext.define('Taco.model.StoreCredit', {
 
         *
         */
-    resendEmail: function (config) {
-        Ext.apply(config, {
-            url: '/admin/app/customer/resendcreditcreatedemail',
-            method: 'POST'
-        });
-
-        // add in boilerplate error handling code;
-        config.errorMsg = config.errorMsg || 'Error resending email';
-        this.addErrorHandling(config);
-        Ext.Ajax.request(config);
-    },
+    
     resendEmail: function (config) {
         var me = this,
             config = config || {},
@@ -121,7 +116,7 @@ Ext.define('Taco.model.StoreCredit', {
                 '<p>Successfully resent e-mail</p>'
             ]),
             confirmData = config.confirmData || me.data,
-            confirmSuccess = config.confirmSuccess || true,
+            confirmSuccess = (config.confirmSuccess==false) ? false : true,
             msg,
             confirmFn = Ext.emptyFn;
 
