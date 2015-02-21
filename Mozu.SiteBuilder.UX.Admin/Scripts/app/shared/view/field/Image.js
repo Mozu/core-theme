@@ -60,39 +60,25 @@ Ext.define('Taco.shared.view.field.Image', {
     cls: 'taco-image-field',
     allowMulti: true,
     thumbnailSize: 150,
+    filters: null,
     imageMetadata: null,
     isMetadataMerged: false,
     
     initComponent: function () {
-        var me = this,
-            cmsFilter = [];
-
-        this.mediaAssociationStore = Ext.create('Taco.store.MediaAssociations', {});
-
-        if (me.imageMetadata) {
-            Ext.Array.each(me.imageMetadata, function (img) {
-                if (!img.cmsId) {
-                    me.addUrlToMediaAssociationStore(img.id, img.url, img.alt, img.sequence);
-                } else {
-                    cmsFilter.push({
-                        property: 'id',
-                        value: img.cmsId
-                    });
-                }
-            });
-        }
-
         this.selectedImages = Ext.create('Taco.shared.store.Files', {
-            
+
             listeners: {
-                load: this.onSelectedImagesLoaded,
+                datachanged: this.onSelectedImagesDataChanged,
+               
                 scope:this
             }
         });
 
-        if (cmsFilter.length > 0) {
+        if (this.filters) {
             this.selectedImages.load({
-                filters: cmsFilter
+                filters: this.filters
+                //,callback: function(images) {
+                //}
             });
         }
 
@@ -117,7 +103,7 @@ Ext.define('Taco.shared.view.field.Image', {
             },
             hidden: true,
             selectedItemCls: 'selected',
-            store: this.mediaAssociationStore,
+            store: this.selectedImages,
             tpl :[ 
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
@@ -126,11 +112,7 @@ Ext.define('Taco.shared.view.field.Image', {
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
-                                '<tpl if="isStoredInCms">',
-                                  '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
-                                '<tpl else>',
-                                  '<div class="square" style="background-image:url(\'{url}\');background-size: contain;" title="{alt:htmlEncode}">',
-                                '</tpl>',
+                                '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
                                     '<ul class="toolbar">',
                                         '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
                                         '<li class="remove" title="Remove">Remove</li>',
@@ -147,13 +129,13 @@ Ext.define('Taco.shared.view.field.Image', {
             itemSelector: 'li.item'
         });
 
-        this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.onSelectedImageAdded, this);
+        this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.imageView.refresh, this.imageView);
 
         this.uploadAction = Ext.widget({
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'Upload File',
+            text: 'upload from computer',
             scope: this,
             handler: function () {
                 this.uploadButton.fileInputEl.dom.click();
@@ -179,18 +161,9 @@ Ext.define('Taco.shared.view.field.Image', {
             xtype: 'button',
             ui: 'link',
             scale: 'medium',
-            text: 'Pick from File Manager',
+            text: 'upload from file manager',
             scope: this,
             handler: this.onAssociatorClick
-        });
-
-        this.urlManagerAction = Ext.widget({
-            xtype: 'button',
-            ui: 'link',
-            scale: 'medium',
-            text: 'Link to URL',
-            scope: this,
-            handler: this.onUrlAssociatorClick
         });
 
         this.items = [
@@ -199,9 +172,7 @@ Ext.define('Taco.shared.view.field.Image', {
             this.uploadButton,
             this.uploadAction,
             { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
-            this.fileManagerAction,
-            { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
-            this.urlManagerAction
+            this.fileManagerAction
         ];
        
         this.callParent(arguments);
@@ -241,27 +212,25 @@ Ext.define('Taco.shared.view.field.Image', {
         });
     },
 
-    //security defect, but commented out due to usage for csv files
-    //validateFiles: function (fileList) {
-    //    var allowedMediaTypes = ['image', 'video'],
-    //        invalidFiles = [];
+    validateFiles: function (fileList) {
+        var allowedMediaTypes = ['image', 'video'],
+            invalidFiles = [];
 
-    //    Ext.each(fileList, function (file) {
-    //        var mediaType = file.type.split('/')[0];
-    //        if (allowedMediaTypes.indexOf(mediaType) === -1) {
-    //            invalidFiles.push(file.name);
-    //        }
-    //    });
-    //    if (invalidFiles.length > 0) {
-    //        Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
-    //        return false;
-    //    }
-    //    return true;
-    //},
+        Ext.each(fileList, function (file) {
+            var mediaType = file.type.split('/')[0];
+            if (allowedMediaTypes.indexOf(mediaType) === -1) {
+                invalidFiles.push(file.name);
+            }
+        });
+        if (invalidFiles.length > 0) {
+            Taco.app.fireEvent('setmessage', 'The following files are not permitted ' + invalidFiles.join(', '), 'error');
+            return false;
+        }
+        return true;
+    },
 
     onViewAfterRender: function () {
-        var id = 'ImageFieldDD-' + Ext.id(),
-            me = this;
+        var id = 'ImageFieldDD-' + Ext.id();
 
         this.dragZone = Ext.create('Ext.view.DragZone', {
             view: this.imageView,
@@ -349,7 +318,6 @@ Ext.define('Taco.shared.view.field.Image', {
 
                 store.insert(index, records);
                 view.getSelectionModel().select(records);
-                me.updateFormFieldFromStore();
             }
         });
     },
@@ -358,7 +326,7 @@ Ext.define('Taco.shared.view.field.Image', {
         if (Ext.fly(e.target).hasCls('remove')) {
             e.stopPropagation();
             e.preventDefault();
-            this.onRemoveImageAssociation(record);
+            this.selectedImages.remove(record);
         }
         else if (Ext.fly(e.target).hasCls('alt-text')) {
             e.stopPropagation();
@@ -368,7 +336,9 @@ Ext.define('Taco.shared.view.field.Image', {
                 listeners: {
                     savesuccess: {
                         scope: this,
-                        fn: this.updateFormFieldFromStore
+                        fn: function (imgMetadataModal, imgMetadata) {
+                            this.onSelectedImagesDataChanged();
+                        }
                     }
                 }
             });
@@ -492,116 +462,41 @@ Ext.define('Taco.shared.view.field.Image', {
         
     },
 
-    onUrlAssociatorClick: function () {
-        
-        var associator = Ext.create('Taco.shared.view.modal.ImageUrlManager', {});
+    onSelectedImagesDataChanged: function () {
+        var value = [];
 
-        this.mon(associator, {
-            savesuccess: {
-                scope: this,
-                fn: 'onUrlAssociatorSave'
-            }
-        });
-        
-    },
-
-    onRemoveImageAssociation: function (record) {
-        this.mediaAssociationStore.remove(record); //todo: add listener to store for removed, added?
-        this.updateFormFieldFromStore();
-    },
-
-    findCmsImage: function(cmsId) {
-        var foundImageIndex = this.selectedImages.findBy(function(cmsImg) {
-            return (cmsId === cmsImg.get('cmsId') || cmsId === cmsImg.get('name'));
-        });
-        return (foundImageIndex !== -1) ? this.selectedImages.getAt(foundImageIndex) : null;
-    },
-
-    findCmsImageInAssociation: function (cmsId) {
-        var foundImageIndex = this.mediaAssociationStore.findBy(function(img) {
-            return (cmsId === img.get('cmsId') || cmsId === img.get('name'));
-        });
-        return (foundImageIndex !== -1) ? this.mediaAssociationStore.getAt(foundImageIndex) : null;
-    },
-    
-
-    mergeProductMetadataWithCms: function() {
-        var me = this,
-            selectedImage;
-
+        //merge product/category images metadata with cms file data
         if (this.imageMetadata) {
-            Ext.Array.each(this.imageMetadata, function (prodImgMetadata) {
-                selectedImage = me.findCmsImage(prodImgMetadata.cmsId);
-                if (selectedImage && !selectedImage.get('isMerged')) {
-                    selectedImage.set('alt', prodImgMetadata.alt);
-                    selectedImage.set('sequence', prodImgMetadata.sequence);
-                    selectedImage.set('isMerged', true);
-                }
-            });
+            for (var i = 0; i < this.imageMetadata.length; i++) {
+                var imgMeta = this.imageMetadata[i];
+                Ext.Array.every(this.selectedImages.data.items, function(selectImg) {
+                    if (imgMeta.cmsId === selectImg.get('cmsId') || imgMeta.cmsId === selectImg.get('name')) {
+                        if (!selectImg.get('isMerged')) {
+                            selectImg.set('alt', imgMeta.alt);
+                            selectImg.set('isMerged', true);
+                        }
+                        return false;
+                    }
+                    return true;
+                });
+            }
         }
-    },
 
-    onSelectedImagesLoaded: function(store, records, successful) {
-        if (!successful) {
-            return false;
-        }
-        this.mergeProductMetadataWithCms();
-        this.addCmsRecordToMediaAssociation(this.selectedImages.data.items);
-        return this.updateFormFieldFromStore();
-    },
-
-    onSelectedImageAdded: function (eventData) {
-        this.addCmsRecordToMediaAssociation([eventData.document]);
-    },
-
-    addCmsRecordToMediaAssociation: function (records) {
-        var me = this;
-        Ext.Array.each(records, function (item) {
-
-            me.mediaAssociationStore.addSorted({
-                id: null,
-                cmsId: item.get('cmsId'),
-                isStoredInCms: true,
-                isUploaded: true,
-                progress: 1,
-                alt: item.get('alt'),
-                url: item.get('url'),
-                sequence: item.get('sequence') ? item.get('sequence') : me.mediaAssociationStore.count() + 1
-            });
-        });
-        
-        this.updateFormFieldFromStore();
-    },
-
-    updateFormFieldFromStore: function() {
-        var values = [];
-        this.mediaAssociationStore.each(function (record) {
-            values.push({
-                id: record.get('id'),
-                cmsId: record.get('cmsId'),
-                isStoredInCms: record.get('isStoredInCms'),
-                isUploaded: record.get('isUploaded') ? record.get('isUploaded') : true,
-                progress: record.get('progress'),
-                alt: record.get('alt'),
-                url: record.get('url'),
-                sequence: record.get('sequence')
-            });
+        this.selectedImages.each(function (record) {
+            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
         }, this);
-        this.updateFormField(values);
-    },
 
-    updateFormField: function(values) {
-        if (values.length > 0) {
+        if (value.length > 0) {
             this.emptyDropZone.hide();
             this.imageView.show();
         } else {
             this.emptyDropZone.show();
             this.imageView.hide();
         }
-        return this.mixins.field.setValue.call(this, values);
-    },
 
-    //todo: figure out what to do here.
+        return this.mixins.field.setValue.call(this, value);
+    },
+    
     setValue: function (value) {
        
         if (!value ) {
@@ -625,6 +520,8 @@ Ext.define('Taco.shared.view.field.Image', {
         }
 
         this.selectedImages.loadData(value);
+
+        return this.onSelectedImagesDataChanged();
     },
     
     getValue:function () {
@@ -638,38 +535,8 @@ Ext.define('Taco.shared.view.field.Image', {
         return val;
     },
 
-    onAssociatorSave: function (associator, fileManagerRecords) {
-        this.selectedImages.add(fileManagerRecords);
-        this.addCmsRecordToMediaAssociation(fileManagerRecords);
-    },
-
-    addUrlToMediaAssociationStore: function (id, url, alt, seq) {
-        this.mediaAssociationStore.addSorted({
-            id: id,
-            cmsId: null,
-            isStoredInCms: false,
-            isUploaded: true,
-            alt: alt,
-            url: url,
-            sequence: seq
-        });
-    },
-
-    onUrlAssociatorSave: function (associator, record) {
-        var existingIndex;
-
-        if (! record.imageUrl) {
-            return;
-        }
-
-        existingIndex = this.mediaAssociationStore.findBy(function (existingItem) {
-            return (existingItem.get('url') && existingItem.get('url').toLowerCase() === record.imageUrl.toLowerCase());
-        });
-        if (existingIndex !== -1) {
-            return;
-        }
-        this.addUrlToMediaAssociationStore(null, record.imageUrl, null, this.mediaAssociationStore.count()+1);
-        this.updateFormFieldFromStore();
+    onAssociatorSave: function (associator, selectedRecords) {
+        this.selectedImages.add(selectedRecords);
     },
 
     onDestroy: function () {
