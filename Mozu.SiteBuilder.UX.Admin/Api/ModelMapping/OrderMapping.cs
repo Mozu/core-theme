@@ -160,6 +160,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
                 .AfterMap(MapAvailableBulkActions)
                 .AfterMap(InterpolateRefundsIntoPaymentInteractions)
+                .AfterMap(RemoveCreditPaymentAvailableActionFromPaymentsWithRefunds)
                 .AfterMap((dc, order) =>
                 {
                     if (order.Packages == null)
@@ -478,6 +479,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     p.Interactions.Insert(Math.Max(indexToInsertAt, 0), riMapped);
                     p.AmountCredited += riMapped.Amount.GetValueOrDefault();
                 }
+            }
+        }
+
+        /// <summary>
+        /// If a credit card refund has had a refund applied, 'CreditPayment' is not _really_ an available action any more.
+        /// </summary>
+        private void RemoveCreditPaymentAvailableActionFromPaymentsWithRefunds(OrdersDC.Order dc, Order order)
+        {
+            const string CREDITPAYMENT = PaymentsDC.PaymentAction.PaymentActionNameConst.CREDIT_PAYMENT;
+
+            if (order == null || order.Payments == null) return;
+
+            var affectedPayments =
+                from p in order.Payments
+                where p.PaymentType == PaymentsDC.PaymentTypeConst.CREDIT_CARD
+                where p.Interactions != null
+                where p.Interactions.Any(i => i.InteractionType == "Refund")
+                where p.AvailableActions != null
+                select p;
+
+            foreach (var payment in affectedPayments)
+            {
+                payment.AvailableActions.Remove("Manual" + CREDITPAYMENT);
+                payment.AvailableActions.Remove(CREDITPAYMENT);
             }
         }
 
