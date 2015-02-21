@@ -164,6 +164,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         new KeyValuePair<string, string>("AMEX", "American Express"),
                         new KeyValuePair<string, string>("MC", "MasterCard"),
                         new KeyValuePair<string, string>("DISCOVER", "Discover"),
+                        new KeyValuePair<string, string>("JCB", "JCB"),
                     };
                 }
             });
