@@ -6,7 +6,7 @@
         extend: 'Ext.data.Store',
         model: 'Taco.model.Discount',
         remoteFilter: true,
-        pageSize: 25,
+        pageSize: 100,
         storeManagerConfig: {
             clearFilters: true,
             contextLevel: 's',

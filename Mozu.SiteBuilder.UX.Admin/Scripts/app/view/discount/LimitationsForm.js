@@ -53,7 +53,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             hideTrigger: true,
             width: 240,
             margin: "0px 20px 0px 0px",
-            fieldLabel: 'Total Number of Redemptions ' + (this.record.get('currentRedemptionCount') ? '&nbsp;&nbsp;&nbsp;&nbsp;<i>(current redemptions:&nbsp;' + this.record.get('currentRedemptionCount') + '</i>)' : ''),
+            fieldLabel: 'Total Number of Redemptions',
             emptyText: 'Unlimited',
             minValue: 0
         });
@@ -80,6 +80,25 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 labelSeparator: ''
             },
             items: [this.redemptionLimits, this.maxRedemptionsPerOrder]
+        });
+
+        this.redemptionCountContainer = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: 500,
+            margin: "5px 0px 10px 0px",
+            hidden: !this.record.get('currentRedemptionCount'),
+            items: [
+                {
+                    xtype: 'label',
+                    flex: 1,
+                    cls: 'taco-readonly-display',
+                    margin: "0px 20px 0px 0px",
+                    text: "Already redeemed: " + this.record.get('currentRedemptionCount') 
+                }
+            ]
         });
 
         this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
@@ -151,7 +170,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 },
                 items: [this.maxDiscountLineItemValue, this.maxDiscountOrderValue]
             },
-            this.redemptionContainer,            
+            this.redemptionContainer,
+            this.redemptionCountContainer,
             this.requiresCouponInput,
             this.couponCodeBox,
             this.oneTimeUsePerShopper
