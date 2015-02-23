@@ -16,6 +16,9 @@ Ext.define('Taco.model.Capability', {
             "name": "appId",
             "type": "string"
         }, {
+            "name": "version",
+            "type": "string"
+        }, {
             "name": "uiConfigurationUrl",
             "type": "string"
         }, {

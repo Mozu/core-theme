@@ -20,6 +20,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 using Mozu.InstalledApplications.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers;
+using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using VM = Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
 
@@ -65,6 +66,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //todo: replace with Tasks.WhenAll...continueWith - Greg Murray on 2014-04-09
             var tenant = (await _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId)).ReadAsSync();
 
+            var entilements = (await _tenantsWebApiClient.GetTenantEntitlements(_apiContext.TenantId)).ReadAsSync();
+
             #region test
             //var appsTask = _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600);
             //var tenantTask = _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId);
@@ -89,7 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var capability in list)
             {
-                _secureConfigUrlHelper.BuildSecureUrl(capability, tenant);
+                Entitlement entitlement = entilements.Items.FirstOrDefault(x => x.AppId == capability.AppId);
+                   
+                _secureConfigUrlHelper.BuildSecureUrl(capability, tenant, entitlement);
             }
 
             if (pagingParams != null && !string.IsNullOrEmpty(pagingParams.id))
