@@ -231,10 +231,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
                 // Special Characters: = '^', '\'', '"', '{','}',')','(' 
                 // Used as delimiters within expressions
                 // source: http://tfs.corp.volusion.com:8080/tfs/VNext/v2Mozu/_git/Mozu.Core#path=%2FMozu.Core.FilterParsing%2FFilterParser.cs&version=GBmaster&_a=contents
-                var stringValue = this.value as string;
-                
-                if (stringValue != null)
+                //var stringValue = this.value as string;
+                var stringValue = "";
+
+                if (this.value != null)
                 {
+                    stringValue = this.value.ToString();
                     stringValue = this.EscapeFilter(stringValue);
                 }
 

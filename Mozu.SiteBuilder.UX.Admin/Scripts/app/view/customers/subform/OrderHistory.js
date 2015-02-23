@@ -2,8 +2,8 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
     extend: 'Taco.view.customers.subform.Subform',
     title: 'Order History',
     initComponent: function () {
-
         var record = this.record;
+
         this.items = [{
             xtype: 'grid',
             listeners: {
@@ -16,7 +16,7 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
             stateId:"statefulOrderHistoryGrid",
             columns: [
                 { text: 'Order Id', stateId: "orderId",  dataIndex: 'orderNumber', flex: 1 },
-                { xtype: 'datecolumn', stateId: "orderDate", text: 'Order Date', dataIndex: 'createDate', flex: 1 },
+                { xtype: 'datecolumn', stateId: "orderDate", text: 'Order Date', dataIndex: 'submittedDate', flex: 1 },
                 {
                     text: 'Order Amount', dataIndex: 'total',
                     stateId: "orderAmount",
@@ -31,5 +31,15 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
         }];
 
         this.callParent(arguments);
+
+        record.on('load', function () {
+            record.sort([{
+                direction: 'DESC',
+                property: 'submittedDate',
+                transform: function (value) {
+                    return Ext.Date.format(value, 'U');
+                }
+            }]);
+        });
     }
 });

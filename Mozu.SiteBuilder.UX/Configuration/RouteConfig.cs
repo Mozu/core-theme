@@ -384,15 +384,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "token/refresh",
                 new {controller = "testing", action = "RefreshAPiContextHeaders"});
 
-
-
-
             routes.MapHttpRoute(
                 "AjaxCreateAccount",
                 "user/create",
                 new {controller = "Auth", action = "AjaxCreateAccount"},
                 new {acceptConstraint = new AcceptConstraint("application/json", true)});
-
 
             routes.MapHttpRoute(
                 "CreateAccount",
@@ -400,12 +396,23 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new {controller = "Auth", action = "CreateAccount"},
                 new {acceptConstraint = new AcceptConstraint("application/json", false)});
 
+            routes.MapHttpRoute(
+                "Sign Up",
+                "user/signup",
+                new { controller = "Auth", action = "CreateAccount" },
+                new { acceptConstraint = new AcceptConstraint("application/json", false)});
 
             routes.MapHttpRoute(
                 "AjaxResetPassword",
                 "user/resetpassword",
                 new {controller = "Auth", action = "AjaxResetPassword"},
                 new {acceptConstraint = new AcceptConstraint("application/json", true)});
+
+             routes.MapHttpRoute(
+                "AjaxForgotPassword",
+                "user/forgotpassword",
+                new {controller = "Auth", action = "AjaxForgotPassword"},
+                new {acceptConstraint = new AcceptConstraint("application/json", false)});
 
 
             

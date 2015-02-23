@@ -18,6 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<DC.Credit, Credit>()
                 //.ForMember(x => x.CustomerName, op => op.ResolveUsing(dc => string.Format("Customer {0}", dc.CustomerId)))
                 //.ForMember(x => x.IssuedBy, op => op.ResolveUsing(dc => string.Format("Issued By {0}", dc.AuditInfo.CreateBy)))
+                .ForMember(x => x.CreatedDate, opt => opt.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.ModifiedDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? (dc.AuditInfo.UpdateDate ?? dc.AuditInfo.CreateDate)
                     : null ))

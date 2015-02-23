@@ -4,7 +4,8 @@
 Ext.define('Taco.view.discount.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Ext.form.FieldContainer'
+        'Ext.form.FieldContainer',
+        'Taco.core.ux.form.DateTime'
     ],
 
     defaults: {

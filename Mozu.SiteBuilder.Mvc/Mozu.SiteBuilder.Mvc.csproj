@@ -629,6 +629,8 @@
     <EmbeddedResource Include="TestData\backoffice\Order1.json" />
     <EmbeddedResource Include="TestData\backoffice\Package1.json" />
     <EmbeddedResource Include="TestData\refund.created\Refund2.json" />
+    <EmbeddedResource Include="TestData\refund.created\Refund3.json" />
+    <None Include="TestData\refund.created\Refund1.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tags\Data\" />

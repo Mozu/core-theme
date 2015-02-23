@@ -223,6 +223,41 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Login", new { ReturnUrl = returnUrl });
         }
 
+        [System.Web.Http.HttpGet]
+        public ActionResult AjaxForgotPassword(string returnUrl = null)
+        {
+
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "forgot-password",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+
+            };
+
+
+            return View("Forgot-Password", new { ReturnUrl = returnUrl });
+        }
+
+        [System.Web.Http.HttpGet]
+        public ActionResult CreateAccount(string returnUrl = null)
+        {
+            var pc = this.PageContext;
+            pc.CmsContext= new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "signup",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            return View("Signup", new { ReturnUrl = returnUrl });
+        }
+
         public class LoginDetails
         {
             public string email { get; set; }
@@ -239,7 +274,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              {
                  return res.ResponseMessage;
              }
-
              if (res.ResponseMessage.IsSuccessStatusCode)
              {
                  return Request.CreateResponse(System.Net.HttpStatusCode.OK, new

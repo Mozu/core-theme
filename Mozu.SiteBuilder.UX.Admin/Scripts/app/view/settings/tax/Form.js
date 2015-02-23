@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.settings.tax.Form', {
     extend: 'Taco.view.product.subform.Subform',
-    requires: ['Taco.store.TaxRates', 'Taco.store.States'],
+    requires: ['Taco.store.TaxRates', 'Taco.store.States', 'Taco.model.Capability', 'Taco.store.Capability'],
     enableStoreSyncTasks: true,
     //layout: {
     //    type: 'vbox',
@@ -12,8 +12,6 @@ Ext.define('Taco.view.settings.tax.Form', {
     title: 'Tax',
     
     initComponent: function() {
-
-
         this.taxStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TaxRates');
         this.taxStore.whenLoaded(this.loadState, this);
         
@@ -53,6 +51,46 @@ Ext.define('Taco.view.settings.tax.Form', {
         }
     },
 
+    onBoxReady: function () {
+        this.callParent(arguments);
+        var me = this;
+        this.up("#contentView").setLoading(true);
+
+        Ext.Ajax.request({
+            url: '/admin/app/capabilities/checktaxcapability',
+            method: 'GET',
+            success: this.checkCapability
+        });
+        
+    },
+    
+    checkCapability: function (responseObj) {
+        var taxHandled = responseObj.responseText === "true";
+        if (taxHandled) {
+            Ext.getCmp("contentView").setLoading({
+                useMsg: true,
+                msg: '<div style="text-align: center;">US tax Settings are managed by your configured capabilities.<br>Please navigate <a href="/capability" class="redirectTax">here</a> to manage tax configuration.</div>',
+                maskCls: 'x-mask',
+                msgCls: 'taco-loadmask-tax-msg',
+                listeners: {
+                    click: {
+                        element: 'el',
+                        scope: this,
+                        fn: function(e, el)
+                        {
+                            if (e.getTarget('.redirectTax', 10)) {
+                                e.preventDefault();
+                                Taco.core.StateManager.attemptNavigate("/capability");
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            Ext.getCmp("contentView").setLoading(false);
+        }
+    },
+
     beforeSave: function() {
         var values = this.statesInput.getValue() || [], delRecords = [];
 
@@ -70,6 +108,7 @@ Ext.define('Taco.view.settings.tax.Form', {
         this.taxStore.remove(delRecords);
         return this.callParent(arguments);
     },
+
     bindTaxStore: function() {
         var val = [];
         this.taxStore.each(function(item) {
@@ -80,6 +119,7 @@ Ext.define('Taco.view.settings.tax.Form', {
         this.statesInput.resetOriginalValue();
         this.resumeEvents();
     },
+
     loadState: function () {
         if (this.taxStore.count() == 0) {
             this.suspendEvents();
@@ -88,6 +128,7 @@ Ext.define('Taco.view.settings.tax.Form', {
             this.resumeEvents();
         }
     },
+
     taxExemptClick: function () {
         if (this.taxFreeCheck.getValue()) {
             this.statesInput.disable();
@@ -95,5 +136,9 @@ Ext.define('Taco.view.settings.tax.Form', {
         } else {
             this.statesInput.enable();
         }
+    },
+
+    onDestroy: function () {
+        Ext.getCmp("contentView").setLoading(false);
     }
 });
