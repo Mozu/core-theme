@@ -10,7 +10,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         'Taco.view.category.Modal',
         'Taco.view.product.Modal',
         'Taco.view.customers.segments.Modal',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.view.discount.widget.CategoryPicker'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
@@ -218,7 +219,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     minValue: 1,
                     allowBlank: true,
                     labelAlign: 'right',
-                    hideLable: true,
+                    hideLable: true
                 }, {
                     xtype: 'component',
                     html: 'of',
@@ -295,52 +296,18 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     },
 
     buildCategory: function () {
-        var catStore = this.record.getCategoryStore();
-        // reset the list's dirty state when its store first loads
-        catStore.clearFilter(true);
-        catStore.load();
-
-        catStore.on({
-            load: function () {
-                this.categoryList.resetOriginalValue();
-            },
-            single: true,
-            scope: this
-        });
-
-        // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
+        
+        this.conditionalCategoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
+            catStore: this.record.getCategoryStore(),
+            record: this.record,
             name: 'conditionalCategories',
-            flex: 1,
-            margin: 0,
-            store: catStore,
-            getStore: function () {
-                return catStore;
-            },
-            queryMode: 'local',
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            displayField: 'nameAndCode',
-            valueField: 'id',
-            hideLabel: true,
-
-            // fieldLabel: 'Purchase an item from the following categories',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
+            listWidth: 407
         });
 
         Ext.defer(function () {
-
-            this.mon(this.categoryList, "change", this.onProductsCategoriesChange, this);
-            //this.categoryList.on({
-            //    change: this.onProductsCategoriesChange,
-            //    scope: this
-            //});
+            this.mon(this.conditionalCategoryPanel, "change", function(newVal) {
+                this.onProductsCategoriesChange();
+            }, this);
         }, 3000, this);
 
         this.categoriesBox = Ext.create('Ext.container.Container', {
@@ -355,61 +322,19 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                     minValue: 1,
                     allowBlank: true,
                     labelAlign: 'right',
-                    hideLable: true,
+                    hideLable: true
                 }, {
                     xtype: 'component',
                     html: 'of',
                     padding: '0 10px 0 10px',
                     cls: 'x-form-item-label x-unselectable x-form-item-label-left'
                 },
-                this.categoryList,
-                {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Add',
-                    margin: '0 0 0 10',
-                    width: 70,
-                    style: {
-                        verticalAlign: 'bottom'
-                    },
-                    handler: function () {
-                        this.launchCategoryModal(this.categoryList);
-                    },
-                    scope: this
-                }
+                this.conditionalCategoryPanel
             ]
         });
         this.minimumQuantityProductsRequiredInCategories = this.categoriesBox.down('[name=minimumQuantityProductsRequiredInCategories]');
 
 
-    },
-
-    /**
-     * Opens a modal with a TreePanel.
-     * @private
-     */
-    launchCategoryModal: function (list) {
-        var me = this,
-            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
-
-        treeStore.clearFilter(true);
-        treeStore.load();
-
-        this.modal = Ext.create('Taco.view.category.Modal', {
-            store: treeStore
-        });
-
-        this.modal.on({
-            savesuccess: function (modal, values) {
-                list.addValue(values);
-                me.reloadStore(list);
-            },
-            aftercancelclose: function () {
-                me.reloadStore(list);
-            },
-            scope: this
-        });
     },
 
     /**
@@ -476,7 +401,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             return;
         }
 
-        var categoryList = this.categoryList.getValue(),
+        var categoryList = this.conditionalCategoryPanel.getValue(), 
             productList = this.productList.getValue(),
             hasProducts = productList && productList.length,
             hasCats = (categoryList && categoryList.length),
@@ -537,26 +462,13 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
 
     },
-    /**
-     * Removes a value from the list if the close icon was clicked.
-     * @private
-     */
-    onCategoryListItemClick: function (view, record, item, index, e) {
-        var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
-            list = view.ownerCt,
-            value,
-            store;
-        if (closeBtn) {
-            store = view.getStore();
-            value = Ext.Array.remove(list.getValue(), record.getId());
-            store.remove(record);
-            list.setValue(value);
-            return false;
-        }
-    },
 
     setFieldVisibility: function (isLineItem) {
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);
+    },
+
+    beforeSave: function () {
+        this.record.set('conditionalCategories', this.conditionalCategoryPanel.getValue());
     },
 
     onDestroy: function () {

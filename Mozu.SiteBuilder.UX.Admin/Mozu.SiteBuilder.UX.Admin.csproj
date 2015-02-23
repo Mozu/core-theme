@@ -946,6 +946,7 @@
     <Content Include="Scripts\app\view\customers\segments\Modal.js" />
     <Content Include="Scripts\app\view\discount\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\discount\ConditionsForm.js" />
+    <Content Include="Scripts\app\view\discount\widget\CategoryPicker.js" />
     <Content Include="Scripts\app\view\discount\CriteriaForm.js" />
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\discount\Grid.js" />

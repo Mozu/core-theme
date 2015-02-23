@@ -6,14 +6,15 @@
 Ext.define('Taco.view.discount.CriteriaForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-criteria',
+    requires: [
+        'Taco.view.discount.widget.CategoryPicker'
+    ],
     ui: 'subform',
     margin: '0 0 39 0',
-
     title: 'Target Criteria',
 
     initComponent: function () {
-        var catStore,
-            productStore,
+        var productStore,
             zoneStore,
             shippingStore,
             me = this;
@@ -60,42 +61,10 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        catStore = this.record.getCategoryStore();
-        catStore.clearFilter(true);
-        catStore.load();
-
-        // reset the list's dirty state when its store first loads
-
-        catStore.on({
-            load: function () {
-                this.categoryList.resetOriginalValue();
-            },
-            single: true,
-            scope: this
+        this.categoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
+            catStore: this.record.getCategoryStore(),
+            record: this.record
         });
-        // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'categories',
-            width: 382,
-            margin: 0,
-            store: catStore,
-            getStore: function () {
-                return catStore;
-            },
-            queryMode: 'local',
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            displayField: 'nameAndCode',
-            valueField: 'id',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
-        });
-
 
         function enableDisableCriteriaQuantities() {
             //var fn = me.includeAllProductsInput.getValue() ? disableCmp : enableCmp;
@@ -118,6 +87,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
             Ext.Array.each(toDisable.query('[isFormField]'), function (cmp) {
                 if (cmp.xtype !== "radio") {
+                    cmp.setValue('');
                     cmp.disable();
                 }
                 if (cmp.itemId === "maxQuantity") cmp.setValue(maximumQuantity);
@@ -141,7 +111,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     xtype: 'radio',
                     name: 'typeOfMinimumToEnforce',
                     value: 'category',
-                    handler: function (box, isChecked) {
+                    handler: function(box, isChecked) {
                         toggleEnabledCriteriaQuantities(isChecked ? me.categoriesBox : me.productsBox);
                     },
                     padding: '0 10px 0 0'
@@ -158,7 +128,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     listeners: {
                         change: function (f, newValue) {
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
-                        }
+                        },
+                        scope: this
                     }
                 }, {
                     xtype: 'component',
@@ -166,68 +137,23 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     padding: '0 10px 0 10px',
                     cls: 'x-form-item-label x-unselectable x-form-item-label-left'
                 },
-                this.categoryList,
-                {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Add',
-                    margin: '0 0 0 10',
-                    width: 70,
-                    style: {
-                        verticalAlign: 'bottom'
-                    },
-                    handler: function () {
-                        this.launchCategoryModal(this.categoryList);
-                    },
-                    scope: this
-                }
+                this.categoryPanel
             ]
         });
 
-
-        this.excludeCategoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
+        this.excludeCategoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
+            catStore: this.record.getCategoryStore(),
+            record: this.record,
             name: 'excludedCategories',
-            width: 520,
-            margin: 0,
-            store: catStore,
-            getStore: function () {
-                return catStore;
-            },
-            queryMode: 'local',
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            displayField: 'nameAndCode',
-            valueField: 'id',
-            fieldLabel: 'Exclude products in the following categories',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
+            listWidth: 520
         });
 
-        this.excludeCategoriesBox = Ext.create('Ext.container.Container', {
-            layout: 'auto',
+        this.excludeCategoriesBox = Ext.create('Ext.form.FieldContainer', {
+            layout: 'hbox',
+            width: 600,
+            fieldLabel: 'Exclude products in the following categories',
             items: [
-                this.excludeCategoryList,
-                {
-                    xtype: 'button',
-                    scale: 'medium',
-                    ui: 'action',
-                    text: 'Add',
-                    margin: '0 0 0 10',
-                    width: 70,
-                    style: {
-                        verticalAlign: 'bottom'
-                    },
-                    handler: function () {
-                        this.launchCategoryModal(this.excludeCategoryList);
-                    },
-                    scope: this
-                }
+                this.excludeCategoryPanel
             ]
         });
 
@@ -381,17 +307,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     name: 'excludeItemsWithExistingProductDiscounts',
                     boxLabel: 'Line Item Product Discounts',
                     width: 300,
-                    value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
+                    value: this.record.get('excludeItemsWithExistingProductDiscounts') === true
                 }, {
                     xtype: 'checkbox',
                     name: 'excludeItemsWithExistingShippingDiscounts',
                     boxLabel: 'Line Item Shipping Discounts',
                     width: 300,
-                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
+                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') === true
                 }
-                
             ]
-        })
+        });
 
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
@@ -447,7 +372,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             //displayField: 'Value',
             displayField: 'name',
             fieldLabel: 'Select Shipping Methods',
-            valueField: 'code',
+            valueField: 'code'
 
         });
 
@@ -477,7 +402,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             //displayField: 'Value',
             displayField: 'code',
             fieldLabel: 'Select Shipping Zones',
-            valueField: 'code',
+            valueField: 'code'
 
         });
 
@@ -511,39 +436,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         //}, this, { single: true })
 
         this.on('boxready', function () {
-            var products = this.record.get('products');
+            //var products = this.record.get('products');
             var categories = this.record.get('categories');
-            var activeQuantityMeasure = (categories && categories.length) ? this.categoriesBox : this.productsBox;            
+            var activeQuantityMeasure = (categories && categories.length) ? me.categoriesBox : me.productsBox;            
             
             activeQuantityMeasure.down('radio').setValue(true);
             toggleEnabledCriteriaQuantities(activeQuantityMeasure);
             enableDisableCriteriaQuantities();
         }, this);
 
-    },
-
-    /**
-     * Opens a modal with a TreePanel.
-     * @private
-     */
-    launchCategoryModal: function (list) {
-        var me = this,
-            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
-
-        this.modal = Ext.create('Taco.view.category.Modal', {
-            store: treeStore
-        });
-
-        this.modal.on({
-            savesuccess: function (modal, values) {
-                list.addValue(values);
-                me.reloadStore(list);
-            },
-            aftercancelclose: function () {
-                me.reloadStore(list);
-            },
-            scope: this
-        });
     },
 
     /**
@@ -584,29 +485,12 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     },
 
     reloadStore: function (list) {
-        var store = list.getStore(),
+        var store = list.store,
             proxy = store.getProxy();
         if (proxy.extraParams) {
             proxy.extraParams = {};
         }
         store.load();
-    },
-
-    /**
-     * Removes a value from the list if the close icon was clicked.
-     * @private
-     */
-    onCategoryListItemClick: function (view, record, item, index, e) {
-        var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
-            list = view.ownerCt,
-            value, store;
-        if (closeBtn) {
-            store = view.getStore();
-            value = Ext.Array.remove(list.getValue(), record.getId());
-            store.remove(record);
-            list.setValue(value);
-            return false;
-        }
     },
 
     setShippingListVisibility: function (appliesToShipping) {
@@ -627,8 +511,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         //reset the hidden fields
         if (!isLineItem) {
             this.includeSpecificProductsInput.setValue(true);
-            this.categoryList.setValue('');
+            this.categoryPanel.setValue('');
             this.productList.setValue('');
+            
             //this.excludeCategoryList.setValue('');
             //this.productExcludeList.setValue('');
         } else {
@@ -646,7 +531,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.includeSpecificProductsInput.setVisible(isLineItem)
         this.productsBox.setVisible(isLineItem)
-        this.categoriesBox.setVisible(isLineItem)
+        this.categoriesBox.setVisible(isLineItem);
 
         this.excludeCategoriesBox.setVisible(true)
         this.productsExcludeBox.setVisible(true)
@@ -660,6 +545,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.setVisible(true);        
         this.setProductCategoryContainerVisibility(isLineItem);        
         this.setShippingListVisibility(appliesToShipping);
+    },
+
+    beforeSave: function() {
+        this.record.set('categories', this.categoryPanel.getValue());
+        this.record.set('excludedCategories', this.excludeCategoryPanel.getValue());
     },
 
     onDestroy: function () {
