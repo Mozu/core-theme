@@ -79,6 +79,7 @@
         "Taco": true,
         "StartTest": true,
         "Siesta": true,
-        "Class": true
+        "Class": true,
+        "helpers": true
     }
 }

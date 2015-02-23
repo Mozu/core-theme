@@ -1,6 +1,5 @@
 var Harness = Siesta.Harness.Browser.ExtJS,
     protoCal = window.location.protocol,
-    relPath = '../../',
     simAndSinPreloads = [
         protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/SimXhr.js',
         protoCal + '//cdn.sencha.io/ext/gpl/4.2.0/examples/ux/ajax/Simlet.js',
@@ -23,7 +22,7 @@ Harness.configure({
     testClass: Taco.TestClass.Core,
     preload: simAndSinPreloads,
     hostPageUrl:'homepages/Mystic.cshtml'
-
 });
 
-Harness.start(DXTestObject, CommerceTestObject);
+/* global DXTestObject, CommerceTestObject, CatalogTestObject, CommonTestObject */
+Harness.start(DXTestObject, CommerceTestObject, CatalogTestObject, CommonTestObject);

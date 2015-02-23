@@ -1454,3 +1454,9 @@
         }
     }
 });
+
+var helpers = {
+    isBuildTask: function(win) {
+        return win.location.pathname.toLowerCase() === '/admin/tests/index.html';
+    }
+};
