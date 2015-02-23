@@ -22,6 +22,8 @@ using Mozu.SiteBuilder.Mvc.ObjectPools;
 using NDjango;
 using NDjango.Interfaces;
 using NDjango.Misc;
+using NDjango.Compatibility;
+using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {

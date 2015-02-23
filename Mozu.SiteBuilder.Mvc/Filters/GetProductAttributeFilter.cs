@@ -34,9 +34,9 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         private static IEnumerable<object> GetAttributesFrom(object value, IContext context)
         {
-            var propFilter = new NDjango.FiltersCS.Object.PropFilter();
-            var properties = propFilter.PerformWithParamAndContext(value, new[] {"properties"}, context) as IEnumerable<object> ?? Enumerable.Empty<object>();
-            var options = propFilter.PerformWithParamAndContext(value, new[] {"options"}, context) as IEnumerable<object> ?? Enumerable.Empty<object>();
+            var propFilter = new NDjango.Filters.PropFilter() as IFilterWithContext;
+            var properties = propFilter.PerformWithParam(value, "properties") as IEnumerable<object> ?? Enumerable.Empty<object>();
+            var options = propFilter.PerformWithParam(value, "options") as IEnumerable<object> ?? Enumerable.Empty<object>();
             return properties.Concat(options);
         }
     }
