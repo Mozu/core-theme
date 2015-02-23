@@ -5,6 +5,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.store.AdminUsers',
+        'Taco.core.ux.form.field.AdminUser',
         'Ext.form.FieldContainer',
         'Ext.form.field.Date',
         'Taco.core.ux.form.CurrencyField',
@@ -280,17 +281,10 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 store: { type: 'Taco.store.Currencies' }
 
             }, {
-                xtype: 'combobox',
+                xtype:"taco-adminuserfield",
                 name: 'updateby',
                 fieldLabel: 'Modified by',
                 flex: 1,
-                valueField: 'id',
-                displayField: 'lastName',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: false,
-                forceSelection: true,
-                //initialValue: "USD",
                 tpl: Ext.create('Ext.XTemplate',
                   '<tpl for=".">',
                       '<div class="x-boundlist-item">{firstName} {lastName}, {emailAddress}</div>',
