@@ -30,7 +30,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             align: 'right',
             unitAtEnd: false,
             minValue: 0,
-            hidden: this.record.get('scope') === 'Order'
+            hidden: this.record.get('scope') === 'Order',
+            emptyText: 'Unlimited'
         });
 
         this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
@@ -43,7 +44,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             currencyCode: Taco.app.context.getCurrent().currencyCode,
             align: 'right',
             unitAtEnd: false,
-            minValue: 0
+            minValue: 0,
+            emptyText: 'Unlimited'
         });
 
         this.redemptionLimits = Ext.create('Ext.form.field.Number', {
@@ -63,7 +65,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             width: 240,
             fieldLabel: 'Max Redemptions (per Order)',
             hidden: this.record.get('scope') === 'Order',
-            minValue: 0
+            minValue: 0,
+            emptyText: 'Unlimited'
         });
 
         this.redemptionContainer = Ext.create('Ext.container.Container', {
@@ -133,7 +136,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.items = [
             {
                 xtype: 'component',
-                html: 'Discount limitations specify the limit a coupon/discount can be redeemed.',
+                html: 'Discount limitations specify restrictions on discount and coupon redemption.',
                 margin: '15 0 0 0'
             }, {
                 xtype: 'container',
