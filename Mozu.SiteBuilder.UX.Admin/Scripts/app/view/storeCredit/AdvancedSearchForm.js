@@ -4,6 +4,8 @@
 Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
+        'Taco.store.AdminUsers',
+        'Taco.core.ux.form.field.AdminUser',
         'Ext.form.FieldContainer',
         'Ext.form.field.Date',
         'Taco.core.ux.form.CurrencyField',
@@ -253,8 +255,8 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 listeners: {
                     expand: {
                         scope: me,
-                        single:true,
-                        fn: function(field) {
+                        single: true,
+                        fn: function (field) {
                             // if the field has no currently set value, default the picker to a default value;
                             if (!field.getValue() && field.initialPickerValue) {
                                 field.setValue(field.initialPickerValue);
@@ -277,7 +279,22 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     this.clearValue();
                 },
                 store: { type: 'Taco.store.Currencies' }
-                        
+
+            }, {
+                xtype:"taco-adminuserfield",
+                name: 'updateby',
+                fieldLabel: 'Modified by',
+                flex: 1,
+                tpl: Ext.create('Ext.XTemplate',
+                  '<tpl for=".">',
+                      '<div class="x-boundlist-item">{firstName} {lastName}, {emailAddress}</div>',
+                  '</tpl>'
+                ),
+                trigger2Cls: 'x-form-clear-trigger',
+                onTrigger2Click: function () {
+                    this.clearValue();
+                },
+                store: { type: 'Taco.store.AdminUsers'}
             }
         ];
 

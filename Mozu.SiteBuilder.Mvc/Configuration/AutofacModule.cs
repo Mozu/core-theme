@@ -20,9 +20,9 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 
 using NDjango;
 using NDjango.FiltersCS;
-using NDjango.Interfaces;
 using Module = Autofac.Module;
 using Mozu.SiteBuilder.Mvc.Logging;
+using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                 .As<ITemplateManagerProvider>()
                 .SingleInstance();
 
-            ResolverConfig.Resolver = new CaseInsensitiveMemberResolver();
+            ResolverConfig.Resolver = new JsonCleaningInsensitiveMemberResolver();
             EscaperConfig.Escaper = new SafeEscaper();
             Utilities.UtilConfig.Comparer = new DjangoComparer();
             Utilities.UtilConfig.VirtualPathFunc = new DjangoUtilHelper();
