@@ -516,6 +516,7 @@
     <Compile Include="Api\Models\Localization\LocalizedAttribute.cs" />
     <Compile Include="Api\Models\Navigation\NavigationTreeNode.cs" />
     <Compile Include="Api\Models\Order\AbstractOrderPackageItem.cs" />
+    <Compile Include="Api\Models\Order\OrderAuditLog.cs" />
     <Compile Include="Api\Models\Order\OrderDigitalPackage.cs" />
     <Compile Include="Api\Models\Order\OrderDigitalPackageItem.cs" />
     <Compile Include="Api\Models\Order\OrderNote.cs" />
@@ -527,6 +528,7 @@
     <Compile Include="Api\Models\ProductModels\ProductCodeRename.cs" />
     <Compile Include="Api\Models\Returns\Return.cs" />
     <Compile Include="Api\Models\Returns\ReturnItem.cs" />
+    <Compile Include="Api\OrderAuditLogController.cs" />
     <Compile Include="Api\OrderBulkActionController.cs" />
     <Compile Include="Api\OrderDigitalPackageController.cs" />
     <Compile Include="Api\OrderGiftCardPaymentController.cs" />
