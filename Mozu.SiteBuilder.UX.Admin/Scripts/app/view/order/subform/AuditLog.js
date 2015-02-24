@@ -28,6 +28,7 @@ Ext.define('Taco.view.order.subform.AuditLog', {
     },
 
     orderNumber: -1,
+    orderId: -1,
 
     // width of the actionColumn. used to align the grid total container
     actionColumnWidth: 30,
@@ -41,11 +42,13 @@ Ext.define('Taco.view.order.subform.AuditLog', {
 
         if (me.record) {
             me.orderNumber = me.record.get('orderNumber');
+            me.orderId = me.record.get('id');
         }
 
         me.auditLogGrid = Ext.create('Taco.view.order.widget.AuditLogGrid', {
             //store: auditLogStore
             orderNumber: me.orderNumber,
+            orderId: me.orderId,
             flex: 1
         });
         

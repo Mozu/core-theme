@@ -55,6 +55,8 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     // This is the order number for this audit log grid.
     orderNumber: -1,
 
+    orderId: -1,
+
     initComponent: function() {
         var me = this;
 

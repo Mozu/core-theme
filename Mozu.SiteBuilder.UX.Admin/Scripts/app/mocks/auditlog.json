@@ -6,7 +6,8 @@
         "subjectType": "Order Status",
         "verb": "Created",
         "order": "12345",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [ { "newValue": "Created" } ]
     },
     {
@@ -16,7 +17,8 @@
         "subjectType": "Order Status",
         "verb": "Pending",
         "order": "12345",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [ { "oldValue": "Created", "newValue": "Pending" } ]
     },
     {
@@ -25,7 +27,8 @@
         "subject": "Coupon Adjusted",
         "subjectType": "Coupon",
         "verb": "Adjusted",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "couponCode": "FREE_SHIPPING", "couponStatus": "Added", "value": 0 }
         ]
@@ -36,7 +39,8 @@
         "subject": "Line Items Added",
         "subjectType": "Line Items",
         "verb": "Added",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "productCode": "AUD-0001", "quantity": 1, "amount": 24.75 },
             { "productCode": "CABLE-239", "quantity": 1, "amount": 12.00 },
@@ -49,7 +53,8 @@
         "subject": "Order Edited: Order Total Adjusted",
         "subjectType": "Order Total",
         "verb": "Adjusted",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "oldValue": 0, "newValue": 237.25 }
         ]
@@ -60,7 +65,8 @@
         "subject": "Line Items Added",
         "subjectType": "Line Items",
         "verb": "Added",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "productCode": "AUD-0001", "quantity": 2, "amount": 51.50 },
             { "productCode": "CABLE-239", "quantity": 2, "amount": 24.00 },
@@ -73,7 +79,8 @@
         "subject": "Order Total Adjusted",
         "subjectType": "Order Total",
         "verb": "Adjusted",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "oldValue": 237.25, "newValue": 711.75 }
         ]
@@ -84,7 +91,8 @@
         "subject": "Payment Created",
         "subjectType": "Payment",
         "verb": "Created",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             {
                 "paymentType": "Check",
@@ -99,7 +107,8 @@
         "subject": "Payment Voided",
         "subjectType": "Payment",
         "verb": "Voided",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             {
                 "amount": 711.75,
@@ -113,7 +122,8 @@
         "subject": "Line Items Removed",
         "subjectType": "Line Items",
         "verb": "Removed",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "productCode": "AUD-0001", "quantity": 1 },
             { "productCode": "CABLE-239", "quantity": 1 },
@@ -126,7 +136,8 @@
         "subject": "Order Total Adjusted",
         "subjectType": "Order Total",
         "verb": "Adjusted",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "oldValue": 711.75, "newValue": 474.50 }
         ]
@@ -137,7 +148,8 @@
         "subject": "Coupon Adjusted",
         "subjectType": "Coupon",
         "verb": "Adjusted",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "couponCode": "FREE_SHIPPING", "couponStatus": "Removed", "value": 0 }
         ]
@@ -148,7 +160,8 @@
         "subject": "Order Shipping Adjusted",
         "subjectType": "Order Shipping",
         "verb": "Adjusted",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "shippingMethod": "UPS", "value": 15.00 }
         ]
@@ -159,7 +172,8 @@
         "subject": "Payment Created",
         "subjectType": "Payment",
         "verb": "Created",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             {
                 "paymentType": "Check",
@@ -174,7 +188,8 @@
         "subject": "Payment Captured",
         "subjectType": "Payment",
         "verb": "Captured",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             {
                 "amount": 711.75,
@@ -188,7 +203,8 @@
         "subject": "Items Shipped",
         "subjectType": "Items Shipped",
         "verb": "",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "productCode": "AUD-0001" },
             { "productCode": "CABLE-239" },
@@ -201,7 +217,8 @@
         "subject": "RMA Created",
         "subjectType": "RMA",
         "verb": "Created",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             {
                 "rmaId": "123456",
@@ -225,7 +242,8 @@
         "subject": "RMA Refunded",
         "subjectType": "RMA",
         "verb": "Refunded",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             { "rmaId": "123456", "transactionId": "alkn23asdf3445", "amount": 100.00 }
         ]
@@ -236,7 +254,8 @@
         "subject": "Replacement Order Created",
         "subjectType": "Replacement Order",
         "verb": "Created",
-        "userDisplayName": "Jeff Lebowski",
+        "userFirstName": "Jeff",
+        "userLastName":  "Lebowski",
         "data": [
             {
                 "orderNumber": "123456",

@@ -61,7 +61,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     flex: 1,
                     data: me.data.getData(),
                     tpl: [
-                        '<div>User: {userDisplayName}</div>'
+                        '<div>User: {userFirstName} {userLastName}</div>'
                     ]
                 }, {
                     flex: 1,

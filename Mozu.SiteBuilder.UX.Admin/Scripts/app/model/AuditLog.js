@@ -32,7 +32,15 @@ Ext.define('Taco.model.AuditLog', {
             type: 'string',
             useNull: false
         }, {
-            name: 'userDisplayName',
+            name: 'userFirstName',
+            type: 'string',
+            useNull: false
+        }, {
+            name: 'userLastName',
+            type: 'string',
+            useNull: false
+        }, {
+            name: 'message',
             type: 'string',
             useNull: false
         }, {
@@ -46,7 +54,7 @@ Ext.define('Taco.model.AuditLog', {
         type: 'ajaxproxy',
         api: {
             read: '/admin/Scripts/app/mocks/auditlog.json'
-            //read: '/admin/app/auditlog/list'
+            //read: '/admin/app/order/changemessages'
         },
         reader: {
             type: 'json',
