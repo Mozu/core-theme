@@ -67,6 +67,16 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                               title: "Location Subform"
                             }
                         ]
+                    },
+                    {
+                        group: 'Product',
+                        expanded: false,
+                        items: [
+                            {
+                              url: relPath + "customunit/view/product/subforms/General.t.js",
+                              title: "Product General Subform"
+                            }
+                        ]
                     }
                ]
             }
