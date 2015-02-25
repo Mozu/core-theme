@@ -516,7 +516,6 @@
     <Compile Include="Api\Models\Localization\LocalizedAttribute.cs" />
     <Compile Include="Api\Models\Navigation\NavigationTreeNode.cs" />
     <Compile Include="Api\Models\Order\AbstractOrderPackageItem.cs" />
-    <Compile Include="Api\Models\Order\OrderAuditLog.cs" />
     <Compile Include="Api\Models\Order\OrderDigitalPackage.cs" />
     <Compile Include="Api\Models\Order\OrderDigitalPackageItem.cs" />
     <Compile Include="Api\Models\Order\OrderNote.cs" />
