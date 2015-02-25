@@ -165,9 +165,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="FSharpx.Collections">
-      <HintPath>..\packages\FSharpx.Collections.1.9.3\lib\net35\FSharpx.Collections.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FSharpx.Collections, Version=1.9.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FSharpx.Collections.1.9.6\lib\net35\FSharpx.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Jolt, Version=0.4.4478.17179, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
