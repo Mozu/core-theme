@@ -818,8 +818,8 @@
             "hrBorderWidth": "1px",
             "hrBorderColor": "#000",
             "hrBorderStyle": "solid",
-            "hrMarginTop": "None",
-            "hrMarginBottom": "None"
+            "hrMarginTop": "0px",
+            "hrMarginBottom": "0px"
         },
         "validPageTypes":["*"]
     }, {
