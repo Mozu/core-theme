@@ -8,8 +8,14 @@
         pageSize: 50,
         remoteSort: true,
         remoteFilter: true,
+        autoLoad: true,
         storeManagerConfig: {
-          //  createOnly:false,
-            autoLoad: true
-        }
+            // createOnly:false,
+            // autoLoad: true
+        },
+
+        sorters: [{
+            property: 'submittedDate',
+            direction: 'DESC'
+        }]
     });

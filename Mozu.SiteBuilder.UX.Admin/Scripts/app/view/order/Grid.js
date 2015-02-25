@@ -40,14 +40,6 @@ Ext.define('Taco.view.order.Grid', {
     
     title: "Orders",
 
-    store: { 
-        type: 'Taco.store.Orders',
-        sorters: [{
-            property: 'submittedDate',
-            direction: 'DESC'
-        }],
-    },  
-
     autoScroll: true,
 
     enableQuickFilters:true,
@@ -83,6 +75,14 @@ Ext.define('Taco.view.order.Grid', {
         
     initComponent: function () {
         var me = this;
+
+        this.mon(this.store, {
+            beforeload: {
+                single: true,
+                scope: this,
+                fn: 'rejectInitialLoad'
+            }
+        });
         
         // need to override the createButtonCfg;
         me.createButtonCfg = me.getCreateButtonConfig();
@@ -717,6 +717,18 @@ Ext.define('Taco.view.order.Grid', {
             scope: this
         });
 
-    }
+    },
 
+    rejectInitialLoad: function (store, operation, success) {
+        var me = this;
+        var state = Ext.state.Manager.get(this.stateId);
+        var allowLoad = !(state && state.storeState && !Ext.isEmpty(state.storeState.sorters));
+
+        return (function () { me.mun(me.store, {
+            beforeload: {
+                scope: me,
+                fn: 'rejectInitialLoad'
+            }
+        }); return allowLoad; })();
+    }
 });
