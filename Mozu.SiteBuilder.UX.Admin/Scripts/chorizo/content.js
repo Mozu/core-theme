@@ -41,9 +41,9 @@
 
                 $tar = $(e.target);
                 if ((!$tar.is(item.selector) && !$tar.parents(item.selector).length) || $tar.parents(item.selector)[0] !== item.element[0]) item.action();
-            })
+            });
         }
-    }
+    };
 
     /**
      * CONTENT Class Definition
@@ -59,14 +59,17 @@
         //if (!this.options.isichText) this.element.addClass('mz-cms-drag-handle');
 
         this.element
-            .append($('<ul class="mz-cms-tools"><li class="mz-cms-drag-handle"></li><li class="mz-cms-trash"></li></ul>'));
+            .append($('<ul class="mz-cms-tools"><li class="mz-cms-drag-handle"><li class="mz-cms-pencil"></li></li><li class="mz-cms-trash"></li></ul>'));
 
         this.$drag = this.element.find('.mz-cms-drag-handle')
-            .html('<i class="fa fa-arrows fa-lg"></i>')
+            .html('<i class="fa fa-arrows fa-lg"></i>');
+        this.$edit = this.element.find('.mz-cms-pencil')
+            .html('<i class="fa fa-pencil fa-lg"></i>')
+            .on('click', $.proxy(this._editingState, this));
         this.$trash = this.element.find('.mz-cms-trash')
             .html('<i class="fa fa-trash-o fa-lg"></i>')
             .on('click', $.proxy(this.remove, this));
-    }
+    };
 
     Content.DEFAULTS = {};
 
@@ -113,20 +116,20 @@
 
             }
         });
-    }
+    };
 
     Content.prototype.remove = function () {
         this.element.mzBlock('remove');
         Chorizo.formatter.hide();
-    }
+    };
 
     Content.prototype.state = function (state) {
         return (state) ? this._setState(state) : this._getState();
-    }
+    };
 
     Content.prototype.lastState = function () {
         return this._lastState;
-    }
+    };
 
     Content.prototype._getState = function () {
         var state;
@@ -140,7 +143,7 @@
         this._state = state;
 
         return state;
-    }
+    };
 
     Content.prototype._setState = function (state) {
         this._lastState = this.state();
@@ -153,11 +156,11 @@
         this._state = state;
 
 
-    }
+    };
 
     Content.prototype.update = function () {
         console.log('placeholder for update override');
-    }
+    };
 
 
     /**
@@ -178,7 +181,7 @@
         this.element.find('.mz-cms-content').on({
             blur: $.proxy(this._onBlur, this)
         });
-    }
+    };
 
     Text.prototype = new Content();
 
@@ -186,16 +189,16 @@
         if (typeof val === 'undefined') return this._editingUrl;
         this._editingUrl = val;
         return this;
-    }
+    };
 
     Text.prototype.focus = function () {
         this.element.find('[contenteditable]').focus();
-    }
+    };
 
     Text.prototype._onMouseup = function (e) {
         if (Chorizo.editor.columnResizing()) return;
         if (this.state() === 'default') this.state('editing');
-    }
+    };
 
     Text.prototype._onClick = function (e) {
         var $tar,
@@ -211,12 +214,12 @@
         $tar.attr('href', '#mz-cms-temp-link');
 
         Chorizo.formatter.showTooltip(oldUrl, $tar);
-    }
+    };
 
     Text.prototype._onBlur = function (e) {
         if (this.editingUrl()) return;
         if (this.state() === 'editing') this.state('default');
-    }
+    };
 
     Text.prototype._defaultState = function () {
         var widgetData = this.element.data('widget');
@@ -233,22 +236,22 @@
 
         //widgetData.config.body = this.$content.html();
         //widgetData.config.body = this.element.children().html();
-    }
+    };
 
 
     Text.prototype._editingState = function () {
         Chorizo.formatter.show(this);
         this.$content.attr('contenteditable', 'true');
         this.$content.focus();
-    }
+    };
 
     Text.prototype._movingState = function () {
 
-    }
+    };
 
     Text.prototype._onSelect = function (e) {
 
-    }
+    };
 
 
     /**
@@ -273,7 +276,7 @@
 
             this.$resizer.css('display', 'none');
 
-        };
+        }
 
         this.$bottom = this.$resizer.find('.mz-cms-bottom')
             .draggable({
@@ -290,7 +293,7 @@
 
         //if (this.widgetData.config.heightResizable === false) this.$bottom.hide();
 
-    }
+    };
 
     Img.prototype = new Content();
 
@@ -307,20 +310,20 @@
 
         this.$resizer.css('display', resizer );
 
-    }
+    };
 
     Img.prototype._defaultState = function () {
         console.log('default');
-    }
+    };
 
     Img.prototype._editingState = function () {
         console.log('editing');
         Chorizo.editor.edit(this.element.data('mozu.mzBlock'));
-    }
+    };
 
     Img.prototype._movingState = function () {
 
-    }
+    };
 
     Img.prototype._onStart = function (e, ui) {
         if (this.moveColumns) {
@@ -329,7 +332,7 @@
                 ratio: this.$content.outerHeight() / this.$content.outerWidth(),
                 offset: this.$content.offset(),
                 width: this.$content.width()
-            }
+            };
             this.colData.colWidth = this.colData.col.outerWidth() / this.colData.col.mzCol('span');
             this.colData.col.mzCol('initResize');
         } else {
@@ -343,7 +346,7 @@
         $doc.on('mousemove', this._moveHandler);
         Chorizo.editor.stopDrag();
         Chorizo.editor.cursor('ns-resize');
-    }
+    };
 
     Img.prototype._onStop = function (e, ui) {
         $doc.off('mousemove', this._moveHandler);
@@ -353,11 +356,11 @@
         
         Chorizo.editor.dirtyStateCheck();
         this.snapHeights = [];
-    }
+    };
 
     Img.prototype._onMousemove = function (e, ui) {
         this[this.moveColumns ? '_moveColumns' : '_changeHeight'](e, ui);
-    }
+    };
 
     Img.prototype._moveColumns = function (e, ui) {
         var height = $doc.scrollTop() + e.clientY - this.offset.top,
@@ -376,7 +379,7 @@
             this.colData.offset = this.$content.offset();
             this.colData.width = this.$content.width();
         }).bind(this), 300);
-    }
+    };
 
     Img.prototype._changeHeight = function (e, ui) {
         var mouseY = $doc.scrollTop() + e.clientY,
@@ -396,7 +399,7 @@
                 inRange = true;
                 if (delta === false || y - mouseY < Math.abs(delta)) {
                     delta = mouseY - y;
-                    snap = y
+                    snap = y;
                 }
             } else if (inRange) {
                 return false;
@@ -407,7 +410,7 @@
             this.$content.height(height - delta + 10);
             //console.log(height, delta, height - delta);
         }
-    }
+    };
 
 
     //  Plugin definitions
@@ -417,6 +420,6 @@
 
     $doc.ready(function () {
         controller.init();
-    })
+    });
 
 }(jQuery, window, document));

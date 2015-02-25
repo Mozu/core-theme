@@ -76,6 +76,7 @@
     // Custom Globals
     "globals": {
         "Ext": true,
-        "Taco": true
+        "Taco": true,
+        "Chorizo": true,
     } // additional predefined global variables
 }
