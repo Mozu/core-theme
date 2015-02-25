@@ -7,29 +7,34 @@
     background: transparentize($color-neutral-white, 0.2) url('images/loader_51x51.gif') no-repeat scroll 50% 50%;
 }
 
+.#{$vprefix}loadmask-text {
+    background: transparentize($color-neutral-white, 0.2);
+}
+
 .#{$prefix}mask-msg {
         padding: 0px;
         border-style: none;
         border-width: 0px;
-        background: none;
+        background: transparent;
 }
-
 .#{$vprefix}loadmask-tax-msg {
-    color: white;
-    font: normal 15px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;
+    color: black;
+    line-height: 28px;
+    font: normal 20px "SourceSansProRegular",helvetica,arial,verdana,sans-serif;
     background-color: transparent;
     border-color: transparent;
-
     .#{$prefix}mask-msg-inner {
         padding: 0px;
         border-style: none;
         border-width: 0px;
         background-color: transparent;
     }
-
     .#{$prefix}mask-msg-text {
         background-image: none;
         padding: 0px;
+        a {
+            text-decoration: underline;
+        }
     }
 }
 

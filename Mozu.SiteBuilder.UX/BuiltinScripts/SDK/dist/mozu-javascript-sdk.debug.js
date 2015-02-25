@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-02-03
+ * Mozu JavaScript SDK - v0.3.0 - 2015-02-25
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3351,7 +3351,7 @@ module.exports=
     "orders": {
         "template": "{+orderService}{?_*}",
         "defaultParams": {
-            "filter": "Status ne Created and Status ne Validated and Status ne Pending",
+            "filter": "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned",
             "startIndex": 0,
             "pageSize": 5
         },
