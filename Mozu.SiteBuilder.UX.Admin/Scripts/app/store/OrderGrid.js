@@ -8,10 +8,9 @@
         pageSize: 50,
         remoteSort: true,
         remoteFilter: true,
-        autoLoad: true,
         storeManagerConfig: {
             // createOnly:false,
-            // autoLoad: true
+           autoLoad: true
         },
 
         sorters: [{
