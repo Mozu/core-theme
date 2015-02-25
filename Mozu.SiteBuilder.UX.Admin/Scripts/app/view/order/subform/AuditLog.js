@@ -71,5 +71,5 @@ Ext.define('Taco.view.order.subform.AuditLog', {
         //me.updateUi();
         Ext.resumeLayouts(true);
         me.setLoading(false, this.body);
-    },
+    }
 });

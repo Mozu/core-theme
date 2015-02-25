@@ -49,22 +49,5 @@ Ext.define('Taco.model.AuditLog', {
             useNull: true
         }
 
-    ],
-    proxy: {
-        type: 'ajaxproxy',
-        api: {
-            read: '/admin/Scripts/app/mocks/auditlog.json'
-            //read: '/admin/app/order/changemessages'
-        },
-        reader: {
-            type: 'json',
-            root: 'items',
-            successProperty: 'success',
-            messageProperty: "message"
-        },
-        writer: {
-            allowSingle: false,
-            type: 'json'
-        }
-    }
+    ]
 });

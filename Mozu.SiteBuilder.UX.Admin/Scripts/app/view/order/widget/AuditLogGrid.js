@@ -38,8 +38,6 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     cancelButtonEnabled: false,
     // No action column at this time.
     showActionsColumn: false,
-    
-    store: { type: 'Taco.store.AuditLog' },
 
     autoScroll: true,
 
@@ -59,6 +57,26 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
 
     initComponent: function() {
         var me = this;
+        console.log(me.orderId);
+
+        this.store = {
+            model: 'Taco.model.AuditLog',
+            pageSize: 25,
+            remoteSort: true,
+            remoteFilter: true,
+            storeManagerConfig: {
+                // Load the data automatically!
+                autoLoad: true
+            },
+            proxy: {
+                type: 'ajaxproxy',
+                api: {
+                    //read: '/admin/Scripts/app/mocks/auditlog.json'
+                    read: '/admin/app/order/changemessages?orderId=' + me.orderId
+                },
+                scope: me
+            }
+        };
 
         // Get the columns for this grid!
         this.columns = me.getColumnConfig();

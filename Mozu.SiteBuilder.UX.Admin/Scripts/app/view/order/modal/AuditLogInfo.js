@@ -99,6 +99,12 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         switch (currentRecord.subjectType) {
             case 'Line Items':
             {
+                // Currently not used!
+                dataContainer = this.createLineItemsInfo(recordData);
+                break;
+            }
+            case 'Line Item':
+            {
                 dataContainer = this.createLineItemInfo(recordData);
                 break;
             }
@@ -172,7 +178,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         this.saveSuccess(null);
     },
 
-    createLineItemInfo: function(lineItemData) {
+    createLineItemsInfo: function(lineItemData) {
         var retVal = null;
         var headerItems = { 'productCode': 'Product Code', 'quantity': 'Quantity', 'amount': 'Amount' };
         var dataColumns = [];
@@ -213,6 +219,45 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             store: dataStore,
             height: '100%',
             width: '100%'
+        });
+        return retVal;
+    },
+
+    createLineItemInfo: function (lineItemData) {
+        var retVal = null;
+        var itemsList = [];
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>Product Code: {productCode}</div>'
+            ]
+        });
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>Quantity: {quantity}</div>'
+            ]
+        });
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>Amount: {amount}</div>'
+            ]
+        });
+
+
+        retVal = Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: itemsList
         });
         return retVal;
     },

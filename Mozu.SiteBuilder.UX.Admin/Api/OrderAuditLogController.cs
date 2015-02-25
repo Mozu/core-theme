@@ -19,9 +19,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public partial class OrderController
     {
         [HttpGetRoute(UriTemplate = "changemessages")]
-        public async Task<Response<List<ChangeMessage>>> ChangeMessages(OrderIdArgs args, [FromUri]PagingParamaters pagingParams, [FromUri]SortingCollectionItem sortingParam, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<ChangeMessage>>> ChangeMessages([FromUri]string orderId, [FromUri]PagingParamaters pagingParams, [FromUri]SortingCollectionItem sortingParam, [FromUri]FilterCollection extFilter)
         {
-            var changeMessages = (await _orderWebApiClient.GetChangeMessages(args.OrderId, pagingParams.pageIndex, pagingParams.pageSize, sortingParam.direction, extFilter.query)).ReadAsSync();
+            var changeMessages = (await _orderWebApiClient.GetChangeMessages(orderId, pagingParams.pageIndex, pagingParams.pageSize, sortingParam.direction, extFilter.query)).ReadAsSync();
 
             return List2(changeMessages.Items);
         }
