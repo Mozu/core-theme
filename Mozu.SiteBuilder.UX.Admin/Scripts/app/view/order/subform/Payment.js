@@ -99,7 +99,18 @@ Ext.define('Taco.view.order.subform.Payment', {
                 dataIndex: 'payment',
                 text: 'Payment Method',
                 flex: 2,
+                cardTemplate: new Ext.XTemplate([
+                    '{cardType}: {cardNumber}'
+                ]),
                 renderer: function (value, meta, record) {
+                    var paymentType = value.paymentType;
+
+                    if (paymentType === 'CreditCard') {
+                        return meta.column.cardTemplate.apply(value);
+                    } else if (value.storeCreditCode && paymentType === 'StoreCredit') {
+                        return ('Store Credit [' + value.storeCreditCode + ']');
+                    }
+
                     return value.paymentType;
                 }
             }, {
