@@ -34,14 +34,15 @@ Ext.define('Taco.view.customers.Form', {
             record: this.record
         });
 
-        var orders = this.record.getOrders();
-        orders.load();
+        var orderStore = this.record.getOrders();
+        orderStore.sort('submittedDate', 'DESC');
+
         me.orderHistory = Ext.create('Taco.view.customers.subform.OrderHistory', {
-            record: orders
+            record: orderStore
         });
 
         me.notes = Ext.create('Taco.view.customers.subform.Notes', {
-            record: orders
+            record: orderStore
         });
 
         me.customerAttribute = Ext.create('Taco.shared.view.form.ExtensibleAttribute', {

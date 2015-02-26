@@ -93,6 +93,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 text: 'Amount',
                 flex: 1,
                 renderer: function (value, meta, record) {
+                    if (!value) return "-Failure-";
                     return me.record.formatCurrency(value);
                 }
             }, {
