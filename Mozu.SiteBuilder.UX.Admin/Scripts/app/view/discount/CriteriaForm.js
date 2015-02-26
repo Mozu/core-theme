@@ -384,18 +384,18 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer', {
             width: 600,
             margin: '10 0 0 0',
-            fieldLabel: "Exclude products that have line item discounts for the following types:",
+            fieldLabel: "Exclude products that already have:",
             items: [
                 {
                     xtype: 'checkbox',
                     name: 'excludeItemsWithExistingProductDiscounts',
-                    boxLabel: 'Line Item Product Discounts',
+                    boxLabel: 'Product Discounts',
                     width: 300,
                     value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
                 }, {
                     xtype: 'checkbox',
                     name: 'excludeItemsWithExistingShippingDiscounts',
-                    boxLabel: 'Line Item Shipping Discounts',
+                    boxLabel: 'Shipping Discounts',
                     width: 300,
                     value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
                 }
