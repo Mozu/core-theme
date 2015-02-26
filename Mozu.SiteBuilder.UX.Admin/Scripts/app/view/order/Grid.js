@@ -40,14 +40,6 @@ Ext.define('Taco.view.order.Grid', {
     
     title: "Orders",
 
-    store: { 
-        type: 'Taco.store.Orders',
-        sorters: [{
-            property: 'submittedDate',
-            direction: 'DESC'
-        }],
-    },  
-
     autoScroll: true,
 
     enableQuickFilters:true,
@@ -718,5 +710,4 @@ Ext.define('Taco.view.order.Grid', {
         });
 
     }
-
 });

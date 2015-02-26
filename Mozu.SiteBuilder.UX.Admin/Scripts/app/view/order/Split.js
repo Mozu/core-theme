@@ -62,12 +62,6 @@ Ext.define('Taco.view.order.Split', {
         }
     },
 
-
-
-
-
-    // cls: "taco-content-navcontainer-padding",
-
     initComponent: function () {
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.OrderGrid');
 
@@ -76,6 +70,7 @@ Ext.define('Taco.view.order.Split', {
         this.config.east = [this.editor];
         
         this.orderList = Ext.create('Taco.view.order.Grid', {
+            store: this.store,
             header: false, // hides the header (the title)
             addContentViewPadding: false,
             enableNavHeader: false, // disables the navHeader Mixin

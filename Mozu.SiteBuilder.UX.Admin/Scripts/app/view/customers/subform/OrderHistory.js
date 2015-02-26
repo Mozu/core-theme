@@ -2,7 +2,7 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
     extend: 'Taco.view.customers.subform.Subform',
     title: 'Order History',
     initComponent: function () {
-        var record = this.record;
+        var orderStore = this.record;
 
         this.items = [{
             xtype: 'grid',
@@ -11,7 +11,7 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
                     Taco.core.StateManager.attemptNavigate('/orders/edit/' + record.getId());
                 }
             },
-            store: record,
+            store: orderStore,
             stateful: true,
             stateId:"statefulOrderHistoryGrid",
             columns: [
@@ -31,15 +31,5 @@ Ext.define('Taco.view.customers.subform.OrderHistory', {
         }];
 
         this.callParent(arguments);
-
-        record.on('load', function () {
-            record.sort([{
-                direction: 'DESC',
-                property: 'submittedDate',
-                transform: function (value) {
-                    return Ext.Date.format(value, 'U');
-                }
-            }]);
-        });
     }
 });

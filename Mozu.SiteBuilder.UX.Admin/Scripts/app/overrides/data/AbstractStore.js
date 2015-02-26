@@ -55,6 +55,10 @@ Ext.define('Taco.overrides.data.AbstractStore', {
         }
         
     },
+    applyState: function () {
+        this.lastOptions = null;
+        this.callParent(arguments);
+    },
     destroyStore: function () {
         var me = this;
         if (!me.isDestroyed) {
