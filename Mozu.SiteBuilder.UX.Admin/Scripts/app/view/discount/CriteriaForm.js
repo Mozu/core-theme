@@ -116,7 +116,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             var toDisable = toEnable === me.productsBox ? me.categoriesBox : me.productsBox,
                 maximumQuantity = me.record.get("maximumQuantityPerRedemption"),
                 isEdit = me.up('formform').isEdit();
-
+            
             Ext.Array.each(toDisable.query('[isFormField]'), function (cmp) {
                 if (cmp.xtype !== "radio") {
                     cmp.disable();
@@ -153,16 +153,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     itemId: 'maxQuantity',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 1,
-                    emptyText:"1",
                     allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
                         change: function (f, newValue) {
-                            if (!newValue) {
-                                this.setValue(1);
-                            }
+                            // need to copy this value to a hidden field that is the primary conduit for persisting this change.
+                            // Note: me.maximumQuantityPerRedemptionTB field is only visible when the "applies to all products" radio is selected
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
                         }
                     }
@@ -288,16 +285,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     itemId: 'maxQuantity',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 1,
-                    emptyText: "1",
                     allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
                         change: function (f, newValue) {
-                            if (!newValue) {
-                                this.setValue(1);
-                            }
+                            // need to copy this value to a hidden field that is the primary conduit for persisting this change.
+                            // Note: me.maximumQuantityPerRedemptionTB field is only visible when the "applies to all products" radio is selected
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
                         }
                     }
@@ -369,7 +363,12 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 }
             ]
         });
-
+        
+        // this field is only visible when the applies to all products radio is selectd.
+        // this field is hidden when the applies to specific products radio is selectd
+        // when hidden this field is used to persist number value in the following fields;
+        // Select the quantity of product from the categories that the shopper will receive the discount on:
+        // Select the quantity of products from the categories that the shopper will recieve the discount on:
         this.maximumQuantityPerRedemptionTB = Ext.widget({
             xtype: 'numberfield',
             name: 'maximumQuantityPerRedemption',
@@ -661,9 +660,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.excludeCategoriesBox.setVisible(true)
         this.productsExcludeBox.setVisible(true)
-        this.maximumQuantityPerRedemptionTB.setVisible(isLineItem)
-
-
+        
+        // even though this field is hidden it will continue to persist its value; see notes where this field is initialized; 
+        this.maximumQuantityPerRedemptionTB.setVisible(isLineItem && this.includeAllProductsInput.checked);
     },
 
     setFieldVisibility: function (isLineItem, appliesToShipping) {        
