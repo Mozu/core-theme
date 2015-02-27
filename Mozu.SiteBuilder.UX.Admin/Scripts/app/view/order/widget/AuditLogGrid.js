@@ -68,8 +68,8 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             proxy: {
                 type: 'ajaxproxy',
                 api: {
-                    read: '/admin/Scripts/app/mocks/auditlog.json'
-                    //read: '/admin/app/order/changemessages?orderId=' + this.orderId
+                    //read: '/admin/Scripts/app/mocks/auditlog.json'
+                    read: '/admin/app/order/changemessages?orderId=' + this.orderId
                 },
                 scope: me
             }
