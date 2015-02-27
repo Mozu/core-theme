@@ -115,6 +115,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.3.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="AutofacContrib.NSubstitute">
+      <HintPath>..\packages\AutofacContrib.NSubstitute.3.2.0\lib\NET40\AutofacContrib.NSubstitute.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
       <Private>True</Private>
@@ -138,6 +141,9 @@
     <Reference Include="FiftyOne.Foundation, Version=2.1.15.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\51Degrees.mobi.2.1.15.1\lib\NET40\FiftyOne.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\packages\FluentAssertions.2.1.0.0\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.1.0.0\lib\Net40\FluentValidation.dll</HintPath>
@@ -239,6 +245,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Mongo.1.13.2\lib\net45\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
+    <Reference Include="Mozu.Core.Test">
+      <HintPath>..\packages\Mozu.Core.Test.1.14.1\lib\net45\Mozu.Core.Test.dll</HintPath>
+    </Reference>
     <Reference Include="Mozu.Core.ThirdParty, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.ThirdParty.1.13.2\lib\net45\Mozu.Core.ThirdParty.dll</HintPath>
@@ -338,6 +347,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RabbitMQ.Client.3.3.5\lib\net30\RabbitMQ.Client.dll</HintPath>
     </Reference>
+    <Reference Include="Should">
+      <HintPath>..\packages\Should.1.1.20\lib\Should.dll</HintPath>
+    </Reference>
     <Reference Include="Stact, Version=1.1.2.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Stact.1.1.2\lib\NET40\Stact.dll</HintPath>
@@ -430,6 +442,7 @@
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
+    <Compile Include="Handlers\StaticContentTest.cs" />
     <Compile Include="Mvc\Caching\ContextualCacheTests.cs" />
     <Compile Include="Mvc\FilterTestBase.cs" />
     <Compile Include="Mvc\Filters\GetProductAttributeTests.cs" />
@@ -442,6 +455,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Mvc\SEO\SlugRegexTest.cs" />
     <Compile Include="StoreFront\ModelMapping\MvcMappingTest.cs" />
+    <Compile Include="Utils\HttpRequestMessageHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Admin\Api\cdProductCodeUpdate.cd" />

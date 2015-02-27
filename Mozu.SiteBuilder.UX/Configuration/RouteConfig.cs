@@ -19,18 +19,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
               "favicon",
               "favicon.ico",
                      new {controller = "Resource", action = "misc" , pathinfo="images/favicon.ico" });
-              
-
-
-
-            
+                         
             routes.MapHttpRoute(
                 "search",
                 "search",
                 new { controller = "Search", action = "index" });
-
-
-           
 
             routes.MapHttpRoute(
                 "StoreFront_productDetails_SEO",
@@ -59,6 +52,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { action = "index", controller = "content", list = "files@mozu" }
                );
 
+            routes.MapHttpRoute(
+              "Static_Content",
+              "staticContent/{*relativePath}",
+              new { controller = "Resource", action = "StaticContentShare" });
 
             routes.MapHttpRoute(
                "cms_page",
@@ -69,8 +66,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
                "StoreFront_pages_list",
                "cms/{list}",
                new { controller = "cmspages", action = "contentIndex" });
-
-
 
             routes.MapHttpRoute(
                 "StoreFront_categories_SEO",
