@@ -405,8 +405,9 @@ Ext.define('Taco.view.order.subform.Detail', {
             editOrderButton.setDisabled(!canEdit);
         }
 
-        
-        resendEmailButton.setVisible(canSendEmail);
+        if (resendEmailButton) {
+            resendEmailButton.setVisible(canSendEmail);
+        }
     },
 
     getButtonActions: function () {

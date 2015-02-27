@@ -8,7 +8,7 @@ Ext.define('Taco.view.order.subform.AuditLog', {
     extend: 'Taco.view.order.subform.Subform',
 
     requires: [
-       'Taco.view.order.widget.AuditLogGrid'
+        'Taco.view.order.widget.AuditLogGrid'
     ],
 
     alias: 'widget.taco-orderaudit',
@@ -22,16 +22,17 @@ Ext.define('Taco.view.order.subform.AuditLog', {
     config: {
         record: null,
         editMode: false,
-        totalColumnWidth: 100,
-        rowTotalColumnWidth: 100,
         itemId: 'orderAudit'
     },
 
     orderNumber: -1,
     orderId: -1,
 
-    // width of the actionColumn. used to align the grid total container
-    actionColumnWidth: 30,
+    layout: { type: 'fit' },
+    height: 500,
+
+    // this should really be the default;
+    closeAction: 'destroy',
 
     initComponent: function (eOpts) {
         var me = this;
@@ -46,10 +47,8 @@ Ext.define('Taco.view.order.subform.AuditLog', {
         }
 
         me.auditLogGrid = Ext.create('Taco.view.order.widget.AuditLogGrid', {
-            //store: auditLogStore
             orderNumber: me.orderNumber,
-            orderId: me.orderId,
-            flex: 1
+            orderId: me.orderId
         });
         
         Ext.apply(this, {
@@ -71,5 +70,12 @@ Ext.define('Taco.view.order.subform.AuditLog', {
         //me.updateUi();
         Ext.resumeLayouts(true);
         me.setLoading(false, this.body);
+    },
+
+    /**
+     * Do any class level cleanup. Destroy and null any scoped refs.     
+     */
+    onDestroy : function (destroy) {
+        this.callParent(arguments);
     }
 });
