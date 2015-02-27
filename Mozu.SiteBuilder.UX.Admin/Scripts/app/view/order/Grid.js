@@ -153,7 +153,6 @@ Ext.define('Taco.view.order.Grid', {
     getBulkActions: function (menu) {
         var me = this;
         var selection = this.getSelectionModel().getSelection();
-        var context = Taco.app.context.getCurrent();
         var allAvailableBulkActions = Ext.Array.flatten(Ext.Array.map(selection, function (o) { return o.get('availableBulkActions') }));
 
         menu.items.each(function (item) {
