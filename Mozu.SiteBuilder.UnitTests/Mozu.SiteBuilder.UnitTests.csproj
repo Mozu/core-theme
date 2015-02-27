@@ -467,6 +467,7 @@
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
+    <Compile Include="Handlers\StaticContentTest.cs" />
     <Compile Include="Handlers\ViewRestrictionHandlerTest.cs" />
     <Compile Include="Mvc\Caching\ContextualCacheTests.cs" />
     <Compile Include="Mvc\FilterTestBase.cs" />
