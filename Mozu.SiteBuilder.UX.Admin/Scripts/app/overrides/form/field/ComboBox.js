@@ -153,7 +153,7 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
     *
     * returns array of record data objects
     */
-    getValueRecordsData: function () {    
+    getValueRecordsData: function () {
         var records = this.getValueRecords();
         var data = [];
         Ext.Array.each(records, function (record) {            
@@ -196,6 +196,15 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
         
         me.suspendCheckChange--;
     },
+ 
+    setValue : function(value, doSelect) {
+        this.callParent(arguments);
+        if (this.autoFetchDisplayValue) {
+            if (this.lastSelection && this.lastSelection.length) {
+                debugger;
+            }
+        }
+    },
 
     // override config parameter that enables fetching of display value for combo with remote store;
     autoFetchDisplayValue:false,
@@ -208,6 +217,11 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
             params = {},
             value = Ext.Array.from(me.value, true),
             modelName = me.store.model.$className;;        
+
+        // check for empty value;
+        if (Ext.isEmpty(me.value)) {
+            return;
+        }
 
         Taco.app.getModel(modelName).load(value, {
             success: function (record) {

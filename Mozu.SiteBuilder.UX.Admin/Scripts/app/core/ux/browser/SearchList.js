@@ -5,28 +5,29 @@
 
 Ext.define('Taco.core.ux.browser.SearchList', {
     extend: 'Taco.core.ux.grid.Panel',
-    requires:['Taco.core.ux.grid.plugins.AutoSelect'],
+    requires: ['Taco.core.ux.grid.plugins.AutoSelect'],
     mixins: {
         launcheditor: 'Taco.core.ux.mixins.LaunchEditor',
-        navHeader : 'Taco.core.ux.mixins.NavHeader',
+        navHeader: 'Taco.core.ux.mixins.NavHeader',
         pageable: 'Taco.core.ux.mixins.Pageable',
         searchable: 'Taco.core.ux.mixins.Searchable',
-        rowEditable: 'Taco.core.ux.mixins.RowEditable'
+        rowEditable: 'Taco.core.ux.mixins.RowEditable',
+        deleteFromGrid : 'Taco.core.ux.mixins.DeleteFromGrid'
     },
-    
+
     alias: 'widget.searchlist',
-    
+
     //cls: Taco.baseCSSPrefix + 'itembrowser',
     //cls: Taco.baseCSSPrefix + 'content-view',
-    
+
     toolbar: null,
 
     launchEditorOnClick: false,
-    
+
     filterProperty: 'title',
-    
+
     gridHeaderLabel: "Items",
-    
+
     enableNavHeader: false,
     // grids with navHeader `enabled will need extra content padding. Class will be assigned in the navHeader mixin.
     addContentPadding: false,
@@ -88,15 +89,18 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             //initialize the content navigation toolbar.
             this.mixins.launcheditor.constructor.apply(this);
         }
-        
-        
+
         if (!me.store) {
             throw("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
             return;
         } else {
             me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
+
         }
-        
+        // initialize the delete mixin
+        this.mixins.deleteFromGrid.init.apply(this);
+
+
         
         /*
         // this is deprecated since the toolbar now showing the item count
@@ -226,53 +230,4 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
         return me.secondToolbar;
     }
-
-    ,
-    deleteRecordFromStore:function (record) {
-
-        var grid = this;
-            
-
-        Ext.MessageBox.show({
-            title: 'Delete',
-            // pushes the buttons to the right to be consistant with our dialog ux.
-            rightJustifyButtons: true,
-            // reverses the order of the buttons
-            reverseOrder: true,
-            msg: "Are you sure you want to delete this",
-            closable: false,
-            buttons: Ext.Msg.YESNO,
-            fn: function (val) {
-                if (val === 'yes') {
-                    
-                    var store = grid.getStore();
-                    grid.setLoading(true);
-                    store.remove(record);
-                    store.sync({
-                        success: function (m) {                            
-                            grid.setLoading(false);
-                        },
-                        failure: function (m) {
-                            store.reload();
-                            grid.setLoading(false);
-
-                            var text = "Unknown error.";
-                            if (m.exceptions && Taco.core.util.ExceptionWhiner.wasHandled(m.exceptions)) {
-                                return;
-                            }
-                            if (m.exceptions) {
-                                text = Taco.core.util.ExceptionWhiner.createHtmlList(m.exceptions);
-                            }
-
-                            Taco.app.fireEvent('setmessage', text, 'error');
-
-                        }
-
-                    });
-                }
-            }
-        });
-
-    },
-
 });

@@ -9,21 +9,43 @@
     statics: {
         sizes: {},
         factory: function (cfg, callback, scope) {
-            cfg = Ext.apply(cfg,
-            {
-                productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes')
+            var tasks = [];
+
+            
+            cfg = Ext.apply(cfg, {
+                productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'),
             });
+
+            tasks.push(
+                {
+                    storeToLoad: cfg.productTypeStore
+                }
+            );
+
+            // need to preload the productType Record so that the views can layout correctly
+            var productTypeId = cfg.record.get("productTypeId");
+
+            if (productTypeId) {
+                cfg = Ext.apply(cfg, {
+                    productTypeRecord: {
+                        type: 'Taco.model.ProductType',
+                        id:productTypeId
+                    }
+                });
+
+                tasks.push({
+                    modelToLoad: cfg.productTypeRecord
+                });
+            }
 
             Ext.create('Taco.core.ux.form.Tasks', {
                 finalCallback: function () {
+                    // cached the productTypeRecord for use when laying out the views;
+                    cfg.record.productTypeRecord = (cfg.productTypeRecord && cfg.productTypeRecord.record) ? cfg.productTypeRecord.record : null;
                     callback.call(scope || this, Ext.create('Taco.view.product.Edit', cfg));
                 },
-                tasks: [
-                    {
-                        storeToLoad: cfg.productTypeStore
-                    }
-                ],
-                autoExecute: true,
+                tasks: tasks,
+                autoExecute: true
             });
         }
     },

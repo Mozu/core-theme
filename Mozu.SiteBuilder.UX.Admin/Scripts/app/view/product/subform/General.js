@@ -18,7 +18,8 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.shared.view.field.Image',
         'Taco.core.ux.form.SelectField',
         'Taco.store.ProductTypes',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.shared.view.field.ProductTypePickerField'
     ],
     statics: {
         sizes: {},
@@ -98,28 +99,50 @@ Ext.define('Taco.view.product.subform.General', {
         var twoColumnFieldWidth = (fullFieldWidth / 2)  -  (defaultFieldMargin/2)
 
         // get the data from the preloaded product type store;
-        var tempProductTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
+        //var tempProductTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
         // need to cache the data because other stores are requesting the store to be loaded and its reseting the filters;
-        var data = Ext.clone(tempProductTypeStore.data.items);
+        //var data = Ext.clone(tempProductTypeStore.data.items);
 
-        this.productTypeStore = Ext.create('Ext.data.Store', {
-            model: "Taco.model.ProductType",
-            data:data
-        });
+        //this.productTypeStore = Ext.create('Ext.data.Store', {
+        //    model: "Taco.model.ProductType",
+        //    data:data
+        //});
+        
+        //this.productTypeStore = Ext.create('Taco.store.ProductTypes', {
+        //    autoLoad:false,
+        //    listeners: {
+        //        beforeload: function (store, operation) {
+        //            debugger;
+        //            var proxy = store.getProxy();
+
+        //            if (!proxy.extraParams) {
+        //                proxy.extraParams = {};
+        //            }
+
+        //            proxy.extraParams.isbaseproducttype = false;
+                    
+
+        //        },
+        //        scope: this
+        //    }
+        //});
+
 
         // filter out the base productType, its not allowed to be a basis for products
         // note: the store is set to auto clear filters so this filter should not effect other stores.
-        this.productTypeStore.filter([
-            {
-                filterFn: function (item) {
-                    return !item.get('isBase');
-                }
-            }
-        ]);
+        //this.productTypeStore.filter([
+        //    {
+        //        filterFn: function (item) {
+        //            return !item.get('isBase');
+        //        }
+        //    }
+        //]);
 
         if (productTypeId) {
-            productTypeRecord = this.productTypeStore.getById(productTypeId);
+            //productTypeRecord = this.productTypeStore.getById(productTypeId);
+            productTypeRecord = this.record.productTypeRecord;
+            
             if (productTypeRecord)
                 isDigitalCredit = (productTypeRecord.get("goodsType") === 'DigitalCredit');
         }
@@ -187,29 +210,142 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             });
 
+            
+            //this.productTypeField = Ext.widget({                
+            //    xtype: 'combobox',
+            //    fieldLabel: 'Product Type',
+            //    name: 'productTypeId',
+            //    readOnly: !this.product.phantom,
+            //    required: true,
+            //    allowBlank: false,
+            //    minChars: 1,
+            //    allQuery: "",
+            //    editable: true,
+            //    queryMode: 'remote',
+            //    width: twoColumnFieldWidth,
+            //    margin: '0 50 0 0',
+            //    displayField: 'name',
+            //    valueField: 'id',
+            //    // this adds support to combos that have paged stores to use the pageup and pagedown keys to change the page in the store;
+            //    enableKeyboardPaging: true,
 
-            this.productTypeField = Ext.widget({                
-                xtype: 'combobox',
+            //    // hide the paging toolbar when there is less than a single page of results;
+            //    autoHidePagingToolbar: true,
+
+            //    pageSize: 10,
+            //    checkChangeBuffer: 5000,
+            //    // modify the format of the query data to fit the service filtering pattern.
+                
+            //    //  queryCaching: true,
+            //    store: this.productTypeStore,
+            //    listeners: {
+            //        beforequery: {
+            //            fn:function (queryEvent, e) {
+                            
+            //                // need to format the search text from the combobox into a filter structure the service wants;
+            //                // always force the query to match what's in the field.
+            //                // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
+
+            //                // delete the last query to force a new request; 
+            //                delete this.lastQuery;
+
+            //                var queryText = queryEvent.combo.getValue() || "";
+            //                if (queryText == "") {
+            //                    // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
+            //                    queryEvent.forceAll = true;
+            //                } else {
+            //                    //the formated query f's the min char check.... 
+            //                    if (queryText.length < this.minChars) {
+            //                        return false;
+            //                    }
+
+            //                    queryEvent.forceAll = false;
+            //                    //queryEvent.query = Ext.encode([{ property: 'all', value: queryText }]);
+            //                }
+
+            //                return true;
+            //            }
+
+            //        },
+            //        change: {
+            //            scope: this,
+            //            fn: 'onProductTypeChange'
+            //        }
+            //    }
+            //});
+
+
+            this.productTypeField = Ext.widget({
+                xtype: 'taco-producttypepickerfield',
                 fieldLabel: 'Product Type',
                 name: 'productTypeId',
+                includeBaseProductType:false,
+                //store:this.productTypeStore,
                 readOnly: !this.product.phantom,
                 required: true,
                 allowBlank: false,
-                editable: false,
-                queryMode: 'local',                
+                minChars: 1,
+                autoFetchDisplayValue:true,
+                //allQuery: "",
+                //editable: true,
+                //queryMode: 'remote',
                 width: twoColumnFieldWidth,
                 margin: '0 50 0 0',
-                displayField: 'name',
-                valueField: 'id',
+                //displayField: 'name',
+                //valueField: 'id',
+                // this adds support to combos that have paged stores to use the pageup and pagedown keys to change the page in the store;
+                //enableKeyboardPaging: true,
+
+                // hide the paging toolbar when there is less than a single page of results;
+                //autoHidePagingToolbar: true,
+
+                //pageSize: 10,
+                //checkChangeBuffer: 5000,
+                // modify the format of the query data to fit the service filtering pattern.
+
                 //  queryCaching: true,
-                store: this.productTypeStore,
+                //store: this.productTypeStore,
                 listeners: {
+                    /*
+                    beforequery: {
+                        fn: function (queryEvent, e) {
+
+                            // need to format the search text from the combobox into a filter structure the service wants;
+                            // always force the query to match what's in the field.
+                            // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
+
+                            // delete the last query to force a new request; 
+                            delete this.lastQuery;
+
+                            var queryText = queryEvent.combo.getValue() || "";
+                            if (queryText == "") {
+                                // need to force the load of the full list. just returning a value of "" causes the control to reload the last query;
+                                queryEvent.forceAll = true;
+                            } else {
+                                //the formated query f's the min char check.... 
+                                if (queryText.length < this.minChars) {
+                                    return false;
+                                }
+
+                                queryEvent.forceAll = false;
+                                //queryEvent.query = Ext.encode([{ property: 'all', value: queryText }]);
+                            }
+
+                            return true;
+                        }
+
+                    },
+                    */
                     change: {
                         scope: this,
                         fn: 'onProductTypeChange'
                     }
                 }
             });
+
+            
+            
+
 
             this.productUsageField = Ext.widget({
                 xtype: 'selectfield',
@@ -802,10 +938,9 @@ Ext.define('Taco.view.product.subform.General', {
         this.callParent(arguments);
 
         this.on('afterrender', function () {
-            
-            
 
 
+            
             
            
 
@@ -899,8 +1034,10 @@ Ext.define('Taco.view.product.subform.General', {
     loadRecord: function (record) {
 
         var me = this;
-        me.updatePriceUI();        
+        me.updatePriceUI();
+        
         me.callParent(arguments);
+        
     },
 
     /**
@@ -1014,7 +1151,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         // when the user changes the productType field we need to update the available productUsages based on the selected productType
         me.filterProductUsageField(productUsages);
-
+        
         //need to set the productTypeId for variations to work.
         product = parentForm.product || parentForm.record;
         product.set('productTypeId', value);

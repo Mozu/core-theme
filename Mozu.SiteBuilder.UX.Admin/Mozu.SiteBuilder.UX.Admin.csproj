@@ -754,6 +754,7 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
@@ -841,13 +842,14 @@
     <Content Include="Scripts\app\shared\view\field\CountryField.js" />
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\Product.js" />
-    <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
+    <Content Include="Scripts\app\shared\view\field\ProductTypePickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
+    <Content Include="Scripts\app\store\ProductTypesGrid.js" />
     <Content Include="Scripts\app\store\States2.js" />
     <Content Include="Scripts\app\store\Currencies.js" />
     <Content Include="Scripts\app\store\CustomerGrid.js" />
@@ -917,6 +919,8 @@
     <Content Include="Scripts\app\view\order\modal\Refund.js" />
     <Content Include="Scripts\app\view\order\modal\BulkActionMessage.js" />
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
+    <Content Include="Scripts\app\view\productType\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\productType\Grid.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />

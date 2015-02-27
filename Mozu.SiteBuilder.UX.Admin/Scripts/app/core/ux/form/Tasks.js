@@ -187,6 +187,46 @@
 
 
             };
+        } else  if (task.modelToLoad) {
+            // require a specific model type and id;
+            var type = task.modelToLoad.type,
+                id = task.modelToLoad.id;
+
+
+
+            
+            if (this.tasks.findBy(function (item) {
+                return task.modelToLoad == item.modelToLoad;
+            })) {
+                return;
+            }
+            if (task.modelToLoad.hasLoaded) {
+                return;
+            }
+
+            task.fn = function (tasks) {
+                    
+                
+                var model = Ext.ModelManager.getModel(type);
+
+                task.modelToLoad.hasLoaded = false;
+
+                model.load(id, {
+                    success: function (data) {
+                        
+                        task.modelToLoad.hasLoaded = true;
+
+                        task.modelToLoad.record = data;
+                        tasks.callback();
+                    },
+                    scope: tasks,
+                    single:true
+                });
+
+                return;
+                //task.modelToLoad.whenLoaded(tasks.callback, tasks);
+
+            };
         }
 
 

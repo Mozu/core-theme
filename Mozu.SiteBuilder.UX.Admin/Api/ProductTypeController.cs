@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
@@ -63,16 +64,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return List2(Mapper.Map<ProductType>(prod));
             }
 
-            string filter = extFilter.ToFilterString();
+
+            if (extFilter.QueryString.Get("isbaseproducttype") != null)
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "isbase", value = "false"});
+
+            }
+
+            var query = extFilter.QueryString.Get("query");
+            if (!String.IsNullOrEmpty(query))
+            {
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
+
+            }
+
+
+            string filter = null;
+            if (extFilter != null && extFilter.Count > 0)
+            {
+                filter = extFilter.ToFilterString();
+            }
+
             string sort = null; // pagingParams.sort.ToSortString();
 
 
             var gpttask = _productTypeClient.GetProductTypes(
                 /* startIndex:     */ pagingParams.startIndex,
-                                      /* pageSize:       */ pagingParams.pageSize,
-                                      /* sortBy:         */ sort,
-                                      /* filter:         */ filter,
-                                      /* responseGroups: */ null
+                /* pageSize:       */ pagingParams.pageSize,
+                /* sortBy:         */ sort,
+                /* filter:         */ filter,
+                /* responseGroups: */ null
                 );
 
 
@@ -112,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		[HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<ProductType>>> CreateProductType(List<ProductType> productTypes)
         {
-            if (productTypes == null || !productTypes.Any())
+            if (productTypes == null || !Enumerable.Any(productTypes))
                 return Message3<List<ProductType>>(false, "No product types were created because they were not sent correctly. Please try again.");
 
             var createdProductTypes = await _productTypeMapper.PerformAction(productTypes, x => _productTypeClient.AddProductType(x));
@@ -125,7 +146,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		[HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<ProductType>>> EditProductType(List<ProductType> productTypes)
         {
-            if (productTypes == null || !productTypes.Any())
+            if (productTypes == null || !Enumerable.Any(productTypes))
                 return Message3<List<ProductType>>(false, "No product types were edited because they were not sent correctly. Please try again.");
 
             var editedProductTypes = await _productTypeMapper.PerformAction(productTypes, (a, b) => _productTypeClient.UpdateProductType(a, b.Id));
@@ -138,7 +159,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		[HttpPostRoute(UriTemplate = "destroy")]
         public async Task<Response<List<ProductType>>> DeleteProductType(List<ProductType> productTypes)
         {
-            if (productTypes == null || !productTypes.Any())
+            if (productTypes == null || !Enumerable.Any(productTypes))
                 return Message3<List<ProductType>>(false, "No product types were deleted because they were not sent correctly. Please try again.");
 
             var deletedProducts = await _productTypeMapper.PerformVoidAction(productTypes, x => _productTypeClient.DeleteProductType(x.Id));

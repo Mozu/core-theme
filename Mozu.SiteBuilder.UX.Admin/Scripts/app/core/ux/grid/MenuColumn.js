@@ -84,26 +84,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
             });
         }
 
-        //Fix for bug 14271
-        if (eventData.record.id.indexOf('ProductType') > 0) {
-            if (eventData.record.data.isBase) {
-                for (var x = 0; x < this.menu.items.items.length; x++) {
-                    if (this.menu.items.items[x].text == 'Delete') {
-                        this.menu.items.items[x].hide();
-                    }
-                }
-            } else {
-                for (var x = 0; x < this.menu.items.items.length; x++) {
-                    if (this.menu.items.items[x].text == 'Delete') {
-                        this.menu.items.items[x].show();
-                    }
-                }
-            }
-        }
-
-        if (this.onMenuShow) {
-            this.onMenuShow(this.menu, eventData);
-        }
+        this.onMenuShow(this.menu, eventData);
         
         recurseItemFn(this.menu);
         if (this.menu.shouldExpand == false) {
@@ -112,6 +93,14 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         return this.menu;
     },
     
+
+    /**
+     * Template method that allows the view to adjust the menu based on the data selected. Typically to disable or hide menu options selectively based on the data record
+     * @param  {Object} The menu that will display
+     * @return {Object} The eventData from the selection
+     * @private
+     */
+    onMenuShow : Ext.emptyFn,
 
     /**
      * Returns an array of items to populate the menu.
