@@ -41,7 +41,6 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
         [TestFixtureTearDown]
         public void Kill()
         {
-            System.IO.File.Delete(file);
             System.IO.Directory.Delete(staticContentPath, true);
         }
 
@@ -57,8 +56,7 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
             InitObjectUnderTest();
             ObjectUnderTest.Request = HttpRequestMessageHelpers.CreateFromContainer(MockContainer.Container);
 
-            //Assert
-          
+            //Assert  
             var response = await ObjectUnderTest.StaticContentShare(path);
             response.StatusCode.ShouldEqual(expected);
         }

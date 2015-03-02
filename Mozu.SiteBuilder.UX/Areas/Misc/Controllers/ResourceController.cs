@@ -470,6 +470,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var pathPrefix = System.IO.Path.IsPathRooted(sharedFolder) ? "" : @"\\";
             var fileName = pathPrefix + sharedFolder + "/../../staticContent/" + relativePath;
             string fileType;
+
             if (checkRequestContent(relativePath, sharedFolder))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
@@ -477,9 +478,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             else if (System.IO.File.Exists(fileName))
             {
-                FileStream SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read);
-                StreamContent content = new StreamContent(SourceStream);
-                
+                HttpContent content;
+                using (var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read))
+                {
+                    Stream destStream = new MemoryStream();
+                    await SourceStream.CopyToAsync(destStream);
+                    content = new StreamContent(destStream);
+                }
+
                 var exists = g_mimeTypeDic.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
                 var resp = Request.CreateResponse(HttpStatusCode.OK);
 
