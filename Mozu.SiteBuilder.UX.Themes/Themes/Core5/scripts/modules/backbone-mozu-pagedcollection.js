@@ -71,7 +71,7 @@
                 var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                     pageSize = this.get("pageSize"),
                     startIndex = this.get("startIndex"),
-                    sortBy = $.deparam().sortBy || this.currentSort();
+                    sortBy = $.deparam().sortBy || this.currentSort() || defaultSort;
                 conf.pageSize = pageSize;
                 if (startIndex) conf.startIndex = startIndex;
                 if (sortBy) conf.sortBy = sortBy;
