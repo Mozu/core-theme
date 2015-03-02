@@ -139,7 +139,7 @@
         },
 
         destroyDragIcon: function() {
-            this.dragIcon.remove();
+            if (this.dragIcon) this.dragIcon.remove();
         },
 
         startDrag: function(widgetCfg, dragIcon) {
@@ -313,7 +313,7 @@
 
             data = this._target.hint(x, y);
 
-            this.hint(data)
+            this.hint(data);
         },
 
         hint: function(data) {

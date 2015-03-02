@@ -143,7 +143,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var contentRetriever = new TestFileContentRetriver(fileToContentMap);
             var logger = Substitute.For<ILogger>();
 
-            var resourceController = new ResourceController(vpp, nav, contentRetriever, logger);
+            var resourceController = new ResourceController(vpp, nav, contentRetriever, logger, settings);
             var results = await resourceController.LiveTemplates();
             results.Count.ShouldEqual(5);
             

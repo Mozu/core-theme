@@ -41,6 +41,7 @@ using dotless.Core.Parser.Tree;
 using dotless.Core.Plugins;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Stact.Routing.Nodes;
+using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -229,8 +230,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private readonly IThemeContentRetriever _contentRetriever;
         private readonly Core.Logging.ILogger _logger;
         private readonly AMDModuleProvider _moduleProvider;
+        private readonly ISettings _settings;
 
-        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger)
+        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger, ISettings settings)
         {
             _navGandalf = gandalf;
             _contentRetriever = contentRetriever;
@@ -240,6 +242,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 PathProvider = pathProvider
             };
+            _settings = settings;
         }
 
         DataViewModeType Convert(string dataViewModeString)
@@ -457,6 +460,52 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 resp = Scripts(pathinfo);
             }
             return resp;
+        }
+
+        [ClientCacheHeaders(ConfigKey = "static")]
+        [HttpGet]
+        public async Task<HttpResponseMessage> StaticContentShare(string relativePath)
+        {
+            var sharedFolder = _settings.AppSettings("DevPackageFileShare");
+            var pathPrefix = System.IO.Path.IsPathRooted(sharedFolder) ? "" : @"\\";
+            var fileName = pathPrefix + sharedFolder + "/../../staticContent/" + relativePath;
+            string fileType;
+
+            if (checkRequestContent(relativePath, sharedFolder))
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            else if (System.IO.File.Exists(fileName))
+            {
+                HttpContent content;
+                using (var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read))
+                {
+                    Stream destStream = new MemoryStream();
+                    await SourceStream.CopyToAsync(destStream);
+                    content = new StreamContent(destStream);
+                }
+
+                var exists = g_mimeTypeDic.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
+                var resp = Request.CreateResponse(HttpStatusCode.OK);
+
+                resp.Content = content;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(exists ? fileType : "text/html");
+          
+                return resp;
+               
+            }
+
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+        }
+
+        private bool checkRequestContent(string relativePath, string sharedFolder)
+        {
+            return relativePath.Contains("..");
         }
 
 

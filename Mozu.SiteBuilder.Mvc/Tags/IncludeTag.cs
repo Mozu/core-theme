@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
             var nodes = getTemplateFunc(templateName).Nodes;
 
-            return new [] { WalkResultHelpers.ContextAdditions(additionalState), WalkResultHelpers.Nodes(nodes) };
+            return WalkResultHelpers.RenderNodesWithContextMods(nodes, additionalState, Enumerable.Empty<string>()).ToFSharpList();
         }
     }
 }

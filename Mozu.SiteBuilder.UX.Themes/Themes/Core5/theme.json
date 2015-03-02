@@ -789,8 +789,8 @@
             "hrBorderColor": "#000",
             "hrBorderStyle": "solid",
             "hrBorderWidth": "1px",
-            "hrMarginBottom": "None",
-            "hrMarginTop": "None"
+            "hrMarginBottom": "0px",
+            "hrMarginTop": "0px"
         },
         "displayName": "Horizontal Rule",
         "displayTemplate": "cms/horizontalrule",

@@ -2,14 +2,14 @@ StartTest(function(t) {
     var m = {};
 
     t.chain(
-        function (next) {
-            var async = t.beginAsync();
-            t.it('Should have requireable files', function(t){
-                t.requireOk('Taco.view.navigation.PrimaryMenu', next.bind(this, async));
-            });
-        },
+        // function (next) {
+        //     var async = t.beginAsync();
+        //     t.it('Should have requireable files', function(t){
+        //         t.requireOk('Taco.view.navigation.PrimaryMenu', next.bind(this, async));
+        //     });
+        // },
         function(next, async){
-            t.endAsync(async);
+            // t.endAsync(async);
             var me = this,
                 primaryMenuTrigger = Ext.create('Taco.core.ux.action.Action', {
                     xtype: 'action',

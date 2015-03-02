@@ -58,7 +58,7 @@
         padding: 0;
         position: absolute;
         right: 0;
-        top: -39px;
+        top: 0;
 		z-index: 1000001;
 
         //@include transition(opacity $duration);
@@ -66,11 +66,16 @@
         li {
             color: white;
             display: inline-block;
-            font-size: 14px;
-            height: 40px;
+            font-size: 10px;
+            height: 26.66px;
             text-align: center;
-            width: 40px;
-            padding-top: 10px;
+            width: 26.66px;
+            padding-top: 6.66px;
+        }
+
+        .mz-cms-pencil {
+            border-left: 2px solid #666666;
+            border-right: 2px solid #666666;
         }
     }
 

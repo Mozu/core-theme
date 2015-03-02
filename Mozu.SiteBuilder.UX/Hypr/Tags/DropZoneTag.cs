@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.ObjectPools;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Models;
+using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 using NDjango.Interfaces;
 using Newtonsoft.Json.Linq;
@@ -53,6 +54,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     [NDjango.Interfaces.Name("cms_resources")]
     public class EditResourcesTag : SimpleTagBase
     {
+
         const string  Format = "\t\t<script type=\"text/javascript\" src=\"{1}/admin/scripts/chorizo/{0}.js\"></script>\r\n";
 
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
@@ -67,14 +69,17 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
+                var assFile = typeof(Mozu.SiteBuilder.UX.Controllers.BaseApiController).Assembly.Location;
+                var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
+
                 //var cdn = context.Resolve<SiteContext>().CdnPrefix;
-                sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css\">\r", cdn);
+                sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?" + @ver.FileVersion + "\">\r", cdn);
                 if (!isEditmode)
                 {
                     return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
                 }
 
-                sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css\">");
+                sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css?" + @ver.FileVersion + "\">");
                 sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
 #if DEBUG

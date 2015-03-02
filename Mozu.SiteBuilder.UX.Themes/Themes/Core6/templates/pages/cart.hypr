@@ -23,5 +23,4 @@
         </table>
 	</form>
 </div>
-
 {% endblock body-content %}

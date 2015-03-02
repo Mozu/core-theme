@@ -1,4 +1,4 @@
-var relPath = (window.location.pathname !== '/admin/tests/buildIndex.html') ? '../../' : '',
+var relPath = helpers.isBuildTask(window) ? '' : '../../',
     CommerceTestObject = {
     group: 'Commerce',
     expanded: true,
@@ -136,7 +136,7 @@ var relPath = (window.location.pathname !== '/admin/tests/buildIndex.html') ? '.
     ]
 };
 
-if (window.location.pathname !== '/admin/tests/buildIndex.html') {
+if (!helpers.isBuildTask(window)) {
 
     var Harness = Siesta.Harness.Browser.ExtJS,
         protoCal = window.location.protocol,

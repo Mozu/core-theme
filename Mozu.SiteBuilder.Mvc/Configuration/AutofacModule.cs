@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                 .As<ITemplateManagerProvider>()
                 .SingleInstance();
 
-            ResolverConfig.Resolver = new CaseInsensitiveMemberResolver();
+            ResolverConfig.Resolver = new JsonCleaningCaseInsensitiveMemberResolver();
             EscaperConfig.Escaper = new SafeEscaper();
             Utilities.UtilConfig.Comparer = new DjangoComparer();
             Utilities.UtilConfig.VirtualPathFunc = new DjangoUtilHelper();
