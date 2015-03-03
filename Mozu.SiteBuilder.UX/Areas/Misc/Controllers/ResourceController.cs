@@ -250,13 +250,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             switch ((dataViewModeString ?? "").ToLowerInvariant())
             {
                 case "p":
-                {
-                    return DataViewModeType.Pending;
-                }
+                    {
+                        return DataViewModeType.Pending;
+                    }
                 case "l":
-                {
-                    return DataViewModeType.Live;
-                }
+                    {
+                        return DataViewModeType.Live;
+                    }
 
             }
             return SbApiContext.DataViewMode;
@@ -264,14 +264,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
-        public HttpResponseMessage Stylesheets(string pathinfo, bool debug = false, string dv= null)
+        public HttpResponseMessage Stylesheets(string pathinfo, bool debug = false, string dv = null)
         {
             SbApiContext.SetDataMode(Convert(dv));
-            
-            return Path.GetExtension(pathinfo) == ".less" ? 
+
+            return Path.GetExtension(pathinfo) == ".less" ?
                 Less(pathinfo, debug) : // TODO: set debug to false later
                 Content("stylesheets/" + pathinfo);
-            }
+        }
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
@@ -280,7 +280,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var res = Content("stylesheets/" + pathinfo, "text/css");
             var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
             bool emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
-            if (oc!= null)
+            if (oc != null)
             {
 
                 ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _pathProvider, _contentRetriever).Transform;
@@ -307,10 +307,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public async Task<JObject> LiveTemplates(bool? debug = false)
         {
             var templateContentsTasks =
-                    _pathProvider.GetLiveTemplates().Select(async x => new TemplateInfo{
-                            key = ScrubVirtualPath(x.VirtualPathNoExt), 
-                            content = await _contentRetriever.GetContentAsync(x),
-                            themeId = x.ThemeId
+                    _pathProvider.GetLiveTemplates().Select(async x => new TemplateInfo
+                    {
+                        key = ScrubVirtualPath(x.VirtualPathNoExt),
+                        content = await _contentRetriever.GetContentAsync(x),
+                        themeId = x.ThemeId
                     });
 
             var templateContents = await Task.WhenAll(templateContentsTasks);
@@ -335,8 +336,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 return new JProperty(sanitizedKey, contentMinusComments);
             }));
             return jobj;
-            }
-          
+        }
+
         #region helpers for live templates
 
         private static IEnumerable<TemplateInfo> TransformAndMapTemplates(IEnumerable<TemplateInfo> allTemplateInfos)
@@ -372,7 +373,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         private static string MakeExtendsPath(string basePath, string themeId)
-            {
+        {
             var interimExtendsPath = string.Format("{0}__{1}", basePath.Replace("\"", String.Empty).Replace("'", String.Empty).Replace("\\", "/"), themeId);
             return ScrubVirtualPath(interimExtendsPath);
         }
@@ -385,8 +386,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var filterPart = m.Groups["filter"].Value;
             var all = string.Format("{0}{1}{2}", pathPart, junkPart, filterPart);
             return all;
-            }
-          
+        }
+
         private static readonly Regex GetExtendsRegex = new Regex(@"{%(?:\s*)extends(?:\s*)(?<path>"".*""|'.*')(?<junk>(?:\s*)\|(?:\s*))(?<filter>parent_template)(?:\s*)%}", RegexOptions.Compiled);
 
         /// <summary>
@@ -397,8 +398,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// <returns></returns>
         private static async Task<IEnumerable<TemplateInfo>> GetParentInfos(IMozuVirtualPathProvider vpp, string virtualPath, IThemeContentRetriever contentRetriever)
         {
-            
-            var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}",virtualPath), false);
+
+            var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}", virtualPath), false);
             if (theme == null) return Enumerable.Empty<TemplateInfo>();
 
             var parents = new List<ThemeFileSystemInfo>();
@@ -478,22 +479,23 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             else if (System.IO.File.Exists(fileName))
             {
-                HttpContent content;
+                Stream content;
                 using (var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read))
                 {
-                    Stream destStream = new MemoryStream();
-                    await SourceStream.CopyToAsync(destStream);
-                    content = new StreamContent(destStream);
+                    content = new MemoryStream();
+                    await SourceStream.CopyToAsync(content);
                 }
 
                 var exists = g_mimeTypeDic.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
                 var resp = Request.CreateResponse(HttpStatusCode.OK);
 
-                resp.Content = content;
+                resp.Content = new StreamContent(content);
+                resp.Content.Headers.ContentLength = content.Length;
+                var y = content.Seek(0, SeekOrigin.Begin);
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(exists ? fileType : "text/html");
-          
+
                 return resp;
-               
+
             }
 
             else
@@ -520,7 +522,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [HttpGet]
-        public HttpResponseMessage HyprContextAction( string dv= null)
+        public HttpResponseMessage HyprContextAction(string dv = null)
         {
             SbApiContext.SetDataMode(Convert(dv));
             var ctx = new Dictionary<string, object>();
@@ -541,7 +543,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             siteContext.Add("secureHost", SiteContext.SecureHost);
             siteContext.Add("supportsInStorePickup", SiteContext.SupportsInStorePickup);
             siteContext.Add("currencyInfo", SiteContext.CurrencyInfo);
-            
+
             return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
         }
 
@@ -604,7 +606,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 var file = PathProvider.GetThemeFileInfo("scripts/" + pathinfo);
                 return file == null ? null : System.IO.File.ReadAllText(file.FullPath);
-                }
+            }
 
             private readonly Regex DepNameRE = new Regex("(.+)=([a-zA-Z_$][0-9a-zA-Z_$]*)$");
 
@@ -705,7 +707,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var fullPath = new FileInfo(widget.FullPath + path);
                     if (fullPath.Exists)
                     {
-                        
+
                         return Request.CreateResponse(HttpStatusCode.OK,
                             new FilePathResult(fullPath.FullName, GetMimeType(pathinfo)));
                     }
@@ -728,7 +730,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             string stem = "/resources/" + pathinfo;
             if (contentType == null)
-        {
+            {
                 contentType = GetMimeType(stem);
             }
 
@@ -744,7 +746,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             var stem = "/" + SiteContext.Theme.Thumbnail.Name;
             var contentType = GetMimeType(stem);
-            
+
 
             return GetFileResult(stem, contentType);
         }
@@ -764,10 +766,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private HttpResponseMessage GetFileResult(string pathinfo, string contentType)
         {
             var file = _pathProvider.GetThemeFileInfo(pathinfo);
-            return file != null ? 
-                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever)) : 
+            return file != null ?
+                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever)) :
                 Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
-                }
+        }
 
         private static string GetMimeType(string path)
         {
@@ -898,22 +900,22 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
                 var parser = new Parser
-                                 {
+                {
                     Importer = new Importer(reader, true, false, false)
-                                 };
-           
+                };
 
-                
+
+
                 Ruleset tree = null;
                 try
                 {
                     tree = parser.Parse(template, _path);
                 }
-                catch(System.IO.FileNotFoundException exception)
+                catch (System.IO.FileNotFoundException exception)
                 {
                     throw new FileNotFoundException(exception.Message + "[" + exception.FileName + "]", exception.InnerException);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     if (_debug && _emitDebugStylesheet)
                     {
@@ -922,25 +924,25 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     else throw;
                 }
 
-                
-           
 
-                var env = new Env {Compress = !_debug, Debug = _debug};
-                
+
+
+                var env = new Env { Compress = !_debug, Debug = _debug };
+
 
                 var mlp = new ProbeForThemeVariablesPlugin()
-                          {
-                              ThemeSettings = Controller.SiteContext.ThemeSettings,
-                              CdnPrefix = Controller.SiteContext.CdnPrefix
-                          };
+                {
+                    ThemeSettings = Controller.SiteContext.ThemeSettings,
+                    CdnPrefix = Controller.SiteContext.CdnPrefix
+                };
                 env.AddPlugin(mlp);
 
                 env.AddPlugin(new InsertThemeVariablePlugin()
-                              {
-                                  Rules = mlp.Rules
-                              });
+                {
+                    Rules = mlp.Rules
+                });
                 env.AddFunction("cdnurl", typeof(CdnFunction));
-                
+
                 try
                 {
                     env.Output.Push().Append(tree);
@@ -966,18 +968,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 MemoryStream ms;
                 using (var container = StringBuilderPool.Default.GetContainer())
                 {
-                StringBuilder sb;
-                if (debuggableException != null)
-                {
+                    StringBuilder sb;
+                    if (debuggableException != null)
+                    {
                         sb = container.Item;
-                    sb.Append(VISIBLE_LESS_ERROR_FILE_START);
+                        sb.Append(VISIBLE_LESS_ERROR_FILE_START);
                         sb.Append(debuggableException.Message.Replace(System.Environment.NewLine, "\\a ").Replace("\'", "\\'"));
-                    sb.Append(VISIBLE_LESS_ERROR_FILE_END);
-                }
-                else
-                {
-                    sb = env.Output.Pop();
-                }
+                        sb.Append(VISIBLE_LESS_ERROR_FILE_END);
+                    }
+                    else
+                    {
+                        sb = env.Output.Pop();
+                    }
                     ms = new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
                 }
                 ms.Position = 0;
@@ -999,7 +1001,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         throw;
                     }
                 }
-            
+
                 return template;
             }
 
@@ -1121,13 +1123,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             public string GetFileContents(string fileName)
             {
                 var transFormedContent = string.Empty;
-                    {
+                {
                     var stem = fileName;
                     var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
                     if (file != null)
-                        {
+                    {
                         transFormedContent = _lessTransFormer.ProcessSettingsVariables(_contentRetriever.GetContent(file), file.VirtualPath);
-                }
+                    }
                 }
                 return string.IsNullOrWhiteSpace(transFormedContent) ? g_content : transFormedContent;
             }
@@ -1169,7 +1171,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         class CdnFunction : dotless.Core.Parser.Functions.Function
         {
-         
+
             protected override Node Evaluate(Env env)
             {
                 string inner;
@@ -1184,10 +1186,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     inner = tn.Value;
                 }
 
-                
 
-             
-                
+
+
+
 
                 var imagePath = inner;
                 if (!inner.StartsWith("http", StringComparison.OrdinalIgnoreCase))
@@ -1214,20 +1216,20 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 get { return VisitorPluginType.BeforeEvaluation; }
             }
             public Dictionary<string, Node> Rules = new Dictionary<string, Node>();
-     
+
             public override Node Execute(Node node, out bool visitDeeper)
             {
                 visitDeeper = true;
-               
-                var root  = node as Root;
-                if (root != null && this.Rules.Count>0)
+
+                var root = node as Root;
+                if (root != null && this.Rules.Count > 0)
                 {
-                    root.Rules.InsertRange(0,Rules.Values);
+                    root.Rules.InsertRange(0, Rules.Values);
                     this.Rules.Clear();
                     visitDeeper = false;
                 }
-                
-               
+
+
                 return node;
             }
         }
@@ -1238,24 +1240,24 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 get { return VisitorPluginType.BeforeEvaluation; }
             }
-            
+
             public Env Env { get; set; }
-            public Dictionary<string, Node> Rules = new Dictionary<string, Node>(); 
-            const string prefix ="@theme-settings-";
-       
+            public Dictionary<string, Node> Rules = new Dictionary<string, Node>();
+            const string prefix = "@theme-settings-";
+
 
             public ThemeRuntimeSettingsCollection ThemeSettings { get; set; }
             public string CdnPrefix { get; set; }
             public override Node Execute(Node node, out bool visitDeeper)
             {
-                
+
                 var variableNode = node as Variable;
                 visitDeeper = true;
                 if (variableNode != null)
                 {
                     if (variableNode.Name.IndexOf(prefix, StringComparison.OrdinalIgnoreCase) == 0 && !Rules.ContainsKey(variableNode.Name))
                     {
-                     
+
                         var setting = ThemeSettings[variableNode.Name.Substring(prefix.Length)];
                         bool added = false;
                         if (setting != null)
@@ -1266,7 +1268,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                             {
                                 var ruleSet = p.Parse(val, "c:\\themesettingVariables.less");
 
-                                Rules.Add(variableNode.Name,ruleSet.Rules.First());
+                                Rules.Add(variableNode.Name, ruleSet.Rules.First());
                             }
                             catch
                             {
@@ -1281,15 +1283,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                 {
                                 }
                             }
-                            
+
                             added = true;
                         }
                     }
                     visitDeeper = false;
-                    
+
                 }
-                
-               
+
+
                 return node;
             }
         }
@@ -1332,9 +1334,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //                }
         //                _xformedNode = rule.Value;
 
-                           
+
         //                }
-                        
+
 
 
         //            }
@@ -1355,7 +1357,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         //    public Color ToColor()
         //    {
-             
+
         //        var oper = XformedNode as IOperable;
         //        if (oper != null)
         //        {
@@ -1391,6 +1393,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //    }
         //}
 
-      
+
     }
 }
