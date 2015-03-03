@@ -13,14 +13,14 @@
 
             
             cfg = Ext.apply(cfg, {
-                productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'),
+            //    productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'),
             });
 
-            tasks.push(
-                {
-                    storeToLoad: cfg.productTypeStore
-                }
-            );
+            //tasks.push(
+            //    {
+            //        storeToLoad: cfg.productTypeStore
+            //    }
+            //);
 
             // need to preload the productType Record so that the views can layout correctly
             var productTypeId = cfg.record.get("productTypeId");
@@ -371,7 +371,9 @@
             focusEl = me.down("#moreButton");
 
         var productTypeId = me.record.get('productTypeId'),
-            productType = this.productTypeStore.getById(productTypeId);
+            productType = this.record.productTypeRecord;
+            //productType = this.productTypeStore.getById(productTypeId);
+
 
         Ext.create("Taco.view.product.widget.productCode.Modal", {
             product: me.record,

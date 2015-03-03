@@ -285,7 +285,8 @@ Ext.define('Taco.view.product.subform.General', {
                 required: true,
                 allowBlank: false,
                 minChars: 1,
-                autoFetchDisplayValue:true,
+                autoFetchDisplayValue: true,
+                autoLoad:false,
                 //allQuery: "",
                 //editable: true,
                 //queryMode: 'remote',
@@ -367,7 +368,8 @@ Ext.define('Taco.view.product.subform.General', {
 
                         var prodTypeId = me.productTypeField.getValue();
                         if (prodTypeId) {
-                            var prodTypeRecord = me.productTypeStore.getById(prodTypeId);
+                            //var prodTypeRecord = me.productTypeStore.getById(prodTypeId);
+                            var prodTypeRecord = me.record.productTypeRecord;
                             var isDigitalCreditProdType = (prodTypeRecord.get("goodsType") === 'DigitalCredit');
                             me.setDigitalCreditDefaults(isDigitalCreditProdType, value);
                         }
@@ -1138,6 +1140,10 @@ Ext.define('Taco.view.product.subform.General', {
             productUsageField,
             parentForm,
             product;
+
+        
+        // cache the record for the other forms in case they need it to control their layout;
+        me.record.productTypeRecord = productTypeRecord;
 
         parentForm = me.up('productsiteform, productglobalform');
 

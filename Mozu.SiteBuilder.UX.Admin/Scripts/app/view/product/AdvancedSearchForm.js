@@ -68,21 +68,16 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
            
             items: [
                 {
-                    xtype: 'combobox',
-                    name: 'productType',
+                    xtype: "taco-producttypepickerfield",
                     fieldLabel: 'Product Type',
-                    valueField: 'id',
+                    name: 'productType',
                     width:200,
-                    displayField: 'name',
-                    queryMode: 'local',
-                    allowBlank: true,
-                    valueNotFoundText: 'not found',
-                    editable: true,
-                    forceSelection: true,
-                    store: { type: 'Taco.store.ProductTypes' }
-                }, {
+                    includeBaseProductType: true
+                },
+                {
                      width:35
-                },{
+                },
+                {
                     xtype: 'combobox',
                     name: 'productUsage',
                     fieldLabel: 'Product Usage',

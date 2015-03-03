@@ -197,14 +197,14 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
         me.suspendCheckChange--;
     },
  
-    setValue : function(value, doSelect) {
-        this.callParent(arguments);
-        if (this.autoFetchDisplayValue) {
-            if (this.lastSelection && this.lastSelection.length) {
-                debugger;
-            }
-        }
-    },
+    //setValue : function(value, doSelect) {
+    //    this.callParent(arguments);
+    //    if (this.autoFetchDisplayValue) {
+    //        if (this.lastSelection && this.lastSelection.length) {
+                
+    //        }
+    //    }
+    //},
 
     // override config parameter that enables fetching of display value for combo with remote store;
     autoFetchDisplayValue:false,

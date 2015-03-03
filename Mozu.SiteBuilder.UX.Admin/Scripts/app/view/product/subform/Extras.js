@@ -43,24 +43,25 @@ Ext.define('Taco.view.product.subform.Extras', {
     initComponent: function () {
         this.extras = [];
 
-        this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
+        //this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
 
         this.callParent(arguments);
 
+        this.loadByProductTypeId();
 
-        this.on('afterrender', function () {
-            if (this.productTypeStore.loading) {
-                this.productTypeStore.on('load', this.loadByProductTypeId, this, {
-                    single: true
-                });
-            } else {
-                this.loadByProductTypeId();
-            }
-        }, this, {
-            single: true,
-            delay: 10
-        });
+        //this.on('afterrender', function () {
+        //    if (this.productTypeStore.loading) {
+        //        this.productTypeStore.on('load', this.loadByProductTypeId, this, {
+        //            single: true
+        //        });
+        //    } else {
+        //        this.loadByProductTypeId();
+        //    }
+        //}, this, {
+        //    single: true,
+        //    delay: 10
+        //});
     },
 
     loadByProductTypeId: function (id) {
@@ -68,15 +69,16 @@ Ext.define('Taco.view.product.subform.Extras', {
             items = [],
             extraEditor;
 
-        if (!id || !Ext.isNumeric(id)) {
-            id = this.product.get('productTypeId');
-        }
+        //if (!id || !Ext.isNumeric(id)) {
+        //    id = this.product.get('productTypeId');
+        //}
 
-        if (!id) {
-            return;
-        }
-
-        this.productType = this.productTypeStore.getById(id);
+        //if (!id) {
+        //    return;
+        //}
+        
+        //this.productType = this.productTypeStore.getById(id);
+        this.productType = this.product.productTypeRecord;
 
         if (!this.productType) {
             return;

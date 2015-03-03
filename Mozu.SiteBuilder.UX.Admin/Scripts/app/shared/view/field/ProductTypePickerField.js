@@ -11,6 +11,8 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     config: {
     
     },
+    // clear out the search text when user clicks the trigger;
+    clearOnTriggerClick : true,
 
     includeBaseProductType: true,
 
@@ -29,7 +31,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     valueField: 'id',
     hideLabel: false,
     hideTrigger: false,
-    emptyText: "Product Type Search",
+    //emptyText: "Product Type Search",
     selectOnFocus: true,
     //flex: 1,
     value: "",    
@@ -68,10 +70,19 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     // default filter parameter used to get the full list
     allQuery: "",
     
+    onTriggerClick : function() {
+        var me = this;
+        debugger;
+        // if there is text in the field and user clicks the trigger clear out the text so that we get a full search result
+        if (!me.isExpanded && me.clearOnTriggerClick) {
+            this.setRawValue("");
+        }
+        this.callParent(arguments);
+    },
+
     // modify the format of the query data to fit the service filtering pattern.
     formatQuery: function (queryEvent, e) {
-
-    
+        
         // need to format the search text from the combobox into a filter structure the service wants;
         // always force the query to match what's in the field.
         // after a selection the queryEvent.query is initially set to "" which is incorrect in this situation;
@@ -101,8 +112,8 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
 
         
         if (!me.store) {
-            
 
+            
             me.store = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.ProductTypes',
                 pageSize: me.pageSize,
@@ -124,6 +135,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
         }
         
         me.mon(me, 'beforequery', this.formatQuery, this);
+        
         me.callParent(arguments);
     }
 });

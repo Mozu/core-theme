@@ -20,10 +20,11 @@ Ext.define('Taco.view.product.subform.Shipping', {
         
         this.record = this.product;
 
-        me.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
+        //me.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
         var productTypeId = this.record.get('productTypeId');
         if (productTypeId) {
-            me.productType = me.productTypeStore.getById(productTypeId);
+            //me.productType = me.productTypeStore.getById(productTypeId);
+            me.productType = me.product.productTypeRecord;
         }
 
         this.items = [];
