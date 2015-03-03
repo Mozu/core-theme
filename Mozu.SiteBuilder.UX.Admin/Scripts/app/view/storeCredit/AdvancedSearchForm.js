@@ -6,6 +6,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
     requires: [
         'Taco.store.AdminUsers',
         'Taco.core.ux.form.field.AdminUser',
+        'Taco.shared.view.field.Customer',
         'Ext.form.FieldContainer',
         'Ext.form.field.Date',
         'Taco.core.ux.form.CurrencyField',
@@ -18,10 +19,45 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
         xtype: 'textfield'
     },
     initComponent: function () {
-        var me = this
+        var me = this;
 
-        this.items = []
-        
+        this.items = [];
+
+        this.customerIdField = Ext.widget({
+            xtype: "textfield",
+            name: 'customerid',
+            flex: 1,
+            margin: '0 0 0 0',
+            // this helps with the reset working. not sure why but this seems to help
+            originalValue:"",
+            fieldLabel: 'Customer Id'
+        });
+
+        this.customerSelector = Ext.widget({
+            xtype: 'taco-customerfield',
+            name:"customer",
+            fieldLabel: "Customer Search",
+            displayField: 'fullName',
+            itemId: 'customerSelector',
+            originalValue: "",
+            showAnonymousCustomers: true,
+            //autoFetchDisplayValue:true,
+            //width: 300,
+            flex:1,
+            emptyText: 'Customer Search',
+            listeners: {
+                select: function (combo, records) {
+                    // need to check to see if the custtomer has an email address for the default shipping address.
+                    // if not, need to prompt user to edit the customer on the customer detail view.
+                    if (records[0]) {
+                        var customer = records[0];
+                        //me.customerIdField.setValue(customer.get("id"));
+                    }
+                },
+                scope: this
+            }
+        });
+
         this.items = [
             {
                 name: 'keyword',
@@ -39,15 +75,13 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                         name: 'code',
                         flex:1,
                         fieldLabel: 'Code'
-                    }, {
-                        xtype: "textfield",
-                        name: 'customerid',
-                        flex: 1,
-                        margin: '0 0 0 20',
-                        fieldLabel: 'Customer Id'
                     }
                 ]
             },
+
+            this.customerSelector,
+            this.customerIdField,
+
             {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Activate Date Range',

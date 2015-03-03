@@ -41,7 +41,19 @@ Ext.define('Taco.model.CustomerAccount', {
             convert: function(value, record) {
                 return Ext.util.Format.htmlEncode(record.get('lastName'));
             }
-        }, {
+        },
+        {
+            name: 'fullName', convert: function (v, r) {
+                return r.raw.firstName + ' ' + r.raw.lastName;
+            }
+        },
+        {
+            name: 'fullNameEmail', convert: function (v, r) {
+                return r.raw.firstName + ' ' + r.raw.lastName + ' ' + r.raw.emailAddress;
+            }
+        },
+
+        {
             name: 'emailAddress',
             type: 'string'
         }, {
