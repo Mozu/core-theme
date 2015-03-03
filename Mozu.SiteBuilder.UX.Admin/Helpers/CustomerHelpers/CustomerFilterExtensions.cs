@@ -179,6 +179,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return String.Format("{0} eq \"{1}\"", CODE_PROPERTY, filter.escapedValue);
                 case "customerid":
                     return String.Format("{0} eq \"{1}\"", CUSTOMERID_PROPERTY, filter.escapedValue);
+                case "customer":
+                    //this is the value coming from the customer picker field. Display value varies but it maps to a customerId
+                    return String.Format("{0} eq \"{1}\"", CUSTOMERID_PROPERTY, filter.escapedValue);
                 case "activatedatefrom":
                     return String.Format("{0} gt \"{1}\"", ACTIVATEDATE_PROPERTY, filter.value);
                 case "activatedateto":
