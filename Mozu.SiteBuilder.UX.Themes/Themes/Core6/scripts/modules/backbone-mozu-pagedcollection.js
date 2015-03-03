@@ -3,12 +3,12 @@
     "hyprlive",
     "modules/backbone-mozu-model"], function ($, Hypr, Backbone) {
 
-        var defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
-
-        var sorts = [
+        var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
+            defaultSort = Hypr.getThemeSetting('defaultSort'),
+            sorts = [
             {
                 "text": Hypr.getLabel('default'),
-                "value": ""
+                "value": defaultSort
             },
             {
                 "text": Hypr.getLabel('sortByPriceAsc'),
@@ -34,8 +34,7 @@
                 "text": Hypr.getLabel('sortByDateAsc'),
                 "value": "createDate asc"
             }
-        ],
-            defaultSort = Hypr.getThemeSetting('defaultSort');
+        ];
 
         var PagedCollection = Backbone.MozuPagedCollection = Backbone.MozuModel.extend({
             helpers: ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage', 'sorts', 'currentSort'],
