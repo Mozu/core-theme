@@ -67,17 +67,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (extFilter.QueryString.Get("isbaseproducttype") != null)
             {
-                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "isbase", value = "false"});
+                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "isbase", value = extFilter.QueryString.Get("isbaseproducttype")});
 
             }
 
+            // search coming from the productTypePickerField. Treat is like a normal keyword search;
             var query = extFilter.QueryString.Get("query");
             if (!String.IsNullOrEmpty(query))
             {
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
-
             }
-
 
             string filter = null;
             if (extFilter != null && extFilter.Count > 0)

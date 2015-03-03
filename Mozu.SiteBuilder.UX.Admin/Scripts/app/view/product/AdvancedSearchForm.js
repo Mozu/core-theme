@@ -69,7 +69,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     fieldLabel: 'Product Type',
                     name: 'productType',
                     flex:1,
-                    includeBaseProductType: true
+                    includeBaseProductType: false
                 },
                 {
                     xtype: 'combobox',

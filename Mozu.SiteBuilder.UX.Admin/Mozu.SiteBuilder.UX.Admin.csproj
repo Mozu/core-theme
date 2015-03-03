@@ -849,6 +849,7 @@
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
+    <Content Include="Scripts\app\store\ProductTypesPicker.js" />
     <Content Include="Scripts\app\store\ProductTypesGrid.js" />
     <Content Include="Scripts\app\store\States2.js" />
     <Content Include="Scripts\app\store\Currencies.js" />
@@ -932,7 +933,6 @@
     <Content Include="Scripts\app\view\entityManager\Grid.js" />
     <Content Include="Scripts\app\view\entityManager\Lists.js" />
     <Content Include="Scripts\app\view\fileManager\AdvancedSearchForm.js" />
-    <Content Include="Scripts\app\view\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\AddGiftCard.js" />
     <Content Include="Scripts\app\view\order\Split.js" />

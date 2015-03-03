@@ -5,7 +5,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.taco-producttypepickerfield',
     requires: [
-        'Taco.store.ProductTypes'
+        'Taco.store.ProductTypesPicker'
     ],
     
     config: {
@@ -14,7 +14,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     // clear out the search text when user clicks the trigger;
     clearOnTriggerClick : true,
 
-    includeBaseProductType: true,
+    includeBaseProductType: false,
 
     // this adds support to combos that have paged stores to use the pageup and pagedown keys to change the page in the store;
     enableKeyboardPaging: true,
@@ -42,7 +42,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     },
 
     // querystring parameter name that contains the search filter data;
-    queryParam: "filter",
+    queryParam: "query",
 
     // default filter parameter used to get the full list
     allQuery: "",
@@ -89,7 +89,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
         if (!me.store) {
             
             me.store = Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.ProductTypes',
+                type: 'Taco.store.ProductTypesPicker',
                 pageSize: me.pageSize,
                 autoLoad: me.autoLoad,
                 createOnly:true,
@@ -104,8 +104,6 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
                     scope: this
                 }
             });
-
-
         }
         
         me.mon(me, 'beforequery', this.formatQuery, this);

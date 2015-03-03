@@ -18,8 +18,8 @@ Ext.define('Taco.store.ProductTypes', {
     pageSize: 25,
 >>>>>>> refactor of product to allow for  paging productType
     buffered: false,
-    remoteSort: false,
-    remoteFilter: false,
+    remoteSort: true,
+    remoteFilter: true,
     storeManagerConfig: {
         contextLevel:'mc',
         clearFilters: true,
