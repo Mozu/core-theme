@@ -1,6 +1,10 @@
 ﻿/**
  * @class Taco.view.product.AdvancedSearchForm
  */
+
+// this doesn't appear to be used. commenting out prior to removing file
+
+
 //Ext.define('Taco.view.inventory.AdvancedSearchForm', {
 //    extend: 'Taco.core.ux.form.Form',
 //    requires: [

@@ -38,30 +38,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     listConfig: {
         loadingText: 'Searching...',
         cls : "product-type-picker-menu",
-        emptyText: '<div style="padding:20px; 10px; ">No matching product types found.</div>',
-        // Custom rendering template for each item
-        //getInnerTpl: function () {
-        //    return "<span class='product-name'>{productName}</span> <span class='product-code'>{productCode}</span>"
-        //},
-
-        // this is an override that hides the paging toolbar when the list only contains a single page of results;
-        //refresh: function () {
-        //    var me = this,
-        //        toolbar = me.pagingToolbar;
-
-        //    Ext.view.View.prototype.refresh.call(me);
-
-        //    if (me.rendered && toolbar && toolbar.rendered && !me.preserveScrollOnRefresh) {
-        //        me.el.appendChild(toolbar.el);
-        //        var store = me.getStore();
-        //        if (store.getTotalCount() <= store.pageSize) {
-        //            me.el.last().hide();
-        //        }
-        //        else {
-        //            me.el.last().show();
-        //        }
-        //    }
-        //}
+        emptyText: '<div style="padding:20px; 10px; ">No matching product types found.</div>'
     },
 
     // querystring parameter name that contains the search filter data;
@@ -72,7 +49,6 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     
     onTriggerClick : function() {
         var me = this;
-        debugger;
         // if there is text in the field and user clicks the trigger clear out the text so that we get a full search result
         if (!me.isExpanded && me.clearOnTriggerClick) {
             this.setRawValue("");
@@ -109,10 +85,8 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     
     initComponent: function(eOpts) {
         var me = this;
-
         
         if (!me.store) {
-
             
             me.store = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.ProductTypes',

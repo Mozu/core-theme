@@ -16,7 +16,6 @@ Ext.define('Taco.view.product.subform.Options', {
 
     initComponent: function () {
         
-        //this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
         this.record = this.product;
 
         this.items = [{
@@ -47,10 +46,6 @@ Ext.define('Taco.view.product.subform.Options', {
 
         this.list = this.down('#list');
         this.loadByProductTypeId();
-
-        //this.on('afterrender', function () {
-        //    this.productTypeStore.whenLoaded(this.loadByProductTypeId, this);
-        //}, this, { single: true, delay: 15 });
     },
 
     onVariantChange: function (view, variantData, optionData) {
@@ -144,7 +139,7 @@ Ext.define('Taco.view.product.subform.Options', {
 
     loadByProductTypeId: function (value) {
         var productTypeId = typeof value === 'number' ? value : this.product.get('productTypeId');
-        //this.productType = this.productTypeStore.getById(productTypeId);
+        
         this.productType = this.product.productTypeRecord;
         this.rebuild();
     },

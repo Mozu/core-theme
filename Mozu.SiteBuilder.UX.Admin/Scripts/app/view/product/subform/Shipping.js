@@ -20,10 +20,8 @@ Ext.define('Taco.view.product.subform.Shipping', {
         
         this.record = this.product;
 
-        //me.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
         var productTypeId = this.record.get('productTypeId');
         if (productTypeId) {
-            //me.productType = me.productTypeStore.getById(productTypeId);
             me.productType = me.product.productTypeRecord;
         }
 
@@ -44,20 +42,6 @@ Ext.define('Taco.view.product.subform.Shipping', {
             me.mon(productForm, 'bundleItemChange', me.updateUI, me);
             me.mon(Taco.app, 'producttypechanged', me.onProductTypeChange, me);
         });
-
-        /*
-
-        this.on('afterrender', function () {
-            var weight = this.findField('packageWeight');
-            if (!weight.getValue()) {
-                weight.setValue(1);
-                this.record.set('packageWeight', 1);
-            }
-        },this, {
-            delay :100
-        });
-        */
-
     },
     
     updateUI: function () {

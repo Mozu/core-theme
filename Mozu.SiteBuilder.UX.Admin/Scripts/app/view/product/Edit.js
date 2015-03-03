@@ -11,17 +11,10 @@
         factory: function (cfg, callback, scope) {
             var tasks = [];
 
-            
             cfg = Ext.apply(cfg, {
-            //    productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes'),
+            
             });
-
-            //tasks.push(
-            //    {
-            //        storeToLoad: cfg.productTypeStore
-            //    }
-            //);
-
+            
             // need to preload the productType Record so that the views can layout correctly
             var productTypeId = cfg.record.get("productTypeId");
 
@@ -372,8 +365,6 @@
 
         var productTypeId = me.record.get('productTypeId'),
             productType = this.record.productTypeRecord;
-            //productType = this.productTypeStore.getById(productTypeId);
-
 
         Ext.create("Taco.view.product.widget.productCode.Modal", {
             product: me.record,

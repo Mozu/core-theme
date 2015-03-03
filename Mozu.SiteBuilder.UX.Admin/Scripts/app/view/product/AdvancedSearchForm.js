@@ -9,12 +9,13 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
     ],
 
     defaults: {
-        width: 435,
+        width: 500,
         xtype: 'textfield'
     },
     items: [
         {
             name: 'keyword',
+            flex:1,
             fieldLabel: 'Keyword Search'
         },{
             xtype: 'fieldcontainer',
@@ -27,16 +28,14 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     xtype: 'textfield',
                     name: 'productCode',
                     fieldLabel: 'Product Code',
-                    width: 200
-                },
-                {
-                    width:35
+                    flex: 1
                 },
                 {
                     xtype: 'textfield',
                     name: 'upc',
                     fieldLabel: 'UPC',
-                    width: 200
+                    margin: '0 0 0 35',
+                    flex: 1
                 } 
             ]
         }, {
@@ -50,16 +49,14 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     xtype: 'textfield',
                     name: 'mfgPartNumber',
                     fieldLabel: 'Mfg Part #',
-                    width: 200
-                },
-                {
-                    width: 35
+                    flex:1
                 },
                 {
                     xtype: 'textfield',
                     name: 'distPartNumber',
                     fieldLabel: 'Dist Part #',
-                    width: 200
+                    margin: '0 0 0 35',
+                    flex: 1
                 }
             ]
         }, {
@@ -71,17 +68,15 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     xtype: "taco-producttypepickerfield",
                     fieldLabel: 'Product Type',
                     name: 'productType',
-                    width:200,
+                    flex:1,
                     includeBaseProductType: true
-                },
-                {
-                     width:35
                 },
                 {
                     xtype: 'combobox',
                     name: 'productUsage',
                     fieldLabel: 'Product Usage',
-                    width: 200,
+                    flex: 1,
+                    margin: '0 0 0 35',
                     valueField: 'id',
                     displayField: 'name',
                     queryMode: 'local',
@@ -111,10 +106,9 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
         {
             xtype: 'combo',
             store: { type: 'Taco.store.Categories' },
-
+            flex:1,
             name: 'category',
             fieldLabel: 'Category',
-
             valueField: 'id',
             displayField: 'nameAndCode',
             queryMode: 'local',
@@ -140,7 +134,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     hideTrigger: true,
                     keyNavEnabled: false,
                     mouseWheelEnabled: false,
-                    width: 200
+                    flex:1
                 }, {
                     xtype: 'component',
                     html: 'to',
@@ -151,7 +145,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     hideTrigger: true,
                     keyNavEnabled: false,
                     mouseWheelEnabled: false,
-                    width: 200
+                    flex:1
                 }]
         }, {
             xtype: 'fieldcontainer',
@@ -166,9 +160,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false,
-                width: 200
-            }, {
-                width: 35
+                flex:1
             }, {
                 xtype: 'currencyfield',
                 name: 'msrp',
@@ -176,13 +168,15 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false,
-                width: 200
+                margin: '0 0 0 35',
+                flex: 1
             }]
         },
         {
             xtype: 'taco-adminuserfield',
             name: 'modifiedBy',
-            fieldLabel: 'Modified By'
+            fieldLabel: 'Modified By',
+            flex: 1
         },
         {
             xtype: 'fieldcontainer',
@@ -191,11 +185,11 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 type: 'hbox',
                 align: 'middle'
             },
-            items: [{
+            items: [
+                {
                     xtype: 'datefield',
                     name: 'modifiedFrom',
-                    //                    fieldLabel: 'Modified From',
-                    width: 200
+                    flex: 1
                 }, {
                     xtype: 'component',
                     html: 'to',
@@ -203,8 +197,8 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 }, {
                     xtype: 'datefield',
                     name: 'modifiedTo',
-                    //fieldLabel: 'Modified To',
-                    width: 200
-                }]
+                    flex: 1
+                }
+            ]
         }]
 });
