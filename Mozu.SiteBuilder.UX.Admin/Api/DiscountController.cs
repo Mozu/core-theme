@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
 using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -124,7 +125,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id));
             await Task.WhenAll(tasks);
-
+            TaskHelper.ThrowExceptionsIfAny(tasks);
+           
             return SuccessWithTotal2<Discount>(discounts.Count);
         }
     }

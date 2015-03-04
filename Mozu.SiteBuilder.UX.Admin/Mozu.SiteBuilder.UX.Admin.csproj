@@ -716,6 +716,7 @@
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="Helpers\SecurityHelpers\SecureCapabilityConfigUrlHelper.cs" />
+    <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
@@ -958,6 +959,7 @@
     <Content Include="Scripts\app\view\order\subform\AuditLog.js" />
     <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
+    <Content Include="Scripts\app\view\settings\localization\subform\Attributes.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
@@ -1048,7 +1050,6 @@
     <Content Include="Scripts\app\view\settings\localization\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductExtras.js" />
     <Content Include="Scripts\app\view\settings\localization\AttributeValues.js" />
-    <Content Include="Scripts\app\view\settings\localization\subform\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\subform\Subform.js" />
     <Content Include="Scripts\app\view\settings\localization\util\Locales.js" />
     <Content Include="Scripts\app\view\settings\localization\util\Currencies.js" />
