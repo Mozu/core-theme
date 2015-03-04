@@ -161,7 +161,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.setLoading(true);
             api.action('customer', 'resetPasswordStorefront', {
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).then(this.displayResetPasswordMessage, this.displayApiMessage);
+            }).then(this.displayResetPasswordMessage.bind(this), this.displayApiMessage);
         },
         handleLoginComplete: function () {
             window.location.reload();

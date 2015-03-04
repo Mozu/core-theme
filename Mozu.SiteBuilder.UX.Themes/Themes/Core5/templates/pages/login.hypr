@@ -17,7 +17,7 @@
                         <label for="email">{{ labels.email }}</label>
                     </div>
                     <div class="mz-l-formfieldgroup-cell">
-                        <input name="email" value="{{model.email|default:user.email}}" type="email"/>
+                        <input name="email" value="{{model.email|default:user.email}}" type="email" data-mz-login-email/>
                     </div>
                 </div>
                 <div class="mz-l-formfieldgroup-row">
@@ -25,7 +25,7 @@
                         <label for="password">{{ labels.password }}</label>
                     </div>
                     <div class="mz-l-formfieldgroup-cell">
-                        <input name="password"  type="password"/>
+                        <input name="password"  type="password" data-mz-login-password/>
                     </div>
                 </div>
                 <div class="mz-l-formfieldgroup-row">
