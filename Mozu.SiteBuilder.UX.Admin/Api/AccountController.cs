@@ -20,6 +20,9 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using ApiRole = Mozu.Core.Api.Contracts.Role;
 
@@ -175,14 +178,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             try
             {
                 var tenant = (await _tenantsClient.GetTenant(_apiContext.TenantId)).ReadAsSync();
+                // Serialized to string
+                var json = JsonConvert.SerializeObject(request, Formatting.Indented,
+                    new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
-                var result = (await _invitationWebApiClient.CreateInvitation( new AdminUser.Contracts.Invitation(){
-                    EmailAddress = request.Value<string>("email"),
-                    UserScopeType =UserScopeType.Tenant.ToString(),
-                    ScopeName = tenant.Name ,
-                    UserScopeId = _apiContext.TenantId ,
-                    RoleId = request.Value<int>("roleId") 
-                    })).ReadAsSync();
+                // Deserialize
+                var inv = JsonConvert.DeserializeObject<Invitation>(json,
+                    new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+
+                // Parse json and stuff
+                var newInv = JValue.Parse(json);
+                dynamic newInvDynamic = newInv;
+                var newInvDynamicJArray = newInvDynamic.roleIds as JArray;
+
+                var rolesIds = newInvDynamicJArray != null ? newInvDynamicJArray.ToObject<List<int>>() : new List<int>();
+                var id = newInvDynamic.id;
+                var email = newInvDynamic.email;
+                var result = (await _invitationWebApiClient.CreateInvitation(new AdminUser.Contracts.Invitation()
+                {
+                    EmailAddress = email,
+                    UserScopeType = UserScopeType.Tenant.ToString(),
+                    ScopeName = tenant.Name,
+                    UserScopeId = _apiContext.TenantId,
+                    InvitationRoles = rolesIds//request.Value<List<int>>("roleIds"),
+                })).ReadAsSync();
                 var newInvitation = Mapper.Map<AdminUser.Contracts.Invitation, Invitation>(result);
 
                 return Single2(newInvitation);
@@ -202,7 +221,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var invitations = Mapper.Map<List<Invitation>>(invites);
             foreach (var invitation in invitations)
             {
-                var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleId);
+                //ToDo: refactor this BF
+                var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleIds[0]);
                 invitation.Role  = role == null ? "(unknown)" : role.Name;
             }
 

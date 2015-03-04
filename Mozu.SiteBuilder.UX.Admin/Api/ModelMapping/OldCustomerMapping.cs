@@ -65,11 +65,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<AC.Invitation, AC.AccountUser>()
                 .ForMember(x => x.Activity, m => m.ResolveUsing(x => x.State))
                 .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress))
-                .ForMember( x=> x.Roles , m => m.ResolveUsing( x=> new List<AC.AccountUserRole >(){ new AC.AccountUserRole()
+                /*.ForMember( x=> x.Roles , m => m.ResolveUsing( x=> new List<AC.AccountUserRole >(){ new AC.AccountUserRole()
                                                                                                         {
                                                                                                             RoleId =x.RoleId ,
                                                                                                             RoleName = x.Role 
-                                                                                                        }}))
+                                                                                                        }}))*/
                 .ForMember(x => x.Type, m => m.ResolveUsing((AC.Invitation x) => x.GetType().Name.ToLowerInvariant()))
                 ;
             Mapper.CreateMap<AP.User, AC.AccountUser>()

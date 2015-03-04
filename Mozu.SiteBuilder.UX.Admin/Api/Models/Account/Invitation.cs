@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using FSharpx.Collections;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 {
-    
+
     public class Invitation
     {
         public string Id { get; set; }
@@ -12,7 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 
         public int TenantId { get; set; }
 
-        public int RoleId { get; set; }
+        [JsonProperty(PropertyName = "roleIds")]
+        public List<int> RoleIds { get; set; }
 
         public string Role { get; set; }
 
