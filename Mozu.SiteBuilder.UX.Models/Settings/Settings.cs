@@ -95,18 +95,47 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
     public class EmailTransactionSettings
     {
-        public bool? OrderChanged { get; set; }
-        public bool? OrderShipped { get; set; }
-        public bool? OrderFulfillmentDetailsChanged { get; set; }
-        public bool? ShopperLoginCreated { get; set; }
-        public bool? ShopperPasswordReset { get; set; }
-        public bool? ReturnCreated { get; set; }
-        public bool? ReturnAuthorized { get; set; }
-        public bool? ReturnItemReceived { get; set; }
-        public bool? ReturnUpdated { get; set; }
-        public bool? ReturnRejected { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? BackInStock { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? OrderChanged { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? OrderShipped { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? OrderFulfillmentDetailsChanged { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShopperLoginCreated { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShopperPasswordReset { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ReturnCreated { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ReturnAuthorized { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ReturnItemReceived { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ReturnUpdated { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ReturnRejected { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? RefundCreated { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? StoreCreditCreated { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? GiftCardCreated { get; set; }
     }
 
     [DataContract]
