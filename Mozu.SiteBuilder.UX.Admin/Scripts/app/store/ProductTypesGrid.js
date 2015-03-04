@@ -14,10 +14,12 @@ Ext.define('Taco.store.ProductTypesGrid', {
     buffered: false,
     remoteSort: true,
     remoteFilter: true,
+    sorters: [{
+        property: 'name',
+        direction: 'ASC'
+    }],
     storeManagerConfig: {
         contextLevel:'mc',
-        clearFilters: true,
-        clearSort: true,
         autoLoad: true
     }
 });
