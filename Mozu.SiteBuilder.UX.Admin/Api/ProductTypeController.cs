@@ -12,6 +12,7 @@ using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductTypeHelpers;
 using Mozu.SiteBuilder.UX.Admin.MockServices;
 using Mozu.SiteBuilder.UX.Admin.MockServices.Mocks;
@@ -84,7 +85,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = extFilter.ToFilterString();
             }
 
-            string sort = null; // pagingParams.sort.ToSortString();
+            //string sort = null; // pagingParams.sort.ToSortString();
+            string sort = pagingParams.sort.ToSortString();
 
 
             var gpttask = _productTypeClient.GetProductTypes(

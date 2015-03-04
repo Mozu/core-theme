@@ -89,6 +89,7 @@ Ext.define('Taco.view.productType.Grid', {
                     minWidth: 120
                 }, {
                     dataIndex: 'numberOfProducts',
+                    sortable: false,
                     stateId: "numberOfProducts",
                     text: 'No. of Products',
                     width: 120
@@ -120,6 +121,7 @@ Ext.define('Taco.view.productType.Grid', {
                     )
                 }, {
                     dataIndex: 'modifiedDate',
+                    sortable: false,
                     stateId: "modifiedDate",
                     text: 'Modified Date',
                     width: 120,
