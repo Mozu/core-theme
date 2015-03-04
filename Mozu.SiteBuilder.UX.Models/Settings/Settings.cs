@@ -92,7 +92,22 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         public Dictionary<string, string> SupportedCards { get; set; }
     }
-   
+
+    public class EmailTransactionSettings
+    {
+        public bool? OrderChanged { get; set; }
+        public bool? OrderShipped { get; set; }
+        public bool? OrderFulfillmentDetailsChanged { get; set; }
+        public bool? ShopperLoginCreated { get; set; }
+        public bool? ShopperPasswordReset { get; set; }
+        public bool? ReturnCreated { get; set; }
+        public bool? ReturnAuthorized { get; set; }
+        public bool? ReturnItemReceived { get; set; }
+        public bool? ReturnUpdated { get; set; }
+        public bool? ReturnRejected { get; set; }
+        public bool? BackInStock { get; set; }
+        public bool? StoreCreditCreated { get; set; }
+    }
 
     [DataContract]
     public class GeneralSettings
@@ -136,6 +151,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "replyToEmail")*/]
         public string ReplyToEmailAddress { get; set; }
 
+        [DataMember(EmitDefaultValue = true)]
+        public EmailTransactionSettings EmailTransactionSettings { get; set; }
 
         [DataMember(EmitDefaultValue = false/*, Name = "logoPath"*/)]
         public string LogoPath { get; set; }
