@@ -223,19 +223,35 @@ Ext.define('Taco.overrides.form.field.ComboBox', {
             return;
         }
 
-        Taco.app.getModel(modelName).load(value, {
-            success: function (record) {
-                if (record) {
-                    me.displayTplData = [record.data];
-                    me.lastSelection = [record];
-                    me.setRawValue(me.getDisplayValue());
-                }
-            },
-            failure: function () {
-                console.log("combo: " + me.name + " did not find a matching record to set a display value")
-            },
-            scope: this
-        });
+        // give the component a chance to locate the display value using a locally sourced record;
+        // see the productType field in product editor for an example of this use case;
+        var displayRecord = null;
+        if (me.getDisplayRecord) {
+            displayRecord = me.getDisplayRecord();
+        }
+
+        // used client side record to preload the combo's display value;
+        if (displayRecord && displayRecord.data) {
+            me.displayTplData = [displayRecord.data];
+            me.lastSelection = [displayRecord];
+            me.setRawValue(me.getDisplayValue());
+        } else {
+            // call the service to get the record;
+            Taco.app.getModel(modelName).load(value, {
+                success: function (record) {
+                    if (record) {
+                        me.displayTplData = [record.data];
+                        me.lastSelection = [record];
+                        me.setRawValue(me.getDisplayValue());
+                    }
+                },
+                failure: function () {
+                    console.log("combo: " + me.name + " did not find a matching record to set a display value")
+                },
+                scope: this
+            });
+        }
+        
     },
 
     /**

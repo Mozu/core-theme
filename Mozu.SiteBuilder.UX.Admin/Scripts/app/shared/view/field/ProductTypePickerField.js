@@ -25,6 +25,9 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
     // this property controls the type of products to return; "parent" returns the parent product. "inventory" returns the all variants for the parent product;    
     productType: 'parent',
     pageSize: 10,
+
+    autoLoad: false,
+
     checkChangeBuffer: 5000,
     minChars :1,
     displayField: 'name',
@@ -82,7 +85,7 @@ Ext.define('Taco.shared.view.field.ProductTypePickerField', {
 
         return true;
     },
-    
+
     initComponent: function(eOpts) {
         var me = this;
         

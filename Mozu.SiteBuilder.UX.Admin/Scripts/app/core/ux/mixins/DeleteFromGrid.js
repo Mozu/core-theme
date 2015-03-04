@@ -56,7 +56,7 @@ Ext.define('Taco.core.ux.mixins.DeleteFromGrid', {
         );
     },
 
-    deletePromptMsg : "Are you sure you want to delete this",
+    deletePromptMsg : "Are you sure you want to delete this?",
 
     /**
      * @cfg saveActionHandler

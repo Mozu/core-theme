@@ -187,14 +187,16 @@
 
 
             };
-        } else  if (task.modelToLoad) {
+        } else if (task.modelToLoad) {
             // require a specific model type and id;
             var type = task.modelToLoad.type,
                 id = task.modelToLoad.id;
-
-
-
             
+            if (!id || !type) {
+                console.log("Taco.core.ux.form.Tasks: modelToLoad requires a type and id");
+                return;
+            }
+
             if (this.tasks.findBy(function (item) {
                 return task.modelToLoad == item.modelToLoad;
             })) {
@@ -217,6 +219,22 @@
                         task.modelToLoad.hasLoaded = true;
 
                         task.modelToLoad.record = data;
+                        tasks.callback();
+                    },
+                    failure: function (noIdea, response) {
+                        
+                        var msg = "Error loading record",
+                            json;
+
+                        if (response && response.error && response.error.responseText) {
+                            json = Ext.decode(response.error.responseText, true);
+                        }
+
+                        if (json && json.message) {
+                            msg = type + ":" + json.message;
+                        }
+                        
+                        Taco.app.fireEvent('setmessage', msg, 'error');
                         tasks.callback();
                     },
                     scope: tasks,

@@ -34,9 +34,7 @@ Ext.define('Taco.view.product.subform.General', {
     margin: '0 0 20 0',
     bodyPadding:"0",
     initComponent: function () {
-
-
-
+    
         var me = this,
             readOnly,
             requiredContent,
@@ -185,6 +183,10 @@ Ext.define('Taco.view.product.subform.General', {
                 autoLoad:false,
                 width: twoColumnFieldWidth,
                 margin: '0 50 0 0',
+                // extension method that allows the combo to use a preloaded record for its display value;
+                getDisplayRecord : function() {
+                    return (me.record.productTypeRecord) ? me.record.productTypeRecord : null;
+                },
                 listeners: {
                     change: {
                         scope: this,
@@ -192,9 +194,6 @@ Ext.define('Taco.view.product.subform.General', {
                     }
                 }
             });
-
-            
-            
 
 
             this.productUsageField = Ext.widget({
