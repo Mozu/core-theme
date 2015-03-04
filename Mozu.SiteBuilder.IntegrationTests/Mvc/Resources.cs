@@ -22,6 +22,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Should;
 using System.IO;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Mvc
 {
@@ -142,8 +143,9 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var nav = Substitute.For<INavigationGandalf>();
             var contentRetriever = new TestFileContentRetriver(fileToContentMap);
             var logger = Substitute.For<ILogger>();
+            var ApiContext = Substitute.For<IApiContext>();
 
-            var resourceController = new ResourceController(vpp, nav, contentRetriever, logger, settings);
+            var resourceController = new ResourceController(vpp, nav, contentRetriever, logger, settings, ApiContext);
             var results = await resourceController.LiveTemplates();
             results.Count.ShouldEqual(5);
             

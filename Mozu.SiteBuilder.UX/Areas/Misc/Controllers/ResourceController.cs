@@ -231,13 +231,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private readonly Core.Logging.ILogger _logger;
         private readonly AMDModuleProvider _moduleProvider;
         private readonly ISettings _settings;
+        private readonly IApiContext _apiContext;
 
-        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger, ISettings settings)
+        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger, ISettings settings, IApiContext ApiContext)
         {
             _navGandalf = gandalf;
             _contentRetriever = contentRetriever;
             _logger = logger;
             _pathProvider = pathProvider;
+            _apiContext = ApiContext;
             _moduleProvider = new AMDModuleProvider
             {
                 PathProvider = pathProvider
@@ -469,7 +471,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var sharedFolder = _settings.AppSettings("DevPackageFileShare");
             var pathPrefix = System.IO.Path.IsPathRooted(sharedFolder) ? "" : @"\\";
-            var fileName = pathPrefix + sharedFolder + "/../../staticContent/" + relativePath;
+            var tenantId = "t-" + _apiContext.TenantId;
+            var fileName = pathPrefix + sharedFolder + "/../../staticContent/" + tenantId + "/" + relativePath;
             string fileType;
 
             if (checkRequestContent(relativePath, sharedFolder))
