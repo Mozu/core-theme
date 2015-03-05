@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-01-23
+ * Mozu JavaScript SDK - v0.3.0 - 2015-03-05
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3417,6 +3417,25 @@ module.exports=
             "verb": "DELETE",
             "template": "{+cartService}current/items/"
         },
+        "get-extended-properties": {
+            "template": "{+cartService}current/extendedproperties"
+        },
+        "add-extended-property": {
+            "verb": "POST",
+            "template": "{+cartService}current/extendedproperties"
+        },
+        "add-extended-properties": {
+            "verb": "PUT",
+            "template": "{+cartService}current/extendedproperties"
+        },
+        "remove-extended-property": {
+            "verb": "DELETE",
+            "template": "{+cartService}current/extendedproperties/{key}"
+        },
+        "remove-extended-properties": {
+            "verb": "DELETE",
+            "template": "{+cartService}current/extendedproperties"
+        },
         "checkout": {
             "verb": "POST",
             "template": "{+orderService}?cartId={id}",
@@ -3461,7 +3480,7 @@ module.exports=
     },
     "customer": {
         "template": "{+customerService}{id}",
-        "defaults": { 
+        "defaults": {
             "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
         },
         "shortcutParam": "id",
@@ -3730,7 +3749,26 @@ module.exports=
             "template": "{+orderService}{id}/notes",
             "includeSelf": true,
             "returnType": "ordernote"
-        }
+        },
+        "get-extended-properties": {
+            "template": "{+orderService}{id}/extendedproperties"
+        },
+        "add-extended-property": {
+            "verb": "POST",
+            "template": "{+orderService}{id}/extendedproperties"
+        },
+        "add-extended-properties": {
+            "verb": "PUT",
+            "template": "{+orderService}{id}/extendedproperties"
+        },
+        "remove-extended-property": {
+            "verb": "DELETE",
+            "template": "{+orderService}{id}/extendedproperties/{key}"
+        },
+        "remove-extended-properties": {
+            "verb": "DELETE",
+            "template": "{+orderService}{id}/extendedproperties"
+        },
     },
     "rma": {
         "create": {
@@ -4133,10 +4171,41 @@ module.exports = ApiReference;
 
 var utils = require('../utils');
 module.exports = {
-    count: function () {
+    count: function() {
         var items = this.prop('items');
         if (!items || !items.length) return 0;
-        return utils.reduce(items, function (total, item) { return total + item.quantity; }, 0);
+        return utils.reduce(items, function(total, item) { return total + item.quantity; }, 0);
+    },
+
+    addExtendedProperty: function(extendedProperty) {
+        // Expect extendedPropert to contain a key/value pair, if it doesn't we need to fail with incorrect data.
+        if (!extendedProperty) {
+            extendedProperty = {};
+        }
+
+        return this.api.action(this, 'addExtendedProperty', {
+            // Fill in the data from extendedProperty here!
+            'key': extendedProperty.key,
+            'value': extendedProperty.value
+    });
+    },
+
+    addExtendedProperties: function(extendedProperties) {
+        // Expect extendedProperties to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+        if (!extendedProperties) {
+            extendedProperties = [];
+        }
+
+        return this.api.action(this, 'addExtendedProperties', extendedProperties);
+    },
+
+    removeExtendedProperties: function (extendedPropertyKeys) {
+        // Expect extendedPropertyKeys to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+        if (!extendedPropertyKeys) {
+            extendedPropertyKeys = [];
+        }
+
+        return this.api.action(this, 'addExtendedProperties', extendedPropertyKeys);
     }
 };
 },{"../utils":35}],25:[function(require,module,exports){
@@ -4658,7 +4727,7 @@ module.exports = (function () {
                     if (availableActions[i] in OrderStatus2IsReady) return this.performOrderAction(availableActions[i]).otherwise(function(e) {
                         return self.get().ensure(function() {
                             throw e;
-                        })
+                        });
                     });
                 }
             }
@@ -4666,6 +4735,37 @@ module.exports = (function () {
         },
         isComplete: function () {
             return !!OrderStatus2IsComplete[this.prop('status')];
+        },
+
+        addExtendedProperty: function (extendedProperty) {
+            // Expect extendedPropert to contain a key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedProperty) {
+                errors.throwOnObject(this, '');
+            }
+
+            return this.api.action(this, 'addExtendedProperty', {
+                // Fill in the data from extendedProperty here!
+                'key': extendedProperty.key,
+                'value': extendedProperty.value
+            });
+        },
+
+        addExtendedProperties: function (extendedProperties) {
+            // Expect extendedProperties to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedProperties) {
+                extendedProperties = [];
+            }
+
+            return this.api.action(this, 'addExtendedProperties', extendedProperties);
+        },
+
+        removeExtendedProperties: function (extendedPropertyKeys) {
+            // Expect extendedPropertyKeys to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedPropertyKeys) {
+                extendedPropertyKeys = [];
+            }
+
+            return this.api.action(this, 'addExtendedProperties', extendedPropertyKeys);
         }
     };
 }());

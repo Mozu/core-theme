@@ -190,6 +190,25 @@
             "verb": "DELETE",
             "template": "{+cartService}current/items/"
         },
+        "get-extended-properties": {
+            "template": "{+cartService}current/extendedproperties"
+        },
+        "add-extended-property": {
+            "verb": "POST",
+            "template": "{+cartService}current/extendedproperties"
+        },
+        "add-extended-properties": {
+            "verb": "PUT",
+            "template": "{+cartService}current/extendedproperties"
+        },
+        "remove-extended-property": {
+            "verb": "DELETE",
+            "template": "{+cartService}current/extendedproperties/{key}"
+        },
+        "remove-extended-properties": {
+            "verb": "DELETE",
+            "template": "{+cartService}current/extendedproperties"
+        },
         "checkout": {
             "verb": "POST",
             "template": "{+orderService}?cartId={id}",
@@ -234,7 +253,7 @@
     },
     "customer": {
         "template": "{+customerService}{id}",
-        "defaults": { 
+        "defaults": {
             "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
         },
         "shortcutParam": "id",
@@ -503,7 +522,26 @@
             "template": "{+orderService}{id}/notes",
             "includeSelf": true,
             "returnType": "ordernote"
-        }
+        },
+        "get-extended-properties": {
+            "template": "{+orderService}{id}/extendedproperties"
+        },
+        "add-extended-property": {
+            "verb": "POST",
+            "template": "{+orderService}{id}/extendedproperties"
+        },
+        "add-extended-properties": {
+            "verb": "PUT",
+            "template": "{+orderService}{id}/extendedproperties"
+        },
+        "remove-extended-property": {
+            "verb": "DELETE",
+            "template": "{+orderService}{id}/extendedproperties/{key}"
+        },
+        "remove-extended-properties": {
+            "verb": "DELETE",
+            "template": "{+orderService}{id}/extendedproperties"
+        },
     },
     "rma": {
         "create": {
