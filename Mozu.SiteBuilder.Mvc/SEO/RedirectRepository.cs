@@ -467,10 +467,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     Dictionary<string, RedirectEntry> ret = null;
                     try
                     {
-                       
                         ServiceClientResponse<Document> gtRes = gdt.Result;
-                        doc = gdt.Result.ReadAsSync();
+                        if (gtRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                        {
+                           return new Dictionary<string, RedirectEntry>();
+                        }
 
+                        doc = gdt.Result.ReadAsSync();
                     }
                     catch (Exception ex)
                     {
