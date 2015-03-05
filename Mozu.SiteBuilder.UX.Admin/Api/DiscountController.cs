@@ -126,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<Discount>> DeleteDiscount(List<Discount> discounts)
         {
-            var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id));
+            var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id)).ToList();
             await Task.WhenAll(tasks);
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
            

@@ -323,7 +323,7 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1502181834-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1503031744-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.14.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -766,6 +766,7 @@
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\util\Validation.js" />
+    <Content Include="Scripts\app\core\ux\action\DeleteMenuItem.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
@@ -791,6 +792,7 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
@@ -959,7 +961,6 @@
     <Content Include="Scripts\app\view\order\subform\AuditLog.js" />
     <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
-    <Content Include="Scripts\app\view\settings\localization\subform\Attributes.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
