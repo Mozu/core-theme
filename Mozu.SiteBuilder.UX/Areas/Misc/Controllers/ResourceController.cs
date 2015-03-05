@@ -231,13 +231,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private readonly Core.Logging.ILogger _logger;
         private readonly AMDModuleProvider _moduleProvider;
         private readonly ISettings _settings;
+        private readonly IApiContext _apiContext;
 
-        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger, ISettings settings)
+        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger, ISettings settings, IApiContext ApiContext)
         {
             _navGandalf = gandalf;
             _contentRetriever = contentRetriever;
             _logger = logger;
             _pathProvider = pathProvider;
+            _apiContext = ApiContext;
             _moduleProvider = new AMDModuleProvider
             {
                 PathProvider = pathProvider
@@ -465,42 +467,32 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "static")]
         [HttpGet]
-        public async Task<HttpResponseMessage> StaticContentShare(string relativePath)
+        public HttpResponseMessage StaticContentShare(string relativePath)
         {
             var sharedFolder = _settings.AppSettings("DevPackageFileShare");
             var pathPrefix = System.IO.Path.IsPathRooted(sharedFolder) ? "" : @"\\";
-            var fileName = pathPrefix + sharedFolder + "/../../staticContent/" + relativePath;
+            var tenantId = "t-" + _apiContext.TenantId;
+            var fileName = pathPrefix + sharedFolder + "/../../staticContent/" + tenantId + "/" + relativePath;
             string fileType;
 
-            if (checkRequestContent(relativePath, sharedFolder))
+            if (checkRequestContent(relativePath, sharedFolder) || !System.IO.File.Exists(fileName))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
-            }
-
-            else if (System.IO.File.Exists(fileName))
-            {
-                Stream content;
-                using (var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read))
-                {
-                    content = new MemoryStream();
-                    await SourceStream.CopyToAsync(content);
-                }
-
-                var exists = g_mimeTypeDic.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
-                var resp = Request.CreateResponse(HttpStatusCode.OK);
-
-                resp.Content = new StreamContent(content);
-                resp.Content.Headers.ContentLength = content.Length;
-                var y = content.Seek(0, SeekOrigin.Begin);
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(exists ? fileType : "text/html");
-
-                return resp;
-
             }
 
             else
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
+                long length;
+                var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                var content = new StreamContent(SourceStream);
+                var exists = g_mimeTypeDic.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
+                var resp = Request.CreateResponse(HttpStatusCode.OK);
+
+                resp.Content = content;
+                resp.Content.Headers.ContentLength = SourceStream.Length;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(exists ? fileType : "text/html");
+
+                return resp;
             }
 
         }

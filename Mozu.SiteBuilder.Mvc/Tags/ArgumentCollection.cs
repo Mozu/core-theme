@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return argument != null;
         }
 
-        public T GetValueOrDefault<T>(string parameterName, T defaultValue = default(T))
+        public T GetValueOrDefault<T>(string parameterName, Func<T> defaultValue)
         {
             TagArgument arg = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));
             if (arg != null)
@@ -58,7 +58,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 return (T)Convert.ChangeType(value, typeof(T));
 
             }
-            return defaultValue;
+            return defaultValue();
+        }
+
+        public T GetValueOrDefault<T>(string parameterName, T defaultValue = default(T))
+        {
+            return GetValueOrDefault(parameterName, () => defaultValue);
         }
 
         public bool TryGetValue<T>(string parameterName, out T value)
