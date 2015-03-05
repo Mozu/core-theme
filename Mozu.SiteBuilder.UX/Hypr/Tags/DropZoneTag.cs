@@ -125,11 +125,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// 
     /// <code>{%dropzone zoneId="bodybottom" scope="template" %}</code>
     /// </summary>
-   
-    [NDjango.Interfaces.Name("dropzone")]
-    public class DropZoneTag2 : SimpleTagBaseAsync
-    {
 
+    [Name("dropzone")]
+    public class DropZoneTag : SimpleTagBaseAsync
+    {
         public static object HTTPCONTEXTKEY = new object();
 
         public class ZoneData
@@ -137,107 +136,44 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             public string id { get; set; }
             public string scope { get; set; }
         }
-        protected override async System.Threading.Tasks.Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
+        protected override async Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
-            var processResult = new ProcessTagResult(context);
-            
             var httpContext = context.HttpContext();
-            var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
-            var scopeString = arguments.GetValueOrDefault<string>("scope", null);
-            if (string.IsNullOrEmpty(scopeString))
-            {
-                if (arguments.Count > 1 && arguments[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
-                {
-                    scopeString = (string) arguments[1].Value;
-                }
-                else
-                {
-                    scopeString = "page";
-                }
-            }
-
-            var zoneSpan = arguments.GetValueOrDefault<int>("span", 12);
-            var zoneId = arguments.GetValueOrDefault<string>("zoneId") ?? (string) arguments.First().Value;
-            var htmlAttributes = arguments.GetValueOrDefault<IDictionary<string, object>>("htmlAttributes");
-            var siteContext = context.SiteContext();
-            var pageContext = context.PageContext();
-            var isEditmode = pageContext.IsEditMode;
-            var viewContext = context.ViewContext();
-
+            var zoneId = arguments.GetValueOrDefault("zoneId", () => (string)arguments.First().Value);
             if (HasVisited(zoneId, httpContext))
             {
                 throw new RenderingError("Zone " + zoneId + "already rendered", null);
             }
 
-
-            if (!scopeString.Equals("page", StringComparison.OrdinalIgnoreCase))
-            {
-                scopeString = scopeString.ToLowerInvariant();
-                if (scopeString != "template" && scopeString != "site")
-                {
-                    throw new Exception("invalid scope type " + scopeString);
-                }
-            }
-             
-
-
+            var siteContext = context.SiteContext();
+            var pageContext = context.PageContext();
+            var viewContext = context.ViewContext();
+            var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
+            ZoneScope scope = ParseZoneScopeString(arguments);
+            var zoneSpan = arguments.GetValueOrDefault("span", 12);
+                                                                   
             if (pageContext.CmsContext != null && !pageContext.CmsContext.Initialized)
             {
                 var cmsHelper = context.Resolve<CmsHelper>();
-
-                cmsHelper.InitCmsPageContext(pageContext, siteContext).Wait();
+                await cmsHelper.InitCmsPageContext(pageContext, siteContext).ConfigureAwait(false);
             }
 
+            var zoneRuntimeData = GetRuntimeData(scope, zoneId, pageContext);
+            var isEditmode = pageContext.IsEditMode && scope.ToStringQuickly().EqualsIgnoreCase(pageContext.EditMode.GetValueOrDefault(EditModes.page).ToString());
 
+            var rendered = await WriteZoneRuntimeData(context, themeEntityDefinitionProvider.GetWidgetDefinition, scope, zoneSpan, zoneId, isEditmode, zoneRuntimeData).ConfigureAwait(false);
+            return new[] { WalkResultHelpers.Buffer(rendered) };
+        }
 
-            ZoneScope zoneScope;
-            if (!Enum.TryParse(scopeString, true, out zoneScope))
-            {
-                zoneScope = ZoneScope.Page;
-            }
-             
-
-
-            isEditmode = isEditmode && scopeString.EqualsIgnoreCase(pageContext.EditMode.GetValueOrDefault(EditModes.page).ToString());
-
-            var zoneRuntimeData = 
-                    (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ? 
-                    null : 
-                    pageContext.CmsContext.RuntimeData.FirstOrDefault(x => zoneScope == x.Scope && x.Id.EqualsIgnoreCase(zoneId));
+        private static async Task<string> WriteZoneRuntimeData(IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, ZoneRuntimeData zoneRuntimeData)
+        {
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
-                sb.Append("<div id=\"mz-drop-zone-");
-                sb.Append(zoneId);
-                sb.Append("\" class=\"mz-drop-zone");
-                if (isEditmode)
-                {
-                    sb.Append(" mz-cms-editing mz-cms-grid\" ");
-                    sb.AppendJsonHtmlAttribute(new
-                                               {
-                                                   id = zoneId,
-                                                   scope = scopeString,
-                                                   span = zoneSpan,
-                                                   source = zoneRuntimeData == null ? null : zoneRuntimeData.Source
-                                               }, "drop-zone");
-
-
-                }
-                else
-                {
-                    sb.Append("\" ");
-                }
-
-
-
-
-                sb.Append(">");
-
-                var sw = new StringWriter(sb);
+                WriteOpenDropZoneTag(scope, zoneSpan, zoneId, isEditmode, zoneRuntimeData, sb);
 
                 if (zoneRuntimeData != null && zoneRuntimeData.Rows != null && zoneRuntimeData.Rows.Count > 0)
                 {
-
                     foreach (var row in zoneRuntimeData.Rows)
                     {
                         sb.Append("<div class=\"mz-cms-row\">");
@@ -252,167 +188,170 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                             {
                                 continue;
                             }
-                            sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", column.Span, zoneSpan);
-
-                            foreach (var widget in column.Widgets)
-                            {
-                                widget.Config = widget.Config  as JObject ?? new JObject();
-                                bool isContent = widget.DefinitionId == "content";
-                                widget.isRichText = isContent;
-
-                                WidgetDefinition widgetDefinition = null;
-                                widgetDefinition = themeEntityDefinitionProvider.GetWidgetDefintion(widget.DefinitionId);
-                                if (widgetDefinition == null)
-                                {
-                                    if (isEditmode)
-                                    {
-                                        sb.Append("<div class=\"mz-cms-block\" ");
-                                        sb.AppendJsonHtmlAttribute(widget, "widget");
-                                        sb.Append(">");
-                                        sb.Append("<div class=\"mz-cms-content\"");
-                                        sb.Append(">");
-                                        sb.Append("<b> missing widget type id=[");
-                                        sb.Append(widget.DefinitionId);
-                                        sb.Append("]");
-
-                                        sb.Append("</div>");
-                                        sb.Append("</div>");
-
-                                    }
-                                    continue;
-                                }
-
-
-
-                                sb.Append("<div class=\"mz-cms-block\" ");
-
-                                if (isEditmode)
-                                {
-                                    sb.AppendJsonHtmlAttribute(widget, "widget");
-                                }
-
-                                sb.Append(">");
-                                sb.Append("<div class=\"mz-cms-content\"");
-
-                                var widgetConfig = widget.Config;
-
-                                var height = widgetConfig["height"] as JValue;
-                                if (height != null && height.Value!= null )
-                                {
-                                    var heightStr = height.Value.ToString();
-                                    if (!string.IsNullOrWhiteSpace(heightStr))
-                                    {
-                                        sb.Append(" style=\"height:");
-                                        int heightInt;
-                                        if (int.TryParse(heightStr, out heightInt))
-                                        {
-                                            sb.Append(heightInt);
-                                            sb.Append("px;\"");
-                                        }
-                                        else
-                                        {
-                                            sb.Append(heightStr);
-                                            sb.Append(";\"");
-                                        }
-                                    }
-                                   
-                                }
-
-                                sb.Append(">");
-
-                                if (isContent)
-                                {
-
-                                    sb.Append((string)widgetConfig["body"]);
-                                }
-                                else
-                                {
-                                    var pos = sb.Length;
-
-                                    var sw1 = new StringWriter(sb);
-                                    try
-                                    {
-                                        await context.AsyncRender("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1).ConfigureAwait(false);
-
-                                        sw1.Flush();
-                                        //sb.Append(sw1.GetStringBuilder().ToString());
-
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        if (isEditmode)
-                                        {
-                                            sb.Remove(pos, sb.Length - pos);
-                                            sb.Append(ex.ToString());
-                                        }
-                                    }
-                                }
-
-                                sb.Append("</div>");
-                                sb.Append("</div>");
-                            }
-                            sb.Append("</div>");
-
-
+                            await WriteWidgets(sb, context, getWidgetDefFunc, column.Span, zoneSpan, isEditmode, column.Widgets).ConfigureAwait(false);
                         }
                         sb.Append("</div>");
                     }
-
-
-
                 }
-                else
-                {
-                    //if (isEditmode)
-                    //{
-                    //    sb.Append("<div class=\"mz-cms-row\">");
-
-                    //    sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", zoneSpan,12);
-                    //    sb.Append("<div class=\"mz-cms-block\" ");
-                    //    sb.AppendJsonHtmlAttribute(new ZoneWidgetRuntimeData()
-                    //    {
-
-                    //    }, "widget");
-
-                    //    sb.Append(">");
-                    //    sb.Append("<div class=\"mz-cms-content\">");
-                    //    sb.Append("</div>");
-                    //    sb.Append("</div>");
-                    //    sb.Append("</div>");
-                    //    sb.Append("</div>");
-                    //    sb.Append("<br><br>");
-                    //}
-                }
-                sb.Append("</div>");
-                return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
+                WriteCloseDropZoneTag(sb);
+                return sb.ToString();
             }
         }
 
-
-        private bool HasVisited(string zoneId, HttpContextBase httpContext)
+        private static void WriteCloseDropZoneTag(StringBuilder sb)
         {
+            sb.Append("</div>");
+        }
 
-            if (httpContext == null || httpContext.Items == null)
+        private static void WriteOpenDropZoneTag(ZoneScope scope, int zoneSpan, string zoneId, bool isEditmode, ZoneRuntimeData zoneRuntimeData, StringBuilder sb)
+        {
+            sb.AppendFormat("<div id=\"mz-drop-zone-{0}", zoneId);
+            sb.Append("\" class=\"mz-drop-zone");
+            if (isEditmode)
             {
-                return false;
-            }
-            var hs = (HashSet<string>) httpContext.Items[HTTPCONTEXTKEY];
-            if (hs == null)
-            {
-                httpContext.Items[HTTPCONTEXTKEY] = hs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            }
-            if (hs.Contains(zoneId))
-            {
-                return true;
+                sb.Append(" mz-cms-editing mz-cms-grid\" ");
+                sb.AppendJsonHtmlAttribute(new
+                {
+                    id = zoneId,
+                    scope = scope.ToStringQuickly(),
+                    span = zoneSpan,
+                    source = zoneRuntimeData == null ? null : zoneRuntimeData.Source
+                }, "drop-zone");
             }
             else
             {
-                hs.Add(zoneId);
-                return false;
+                sb.Append("\" ");
             }
-
+            sb.Append(">");
         }
 
-        
+        private static async Task WriteWidgets(StringBuilder sb, IContext context, Func<string, WidgetDefinition> getWidgetDefFunc, int columnSpan, int zoneSpan, bool isEditmode, IEnumerable<ZoneWidgetRuntimeData> widgets)
+        {
+            sb.AppendFormat("<div class=\"mz-cms-col-{0}-{1}\">", columnSpan, zoneSpan);
+
+            foreach (var widget in widgets)
+            {
+                await WriteWidget(sb, widget, getWidgetDefFunc, isEditmode, context);
+            }
+
+            sb.Append("</div>");
+        }
+                                                                                                    
+        private static async Task WriteWidget(StringBuilder sb, ZoneWidgetRuntimeData widget, Func<string, WidgetDefinition> getWidgetDefFunc, bool isEditmode, IContext context)
+        {
+            {
+                widget.Config = widget.Config as JObject ?? new JObject();
+                bool isContent = widget.DefinitionId == "content";
+                widget.isRichText = isContent;
+
+                var widgetDefinition = getWidgetDefFunc(widget.DefinitionId);
+                if (widgetDefinition == null)
+                {
+                    if (isEditmode)
+                    {
+                        sb.Append("<div class=\"mz-cms-block\" "); sb.AppendJsonHtmlAttribute(widget, "widget"); sb.Append(">");
+                            sb.Append("<div class=\"mz-cms-content\" >");
+                                sb.AppendFormat("<b> missing widget type id=[{0}] </b>", widget.DefinitionId);
+                            sb.Append("</div>");
+                        sb.Append("</div>");
+                    }
+                }
+
+                sb.Append("<div class=\"mz-cms-block\" ");
+
+                if (isEditmode)
+                {
+                    sb.AppendJsonHtmlAttribute(widget, "widget");
+                }
+
+                sb.Append(">");
+                sb.Append("<div class=\"mz-cms-content\"");
+
+                var widgetConfig = widget.Config;
+
+                var height = widgetConfig["height"] as JValue;
+                if (height != null && height.Value != null)
+                {
+                    var heightStr = height.Value.ToString();
+                    if (!string.IsNullOrWhiteSpace(heightStr))
+                    {
+                        sb.Append(" style=\"height:");
+                        int heightInt;
+                        if (int.TryParse(heightStr, out heightInt))
+                        {
+                            sb.Append(heightInt);
+                            sb.Append("px;\"");
+                        }
+                        else
+                        {
+                            sb.Append(heightStr);
+                            sb.Append(";\"");
+                        }
+                    }
+                }
+                sb.Append(">");
+
+                if (isContent)
+                {
+                    sb.Append((string)widgetConfig["body"]);
+                }
+                else
+                {
+                    var pos = sb.Length;
+                    var sw1 = new StringWriter(sb);
+                    try
+                    {
+                        await context.AsyncRender("widgets/" + widgetDefinition.DisplayTemplate, widget, sw1).ConfigureAwait(false);
+                        sw1.Flush();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (isEditmode)
+                        {
+                            sb.Remove(pos, sb.Length - pos);
+                            sb.Append(ex.ToString());
+                        }
+                    }
+                }
+                sb.Append("</div>");
+                sb.Append("</div>");
+            }
+        }
+
+        private static ZoneRuntimeData GetRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.PageContext pageContext)
+        {
+            return (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ?
+                    null :
+                    pageContext.CmsContext.RuntimeData.FirstOrDefault(x => scope == x.Scope && x.Id.EqualsIgnoreCase(zoneId));
+        }
+
+        private static string DetermineZoneScopeDefault(ArgumentCollection args)
+        {
+            if (args.Count > 1 && args[1].ArgumentType == TagArgument.ArgumentTypes.ValueArgument)
+            {
+                return (string)args[1].Value;
+            }
+            return "page";
+        }
+
+        private static ZoneScope ParseZoneScopeString(ArgumentCollection arguments)
+        {
+            var scopeString = arguments.GetValueOrDefault("scope", () => DetermineZoneScopeDefault(arguments));
+            ZoneScope scope;
+            if (Enum.TryParse(scopeString, out scope))
+            {
+                return scope;
+            }
+            return ZoneScope.Page;
+        }
+
+        private bool HasVisited(string zoneId, HttpContextBase httpContext)
+        {
+            if (httpContext == null || httpContext.Items == null) return false;
+            var hs = httpContext.EnsureInContext(HTTPCONTEXTKEY, () => new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+            if (hs.Contains(zoneId)) return true;
+            hs.Add(zoneId);
+            return false;
+        }
     }
 }
