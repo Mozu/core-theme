@@ -316,7 +316,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
 
             }, {
                 xtype:"taco-adminuserfield",
-                name: 'updateby',
+                name: 'modifiedby',
                 fieldLabel: 'Modified by',
                 flex: 1,
                 tpl: Ext.create('Ext.XTemplate',

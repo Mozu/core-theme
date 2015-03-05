@@ -214,6 +214,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return String.Format("{0} eq \"{1}\"", CREATEBY_PROPERTY, filter.value);
                 case "updateby":
                     return String.Format("{0} eq \"{1}\"", UPDATEBY_PROPERTY, filter.value);
+                case "modifiedby":
+                    return String.Format("{0} eq \"{2}\" or {1} eq \"{2}\"", UPDATEBY_PROPERTY, CREATEBY_PROPERTY, filter.value);
 
                 // need service to add support for user name and user email address
                 //case "name":
