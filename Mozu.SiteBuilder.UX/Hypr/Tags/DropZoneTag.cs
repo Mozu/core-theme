@@ -17,6 +17,8 @@ using NDjango.Interfaces;
 using Newtonsoft.Json.Linq;
 using NDjango.FiltersCS.Compatibility;
 using Mozu.Core.Extensions;
+using Mozu.Core.Settings;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -26,6 +28,16 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             sb.Append(Newtonsoft.Json.JsonConvert.SerializeObject(obj, CaseInsensitiveJsonSerializerSettings.Default));
             return sb;
+        }
+
+        public static TItem EnsureInContext<TKey, TItem>(this HttpContextBase ctx, TKey key, Func<TItem> thing) where TItem :class
+        {
+            var guy = ctx.Items[key] as TItem;
+            if (guy != null) return guy;
+
+            guy = thing();
+            ctx.Items[key] = guy;
+            return guy;
         }
 
         public static StringBuilder AppendJsonHtmlAttributeEncoded(this StringBuilder sb, object obj)
@@ -46,54 +58,45 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
     }
 
+
     /// <summary>
     /// adds the necessary scripts and styles for page editing.
-    /// 
-    /// 
     /// </summary>
-    [NDjango.Interfaces.Name("cms_resources")]
+    [Name("cms_resources")]
     public class EditResourcesTag : SimpleTagBase
     {
-
-        const string  Format = "\t\t<script type=\"text/javascript\" src=\"{1}/admin/scripts/chorizo/{0}.js\"></script>\r\n";
+        static string FileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(BaseApiController).Assembly.Location).FileVersion;
+        const string Format = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/{1}.js\"></script>\r\n";
+        static string[] autoIncludeScripts = new[] { "_classfactory", "format", "content", "targets", "widgets", "editor" };
 
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
         {
             var pageContext = context.PageContext();
-            var cdnHost = Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
-            var cdn = Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost)
-                ? ""
-                : ("//" + cdnHost + "/common");
+            var settings = context.Resolve<ISettings>();
+            var cdnHost = settings.AppSettings("CdnHost");
+            var cdn = settings.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost)
+                ? string.Empty
+                : string.Format("//{0}/common", cdnHost);
 
             var isEditmode = pageContext.IsEditMode;
             using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
             {
                 var sb = sbItemDisposer.Item;
-                var assFile = typeof(Mozu.SiteBuilder.UX.Controllers.BaseApiController).Assembly.Location;
-                var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
-
-                //var cdn = context.Resolve<SiteContext>().CdnPrefix;
-                sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?" + @ver.FileVersion + "\">\r", cdn);
+                sb.AppendFormat("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?{1}\">\r", cdn, FileVersion);
                 if (!isEditmode)
                 {
                     return new[] { WalkResultHelpers.Buffer(sb.ToString()) };
                 }
 
-                sb.AppendLine("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css?" + @ver.FileVersion + "\">");
+                sb.AppendFormat("\r\n\t\t<link rel=\"stylesheet\" href=\"/admin/scripts/chorizo/build/chorizo.css?{0}\">", FileVersion);
                 sb.AppendLine("\t\t<link rel=\"stylesheet\" href=\"//netdna.bootstrapcdn.com/font-awesome/4.0.2/css/font-awesome.min.css\">");
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js\"></script>");
 #if DEBUG
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js\"></script>");
 #else
-            sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
+                sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
 #endif
-                sb.AppendFormat(Format, "_classfactory", cdn);
-                sb.AppendFormat(Format, "format", cdn);
-                sb.AppendFormat(Format, "content", cdn);
-                sb.AppendFormat(Format, "targets", cdn);
-                sb.AppendFormat(Format, "widgets", cdn);
-                sb.AppendFormat(Format, "editor", cdn);
-
+                autoIncludeScripts.Aggregate(sb, (builder, s) => builder.AppendFormat(Format, cdn, s));
 
                 return new[] { WalkResultHelpers.Buffer(sb.ToString()) }; 
             }
