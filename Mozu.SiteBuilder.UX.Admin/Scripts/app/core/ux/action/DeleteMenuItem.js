@@ -28,7 +28,7 @@ Ext.define('Taco.core.ux.action.DeleteMenuItem', {
                 behavior: 'destroy'
             };
         }
-        this.handler = Ext.bind(me.destroyRecord, me),
+        this.handler = Ext.bind(me.destroyRecord, me);
         this.callParent(arguments);
     },
 
