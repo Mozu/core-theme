@@ -55,7 +55,8 @@ Ext.define('Taco.view.website.Tree', {
             flex: 1,
             dataIndex: 'name',
             renderer: function (value, metaData, record) {
-                var output = '<span class="taco-website-tree-icon"></span><span>' + value + '</span>';
+                
+                var output = me.getNavIcon(value, record);
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
                     output += '<span class="taco-website-tree-menu-trigger"></span>';
@@ -71,13 +72,13 @@ Ext.define('Taco.view.website.Tree', {
 
         this.store.load({
             callback:function (records, operation) {
-                if (operation && operation.response && operation.response.getResponseHeader("needsFixup")==='true') {
+                if (operation && operation.response && operation.response.getResponseHeader('needsFixup')==='true') {
                     Ext.Ajax.request(
                         {
                             url: '/admin/app/navigation/fixup',
                             method: 'POST',
                             success: function (response) {
-                                if (response.responseText === "true") {
+                                if (response.responseText === 'true') {
                                     me.store.load();
                                 }
                             }
@@ -331,9 +332,35 @@ Ext.define('Taco.view.website.Tree', {
 
         //contentlist
 
-
         return items;
     },
+
+    getIconClass: function(record) {
+
+        var descriptor = record.get('nodeType'),
+            iconDefinitions = {
+                link: 'link-icon',
+                category: 'category-icon',
+                page: 'page-icon',
+                emailtemplate: 'template-icon',
+                template: 'template-icon',
+                ordertemplate: 'template-icon',
+                group: function(record) {return this['parent' + record.data.id];},
+                parent_navigation: 'folder-icon',
+                parent_unlinked: 'folder-icon',
+                parent_backOffice: 'template-icon',
+                parent_templates: 'template-icon',
+                parent_emailTemplates: 'template-icon'
+            };
+
+        return typeof iconDefinitions[descriptor] === 'function' ? iconDefinitions[descriptor](record) : iconDefinitions[descriptor];
+
+    },
+
+    getNavIcon: function(value, record) {
+        return '<span class="taco-website-tree-icon ' + this.getIconClass(record) + '"></span><span>' + value + '</span>';
+    },
+
     showNavState: function(records, success) {
         var me = this,
             navItems = this.store.tree.nodeHash,
@@ -342,6 +369,7 @@ Ext.define('Taco.view.website.Tree', {
         if (current) me.selectPath(current.getPath());
 
     },
+
     getCurrentNode: function(navItems){
 
         var me = this,
@@ -355,6 +383,7 @@ Ext.define('Taco.view.website.Tree', {
 
         return current;
     },
+
     showLinkEditor: function (record, parentRecord) {
         var me = this;
              Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
@@ -429,7 +458,7 @@ Ext.define('Taco.view.website.Tree', {
 
                     var request = {
                         url: '/admin/app/emailTesting/Send',
-                        method: "POST",
+                        method: 'POST',
                         jsonData: {
                             email: dialog.getForm().getValues().recipient || Taco.user.email,
                             id: record.get('originalId')
@@ -457,7 +486,7 @@ Ext.define('Taco.view.website.Tree', {
             pageTypeDefinitionStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PageTypeDefinitions'),
             dialog;
 
-        pageTypeDefinitionStore.filter([{ property: "userCreatable", value: true }]);
+        pageTypeDefinitionStore.filter([{ property: 'userCreatable', value: true }]);
 
         // hack to get around filtered store not working... todo spend 5 mins and figure it out
         
@@ -521,10 +550,10 @@ Ext.define('Taco.view.website.Tree', {
                         //    listFQN: values.docInfo.listFQN,
                             name: values.name,
                             properties: {
-                                "title": values.title,
-                                "meta_title": values.title,
-                                "page_type_definition": values.docInfo,
-                                "link_title": values.title
+                                title: values.title,
+                                meta_title: values.title,
+                                page_type_definition: values.docInfo,
+                                link_title: values.title
                             }
                         });
 
@@ -549,7 +578,7 @@ Ext.define('Taco.view.website.Tree', {
                                 dialog.saveSuccess();
                             },
                             failure: function () {
-                                Taco.app.fireEvent('setmessage', "Error creating page", 'error');
+                                Taco.app.fireEvent('setmessage', 'Error creating page', 'error');
                             }
                         });
 

@@ -22,7 +22,7 @@
     }
 
     .#{$prefix}tree-node-text {
-        font-size: 14px;
+        font-size: 13px;
 
         span {
             vertical-align: top;
@@ -44,9 +44,30 @@
         display: inline-block;
         margin-right: 4px;
         overflow: hidden;
-        @include icon-font($glyph-category);
-        height: 14px;
-        width: 13px;
+        height: 13px;
+        width: 12px;
+
+        &.page-icon {
+            @include icon-font($glyph-category);
+            top: -1.5px;
+        }
+
+        &.template-icon {
+            @include icon-font($glyph-template);
+        }
+
+        &.category-icon {
+            @include icon-font($glyph-tree-category);
+        }
+
+        &.folder-icon {
+            @include icon-font($glyph-filemanager);
+            top: -3px;
+        }
+
+        &.link-icon {
+            @include icon-font($glyph-link, 13px);
+        }
 
         &::after {
             color: $color-neutral-40;
