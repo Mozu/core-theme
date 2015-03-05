@@ -11,6 +11,7 @@ using Should;
 using System.Net;
 using System.Collections.Generic;
 using Mozu.Core;
+using System.Net.Http;
 
 
 namespace Mozu.SiteBuilder.UnitTests.Handlers
@@ -60,8 +61,9 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
             ObjectUnderTest.Request = HttpRequestMessageHelpers.CreateFromContainer(MockContainer.Container);
 
             //Assert  
-            var response = await ObjectUnderTest.StaticContentShare(path);
+            var response = ObjectUnderTest.StaticContentShare(path);
             response.StatusCode.ShouldEqual(expected);
+            if (expected != HttpStatusCode.NotFound) (response.Content as StreamContent).Dispose();
         }
 
         private IEnumerable<object[]> GetCases()
