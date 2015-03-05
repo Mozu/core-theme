@@ -571,6 +571,10 @@ Ext.define('Taco.Application', {
             });
         };
 
-
+        Ext.apply(Ext.util.Format, {
+            siteCurrency: function (value, siteId) {
+                return Taco.app.context.findSite(siteId).formatCurrency(value);
+            }
+        });
     }
 });

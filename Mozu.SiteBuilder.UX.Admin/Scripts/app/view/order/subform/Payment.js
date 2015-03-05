@@ -82,6 +82,18 @@ Ext.define('Taco.view.order.subform.Payment', {
                 deferEmptyText: false
             },
             store: this.record.refunds(),
+            tools: [{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Refund',
+                margin: '0 0 10 10',
+                handler: function () {
+                    Ext.create('Taco.view.order.modal.Refund', {
+                        order: record
+                    });
+                }
+            }],
             columns: [{
                 xtype: 'datecolumn',
                 dataIndex: 'createDate',
@@ -98,7 +110,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                 }
             }, {
                 dataIndex: 'payment',
-                text: 'Payment Method',
+                text: 'Refund Method',
                 flex: 2,
                 cardTemplate: new Ext.XTemplate([
                     '{cardType}: {cardNumber}'
@@ -109,14 +121,14 @@ Ext.define('Taco.view.order.subform.Payment', {
                     if (paymentType === 'CreditCard') {
                         return meta.column.cardTemplate.apply(value);
                     } else if (value.storeCreditCode && paymentType === 'StoreCredit') {
-                        return ('Store Credit [' + value.storeCreditCode + ']');
+                        return ('Store Credit: ' + value.storeCreditCode);
                     }
 
                     return value.paymentType;
                 }
             }, {
                 dataIndex: 'reason',
-                text: 'Notes',
+                text: 'Reason',
                 flex: 2,
                 renderer: function (value) {
                     return Ext.String.htmlEncode(value);
