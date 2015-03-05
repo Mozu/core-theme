@@ -101,9 +101,9 @@ Ext.define('Taco.view.order.modal.Refund', {
             data: store.getRange().map(function (record) {
                 var data = record.getData();
 
-                data.paymentId = data.id,
+                data.paymentId = data.id;
                 data.id = 'payment-' + data.id;
-                data.transactionType = 'Payment',
+                data.transactionType = 'Payment';
                 data.transactionMethod = data.paymentType;
                 data.amountRefunded = data.amountCredited;
 
@@ -112,7 +112,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 var data = record.getData();
 
                 data.id = 'refund-' + data.id;
-                data.transactionType = 'Refund',
+                data.transactionType = 'Refund';
                 data.transactionMethod = data.payment.paymentType;
                 data.amountRefunded = data.amount;
                 data.paymentId = data.transactionMethod === 'StoreCredit' ? data.orderId : data.payment.id;
