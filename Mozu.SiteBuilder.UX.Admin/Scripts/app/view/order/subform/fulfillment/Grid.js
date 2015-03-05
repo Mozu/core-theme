@@ -305,8 +305,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
     getSelectedDataItems: function() {
         var ret = [];
         
-        Ext.Array.each(this.getSelectionModel().getSelection(), function(element) {
-            ret.push(element.getData());
+        Ext.Array.each(this.getSelectionModel().getSelection(), function (element) {
+            // ignore any items with no quantity;
+            var dataItem = element.getData();
+            if (dataItem && dataItem.quantity) {
+                ret.push(element.getData());
+            }            
         });
 
         return ret;

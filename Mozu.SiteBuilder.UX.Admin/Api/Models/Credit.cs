@@ -18,6 +18,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public DateTime? ModifiedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string IssuedBy { get; set; }
+        public string CreateBy { get; set; }
+        public string UpdateBy { get; set; }
+
         public Mozu.SiteBuilder.UX.Admin.Api.Models.Customer  Customer { get; set; }
     }
 }

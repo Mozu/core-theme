@@ -47,6 +47,13 @@ Ext.define('Taco.model.StoreCredit', {
             dateFormat: 'c'
         },
         {
+            name: "createBy",
+            type: "string"
+        }, {
+            name: "updateBy",
+            type: "string"
+        },
+        {
             name: 'currentBalance',
             type: 'float'
         },

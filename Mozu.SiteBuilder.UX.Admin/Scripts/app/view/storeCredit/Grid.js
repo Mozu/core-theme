@@ -175,6 +175,42 @@ Ext.define('Taco.view.storeCredit.Grid', {
             xtype: 'datecolumn',
             format: 'n/j/Y g:i a',
         }, {
+            dataIndex: 'updateBy',
+            stateId: 'updateBy',
+            text: 'Updated By',
+            width: 130,
+            hidden: true,
+            sortable: false,
+            renderer: function (val, creditRecord) {
+                var store = Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers');
+                var rec = store.getById(val);
+                var name = "";
+                if (rec) {
+                    name = rec.get("fullName");
+                } else {
+                    name = "system";
+                }
+                return name;
+            }
+        },{
+            dataIndex: 'createBy',
+            stateId: 'createBy',
+            text: 'Created By',
+            width: 130,
+            hidden: true,
+            sortable: false,
+            renderer: function (val, creditRecord) {
+                var store = Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers');
+                var rec = store.getById(val);
+                var name = "";
+                if (rec) {
+                    name = rec.get("fullName");
+                } else {
+                    name = "system";
+                }
+                return name;
+            }
+        }, {
             xtype: 'taco.menucolumn',
             text: 'Actions',
             onMenuShow: function (menu, eventData) {
