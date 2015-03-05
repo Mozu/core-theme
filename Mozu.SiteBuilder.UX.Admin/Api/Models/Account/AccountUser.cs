@@ -21,7 +21,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 
         public List<AccountUserRole> Roles { get; set; }
 
-
         public string Email { get; set; }
 
         public string Activity { get; set; }

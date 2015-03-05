@@ -38,8 +38,8 @@ Ext.define('Taco.model.AccountUserTree', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/Scripts/app/mocks/accountusertree.json',
-            //read: '/admin/app/account/users/list',
+            //read: '/admin/Scripts/app/mocks/accountusertree.json',
+            read: '/admin/app/account/users/list/tree',
             destroy: '/admin/app/account/users/delete'
         },
         reader: {

@@ -152,7 +152,6 @@ Ext.define('Taco.view.account.userFormModal', {
                 roleIds: roles
             },
             success: function (response) {
-                debugger;
                 var res = Ext.JSON.decode(response.responseText);
                 if (res.success) {
                     Taco.app.fireEvent('UserSaved');

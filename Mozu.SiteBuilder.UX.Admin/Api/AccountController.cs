@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
@@ -210,6 +211,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return Message3<Invitation>(false, e.Message);
             }
+        }
+
+        [HttpGetRoute(UriTemplate = "users/list/tree")]
+        public async Task<Response<List<AccountUserTreeNode>>> GetAccountUsersTree()
+        {
+
+            var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "Roles")).ReadAsSync().Items;
+            var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
+            var invitations = Mapper.Map<List<Invitation>>(invites);
+           /* foreach (var invitation in invitations)
+            {
+                //ToDo: refactor this BF
+                var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleIds[0]);
+                invitation.Role = role == null ? "(unknown)" : role.Name;
+            }
+            */
+            List<AccountUser> users = admins.Select(Mapper.Map<AccountUser>).Concat(
+                invitations.Select(Mapper.Map<AccountUser>)).ToList();
+
+            return List2(UserInventationTreeNodeExtentionscs.ToTreeNode(users));
         }
 
         [HttpGetRoute(UriTemplate = "users/list")]
