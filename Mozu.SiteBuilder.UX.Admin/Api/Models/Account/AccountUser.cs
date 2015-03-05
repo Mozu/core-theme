@@ -23,6 +23,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 
         public string Email { get; set; }
 
+        public System.DateTime DateLastSent { get; set; }
+
         public string Activity { get; set; }
 
         public string Type { get; set; }

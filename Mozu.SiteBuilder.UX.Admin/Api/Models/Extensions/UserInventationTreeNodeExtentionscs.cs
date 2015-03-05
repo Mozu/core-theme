@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web;
+using AutoMapper.Internal;
 using Mozu.AppDev.Contracts.External;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
@@ -16,17 +17,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions
             {
                 List<AccountUserTreeNode> roles = new List<AccountUserTreeNode>();// = ToLeafNode(accountUser, accountUser.Roles);
                 var roleText = "None";
+                var activity = accountUser.Activity;
+
+                if (accountUser.DateLastSent != null)
+                {
+                    activity = accountUser.DateLastSent.ToString();
+                }
 
                 if (!accountUser.Roles.IsNullOrEmpty())
                 {
                     roles = ToLeafNode(accountUser);
                 }
+
                 if (!roles.IsNullOrEmpty() && roles.Count < 2)
                 {
                     roleText = roles[0].Role;
                     roles = new List<AccountUserTreeNode>();
                 }
-                else
+                else if(roles.Count > 2)
                 {
                     roleText = "Multiple";
                 }
@@ -37,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions
                     Id = accountUser.Id,
                     Email = accountUser.Email,
                     Role = roleText,
-                    Activity = accountUser.Activity,
+                    Activity = activity,//accountUser.Activity,
                     Leaf = false,
                     Type = accountUser.Type,
                     Items = roles
