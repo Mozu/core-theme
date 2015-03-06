@@ -113,23 +113,23 @@ Ext.define('Taco.view.discount.Grid', {
                     text: 'Type',
                     width: 150,
                     renderer: function (value, metaData, record, rowIndex, colIndex, store) {
-
-                        // percentage
-                        if (value == "Percentage") {
-                            return record.get("amount") + "% OFF";
+                        var retVal="";
+                        switch (value){
+                            case "Percentage":
+                                retVal =  record.get("amount") + "% OFF";
+                                break;
+                            case "Amount":
+                                retVal = Taco.app.context.getCurrent().formatCurrency(record.get("amount")) + " OFF";
+                                break;
+                            case "Free":
+                                retVal = "Free";
+                                break;
+                            case "FixedPrice":
+                                retVal = "Fixed: " + Taco.app.context.getCurrent().formatCurrency(record.get("amount"));
+                                break;
                         }
 
-                        // amount
-                        if (value == "Amount") {
-                            return Taco.app.context.getCurrent().formatCurrency( record.get("amount") ) + " OFF";
-                        }
-
-                        // freeShipping
-                        if (value == "Free") {
-                            return "Free";
-                        }
-
-                        return Ext.emptyString;
+                        return retVal;
                     }
                 }, {
                     xtype: 'gridcolumn',
