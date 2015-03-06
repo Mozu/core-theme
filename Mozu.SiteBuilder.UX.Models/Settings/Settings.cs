@@ -181,7 +181,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string ReplyToEmailAddress { get; set; }
 
         [DataMember(EmitDefaultValue = true)]
-        public EmailTransactionSettings EmailTransactionSettings { get; set; }
+        public EmailTransactionSettings SupressedEmailTransactions { get; set; }
 
         [DataMember(EmitDefaultValue = false/*, Name = "logoPath"*/)]
         public string LogoPath { get; set; }
