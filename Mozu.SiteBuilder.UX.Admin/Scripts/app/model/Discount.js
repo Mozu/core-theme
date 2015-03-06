@@ -175,8 +175,10 @@ Ext.define('Taco.model.Discount', {
         }, {
             name: 'status',
             type: 'string'
-        },
-        {
+        }, {
+            name: 'canBeDeleted',
+            type: 'boolean'
+        }, {
             name: 'minimumQuantityProductsRequiredInCategories',
             type:'int',
             useNull:true
@@ -251,6 +253,12 @@ Ext.define('Taco.model.Discount', {
 
         }
         return me.customerSegmentStore;
+    },
+
+    getDeletePromptMessage: function () {
+        return (this.get('status') === 'Active')
+            ? 'This discount is currently active and could affect pending orders and carts.<br/>Are you sure you want to delete this?'
+            : 'Are you sure you want to delete this?';
     },
 
     // manipulate a record that is set to be duplicated prior to loading it in the view. Called by app\core\Controller.js

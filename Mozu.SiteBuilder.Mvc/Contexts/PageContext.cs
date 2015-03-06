@@ -388,7 +388,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string DocumentId { get; set; }
 
-        public bool IsEditMode { get; set; }
+        public bool IsEditMode { get { return _apiContext.IsEditMode;  } set { _apiContext.IsEditMode = value; } }
 
         public string Url { get; set; }
 
