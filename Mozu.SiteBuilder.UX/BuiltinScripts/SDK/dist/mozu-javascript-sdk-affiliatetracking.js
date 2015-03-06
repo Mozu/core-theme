@@ -1,10 +1,3 @@
-/*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-03-06
- *
- * Copyright (c) 2015 Volusion, Inc.
- *
- */
-
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.MozuSDK=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // shim for using process in browser
 
@@ -61,10 +54,6 @@ process.chdir = function (dir) {
 };
 
 },{}],2:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/microevent/microevent.js
-
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
  * 
@@ -117,11 +106,7 @@ if( typeof module !== "undefined" && ('exports' in module)){
 }
 
 },{}],3:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};
-
-//# sourceUrl=node_modules/uritemplate/bin/uritemplate.js
-
-/*global unescape, module, define, window, global*/
+var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*global unescape, module, define, window, global*/
 
 /*
  UriTemplate Copyright (c) 2012-2013 Franz Antesberger. All Rights Reserved.
@@ -1008,10 +993,6 @@ var UriTemplate = (function () {
 ));
 
 },{}],4:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/aggregator.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1107,10 +1088,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],5:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/array.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1169,10 +1146,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],6:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/console.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1226,10 +1199,6 @@ define(function(require) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
 },{"./aggregator":4,"./logger/consoleGroup":7,"./simpleFormatter":8,"./simpleReporter":9,"./stackFilter":10,"./throttledReporter":11}],7:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/logger/consoleGroup.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1308,10 +1277,6 @@ define(function(require) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
 },{"../array":5}],8:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/simpleFormatter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1387,10 +1352,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],9:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/simpleReporter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1451,10 +1412,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],10:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/stackFilter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1507,10 +1464,6 @@ define(function(require) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
 
 },{"./array":5}],11:[function(require,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/throttledReporter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1549,11 +1502,7 @@ define(function(require) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],12:[function(require,module,exports){
-var process=require("__browserify_process");
-
-//# sourceUrl=node_modules/when/when.js
-
-/** @license MIT License (c) copyright 2011-2013 original author or authors */
+var process=require("__browserify_process");/** @license MIT License (c) copyright 2011-2013 original author or authors */
 
 /**
  * A lightweight CommonJS Promises/A and when() implementation
@@ -2483,11 +2432,7 @@ define(function (require) {
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); });
 
 },{"__browserify_process":1}],13:[function(require,module,exports){
-
-
-//# sourceUrl=src/affiliate-tracking-mixin.js
-
-﻿function deparam(querystring) {
+function deparam(querystring) {
     // remove any preceding url and split
     querystring = querystring || window.location.search;
     querystring = querystring.substring(querystring.indexOf('?') + 1).split('&');
@@ -2644,10 +2589,6 @@ module.exports = {
     }
 }
 },{}],14:[function(require,module,exports){
-
-
-//# sourceUrl=src/collection.js
-
 // BEGIN OBJECT
 
 var utils = require('./utils');
@@ -2769,10 +2710,6 @@ var ApiObject = require('./object');
 
 /***********/
 },{"./object":23,"./types/locations":29,"./utils":36}],15:[function(require,module,exports){
-
-
-//# sourceUrl=src/constants/default.js
-
 module.exports = {
     DEFAULT_WISHLIST_NAME: 'my_wishlist',
     PAYMENT_STATUSES: {
@@ -2820,10 +2757,6 @@ module.exports = {
 };
 
 },{}],16:[function(require,module,exports){
-
-
-//# sourceUrl=src/context.js
-
 // BEGIN CONTEXT
 /**
  * @class
@@ -2927,10 +2860,6 @@ module.exports = ApiContextConstructor;
 
 /********/
 },{"./interface":21,"./reference":24,"./utils":36,"when/monitor/console":6}],17:[function(require,module,exports){
-
-
-//# sourceUrl=src/errors.js
-
 // BEGIN ERRORS
 var utils = require('./utils');
 
@@ -2979,10 +2908,6 @@ var errors = {
 module.exports = errors;
 // END ERRORS
 },{"./utils":36}],18:[function(require,module,exports){
-
-
-//# sourceUrl=src/iframexhr.js
-
 // BEGIN IFRAMEXHR
 var utils = require('./utils');
 module.exports = (function(window, document, undefined) {
@@ -3137,20 +3062,12 @@ module.exports = (function(window, document, undefined) {
 }(window, document));
 // END IFRAMEXHR
 },{"./utils":36}],19:[function(require,module,exports){
-
-
-//# sourceUrl=src/init.js
-
 // BEGIN INIT
 var ApiContext = require('./context');
 var initialGlobalContext = new ApiContext();
 module.exports = initialGlobalContext;
 // END INIT
 },{"./context":16}],20:[function(require,module,exports){
-
-
-//# sourceUrl=src/init_affiliatetracking.js
-
 // EXPOSE DEBUGGING STUFF
 var _init = require('./init');
 
@@ -3178,11 +3095,7 @@ _init.ApiContext.__debug__ = true;
 
 module.exports = _init;
 },{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":36}],21:[function(require,module,exports){
-
-
-//# sourceUrl=src/interface.js
-
-﻿/**
+/**
  * @external Promise
  * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
  */
@@ -3386,11 +3299,7 @@ module.exports = ApiInterfaceConstructor;
 
 /*********/
 },{"./object":23,"./reference":24,"./utils":36}],22:[function(require,module,exports){
-module.exports=
-
-//# sourceUrl=src/methods.json
-
-{
+module.exports={
     "document": {
         "template": "{+documentListService}{listName}/documents/{id}{?_*}",
         "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
@@ -4066,10 +3975,6 @@ module.exports=
     }
 }
 },{}],23:[function(require,module,exports){
-
-
-//# sourceUrl=src/object.js
-
 // BEGIN OBJECT
 
 var utils = require('./utils');
@@ -4160,10 +4065,6 @@ module.exports = ApiObjectConstructor;
 
 /***********/
 },{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/creditcard":27,"./types/customer":28,"./types/login":30,"./types/order":31,"./types/product":32,"./types/shipment":33,"./types/user":34,"./types/wishlist":35,"./utils":36}],24:[function(require,module,exports){
-
-
-//# sourceUrl=src/reference.js
-
 // BEGIN REFERENCE
 var utils = require('./utils');
 var errors = require('./errors');
@@ -4330,10 +4231,6 @@ module.exports = ApiReference;
 
 /***********/
 },{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":36}],25:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/cart.js
-
 var utils = require('../utils');
 module.exports = {
     count: function() {
@@ -4374,10 +4271,6 @@ module.exports = {
     }
 };
 },{"../utils":36}],26:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/cartsummary.js
-
 var utils = require('../utils');
 module.exports = {
     count: function () {
@@ -4385,10 +4278,6 @@ module.exports = {
     }
 };
 },{"../utils":36}],27:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/creditcard.js
-
 var utils = require('../utils');
 var errors = require('../errors');
 module.exports = (function() {
@@ -4539,10 +4428,6 @@ module.exports = (function() {
 
 }());
 },{"../errors":17,"../utils":36}],28:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/customer.js
-
 var utils = require('../utils');
 var errors = require('../errors');
 module.exports = (function () {
@@ -4609,10 +4494,6 @@ module.exports = (function () {
     }
 }());
 },{"../errors":17,"../utils":36}],29:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/locations.js
-
 var utils = require('../utils');
 module.exports = (function () {
 
@@ -4715,10 +4596,6 @@ module.exports = (function () {
 
 }());
 },{"../utils":36}],30:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/login.js
-
 module.exports = {
     postconstruct: function (type, json) {
         var accessToken;
@@ -4734,10 +4611,6 @@ module.exports = {
     }
 };
 },{}],31:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/order.js
-
 var errors = require('../errors');
 var CONSTANTS = require('../constants/default');
 var utils = require('../utils');
@@ -4935,10 +4808,6 @@ module.exports = (function () {
     };
 }());
 },{"../constants/default":15,"../errors":17,"../reference":24,"../utils":36}],32:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/product.js
-
 var errors = require('../errors');
 var utils = require('../utils');
 var CONSTANTS = require('../constants/default');
@@ -4988,10 +4857,6 @@ module.exports = {
     }
 };
 },{"../constants/default":15,"../errors":17,"../utils":36}],33:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/shipment.js
-
 var utils = require('../utils');
 module.exports = {
     getShippingMethodsFromContact: function (contact) {
@@ -5005,10 +4870,6 @@ module.exports = {
     }
 };
 },{"../utils":36}],34:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/user.js
-
 module.exports = {
     postconstruct: function () {
         var self = this;
@@ -5046,10 +4907,6 @@ module.exports = {
     }
 };
 },{}],35:[function(require,module,exports){
-
-
-//# sourceUrl=src/types/wishlist.js
-
 var errors = require('../errors'),
     utils = require('../utils');
 module.exports = (function() {
@@ -5103,11 +4960,7 @@ module.exports = (function() {
     };
 }());
 },{"../errors":17,"../utils":36}],36:[function(require,module,exports){
-var process=require("__browserify_process");
-
-//# sourceUrl=src/utils.js
-
-// BEGIN UTILS
+var process=require("__browserify_process");// BEGIN UTILS
 // Many of these poached from lodash
 
     var maxFlattenDepth = 20;

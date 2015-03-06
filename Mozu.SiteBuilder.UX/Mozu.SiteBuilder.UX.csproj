@@ -532,11 +532,15 @@
     <Content Include="BuiltinScripts\RequireJS\src\plugins\shim-browser.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-min.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-debug.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk-affiliatetracking.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk-affiliatetracking.min.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.debug.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.min.js" />
+    <Content Include="BuiltinScripts\SDK\src\affiliate-tracking-mixin.js" />
     <Content Include="BuiltinScripts\SDK\src\constants\default.js" />
     <Content Include="BuiltinScripts\SDK\src\errors.js" />
     <Content Include="BuiltinScripts\SDK\src\iframexhr.js" />
+    <Content Include="BuiltinScripts\SDK\src\init_affiliatetracking.js" />
     <Content Include="BuiltinScripts\SDK\src\types\cart.js" />
     <Content Include="BuiltinScripts\SDK\src\types\cartsummary.js" />
     <Content Include="BuiltinScripts\SDK\src\types\locations.js" />

@@ -184,7 +184,8 @@
     } catch(e) {}
 
     var mozuBuiltins = {
-        hyprlivecontext: "/hyprlivecontext?callback=define&dv=" + (dataViewMode ? dataViewMode.toString().substring(0, 1) : 'L')
+        hyprlivecontext: "/hyprlivecontext?callback=define&dv=" + (dataViewMode ? dataViewMode.toString().substring(0, 1) : 'L'),
+        'sdk-affiliatetracking': '/js/sdk-affiliatetracking' + storeMode + '.js'
     },
         builtinRoot = "/js/";
     each(['sdk', 'hyprlive'], function (modName) {
