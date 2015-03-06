@@ -711,6 +711,7 @@
     <Content Include="Themes\Core6\scripts\modules\cart-monitor.js" />
     <Content Include="Themes\Core6\scripts\modules\common.js" />
     <Content Include="Themes\Core6\scripts\modules\contextify.js" />
+    <Content Include="Themes\Core6\scripts\modules\extended-properties.js" />
     <Content Include="Themes\Core6\scripts\modules\jquery-dateinput-localized.js" />
     <Content Include="Themes\Core6\scripts\modules\jquery-mozu.js" />
     <Content Include="Themes\Core6\scripts\modules\login-links.js" />
