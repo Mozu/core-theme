@@ -72,11 +72,31 @@
             text-align: center;
             width: 26.66px;
             padding-top: 6.66px;
+            text-align: center;
         }
 
-        .mz-cms-pencil {
-            border-left: 2px solid #666666;
-            border-right: 2px solid #666666;
+        .chorizo-icon {
+            display: inline-block;
+            overflow: hidden;
+            height: 13px;
+            position: relative;
+            font-style: normal;
+    
+            &.pencil {
+                @include icon-font(char-from-code($glyph-chorizo-pencil), 13px, rgb(255,255,255));
+                cursor: pointer;
+            }
+
+            &.drag-handle {
+                @include icon-font(char-from-code($glyph-chorizo-move), 14px, rgb(255,255,255));
+                
+            }
+
+            &.trash {
+                @include icon-font(char-from-code($glyph-chorizo-trash), 13px, rgb(255,255,255));
+                cursor: pointer;
+            }
+
         }
 
     }
@@ -140,6 +160,7 @@
                 border-top: 0;
                 bottom: 0;
                 top: initial;
+                color: rgba(255,255,255,0.01);
             }
         }
 
