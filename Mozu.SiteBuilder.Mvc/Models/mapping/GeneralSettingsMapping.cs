@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
-                .ForMember(m => m.EmailTransactionSettings, op => op.ResolveUsing(x => x.EmailTransactionSettings))
+                .ForMember(m => m.SupressedEmailTransactions, op => op.ResolveUsing(x => x.SupressedEmailTransactions))
                 .ForMember(m => m.ChannelId, op => op.Ignore())
                 .ForMember(m => m.TemplateSiteId, op => op.ResolveUsing(dc => dc.TemplateSiteId))
                 .ForMember(m => m.DesktopTheme, opt => opt.ResolveUsing(x =>
