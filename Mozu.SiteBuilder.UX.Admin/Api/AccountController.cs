@@ -156,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcUser = (await _adminUserWebApiClient.GetUserRoles(accountUser.Id, scopeType: "Tenant", scopeId: _apiContext.TenantId)).ReadAsSync();
 
-            await Task.WhenAll(dcUser.Items.Select(role => _adminUserWebApiClient.RemoveUserRole(accountUser.Id, role.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)));
+            //await Task.WhenAll(dcUser.Items.Select(role => _adminUserWebApiClient.RemoveUserRole(accountUser.Id, role.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)));
 
             //await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
 
@@ -220,13 +220,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "Roles")).ReadAsSync().Items;
             var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
             var invitations = Mapper.Map<List<Invitation>>(invites);
-           /* foreach (var invitation in invitations)
-            {
-                //ToDo: refactor this BF
-                var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleIds[0]);
-                invitation.Role = role == null ? "(unknown)" : role.Name;
-            }
-            */
+
             List<AccountUser> users = admins.Select(Mapper.Map<AccountUser>).Concat(
                 invitations.Select(Mapper.Map<AccountUser>)).ToList();
 

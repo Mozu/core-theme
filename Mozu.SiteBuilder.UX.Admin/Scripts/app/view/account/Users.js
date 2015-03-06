@@ -242,14 +242,19 @@ Ext.define('Taco.view.account.Users', {
         }
     },
     resendInvitation: function (item, event) {
+        console.log(item.scope.treelist.getSelectionModel().getSelection()[0]);
         Ext.Ajax.request({
             url: '/admin/app/account/invitations/resend',
-            jsonData: item.data,
-            success: function (response) {
+            jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,//item.data,
+            success: function(response) {
                 var res = Ext.JSON.decode(response.responseText);
-                if (!res.success) Taco.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
+                if (!res.success) {
+                    Taco.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
+                } else {
+                    //Taco.MessageBox.alert('Success', 'The invite has been sent');
+                }
             }
-        })
+        });
     },
     deleteRecord: function (item, event) {
         switch (item.scope.treelist.getSelectionModel().getSelection()[0].get('type')) {
@@ -327,7 +332,7 @@ Ext.define('Taco.view.account.Users', {
     },
 
     launchEditor: function (record) {
-        if (record == null || record.get('type') != 'invite' && !record.get('leaf')) {
+        if (record == null || record.get('type') != 'invitation' && !record.get('leaf')) {
             var editor = Ext.create('Taco.view.account.userFormModal', {
                 record: record
             });

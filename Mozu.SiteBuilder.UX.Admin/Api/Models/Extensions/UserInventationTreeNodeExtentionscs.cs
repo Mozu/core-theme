@@ -15,43 +15,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions
             var accountUserTreeNodeList = new List<AccountUserTreeNode>();
             foreach (var accountUser in accountUsers)
             {
-                List<AccountUserTreeNode> roles = new List<AccountUserTreeNode>();// = ToLeafNode(accountUser, accountUser.Roles);
-                var roleText = "None";
-                var activity = accountUser.Activity;
+                if (accountUser.Activity != "Declined")
+                {
 
-                if (accountUser.DateLastSent != null)
-                {
-                    activity = accountUser.DateLastSent.ToString();
-                }
 
-                if (!accountUser.Roles.IsNullOrEmpty())
-                {
-                    roles = ToLeafNode(accountUser);
-                }
+                    List<AccountUserTreeNode> roles = new List<AccountUserTreeNode>();
+                        // = ToLeafNode(accountUser, accountUser.Roles);
+                    var roleText = "None";
+                    var activity = accountUser.Activity;
 
-                if (!roles.IsNullOrEmpty() && roles.Count < 2)
-                {
-                    roleText = roles[0].Role;
-                    roles = new List<AccountUserTreeNode>();
-                }
-                else if(roles.Count > 2)
-                {
-                    roleText = "Multiple";
-                }
-                var accountUserTreeNode = new AccountUserTreeNode()
-                {
-                    NodeId = "user-" + accountUser.Id,
-                    ParentId = "",
-                    Id = accountUser.Id,
-                    Email = accountUser.Email,
-                    Role = roleText,
-                    Activity = activity,//accountUser.Activity,
-                    Leaf = false,
-                    Type = accountUser.Type,
-                    Items = roles
-                };
+                    if (accountUser.DateLastSent != null)
+                    {
+                        activity = accountUser.DateLastSent.ToString();
+                    }
 
-                accountUserTreeNodeList.Add(accountUserTreeNode);
+                    if (!accountUser.Roles.IsNullOrEmpty())
+                    {
+                        roles = ToLeafNode(accountUser);
+                    }
+
+                    if (!roles.IsNullOrEmpty() && roles.Count < 2)
+                    {
+                        roleText = roles[0].Role;
+                        roles = new List<AccountUserTreeNode>();
+                    }
+                    else if (roles.Count > 2)
+                    {
+                        roleText = "Multiple";
+                    }
+                    var accountUserTreeNode = new AccountUserTreeNode()
+                    {
+                        NodeId = "user-" + accountUser.Id,
+                        ParentId = "",
+                        Id = accountUser.Id,
+                        Email = accountUser.Email,
+                        Role = roleText,
+                        Activity = activity, //accountUser.Activity,
+                        Leaf = false,
+                        Type = accountUser.Type,
+                        Items = roles
+                    };
+
+                    accountUserTreeNodeList.Add(accountUserTreeNode);
+                }
             }
             return accountUserTreeNodeList;
         }

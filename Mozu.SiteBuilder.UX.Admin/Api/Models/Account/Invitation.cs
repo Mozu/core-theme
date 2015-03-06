@@ -19,6 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 
         public string Role { get; set; }
 
+        public List<AccountUserRole> Roles { get; set; }
+
         [JsonProperty(PropertyName = "email")]
         public string EmailAddress { get; set; }
 
