@@ -338,6 +338,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     minValue: Number.MIN_VALUE,
                     emptyText: this.suggestRefund().toFixed(2),
                     maxText: ('Amount must be less than or equal to ' + this.order.formatCurrency(this.suggestRefund())),
+                    minText: ('Amount must be greater than ' + this.order.formatCurrency(0)),
                     listeners: {
                         change: {
                             scope: this,
