@@ -44,12 +44,12 @@ Ext.define('Taco.model.CustomerAccount', {
         },
         {
             name: 'fullName', convert: function (v, r) {
-                return r.raw.firstName + ' ' + r.raw.lastName;
+                return r.raw ? r.raw.firstName + ' ' + r.raw.lastName : null;
             }
         },
         {
             name: 'fullNameEmail', convert: function (v, r) {
-                return r.raw.firstName + ' ' + r.raw.lastName + ' ' + r.raw.emailAddress;
+                return r.raw ? r.raw.firstName + ' ' + r.raw.lastName + ' ' + r.raw.emailAddress : null;
             }
         },
 
