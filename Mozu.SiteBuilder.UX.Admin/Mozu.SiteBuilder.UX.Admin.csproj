@@ -323,7 +323,7 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1502181834-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1503031744-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.14.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -717,6 +717,7 @@
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
     <Compile Include="Helpers\SecurityHelpers\SecureCapabilityConfigUrlHelper.cs" />
+    <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
@@ -766,6 +767,7 @@
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
     <Content Include="Scripts\app\core\util\Validation.js" />
+    <Content Include="Scripts\app\core\ux\action\DeleteMenuItem.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
@@ -791,6 +793,7 @@
     <Content Include="Scripts\app\core\ux\grid\ActionColumn.js" />
     <Content Include="Scripts\app\core\ux\grid\AddEntityRow.js" />
     <Content Include="Scripts\app\core\ux\grid\plugins\AutoSelect.js" />
+    <Content Include="Scripts\app\core\ux\mixins\DeleteFromGrid.js" />
     <Content Include="Scripts\app\core\ux\plugins\NextPrevious.js" />
     <Content Include="Scripts\app\core\ux\PanelHeaderStat.js" />
     <Content Include="Scripts\app\core\ux\HtmlEditorImagePlugin.js" />
@@ -1048,7 +1051,6 @@
     <Content Include="Scripts\app\view\settings\localization\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductExtras.js" />
     <Content Include="Scripts\app\view\settings\localization\AttributeValues.js" />
-    <Content Include="Scripts\app\view\settings\localization\subform\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\subform\Subform.js" />
     <Content Include="Scripts\app\view\settings\localization\util\Locales.js" />
     <Content Include="Scripts\app\view\settings\localization\util\Currencies.js" />

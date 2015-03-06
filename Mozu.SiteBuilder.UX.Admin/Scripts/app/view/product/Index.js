@@ -167,12 +167,20 @@ Ext.define('Taco.view.product.Index', {
                         items: []
                     }
                 }, {
-                    text: 'Delete',
+                    text: 'Edit',
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
-                        behavior: 'destroy'
+                        behavior: 'update'
                     },
-                    menuColumnHandler: 'destroyMenuColumnHandler'
+                    menuColumnHandler: function (item, eventData) {
+                        var page = eventData.grid.getParentPage(),
+                            record = eventData.record,
+                            metaData = {
+                                id: record.getId()
+                            };
+
+                        page.launchEditor(record, metaData);
+                    }
                 }, {
                     text: 'Duplicate',
                     requiredBehaviors: {
@@ -190,21 +198,12 @@ Ext.define('Taco.view.product.Index', {
                         Taco.app.StateManager.attemptNavigate(controller + '/duplicate/' + record.getId(), metaData);
                     }
                 }, {
-                    text: 'Edit',
+                    text: 'Delete',
                     requiredBehaviors: {
                         model: 'Taco.model.Product',
-                        behavior: 'update'
+                        behavior: 'destroy'
                     },
-                    menuColumnHandler: function (item, eventData) {
-                        var page = eventData.grid.getParentPage(),
-                            record = eventData.record,
-                            metaData = {
-                                id: record.getId()
-                            };
-
-                        page.launchEditor(record, metaData);
-
-                    }
+                    menuColumnHandler: 'destroyMenuColumnHandler'
                 }],
                 onMenuShow: function (menu, eventData) {
                     var previewAction = menu.items.get('preview'),

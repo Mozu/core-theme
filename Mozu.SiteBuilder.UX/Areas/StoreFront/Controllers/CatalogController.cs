@@ -84,7 +84,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var product = Mapper.Map<Product>(prod);
 
             HttpResponseMessage msg;
-            if (RedirectToCanonicle(product.Url , out msg))
+            if (RedirectToCanonical(product.Url , out msg))
             {
                 return msg;
             }
@@ -230,7 +230,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
             HttpResponseMessage msg;
-            if (RedirectToCanonicle(cat.Url , out msg))
+            if (RedirectToCanonical(cat.Url , out msg))
             {
                 return msg;
             }
@@ -272,7 +272,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, result);
 
         }
-        private bool RedirectToCanonicle(string url, out HttpResponseMessage msg)
+        private bool RedirectToCanonical(string url, out HttpResponseMessage msg)
         {
             msg = null;
             var requestUrl = this.Request.RequestUri.AbsolutePath;

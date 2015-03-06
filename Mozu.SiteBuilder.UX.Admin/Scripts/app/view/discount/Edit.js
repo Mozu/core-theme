@@ -5,7 +5,8 @@
 Ext.define('Taco.view.discount.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     requires: [
-        'Taco.view.discount.Form'
+        'Taco.view.discount.Form',
+        'Taco.core.ux.action.DeleteMenuItem'
     ],
     formCls: 'Taco.view.discount.Form',
     statics: {
@@ -45,8 +46,38 @@ Ext.define('Taco.view.discount.Edit', {
     },
 
     initComponent: function () {
-        var me = this;
-        
+        var me = this,
+            menuItems = [],
+            delMenuItem;
+
+        menuItems.push({
+            text: 'Duplicate',
+            disabled: me.record.phantom,
+            requiredBehaviors: {
+                model: 'Taco.model.Discount',
+                behavior: 'create'
+            },
+            handler: function(item) {
+                var record = me.record,
+                    metaData = {
+                        id: record.getId()
+                    };
+
+                Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
+            }
+        });
+
+        if (me.record.get('canBeDeleted')) {
+            delMenuItem = Ext.create('Taco.core.ux.action.DeleteMenuItem', {
+                record: me.record,
+                modelName: 'Taco.model.Discount',
+                storeName: 'Taco.store.DiscountGrid',
+                collectionName: 'discounts',
+                promptMessage: me.record.getDeletePromptMessage(),
+            });
+            menuItems.push(delMenuItem);
+        }
+
         this.additionalActions = [{
             xtype: 'button',
             itemId: 'moreButton',
@@ -57,22 +88,7 @@ Ext.define('Taco.view.discount.Edit', {
             menu: {
                 plain: true,
                 shadow: false,
-                items: [{
-                    text: 'Duplicate',
-                    disabled : me.record.phantom,
-                    requiredBehaviors: {
-                        model: 'Taco.model.Discount',
-                        behavior: 'create'
-                    },
-                    handler: function (item) {
-                        var record = me.record,
-                            metaData = {
-                                id: record.getId()
-                            };
-
-                        Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
-                    }
-                }]
+                items: menuItems
             }
         }];
 
