@@ -14,24 +14,43 @@ namespace Mozu.SiteBuilder.Mvc
     /// </summary>
     public interface IDataViewModeFinderOuter
     {
-        DataViewModeType GetDataViewMode();
+        DataViewModeType GetDataViewMode(LightweightUserClaims userclaims);
     }
     public class DataViewModeFinderOuter : IDataViewModeFinderOuter
     {
-        private readonly Lazy<DataViewModeType> _lazyDVM;
+        private ICookieProvider _cookies;
+        private IEditModeFinderOuter _editmodeGetter;
+        private HttpRequestMessage _request;
 
         public DataViewModeFinderOuter(IEditModeFinderOuter editModeGetter, HttpRequestMessage request, ICookieProvider cookies)
         {
-            _lazyDVM = new Lazy<DataViewModeType>(() => GetDataViewMode(editModeGetter, request.Headers, cookies)); 
+            _editmodeGetter = editModeGetter;
+            _request = request;
+            _cookies = cookies;
         }
-        private static DataViewModeType GetDataViewMode(IEditModeFinderOuter editModeGetter, HttpRequestHeaders headers, ICookieProvider cookies)
+
+        public DataViewModeType GetDataViewMode(LightweightUserClaims userclaims)
+        {
+            return GetDataViewMode(_editmodeGetter, _request.Headers, _cookies, userclaims);
+        }
+
+        private static DataViewModeType GetDataViewMode(IEditModeFinderOuter editModeGetter, HttpRequestHeaders headers, ICookieProvider cookies, LightweightUserClaims userclaims)
         {
             var isEditMode = editModeGetter.IsEditMode() ? DataViewModeType.Pending : DataViewModeType.NoneSet;
             var headerMode = GetModeFromHeaders(headers);
             var cookieMode = GetModeFromCookie(cookies);
+            var scopeMode = GetModeFromUserScope(userclaims);
 
-            var modeToReturn = new[] { isEditMode, headerMode, cookieMode }.Aggregate(DataViewModeType.NoneSet, (prev, next) => prev != DataViewModeType.NoneSet ? prev : next);
-            return modeToReturn == DataViewModeType.NoneSet ? DataViewModeType.Live : modeToReturn;
+            var modeToReturn = new[] { isEditMode, headerMode, cookieMode, scopeMode, DataViewModeType.Live }.Aggregate(DataViewModeType.NoneSet, (prev, next) => prev != DataViewModeType.NoneSet ? prev : next);
+            return modeToReturn;
+        }
+
+        static int previewBehaviorId = new Core.Behaviors.PublishPreviewBehavior().Id;
+        private static DataViewModeType GetModeFromUserScope(LightweightUserClaims userclaims)
+        {
+            return userclaims != null && userclaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly()) && userclaims.BehaviorIds != null && userclaims.BehaviorIds.Contains(previewBehaviorId) 
+                    ? DataViewModeType.Pending 
+                    : DataViewModeType.NoneSet; 
         }
 
         private static DataViewModeType GetModeFromCookie(ICookieProvider cookies)
@@ -45,11 +64,6 @@ namespace Mozu.SiteBuilder.Mvc
         {
             if (!headers.Contains(Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE)) return DataViewModeType.NoneSet;
             return headers.GetValues(Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE).First().ToEnum<DataViewModeType>();
-        }
-
-        public DataViewModeType GetDataViewMode()
-        {
-            return _lazyDVM.Value;
         }
     }
 }

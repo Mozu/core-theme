@@ -334,9 +334,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.13.2\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts">
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1502181834-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1503031744-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.14.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

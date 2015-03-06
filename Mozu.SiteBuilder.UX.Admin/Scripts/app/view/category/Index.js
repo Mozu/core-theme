@@ -66,13 +66,6 @@ Ext.define('Taco.view.category.Index', {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
                 menuItems: [{
-                    text: 'Delete',
-                    requiredBehaviors: {
-                        model: 'Taco.model.Category',
-                        behavior: 'destroy'
-                    },
-                    menuColumnHandler: 'destroyMenuColumnHandler'
-                }, {
                     text: 'Edit',
                     requiredBehaviors: {
                         model: 'Taco.model.Category',
@@ -101,6 +94,13 @@ Ext.define('Taco.view.category.Index', {
                         
                         Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
                     }
+                }, {
+                    text: 'Delete',
+                    requiredBehaviors: {
+                        model: 'Taco.model.Category',
+                        behavior: 'destroy'
+                    },
+                    menuColumnHandler: 'destroyMenuColumnHandler'
                 }]
                 
             }],
@@ -219,7 +219,7 @@ Ext.define('Taco.view.category.Index', {
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: "Are you sure you want to delete this",
+            msg: "Are you sure you want to delete this?",
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {

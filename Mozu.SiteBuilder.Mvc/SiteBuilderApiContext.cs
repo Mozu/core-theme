@@ -34,7 +34,6 @@ namespace Mozu.SiteBuilder.Mvc
             _authenticationHelper = authenticationHelper;
             _httpRequestMessage = httpRequestMessage;
 
-            DataViewMode = dvmGetter.GetDataViewMode();
             IsEditMode = editModeGetter.IsEditMode();
 
             Load();
@@ -45,6 +44,8 @@ namespace Mozu.SiteBuilder.Mvc
             LoadUser();
             ValidateUser();                  
             SetDebugMode();
+
+            DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             this.Now = new Lazy<DateTime>(GetNowValue);
             
         }

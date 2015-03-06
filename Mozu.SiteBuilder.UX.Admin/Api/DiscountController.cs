@@ -11,6 +11,10 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Discount;
 using Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
+using Mozu.Core.Api.Contracts.Client;
+using System.Net.Http;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -122,9 +126,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<Discount>> DeleteDiscount(List<Discount> discounts)
         {
-            var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id));
+            var tasks = discounts.Select(d => _discountWebClient.DeleteDiscount(d.Id)).ToList();
             await Task.WhenAll(tasks);
-
+            tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
+           
             return SuccessWithTotal2<Discount>(discounts.Count);
         }
     }

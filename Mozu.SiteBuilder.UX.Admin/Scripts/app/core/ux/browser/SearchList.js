@@ -239,7 +239,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: "Are you sure you want to delete this",
+            msg: "Are you sure you want to delete this?",
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {

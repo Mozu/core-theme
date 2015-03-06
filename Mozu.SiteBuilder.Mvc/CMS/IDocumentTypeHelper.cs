@@ -116,7 +116,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             _siteBuilderContext = siteBuilderContext;
         }
-        public WidgetDefinition GetWidgetDefintion(string id)
+        public WidgetDefinition GetWidgetDefinition(string id)
         {
             return _siteBuilderContext.Theme.Widgets.FirstOrDefault(x => x.Id == id);
 

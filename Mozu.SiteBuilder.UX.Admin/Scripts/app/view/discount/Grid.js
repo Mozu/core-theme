@@ -20,6 +20,10 @@ Ext.define('Taco.view.discount.Grid', {
         'Taco.core.ux.grid.MenuColumn'
     ],
 
+    mixins: {
+        deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
+    },
+
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
@@ -87,6 +91,9 @@ Ext.define('Taco.view.discount.Grid', {
         var me = this;
 
         this.columns = this.getColumnConfig();
+
+        // initialize the delete mixin
+        this.mixins.deleteFromGrid.init.apply(this);
         
         me.callParent(arguments);
     },
@@ -215,6 +222,15 @@ Ext.define('Taco.view.discount.Grid', {
                 },{
                     xtype: 'taco.menucolumn',
                     text: 'Actions',
+                    onMenuShow: function (menu, eventData) {
+                        // need to disable the delete menu option when discount has been used
+                        var deleteMenuItem = menu.down("#deleteMenuItem");
+                        if (eventData.record.get('canBeDeleted')) {
+                            deleteMenuItem.show();
+                        } else {
+                            deleteMenuItem.hide();
+                        }
+                    },
                     //flex: 1,
                     menuItems: [
                         {
@@ -243,6 +259,16 @@ Ext.define('Taco.view.discount.Grid', {
 
                                 Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
                             }
+                        }, {
+                            text: 'Delete',
+                            itemId: "deleteMenuItem",
+                            // deleteMenuColumnHandler can be found in Taco.core.ux.mixins.DeleteFromGrid
+                            menuColumnHandler: "deleteMenuColumnHandler",
+                            requiredBehaviors: {
+                                model: 'Taco.model.Discount',
+                                behavior: 'delete'
+                            },
+                            scope: me
                         }
                     ]
                 }
@@ -293,6 +319,10 @@ Ext.define('Taco.view.discount.Grid', {
             Taco.core.StateManager.attemptNavigate('discounts/edit/' + record.getId(), { complexMetaData: { record: record } });
         }, 1, this);
         return;
+    },
+
+    getDeletePromptMessage: function (record) {
+        return record.getDeletePromptMessage();
     }
 
 });
