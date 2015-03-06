@@ -162,7 +162,10 @@ Ext.define('Taco.view.storeCredit.Grid', {
             text: 'Create Date',
             width: 130,
             hidden: true,
-            sortable: false,
+            sortable: true,
+            getSortParam: function () {
+                return "createdate";
+            },
             xtype: 'datecolumn',
             format: 'n/j/Y g:i a',
         }, {
@@ -171,7 +174,10 @@ Ext.define('Taco.view.storeCredit.Grid', {
             text: 'Update Date',
             width: 130,
             hidden: true,
-            sortable: false,
+            sortable: true,
+            getSortParam: function () {
+                return "updatedate";
+            },
             xtype: 'datecolumn',
             format: 'n/j/Y g:i a',
         }, {
