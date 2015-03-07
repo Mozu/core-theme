@@ -120,19 +120,34 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool? ReturnAuthorized { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
-        public bool? ReturnItemReceived { get; set; }
-
-        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? ReturnUpdated { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? ReturnRejected { get; set; }
+
+        /// <summary>
+        /// There is no corresponding template for this in the Core theme.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ReturnCancelled { get; set; }
+
+        /// <summary>
+        /// This controls "email/product-return-received" in the Core theme.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ReturnClosed { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? RefundCreated { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? StoreCreditCreated { get; set; }
+
+        /// <summary>
+        /// The corresponding topic is not currently used by Mozu.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? StoreCreditUpdated { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? GiftCardCreated { get; set; }
