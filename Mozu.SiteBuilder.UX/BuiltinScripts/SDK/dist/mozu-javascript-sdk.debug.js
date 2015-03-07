@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-03-06
+ * Mozu JavaScript SDK - v0.3.0 - 2015-03-07
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -2487,7 +2487,9 @@ define(function (require) {
 
 //# sourceUrl=src/affiliate-tracking-mixin.js
 
-﻿function deparam(querystring) {
+﻿var utils = require('./utils');
+
+function deparam(querystring) {
     // remove any preceding url and split
     querystring = querystring || window.location.search;
     querystring = querystring.substring(querystring.indexOf('?') + 1).split('&');
@@ -2565,8 +2567,33 @@ var docCookies = {
     }
 };
 
+function mergeOnKey(coll1, coll2) {
+    var newHash = utils.reduce(coll2, function(memo, item) {
+        memo[item.key] = item.value;
+        return memo;
+    }, {});
+
+    utils.each(coll1, function(item) {
+        if (newHash[item.key]) {
+            item.value = newHash[item.key];
+            delete newHash[item.key];
+        }
+    });
+
+    for (var remaining in newHash) {
+        if (newHash.hasOwnProperty(remaining)) {
+            coll1.push({
+                key: remaining,
+                value: newHash[remaining]
+            });
+        }
+    }
+
+    return coll1;
+}
+
 function isCartUrl(url) {
-    return url.indexOf('/api/commerce/carts/current') !== -1;
+    return url.indexOf('/api/commerce/carts/current') !== -1 && !url.match(/\/extendedproperties$/);
 }
 
 var cookieName = 'MOZU_AFFILIATE_IDS';
@@ -2579,71 +2606,95 @@ module.exports = {
             // p/OAISHD?someOtherQP=123&utmsomething=456&affiliateId=abc
             var queryParams = deparam(window.location.search);
             // { someOtherQP: '123', utmsomething: 456, affiliateId: 'abc' }
-            var newAffiliates = params.reduce(function(memo,param) {
-                // {}, 'affiliateId'
-                if (queryParams[param]) {
-                    memo[param] = queryParams[param];
-                }
-                // { affiliateId: 'abc' }
-                return memo;
-            }, {});
             var existingAffiliateString = docCookies.getItem(cookieName);
             var existingAffiliates = JSON.parse(existingAffiliateString) || [];
 
-            existingAffiliates.forEach(function(affiliate) {
-                if (newAffiliates[affiliate.key]) {
-                    affiliate.value = newAffiliates[affiliate.key];
-                }
-                delete newAffiliates[affiliate.key];
-            });
-
-            for (var remaining in newAffiliates) {
-                if (newAffiliates.hasOwnProperty(remaining)) {
-                    existingAffiliates.push({
-                        key: remaining,
-                        value: newAffiliates[remaining]
+            var updatedAffiliates = mergeOnKey(existingAffiliates, utils.reduce(params, function(memo, param) {
+                if (queryParams[param]) {
+                    memo.push({
+                        key: param,
+                        value: queryParams[param]
                     });
                 }
-            }
+                return memo;
+            }, []));
 
-            var newAffiliateString = JSON.stringify(existingAffiliates);
+
+            var newAffiliateString = JSON.stringify(updatedAffiliates);
 
             if (newAffiliateString !== existingAffiliateString) {
-                docCookies.setItem(cookieName, newAffiliateString);
+                docCookies.setItem(cookieName, newAffiliateString, null, "/");
             }
-            
-        };
 
-        var oldRequest = interface.prototype.request;
 
-        interface.prototype.request = function(method, requestConf, conf) {
-            var self = this;
-            var operation = oldRequest.apply(this, arguments);
-            var url = typeof requestConf === "string" ? requestConf : requestConf.url;
-            var affiliates = docCookies.getItem(cookieName);
-            try {
-                affiliates = JSON.parse(affiliates);
-            } catch (e) { }
-            
-            if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._hasUpdatedAffiliates) {
-                return operation.then(function(originalResponse) {
-                    return self.action('cart', 'addExtendedProperties', affiliates.reduce(function(memo, affiliate) {
-                        memo[affiliate.key] = affiliate.value;
-                        return memo;
-                    },{})).then(function() {
+            var oldRequest = this.request;
+
+            this.request = function(method, requestConf, conf) {
+                var self = this;
+                var operation = oldRequest.apply(this, arguments);
+                var url = typeof requestConf === "string" ? requestConf : requestConf.url;
+                var affiliates = docCookies.getItem(cookieName);
+                var originalResponse;
+                try {
+                    affiliates = JSON.parse(affiliates);
+                } catch (e) { }
+
+                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates) {
+                    return operation.then(function(r) {
+                        originalResponse = r;
+                        return self.action('cart', 'getExtendedProperties', {}, { silent: true });
+                    }).then(function(res) {
+
+                        var xProperties = res; //  res.items;
+
+                        var existingPropertyKeys = utils.map(xProperties, function(xprop) {
+                            return xprop.key;
+                        });
+
+                        var affiliatePayloads = utils.reduce(affiliates, function(memo, affiliate) {
+                            var existing = xProperties[utils.indexOf(existingPropertyKeys, affiliate.key)];
+                            if (existing) {
+                                if (existing.value !== affiliate.value) {
+                                    memo.toUpdate.push(affiliate);
+                                }
+                            } else {
+                                memo.toAdd.push(affiliate);
+                            }
+                            return memo;
+                        }, {
+                            toAdd: [],
+                            toUpdate: []
+                        });
+
+                        var tasks = [];
+
+                        if (affiliatePayloads.toAdd.length > 0) {
+                            tasks.push(self.action('cart', 'addExtendedProperties', affiliatePayloads.toAdd, { silent: true }));
+                        }
+
+                        if (affiliatePayloads.toUpdate.length > 0) {
+                            tasks.push(self.action('cart', 'updateExtendedProperties', affiliatePayloads.toUpdate, { silent: true }));
+                        }
+
+                        return utils.when.all(tasks);
+                    }).then(function() {
                         self._hasUpdatedAffiliates = true;
                         return originalResponse;
-                    })
-                });
-            } else {
-                return operation;
-            }
+                    });
+                } else {
+                    return operation;
+                }
 
+            };
+
+            
         };
+
+        
 
     }
 }
-},{}],14:[function(require,module,exports){
+},{"./utils":36}],14:[function(require,module,exports){
 
 
 //# sourceUrl=src/collection.js
@@ -3225,11 +3276,13 @@ ApiInterfaceConstructor.prototype = {
      * @memberof ApiInterface#
      * @returns {external:Promise#}
      */
-    request: function(method, requestConf, conf) {
+    request: function(method, requestConf, conf, runningOptions) {
         var me = this,
             url = typeof requestConf === "string" ? requestConf : requestConf.url;
         if (requestConf.verb)
             method = requestConf.verb;
+
+        if (!runningOptions) runningOptions = {};
 
         var deferred = me.defer();
 
@@ -3245,8 +3298,10 @@ ApiInterfaceConstructor.prototype = {
         var makeRequest = function () {
             var contextHeaders = me.getRequestHeaders();
             xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
-            // update context with response headers
-            me.fire('success', rawJSON, xhr, requestConf);
+                // update context with response headers
+                if (!runningOptions.silent) {
+                    me.fire('success', rawJSON, xhr, requestConf);
+                }
             deferred.resolve(rawJSON, xhr);
             }, function (error) {
 
@@ -3271,12 +3326,16 @@ ApiInterfaceConstructor.prototype = {
             };
 
         makeRequest();
-        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
+        if (!runningOptions.silent) {
+            this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
+        }
 
         deferred.promise.otherwise(function(error) {
             var res;
             if (!cancelled) {
-                me.fire('error', error, xhr, requestConf);
+                if (!runningOptions.silent) {
+                    me.fire('error', error, xhr, requestConf);
+                }
                 throw error;
             }
         });
@@ -3303,37 +3362,47 @@ ApiInterfaceConstructor.prototype = {
      * @memberof ApiInterface#
      * @returns external:Promise#
      */
-    action: function(instanceOrType, actionName, data) {
+    action: function(instanceOrType, actionName, data, runningOptions) {
         var me = this,
-            obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType),
+            obj = instanceOrType instanceof ApiObject ? instanceOrType : me.createSync(instanceOrType, null, runningOptions),
             type = obj.type;
 
-        obj.fire('action', actionName, data);
-        me.fire('action', obj, actionName, data);
+        if (!runningOptions) runningOptions = {};
+
+        if (!runningOptions.silent) {
+            obj.fire('action', actionName, data);
+            me.fire('action', obj, actionName, data);
+        }
         var requestConf = ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
 
         if ((actionName == "update" || actionName == "create") && !data) {
             data = obj.data;
         }
 
-        return me.request(ApiReference.basicOps[actionName], requestConf, data).then(function(rawJSON) {
+        return me.request(ApiReference.basicOps[actionName], requestConf, data, runningOptions).then(function(rawJSON) {
             if (requestConf.returnType) {
                 var returnObj = ApiObject.create(requestConf.returnType, rawJSON, me);
-                obj.fire('spawn', returnObj);
-                me.fire('spawn', returnObj, obj);
+                if (!runningOptions.silent) {
+                    obj.fire('spawn', returnObj);
+                    me.fire('spawn', returnObj, obj);
+                }
                 return returnObj;
             } else {
                 if (rawJSON || rawJSON === 0 || rawJSON === false)
                     obj.data = utils.clone(rawJSON);
                 delete obj.unsynced;
-                obj.fire('sync', rawJSON, obj.data);
-                me.fire('sync', obj, rawJSON, obj.data);
+                if (!runningOptions.silent) {
+                    obj.fire('sync', rawJSON, obj.data);
+                    me.fire('sync', obj, rawJSON, obj.data);
+                }
                 return obj;
             }
         }, function(errorJSON) {
             if (!requestConf.suppressErrors) {
-            obj.fire('error', errorJSON);
-            me.fire('error', errorJSON, obj);
+                if (!runningOptions.silent) {
+                    obj.fire('error', errorJSON);
+                    me.fire('error', errorJSON, obj);
+                }
             }
             throw errorJSON;
         });
@@ -3371,10 +3440,12 @@ for (var i in ApiReference.basicOps) {
 }
 
 // add createSync method for a different style of development
-ApiInterfaceConstructor.prototype.createSync = function(type, conf) {
+ApiInterfaceConstructor.prototype.createSync = function(type, conf, runningOptions) {
     var newApiObject = ApiObject.create(type, conf, this);
     newApiObject.unsynced = true;
-    this.fire('spawn', newApiObject);
+    if (!runningOptions || !runningOptions.silent) {
+        this.fire('spawn', newApiObject);
+    }
     return newApiObject;
 };
 
@@ -3583,13 +3654,14 @@ module.exports=
             "template": "{+cartService}current/items/"
         },
         "get-extended-properties": {
-            "template": "{+cartService}current/extendedproperties"
+            "template": "{+cartService}current/extendedproperties",
+            "returnType":  "json"
         },
-        "add-extended-property": {
+        "add-extended-properties": {
             "verb": "POST",
             "template": "{+cartService}current/extendedproperties"
         },
-        "add-extended-properties": {
+        "update-extended-properties": {
             "verb": "PUT",
             "template": "{+cartService}current/extendedproperties"
         },
@@ -5151,6 +5223,9 @@ var process=require("__browserify_process");
             }
             return target;
         },
+        each: function(arr, callback) {
+
+        },
         clone: function(obj) {
             return JSON.parse(JSON.stringify(obj)); // cheap copy :)
         },
@@ -5209,14 +5284,83 @@ var process=require("__browserify_process");
             }
             return newArr;
         },
-        reduce: function(collection, callback, accumulator) {
-            var index = -1,
-                length = collection.length;
-            while (++index < length) {
-                accumulator = callback(accumulator, collection[index], index, collection);
+        each: (function(nativeForEach) {
+            return (nativeForEach && typeof nativeForEach === "function") ? function(arr) {
+                return nativeForEach.apply(arr, utils.slice(arguments, 1));
+            } : function(collection, callback, thisArg) {
+
+                var T, k;
+
+                // 1. Let O be the result of calling ToObject passing the |this| value as the argument.
+                var O = Object(collection);
+
+                // 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
+                // 3. Let len be ToUint32(lenValue).
+                var len = O.length >>> 0;
+
+                // 4. If IsCallable(callback) is false, throw a TypeError exception.
+                // See: http://es5.github.com/#x9.11
+                if (typeof callback !== "function") {
+                    throw new TypeError(callback + ' is not a function');
+                }
+
+                // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
+                if (arguments.length > 1) {
+                    T = thisArg;
+                }
+
+                // 6. Let k be 0
+                k = 0;
+
+                // 7. Repeat, while k < len
+                while (k < len) {
+
+                    var kValue;
+
+                    // a. Let Pk be ToString(k).
+                    //   This is implicit for LHS operands of the in operator
+                    // b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
+                    //   This step can be combined with c
+                    // c. If kPresent is true, then
+                    if (k in O) {
+
+                        // i. Let kValue be the result of calling the Get internal method of O with argument Pk.
+                        kValue = O[k];
+
+                        // ii. Call the Call internal method of callback with T as the this value and
+                        // argument list containing kValue, k, and O.
+                        callback.call(T, kValue, k, O);
+                    }
+                    // d. Increase k by 1.
+                    k++;
+                }
+                // 8. return undefined
             }
-            return accumulator;
-        },
+        }(Array.prototype.forEach)),
+        reduce: (function(nativeReduce) {
+            return (nativeReduce && typeof nativeReduce === "function") ? function(arr) {
+                return nativeReduce.apply(arr, utils.slice(arguments, 1));
+            } : function(collection, callback /*, initialValue*/) {
+                var t = Object(collection), len = t.length >>> 0, k = 0, value;
+                if (arguments.length == 3) {
+                    value = arguments[2];
+                } else {
+                    while (k < len && !(k in t)) {
+                        k++; 
+                    }
+                    if (k >= len) {
+                        throw new TypeError('Reduce of empty array with no initial value');
+                    }
+                    value = t[k++];
+                }
+                for (; k < len; k++) {
+                    if (k in t) {
+                        value = callback(value, t[k], k, t);
+                    }
+                }
+                return value;
+            }
+        }(Array.prototype.reduce)), 
         slice: function(arrayLikeObj, ix) {
             return Array.prototype.slice.call(arrayLikeObj, ix);
         },

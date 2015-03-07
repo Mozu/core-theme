@@ -191,13 +191,14 @@
             "template": "{+cartService}current/items/"
         },
         "get-extended-properties": {
-            "template": "{+cartService}current/extendedproperties"
+            "template": "{+cartService}current/extendedproperties",
+            "returnType":  "json"
         },
-        "add-extended-property": {
+        "add-extended-properties": {
             "verb": "POST",
             "template": "{+cartService}current/extendedproperties"
         },
-        "add-extended-properties": {
+        "update-extended-properties": {
             "verb": "PUT",
             "template": "{+cartService}current/extendedproperties"
         },

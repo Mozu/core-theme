@@ -1,4 +1,6 @@
-﻿function deparam(querystring) {
+﻿var utils = require('./utils');
+
+function deparam(querystring) {
     // remove any preceding url and split
     querystring = querystring || window.location.search;
     querystring = querystring.substring(querystring.indexOf('?') + 1).split('&');
@@ -76,8 +78,33 @@ var docCookies = {
     }
 };
 
+function mergeOnKey(coll1, coll2) {
+    var newHash = utils.reduce(coll2, function(memo, item) {
+        memo[item.key] = item.value;
+        return memo;
+    }, {});
+
+    utils.each(coll1, function(item) {
+        if (newHash[item.key]) {
+            item.value = newHash[item.key];
+            delete newHash[item.key];
+        }
+    });
+
+    for (var remaining in newHash) {
+        if (newHash.hasOwnProperty(remaining)) {
+            coll1.push({
+                key: remaining,
+                value: newHash[remaining]
+            });
+        }
+    }
+
+    return coll1;
+}
+
 function isCartUrl(url) {
-    return url.indexOf('/api/commerce/carts/current') !== -1;
+    return url.indexOf('/api/commerce/carts/current') !== -1 && !url.match(/\/extendedproperties$/);
 }
 
 var cookieName = 'MOZU_AFFILIATE_IDS';
@@ -90,67 +117,91 @@ module.exports = {
             // p/OAISHD?someOtherQP=123&utmsomething=456&affiliateId=abc
             var queryParams = deparam(window.location.search);
             // { someOtherQP: '123', utmsomething: 456, affiliateId: 'abc' }
-            var newAffiliates = params.reduce(function(memo,param) {
-                // {}, 'affiliateId'
-                if (queryParams[param]) {
-                    memo[param] = queryParams[param];
-                }
-                // { affiliateId: 'abc' }
-                return memo;
-            }, {});
             var existingAffiliateString = docCookies.getItem(cookieName);
             var existingAffiliates = JSON.parse(existingAffiliateString) || [];
 
-            existingAffiliates.forEach(function(affiliate) {
-                if (newAffiliates[affiliate.key]) {
-                    affiliate.value = newAffiliates[affiliate.key];
-                }
-                delete newAffiliates[affiliate.key];
-            });
-
-            for (var remaining in newAffiliates) {
-                if (newAffiliates.hasOwnProperty(remaining)) {
-                    existingAffiliates.push({
-                        key: remaining,
-                        value: newAffiliates[remaining]
+            var updatedAffiliates = mergeOnKey(existingAffiliates, utils.reduce(params, function(memo, param) {
+                if (queryParams[param]) {
+                    memo.push({
+                        key: param,
+                        value: queryParams[param]
                     });
                 }
-            }
+                return memo;
+            }, []));
 
-            var newAffiliateString = JSON.stringify(existingAffiliates);
+
+            var newAffiliateString = JSON.stringify(updatedAffiliates);
 
             if (newAffiliateString !== existingAffiliateString) {
-                docCookies.setItem(cookieName, newAffiliateString);
+                docCookies.setItem(cookieName, newAffiliateString, null, "/");
             }
-            
-        };
 
-        var oldRequest = interface.prototype.request;
 
-        interface.prototype.request = function(method, requestConf, conf) {
-            var self = this;
-            var operation = oldRequest.apply(this, arguments);
-            var url = typeof requestConf === "string" ? requestConf : requestConf.url;
-            var affiliates = docCookies.getItem(cookieName);
-            try {
-                affiliates = JSON.parse(affiliates);
-            } catch (e) { }
-            
-            if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._hasUpdatedAffiliates) {
-                return operation.then(function(originalResponse) {
-                    return self.action('cart', 'addExtendedProperties', affiliates.reduce(function(memo, affiliate) {
-                        memo[affiliate.key] = affiliate.value;
-                        return memo;
-                    },{})).then(function() {
+            var oldRequest = this.request;
+
+            this.request = function(method, requestConf, conf) {
+                var self = this;
+                var operation = oldRequest.apply(this, arguments);
+                var url = typeof requestConf === "string" ? requestConf : requestConf.url;
+                var affiliates = docCookies.getItem(cookieName);
+                var originalResponse;
+                try {
+                    affiliates = JSON.parse(affiliates);
+                } catch (e) { }
+
+                if (affiliates && affiliates.length > 0 && isCartUrl(url) && !this._finishedUpdatingAffiliates) {
+                    return operation.then(function(r) {
+                        originalResponse = r;
+                        return self.action('cart', 'getExtendedProperties', {}, { silent: true });
+                    }).then(function(res) {
+
+                        var xProperties = res; //  res.items;
+
+                        var existingPropertyKeys = utils.map(xProperties, function(xprop) {
+                            return xprop.key;
+                        });
+
+                        var affiliatePayloads = utils.reduce(affiliates, function(memo, affiliate) {
+                            var existing = xProperties[utils.indexOf(existingPropertyKeys, affiliate.key)];
+                            if (existing) {
+                                if (existing.value !== affiliate.value) {
+                                    memo.toUpdate.push(affiliate);
+                                }
+                            } else {
+                                memo.toAdd.push(affiliate);
+                            }
+                            return memo;
+                        }, {
+                            toAdd: [],
+                            toUpdate: []
+                        });
+
+                        var tasks = [];
+
+                        if (affiliatePayloads.toAdd.length > 0) {
+                            tasks.push(self.action('cart', 'addExtendedProperties', affiliatePayloads.toAdd, { silent: true }));
+                        }
+
+                        if (affiliatePayloads.toUpdate.length > 0) {
+                            tasks.push(self.action('cart', 'updateExtendedProperties', affiliatePayloads.toUpdate, { silent: true }));
+                        }
+
+                        return utils.when.all(tasks);
+                    }).then(function() {
                         self._hasUpdatedAffiliates = true;
                         return originalResponse;
-                    })
-                });
-            } else {
-                return operation;
-            }
+                    });
+                } else {
+                    return operation;
+                }
 
+            };
+
+            
         };
+
+        
 
     }
 }

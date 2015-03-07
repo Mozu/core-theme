@@ -19,6 +19,23 @@
         },
         {
             "xtype": "panel",
+            "title": "Extended Properties",
+            "collapsed":false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "expandedPropertiesEnabled",
+                    "fieldLabel": "Enable Expanded Properties (Tracking Strings)"
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                    "name": "expandedPropertyParameters",
+                    "fieldLabel": "Query Parameters (comma seperated)"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
             "title": "Product Lists",
             "collapsed": false,
             "items": [
