@@ -108,27 +108,25 @@ Ext.define('Taco.view.order.Form', {
             // need to adjust the visibility of subforms based on the progression of data entry in phone orders
             if (me.isHeaderDataComplete()) {
                 //this.formContainer.show()
-                // remove the audit log from the tab panels, this will be readded later!
-                if (this.auditLogPanel.rendered) {
-                    this.formContainer.remove(this.auditLogPanel);
-                }
 
                 navUpdateRequired = true;
                 if (!this.orderDetailPanel.rendered) {
                     this.formContainer.add(this.orderDetailPanel);
                 }
 
-                // if the order has some order items
+                if (!this.auditLogPanel.rendered) {
+                    this.formContainer.add(this.auditLogPanel);
+                }
+
+                // If the order has some order items
                 if (orderItems.length) {
+                    // If the paymentPanel is not rendered
                     if (!this.paymentPanel.rendered) {
-                        this.formContainer.add(this.paymentPanel);
+                        this.formContainer.insert(1, this.paymentPanel);
                         navUpdateRequired = true;
                     }
                 }
 
-                if (!this.auditLogPanel.rendered) {
-                    this.formContainer.add(this.auditLogPanel);
-                }
             } else {
                 navUpdateRequired = true;
             }

@@ -53,7 +53,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         var orderObject = { orderNumber: me.orderNumber };
 
         // Create the user object for the template below:
-        var userObject = {appName: me.data.get('appName'), userName: me.data.get('userDisplayName'), type: me.data.get('userType')};
+        var userObject = {appName: me.data.get('appName'), userName: me.data.get('userDisplayName')};
 
         // Set the items!
         var logHeader = Ext.create('Ext.container.Container', {
@@ -65,8 +65,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     flex: 1.5,
                     data: userObject,
                     tpl: [
-                        '<div><b>User:</b> {userName}</div>',
-                        '<div><b>User Type:</b> {type}</div>',
+                        '<tpl if="userName && userName.length &gt; 0"><div><b>User:</b> {userName}</div></tpl>',
                         '<div><b>Application:</b> {appName}</div>'
                     ]
                 }, {

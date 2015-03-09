@@ -8,7 +8,6 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     extend: 'Taco.core.ux.browser.SearchList',
 
     requires: [
-        'Taco.store.AuditLog',
         'Taco.model.AuditLog',
         'Taco.view.order.modal.AuditLogInfo'
     ],
