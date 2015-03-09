@@ -25,7 +25,7 @@
                 {
                     "xtype": "mz-input-checkbox",
                     "name": "extendedPropertiesEnabled",
-                    "fieldLabel": "Enable Expanded Properties (Tracking Strings)"
+                    "fieldLabel": "Enable Extended Properties (Tracking Strings)"
                 },
                 {
                     "xtype": "mz-input-textarea",
