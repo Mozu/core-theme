@@ -69,6 +69,15 @@
             @include icon-font($glyph-link, 13px);
         }
 
+        &.drag-icon {
+            @include icon-font($glyph-knurling, 13px, rgb(179, 179, 179));
+            float: right;
+
+            &.invisible {
+                visibility: hidden;
+            }
+        }
+
         &::after {
             color: $color-neutral-40;
             left: auto;

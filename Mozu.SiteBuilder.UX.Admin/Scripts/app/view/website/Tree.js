@@ -59,7 +59,8 @@ Ext.define('Taco.view.website.Tree', {
                 var output = me.getNavIcon(value, record);
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
-                    output += '<span class="taco-website-tree-menu-trigger"></span>';
+                    output += me.getNavOptions(record);
+                    output += '</span><span class="taco-website-tree-menu-trigger"></span>';
                 }
 
                 return output;
@@ -359,6 +360,12 @@ Ext.define('Taco.view.website.Tree', {
 
     getNavIcon: function(value, record) {
         return '<span class="taco-website-tree-icon ' + this.getIconClass(record) + '"></span><span>' + value + '</span>';
+    },
+
+    getNavOptions: function(record) {
+        var cls = Ext.Array.contains(['page', 'link'], record.get('nodeType')) ? 'visible' : 'invisible';
+
+        return '<span class="taco-website-tree-icon drag-icon ' + cls + '">';
     },
 
     showNavState: function(records, success) {
