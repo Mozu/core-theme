@@ -3897,13 +3897,14 @@ module.exports={
             "returnType": "ordernote"
         },
         "get-extended-properties": {
-            "template": "{+orderService}{id}/extendedproperties"
+            "template": "{+orderService}{id}/extendedproperties",
+            "returnType":  "json"
         },
-        "add-extended-property": {
+        "add-extended-properties": {
             "verb": "POST",
             "template": "{+orderService}{id}/extendedproperties"
         },
-        "add-extended-properties": {
+        "update-extended-properties": {
             "verb": "PUT",
             "template": "{+orderService}{id}/extendedproperties"
         },
