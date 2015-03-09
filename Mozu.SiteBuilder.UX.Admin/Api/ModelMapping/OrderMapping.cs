@@ -481,8 +481,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 .ForMember(dc => dc.OptionValue, op => op.ResolveUsing(x => x.OptionValue))
                 // Add this mapping back to main 1.17
-                .ForMember(dc => dc.AllocationId, op => op.Ignore())
-                .ForMember(dc => dc.AllocationExpiration, op => op.Ignore())
+                //.ForMember(dc => dc.AllocationId, op => op.Ignore())
+                //.ForMember(dc => dc.AllocationExpiration, op => op.Ignore())
                 ;
         
 
