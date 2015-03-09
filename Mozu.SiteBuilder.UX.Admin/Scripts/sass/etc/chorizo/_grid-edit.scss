@@ -60,6 +60,7 @@
         right: 0;
         top: 0;
 		z-index: 1000001;
+        cursor: pointer;
 
         //@include transition(opacity $duration);
 
@@ -77,6 +78,7 @@
             border-left: 2px solid #666666;
             border-right: 2px solid #666666;
         }
+
     }
 
 

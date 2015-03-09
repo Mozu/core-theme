@@ -258,34 +258,34 @@
     </Reference>
     <Reference Include="Mozu.Core, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Api.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Client, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Api.Contracts, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Caching, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.Caching.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Caching.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.CodeBlocks, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.CodeBlocks.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.CodeBlocks.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.14.5\lib\net45\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.FilterParsing, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.FilterParsing.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.FilterParsing.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.Messaging, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -297,19 +297,19 @@
     </Reference>
     <Reference Include="Mozu.Core.Mongo, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.Mongo.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty.Contracts, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.ThirdParty.Mapping, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1502171701-s\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Customer.Contracts, Version=1.15.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
