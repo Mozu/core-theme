@@ -36,12 +36,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "debug":
                     fileName = "mozu-javascript-sdk.debug.js";
                     break;
-                case "affiliatetrackingmin":
-                    fileName = "mozu-javascript-sdk-affiliatetracking.min.js";
-                    break;
-                case "affiliatetrackingdebug":
-                    fileName = "mozu-javascript-sdk-affiliatetracking.js";
-                    break;
                 default:
                     fileName = "mozu-javascript-sdk.min.js";
                     break;
