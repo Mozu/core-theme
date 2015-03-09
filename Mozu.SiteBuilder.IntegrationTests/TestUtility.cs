@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
         protected static IApiContext GetApiContext(UserScope userScope, bool useAnonymousUser = false, string appId = "4604378B-073A-4D51-86C2-BA4CBADD64D4")
         {
             var userclaims = LightweightUserClaims
-                .CreateForAdminUser(Guid.NewGuid().ToString("N"), new int[0], userScope, DateTime.Now.AddDays(3));
+                .CreateForAdminUser(Guid.NewGuid().ToString("N"), string.Empty, string.Empty, new int[0], userScope, DateTime.Now.AddDays(3));
 
             var result = CreateApiContext(appId, userScope.Id, userclaims);
 

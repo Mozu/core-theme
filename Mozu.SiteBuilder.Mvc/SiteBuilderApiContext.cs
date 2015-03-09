@@ -201,7 +201,7 @@ namespace Mozu.SiteBuilder.Mvc
                 }
                 else
                 {
-                    this.UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), new int[0], new UserScope() { Id = this.TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
+                    this.UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), string.Empty, string.Empty, new int[0], new UserScope() { Id = this.TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
                     this.UserClaims.IsAnonymous = true;
                 }
                 this.HasInvalidCredentials = true;
