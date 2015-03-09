@@ -9,7 +9,7 @@ define(['sdk-affiliatetracking', 'jquery', 'hyprlive'], function (Mozu, $, Hypr)
     Mozu.setServiceUrls(apiConfig.urls);
     var api = Mozu.Store(apiConfig.headers).api();
 
-    api.setAffiliateTrackingParameters(Hypr.getThemeSetting('expandedPropertyParameters'));
+    api.setAffiliateTrackingParameters(Hypr.getThemeSetting('extendedPropertyParameters'));
 
     if (Hypr.getThemeSetting('useDebugScripts') || require.mozuData('pagecontext').isDebugMode) {
         api.on('error', function (badPromise, xhr, requestConf) {

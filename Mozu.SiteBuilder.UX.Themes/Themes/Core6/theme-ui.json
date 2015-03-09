@@ -24,12 +24,12 @@
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
-                    "name": "expandedPropertiesEnabled",
+                    "name": "extendedPropertiesEnabled",
                     "fieldLabel": "Enable Expanded Properties (Tracking Strings)"
                 },
                 {
                     "xtype": "mz-input-textarea",
-                    "name": "expandedPropertyParameters",
+                    "name": "extendedPropertyParameters",
                     "fieldLabel": "Query Parameters (comma seperated)"
                 }
             ]
