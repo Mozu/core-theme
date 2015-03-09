@@ -133,86 +133,102 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
 
         switch (curRecord.subjectType) {
             case 'Line Items':
-                {
-                    // Currently not used!
-                    dataContainer = this.createLineItemsInfo(metaData);
-                    break;
-                }
+            {
+                // Currently not used!
+                dataContainer = this.createLineItemsInfo(metaData);
+                break;
+            }
             case 'OrderItem':
-                {
-                    if (curRecord.subject.indexOf('Fulfillment') > -1) {
-                        dataContainer = this.createFulfillmentChange(metaData);
-                    } else if (curRecord.subject.indexOf('Product Price') > -1) {
-                        dataContainer = this.createPriceChange(metaData);
-                    } else if (curRecord.subject.indexOf('Product Quantity') > -1) {
-                        dataContainer = this.createQuantityChange(metaData);
-                    } else {
-                        dataContainer = this.createLineItemInfo(metaData);
-                    }
-                    break;
-                }
+            {
+                dataContainer = this.determineOrderItem(curRecord, metaData);
+                break;
+            }
             case 'Order Total':
-                {
-                    dataContainer = this.createOrderTotalInfo(metaData);
-                    break;
-                }
+            {
+                dataContainer = this.createOrderTotalInfo(metaData);
+                break;
+            }
             case 'Payment':
             case 'StateChange.Payment':
-                {
-                    dataContainer = this.createPaymentInfo(metaData, curRecord.verb);
-                    break;
-                }
+            {
+                dataContainer = this.createPaymentInfo(metaData, curRecord.verb);
+                break;
+            }
             case 'Order Shipping':
-                {
-                    dataContainer = this.createShippingInfo(metaData);
-                    break;
-                }
+            {
+                dataContainer = this.createShippingInfo(metaData);
+                break;
+            }
             case 'Coupon':
-                {
-                    dataContainer = this.createCouponInfo(metaData);
-                    break;
-                }
+            {
+                dataContainer = this.createCouponInfo(metaData);
+                break;
+            }
             case 'Items Shipped':
             case 'StateChange.Fulfillment':
-                {
-                    dataContainer = this.createItemsShippedInfo(metaData);
-                    break;
-                }
+            {
+                dataContainer = this.createItemsShippedInfo(metaData);
+                break;
+            }
             case 'RMA':
             case 'StateChange.Return':
-                {
-                    if (curRecord.verb.toLowerCase() === 'created') {
-                        dataContainer = this.createNestedGrid(metaData);
-                    } else if (curRecord.verb.toLowerCase() === 'refunded') {
-                        dataContainer = this.createRMARefundInfo(metaData);
-                    }
-                    break;
-                }
+            {
+                dataContainer = this.determineReturnItem(curRecord, metaData);
+                break;
+            }
             case 'Replacement Order':
-                {
-                    dataContainer = this.createNestedGrid(metaData);
-                    break;
-                }
+            {
+                dataContainer = this.createNestedGrid(metaData);
+                break;
+            }
             case 'Order Status':
             case 'StateChange.WorkflowAction':
             case 'Order':
             case 'StateChange.Order':
-                {
-                    dataContainer = this.createOrderMessage(curRecord);
-                    break;
-                }
+            {
+                dataContainer = this.createOrderMessage(curRecord);
+                break;
+            }
             case 'Item':
             case 'WorkflowAction':
             case 'Cart':
-                {
-                    dataContainer = this.createDataUsingMessage(curRecord);
-                    break;
-                }
+            {
+                dataContainer = this.createDataUsingMessage(curRecord);
+                break;
+            }
             default:
-                {
-                    // Do Nothing!
-                    break;
-                }
+            {
+                // Do Nothing!
+                break;
+            }
+        }
+
+        return dataContainer;
+    },
+
+    determineOrderItem: function (curRecord, metaData) {
+        var dataContainer = null;
+
+        if (curRecord.subject.indexOf('Fulfillment') > -1) {
+            dataContainer = this.createFulfillmentChange(metaData);
+        } else if (curRecord.subject.indexOf('Product Price') > -1) {
+            dataContainer = this.createPriceChange(metaData);
+        } else if (curRecord.subject.indexOf('Product Quantity') > -1) {
+            dataContainer = this.createQuantityChange(metaData);
+        } else {
+            dataContainer = this.createLineItemInfo(metaData);
+        }
+
+        return dataContainer;
+    },
+
+    determineReturnItem: function(curRecord, metaData) {
+        var dataContainer = null;
+
+        if (curRecord.verb.toLowerCase() === 'created') {
+            dataContainer = this.createNestedGrid(metaData);
+        } else if (curRecord.verb.toLowerCase() === 'refunded') {
+            dataContainer = this.createRMARefundInfo(metaData);
         }
 
         return dataContainer;
