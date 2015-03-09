@@ -50,6 +50,7 @@ app\view\order\widget\OrderTotalPanelEditable.js
 app\view\order\widget\OrderTotalPanel.js
 app\view\order\widget\OrderItemGrid.js
 app\view\order\modal\AddPayment.js
+app\view\order\modal\AuditLogInfo.js
 app\view\productType\AttributeGroup.js
 app\view\order\subform\fulfillment\DigitalDelivery.js
 app\view\order\AdvancedSearchForm.js
