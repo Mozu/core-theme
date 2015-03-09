@@ -168,31 +168,14 @@ Ext.define('Taco.view.account.Users', {
                     xtype: 'taco.menucolumn',
                     text: 'Actions',
                     stateId: 'actionsColumn',
-                    menuItems: [
-                        {
-                            text: 'Delete',
-                            handler: function (item, event) {
-                                if (item.scope.basegrid.selModel.getSelection()[0].get('type') == 'user') {
-                                    item.scope.basegrid.selModel.getSelection()[0].destroy();
-                                } else {
-                                    Ext.Ajax.request({
-                                        url: "/admin/app/account/invitations/delete",
-                                        method: 'post',
-                                        jsonData: item.scope.basegrid.selModel.getSelection()[0].data,
-                                        success: function () {
-                                            item.scope.basegrid.store.reload();
-                                        },
-                                        failure: function (resp) {
-                                            var json = Ext.decode(resp.responseText, true);
-                                            Taco.app.fireEvent('setmessage', json.message, 'error');
-                                        }
-                                    });
-                                }
-
-                            },
-                            scope: me
-                        }
-                    ]
+                    scope: me,
+                    items: [
+                    {
+                        text: 'flerp'
+                    }],
+                    handler: function (grid, foo, bar, snerst, evt, record, row) {
+                        this.launchContextMenu(evt, record, row);
+                    }
                 }],
 
             plugins: [cellEditing],
@@ -243,7 +226,59 @@ Ext.define('Taco.view.account.Users', {
         basegridview = me.basegrid.view;
         basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
     },
+    launchContextMenu: function (evt, record, row) {
+        var actions;
+        var me = this;
 
+        actions = [
+                {
+                    text: 'Delete',
+                    disabled: (Taco.user.id == record.get('id')) ? true : false,
+                    handler: function (item, event) {
+                        if (item.scope.basegrid.selModel.getSelection()[0].get('type') == 'user') {
+                            item.scope.basegrid.selModel.getSelection()[0].destroy();
+                        } else {
+                            Ext.Ajax.request({
+                                url: "/admin/app/account/invitations/delete",
+                                method: 'post',
+                                jsonData: item.scope.basegrid.selModel.getSelection()[0].data,
+                                success: function () {
+                                    item.scope.basegrid.store.reload();
+                                },
+                                failure: function (resp) {
+                                    var json = Ext.decode(resp.responseText, true);
+                                    Taco.app.fireEvent('setmessage', json.message, 'error');
+                                }
+                            });
+                        }
+
+                    },
+                    scope: me
+                }
+        ];
+        var menu = Ext.create('Ext.menu.Menu', {
+            showSeparator: false,
+            items: actions,
+            record: record,
+            cls: 'dc-flydown-menu',
+            shadow: false,
+            plain: true,
+            listeners: {
+                beforeshow: function (view, eOpts) {
+                    me.actionMenuOpen = true;
+                },
+                beforehide: function (view, eOpts) {
+                    me.actionMenuOpen = false;
+                }
+            }
+        });
+
+        if (row) {
+            menu.showBy(row, 'tr-br', [-1, -1]);
+        } else {
+            menu.showAt(evt.getXY());
+        }
+    },
     updateUserAccountRole: function (updateInfo) {
         var me = this;
 
