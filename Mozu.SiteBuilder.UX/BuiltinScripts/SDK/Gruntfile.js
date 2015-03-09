@@ -17,7 +17,7 @@ function bNormalizeLineEndingsTransform(file) {
 
     function write(buf) { data += buf }
     function end() {
-        var tag = "\n\n//# sourceUrl=" + path.relative(wd, file).replace(/\\/g,'/') + "\n\n";
+        var tag = "\n\n//# sourceUrl=" + path.relative(wd, file).replace(/\\/g, '/') + "\n\n";
         this.queue(tag + data.replace(crlfRE, normalizeTo));
         this.queue(null);
     }
@@ -35,7 +35,7 @@ module.exports = function (grunt) {
         toExport: "MozuSDK",
 
         testPlatform: './tests/sdk.js',
-       
+
         clean: {
             dist: {
                 src: ['dist']
@@ -50,7 +50,7 @@ module.exports = function (grunt) {
         browserify: {
             debug: {
                 files: {
-                    '<%= testPlatform %>': ['./src/init_affiliatetracking.js']
+                    '<%= testPlatform %>': ['./src/init_debug.js']
                 },
                 options: {
                     //debug: true,
@@ -63,16 +63,6 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                     '<%= releasetemp %>': ['./src/init.js']
-                },
-                options: {
-                    standalone: '<%= toExport %>',
-                    bare: true,
-                    external: ["xmlhttprequest"]
-                }
-            },
-            affiliate: {
-                files: {
-                    './dist/<%= pkg.name %>-affiliatetracking.js': ['./src/init_affiliatetracking.js']
                 },
                 options: {
                     standalone: '<%= toExport %>',
@@ -97,13 +87,6 @@ module.exports = function (grunt) {
                 },
                 src: '<%= releasetemp %>',
                 dest: '<%= pkg.main %>.js'
-            },
-            affiliate: {
-                options: {
-                    banner: '<%= banner %>'
-                },
-                src: './dist/<%= pkg.name %>-affiliatetracking.js',
-                dest: './dist/<%= pkg.name %>-affiliatetracking.min.js'
             }
         },
         connect: {
@@ -147,8 +130,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-browserify');
 
-    grunt.registerTask('test', ['browserify:debug', 'browserify:affiliate', 'connect:server', 'mocha']);
-    grunt.registerTask('dist', ['clean:dist', 'browserify:dist', 'browserify:affiliate', 'concat:debug', 'uglify', 'clean:tmp']);
+    grunt.registerTask('test', ['browserify:debug', 'connect:server', 'mocha']);
+    grunt.registerTask('dist', ['clean:dist', 'browserify:dist', 'concat:debug', 'uglify', 'clean:tmp']);
     grunt.registerTask('testbrowser', ['browserify:debug', 'connect:browser']);
     grunt.registerTask('default', ['test', 'dist', 'clean:test']);
 

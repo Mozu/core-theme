@@ -4,6 +4,10 @@ var _init = require('./init');
 _init.Utils = require('./utils');
 _init.ApiContext = require('./context');
 _init.ApiInterface = require('./interface');
+
+
+require('./affiliate-tracking-mixin').mixin(_init.ApiInterface);
+
 _init.ApiObject = require('./object');
 _init.ApiCollection = require('./collection');
 _init.ApiReference = require('./reference');

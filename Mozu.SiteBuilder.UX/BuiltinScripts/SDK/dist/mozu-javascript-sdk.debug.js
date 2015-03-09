@@ -3194,13 +3194,14 @@ module.exports = (function(window, document, undefined) {
 
 // BEGIN INIT
 var ApiContext = require('./context');
+require('./affiliate-tracking-mixin').mixin(require("./interface"));
 var initialGlobalContext = new ApiContext();
 module.exports = initialGlobalContext;
 // END INIT
-},{"./context":16}],20:[function(require,module,exports){
+},{"./affiliate-tracking-mixin":13,"./context":16,"./interface":21}],20:[function(require,module,exports){
 
 
-//# sourceUrl=src/init_affiliatetracking.js
+//# sourceUrl=src/init_debug.js
 
 // EXPOSE DEBUGGING STUFF
 var _init = require('./init');
