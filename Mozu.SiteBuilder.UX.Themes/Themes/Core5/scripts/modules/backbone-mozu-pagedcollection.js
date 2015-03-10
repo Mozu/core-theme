@@ -89,6 +89,16 @@
                 } catch (e) { }
             },
 
+            syncIndex: function (currentUriFragment) {
+                try {
+                    var uriStartIndex = parseInt(($.deparam(currentUriFragment).startIndex || 0), 10);
+                    if (!isNaN(uriStartIndex) && uriStartIndex !== this.apiModel.getIndex()) {
+                        this.lastRequest.startIndex = uriStartIndex;
+                        return this.apiModel.setIndex(uriStartIndex, this.lastRequest);
+                    }
+                } catch (e) { }
+            },
+
             setPage: function(num) {
                 num = parseInt(num, 10);
                 if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiGet($.extend(this.lastRequest, {
