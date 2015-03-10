@@ -1,7 +1,7 @@
 /*! 
- * Mozu Require - v0.2.0 - 2014-11-14
+ * Mozu Require - v0.2.0 - 2015-03-09
  *
- * Copyright (c) 2014 Volusion, Inc.
+ * Copyright (c) 2015 Volusion, Inc.
  *
  */
 

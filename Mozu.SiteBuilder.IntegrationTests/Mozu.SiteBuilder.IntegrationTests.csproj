@@ -250,7 +250,6 @@
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts">
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.2-dev1503022230ext-s\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -280,7 +279,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.CodeBlocks.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Extensible.Contracts">
+    <Reference Include="Mozu.Core.Extensible.Contracts, Version=1.14.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.14.5\lib\net45\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core.FilterParsing, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">

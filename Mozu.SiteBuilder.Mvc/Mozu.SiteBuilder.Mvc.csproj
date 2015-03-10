@@ -278,7 +278,6 @@
     </Reference>
     <Reference Include="Mozu.Core.Extensible.Contracts">
       <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.14.5\lib\net45\Mozu.Core.Extensible.Contracts.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.Core.FilterParsing, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

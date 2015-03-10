@@ -954,7 +954,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.FeeTotal, op => op.Ignore())
                   .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
-                  .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
+                  .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                   .ForMember(dc => dc.Data, op => op.Ignore())
             
                   ;

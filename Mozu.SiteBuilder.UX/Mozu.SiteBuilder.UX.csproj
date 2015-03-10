@@ -232,9 +232,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.AdminUser.Contracts.1.13.2\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Mozu.CommerceRuntime.Contracts">
       <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.2-dev1503022230ext-s\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -536,11 +536,15 @@
     <Content Include="BuiltinScripts\RequireJS\src\plugins\shim-browser.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-min.js" />
     <Content Include="BuiltinScripts\RequireJS\src\vars-debug.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk-affiliatetracking.js" />
+    <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk-affiliatetracking.min.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.debug.js" />
     <Content Include="BuiltinScripts\SDK\dist\mozu-javascript-sdk.min.js" />
+    <Content Include="BuiltinScripts\SDK\src\affiliate-tracking-mixin.js" />
     <Content Include="BuiltinScripts\SDK\src\constants\default.js" />
     <Content Include="BuiltinScripts\SDK\src\errors.js" />
     <Content Include="BuiltinScripts\SDK\src\iframexhr.js" />
+    <Content Include="BuiltinScripts\SDK\src\init_affiliatetracking.js" />
     <Content Include="BuiltinScripts\SDK\src\types\cart.js" />
     <Content Include="BuiltinScripts\SDK\src\types\cartsummary.js" />
     <Content Include="BuiltinScripts\SDK\src\types\locations.js" />
