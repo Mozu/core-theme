@@ -132,7 +132,21 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.callParent(arguments);
     },
 
-    setFieldVisibility: function (isLineItem) {
+    setFieldVisibility: function (scopeType, targetType, discountType) {
+        var appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem');
+    
+
+        if ((!isLineItem && !isOrder) || !targetType) {
+            this.setVisible(false);
+            return;
+        } else {
+            this.setVisible(true);
+        }
+        
+        
+
         this.maxRedemptionsPerOrder.setVisible(isLineItem);
         if (!isLineItem) {
             this.maxRedemptionsPerOrder.setValue(null);
