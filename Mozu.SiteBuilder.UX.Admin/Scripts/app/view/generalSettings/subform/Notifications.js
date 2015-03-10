@@ -118,14 +118,20 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
                             checked: !emailSettings.returnRejected,
                             name: 'emailSettings.returnRejected'
                         }, {
-                            boxLabel: 'Return Item Received',
-                            checked: !emailSettings.returnItemReceived,
-                            name: 'emailSettings.returnItemReceived'
-                        }, {
                             boxLabel: 'Return Has Been Updated',
                             checked: !emailSettings.returnUpdated,
                             name: 'emailSettings.returnUpdated'
-                        }]
+                        }, {
+                            boxLabel: 'Return Closed',
+                            checked: !emailSettings.returnClosed,
+                            name: 'emailSettings.returnClosed'
+                        },
+                        //{
+                        //    boxLabel: 'Return Cancelled',
+                        //    checked: !emailSettings.returnCancelled,
+                        //    name: 'emailSettings.returnCancelled'
+                        //}
+                        ]
                     }, {
                         xtype: 'fieldcontainer',
                         defaults: {
@@ -137,7 +143,17 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
                             checked: !emailSettings.backInStock,
                             name: 'emailSettings.backInStock'
                         }, {
-                            boxLabel: 'Gift Card',
+                            boxLabel: 'Store Credit Created',
+                            checked: !emailSettings.storeCreditCreated,
+                            name: 'emailSettings.storeCreditCreated'
+                        },
+                        //{
+                        //    boxLabel: 'Store Credit Updated',
+                        //    checked: !emailSettings.storeCreditUpdated,
+                        //    name: 'emailSettings.storeCreditUpdated'
+                        //},
+                        {
+                            boxLabel: 'Gift Card Created',
                             checked: !emailSettings.giftCardCreated,
                             name: 'emailSettings.giftCardCreated'
                         }]
