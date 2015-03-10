@@ -142,6 +142,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     } else if (newV == 'Free') {
                         this.amountInput.setDisabled(true);
                         this.amountInput.setValue(null);
+                        this.parentForm.setFieldVisibility();
                         return;
                     } else {
                         this.amountInput.unitString = Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol;
@@ -149,6 +150,10 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     }
                     this.amountInput.setDisabled(false);
                     this.amountInput.setValue(this.amountInput.value);
+
+                    // notify the parent form. limitations will need to adjust to the value;
+                    // see this.maxDiscountOrderValue
+                    this.parentForm.setFieldVisibility();
                 },
                 scope: this
             }

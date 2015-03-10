@@ -181,12 +181,56 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.callParent(arguments);
     },
 
-    setFieldVisibility: function (isLineItem) {
-        this.maxRedemptionsPerOrder.setVisible(isLineItem);
-        this.maxDiscountLineItemValue.setVisible(isLineItem);
+    setFieldVisibility: function (isLineItem, appliesToShipping, discountType) {
+        var me = this,
+            orderMaxVisible = false,
+            lineItemMaxVisible = false,
+            orderMaxLabel,
+            orderMaxLabelWhenOrder = "Max Discount Value",
+            orderMaxLabelWhenInline = "Max Discount Value (Per Order)";
+
+        if (isLineItem) {
+            orderMaxLabel = orderMaxLabelWhenInline;
+            if (Ext.Array.contains(["Percentage", "Fixed","Free"], discountType)) {
+                orderMaxVisible = true;
+                lineItemMaxVisible = true;
+            } else if (discountType == "Amount") {
+                orderMaxVisible = true;
+                lineItemMaxVisible = false;
+            }
+        } else {
+            // order or not selected
+            if (discountType == "Percentage") {
+                orderMaxLabel = orderMaxLabelWhenOrder;
+                orderMaxVisible = true;
+                lineItemMaxVisible = false;
+            } else if (discountType == "Amount") {
+                orderMaxVisible = false;
+                lineItemMaxVisible = false;
+            }
+        }
+
+        // need to update the label since it will be visible. the line item max never gets a label change. 
+        if (orderMaxLabel) {
+            me.maxDiscountOrderValue.setFieldLabel(orderMaxLabel);
+        }
+
+        //set the visibility of the order and lineitem max fields as defined above;
+        me.maxDiscountOrderValue.setVisible(orderMaxVisible);
+        me.maxDiscountLineItemValue.setVisible(lineItemMaxVisible);
+
+        // need to reset the fields when they are hidden;
+        if (!orderMaxVisible && me.maxDiscountOrderValue.getValue()) {
+            me.maxDiscountOrderValue.setValue(null);
+        }
+
+        if (!lineItemMaxVisible && me.maxDiscountLineItemValue.getValue()) {
+            me.maxDiscountLineItemValue.setValue(null);
+        }
+
+        me.maxRedemptionsPerOrder.setVisible(isLineItem);
         if (!isLineItem) {
-            this.maxRedemptionsPerOrder.setValue(null);
-            this.maxDiscountLineItemValue.setValue(null);
+            me.maxRedemptionsPerOrder.setValue(null);
         }
     },
 
