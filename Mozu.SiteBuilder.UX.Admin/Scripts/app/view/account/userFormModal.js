@@ -12,7 +12,13 @@ Ext.define('Taco.view.account.userFormModal', {
     autoShow: true,
     scale: 'large',
     title: 'Add User',
-
+    actions: [{
+        xtype: 'button',
+        itemId: 'secondaryAction'
+    }, {
+        xtype: 'button',
+        itemId: 'primaryAction'
+    }],
     initComponent: function() {
         var me = this;
 
@@ -29,6 +35,13 @@ Ext.define('Taco.view.account.userFormModal', {
 
         me.roles.on('load', function () {
             var selectedRecs = [];
+
+            if (this.form.getValues()['email'] || this.selModel.getSelection().length == 0) {
+                Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+            } else {
+                Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+            }
+
             if (this.record) {
                 if (this.record.get('role') == 'SuperAdmin') {
                     Ext.ComponentQuery.query('[inputValue="sa"]')[0].setValue(true);
@@ -61,7 +74,7 @@ Ext.define('Taco.view.account.userFormModal', {
             headerWidth: 37,
             listeners: {
                 selectionchange: function (it) {
-                    if (it.getSelection().length == 0) {
+                    if (it.getSelection().length == 0 || this.scope.form.getValues()['email'] == '') {
                         Ext.ComponentQuery.query('[text="Save"]')[0].disable();
                     } else if (this.scope.form.getValues()['email'] != '') {
                         Ext.ComponentQuery.query('[text="Save"]')[0].enable();
@@ -101,14 +114,16 @@ Ext.define('Taco.view.account.userFormModal', {
                     width: 400,
                     fieldLabel: 'Email',
                     allowBlank: false,
+                    enableKeyEvents: true,
                     value: (this.record) ? this.record.get('email') : '',
                     listeners: {
-                        change: function (it) {
-                            if (it.getValue() == '') {
+                        change: function (it, newVal) {
+                            debugger;
+                            if (newVal == '' || it.scope.selModel.getSelection().length == 0) {
                                 Ext.ComponentQuery.query('[text="Save"]')[0].disable();
                             } else if (it.scope.selModel.getSelection().length > 0) {
                                 Ext.ComponentQuery.query('[text="Save"]')[0].enable();
-                            } 
+                            }
                         }
                     },
                     scope: me
