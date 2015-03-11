@@ -585,9 +585,13 @@ Ext.define('Taco.view.website.Index', {
         return this.cardpanel;
     },
     toggleCard: function (item) {
+
         this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
 
         this.cardpanel.getLayout().setActiveItem(item);
+
+        this.setActiveButton(item);
+
     },
     getActiveCard: function () {
         this.cardpanel = this.cardpanel || this.down('#editorCardPanel');
@@ -726,6 +730,16 @@ Ext.define('Taco.view.website.Index', {
             this.toggleCard(3);
         }
 
+    },
+    setActiveButton: function(item) {
+        var cardButtons = {
+            0: '#pageEditorTabButton',
+            1: '#pageSettingsTabButton',
+            3: '#contentGridTabButton'
+        },
+        button = this.down(cardButtons[item]);
+
+        if (button && button.toggle) button.toggle(true);
     },
     onNavigationChange:function () {
         this.reloadPage();
