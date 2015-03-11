@@ -7,7 +7,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
     requires: [
         'Ext.data.UuidGenerator',
         'Ext.ux.form.field.BoxSelect',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.core.util.Validation'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-limitations',
@@ -85,14 +86,15 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             labelAlign: 'right',
             listeners: {
                 change: function (cb, newValue) {
-                    this.couponCodeBox[newValue ? 'show' : 'hide']();
+                    this.couponCodeBox[newValue ? 'show' : 'hide']();  
                 },
                 scope: this
             }
         });
         this.couponCodeInput = Ext.create('Ext.form.field.Text', {
             name: 'couponCode',
-            width: 500
+            width: 500,
+            validator: Taco.core.util.Validation.validateQueryString
         });
         this.couponCodeBox = Ext.create('Ext.container.Container', {
             layout: {
