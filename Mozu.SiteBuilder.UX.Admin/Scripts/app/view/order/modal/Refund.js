@@ -416,7 +416,7 @@ Ext.define('Taco.view.order.modal.Refund', {
     suggestRefund: function () {
         var state = this.getModalState();
         var payment = state.payment;
-        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited : state.collected - state.refunded).toFixed(2));
+        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited - payment.amountRefunded : state.collected - state.refunded).toFixed(2));
 
         return suggestion > 0 ? suggestion : 0;
     },

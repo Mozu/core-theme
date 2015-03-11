@@ -158,6 +158,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 '<tpl if="payment.amountCredited != 0">',
                 lbl('Amount Credited: ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
                 '</tpl>',
+                '<tpl if="payment.amountRefunded != 0">',
+                lbl('Amount Refunded: ', '{[values.orderRecord.formatCurrency(values.payment.amountRefunded)]}'),
+                '</tpl>'
             ],
             data: {
                 cls: cls,

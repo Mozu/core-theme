@@ -50,6 +50,11 @@ Ext.define('Taco.model.OrderPayment', {
             'useNull': false
         },
         {
+            'name': 'amountRefunded',
+            'type': 'float',
+            'useNull': false
+        },
+        {
             'name': 'amountAuthorized',
             'type': 'float',
             'useNull': false

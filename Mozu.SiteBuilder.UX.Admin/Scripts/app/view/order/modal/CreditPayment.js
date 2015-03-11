@@ -9,7 +9,10 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
     title: 'Issue Credit',
 
     initComponent: function (eOpts) {
-        var amountCollected = this.record.get('amountCollected');
+        var amountCollected = this.record.get('amountCollected'),
+            amountCredited = this.record.get('amountCredited'),
+            amountRefunded = this.record.get('amountRefunded'),
+            availableForCredit = Math.max(amountCollected - amountCredited - amountRefunded, 0);
 
         this.form = Ext.create('Taco.core.ux.form.Form', {
             requireDirty: false,
@@ -23,8 +26,8 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
                 itemId : 'amount',
                 fieldLabel: 'Amount',
                 required: true,
-                value: amountCollected,
-                maxValue : amountCollected,
+                value: availableForCredit,
+                maxValue: availableForCredit,
                 width: 160
             }, {
                 xtype: 'textarea',
