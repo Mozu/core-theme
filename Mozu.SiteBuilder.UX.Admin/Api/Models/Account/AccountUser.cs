@@ -8,8 +8,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     {
         public string UserId { get; set; }
 
-        public int[] Roles { get; set; }
-
+        //public List<AccountUserRole> Roles { get; set; }
+        public List<int> Roles { get; set; }
      
     }
 
@@ -20,6 +20,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
 
 
         public List<AccountUserRole> Roles { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
 
         public string Email { get; set; }
 
@@ -36,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         [JsonProperty(PropertyName = "id")]
         public int RoleId { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "roleName")]
         public string RoleName { get; set; }
     }
 }

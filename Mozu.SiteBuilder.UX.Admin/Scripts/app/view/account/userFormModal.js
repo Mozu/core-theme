@@ -27,16 +27,24 @@ Ext.define('Taco.view.account.userFormModal', {
             ]
         });
 
-        me.roles.on('load', function() {
+        me.roles.on('load', function () {
+            var selectedRecs = [];
             if (this.record) {
                 if (this.record.get('role') == 'SuperAdmin') {
                     Ext.ComponentQuery.query('[inputValue="sa"]')[0].setValue(true);
                 } else if (this.record.get('role') == 'Admin') {
                     //admin
                     Ext.ComponentQuery.query('[inputValue="a"]')[0].setValue(true);
+                } else if (this.record.get('role') != 'None' && this.record.get('role') != 'Multiple') {
+                    var pushRec = this.roles.getAt(this.roles.find('name', this.record.get('role')));
+
+                    if (pushRec) {
+                        console.log(pushRec);
+                        selectedRecs.push(pushRec);
+                    }
                 }
-                var selectedRecs = [];
-                this.record.childNodes.forEach(function(child) {
+
+                this.record.childNodes.forEach(function (child) {
                     if (this.roles.getById(child.get('id')) > -1) {
                         selectedRecs.push(this.roles.getById(Number(child.get('id'))));
                     }
@@ -144,14 +152,26 @@ Ext.define('Taco.view.account.userFormModal', {
 
         if (Ext.ComponentQuery.query('[name=role]')[0].value == true) {
             //super admin
-            roles.push(1);
+            var item = {
+                roleId: 1,
+                name: 'superadmin'
+            };
+            roles.push(item);
         } else if (Ext.ComponentQuery.query('[name=role]')[1].value == true) {
             //admin
-            roles.push(2);
+            var item = {
+                roleId: 2,
+                name: 'admin'
+            };
+            roles.push(item);
         } else {
             //other
             for (var x = 0; x < this.roleSelector.selModel.getSelection().length; x++) {
-                roles.push(this.roleSelector.selModel.getSelection()[x].get('id'));
+                var item = {
+                    roleId: this.roleSelector.selModel.getSelection()[x].get('id'),
+                    name: this.roleSelector.selModel.getSelection()[x].get('name')
+                };
+                roles.push(item);
             }
         }
         Ext.Ajax.request({
@@ -175,7 +195,6 @@ Ext.define('Taco.view.account.userFormModal', {
     updateUserAccountRole: function (record) {
         var me = this;
         var roles = [];
-
         if (Ext.ComponentQuery.query('[name=role]')[0].value == true) {
             //super admin
             roles.push(1);
@@ -188,7 +207,7 @@ Ext.define('Taco.view.account.userFormModal', {
                 roles.push(this.roleSelector.selModel.getSelection()[x].get('id'));
             }
         }
-        
+
         Ext.Ajax.request({
             url: '/admin/app/account/users/updaterole',
             method: 'POST',

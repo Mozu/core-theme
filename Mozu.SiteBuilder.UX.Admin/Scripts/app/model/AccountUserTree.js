@@ -19,7 +19,9 @@ Ext.define('Taco.model.AccountUserTree', {
                 return value;
             }
         },
-        { name: 'type',     type: 'string' },
+        { name: 'type', type: 'string' },
+        { name: 'firstName', type: 'string' },
+        { name: 'lastName', type: 'string' },
         { name: 'email', type: 'string' },
         {
             name: 'status', type: 'string', convert: function (value, rec) {

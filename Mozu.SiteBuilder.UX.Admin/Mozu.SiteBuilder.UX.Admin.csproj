@@ -228,10 +228,11 @@
     </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1503030029-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1503101519-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.AppDev.Contracts">
-      <HintPath>..\packages\Mozu.AppDev.Contracts.1.13.10\lib\net45\Mozu.AppDev.Contracts.dll</HintPath>
+    <Reference Include="Mozu.AppDev.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.AppDev.Contracts.1.17.1-dev1503051516-s\lib\net45\Mozu.AppDev.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.15.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -485,6 +486,8 @@
     <Compile Include="Api\EmailTestController.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyAggregateExceptionResponseBuilder.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyExceptionResponseBuilderCollection.cs" />
+    <Compile Include="Api\ModelMapping\InvitationMapping.cs" />
+    <Compile Include="Api\ModelMapping\InvitationRoleMapping.cs" />
     <Compile Include="Api\ModelMapping\LocalizationMapping.cs" />
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />

@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions
                     var roleText = "None";
                     var activity = accountUser.Activity;
 
-                    if (accountUser.DateLastSent != null)
+                    if (accountUser.Type.ToLower() != "user")
                     {
                         activity = accountUser.DateLastSent.ToString();
                     }
@@ -34,12 +34,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions
                         roles = ToLeafNode(accountUser);
                     }
 
-                    if (!roles.IsNullOrEmpty() && roles.Count < 2)
+                    if (!roles.IsNullOrEmpty() && roles.Count == 1)
                     {
                         roleText = roles[0].Role;
                         roles = new List<AccountUserTreeNode>();
                     }
-                    else if (roles.Count > 2)
+                    else if (roles.Count > 1)
                     {
                         roleText = "Multiple";
                     }
@@ -48,6 +48,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions
                         NodeId = "user-" + accountUser.Id,
                         ParentId = "",
                         Id = accountUser.Id,
+                        FirstName = (accountUser.FirstName.IsNullOrEmpty()) ? "" : accountUser.FirstName,
+                        LastName = (accountUser.LastName.IsNullOrEmpty()) ? "" : accountUser.LastName,
                         Email = accountUser.Email,
                         Role = roleText,
                         Activity = activity, //accountUser.Activity,

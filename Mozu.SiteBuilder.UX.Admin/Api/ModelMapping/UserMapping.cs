@@ -43,21 +43,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ParentCategoryId, op => op.Ignore())
                 .ForMember(x => x.Categories, op => op.Ignore())                
                   ;
-
-
-            Mapper.CreateMap<Mozu.AdminUser.Contracts.Invitation, Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation>()
-                //ignore
-                .ForMember(x => x.SiteId, op => op.Ignore())
-                .ForMember(x => x.TenantId, op => op.Ignore())
-                .ForMember(x => x.Role, op => op.Ignore())
-                ;
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.Account.Invitation,Mozu.AdminUser.Contracts.Invitation>()
-                //ignores
-                .ForMember(dc => dc.UserScopeType, op => op.Ignore())
-                .ForMember(dc => dc.UserScopeId, op => op.Ignore())
-                .ForMember(dc => dc.ScopeName, op => op.Ignore())
-                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
-                ;
+            
+            InvitationRoleMapping.Configure();
+            InvitationMapping.Configure();
         }
     }
 }

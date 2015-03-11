@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using AutoMapper;
+using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -16,6 +17,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions;
@@ -172,7 +174,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         
-
+        
         [HttpPostRoute(UriTemplate = "invitations/create")]
         public async Task<Response<Invitation>> CreateInvitation(Newtonsoft.Json.Linq.JObject request)
         {
@@ -192,7 +194,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dynamic newInvDynamic = newInv;
                 var newInvDynamicJArray = newInvDynamic.roleIds as JArray;
 
-                var rolesIds = newInvDynamicJArray != null ? newInvDynamicJArray.ToObject<List<int>>() : new List<int>();
+                var rolesIds = newInvDynamicJArray != null ? newInvDynamicJArray.ToObject<List<Mozu.AdminUser.Contracts.InvitationRole>>() : new List<Mozu.AdminUser.Contracts.InvitationRole>();
                 var id = newInvDynamic.id;
                 var email = newInvDynamic.email;
                 var result = (await _invitationWebApiClient.CreateInvitation(new AdminUser.Contracts.Invitation()
@@ -212,19 +214,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return Message3<Invitation>(false, e.Message);
             }
         }
-
+        
         [HttpGetRoute(UriTemplate = "users/list/tree")]
         public async Task<Response<List<AccountUserTreeNode>>> GetAccountUsersTree()
         {
 
             var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "Roles")).ReadAsSync().Items;
-            var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
-            var invitations = Mapper.Map<List<Invitation>>(invites);
+            List<AdminUser.Contracts.Invitation> invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
+            //Mapper.Map<Mozu.AdminUser.Contracts.InvitationRole, InvitationRole>();
+            var invitations = invites.ToSiteBuilderContract();// Mapper.Map<List<Invitation>>(invites);
 
             List<AccountUser> users = admins.Select(Mapper.Map<AccountUser>).Concat(
                 invitations.Select(Mapper.Map<AccountUser>)).ToList();
 
-            return List2(UserInventationTreeNodeExtentionscs.ToTreeNode(users));
+            return List2(users.ToTreeNode());
         }
 
         [HttpGetRoute(UriTemplate = "users/list")]
@@ -234,13 +237,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "Roles")).ReadAsSync().Items;
             var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
             var invitations = Mapper.Map<List<Invitation>>(invites);
-            foreach (var invitation in invitations)
+            /*foreach (var invitation in invitations)
             {
                 //ToDo: refactor this BF
                 var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleIds[0]);
                 invitation.Role  = role == null ? "(unknown)" : role.Name;
             }
-
+            */
             var users = admins.Select(Mapper.Map<AccountUser>).Concat(
                 invitations.Select(Mapper.Map<AccountUser>)).ToList();
 
@@ -261,7 +264,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             try
             {
                 var dcRoles = (await _adminUserWebApiClient.GetUserRoles(info.UserId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync();
-
+                var remove = dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId));
+                var add = info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x));
+                
                 await Task.WhenAll(dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId)).Select(
                     x => 
                         _adminUserWebApiClient.RemoveUserRole(info.UserId, x.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)
@@ -269,9 +274,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 await Task.WhenAll(info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x)).Select(x => 
                     _adminUserWebApiClient.AddUserRole( info.UserId, x, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ToList());
-
-
-                
             }
             catch (Exception e)
             {

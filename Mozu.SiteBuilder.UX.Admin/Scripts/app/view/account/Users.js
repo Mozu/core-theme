@@ -37,17 +37,6 @@ Ext.define('Taco.view.account.Users', {
             autoLoad: true
         });
 
-        //quick hack bc there's no paging, also this is slated to be refactored
-        //BF 2/4/15
-        me.store.on('load', function () {
-            /*this.filter(function (rec) {
-                if (rec.get('activity') != 'Declined') {
-                    return rec;
-                }
-            });*/
-            console.log('store loaded');
-        });
-
         me.treelist = Ext.create('Taco.core.ux.TreeList', {
             animate: false,
             enableColumnHide: false,
@@ -251,7 +240,7 @@ Ext.define('Taco.view.account.Users', {
                 if (!res.success) {
                     Taco.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
                 } else {
-                    //Taco.MessageBox.alert('Success', 'The invite has been sent');
+                    Taco.MessageBox.alert('Success', 'The invite has been sent');
                 }
             }
         });
@@ -259,6 +248,7 @@ Ext.define('Taco.view.account.Users', {
     deleteRecord: function (item, event) {
         switch (item.scope.treelist.getSelectionModel().getSelection()[0].get('type')) {
             case 'user':
+                Taco.MessageBox.alert('Success', 'User has been deleted');
                 item.scope.treelist.getSelectionModel().getSelection()[0].destroy();
                 break;
             case 'invitation':
@@ -267,6 +257,7 @@ Ext.define('Taco.view.account.Users', {
                     method: 'post',
                     jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,
                     success: function () {
+                        Taco.MessageBox.alert('Success', 'User has been deleted');
                         item.scope.treelist.store.reload();
                     },
                     failure: function (resp) {
