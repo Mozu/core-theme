@@ -246,53 +246,70 @@ Ext.define('Taco.view.account.Users', {
         });
     },
     deleteRecord: function (item, event) {
-        switch (item.scope.treelist.getSelectionModel().getSelection()[0].get('type')) {
-            case 'user':
-                Taco.MessageBox.alert('Success', 'User has been deleted');
-                item.scope.treelist.getSelectionModel().getSelection()[0].destroy();
-                break;
-            case 'invitation':
-                Ext.Ajax.request({
-                    url: "/admin/app/account/invitations/delete",
-                    method: 'post',
-                    jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,
-                    success: function () {
-                        Taco.MessageBox.alert('Success', 'User has been deleted');
-                        item.scope.treelist.store.reload();
-                    },
-                    failure: function (resp) {
-                        var json = Ext.decode(resp.responseText, true);
-                        Taco.app.fireEvent('setmessage', json.message, 'error');
-                    }
-                });
-                break;
-            case 'roll':
-                var childIds = [],
-                    userid = item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.get('id'),
-                    deleteRecId = item.scope.treelist.getSelectionModel().getSelection()[0].get('id');
-                item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.childNodes.forEach(function (child) {
-                    if (deleteRecId != child.get('id')) {
-                        childIds.push(child.get('id'));
-                    }
-                });
-
-                Ext.Ajax.request({
-                    url: "/admin/app/account/users/updaterole",
-                    method: 'post',
-                    jsonData: {
-                        userId: userid,
-                        roles: childIds
-                    },
-                    success: function () {
-                        item.scope.treelist.store.reload();
-                    },
-                    failure: function (resp) {
-                        var json = Ext.decode(resp.responseText, true);
-                        Taco.app.fireEvent('setmessage', json.message, 'error');
-                    }
-                });
-                break;
-        };
+        var message = 'Are you sure you want to delete this user?';
+        if (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase() == 'roll') {
+            message = 'Are you sure you want to remove this role from the user?';
+        }
+        Taco.MessageBox.show({
+            title: 'Delete',
+            icon: Ext.Msg.QUESTION,
+            msg: message,
+            buttons: Ext.Msg.YESNO,
+            fn: function (buttonId) {
+                if (buttonId === 'yes') {
+                    switch (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase()) {
+                        case 'user':
+                            Taco.MessageBox.alert('Success', 'User has been deleted');
+                            item.scope.treelist.getSelectionModel().getSelection()[0].destroy();
+                            break;
+                        case 'invitation':
+                            Ext.Ajax.request({
+                                url: "/admin/app/account/invitations/delete",
+                                method: 'post',
+                                jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,
+                                success: function () {
+                                    Taco.MessageBox.alert('Success', 'User has been deleted');
+                                    item.scope.treelist.store.reload();
+                                },
+                                failure: function (resp) {
+                                    var json = Ext.decode(resp.responseText, true);
+                                    Taco.app.fireEvent('setmessage', json.message, 'error');
+                                }
+                            });
+                            break;
+                        case 'roll':
+                            
+                            var childIds = [],
+                                userid = item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.get('id'),
+                                deleteRecId = item.scope.treelist.getSelectionModel().getSelection()[0].get('id');
+                            item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.childNodes.forEach(function (child) {
+                                if (deleteRecId != child.get('id')) {
+                                    childIds.push(child.get('id'));
+                                }
+                            });
+                            Ext.Ajax.request({
+                                url: "/admin/app/account/users/updaterole",
+                                method: 'post',
+                                jsonData: {
+                                    userId: userid,
+                                    roles: childIds
+                                },
+                                success: function () {
+                                    item.scope.treelist.store.reload();
+                                },
+                                failure: function (resp) {
+                                    var json = Ext.decode(resp.responseText, true);
+                                    Taco.app.fireEvent('setmessage', json.message, 'error');
+                                }
+                            });
+                            break;
+                    };
+                }
+                if (buttonId === 'no') {
+                    me.close();
+                }
+            }
+        });
     },
     onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         var target = Ext.fly(e.getTarget()),

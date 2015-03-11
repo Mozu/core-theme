@@ -258,6 +258,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(invitation);
         }
 
+        [HttpPostRoute(UriTemplate = "users/update")]
+        public async Task<Response<AccountUserRoleUpdate>> UpdateUser(AccountUserRoleUpdate info)
+        {
+            try
+            {
+                var dcRoles = (await _adminUserWebApiClient.GetUserRoles(info.UserId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync();
+                var remove = dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId));
+                var add = info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x));
+
+                await Task.WhenAll(dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId)).Select(
+                    x =>
+                        _adminUserWebApiClient.RemoveUserRole(info.UserId, x.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)
+                    ).ToList());
+
+                await Task.WhenAll(info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x)).Select(x =>
+                    _adminUserWebApiClient.AddUserRole(info.UserId, x, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ToList());
+            }
+            catch (Exception e)
+            {
+                return Message3<AccountUserRoleUpdate>(false, e.Message);
+            }
+
+            return Single2(info);
+        }
         [HttpPostRoute(UriTemplate = "users/updaterole")]
         public async Task<Response<AccountUserRoleUpdate>> UpdateAccountUser(AccountUserRoleUpdate info)
         {
@@ -274,6 +298,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 await Task.WhenAll(info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x)).Select(x => 
                     _adminUserWebApiClient.AddUserRole( info.UserId, x, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ToList());
+
+                var accountInfo = new AccountInformation {Email = info.Email, FirstName = info.FirstName, LastName = info.LastName};
+
+                _userHelper.UpdateUser(accountInfo, info.UserId); 
             }
             catch (Exception e)
             {

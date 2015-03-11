@@ -8,9 +8,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
     {
         public string UserId { get; set; }
 
-        //public List<AccountUserRole> Roles { get; set; }
         public List<int> Roles { get; set; }
-     
+
+        public string Email { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
     }
 
     

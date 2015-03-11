@@ -58,7 +58,18 @@ Ext.define('Taco.view.account.userFormModal', {
             checkOnly: true,
             showHeaderCheckbox: true,
             mode: this.multiSelect === false ? "SINGLE" : "MULTI",
-            headerWidth: 37
+            headerWidth: 37,
+            listeners: {
+                selectionchange: function (it) {
+                    if (it.getSelection().length == 0) {
+                        Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                    } else if (this.scope.form.getValues()['email'] != '') {
+                        Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+                    }
+
+                }
+            },
+            scope: me
         });
 
 
@@ -89,7 +100,18 @@ Ext.define('Taco.view.account.userFormModal', {
                     name: 'email',
                     width: 400,
                     fieldLabel: 'Email',
-                    value: (this.record) ? this.record.get('email') : ''
+                    allowBlank: false,
+                    value: (this.record) ? this.record.get('email') : '',
+                    listeners: {
+                        change: function (it) {
+                            if (it.getValue() == '') {
+                                Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                            } else if (it.scope.selModel.getSelection().length > 0) {
+                                Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+                            } 
+                        }
+                    },
+                    scope: me
                 },
                 {
                     xtype: 'fieldcontainer',
@@ -195,6 +217,7 @@ Ext.define('Taco.view.account.userFormModal', {
     updateUserAccountRole: function (record) {
         var me = this;
         var roles = [];
+        var email = this.form.getValues()['email'];
         if (Ext.ComponentQuery.query('[name=role]')[0].value == true) {
             //super admin
             roles.push(1);
@@ -213,8 +236,11 @@ Ext.define('Taco.view.account.userFormModal', {
             method: 'POST',
             jsonData: {
                 roles: roles,
-                userId: record.get('id')
-            },
+                userId: record.get('id'),
+                email: email,
+                firstName: record.get('firstName'),
+                lastName: record.get('lastName')
+    },
             success: function () {
                 Taco.app.fireEvent('UserSaved');
                 //I had to do this bc a weird scoping issue and overwriting the close function
