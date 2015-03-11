@@ -42,7 +42,14 @@ Ext.define('Taco.view.order.Header', {
              * @param {Taco.view.order.header} header The Header object that fired the event
              * @param {Taco.model.CustomerAccount} record The record of the Customer Account
              */
-            'customerchanged'
+            'customerchanged',
+            /**
+             * @event customerloaded
+             * Fired when the header loads a customer record
+             * @param {Taco.view.order.header} header The Header object that fired the event
+             * @param {Taco.model.CustomerAccount} record The record of the Customer Account
+             */
+            'customerloaded'
         ]);
 
         // after the record is reloaded we will need to refresh the ui
@@ -75,7 +82,8 @@ Ext.define('Taco.view.order.Header', {
         var me = this;
 
         this.record.loadCustomer({
-            callback: function () {
+            callback: function (record) {
+                me.fireEvent('customerloaded', me, record);
                 me.loadItems();
             }
         });
