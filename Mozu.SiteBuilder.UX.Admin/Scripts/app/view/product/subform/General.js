@@ -352,6 +352,7 @@ Ext.define('Taco.view.product.subform.General', {
             //flex:1,
             width: defaultFieldWidth,
             name: 'price',
+            itemId: 'price',
             required: true,
             allowBlank: false,
             hideTrigger: true,

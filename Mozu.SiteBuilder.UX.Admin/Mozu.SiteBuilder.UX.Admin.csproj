@@ -2105,6 +2105,7 @@
     <Content Include="Tests\unit\view\customers\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\createCustomer.t.js" />
+    <Content Include="Tests\unit\view\customers\subform\information-create.t.js" />
     <Content Include="Tests\unit\view\customers\subform\information.t.js" />
     <Content Include="Tests\customunit\view\order\header.t.js" />
     <Content Include="Tests\unit\view\discount\LimitationsForm.t.js" />

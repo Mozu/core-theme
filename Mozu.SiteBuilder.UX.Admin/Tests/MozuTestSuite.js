@@ -39,16 +39,17 @@ Harness.start(
                 group: 'Products',
                 expanded: true,
                 items: [
-                    {
-                        group: 'Products',
+                    //{
+                    //    group: 'Products',
 
-                        items: [
-                            {
-                                url: 'integration/product/product-basic-edit-save.js',
-                                title: 'Product Save'
-                            }
-                        ]
-                    }, {
+                    //    items: [
+                    //        {
+                    //            url: 'integration/product/product-basic-edit-save.js',
+                    //            title: 'Product Save'
+                    //        }
+                    //    ]
+                    //},
+                    {
                         group: 'Attributes',
                         expanded: true,
                         items: [
@@ -146,6 +147,9 @@ Harness.start(
                 items: [{
                     url: 'unit/view/customers/subform/information.t.js',
                     title: 'Customer Information Subform'
+                }, {
+                    url: 'unit/view/customers/subform/information-create.t.js',
+                    title: 'Create Information Subform'
                 }, {
                     url: 'unit/view/customers/modal/createCustomer.t.js',
                     title: 'Create Customer Modal'
