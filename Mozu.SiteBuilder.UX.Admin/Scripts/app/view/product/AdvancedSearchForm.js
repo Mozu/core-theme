@@ -5,7 +5,8 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.core.ux.form.field.AdminUser',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.shared.view.field.ProductTypePickerField'
     ],
 
     defaults: {
@@ -200,5 +201,6 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     flex: 1
                 }
             ]
-        }]
+        }
+    ]
 });

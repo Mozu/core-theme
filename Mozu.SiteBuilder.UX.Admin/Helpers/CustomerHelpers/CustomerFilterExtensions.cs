@@ -173,10 +173,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    var retVal = String.Format("{0} eq '{2}' or {1} eq '{2}'", CODE_PROPERTY, CUSTOMERID_PROPERTY, filter.escapedValue);
+                    var retVal = String.Format("{0} sw '{2}' or {1} eq '{2}'", CODE_PROPERTY, CUSTOMERID_PROPERTY, filter.escapedValue);
                     return retVal;
                 case "code":
-                    return String.Format("{0} eq \"{1}\"", CODE_PROPERTY, filter.escapedValue);
+                    return String.Format("{0} sw \"{1}\"", CODE_PROPERTY, filter.escapedValue);
                 case "customerid":
                     return String.Format("{0} eq \"{1}\"", CUSTOMERID_PROPERTY, filter.escapedValue);
                 case "customer":
