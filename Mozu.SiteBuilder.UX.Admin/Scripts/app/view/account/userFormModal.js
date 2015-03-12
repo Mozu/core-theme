@@ -11,7 +11,7 @@ Ext.define('Taco.view.account.userFormModal', {
 
     autoShow: true,
     scale: 'large',
-    title: 'Add User',
+    //title: 'Add User',
     actions: [{
         xtype: 'button',
         itemId: 'secondaryAction'
@@ -21,7 +21,7 @@ Ext.define('Taco.view.account.userFormModal', {
     }],
     initComponent: function() {
         var me = this;
-
+        me.title = (me.record) ? 'Edit User' : 'Add User';
         me.roles = Ext.create('Taco.store.Roles', {
             autoLoad: true,
             filters: [
@@ -35,12 +35,6 @@ Ext.define('Taco.view.account.userFormModal', {
 
         me.roles.on('load', function () {
             var selectedRecs = [];
-
-            if (this.form.getValues()['email'] || this.selModel.getSelection().length == 0) {
-                Ext.ComponentQuery.query('[text="Save"]')[0].disable();
-            } else {
-                Ext.ComponentQuery.query('[text="Save"]')[0].enable();
-            }
 
             if (this.record) {
                 if (this.record.get('role') == 'SuperAdmin') {
@@ -64,6 +58,12 @@ Ext.define('Taco.view.account.userFormModal', {
                 }, this);
                 this.selModel.select(selectedRecs);
             }
+
+            if (!this.isValid()) {
+                Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+            } else {
+                Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+            }
         }, me);
 
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
@@ -74,9 +74,9 @@ Ext.define('Taco.view.account.userFormModal', {
             headerWidth: 37,
             listeners: {
                 selectionchange: function (it) {
-                    if (it.getSelection().length == 0 || this.scope.form.getValues()['email'] == '') {
+                    if (!this.scope.isValid()) {
                         Ext.ComponentQuery.query('[text="Save"]')[0].disable();
-                    } else if (this.scope.form.getValues()['email'] != '') {
+                    } else {
                         Ext.ComponentQuery.query('[text="Save"]')[0].enable();
                     }
 
@@ -118,10 +118,9 @@ Ext.define('Taco.view.account.userFormModal', {
                     value: (this.record) ? this.record.get('email') : '',
                     listeners: {
                         change: function (it, newVal) {
-                            debugger;
-                            if (newVal == '' || it.scope.selModel.getSelection().length == 0) {
+                            if (!this.isValid()) {
                                 Ext.ComponentQuery.query('[text="Save"]')[0].disable();
-                            } else if (it.scope.selModel.getSelection().length > 0) {
+                            } else {
                                 Ext.ComponentQuery.query('[text="Save"]')[0].enable();
                             }
                         }
@@ -141,12 +140,28 @@ Ext.define('Taco.view.account.userFormModal', {
                             boxLabel: 'Super Admin',
                             name: 'role',
                             inputValue: 'sa',
-                            padding: '0 10 0 0'
+                            padding: '0 10 0 0',
+                            handler: function (radio) {
+                                if (!this.isValid()) {
+                                    Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                                } else {
+                                    Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+                                }
+                            },
+                            scope: this
                         }, {
                             boxLabel: 'Admin',
                             name: 'role',
                             inputValue: 'a',
-                            padding: '0 10 0 0'
+                            padding: '0 10 0 0',
+                            handler: function (radio) {
+                                if (!this.isValid()) {
+                                    Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                                } else {
+                                    Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+                                }
+                            },
+                            scope: this
                         }, {
                             boxLabel: 'Other',
                             name: 'role',
@@ -158,6 +173,12 @@ Ext.define('Taco.view.account.userFormModal', {
                                     this.roleSelector.enable();
                                 } else {
                                     this.roleSelector.disable();
+                                }
+
+                                if (!this.isValid()) {
+                                    Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                                } else {
+                                    Ext.ComponentQuery.query('[text="Save"]')[0].enable();
                                 }
                             },
                             scope: this
@@ -245,7 +266,7 @@ Ext.define('Taco.view.account.userFormModal', {
                 roles.push(this.roleSelector.selModel.getSelection()[x].get('id'));
             }
         }
-
+        this.close();
         Ext.Ajax.request({
             url: '/admin/app/account/users/updaterole',
             method: 'POST',
@@ -255,12 +276,30 @@ Ext.define('Taco.view.account.userFormModal', {
                 email: email,
                 firstName: record.get('firstName'),
                 lastName: record.get('lastName')
-    },
+            },
             success: function () {
                 Taco.app.fireEvent('UserSaved');
-                //I had to do this bc a weird scoping issue and overwriting the close function
-                Ext.ComponentQuery.query('window[title="Add User"]')[0].close();
             }
-        });
+        }, this);
+    },
+    isValid: function() {
+        var retval = false;
+        var radioSuperAdmin = Ext.ComponentQuery.query('[name=role]')[0];
+        var radioAdmin = Ext.ComponentQuery.query('[name=role]')[1];
+        var email = this.form.getValues()['email'];
+        var selectionModel = this.selModel.getSelection();
+
+        if (radioSuperAdmin.value == true && email != '') {
+            //super admin
+            retval = true;
+        } else if (radioAdmin.value == true && email != '') {
+            //admin
+            retval = true;
+        } else if (email != '' && selectionModel.length != 0) {
+            //other
+            retval = true;
+        }
+
+        return retval;
     }
 });

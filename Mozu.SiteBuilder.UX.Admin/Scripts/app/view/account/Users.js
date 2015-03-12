@@ -238,9 +238,9 @@ Ext.define('Taco.view.account.Users', {
             success: function(response) {
                 var res = Ext.JSON.decode(response.responseText);
                 if (!res.success) {
-                    Taco.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
+                    Ext.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
                 } else {
-                    Taco.MessageBox.alert('Success', 'The invite has been sent');
+                    Ext.MessageBox.alert('Success', 'The invite has been sent');
                 }
             }
         });
@@ -250,7 +250,7 @@ Ext.define('Taco.view.account.Users', {
         if (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase() == 'roll') {
             message = 'Are you sure you want to remove this role from the user?';
         }
-        Taco.MessageBox.show({
+        Ext.MessageBox.show({
             title: 'Delete',
             icon: Ext.Msg.QUESTION,
             msg: message,
@@ -259,7 +259,7 @@ Ext.define('Taco.view.account.Users', {
                 if (buttonId === 'yes') {
                     switch (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase()) {
                         case 'user':
-                            Taco.MessageBox.alert('Success', 'User has been deleted');
+                            Ext.MessageBox.alert('Success', 'User has been deleted');
                             item.scope.treelist.getSelectionModel().getSelection()[0].destroy();
                             break;
                         case 'invitation':
@@ -268,12 +268,12 @@ Ext.define('Taco.view.account.Users', {
                                 method: 'post',
                                 jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,
                                 success: function () {
-                                    Taco.MessageBox.alert('Success', 'User has been deleted');
+                                    Ext.MessageBox.alert('Success', 'User has been deleted');
                                     item.scope.treelist.store.reload();
                                 },
                                 failure: function (resp) {
                                     var json = Ext.decode(resp.responseText, true);
-                                    Taco.app.fireEvent('setmessage', json.message, 'error');
+                                    Ext.app.fireEvent('setmessage', json.message, 'error');
                                 }
                             });
                             break;
@@ -306,7 +306,7 @@ Ext.define('Taco.view.account.Users', {
                     };
                 }
                 if (buttonId === 'no') {
-                    me.close();
+                    //me.close();
                 }
             }
         });
