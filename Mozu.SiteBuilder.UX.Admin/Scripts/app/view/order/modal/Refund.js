@@ -96,25 +96,24 @@ Ext.define('Taco.view.order.modal.Refund', {
                 'paymentId',
                 { type: 'date', name: 'createDate' },
                 { type: 'number', name: 'amountCollected', defaultValue: 0 },
-                { type: 'number', name: 'amountRefunded', defaultValue: 0 }
+                { type: 'number', name: 'amountCredited', defaultValue: 0 }
             ],
-            data: store.getRange().map(function (record) {
+            data: Ext.Array.map(store.getRange(), function (record) {
                 var data = record.getData();
 
                 data.paymentId = data.id;
                 data.id = 'payment-' + data.id;
                 data.transactionType = 'Payment';
                 data.transactionMethod = data.paymentType;
-                data.amountRefunded = data.amountCredited;
 
                 return data;
-            }).concat(refunds.getRange().map(function (record) {
+            }).concat(Ext.Array.map(refunds.getRange(), function (record) {
                 var data = record.getData();
 
                 data.id = 'refund-' + data.id;
                 data.transactionType = 'Refund';
                 data.transactionMethod = data.payment.paymentType;
-                data.amountRefunded = data.amount;
+                data.amountCredited = data.amount;
                 data.paymentId = data.transactionMethod === 'StoreCredit' ? data.orderId : data.payment.id;
 
                 return data;
@@ -135,13 +134,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 ftype: 'grouping',
                 collapsible: false,
                 groupHeaderTpl: [
-                    'Payment:',
-                    '{[this.inspect(values)]}',
-                    {
-                        inspect: function (values) {
-                            return 'hello world';
-                        }
-                    }
+                    'Payment'
                 ]
             }],
             viewConfig: {
@@ -212,8 +205,8 @@ Ext.define('Taco.view.order.modal.Refund', {
                     return me.order.formatCurrency(value);
                 }
             }, {
-                dataIndex: 'amountRefunded',
-                text: 'Amount Refunded',
+                dataIndex: 'amountCredited',
+                text: 'Amount Credited',
                 flex: 1,
                 draggable: false,
                 sortable: false,
@@ -223,7 +216,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     var method = record.get('transactionMethod');
                     var type = record.get('transactionType');
 
-                    if (method === 'Check' || (method === 'StoreCredit' && type === 'Payment')) {
+                    if ((method === 'Check' && !value) || (method === 'StoreCredit' && type === 'Payment')) {
                         return '--';
                     }
 
@@ -338,6 +331,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     minValue: Number.MIN_VALUE,
                     emptyText: this.suggestRefund().toFixed(2),
                     maxText: ('Amount must be less than or equal to ' + this.order.formatCurrency(this.suggestRefund())),
+                    minText: ('Amount must be greater than ' + this.order.formatCurrency(0)),
                     listeners: {
                         change: {
                             scope: this,
@@ -422,7 +416,7 @@ Ext.define('Taco.view.order.modal.Refund', {
     suggestRefund: function () {
         var state = this.getModalState();
         var payment = state.payment;
-        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited : state.collected - state.refunded).toFixed(2));
+        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited - payment.amountRefunded : state.collected - state.refunded).toFixed(2));
 
         return suggestion > 0 ? suggestion : 0;
     },
