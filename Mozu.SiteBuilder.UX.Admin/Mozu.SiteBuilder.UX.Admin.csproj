@@ -892,11 +892,8 @@
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
-<<<<<<< HEAD
     <Content Include="Scripts\app\store\AccountUsersTree.js" />
     <Content Include="Scripts\app\store\AuditLog.js" />
-=======
->>>>>>> origin/1.17
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\States2.js" />
