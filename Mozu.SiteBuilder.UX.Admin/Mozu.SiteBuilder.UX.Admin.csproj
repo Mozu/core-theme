@@ -226,12 +226,13 @@
     <Reference Include="MoreLinq">
       <HintPath>..\packages\morelinq.1.0.16006\lib\net35\MoreLinq.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.AdminUser.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.AdminUser.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.13.2\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1503101519-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.AppDev.Contracts">
-      <HintPath>..\packages\Mozu.AppDev.Contracts.1.13.10\lib\net45\Mozu.AppDev.Contracts.dll</HintPath>
+    <Reference Include="Mozu.AppDev.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.AppDev.Contracts.1.17.1-dev1503051516-s\lib\net45\Mozu.AppDev.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -485,12 +486,15 @@
     <Compile Include="Api\EmailTestController.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyAggregateExceptionResponseBuilder.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyExceptionResponseBuilderCollection.cs" />
+    <Compile Include="Api\ModelMapping\InvitationMapping.cs" />
+    <Compile Include="Api\ModelMapping\InvitationRoleMapping.cs" />
     <Compile Include="Api\ModelMapping\LocalizationMapping.cs" />
     <Compile Include="Api\ModelMapping\CustomerContactMapping.cs" />
     <Compile Include="Api\ModelMapping\ISortFormatter.cs" />
     <Compile Include="Api\ModelMapping\OrderMappingExtensions.cs" />
     <Compile Include="Api\ModelMapping\ExtensibleAttributeMapping.cs" />
     <Compile Include="Api\ModelMapping\ReturnMapping.cs" />
+    <Compile Include="Api\Models\Account\AccountUserTreeNode.cs" />
     <Compile Include="Api\Models\Attributes\Extensible\Attribute.cs" />
     <Compile Include="Api\Models\Attributes\Extensible\AttributeDataType.cs" />
     <Compile Include="Api\Models\Attributes\Extensible\AttributeInputType.cs" />
@@ -508,6 +512,7 @@
     <Compile Include="Api\Models\Attributes\Product\AttributeValueType.cs" />
     <Compile Include="Api\Models\CustomerContact.cs" />
     <Compile Include="Api\Models\Entities\TenantAdminGlobalSettings.cs" />
+    <Compile Include="Api\Models\Extensions\UserInventationTreeNodeExtentionscs.cs" />
     <Compile Include="Api\Models\GeneralSettings\IPBlock.cs" />
     <Compile Include="Api\Models\Localization\LocalizedAttributeValue.cs" />
     <Compile Include="Api\Models\Localization\LocalizedProductProperty.cs" />
@@ -807,6 +812,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\AccountUserTree.js" />
     <Content Include="Scripts\app\model\AuditLog.js" />
     <Content Include="Scripts\app\model\State.js" />
     <Content Include="Scripts\app\model\DocumentType.js" />
@@ -886,6 +892,8 @@
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
+    <Content Include="Scripts\app\store\AccountUsersTree.js" />
+    <Content Include="Scripts\app\store\AuditLog.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
     <Content Include="Scripts\app\store\States2.js" />
@@ -935,6 +943,8 @@
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\store\StoreCredits.js" />
     <Content Include="Scripts\app\store\Wishlists.js" />
+    <Content Include="Scripts\app\view\account\userFormModal.js" />
+    <Content Include="Scripts\app\view\account\Users.js" />
     <Content Include="Scripts\app\view\businessIntelligence\Index.js" />
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
@@ -961,6 +971,7 @@
     <Content Include="Scripts\app\view\order\subform\AuditLog.js" />
     <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
+    <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
@@ -2001,7 +2012,6 @@
     <Content Include="Scripts\app\view\account\Billing.js" />
     <Content Include="Scripts\app\view\account\Navigation.js" />
     <Content Include="Scripts\app\view\account\Overview.js" />
-    <Content Include="Scripts\app\view\account\Users.js" />
     <Content Include="Scripts\app\shared\view\form\Address.js" />
     <Content Include="Scripts\app\view\customers\Edit.js" />
     <Content Include="Scripts\app\view\customers\GroupsForm.js" />
@@ -2504,6 +2514,7 @@
     <Folder Include="Scripts\sass\var\" />
     <Folder Include="Scripts\stylesheets\etc\" />
     <Folder Include="Tests\customunit\view\website\settings\" />
+    <Folder Include="Views\AccountUserTreeNode\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

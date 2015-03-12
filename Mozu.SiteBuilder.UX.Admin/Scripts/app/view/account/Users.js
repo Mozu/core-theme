@@ -1,319 +1,350 @@
 /**
- * @class  Taco.view.account.Users
+ * @class Taco.view.account.Users
  */
-
 Ext.define('Taco.view.account.Users', {
     extend: 'Taco.core.ux.content.Container',
     requires: [
-            'Taco.store.Roles',
-            'Taco.store.AccountUsers'
-  ],
-
-    // this is the title. 
-    title: 'Users',
-
+        'Taco.core.ux.TreeList',
+        'Taco.store.AccountUsersTree',
+        'Taco.view.account.userFormModal'
+    ],
     initComponent: function () {
         var me = this;
 
+        Taco.user.sites.forEach(function (site) {
+            if (site.roleId == 1) {
+                me.isSuperAdmin = true;
+            };
+        });
+
         me.header = {
-            title: this.title
-        };
-
-        me.store = Ext.create('Taco.store.AccountUsers', {
-            autoLoad: true
-        });
-
-        //quick hack bc there's no paging, also this is slated to be refactored
-        //BF 2/4/15
-        me.store.on('load', function () {
-            this.filter(function (rec) {
-                if (rec.get('activity') != 'Declined') {
-                    return rec;
-                }
-            });
-        });
-
-        me.roles = Ext.create('Taco.store.Roles', {
-            autoLoad: true
-        });
-
-        me.addform = Ext.create('Ext.form.Panel', {
-            layout: {
-                type: 'hbox',
-                align: 'middle'
-            },
-            defaults: {
-                margin: '0 15 0 0'
-            },
-            hidden: true,
-            items: [{
-                xtype: 'textfield',
-                name: 'email',
-                fieldLabel: 'Email',
-                labelAlign: 'left',
-                labelWidth: 60,
-                msgTarget: 'qtip',
-                allowOnlyWhitespace: false
-             }, {
-                xtype: 'combobox',
-                name: 'accessLevel',
-                fieldLabel: 'Access Level',
-                labelAlign: 'left',
-                labelWidth: 100,
-                msgTarget: 'qtip',
-                queryMode: 'local',
-                valueField: 'id',
-                displayField: 'name',
-                emptyText: 'Select access',
-                allowOnlyWhitespace: false,
-                editable: false,
-                forceSelection: true,
-                store: me.roles
-             }, {
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Cancel',
-                scope: this,
-                handler: function () {
-                    this.addbutton.show();
-                    this.addform.hide();
-                }
-            }, {
+            title: 'Users',
+            actions: [{
                 xtype: 'button',
                 ui: 'action-primary',
                 scale: 'medium',
-                text: 'Send Invite',
-                scope: this,
+                itemId: 'createActionButton',
+                text: 'Add User',
+                margin: '0 0 0 10',
+                disabled: !me.isSuperAdmin,
                 handler: function () {
-                    var form = me.addform.getForm();
-
-                    this.fireEvent('adduser', form.getFieldValues());
-                    form.reset();
+                    me.launchEditor();
                 }
             }]
+        };
+
+        me.store = Ext.create('Taco.store.AccountUsersTree', {
+            autoLoad: true
         });
 
-        me.addbutton = Ext.widget('button', {
-            ui: 'action',
-            scale: 'medium',
-            text: '+ Add new User',
-            scope: this,
-            handler: function () {
-                this.addform.show();
-                this.addbutton.hide();
-            }
-        });
-
-        me.rolesEditor = Ext.widget('boxselect', {
-            name: 'accessLevel',
-            mode: 'local',
-            valueField: 'id',
-            displayField: 'name',
-            allowBlank: false,
-            store: me.roles
-        });
-
-        var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1,
-                listeners: {
-                    beforeedit: function (editor, e) {
-                        return e.record.data.type !== 'invitation';
-                    },
-                    edit: function (editor, e) {
-
-                        me.updateUserAccountRole({
-                            roles: e.value,
-                            userId: e.record.getId()
-                        });
-                    }
-                }
-            }),
-            basegridview;
-
-        me.basegrid = Ext.create('Taco.core.ux.BaseGrid', {
+        me.treelist = Ext.create('Taco.core.ux.TreeList', {
+            animate: false,
+            enableColumnHide: false,
+            enableRowReorder: false,
             store: me.store,
-            layout: 'fit',
-            width: 942,
-            //hiddenColumns: ['name','siteName'],
-            enableColumnHide: true,
-            stateful:true,
-            stateId:"statefulUsersGrid",
+            viewConfig: {
+                animate: false,
+                stripeRows: true,
+                onExpand: Ext.emptyFn
+            },
             columns: [{
-                xtype: 'gridcolumn',
+                xtype: 'treecolumn',
                 dataIndex: 'email',
                 stateId: "email",
                 text: 'Email',
                 width: 400
-                }, {
-                xtype: 'gridcolumn',
-                dataIndex: 'roleIds',
-                stateId: "roles",
+            }, {
+                dataIndex: 'role',
+                stateId: "role",
                 text: 'Roles',
-                width: 200,
-                renderer: function (value, metaData, record) {
-                    return Ext.Array.pluck(record.data.roles || [], 'name').join(', ');
-                },
-                editor: me.rolesEditor
-                }, {
-                xtype: 'gridcolumn',
+                width: 200
+            }, {
                 dataIndex: 'activity',
                 stateId: "activity",
                 text: 'Activity',
-                width: 300,
-                renderer: function (value) {
-                    return value === 'Pending' ? value + ' <a href="#" class="resend-user-invite">Resend</a>' : value;
-                }
-                }, {
-                    xtype: 'taco.menucolumn',
-                    text: 'Actions',
-                    stateId: 'actionsColumn',
-                    menuItems: [
-                        {
-                            text: 'Delete',
-                            handler: function (item, event) {
-                                if (item.scope.basegrid.selModel.getSelection()[0].get('type') == 'user') {
-                                    item.scope.basegrid.selModel.getSelection()[0].destroy();
-                                } else {
-                                    Ext.Ajax.request({
-                                        url: "/admin/app/account/invitations/delete",
-                                        method: 'post',
-                                        jsonData: item.scope.basegrid.selModel.getSelection()[0].data,
-                                        success: function () {
-                                            item.scope.basegrid.store.reload();
-                                        },
-                                        failure: function (resp) {
-                                            var json = Ext.decode(resp.responseText, true);
-                                            Taco.app.fireEvent('setmessage', json.message, 'error');
-                                        }
-                                    });
-                                }
-
-                            },
-                            scope: me
-                        }
-                    ]
+                flex: 1,
+                width: 300
+            }, {
+                dataIndex: 'status',
+                stateId: "status",
+                text: 'Status',
+                width: 300
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                stateId: 'actionsColumn',
+                scope: me,
+                items: [
+                {
+                    text: 'flerp'
                 }],
-
-            plugins: [cellEditing],
-
+                handler: function (grid, foo, bar, snerst, evt, record, row) {
+                    this.launchContextMenu(evt, record, row);
+                }
+            }],
             dockedItems: [{
-                xtype: 'toolbar',
-                dock: 'bottom',
-                weight: 101,
-                padding: '5 0 0 0',
+                xtype: 'container',
+                dock: 'top',
+                padding: '0 0 10',
+                cls: 'taco-secondary-actions',
                 layout: {
                     type: 'hbox',
-                    align: 'stretch'
+                    align: 'middle',
+                    pack: 'end'
                 },
-                cls: Taco.baseCSSPrefix + 'toolbar-form',
-                items: [me.addbutton, me.addform]
-             }]
-        });
-
-        me.items = Ext.create('Ext.panel.Panel', {
-            layout: {
-                type: 'fit'
-            },
-            flex: 1,
-            items: [me.basegrid]
+                items: [{
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Expand All',
+                    allowDepress: false,
+                    enableToggle: true,
+                    scope: this,
+                    toggleHandler: function (button, nextState) {
+                        this.treelist.expandAll(function () {
+                            button.toggle(false);
+                        });
+                    }
+                }, {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Collapse All',
+                    margin: '0 0 0 10',
+                    scope: this,
+                    handler: function () {
+                        this.treelist.collapseAll();
+                    }
+                }]
+            }],
+            listeners: {
+                cellclick: me.onCellClick,
+                itemmove: me.onItemMove,
+                scope: me
+            }
         });
 
         Ext.apply(me.body, {
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            items: [me.items]
+            layout: 'fit',
+            items: [me.treelist]
         });
 
         me.callParent(arguments);
-        me.store.load();
 
-        me.on({
-            'adduser': {
-                fn: me.createInvite,
-                scope: me
+        Taco.app.on({
+            UserSaved: function (direction) {
+                this.store.load();
             },
-            'deleteuser': {
-                fn: me.deleteuser,
-                scope: me
-            }
-        });
-        basegridview = me.basegrid.view;
-        basegridview.mon(basegridview, 'itemclick', me.onItemClick, me);
-    },
-
-    updateUserAccountRole: function (updateInfo) {
-        var me = this;
-
-        Ext.Ajax.request({
-            url: '/admin/app/account/users/updaterole',
-            method: 'POST',
-            jsonData: updateInfo,
-
-            success: function () {
-                me.store.load();
-            }
+            scope: me
         });
     },
-
-    createInvite: function (values) {
+    launchContextMenu: function (evt, record, row) {
+        var actions;
         var me = this;
 
-        if (!(values.email) || !(values.accessLevel)) {
-            return false;
+        if (record.get('leaf')) {
+            //debugger
+            actions = [
+                {
+                    text: 'Delete Role',
+                    disabled: (record.parentNode.get('status') == 'Pending' || !me.isSuperAdmin) ? true : false,
+                    handler: function (item, event) {
+                        //me.launchEditor(item.ownerCt.record);
+                        me.deleteRecord(item, event);
+                    },
+                    scope: me
+                }
+            ];
+        } else if (record.get('status') == 'Pending') {
+            actions = [
+                {
+                    text: 'Delete User',
+                    disabled: !me.isSuperAdmin,
+                    handler: function (item, event) {
+                        //me.launchEditor(item.ownerCt.record);
+                        me.deleteRecord(item, event);
+                    },
+                    scope: me
+                },
+                {
+                    text: 'Resend Invite',
+                    disabled: !me.isSuperAdmin,
+                    handler: function (item, event) {
+                        me.resendInvitation(item, event);
+                    },
+                    scope: me
+                }
+            ];
+        } else {
+            /*
+                Delete requirements:
+                have to be super admin 
+                can not delete yourself
+            */
+            var canDelete = true;
+            if (Taco.user.id == record.get('id')) {
+                canDelete = false;
+            }
+            actions = [
+                {
+                    text: 'Edit',
+                    disabled: !me.isSuperAdmin,
+                    handler: function (item, event) {
+                        me.launchEditor(item.ownerCt.record);
+                    },
+                    scope: me
+                },
+                {
+                    text: 'Delete User',
+                    disabled: (!me.isSuperAdmin || !canDelete) ? true : false,
+                    handler: function (item, event) {
+                        //me.launchEditor(item.ownerCt.record);
+                        me.deleteRecord(item, event);
+                    },
+                    scope: me
+                }
+            ];
         }
 
 
-        Ext.Ajax.request({
-            url: '/admin/app/account/invitations/create',
-            jsonData: {
-                email: values.email,
-                roleId: values.accessLevel
-            },
-            success: function (response) {
+        var menu = Ext.create('Ext.menu.Menu', {
+            showSeparator: false,
+            items: actions,
+            record: record,
+            cls: 'dc-flydown-menu',
+            shadow: false,
+            plain: true,
+            listeners: {
+                beforeshow: function (view, eOpts) {
+                    me.actionMenuOpen = true;
+                },
+                beforehide: function (view, eOpts) {
+                    me.actionMenuOpen = false;
+                }
+            }
+        });
 
+        if (row) {
+            menu.showBy(row, 'tr-br', [-1, -1]);
+        } else {
+            menu.showAt(evt.getXY());
+        }
+    },
+    resendInvitation: function (item, event) {
+        console.log(item.scope.treelist.getSelectionModel().getSelection()[0]);
+        Ext.Ajax.request({
+            url: '/admin/app/account/invitations/resend',
+            jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,//item.data,
+            success: function(response) {
                 var res = Ext.JSON.decode(response.responseText);
-                if (res.success) {
-                    me.store.load();
+                if (!res.success) {
+                    Ext.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
                 } else {
-                    Taco.MessageBox.alert('Error', 'There was a problem inviting the user: ' + res.message);
+                    Ext.MessageBox.alert('Success', 'The invite has been sent');
                 }
             }
         });
     },
+    deleteRecord: function (item, event) {
+        var message = 'Are you sure you want to delete this user?';
+        if (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase() == 'roll') {
+            message = 'Are you sure you want to remove this role from the user?';
+        }
+        Ext.MessageBox.show({
+            title: 'Delete',
+            icon: Ext.Msg.QUESTION,
+            msg: message,
+            buttons: Ext.Msg.YESNO,
+            fn: function (buttonId) {
+                if (buttonId === 'yes') {
+                    switch (item.scope.treelist.getSelectionModel().getSelection()[0].get('type').toLowerCase()) {
+                        case 'user':
+                            Ext.MessageBox.alert('Success', 'User has been deleted');
+                            item.scope.treelist.getSelectionModel().getSelection()[0].destroy();
+                            break;
+                        case 'invitation':
+                            Ext.Ajax.request({
+                                url: "/admin/app/account/invitations/delete",
+                                method: 'post',
+                                jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,
+                                success: function () {
+                                    Ext.MessageBox.alert('Success', 'User has been deleted');
+                                    item.scope.treelist.store.reload();
+                                },
+                                failure: function (resp) {
+                                    var json = Ext.decode(resp.responseText, true);
+                                    Ext.app.fireEvent('setmessage', json.message, 'error');
+                                }
+                            });
+                            break;
+                        case 'roll':
+                            
+                            var childIds = [],
+                                userid = item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.get('id'),
+                                deleteRecId = item.scope.treelist.getSelectionModel().getSelection()[0].get('id');
+                            item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.childNodes.forEach(function (child) {
+                                if (deleteRecId != child.get('id')) {
+                                    childIds.push(child.get('id'));
+                                }
+                            });
+                            Ext.Ajax.request({
+                                url: "/admin/app/account/users/updaterole",
+                                method: 'post',
+                                jsonData: {
+                                    userId: userid,
+                                    roles: childIds
+                                },
+                                success: function () {
+                                    item.scope.treelist.store.reload();
+                                },
+                                failure: function (resp) {
+                                    var json = Ext.decode(resp.responseText, true);
+                                    Taco.app.fireEvent('setmessage', json.message, 'error');
+                                }
+                            });
+                            break;
+                    };
+                }
+                if (buttonId === 'no') {
+                    //me.close();
+                }
+            }
+        });
+    },
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        var target = Ext.fly(e.getTarget()),
+            metaData = { id: record.getId() },
+            header = view.getHeaderAtIndex(cellIndex);
 
-    onItemClick: function (view, record, elm, index, e) {
-        if (e.target.className === 'resend-user-invite') {
+        if (target.hasCls('x-tree-expander')) {
+            return;
+        }
+
+        if ((header.dataIndex || header.allowNavigation === true) && header.allowNavigation !== false && this.allowNavigation !== false) {
             e.preventDefault();
 
-            Ext.Ajax.request({
-                url: '/admin/app/account/invitations/resend',
-                jsonData: record.data,
-                success: function (response) {
-                    var res = Ext.JSON.decode(response.responseText);
-                    if (!res.success) Taco.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
-                }
+            if (e.target) {
+                metaData = Ext.apply(metaData, e.target.dataset);
+            }
+
+            this.launchEditor(record, metaData);
+        }
+    },
+
+    onItemClick: function (view, record, elm, index, e) {
+        this.launchEditor(record);
+    },
+
+    onItemMove: function (node, oldParent, newParent, index, options) {
+        //Place holder bc this function is required by the base class
+    },
+
+    launchEditor: function (record) {
+        if (record == null || record.get('type') != 'invitation' && !record.get('leaf')) {
+            var editor = Ext.create('Taco.view.account.userFormModal', {
+                record: record
             });
-        } else if (e.target.className.indexOf('taco-action-delete') >= 0) {
-            // todo: fix! this sucks, but the actions column on basegrid wasn't working as expected for me. allow this hack for now
-            var me = this;
-
-            Ext.Ajax.request({
-                url: '/admin/app/account/' + Ext.util.Inflector.pluralize(record.data.type) + '/delete',
-                jsonData: record.data,
-                success: function (response) {
-
-                    var res = Ext.JSON.decode(response.responseText);
-                    if (res.success) {
-                        me.store.load();
-                    } else {
-                        Taco.MessageBox.alert('Error', 'There was a problem deleting the user/invite: ' + res.message);
-                    }
-                }
-            });
-
+            editor.show();
         }
     }
 });

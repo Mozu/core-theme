@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using AutoMapper;
+using Mozu.AdminUser.Contracts;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -16,10 +17,15 @@ using Mozu.Core.Api.Routing;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.Tenant.Contracts.Clients;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using ApiRole = Mozu.Core.Api.Contracts.Role;
 
@@ -152,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcUser = (await _adminUserWebApiClient.GetUserRoles(accountUser.Id, scopeType: "Tenant", scopeId: _apiContext.TenantId)).ReadAsSync();
 
-            await Task.WhenAll(dcUser.Items.Select(role => _adminUserWebApiClient.RemoveUserRole(accountUser.Id, role.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)));
+            //await Task.WhenAll(dcUser.Items.Select(role => _adminUserWebApiClient.RemoveUserRole(accountUser.Id, role.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)));
 
             //await _adminUserWebApiClient.RemoveUserRole(accountUser.Id, accountUser.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId);
 
@@ -168,21 +174,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         
-
+        
         [HttpPostRoute(UriTemplate = "invitations/create")]
         public async Task<Response<Invitation>> CreateInvitation(Newtonsoft.Json.Linq.JObject request)
         {
             try
             {
                 var tenant = (await _tenantsClient.GetTenant(_apiContext.TenantId)).ReadAsSync();
+                // Serialized to string
+                var json = JsonConvert.SerializeObject(request, Formatting.Indented,
+                    new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
-                var result = (await _invitationWebApiClient.CreateInvitation( new AdminUser.Contracts.Invitation(){
-                    EmailAddress = request.Value<string>("email"),
-                    UserScopeType =UserScopeType.Tenant.ToString(),
-                    ScopeName = tenant.Name ,
-                    UserScopeId = _apiContext.TenantId ,
-                    RoleId = request.Value<int>("roleId") 
-                    })).ReadAsSync();
+                // Deserialize
+                var inv = JsonConvert.DeserializeObject<Invitation>(json,
+                    new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+
+                // Parse json and stuff
+                var newInv = JValue.Parse(json);
+                dynamic newInvDynamic = newInv;
+                var newInvDynamicJArray = newInvDynamic.roleIds as JArray;
+
+                var rolesIds = newInvDynamicJArray != null ? newInvDynamicJArray.ToObject<List<Mozu.AdminUser.Contracts.InvitationRole>>() : new List<Mozu.AdminUser.Contracts.InvitationRole>();
+                var id = newInvDynamic.id;
+                var email = newInvDynamic.email;
+                var result = (await _invitationWebApiClient.CreateInvitation(new AdminUser.Contracts.Invitation()
+                {
+                    EmailAddress = email,
+                    UserScopeType = UserScopeType.Tenant.ToString(),
+                    ScopeName = tenant.Name,
+                    UserScopeId = _apiContext.TenantId,
+                    InvitationRoles = rolesIds//request.Value<List<int>>("roleIds"),
+                })).ReadAsSync();
                 var newInvitation = Mapper.Map<AdminUser.Contracts.Invitation, Invitation>(result);
 
                 return Single2(newInvitation);
@@ -192,6 +214,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return Message3<Invitation>(false, e.Message);
             }
         }
+        
+        [HttpGetRoute(UriTemplate = "users/list/tree")]
+        public async Task<Response<List<AccountUserTreeNode>>> GetAccountUsersTree()
+        {
+
+            var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "Roles")).ReadAsSync().Items;
+            List<AdminUser.Contracts.Invitation> invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
+            //Mapper.Map<Mozu.AdminUser.Contracts.InvitationRole, InvitationRole>();
+            var invitations = invites.ToSiteBuilderContract();// Mapper.Map<List<Invitation>>(invites);
+
+            List<AccountUser> users = admins.Select(Mapper.Map<AccountUser>).Concat(
+                invitations.Select(Mapper.Map<AccountUser>)).ToList();
+
+            return List2(users.ToTreeNode());
+        }
 
         [HttpGetRoute(UriTemplate = "users/list")]
         public async Task<Response<List<AccountUser>>> GetAccountUsers()
@@ -200,12 +237,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var admins = (await _adminUserWebApiClient.GetUsers(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, startIndex: 0, pageSize: 600, responseGroups: "Roles")).ReadAsSync().Items;
             var invites = (await _invitationWebApiClient.GetInvitations(scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId, filter: "state ne confirmed")).ReadAsSync().Items;
             var invitations = Mapper.Map<List<Invitation>>(invites);
-            foreach (var invitation in invitations)
+            /*foreach (var invitation in invitations)
             {
-                var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleId);
+                //ToDo: refactor this BF
+                var role = (await GetRolesInternal()).FirstOrDefault(r => r.Id == invitation.RoleIds[0]);
                 invitation.Role  = role == null ? "(unknown)" : role.Name;
             }
-
+            */
             var users = admins.Select(Mapper.Map<AccountUser>).Concat(
                 invitations.Select(Mapper.Map<AccountUser>)).ToList();
 
@@ -220,13 +258,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(invitation);
         }
 
+        [HttpPostRoute(UriTemplate = "users/update")]
+        public async Task<Response<AccountUserRoleUpdate>> UpdateUser(AccountUserRoleUpdate info)
+        {
+            try
+            {
+                var dcRoles = (await _adminUserWebApiClient.GetUserRoles(info.UserId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync();
+                var remove = dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId));
+                var add = info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x));
+
+                await Task.WhenAll(dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId)).Select(
+                    x =>
+                        _adminUserWebApiClient.RemoveUserRole(info.UserId, x.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)
+                    ).ToList());
+
+                await Task.WhenAll(info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x)).Select(x =>
+                    _adminUserWebApiClient.AddUserRole(info.UserId, x, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ToList());
+            }
+            catch (Exception e)
+            {
+                return Message3<AccountUserRoleUpdate>(false, e.Message);
+            }
+
+            return Single2(info);
+        }
         [HttpPostRoute(UriTemplate = "users/updaterole")]
         public async Task<Response<AccountUserRoleUpdate>> UpdateAccountUser(AccountUserRoleUpdate info)
         {
             try
             {
                 var dcRoles = (await _adminUserWebApiClient.GetUserRoles(info.UserId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ReadAsSync();
-
+                var remove = dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId));
+                var add = info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x));
+                
                 await Task.WhenAll(dcRoles.Items.Where(x => !info.Roles.Contains(x.RoleId)).Select(
                     x => 
                         _adminUserWebApiClient.RemoveUserRole(info.UserId, x.RoleId, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)
@@ -235,8 +299,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 await Task.WhenAll(info.Roles.Where(x => !dcRoles.Items.Any(_ => _.RoleId == x)).Select(x => 
                     _adminUserWebApiClient.AddUserRole( info.UserId, x, scopeType: UserScopeType.Tenant.ToString(), scopeId: _apiContext.TenantId)).ToList());
 
+                var accountInfo = new AccountInformation {Email = info.Email, FirstName = info.FirstName, LastName = info.LastName};
 
-                
+                _userHelper.UpdateUser(accountInfo, info.UserId); 
             }
             catch (Exception e)
             {
