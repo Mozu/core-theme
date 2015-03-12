@@ -56,7 +56,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     initComponent: function(eOpts) {
         var me = this,
             siteContext,
-            editModeCls = (this.getEditMode()) ? " order-editable " : "";
+            editModeCls = (this.getEditMode()) ? ' order-editable ' : '';
 
 
         // attribute names need to be looked up for each order item that contains an option. :(
@@ -73,9 +73,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
         this.addEvents('save','saveFailure','saveSuccess');
         
-        me.cls = [this.cls,"focus-grid", editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
+        me.cls = [this.cls,'focus-grid', editModeCls, Taco.baseCSSPrefix + 'orderform-orderitemgrid'].join(' ');
 
-        me.bodyCls = Taco.baseCSSPrefix + 'orderform-orderitemgrid-body'
+        me.bodyCls = Taco.baseCSSPrefix + 'orderform-orderitemgrid-body';
         
         siteContext = Taco.app.context.getCurrent().urlToken;
 
@@ -87,7 +87,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             me.mon(me,'edit', me.onFieldEdit, me);
         } else {
             // if there is a draft version of this order we need to show a warning toolbar
-            if (this.record.get("hasDraft")) {
+            if (this.record.get('hasDraft')) {
                 me.showHasDraftToolbar();
             }
         };
@@ -100,17 +100,17 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             var editor = e.column.getEditor(),
                 record = e.record;
         
-            if (editor.$className == "Taco.view.order.widget.FulfillmentPickerField") {
+            if (editor.$className == 'Taco.view.order.widget.FulfillmentPickerField') {
 
                 
                 // prevent the user from editing the fulfillment method of an electronic download since we don't support that yet.
-                if (record.data.fulfillmentMethod == "Digital") {
-                    return false
+                if (record.data.fulfillmentMethod == 'Digital') {
+                    return false;
                 }
 
                 // neeed to set the productCode on the fulfillmentCombo editor so that the store can use it in its filter when opened;
-                var productCode = record.get("productCode"),
-                    parentProductCode = record.get("parentProductCode"),
+                var productCode = record.get('productCode'),
+                    parentProductCode = record.get('parentProductCode'),
                     fulfillmentConfig;
 
                 // if we have a parentProductCode, that means our productCode is really the code for the product varient; need to remamp these so that the service is happy.
@@ -136,12 +136,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         if (this.getEditMode()) {
             // this is the combo box that shows in the fullment column when the user clicks in the grid
             me.fulfillmentFieldComboEditor = Ext.widget({
-                xtype: "taco-fulfillmentpickerfield",
+                xtype: 'taco-fulfillmentpickerfield',
                 showBorder: (this.getEditMode()),
                 allowBlank: false,
                 typeAhead: false,
                 autoSelectFirstRecord: false,
-                msgTarget: "qtip",
+                msgTarget: 'qtip',
                 listeners: {
                     render: function (combo) {
                         var me = this;
@@ -151,14 +151,14 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         me.mon(editor, 'beforestartedit', function (cellEditor, el, value, eOpts) {
         
                             // reset the value for the field to empty text so that we get the full set of location options but still allow the user to type in search terms. This is the primary reason why I had to use the beforestartedit with canceled return; Criminy!
-                            value = "";
+                            value = '';
                             
                             // BEGIN COPIED CODE: from Ext.Editor.startEdit();
-                            // need to return false to cancel the edit and then do what the original method did but with the value reset to "", store loaded, and menu expanded;
+                            // need to return false to cancel the edit and then do what the original method did but with the value reset to '', store loaded, and menu expanded;
                             cellEditor.startValue = value;
                             cellEditor.show();                                
                             var field = cellEditor.field;
-                            // temporarily suspend events on field to prevent the "change" event from firing when reset() and setValue() are called
+                            // temporarily suspend events on field to prevent the 'change' event from firing when reset() and setValue() are called
                             field.suspendEvents();
                             field.reset();
                             field.setValue(value);
@@ -185,29 +185,29 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             })
         }
 
-        
+
         Ext.apply(this, {
             features: [
                 {
                     ftype: 'discountrowbody'
-                },{
+                }, {
                     ftype: 'rowwrap'
                 }
             ],
 
             viewConfig: {
-                cls: (this.getEditMode()) ? "editmode-enabled" : "",
+                cls: (this.getEditMode()) ? 'editmode-enabled' : '',
                 trackOver: (this.getEditMode()),
                 // changing the hover class to get rid of taco overrides of grid
                 //overItemCls: 'taco-orderItem-grid-row-over',
-                
+
                 emptyText: '<div class="empty-grid-message">No order items to display</div>',
                 deferEmptyText: false,
                 stripeRows: false,
-                disabled: false,  // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
+                disabled: false, // disables the grid, prevents the field editors from opening. prevents default hover behavior. Makes text grey and background grey. TODOs, explore this as an option for making the grid readony.
                 disableSelection: (!this.getEditMode()),
                 listeners: {
-                    beforecellmousedown: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+                    beforecellmousedown: function(view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
                         //prevent the column from being selected unless its an editor column
                         return me.columns[cellIndex].hasEditor();
                     }
@@ -215,7 +215,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // provides selective row class addition based on record.
                 getRowClass: function(record) {
                     if (!record) return '';
-                    if (record.get("discount")) {
+                    if (record.get('discount')) {
                         return 'taco-order-orderItem-hasDiscount';
                     }
                     return '';
@@ -225,18 +225,28 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             selModel: Ext.create('Ext.selection.CellModel', {
                 enableFieldTabbing: true,
                 // this disables support for tabbing into the grid when not editable;
-                enableKeyNav : (this.getEditMode()) ? true : false
+                enableKeyNav: (this.getEditMode()) ? true : false
             }),
 
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
-                    pluginId: "cellEditing",
+                    pluginId: 'cellEditing',
                     clicksToEdit: 1
                 })
             ],
 
             columns: [
-
+                {
+                    text: 'Line',
+                    draggable: false,
+                    resizable: true,
+                    width: 50,
+                    sortable: false,
+                    menuDisabled: true,
+                    hidden: false,
+                    align: 'center'
+                    //dataIndex: ''
+                },
                 {
                     text: 'Code',
                     draggable: false,
@@ -245,18 +255,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     hidden:false,
-                    align: "left",                                        
+                    align: 'left',                                        
                     dataIndex: 'productCode'
                 },
-
-
                 {
                     text: 'Products',
                     draggable: false,
                     minWidth:80,
                     xtype: 'templatecolumn',
                     flex: 1,
-                    //tdCls:"taco-product-column",
+                    //tdCls:'taco-product-column',
                     sortable: false,
                     resizable: false,
                     menuDisabled: true,                                       
@@ -295,18 +303,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         {
                             getAttributeName: function (val) {
                                 var rec = me.attributeStore.getById(val.attributeFQN)
-                                return (rec) ? rec.get("name") :  ""
+                                return (rec) ? rec.get('name') :  ''
                             }
                         }
                         /*,
                         {
                             getFulfillmentMethodText: function (record) {                            
                                 var fulfillmentMethod = record.fulfillmentMethod;
-                                var fulfillmentLocation = " (" + record.fulfillmentLocationCode + ")";
-                                if (fulfillmentMethod == "Ship") {
-                                    return "Direct Ship" + fulfillmentLocation;
+                                var fulfillmentLocation = ' (' + record.fulfillmentLocationCode + ')';
+                                if (fulfillmentMethod == 'Ship') {
+                                    return 'Direct Ship' + fulfillmentLocation;
                                 } else {
-                                    return "In Store Pickup" + fulfillmentLocation;                                
+                                    return 'In Store Pickup' + fulfillmentLocation;                                
                                 }
                             },
                             isEditable: function (values) {
@@ -323,7 +331,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
                                 
                                     var editMode = view.ownerCt.editMode,
-                                        fulfillmentMethod = e.target.getAttribute("fulfillmentMethod"),
+                                        fulfillmentMethod = e.target.getAttribute('fulfillmentMethod'),
                                         orderRecord = me.record
 
                                 
@@ -333,7 +341,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                         me.editFulfillmentMethod(record,orderRecord);
                                     }
 
-                                    if (!editMode || e.target.tagName != "A") {
+                                    if (!editMode || e.target.tagName != 'A') {
                                         return;
                                     }
                                 
@@ -343,8 +351,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                     // prevent the default link behavior
                                     e.preventDefault();
                                 
-                                    var productCode = record.get("productCode"),
-                                    isConfigurable = record.get("isConfigurable");
+                                    var productCode = record.get('productCode'),
+                                    isConfigurable = record.get('isConfigurable');
 
                                     // determine if we need to show the configurator
                                     //if (isConfigurable) {
@@ -370,10 +378,20 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         
                         }
                 },
-
+                {
+                    text: 'Status',
+                    draggable: false,
+                    resizable: true,
+                    width: 120,
+                    sortable: false,
+                    menuDisabled: true,
+                    hidden: false,
+                    align: 'left'
+                    //dataIndex: ''
+                },
                 {
                     text: 'Fulfillment',
-                    editorId: "fulfillmentColumn",
+                    editorId: 'fulfillmentColumn',
                     xtype: 'templatecolumn',
                     dataIndex: 'fulfillmentId',
                     draggable: false,
@@ -382,7 +400,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     width:180,
                     sortable: false,
                     menuDisabled: true,
-                    align: "left",
+                    align: 'left',
                     tpl: [
                         '{fulfillmentMethod}',
                         '<tpl if="values.fulfillmentMethod == \'Digital\'">',
@@ -399,7 +417,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     width: 80,
                     sortable: false,
                     menuDisabled: true,
-                    align: "right",
+                    align: 'right',
                     renderer: function (value) {
                         return me.record.formatCurrency(value);
                     },
@@ -409,10 +427,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         forcePrecision: true,
                         selectOnFocus:true,
                         hideTrigger: true,
-                        fieldStyle: "text-align:right;padding-right:4px;",
+                        fieldStyle: 'text-align:right;padding-right:4px;',
                         mouseWheelEnabled: false,
                         
-                        //unitString: "$",
+                        //unitString: '$',
                         //unitAtEnd: false,
                         allowBlank: true,
                         minValue: 0,
@@ -426,11 +444,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     width: 80,
                     sortable: false,
                     menuDisabled: true,
-                    align: "right",
+                    align: 'right',
                     editor: {
-                        xtype: "numberfield",
+                        xtype: 'numberfield',
                         showBorder: (this.getEditMode()),
-                        fieldStyle: "text-align:right;",
+                        fieldStyle: 'text-align:right;',
                         selectOnFocus: true,
                         allowBlank: true,
                         hideTrigger:true,
@@ -447,7 +465,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuDisabled: true,
                     width: this.getRowTotalColumnWidth(),
                     sortable: false,
-                    align: "right",
+                    align: 'right',
                     
                     renderer: function (value) {
                         return me.record.formatCurrency(value);
@@ -456,7 +474,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 },
                 {
                     //xtype: 'taco.menucolumn',
-                    //xtype:"templatecolumn",
+                    //xtype:'templatecolumn',
                     xtype: 'taco.actioncolumn',
                     
                     disabled:(!this.getEditMode()),
@@ -465,10 +483,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuDisabled: true,
                     text: '',
                     width: this.actionColumnWidth,
-                    // note: "x-action-col-icon" is required for the action column to call the handler;
-                    //innerCls: "x-grid-cell-inner-action-col x-action-col-icon",
+                    // note: 'x-action-col-icon' is required for the action column to call the handler;
+                    //innerCls: 'x-grid-cell-inner-action-col x-action-col-icon',
                     iconCls: Taco.baseCSSPrefix + 'grid-row-action-trigger ' + Taco.baseCSSPrefix + 'grid-row-action-trigger-remove',
-                    //tdCls: "remove-order-item-cell",
+                    //tdCls: 'remove-order-item-cell',
                     actionIconTpl: [
                         '<div roles="button" alt="{altText}" class="{cls}" {tooltip} ></div>'
                     ],
@@ -483,7 +501,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             rightJustifyButtons: true,
                             // reverses the order of the buttons
                             reverseOrder: true,
-                            msg: "Are you certain you want to delete this item?",
+                            msg: 'Are you certain you want to delete this item?',
                             closable: false,
                             buttons: Ext.Msg.YESNO,
                             fn: function (val) {
@@ -540,7 +558,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             }
 
             // listening for a custom event added to the cellSelectionModel via override; this is a cancellable event; retun false to prevent the key navigation to get processed by the grid;
-            me.mon(this.view, "beforecellkeymove", function (view, pos, newPos, dir, e) {                
+            me.mon(this.view, 'beforecellkeymove', function (view, pos, newPos, dir, e) {                
                 var me = this,
                     rowCount = me.store.getCount(),
                     cellCount = me.columns.length,
@@ -550,7 +568,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 //console.log(dir);
 
                 // user clicks down arrow while in last row or user hits tab key when in last cell on last row
-                if ((rowIndex == rowCount - 1 && dir == "down") || (rowIndex == rowCount - 1 && cellIndex == cellCount - 1 && dir == "right")) {
+                if ((rowIndex == rowCount - 1 && dir == 'down') || (rowIndex == rowCount - 1 && cellIndex == cellCount - 1 && dir == 'right')) {
                     // need to manually deselect the last selected grid cell to work around a bug in extjs;
                     me.view.onCellDeselect({
                         column: cellIndex,
@@ -577,7 +595,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 bug 1. beforeKey events don't fire before the grid navigates to next cell;
                 bug 2. rowIndex is incorrect in the arguments that are passed when the events fire; this is working in the 4.2.3 nightly but not working in the 4.2.2 release;
                 Keep this code around so we can use it when the bugs are fixed and my override can be removed;
-                See "beforecellkeymove" which is a custom event that I added to the CellModel override to fix both issues above;
+                See 'beforecellkeymove' which is a custom event that I added to the CellModel override to fix both issues above;
 
                 this.mon(this.view, 'beforecellkeydown', function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
                     var me = this,
@@ -615,35 +633,35 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             comboRecord = records[0],
             editor = combo.ownerCt,
             gridRecord = this.getSelectionModel().getSelection()[0],
-            plugin = me.getPlugin("cellEditing"),
-            fulfillmentMethod = comboRecord.get("fulfillmentMethod"),
-            fulfillmentLocationCode = comboRecord.get("locationCode"),
-            orderId = me.record.get("id"),
+            plugin = me.getPlugin('cellEditing'),
+            fulfillmentMethod = comboRecord.get('fulfillmentMethod'),
+            fulfillmentLocationCode = comboRecord.get('locationCode'),
+            orderId = me.record.get('id'),
             data= Ext.clone(gridRecord.data);
 
         
         var mask = me.setLoading({
-            msg: "Saving"
+            msg: 'Saving'
         }, me.body);
         
             
 
         /*
-        gridRecord.set("fulfillmentMethod", fulfillmentMethod);
-        gridRecord.set("fulfillmentLocationCode", fulfillmentLocationCode);
-        gridRecord.set("fulfillmentId", fulfillmentMethod + "(" + fulfillmentLocationCode + ")");
+        gridRecord.set('fulfillmentMethod', fulfillmentMethod);
+        gridRecord.set('fulfillmentLocationCode', fulfillmentLocationCode);
+        gridRecord.set('fulfillmentId', fulfillmentMethod + '(' + fulfillmentLocationCode + ')');
         */
         
         Ext.apply(data, {
             fulfillmentMethod: fulfillmentMethod,
             fulfillmentLocationCode : fulfillmentLocationCode,
-            fulfillmentId: fulfillmentMethod + "(" + fulfillmentLocationCode + ")"
+            fulfillmentId: fulfillmentMethod + '(' + fulfillmentLocationCode + ')'
         })
 
         plugin.completeEdit();
-        gridRecord.set("fulfillmentMethod", fulfillmentMethod);
-        gridRecord.set("fulfillmentLocationCode", fulfillmentLocationCode);
-        gridRecord.set("fulfillmentId", fulfillmentMethod + "(" + fulfillmentLocationCode + ")");
+        gridRecord.set('fulfillmentMethod', fulfillmentMethod);
+        gridRecord.set('fulfillmentLocationCode', fulfillmentLocationCode);
+        gridRecord.set('fulfillmentId', fulfillmentMethod + '(' + fulfillmentLocationCode + ')');
 
 
         me.record.editOrderItemFulfillmentMethod({
@@ -673,7 +691,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 gridRecord.commit();
                 me.setLoading(false, me.body);
                 //need to fire this event to get the record to reload
-                me.fireEvent("saveSuccess", json);
+                me.fireEvent('saveSuccess', json);
             },
             scope: this
         });
@@ -803,33 +821,33 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         if (!this.hasDraftToolbar) {
             
             this.hasDraftToolbar = Ext.create('Ext.toolbar.Toolbar', {
-                doc: "top",
-                componentCls: "title-toolbar draft-toolbar",
+                doc: 'top',
+                componentCls: 'title-toolbar draft-toolbar',
                 enableOverflow: false,
                 weight: 1,
                 items: [
                     {
-                        xtype: "component",
-                        html: "Warning: You have draft changes to this order detail",
-                        cls: "title",
+                        xtype: 'component',
+                        html: 'Warning: You have draft changes to this order detail',
+                        cls: 'title',
                         flex: 1
                     }, {
-                        //xtype: "taco.button",
-                        xtype: "button",
-                        ui: "action",
-                        scale:"medium",
-                        text: "Discard Changes",
+                        //xtype: 'taco.button',
+                        xtype: 'button',
+                        ui: 'action',
+                        scale:'medium',
+                        text: 'Discard Changes',
                         handler: function () {
                             me.removeDraftOrder();
                         },
                         scope: this
                     }, {
-                        //xtype: "taco.button",
-                        xtype: "button",
-                        ui: "action",
-                        scale: "medium",
-                        text: "Continue Editing",
-                        style: "margin-left:5px;",
+                        //xtype: 'taco.button',
+                        xtype: 'button',
+                        ui: 'action',
+                        scale: 'medium',
+                        text: 'Continue Editing',
+                        style: 'margin-left:5px;',
                         handler: function (button, e) {
                             var animationTarget = button.el;
                             me.editOrder(animationTarget);
@@ -857,7 +875,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         //e.record.commit();
 
         // don't need to persist changes to this field as they are handled by the select of the combo;
-        if (e.field == "fulfillmentId") {            
+        if (e.field == 'fulfillmentId') {            
             return;
         }
 
@@ -923,7 +941,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error adding coupon.", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error adding coupon.', 'error');
                     return;
                 }
                 this.fireEvent('saveSuccess',json);
@@ -931,7 +949,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error adding coupon.";
+                    msg = (json && json.message) ? json.message : 'Error adding coupon.';
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
             },
@@ -960,7 +978,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     // service didnt' return data properly
                     me.fireEvent('saveFailure');
                     
-                    Taco.app.fireEvent('setmessage', "Error adding order item.", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error adding order item.', 'error');
                     return;
                 }
                 
@@ -975,7 +993,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // error handling here
                 me.addInProgress = false;
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error adding order item.";
+                    msg = (json && json.message) ? json.message : 'Error adding order item.';
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 me.fireEvent('saveFailure');
@@ -1023,7 +1041,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 if (!json || !json.success) {
                     // service didnt' return data properly
                     this.fireEvent('saveFailure');                    
-                    Taco.app.fireEvent('setmessage', "Error editing order item.", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error editing order item.', 'error');
                     // reset the value to its default
                     var evt = e;
                     e.record.set(e.field, e.record.raw[e.field]);
@@ -1049,7 +1067,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error editing order item.";                
+                    msg = (json && json.message) ? json.message : 'Error editing order item.';                
                 // reset the value to its default
                 var evt = e;
                 e.record.set(e.field, e.record.raw[e.field]);
@@ -1070,8 +1088,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     //    var me = this,
     //        jsonData = {
     //            orderId: this.record.get('id'),
-    //            orderAdjustment: Ext.clone(this.record.get("orderAdjustment")),
-    //            shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment"))
+    //            orderAdjustment: Ext.clone(this.record.get('orderAdjustment')),
+    //            shippingAdjustment: Ext.clone(this.record.get('shippingAdjustment'))
     //        };
         
     //    if (!config.data) {
@@ -1096,7 +1114,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     //            var json = Ext.decode(response.responseText, true);
     //            if (!json || !json.success) {
     //                this.fireEvent('saveFailure');
-    //                Taco.app.fireEvent('setmessage', "Error adding adjustments", 'error');
+    //                Taco.app.fireEvent('setmessage', 'Error adding adjustments', 'error');
     //                return;
     //            }
     //            me.removeDocked(me.activeAddToolbar, true);
@@ -1104,7 +1122,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
     //        },
     //        failure: function (response) {
     //            var json = Ext.decode(response.responseText, true),
-    //                msg = (json && json.message) ? json.message : "Error adding adjustments.";
+    //                msg = (json && json.message) ? json.message : 'Error adding adjustments.';
     //            Taco.app.fireEvent('setmessage', msg, 'error');
     //            this.fireEvent('saveFailure');
     //        },
@@ -1124,16 +1142,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error deleting order item", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error deleting order item', 'error');
                     this.fireEvent('saveFailure');
                     return;
                 }
-                me.fireEvent("saveSuccess",json);
+                me.fireEvent('saveSuccess',json);
             },
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error deleting order item";
+                    msg = (json && json.message) ? json.message : 'Error deleting order item';
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1147,7 +1165,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         var me = this;
 
         me.ownerCt.setLoading({
-            maskCls: "x-mask taco-white-mask"
+            maskCls: 'x-mask taco-white-mask'
         });
 
         me.record.acceptOrder({
@@ -1158,18 +1176,18 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', "Error accepting order", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error accepting order', 'error');
                     me.fireEvent('saveFailure');
                     return;
                 }
                 me.ownerCt.setLoading(false);
-                me.fireEvent("orderAccepted", json);
+                me.fireEvent('orderAccepted', json);
             },
             failure: function (response) {
                 me.setLoading(false);
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error accepting order";
+                    msg = (json && json.message) ? json.message : 'Error accepting order';
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 me.ownerCt.setLoading(false);
                 me.fireEvent('saveFailure');
@@ -1197,7 +1215,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             fn: function (rec) {
                 if (rec === 'yes') {
                     me.ownerCt.setLoading({
-                        maskCls: "x-mask taco-white-mask"
+                        maskCls: 'x-mask taco-white-mask'
                     });
 
                     me.record.cancelOrder({
@@ -1208,19 +1226,19 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             // success handling here
                             var json = Ext.decode(response.responseText, true);
                             if (!json || !json.success) {
-                                Taco.app.fireEvent('setmessage', "Error canceling order", 'error');
+                                Taco.app.fireEvent('setmessage', 'Error canceling order', 'error');
                                 me.fireEvent('saveFailure');
                                 return;
                             }
                             me.ownerCt.setLoading(false);
-                            me.fireEvent("orderCancelled", json);
+                            me.fireEvent('orderCancelled', json);
                             
                         },
                         failure: function (response) {
                             me.setLoading(false);
                             // error handling here
                             var json = Ext.decode(response.responseText, true),
-                                msg = (json && json.message) ? json.message : "Error canceling order";
+                                msg = (json && json.message) ? json.message : 'Error canceling order';
                             Taco.app.fireEvent('setmessage', msg, 'error');
                             me.ownerCt.setLoading(false);
                             me.fireEvent('saveFailure');
@@ -1252,17 +1270,17 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.fireEvent('setmessage', "Error suppressing order item discount", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error suppressing order item discount', 'error');
                     this.fireEvent('saveFailure');
                     return;
                 }
                 
-                me.fireEvent("saveSuccess",json);
+                me.fireEvent('saveSuccess',json);
             },
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error suppressing order item discount";
+                    msg = (json && json.message) ? json.message : 'Error suppressing order item discount';
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1284,16 +1302,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.fireEvent('setmessage', "Error activating order item discount", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error activating order item discount', 'error');
                     this.fireEvent('saveFailure');
                     return;
                 }
-                me.fireEvent("saveSuccess",json);
+                me.fireEvent('saveSuccess',json);
             },
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error activating order item discount";
+                    msg = (json && json.message) ? json.message : 'Error activating order item discount';
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 this.fireEvent('saveFailure');
@@ -1311,24 +1329,24 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         
         this.record.removeDraftOrder({
             jsonData: {
-                orderId: this.record.get("id")
+                orderId: this.record.get('id')
             },
             success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didnt' return data properly
-                    Taco.app.fireEvent('setmessage', "Error cancelling changes", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error cancelling changes', 'error');
                     
                     this.fireEvent('saveFailure');
                     return;
                 }
-                me.fireEvent("draftOrderRemoved");
+                me.fireEvent('draftOrderRemoved');
             },
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error cancelling changes";
+                    msg = (json && json.message) ? json.message : 'Error cancelling changes';
 
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 
@@ -1349,23 +1367,23 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         
         this.record.saveDraftOrder({
             jsonData: {
-                orderId: this.record.get("id")
+                orderId: this.record.get('id')
             },
             success: function (response) {
                 // success handling here
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     this.fireEvent('saveFailure');
-                    Taco.app.fireEvent('setmessage', "Error saving changes", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error saving changes', 'error');
                     return;
                 }
                 
-                me.fireEvent("draftOrderSaved",json);
+                me.fireEvent('draftOrderSaved',json);
             },
             failure: function(response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : "Error saving changes";
+                    msg = (json && json.message) ? json.message : 'Error saving changes';
                 Taco.app.fireEvent('setmessage', msg, 'error');
                 
                 this.fireEvent('saveFailure');

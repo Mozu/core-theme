@@ -18,20 +18,20 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         fulfillmentMethod: null,
         locationCode: null
     },
-    dock: "bottom",
+    dock: 'bottom',
     layout: {
-        type: "hbox",
-        align: "middle"
+        type: 'hbox',
+        align: 'middle'
     },
-    style: "border:1px solid #ccc;padding-top:2px;padding-bottom:2px;",
+    style: 'border:1px solid #ccc;padding-top:2px;padding-bottom:2px;',
 
-    focusCls: "taco-order-addproducttoolbar-focus",
+    focusCls: 'taco-order-addproducttoolbar-focus',
 
     initComponent: function(eOpts) {
-        var me = this
+        var me = this;
         
         if (!me.grid) {
-            throw "A grid is requred;"
+            throw 'A grid is requred;';
         };
 
         me.gridColumns = me.grid.columns;
@@ -40,74 +40,94 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         
         me.cls = [this.cls, 'order-addproducttoolbar'].join(' ');
 
-        me.codeField = Ext.widget({
-            xtype: "displayfield",
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            fieldStyle: "padding:0px 4px;",
-            fieldCls: "order-addproducttoolbar-field",
+        me.lineField = Ext.widget({
+            xtype: 'displayfield',
+            fieldBodyCls: 'order-addproducttoolbar-cell',
+            fieldStyle: 'padding:0px 4px;',
+            fieldCls: 'order-addproducttoolbar-field',
             width: this.gridColumns[0].width,
-            value: ""
+            value: ''
+        });
+
+        me.statusField = Ext.widget({
+            xtype: 'displayfield',
+            fieldBodyCls: 'order-addproducttoolbar-cell',
+            fieldStyle: 'padding:0px 4px;',
+            fieldCls: 'order-addproducttoolbar-field',
+            width: this.gridColumns[3].width,
+            value: ''
+        });
+        
+
+        me.codeField = Ext.widget({
+            xtype: 'displayfield',
+            fieldBodyCls: 'order-addproducttoolbar-cell',
+            fieldStyle: 'padding:0px 4px;',
+            fieldCls: 'order-addproducttoolbar-field',
+            width: this.gridColumns[1].width,
+            value: ''
         });
 
         me.priceField = Ext.widget({
-            xtype: "displayfield",
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            fieldStyle: "text-align:right;padding:0px 4px;",
-            fieldCls: "order-addproducttoolbar-field",
-            width: this.gridColumns[3].width,
-            value: ""
-        })
+            xtype: 'displayfield',
+            fieldBodyCls: 'order-addproducttoolbar-cell',
+            fieldStyle: 'text-align:right;padding:0px 4px;',
+            fieldCls: 'order-addproducttoolbar-field',
+            width: this.gridColumns[5].width,
+            value: ''
+        });
 
         me.quantityField = Ext.widget({
-            xtype: "numberfield",
+            xtype: 'numberfield',
             disabled: true,
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            fieldStyle: "text-align:right;padding-right:4px;",            
+            fieldBodyCls: 'order-addproducttoolbar-cell',
+            fieldStyle: 'text-align:right;padding-right:4px;',
             //forcePrecision: true,
             selectOnFocus: true,
             hideTrigger: true,
 
-            //fieldStyle: "text-align:right;padding-right:4px;",
+            //fieldStyle: 'text-align:right;padding-right:4px;',
             mouseWheelEnabled: false,
             allowBlank: false,
             minValue: 1,
             maxValue: 100000,
-            width: this.gridColumns[4].width,
-            value: "",
+            width: this.gridColumns[6].width,
+            value: '',
             listeners: {
                 focus: this.onFocus,
                 blur: this.onBlur,
-                scope:me
+                scope: me
             }
-        })
+        });
 
         me.addItemButton = Ext.widget({            
-            xtype: "button",
-            ui: "action",
-            scale:"medium",
-            fieldBodyCls: "order-addproducttoolbar-cell",            
-            text: "Add",
+            xtype: 'button',
+            ui: 'action',
+            scale:'medium',
+            fieldBodyCls: 'order-addproducttoolbar-cell',            
+            text: 'Add',
             itemId: 'addButton',
             disabled: true,            
-            width: this.gridColumns[5].width,
+            width: this.gridColumns[7].width,
             handler: function () {
                 // the handler also gets called, when the enter key is hit. But there is already a handler for enter, so we cancel it
                 if (arguments[1].keyCode != 13)
                     this.save();
             },
             scope:this,
-            value: ""
+            value: ''
         });
 
         me.productPickerField = Ext.create('Taco.shared.view.field.ProductPickerField', {
             plugins: [
                 'inputmask'
             ],            
-            flex:1,
-            style: "padding:5px",
-            fieldBodyCls: "order-addproducttoolbar-cell",
+            width: this.gridColumns[2].width,
+            flex: 1,
+            style: 'padding:5px',
+            fieldBodyCls: 'order-addproducttoolbar-cell',
             pageSize: me.getProductsPerPage(),
-            value: "",
+            value: '',
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl if="values && values.productName"><span class="product-name">{productName}</span> <span class="product-code">{productCode}</span></tpl>'
             ),
@@ -136,7 +156,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                     me.reset();
 
                     // cancel event to prevent the default behavior from completing;
-                    return false
+                    return false;
                 },
                 'specialkey': {
                     fn: function (field, e) {                        
@@ -175,16 +195,16 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                 'inputmask'
             ],
             disabled: true,
-            //fieldCls: "toolbar-field",
+            //fieldCls: 'toolbar-field',
             //allowBlank:false,
-            fieldBodyCls: "order-addproducttoolbar-cell",
-            msgTarget: "qtip",
-            width: this.gridColumns[2].width,
+            fieldBodyCls: 'order-addproducttoolbar-cell',
+            msgTarget: 'qtip',
+            width: this.gridColumns[4].width,
             pageSize: me.productsPerPage,
-            value: "",
+            value: '',
             /*
             displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl if="values && values.fulfillmentMethod"><span class="fulfillmentmethod">{fulfillmentMethod}</span> <span class="locationcode">{locationCode}</span></tpl>'
+                '<tpl if='values && values.fulfillmentMethod'><span class='fulfillmentmethod'>{fulfillmentMethod}</span> <span class='locationcode'>{locationCode}</span></tpl>'
             ),
             */
             maskTpl: Ext.create('Ext.XTemplate',
@@ -212,8 +232,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                     
                     //field.reset();
                     // clear the cached values on the toolbar;
-                    me.setFulfillmentMethod("")
-                    me.setLocationCode("");
+                    me.setFulfillmentMethod('');
+                    me.setLocationCode('');
                     
                     me.quantityField.disable();
                     me.addItemButton.disable();
@@ -234,8 +254,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                 
                 beforeselect: {
                     fn: function (combo, record, index, e) {
-                        var fulfillmentMethod = record.get("fulfillmentMethod"),
-                            locationCode = record.get("locationCode"),
+                        var fulfillmentMethod = record.get('fulfillmentMethod'),
+                            locationCode = record.get('locationCode'),
                             maskTxt;
                         
                         combo.collapse();
@@ -248,12 +268,12 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                             //combo.setRawValue(record.get('locationCode'));
                             
                             // save cached values on the toolbar. These are what will be persisted;
-                            me.setFulfillmentMethod(record.get("fulfillmentMethod"))
-                            me.setLocationCode(record.get("locationCode"));
+                            me.setFulfillmentMethod(record.get('fulfillmentMethod'));
+                            me.setLocationCode(record.get('locationCode'));
 
                             // need to manually blur this field due to a bug in extjs where combo's with trigger don't blur properly;
                             combo.blur();
-                            combo.triggerBlur()
+                            combo.triggerBlur();
                             me.quantityField.enable();
                             me.quantityField.focus();
                             me.addItemButton.enable();
@@ -268,24 +288,24 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         });
 
 
-
-
         this.items = [
+            this.lineField,
             this.codeField,
             this.productPickerField,
+            this.statusField,
             this.fulfillmentPickerField,
             this.priceField,
             this.quantityField,
-            this.addItemButton,            
+            this.addItemButton,
             {
-                xtype: "component",
-                width: this.gridColumns[6].width
+                xtype: 'component',
+                width: this.gridColumns[8].width
             }
-        ]
+        ];
 
         me.callParent(arguments);
-        
-        me.mon(me, 'render', function () {
+
+        me.mon(me, 'render', function() {
             this.keyNav = new Ext.util.KeyNav({
                 target: me.el,
                 // the defaultEventAction needs to be falsy to allow for the event to propogate;it is stopped by default;
@@ -294,22 +314,20 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                 //down: function (e) {},
                 //left: function (e) {},
                 //right: function (e) {},
-                enter: function () {
+                enter: function() {
                     this.save();
                 },
                 //esc: this.reset,
                 scope: this
             });
-        }, this)
-
-
+        }, this);
     },
 
     // after a product is selected and optionaly configured (if product is configurable)
     onProductSelect : function (record,productConfig){
         var me = this,            
             productCode = record.get('productCode'),
-            variationProductCode = (productConfig && productConfig.VariationProductCode) ? productConfig.VariationProductCode : "",
+            variationProductCode = (productConfig && productConfig.VariationProductCode) ? productConfig.VariationProductCode : '',
             productCodeToAdd = variationProductCode || productCode,
             price;
 
@@ -319,10 +337,10 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             //productCodeToAdd = productConfig.VariationProductCode || record.get('productCode');
             price = productConfig.Price || productConfig.price;
             if (Ext.isObject(price)) {
-                price  = price.SalePrice || price.Price
+                price = price.SalePrice || price.Price;
             }
         } else {
-            price = record.get("salePrice") || record.get("price")
+            price = record.get('salePrice') || record.get('price');
             // need to create a product config since one wasn't passed in;
             productConfig = {
                 productCode: productCode
@@ -337,7 +355,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         me.setProductConfiguration(productConfig);
         // need to manually blur this field;
         me.productPickerField.blur();
-        me.productPickerField.triggerBlur()
+        me.productPickerField.triggerBlur();
 
         //init the fulfillment field. Need to pick the fulfillment location and determined product availability;
         this.loadFulfillmentPickerField({
@@ -351,8 +369,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
     onBeforeProductSelect: function (combo, record, index, e) {
         var me = this,
         productPickerField = combo,
-        productCode = record.get("productCode"),
-        isConfigurable = record.get("isConfigurable"),
+        productCode = record.get('productCode'),
+        isConfigurable = record.get('isConfigurable'),
         price,
         win,
         productCodeToAdd;
@@ -370,8 +388,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                 listeners: {                    
                     'aftersaveclose': {
                         fn: function (cmp, configurationData) {
-                            combo.inputMask.show(record.get("productName"))
-                            //combo.showInputMask(record.get("productName"));
+                            combo.inputMask.show(record.get('productName'));
+                            //combo.showInputMask(record.get('productName'));
                             this.onProductSelect(record, Ext.clone(configurationData));
                         },
                         scope:this
@@ -390,8 +408,8 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             });
 
         } else {
-            combo.inputMask.show(record.get("productName"))            
-            this.onProductSelect(record)
+            combo.inputMask.show(record.get('productName'));
+            this.onProductSelect(record);
         }
 
         // cancel the selection so that the same product can be reselected again;
@@ -439,33 +457,33 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             quantity: this.quantityField.getValue(),
             fulfillmentMethod: fulfillmentMethod,
             fulfillmentLocationCode: locationCode,
-            fulfillmentId: fulfillmentMethod + "(" + locationCode + ")"
+            fulfillmentId: fulfillmentMethod + '(' + locationCode + ')'
         })
 
-        
-        me.fireEvent("save", me, Ext.clone(productConfiguration))
+
+        me.fireEvent('save', me, Ext.clone(productConfiguration));
     },
 
-    onSaveSuccess: function (){
-        console.log("onSaveSuccess")
+    onSaveSuccess: function () {
+        console.log('onSaveSuccess');
         me.reset();
     },
 
     onSaveFailure: function () {
-        console.log("onSaveFailure")
+        console.log('onSaveFailure');
         // notify user of the error;
     },
 
     onFocus: function (){
         var me = this;
         me.addCls(me.focusCls);
-        me.fireEvent("focus");
+        me.fireEvent('focus');
     },
 
     onBlur: function () {
         var me = this;
         me.removeCls(me.focusCls);
-        me.fireEvent("blur");
+        me.fireEvent('blur');
     },
 
     reset: function (config) {
@@ -476,26 +494,26 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
         
         
         me.fulfillmentPickerField.reset();
-        me.fulfillmentPickerField.blur()
-        me.fulfillmentPickerField.triggerBlur()        
+        me.fulfillmentPickerField.blur();
+        me.fulfillmentPickerField.triggerBlur();     
         me.fulfillmentPickerField.disable();
         
-        me.codeField.setValue("");
+        me.codeField.setValue('');
 
         me.quantityField.reset();
         me.quantityField.blur();
         // Note: due to extjs bug, blur on numberfield or any field with triggers isn't successful unless you call triggerBlur() as well;
-        me.quantityField.triggerBlur()        
+        me.quantityField.triggerBlur(); 
         me.quantityField.disable();
 
-        me.priceField.setValue("");
+        me.priceField.setValue('');
 
         me.addItemButton.disable();
 
         // adding a small delay to let IE/Firefox catch up
         Ext.Function.defer(function () {
             if (this.productPickerField) {
-                this.productPickerField.focus()
+                this.productPickerField.focus();
             }
         }, 100, me);
         
