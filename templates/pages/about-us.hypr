@@ -7,7 +7,7 @@
 
  {% block body-content %}
 
-	 <div>{{model.properties.blurb|safe}}<div>
+	 <div>{{model.properties.blurb|safe}}</div>
 
 	{% dropzone "body" scope="page" %}
 {% endblock body-content %}
