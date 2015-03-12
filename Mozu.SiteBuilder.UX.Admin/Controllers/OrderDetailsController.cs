@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             if (requiredBehaviors.Except(_apiContext.UserClaims.BehaviorIds).Count() > 0)
                 throw new VaeForbiddenException("You do not have the necessary permission to view this page.");
 
-            var claim = LightweightUserClaims.CreateForAdminUser(_apiContext.UserClaims.UserId, requiredBehaviors, newScope, DateTime.UtcNow.AddMinutes(25));
+            var claim = LightweightUserClaims.CreateForAdminUser(_apiContext.UserClaims.UserId, string.Empty, string.Empty, requiredBehaviors, newScope, DateTime.UtcNow.AddMinutes(25));
             claim.Bag["OrderId"] = orderId;
 
             return claim;

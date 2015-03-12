@@ -480,6 +480,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.CreditValue, op => op.ResolveUsing(x => x.CreditValue))
                 .ForMember(dc => dc.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 .ForMember(dc => dc.OptionValue, op => op.ResolveUsing(x => x.OptionValue))
+                .ForMember(dc => dc.AllocationId, op => op.Ignore())
+                .ForMember(dc => dc.AllocationExpiration, op => op.Ignore())
+
                 ;
         
 
@@ -952,6 +955,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+                  .ForMember(dc => dc.Data, op => op.Ignore())
             
                   ;
         }

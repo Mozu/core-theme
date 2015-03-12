@@ -35,7 +35,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 return (_manager ?? (_manager = new TemplateManagerProvider()
                     .WithLibrary(typeof (AddFilter).Assembly)
                     .WithLibrary(typeof (HyprViewEngine).Assembly)
-                    .WithLibrary(typeof (DropZoneTag2).Assembly)
+                    .WithLibrary(typeof (DropZoneTag).Assembly)
                     .WithLoader(new TestTemplateLoader())
                     .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager()));
             }

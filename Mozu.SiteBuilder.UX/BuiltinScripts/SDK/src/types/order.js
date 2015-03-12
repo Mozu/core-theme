@@ -152,7 +152,7 @@ module.exports = (function () {
                     if (availableActions[i] in OrderStatus2IsReady) return this.performOrderAction(availableActions[i]).otherwise(function(e) {
                         return self.get().ensure(function() {
                             throw e;
-                        })
+                        });
                     });
                 }
             }
@@ -160,6 +160,37 @@ module.exports = (function () {
         },
         isComplete: function () {
             return !!OrderStatus2IsComplete[this.prop('status')];
+        },
+
+        addExtendedProperty: function (extendedProperty) {
+            // Expect extendedPropert to contain a key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedProperty) {
+                errors.throwOnObject(this, '');
+            }
+
+            return this.api.action(this, 'addExtendedProperty', {
+                // Fill in the data from extendedProperty here!
+                'key': extendedProperty.key,
+                'value': extendedProperty.value
+            });
+        },
+
+        addExtendedProperties: function (extendedProperties) {
+            // Expect extendedProperties to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedProperties) {
+                extendedProperties = [];
+            }
+
+            return this.api.action(this, 'addExtendedProperties', extendedProperties);
+        },
+
+        removeExtendedProperties: function (extendedPropertyKeys) {
+            // Expect extendedPropertyKeys to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedPropertyKeys) {
+                extendedPropertyKeys = [];
+            }
+
+            return this.api.action(this, 'addExtendedProperties', extendedPropertyKeys);
         }
     };
 }());

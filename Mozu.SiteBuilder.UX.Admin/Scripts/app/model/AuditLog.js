@@ -15,6 +15,30 @@ Ext.define('Taco.model.AuditLog', {
             name: 'id',
             type: 'string'
         }, {
+            name: 'userId',
+            type: 'string'
+        }, {
+            name: 'userFirstName',
+            type: 'string'
+        }, {
+            name: 'userLastName',
+            type: 'string'
+        }, {
+            name: 'userDisplayName',
+            type: 'string',
+            convert: function(value, record) {
+                return record.get('userFirstName') + record.get('userLastName');
+            }
+        }, {
+            name: 'userType',
+            type: 'string'
+        }, {
+            name: 'appId',
+            type: 'string'
+        }, {
+            name: 'appName',
+            type: 'string'
+        }, {
             name: 'createDate',
             type: 'date',
             useNull: false,
@@ -32,31 +56,14 @@ Ext.define('Taco.model.AuditLog', {
             type: 'string',
             useNull: false
         }, {
-            name: 'userDisplayName',
+            name: 'message',
             type: 'string',
             useNull: false
         }, {
-            name: 'data',
+            name: 'metadata',
             type: 'auto',
             useNull: true
         }
 
-    ],
-    proxy: {
-        type: 'ajaxproxy',
-        api: {
-            read: '/admin/Scripts/app/mocks/auditlog.json'
-            //read: '/admin/app/auditlog/list'
-        },
-        reader: {
-            type: 'json',
-            root: 'items',
-            successProperty: 'success',
-            messageProperty: "message"
-        },
-        writer: {
-            allowSingle: false,
-            type: 'json'
-        }
-    }
+    ]
 });

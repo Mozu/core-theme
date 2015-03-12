@@ -8,7 +8,6 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     extend: 'Taco.core.ux.browser.SearchList',
 
     requires: [
-        'Taco.store.AuditLog',
         'Taco.model.AuditLog',
         'Taco.view.order.modal.AuditLogInfo'
     ],
@@ -38,12 +37,8 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     cancelButtonEnabled: false,
     // No action column at this time.
     showActionsColumn: false,
-    
-    store: { type: 'Taco.store.AuditLog' },
 
     autoScroll: true,
-
-    minHeight: 500,
 
     // No filtering at this time.
     enableQuickFilters: false,
@@ -52,11 +47,32 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     // Is this needed?
     onCreate: Ext.emptyFn,
 
-    // This is the order number for this audit log grid.
+    // This is the order number and ID associated to this audit log grid.
     orderNumber: -1,
+    orderId: -1,
 
     initComponent: function() {
         var me = this;
+
+        this.store = Ext.create('Ext.data.Store',{
+            model: 'Taco.model.AuditLog',
+            pageSize: 15,
+            remoteSort: true,
+            remoteFilter: true,
+            orderId: me.orderId,
+            storeManagerConfig: {
+                // Load the data automatically!
+                autoLoad: true
+            },
+            proxy: {
+                type: 'ajaxproxy',
+                api: {
+                    //read: '/admin/Scripts/app/mocks/auditlog.json'
+                    read: '/admin/app/order/changemessages?orderId=' + this.orderId
+                },
+                scope: me
+            }
+        });
 
         // Get the columns for this grid!
         this.columns = me.getColumnConfig();
@@ -65,12 +81,12 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
         
         // Change to itemClick
         me.mon(me, 'cellclick', function(grid, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-            Ext.create('Taco.view.order.modal.AuditLogInfo', {
+            Ext.create(me.modalName, {
                 orderNumber: me.orderNumber,
                 autoShow: true,
                 scale: 'medium',
                 data: record
-        });
+            });
         }, me);
     },
 
@@ -86,7 +102,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             draggable: false,
             resizable: true,
             minWidth: 180,
-            sortable: true,
+            sortable: false,
             menuDisabled: true
         }, {
             text: 'Event',
@@ -103,7 +119,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
             draggable: false,
             resizable: true,
             minWidth: 300,
-            sortable: true,
+            sortable: false,
             menuDisabled: true
         }];
 
@@ -113,6 +129,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
     refreshAuditLog: function () {
         this.setLoading(true);
         var store = this.getStore();
+        store.orderId = this.orderId;
         store.reload();
         this.setLoading(false);
 

@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             ISettings settings = Substitute.For<ISettings>();
             IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
             var dvm = Substitute.For<IDataViewModeFinderOuter>();
-            dvm.GetDataViewMode().Returns(Core.DataViewModeType.Pending);
+            dvm.GetDataViewMode(Arg.Any<Mozu.Core.LightweightUserClaims>()).Returns(Core.DataViewModeType.Pending);
             var edit = Substitute.For<IEditModeFinderOuter>();
             edit.IsEditMode().Returns(false);
             HttpRequestMessage request = Substitute.For<HttpRequestMessage>();
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
             HttpRequestMessage request = Substitute.For<HttpRequestMessage>();
             var dvm = Substitute.For<IDataViewModeFinderOuter>();
-            dvm.GetDataViewMode().Returns(Core.DataViewModeType.Live);
+            dvm.GetDataViewMode(Arg.Any<Mozu.Core.LightweightUserClaims>()).Returns(Core.DataViewModeType.Live);
             var edit = Substitute.For<IEditModeFinderOuter>();
             edit.IsEditMode().Returns(false);
             request.RequestUri = new Uri("http://foo.com/?mz_now=2012-11-10");

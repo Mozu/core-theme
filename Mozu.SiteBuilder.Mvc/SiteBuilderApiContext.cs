@@ -34,7 +34,6 @@ namespace Mozu.SiteBuilder.Mvc
             _authenticationHelper = authenticationHelper;
             _httpRequestMessage = httpRequestMessage;
 
-            DataViewMode = dvmGetter.GetDataViewMode();
             IsEditMode = editModeGetter.IsEditMode();
 
             Load();
@@ -45,6 +44,8 @@ namespace Mozu.SiteBuilder.Mvc
             LoadUser();
             ValidateUser();                  
             SetDebugMode();
+
+            DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             this.Now = new Lazy<DateTime>(GetNowValue);
             
         }
@@ -200,7 +201,7 @@ namespace Mozu.SiteBuilder.Mvc
                 }
                 else
                 {
-                    this.UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), new int[0], new UserScope() { Id = this.TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
+                    this.UserClaims = LightweightUserClaims.CreateForAdminUser(Guid.NewGuid().ToString("N"), string.Empty, string.Empty, new int[0], new UserScope() { Id = this.TenantId, Type = UserScopeType.Tenant }, DateTime.Today.AddYears(1));
                     this.UserClaims.IsAnonymous = true;
                 }
                 this.HasInvalidCredentials = true;

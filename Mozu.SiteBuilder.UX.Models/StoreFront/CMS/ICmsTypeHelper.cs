@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.CMS
     public interface IThemeEntityDefinitionProvider
     {
         IEnumerable<PageTypeDefinition> GetPageTypeDefinitions();
-        WidgetDefinition GetWidgetDefintion(string id);
+        WidgetDefinition GetWidgetDefinition(string id);
         PageTypeDefinition GetPageTypeDefinition(string id);
     }
 }

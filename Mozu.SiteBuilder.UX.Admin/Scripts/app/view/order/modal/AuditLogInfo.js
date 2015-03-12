@@ -49,25 +49,30 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         // Update the title to reflect the data
         me.setTitle(me.data.get('subject'));
 
+        // Create the order object for the template below:
         var orderObject = { orderNumber: me.orderNumber };
+
+        // Create the user object for the template below:
+        var userObject = {appName: me.data.get('appName'), userName: me.data.get('userDisplayName')};
+
         // Set the items!
         var logHeader = Ext.create('Ext.container.Container', {
             width: '100%',
             layout: 'hbox',
-            align: 'bottom',
             flex: 1,
             items: [
                 {
-                    flex: 1,
-                    data: me.data.getData(),
+                    flex: 1.5,
+                    data: userObject,
                     tpl: [
-                        '<div>User: {userDisplayName}</div>'
+                        '<tpl if="userName && userName.length &gt; 0"><div><b>User:</b> {userName}</div></tpl>',
+                        '<div><b>Application:</b> {appName}</div>'
                     ]
                 }, {
-                    flex: 1,
+                    flex: 0.5,
                     data: orderObject,
                     tpl: [
-                        '<div>Order: #{orderNumber}</div>'
+                        '<div><b>Order:</b> #{orderNumber}</div>'
                     ]
                 }, {
                     flex: 1,
@@ -86,83 +91,15 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         me.callParent(arguments);
     },
 
-    createDataContainer: function(currentRecord) {
-        var recordData = currentRecord.data;
+    createDataContainer: function (currentRecord) {
+        var metaData = currentRecord.metadata;
         var dataContainer = null;
 
-        if (recordData.length < 0) {
-            return null;
-        } else if (Ext.Object.isEmpty(recordData[0])) {
-            return null;
-        }
-
-        switch (currentRecord.subjectType) {
-            case 'Line Items':
-            {
-                dataContainer = this.createLineItemInfo(recordData);
-                break;
-            }
-            case 'Order Total':
-            {
-                dataContainer = this.createOrderTotalInfo(recordData);
-                break;
-            }
-            case 'Payment':
-            {
-                dataContainer = this.createPaymentInfo(recordData, currentRecord.verb);
-                break;
-            }
-            case 'Order Shipping':
-            {
-                dataContainer = this.createShippingInfo(recordData);
-                break;
-            }
-            case 'Coupon':
-            {
-                dataContainer = this.createCouponInfo(recordData);
-                break;
-            }
-            case 'Items Shipped':
-            {
-                dataContainer = this.createItemsShippedInfo(recordData);
-                break;
-            }
-            case 'RMA':
-            {
-                if (currentRecord.verb.toLowerCase() === 'created') {
-                    dataContainer = this.createNestedGrid(recordData);
-                } else if (currentRecord.verb.toLowerCase() === 'refunded') {
-                    dataContainer = this.createRMARefundInfo(recordData);
-                }
-                break;
-            }
-            case 'Replacement Order':
-            {
-                dataContainer = this.createNestedGrid(recordData);
-                break;
-            }
-            case 'Order Status':
-            {
-                dataContainer = Ext.create('Ext.container.Container', {
-                    padding: '20 0 0',
-                    items: [
-                        {
-                            flex: 1,
-                            padding: '2 2',
-                            data: recordData[0],
-                            tpl: [
-                                '<div>New Status: {newValue}</div>'
-                            ]
-                        }
-                    ]
-                });
-                break;
-            }
-            default:
-            {
-                // Do Nothing!
-                break;
-            }
+        if (Ext.Object.isEmpty(metaData)) {
+            // Do something using message only!
+            dataContainer = this.createDataUsingMessage(currentRecord);
+        } else {
+            dataContainer = this.createDataUsingMetadata(currentRecord);
         }
 
         return dataContainer;
@@ -172,7 +109,262 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         this.saveSuccess(null);
     },
 
-    createLineItemInfo: function(lineItemData) {
+    createDataUsingMessage: function(curRecord) {
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: [{
+                flex: 1,
+                padding: '2 2',
+                data: curRecord,
+                tpl: [
+                    '<div>{message}</div>'
+                ]
+            }]
+        });
+    },
+
+    createDataUsingMetadata: function (curRecord) {
+        var dataContainer = null;
+        var metaData = curRecord.metadata;
+
+        if (metaData.length < 0) {
+            return null;
+        }
+
+        switch (curRecord.subjectType) {
+            case 'Line Items':
+                {
+                    // Currently not used!
+                    dataContainer = this.createLineItemsInfo(metaData);
+                    break;
+                }
+            case 'OrderItem':
+                {
+                    if (curRecord.subject.indexOf('Fulfillment') > -1) {
+                        dataContainer = this.createFulfillmentChange(metaData);
+                    } else if (curRecord.subject.indexOf('Product Price') > -1) {
+                        dataContainer = this.createPriceChange(metaData);
+                    } else if (curRecord.subject.indexOf('Product Quantity') > -1) {
+                        dataContainer = this.createQuantityChange(metaData);
+                    } else {
+                        dataContainer = this.createLineItemInfo(metaData);
+                    }
+                    break;
+                }
+            case 'Order Total':
+                {
+                    dataContainer = this.createOrderTotalInfo(metaData);
+                    break;
+                }
+            case 'Payment':
+            case 'StateChange.Payment':
+                {
+                    dataContainer = this.createPaymentInfo(metaData, curRecord.verb);
+                    break;
+                }
+            case 'Order Shipping':
+                {
+                    dataContainer = this.createShippingInfo(metaData);
+                    break;
+                }
+            case 'Coupon':
+                {
+                    dataContainer = this.createCouponInfo(metaData);
+                    break;
+                }
+            case 'Items Shipped':
+            case 'StateChange.Fulfillment':
+                {
+                    dataContainer = this.createItemsShippedInfo(metaData);
+                    break;
+                }
+            case 'RMA':
+            case 'StateChange.Return':
+                {
+                    if (curRecord.verb.toLowerCase() === 'created') {
+                        dataContainer = this.createNestedGrid(metaData);
+                    } else if (curRecord.verb.toLowerCase() === 'refunded') {
+                        dataContainer = this.createRMARefundInfo(metaData);
+                    }
+                    break;
+                }
+            case 'Replacement Order':
+                {
+                    dataContainer = this.createNestedGrid(metaData);
+                    break;
+                }
+            case 'Order Status':
+            case 'StateChange.WorkflowAction':
+            case 'Order':
+            case 'StateChange.Order':
+                {
+                    dataContainer = this.createOrderMessage(curRecord);
+                    break;
+                }
+            case 'Item':
+            case 'WorkflowAction':
+            case 'Cart':
+                {
+                    dataContainer = this.createDataUsingMessage(curRecord);
+                    break;
+                }
+            default:
+                {
+                    // Do Nothing!
+                    break;
+                }
+        }
+
+        return dataContainer;
+    },
+
+    createQuantityChange: function(quantityData) {
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: [
+            {
+                flex: 1,
+                padding: '2 2',
+                data: quantityData[0],
+                tpl: [
+                    '<div>Product Code: {productCode}</div>',
+                    '<div>Product Name: {productName}</div>',
+                    '<br/>',
+                    '<div>Old Quantity: {oldValue}</div>',
+                    '<div>New Quantity: {newValue}</div>'
+                ]
+            }]
+        });
+    },
+
+    createPriceChange: function(priceData) {
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: [
+            {
+                flex: 1,
+                padding: '2 2',
+                data: priceData[0],
+                tpl: [
+                    '<div>Product Code: {productCode}</div>',
+                    '<div>Product Name: {productName}</div>',
+                    '<br/>',
+                    '<div>Old Amount: {[this.getCurrencyFormat(values.oldValue)]}</div>',
+                    '<div>New Amount: {[this.getCurrencyFormat(values.newValue)]}</div>',
+                    {
+                        getCurrencyFormat: function (v) {
+                            var retVal,
+                                isNegative;
+
+                            v = v - 0;
+
+                            if (v < 0) {
+                                isNegative = true;
+                                v = -v;
+                            }
+                            v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                            if (isNegative) {
+                                retVal = '(' + v + ')';
+                            } else {
+                                retVal = v;
+                            }
+
+                            return retVal;
+                        }
+                    }
+                ]
+            }]
+        });
+    },
+
+    createOrderMessage: function (orderRecordData) {
+        var itemsList = [];
+        var orderData = orderRecordData.metadata;
+
+        if (orderData[0].hasOwnProperty('amount')) {
+            if (orderRecordData.subject.indexOf('Return') > -1) {
+                itemsList.push({
+                    flex: 1,
+                    padding: '2 2',
+                    data: orderRecordData,
+                    tpl: [
+                        '<div>{message}</div>'
+                    ]
+                });
+            }
+
+            itemsList.push({
+                flex: 1,
+                padding: '2 2',
+                data: orderData[0],
+                tpl: [
+                    '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+                    {
+                        getCurrencyFormat: function(v) {
+                            var retVal,
+                                isNegative;
+
+                            v = v - 0;
+
+                            if (v < 0) {
+                                isNegative = true;
+                                v = -v;
+                            }
+                            v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                            if (isNegative) {
+                                retVal = '(' + v + ')';
+                            } else {
+                                retVal = v;
+                            }
+
+                            return retVal;
+                        }
+                    }
+                ]
+            });
+        } else {
+            itemsList.push({
+                flex: 1,
+                padding: '2 2',
+                data: orderData[0],
+                tpl: [
+                    '<div>Order Status: {newValue}</div>'
+                ]
+            });
+        }
+
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: itemsList
+        });
+    },
+
+    createFulfillmentChange: function(fulfillmentData) {
+        var retVal = null;
+
+        retVal = Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: {
+                flex: 1,
+                padding: '2 2',
+                data: fulfillmentData[0],
+                tpl: [
+                    '<div>Product Code: {productCode}</div>',
+                    '<br>',
+                    '<div>Fulfillment moved from: {oldLocation}</div>',
+                    '<div>Fulfillment moved to: {newLocation}</div>',
+                    '<div>Fulfillment method: {newMethod}</div>'
+                ]
+            }
+        });
+        return retVal;
+    },
+
+    createLineItemsInfo: function(lineItemData) {
         var retVal = null;
         var headerItems = { 'productCode': 'Product Code', 'quantity': 'Quantity', 'amount': 'Amount' };
         var dataColumns = [];
@@ -213,6 +405,45 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             store: dataStore,
             height: '100%',
             width: '100%'
+        });
+        return retVal;
+    },
+
+    createLineItemInfo: function (lineItemData) {
+        var retVal = null;
+        var itemsList = [];
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>Product Code: {productCode}</div>'
+            ]
+        });
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>Product Name: {productName}</div>'
+            ]
+        });
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: lineItemData[0],
+            tpl: [
+                '<div>Quantity: {quantity}</div>'
+            ]
+        });
+
+
+        retVal = Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: itemsList
         });
         return retVal;
     },
@@ -259,7 +490,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         return retVal;
     },
 
-    createPaymentInfo: function(paymentData, verb) {
+    createPaymentInfo: function(paymentData) {
         var retVal = null;
         var itemsList = [];
 
@@ -272,7 +503,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             ]
         });
 
-        if (verb === 'Created') {
+        if (paymentData[0].newValue.toLowerCase() === 'new') {
             itemsList.push({
                 flex: 1,
                 padding: '2 2',
@@ -283,35 +514,56 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             });
         }
 
+        if (paymentData[0].newValue.toLowerCase() !== 'voided') {
+            itemsList.push({
+                flex: 1,
+                padding: '2 2',
+                data: paymentData[0],
+                tpl: [
+                    '<div>Amount: {[this.getCurrencyFormat(values)]}</div>',
+                    {
+                        // This needs to take the newValue into effect.
+                        getCurrencyFormat: function(v) {
+                            var retVal,
+                                isNegative,
+                                amt;
+                            
+                            if (v.newValue.toLowerCase() === 'collected') {
+                                amt = v.amountCollected;
+                            } else if (v.newValue.toLowerCase() === 'new' || v.newValue.toLowerCase() === 'pending') {
+                                amt = v.amountRequested;
+                            } else {
+                                amt = v.amountCredited;
+                            }
+
+                            amt = amt - 0;
+
+                            if (amt < 0) {
+                                isNegative = true;
+                                amt = -amt;
+                            }
+                            amt = Taco.app.context.getCurrent().formatCurrency(amt);
+
+
+                            if (isNegative) {
+                                retVal = '(' + amt + ')';
+                            } else {
+                                retVal = amt;
+                            }
+
+                            return retVal;
+                        }
+                    }
+                ]
+            });
+        }
+
         itemsList.push({
             flex: 1,
             padding: '2 2',
             data: paymentData[0],
             tpl: [
-                '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
-                {
-                    getCurrencyFormat: function (v) {
-                        var retVal,
-                            isNegative;
-
-                        v = v - 0;
-
-                        if (v < 0) {
-                            isNegative = true;
-                            v = -v;
-                        }
-                        v = Taco.app.context.getCurrent().formatCurrency(v);
-
-
-                        if (isNegative) {
-                            retVal = '(' + v + ')';
-                        } else {
-                            retVal = v;
-                        }
-
-                        return retVal;
-                    }
-                }
+                '<div>Payment Status: {newValue}</div>'
             ]
         });
 
