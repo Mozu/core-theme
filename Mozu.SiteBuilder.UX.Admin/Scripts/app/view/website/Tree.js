@@ -145,7 +145,11 @@ Ext.define('Taco.view.website.Tree', {
 
                     this.url = url;
 
-                    if (e.getTarget('.taco-website-tree-menu-trigger', 10)) {
+                    if (metaData) {
+                        this.fireEvent('contentlistclick', this, metaData, record, item, index, e, eOpts);
+                    }
+
+                    else if (e.getTarget('.taco-website-tree-menu-trigger', 10)) {
                         items = this.getMenuItems(record, this);
                         this.menu.removeAll();
 
@@ -153,11 +157,10 @@ Ext.define('Taco.view.website.Tree', {
                             this.menu.add(items);
                             this.menu.showBy(item, null, [-5, 0]);
                         }
-                    } else if (url) {
+                    } 
+
+                    else if (url) {
                         this.fireEvent('urlclick', this, url, record, item, index, e, eOpts);
-                    }
-                    else if (metaData) {
-                        this.fireEvent('contentlistclick', this, metaData, record, item, index, e, eOpts);
                     }
                 }
             },
@@ -346,6 +349,7 @@ Ext.define('Taco.view.website.Tree', {
                 emailtemplate: 'template-icon',
                 template: 'template-icon',
                 ordertemplate: 'template-icon',
+                contentlist: 'template-icon',
                 group: function(record) {return this['parent' + record.data.id];},
                 parent_navigation: 'folder-icon',
                 parent_unlinked: 'folder-icon',
