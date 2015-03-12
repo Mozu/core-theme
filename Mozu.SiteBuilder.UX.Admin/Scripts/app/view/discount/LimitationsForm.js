@@ -162,7 +162,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 layout: {
                     type: 'hbox',
                     align: 'bottom'
-                },
+            },
                 width: 500,
                 defaults: {
                     labelAlign: 'top',
@@ -170,7 +170,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 },
                 items: [this.maxDiscountLineItemValue, this.maxDiscountOrderValue]
             },
-            this.redemptionContainer,
+            this.redemptionContainer,            
             this.redemptionCountContainer,
             this.requiresCouponInput,
             this.couponCodeBox,
@@ -181,13 +181,28 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.callParent(arguments);
     },
 
-    setFieldVisibility: function (isLineItem, appliesToShipping, discountType) {
+    //setFieldVisibility: function (isLineItem, appliesToShipping, discountType) {
+    setFieldVisibility: function (scopeType, targetType, discountType) {
         var me = this,
+            appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem'),
             orderMaxVisible = false,
             lineItemMaxVisible = false,
             orderMaxLabel,
             orderMaxLabelWhenOrder = "Max Discount Value",
             orderMaxLabelWhenInline = "Max Discount Value (Per Order)";
+
+
+
+
+        if ((!isLineItem && !isOrder) || !targetType) {
+            this.setVisible(false);
+            return;
+        } else {
+            this.setVisible(true);
+        }
+
 
         if (isLineItem) {
             orderMaxLabel = orderMaxLabelWhenInline;

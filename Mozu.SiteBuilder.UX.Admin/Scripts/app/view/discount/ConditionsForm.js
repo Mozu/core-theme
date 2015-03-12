@@ -555,7 +555,19 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         }
     },
 
-    setFieldVisibility: function (isLineItem) {
+    setFieldVisibility: function (scopeType, targetType, discountType) {
+        var appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem');
+
+
+        if ((!isLineItem && !isOrder) || !targetType) {
+            this.setVisible(false);
+            return;
+        } else {
+            this.setVisible(true);
+        }
+
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);
     },
 

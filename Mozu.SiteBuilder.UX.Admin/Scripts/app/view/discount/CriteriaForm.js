@@ -29,8 +29,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             checked: this.record.get('includeAllProducts'),
             listeners: {
                 change: function () {
+                    // need to just kick off a wholesale reflow of the visibility;
                     this.parentForm.setFieldVisibility();
-                    enableDisableCriteriaQuantities();
                 },
                 scope: this
             }
@@ -97,20 +97,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-
-        function enableDisableCriteriaQuantities() {
-            //var fn = me.includeAllProductsInput.getValue() ? disableCmp : enableCmp;
-            var isVisible = me.includeAllProductsInput.getValue() ? false : true;
-
-            me.productsBox.setVisible(isVisible);
-            me.categoriesBox.setVisible(isVisible);
-
-
-            //var box = me.productsBox.down('radio').getValue() ? me.productsBox : me.categoriesBox;
-            //Ext.Array.each(box.query('[isFormField]'), fn);
-
-
-        }
 
         function toggleEnabledCriteriaQuantities(toEnable) {
             var toDisable = toEnable === me.productsBox ? me.categoriesBox : me.productsBox,
@@ -526,7 +512,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             
             activeQuantityMeasure.down('radio').setValue(true);
             toggleEnabledCriteriaQuantities(activeQuantityMeasure);
-            enableDisableCriteriaQuantities();
         }, this);
 
     },
@@ -618,7 +603,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
     },
 
-    setShippingListVisibility: function (appliesToShipping) {
+    setShippingListVisibility: function (scopeType, targetType, discountType) {
+        var appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem');
+
         this.shippingList.setVisible(appliesToShipping);
         this.shippingZoneList.setVisible(appliesToShipping);
         if (!appliesToShipping) {
@@ -627,20 +616,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
     },
 
-    //todo: gm split prodCat containter into include and exclude. On includeAll checked, then only show exclude.
-    setProductCategoryContainerVisibility: function (isLineItem) {
-        //this.productCategoryContainer.setVisible(isLineItem);
-        //always visible now
-        this.productCategoryContainer.setVisible(true);       
-        
+
+    
+    setProductCategoryContainerVisibility: function (scopeType, targetType, discountType) {
+        var me = this,
+            isLineItem = (scopeType === 'LineItem');
+
         //reset the hidden fields
         if (!isLineItem) {
             this.includeSpecificProductsInput.setValue(true);
-            
-            //this.categoryList.setValue('');
-            //this.productList.setValue('');
-            //this.excludeCategoryList.setValue('');
-            //this.productExcludeList.setValue('');
         } else {
             // order level
             this.findField("excludeItemsWithExistingShippingDiscounts").setValue(false)
@@ -650,26 +634,55 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.excludeLineItemDiscounts.setVisible(!isLineItem);
 
         // setup line item;
-        
-        this.includeAllProductsInput.setVisible(isLineItem)
+
+
+        this.includeAllProductsInput.setVisible(isLineItem);
         this.appliesToSaleProducts.setVisible(true)
 
-        this.includeSpecificProductsInput.setVisible(isLineItem)
-        //this.productsBox.setVisible(isLineItem)
-        //this.categoriesBox.setVisible(isLineItem)
+        this.includeSpecificProductsInput.setVisible(isLineItem);
 
-        this.excludeCategoriesBox.setVisible(true)
-        this.productsExcludeBox.setVisible(true)
+        if (isLineItem) {
+            var includeAllProductsSelected = me.includeAllProductsInput.getValue() ? false : true;
+            // optionaly hide or show these based on the selection of the "applies to all products radio button"
+            me.productsBox.setVisible(includeAllProductsSelected);
+            me.categoriesBox.setVisible(includeAllProductsSelected);
+        } else {
+            this.productsBox.setVisible(false);
+            this.categoriesBox.setVisible(false);
+        }
+
+        this.excludeCategoriesBox.setVisible(true);
+        this.productsExcludeBox.setVisible(true);
         
         // even though this field is hidden it will continue to persist its value; see notes where this field is initialized; 
         this.maximumQuantityPerRedemptionTB.setVisible(isLineItem && this.includeAllProductsInput.checked);
     },
 
-    setFieldVisibility: function (isLineItem, appliesToShipping) {        
-        // always visible now. shows for order and lineItem
-        this.setVisible(true);        
-        this.setProductCategoryContainerVisibility(isLineItem);        
-        this.setShippingListVisibility(appliesToShipping);
+    setFieldVisibility: function (scopeType, targetType, discountType) {
+        var appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem');
+
+        this.scopeType = scopeType;
+        this.targetType = targetType;
+        this.discountType = discountType;
+
+        this.appliesToShipping = appliesToShipping;
+        this.isOrder = isOrder;
+        this.isLineItem = isLineItem;
+        
+        // if order or line item combo has a selection;
+        if ((!isLineItem && !isOrder) || !targetType) {
+            this.setVisible(false);
+            return;
+        } else {
+            this.setVisible(true);
+        }
+        
+        this.setProductCategoryContainerVisibility(scopeType, targetType, discountType);
+        this.setShippingListVisibility(scopeType, targetType, discountType);
+        
+
     },
 
     beforeSave: function () {

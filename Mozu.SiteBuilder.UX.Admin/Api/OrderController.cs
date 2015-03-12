@@ -96,7 +96,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var responseGroups = "header,payment,packageheaders,availableactions";
                 var dcOrders = (await orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
 
-                var o = Mapper.Map<Order>(dcOrders.Items.First());
                 return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
             }
         }
