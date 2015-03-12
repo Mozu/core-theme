@@ -967,6 +967,7 @@
     <Content Include="Scripts\app\view\order\subform\AuditLog.js" />
     <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
+    <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
