@@ -153,6 +153,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.UndeliveredDigitalItems, op => op.Ignore())
                 .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
+                .ForMember(x => x.TaxDutyTotal, op => op.Ignore())
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
                 .AfterMap(MapAvailableBulkActions)
                 .AfterMap((dc, order) =>

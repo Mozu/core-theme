@@ -273,6 +273,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal TaxTotal { get; set; }
 
         /// <summary>
+        /// Final cost of taxes.
+        /// </summary>
+        public decimal TaxDutyTotal { get; set; }
+
+        /// <summary>
         /// Final price of the order.
         /// </summary>
         public decimal Total { get; set; }
