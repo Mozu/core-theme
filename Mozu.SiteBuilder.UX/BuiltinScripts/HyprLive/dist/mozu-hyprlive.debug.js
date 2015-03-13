@@ -1,14 +1,14 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2014-12-18
+ * Mozu Hypr Live - v1.0.0 - 2015-03-12
  *
- * Copyright (c) 2014 Volusion, Inc.
+ * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2014-12-18
+ * Mozu Hypr Live - v1.0.0 - 2015-03-12
  *
- * Copyright (c) 2014 Volusion, Inc.
+ * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
@@ -5751,6 +5751,30 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
             }
         }
         return '';
+    });
+
+    HyprLive.engine.setFilter('dictsort', function(dictList, key) {
+        var sorted = dictList.slice();
+        sorted.sort(function(a, b) {
+            if (a && b) {
+                if (a[key] < b[key]) return -1;
+                if (a[key] > b[key]) return 1;
+            }
+            return 0;
+        });
+        return sorted;
+    });
+
+    HyprLive.engine.setFilter('dictsortreversed', function(dictList, key) {
+        var sorted = dictList.slice();
+        sorted.sort(function(a, b) {
+            if (a && b) {
+                if (a[key] > b[key]) return -1;
+                if (a[key] < b[key]) return 1;
+            }
+            return 0;
+        });
+        return sorted;
     });
 
 }());

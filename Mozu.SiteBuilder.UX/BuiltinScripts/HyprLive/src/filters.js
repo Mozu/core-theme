@@ -128,4 +128,28 @@
         return '';
     });
 
+    HyprLive.engine.setFilter('dictsort', function(dictList, key) {
+        var sorted = dictList.slice();
+        sorted.sort(function(a, b) {
+            if (a && b) {
+                if (a[key] < b[key]) return -1;
+                if (a[key] > b[key]) return 1;
+            }
+            return 0;
+        });
+        return sorted;
+    });
+
+    HyprLive.engine.setFilter('dictsortreversed', function(dictList, key) {
+        var sorted = dictList.slice();
+        sorted.sort(function(a, b) {
+            if (a && b) {
+                if (a[key] > b[key]) return -1;
+                if (a[key] < b[key]) return 1;
+            }
+            return 0;
+        });
+        return sorted;
+    });
+
 }());

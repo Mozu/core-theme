@@ -141,5 +141,42 @@
             var tpt4 = '{% if p|get_product_attribute_value("tenant~true-thing") %}Has True Thing{% endif %}';
             expect(Hypr.engine.render(tpt4, { locals: { p: MozuProduct } })).to.equal('Has True Thing');
         });
+
+        var gang = [
+            {
+                name: 'Scooby',
+                age: 3
+            },
+            {
+                name: 'Shaggy',
+                age: 20
+            },
+            {
+                name: 'Fred',
+                age: 17
+            },
+            {
+                name: 'Daphne',
+                age: 18
+            },
+            {
+                name: 'Velma',
+                age: 15
+            }
+        ];
+
+        it('has a dictsort filter that sorts a dictionary of values based on a numeric or string key', function() {
+            var tpt = '{% with gang|dictsort("age") as g %}{% for member in g %}{{member.name}}:{{member.age}},{% endfor %}{% endwith %}';
+            expect(Hypr.engine.render(tpt, { locals: { gang: gang } })).to.equal('Scooby:3,Velma:15,Fred:17,Daphne:18,Shaggy:20,');
+            var tpt2 = '{% with gang|dictsort("name") as g %}{% for member in g %}{{member.name}}:{{member.age}},{% endfor %}{% endwith %}';
+            expect(Hypr.engine.render(tpt2, { locals: { gang: gang } })).to.equal('Daphne:18,Fred:17,Scooby:3,Shaggy:20,Velma:15,');
+        });
+
+        it('has a dictsortreversed filter that sorts (reversed) a dictionary of values based on a numeric or string key', function() {
+            var tpt = '{% with gang|dictsortreversed("age") as g %}{% for member in g %}{{member.name}}:{{member.age}},{% endfor %}{% endwith %}';
+            expect(Hypr.engine.render(tpt, { locals: { gang: gang } })).to.equal('Shaggy:20,Daphne:18,Fred:17,Velma:15,Scooby:3,');
+            var tpt2 = '{% with gang|dictsortreversed("name") as g %}{% for member in g %}{{member.name}}:{{member.age}},{% endfor %}{% endwith %}';
+            expect(Hypr.engine.render(tpt2, { locals: { gang: gang } })).to.equal('Velma:15,Shaggy:20,Scooby:3,Fred:17,Daphne:18,');
+        });
     });
 })
