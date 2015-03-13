@@ -280,6 +280,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Expandable = true,
                     Index = 102,
                     Name = e.Text,
+                    Url = "/-content-list-/" + (string)e.MetaData.GetValue("listFQN"),
                     ParentId = "_cmsContentTypes",
                     IsHidden = false
                 };

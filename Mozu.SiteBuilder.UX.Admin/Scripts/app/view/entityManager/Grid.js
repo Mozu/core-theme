@@ -22,7 +22,7 @@ Ext.define('Taco.view.entityManager.Grid', {
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
     showActionsColumn: true,
-    hideSearchToolbar: false,
+    hideSearchToolbar: true,
     selType: 'rowmodel',
     autoScroll: true,
     enableQuickFilters: false,

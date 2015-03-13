@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     public class EditResourcesTag : SimpleTagBase
     {
         static string FileVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(BaseApiController).Assembly.Location).FileVersion;
-        const string Format = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/{1}.js\"></script>\r\n";
+        const string Format = "\t\t<script type=\"text/javascript\" src=\"{0}/admin/scripts/chorizo/{1}.js?{2}\"></script>\r\n";
         static string[] autoIncludeScripts = new[] { "_classfactory", "format", "content", "targets", "widgets", "editor" };
 
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunction)
@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 #else
                 sb.AppendLine("\t\t<script src=\"//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js\"></script>");
 #endif
-                autoIncludeScripts.Aggregate(sb, (builder, s) => builder.AppendFormat(Format, cdn, s));
+                autoIncludeScripts.Aggregate(sb, (builder, s) => builder.AppendFormat(Format, cdn, s, FileVersion));
 
                 return new[] { WalkResultHelpers.Buffer(sb.ToString()) }; 
             }
