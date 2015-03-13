@@ -128,28 +128,48 @@
         return '';
     });
 
-    HyprLive.engine.setFilter('dictsort', function(dictList, key) {
-        var sorted = dictList.slice();
-        sorted.sort(function(a, b) {
+
+    function createAscendingComparator(key) {
+        return function(a, b) {
             if (a && b) {
                 if (a[key] < b[key]) return -1;
                 if (a[key] > b[key]) return 1;
             }
             return 0;
-        });
-        return sorted;
-    });
+        };
+    }
 
-    HyprLive.engine.setFilter('dictsortreversed', function(dictList, key) {
-        var sorted = dictList.slice();
-        sorted.sort(function(a, b) {
+    function createDescendingComparator(key) {
+        return function(a, b) {
             if (a && b) {
                 if (a[key] > b[key]) return -1;
                 if (a[key] < b[key]) return 1;
             }
             return 0;
-        });
-        return sorted;
-    });
+        };
+    }
+
+    function createDictSortFilter(comparator) {
+        return function(dictList, key) {
+            var sorted = dictList.slice();
+
+            // peek for the proper casing
+            key = key.toLowerCase();
+            for (var i in sorted[0]) {
+                if (sorted[0].hasOwnProperty(i) && i.toLowerCase() === key) {
+                    key = i;
+                    break;
+                }
+            }
+
+            sorted.sort(comparator(key));
+            return sorted;
+        }
+    }
+
+    HyprLive.engine.setFilter('dictsort', createDictSortFilter(createAscendingComparator));
+
+    HyprLive.engine.setFilter('dictsortreversed', createDictSortFilter(createDescendingComparator));
+
 
 }());
