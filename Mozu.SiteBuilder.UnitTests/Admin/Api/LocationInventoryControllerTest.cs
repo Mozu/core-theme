@@ -164,6 +164,29 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             Assert.That(actual[3].Fulfillment.Code, Is.EqualTo(sp.Code) );
         }
 
+        [TestCase("inherited both types", new[]{"DirectShip", "InStorePickup"}, new string[]{}, new[]{"DS", "SP"} )]
+        [TestCase("inherited one type", new[]{"InStorePickup"}, new string[]{}, new[]{"SP"} )]
+        [TestCase("overriden both", new[] { "InStorePickup" }, new []{ "DirectShip", "InStorePickup" }, new[] { "DS", "SP" })]
+        [TestCase("overriden single", new[] { "DirectShip", "InStorePickup" }, new []{ "InStorePickup" }, new[] { "SP" })]
+        public void Given_Variant_With_Empty_FulfillmentTypes_Should_Inherit_From_Product(string scenario, string[] prodFulfill, string[] variantFulfill, string[] expectedFulfill)
+        {
+            const string variantCode = "var1";
+            // arrange
+            var controller = CreateController(prodFulfill, variantCode, variantFulfill, location_both);
+
+            // act
+            var t = controller.GetLocationsForProduct(empty_paging_params, empty_filter_collection, product_code, variantCode);
+            List<LocationWithInventory> result = t.Result.Items;
+
+            // assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Empty);
+            var match = from r in result
+                        join exp in expectedFulfill on r.Fulfillment.Code equals exp
+                        select r;
+            Assert.That(match.Count(), Is.EqualTo(expectedFulfill.Length));
+        }
+
         private static DCprod.Product CreateProduct(bool manageStock, string outOfStockBehavior, string[] fulfillmentTypes, string code = "prodCode", string name = "hat")
         {
             var product = new DCprod.Product
@@ -212,7 +235,13 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             };
         }
 
-        private LocationInventoryController CreateController(string[] fulfillmentTypesSupported, params DCloc.Location[] locations)
+        private LocationInventoryController CreateController(string[] fulfillmentTypesSupported,
+            params DCloc.Location[] locations)
+        {
+            return CreateController(fulfillmentTypesSupported, null, null, locations);
+        }
+
+        private LocationInventoryController CreateController(string[] fulfillmentTypesSupported, string productVariantCode, string[] variantFulfillmentTypes, params DCloc.Location[] locations)
         {
             var locationInventoryClient = NSubstitute.Substitute.For<DCprod.Clients.ILocationInventoryWebApiClient>();
             var productWebApiClient = NSubstitute.Substitute.For<DCprod.Clients.IProductWebApiClient>();
@@ -246,6 +275,11 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
                     FulfillmentTypesSupported = fulfillmentTypesSupported
                 }.AsServiceClientResponseAsync());
 
+            if (productVariantCode != null)
+            {
+                SetupMockVariants(productVariantCode, variantFulfillmentTypes, productWebApiClient);
+            }
+
             // location usage is what site settings uses to figure out which directship location is the site's default.
             // the only thing it's looking for is the first child of the locationusage "DS".
             var siteDirectShipLocation = locations.FirstOrDefault(l => l.FulfillmentTypes.Contains(ds));
@@ -266,6 +300,23 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
             }
 
             return new LocationInventoryController(locationInventoryClient, productWebApiClient, locationAdminWebApiClient, locationSettingsWebApiClient, prodAvailInventoryHelper);
+        }
+
+        private static void SetupMockVariants(string productVariantCode, string[] variantFulfillmentTypes,
+            DCprod.Clients.IProductWebApiClient productWebApiClient)
+        {
+            productWebApiClient.GetProductVariations(product_code)
+                .ReturnsForAnyArgs(new DCprod.ProductVariationPagedCollection
+                {
+                    Items = new List<DCprod.ProductVariation>
+                    {
+                        new DCprod.ProductVariation
+                        {
+                            FulfillmentTypesSupported = variantFulfillmentTypes,
+                            VariationProductCode = productVariantCode,
+                        }
+                    }
+                }.AsServiceClientResponseAsync());
         }
     }
 }

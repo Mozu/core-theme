@@ -183,6 +183,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 variation = allTheVariations.First(v => v.VariationProductCode == variationProductCode);
             }
 
+            if (variation != null && (variation.FulfillmentTypesSupported == null || variation.FulfillmentTypesSupported.Length == 0))
+            {
+                variation.FulfillmentTypesSupported = product.FulfillmentTypesSupported;
+            }
+
             List<LocationWithInventory> result = product.InventoryInfo.ManageStock.GetValueOrDefault(false) && 
                 //todo:not this.
                 product.ProductUsage != "Bundle"
