@@ -9,6 +9,16 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     title: 'Returnable Items',
 
     columns: [{
+        text: 'Line',
+        draggable: false,
+        resizable: true,
+        width: 50,
+        sortable: false,
+        menuDisabled: true,
+        hidden: false,
+        align: 'center'
+        //dataIndex: ''
+    }, {
         dataIndex: 'productCode',
         text: 'Code',
         draggable: false,
@@ -30,6 +40,16 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             var parentBundleName = record.get('parentBundleName');
             return parentBundleName ? val + " <em class=\"taco-bundleditem-note\">(Bundled with <strong>" + parentBundleName + "</strong>)</em>" : val;
         }
+    }, {
+        text: 'Status',
+        draggable: false,
+        resizable: true,
+        width: 120,
+        sortable: false,
+        menuDisabled: true,
+        hidden: false,
+        align: 'left'
+        //dataIndex: ''
     }, {
         dataIndex: 'returnType',
         text: 'Type',
