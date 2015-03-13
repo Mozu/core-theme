@@ -469,10 +469,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public HttpResponseMessage StaticContentShare(string relativePath)
         {
-            var sharedFolder = _settings.AppSettings("DevPackageFileShare");
+            var sharedFolder = _settings.AppSettings("SiteBuilderStaticContent");
             var pathPrefix = System.IO.Path.IsPathRooted(sharedFolder) ? "" : @"\\";
             var tenantId = "t-" + _apiContext.TenantId;
-            var fileName = pathPrefix + sharedFolder + "/../../staticContent/" + tenantId + "/" + relativePath;
+            var fileName = pathPrefix + sharedFolder + "/" + tenantId + "/" + relativePath;
             string fileType;
 
             if (checkRequestContent(relativePath, sharedFolder) || !System.IO.File.Exists(fileName))
@@ -482,7 +482,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             else
             {
-                long length;
                 var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var content = new StreamContent(SourceStream);
                 var exists = g_mimeTypeDic.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
