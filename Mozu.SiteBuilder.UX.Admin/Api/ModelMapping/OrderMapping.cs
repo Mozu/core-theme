@@ -729,6 +729,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? dc.AuditInfo.CreateDate : null))
                 //ignores
                 .ForMember(x => x.IsManual, op => op.Ignore()) //calculated field
+                .ForMember(x => x.AmountRefunded, op => op.Ignore()) // calculated field
                 .AfterMap((dc, payment) =>
                 {
                     if (payment == null || payment.PaymentType == PaymentsDC.PaymentTypeConst.CHECK)
