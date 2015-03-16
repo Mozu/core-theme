@@ -578,7 +578,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //todo: temp to get unit test to pass - Greg Murray on 2014-05-20 
                 .ForMember(x => x.ProductDiscount, op => op.Ignore())
                 .ForMember(dc => dc.ProductUsage, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
-                .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+                .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
+                .ForMember(dc => dc.DutyAmount, op => op.Ignore())
             
 //                             ProductCode = orderItem.ProductCode,
 //                             ProductName = orderItem.ProductName,
