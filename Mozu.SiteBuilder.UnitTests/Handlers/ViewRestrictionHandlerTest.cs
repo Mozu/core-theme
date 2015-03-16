@@ -17,10 +17,12 @@ using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using System.Threading;
 using System.Linq;
+using System.Net;
 
 namespace Mozu.SiteBuilder.UnitTests.Handlers
 {
     [TestFixture]
+    [Category("Live/Pending permissions")]
     public class ViewRestrictionHandlerTest :  UnitTestsFor<ViewRestrictionHandler>
     {
         [SetUp]
@@ -103,6 +105,29 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
                 SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsShopper(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.OK
             };
+            yield return new HandlerTest()
+            {
+                Name = "Unauth redirect has correct path",
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsAdmin().WithSiteId(),
+                EvalFunc = msg => IsRedirectTo(msg, "login/unauthorized/index")
+            };
+            yield return new HandlerTest()
+            {
+                Name = "Login redirect has correct path",
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper().WithSiteId(),
+                EvalFunc = msg => IsRedirectTo(msg, "login/to")
+            };
+        }
+
+        static HttpStatusCode[] redirectCodes = new[] { HttpStatusCode.Redirect, HttpStatusCode.RedirectKeepVerb, HttpStatusCode.RedirectMethod, HttpStatusCode.TemporaryRedirect };
+        static bool IsRedirect(HttpResponseMessage msg)
+        {
+            return redirectCodes.Contains(msg.StatusCode);
+        }
+
+        static bool IsRedirectTo(HttpResponseMessage msg, string route)
+        {
+            return IsRedirect(msg) && msg.Headers.Location.AbsolutePath.Trim('/').EqualsIgnoreCase(route);
         }
 
         private class EchoHandler : DelegatingHandler

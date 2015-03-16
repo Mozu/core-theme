@@ -1,8 +1,10 @@
 ﻿Ext.define('Taco.view.productType.AttributeForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.producttype.attributeform',
-    requires: ['Taco.store.Attributes'],
-
+    requires: [
+        'Taco.store.Attributes',
+        'Taco.core.ux.form.SelectField'
+    ],
     layout: {
         type: 'hbox',
         align: 'top',
@@ -307,19 +309,20 @@
     },
 
     addCheckboxes: function (attribute) {
-        var fieldGroup = Ext.create('Ext.container.Container', {
-            removeOnAttributeChange: true,
-            defaults: {
-                xtype: 'checkbox',
-                inputValue: true,
-                ignoreParentFormTracking: true
-            },
-            items: [{
-                name: 'isRequired',
-                checked: this.record.get('isRequired'),
-                boxLabel: 'Required by admin'
-            }]
-        });
+        var me = this,
+            fieldGroup = Ext.create('Ext.container.Container', {
+                removeOnAttributeChange: true,
+                defaults: {
+                    xtype: 'checkbox',
+                    inputValue: true,
+                    ignoreParentFormTracking: true
+                },
+                items: [{
+                    name: 'isRequired',
+                    checked: this.record.get('isRequired'),
+                    boxLabel: 'Required by admin'
+                }]
+            });
 
         if (attribute.get('inputType') === 'List' && this.type !== 'options') {
             fieldGroup.add({
@@ -330,11 +333,47 @@
         }
 
         if (this.type === 'properties') {
-            fieldGroup.add({
+            this.isAdminOnlyStore = Ext.create('Ext.data.Store', {
+                fields: ['id', "name"],
+                data: [
+                    {
+                        name: "Admin & Storefront",
+                        id: false
+                    }, {
+                        name: "Admin Only",
+                        id: true
+                    }
+                ]
+            });
+
+            this.displayGroupSelector = Ext.widget({
+                xtype: 'selectfield',
+                itemId: "displayGroupSelector",
+                fieldLabel: 'Display Group',
+                name: 'isAdminOnly',
+                queryMode: 'local',
+                margin: '0 0 10 0',
+                width: 185,
+                displayField: 'name',
+                valueField: 'id',
+                value: this.record.get('isAdminOnly'),
+                store: this.isAdminOnlyStore,
+                listeners: {
+                    change: function (view, value) {
+                        me.isHiddenFromShopper.setDisabled(value);
+                    }
+                }
+            });
+
+            this.isHiddenFromShopper = Ext.create('Ext.form.field.Checkbox', {
                 name: 'isHidden',
                 checked: this.record.get('isHidden'),
+                disabled: this.record.get('isAdminOnly'),
                 boxLabel: 'Hidden from Shopper'
             });
+
+            fieldGroup.add(this.displayGroupSelector);
+            fieldGroup.add(this.isHiddenFromShopper);
         }
 
 
