@@ -27,8 +27,8 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            devcenterpath = System.IO.Path.GetTempPath() + "bar/baz/";
-            staticContentPath = devcenterpath + "../../staticContent/t-12345/";
+            devcenterpath = System.IO.Path.GetTempPath();
+            staticContentPath = devcenterpath + "/t-12345/";
             file = "file.html";
             System.IO.Directory.CreateDirectory(devcenterpath);
             System.IO.Directory.CreateDirectory(staticContentPath);
@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
             // Arrange
             var settings = MockContainer.ResolveAndSubstituteFor<ISettings>();
             var apiContext = MockContainer.ResolveAndSubstituteFor<IApiContext>();
-            settings.AppSettings("DevPackageFileShare").Returns(devcenterpath);
+            settings.AppSettings("SiteBuilderStaticContent").Returns(devcenterpath);
             apiContext.TenantId.Returns(tenandId);
             
             //Act

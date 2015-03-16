@@ -16,6 +16,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Product
         public bool? AllowMulti { get; set; }
 
         public bool? IsHidden { get; set; }
+        
+        public bool? IsAdminOnly { get; set; }
 
         public bool? IsLocked { get; set; }
 
