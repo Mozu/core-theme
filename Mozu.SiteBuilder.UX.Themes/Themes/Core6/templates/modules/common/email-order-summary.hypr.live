@@ -46,7 +46,7 @@
               </td>
             </tr>
 
-            {% if model.taxDutyTotal and model.taxDutyTotal > 0 %}
+            {% if model.taxDutyTotal > 0 %}
             <tr class="mz-ordersummary-tax">
                 <td align="right" colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.taxDuty }}:</span>

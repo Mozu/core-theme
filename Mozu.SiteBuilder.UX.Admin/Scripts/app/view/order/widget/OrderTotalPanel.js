@@ -263,9 +263,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     */
     subTpl_2: new Ext.XTemplate(
         '<tr>',
-            '<td class="{tdCls}"><div class="{tdInnerCls}"><tpl if="taxDutyTotal && taxDutyTotal %gt 0">Duties and Taxes<tpl else>Tax</tpl></div></td>',
-            '<td class="{tdCls}"><div class="{tdInnerCls}"><tpl if="taxDutyTotal && taxDutyTotal %gt 0">{[this.getCurrencyFormat(values.taxDutyTotal)]}',
-            '<tpl else>{[this.getCurrencyFormat(values.taxTotal)]}</tpl></div></td>',
+            '<tpl if="taxDutyTotal &gt; 0">',
+                '<td class="{tdCls}"><div class="{tdInnerCls}">Duties and Taxes</div></td>',
+                '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.taxDutyTotal)]}</div></td>',
+            '<tpl else>',
+                '<td class="{tdCls}"><div class="{tdInnerCls}">Tax</div></td>',
+                '<td class="{tdCls}"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.taxTotal)]}</div></td>',
+            '</tpl>',
         '</tr>',
 
         '<tr class="row-group-start">',
