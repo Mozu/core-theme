@@ -61,8 +61,8 @@
         }
 
         &.folder-icon {
-            @include icon-font($glyph-filemanager);
-            top: -3px;
+            @include icon-font($glyph-folder, 15px);
+            top: -1px;
         }
 
         &.link-icon {
