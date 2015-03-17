@@ -64,7 +64,7 @@ StartTest(function(t) {
         function(next) {
             t.diag("panel header bound to record");
             m.panel.on('rerender', next, { single: true });
-            t.isHandleHtml(m.panel, 'order-payment-status', 'Fully Paid', 'panel header reflects fully paid status');
+            t.isHandleHtml(m.panel, 'order-payment-status', 'Paid', 'panel header reflects fully paid status');
             m.record.set({
                 authorizationInfo: {
                     amountCollected: 0,
@@ -92,7 +92,7 @@ StartTest(function(t) {
 
         
         function(next) {
-            t.isHandleHtml(m.panel, 'order-payment-status', 'Partially Paid', 'panel header reflects partially paid status and updates');
+            t.isHandleHtml(m.panel, 'order-payment-status', 'Pending', 'panel header reflects partially paid status and updates');
 
             t.diag("payment actions should be available when order is pending");
 
