@@ -5,9 +5,24 @@ Ext.define('Taco.store.StoreCredits', {
     remoteSort: true,
     remoteFilter: true,
     sorters: [{
-        property: 'createDate',
+        property: 'activationDate',
         direction: 'DESC'
     }],
+    proxy: {
+        type: 'ajaxproxy',
+        api: {
+            read: '/admin/app/customer/credits/list',
+            create: '/admin/app/customer/credits/create',
+            update: '/admin/app/customer/credits/edit',
+            destroy: '/admin/app/customer/credits/delete'
+        },
+        reader: {
+            type: 'json',
+            root: 'items',
+            successProperty: 'success',
+            messageProperty: "message"
+        }
+    },
     statics: {
         createForCustomer: function(customerId, options) {
             var store, proxy;

@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         // Store Credit constants
         private const string CODE_PROPERTY = "Code";
         private const string CUSTOMERID_PROPERTY = "CustomerId";
-        private const string ACTIVATEDATE_PROPERTY = "ActivateDate";
+        private const string ACTIVATEDATE_PROPERTY = "ActivationDate";
         private const string EXPIRATIONDATE_PROPERTY = "ExpirationDate";
         private const string CREATEDATE_PROPERTY = "CreateDate";
         private const string UPDATEDATE_PROPERTY = "UpdateDate";
@@ -24,10 +24,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         private const string CURRENCYCODE_PROPERTY = "CurrencyCode";
         private const string CREATEBY_PROPERTY = "CreateBy";
         private const string UPDATEBY_PROPERTY = "UpdateBy";
-        private const string NAME_PROPERTY = "Name";
-        private const string EMAIL_PROPERTY = "Email";
-
-
 
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
@@ -154,22 +150,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         
         private static string GetCreditFilter(object value, FilterCollectionItem filter)
         {
-           /*
-            // Store Credit constants
-        private const string CODE_PROPERTY = "Code";
-        private const string CUSTOMERID_PROPERTY = "CustomerId";
-        private const string ACTIVATEDATE_PROPERTY = "ActivateDate";
-        private const string EXPIRATIONDATE_PROPERTY = "ExpirationDate";
-        private const string CREATEDATE_PROPERTY = "CreateDate";
-        private const string UPDATEDATE_PROPERTY = "UpdateDate";
-        private const string CREDITTYPE_PROPERTY = "CreditType";
-        private const string INITIALBALANCE_PROPERTY = "InitialBalance";
-        private const string CURRENTBALANCE_PROPERTY = "CurrentBalance";
-        private const string CURRENCYCODE_PROPERTY = "CurrencyCode";
-        private const string CREATEBY_PROPERTY = "CreateBy";
-        private const string UPDATEBY_PROPERTY = "UpdateBy";
-            */
-
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
@@ -183,21 +163,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     //this is the value coming from the customer picker field. Display value varies but it maps to a customerId
                     return String.Format("{0} eq \"{1}\"", CUSTOMERID_PROPERTY, filter.escapedValue);
                 case "activatedatefrom":
-                    return String.Format("{0} gt \"{1}\"", ACTIVATEDATE_PROPERTY, filter.value);
+                    return String.Format("{0} gt \"{1}\"", ACTIVATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "activatedateto":
-                    return String.Format("{0} lt \"{1}\"", ACTIVATEDATE_PROPERTY, filter.value);
+                    return String.Format("{0} lt \"{1}\"", ACTIVATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "expirationdatefrom":
-                    return String.Format("{0} gt \"{1}\"", EXPIRATIONDATE_PROPERTY, filter.value);
+                    return String.Format("{0} gt \"{1}\"", EXPIRATIONDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "expirationdateto":
-                    return String.Format("{0} lt \"{1}\"", EXPIRATIONDATE_PROPERTY, filter.value);
+                    return String.Format("{0} lt \"{1}\"", EXPIRATIONDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "createdatefrom":
-                    return String.Format("{0} gt \"{1}\"", CREATEDATE_PROPERTY, filter.value);
+                    return String.Format("{0} gt \"{1}\"", CREATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "createdateto":
-                    return String.Format("{0} lt \"{1}\"", CREATEDATE_PROPERTY, filter.value);
+                    return String.Format("{0} lt \"{1}\"", CREATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "updatedatefrom":
-                    return String.Format("{0} gt \"{1}\"", UPDATEDATE_PROPERTY, filter.value);
+                    return String.Format("{0} gt \"{1}\"", UPDATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "updatedateto":
-                    return String.Format("{0} lt \"{1}\"", UPDATEDATE_PROPERTY, filter.value);
+                    return String.Format("{0} lt \"{1}\"", UPDATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "credittype":
                     return String.Format("{0} eq \"{1}\"", CREDITTYPE_PROPERTY, filter.value);
                 case "initialbalancefrom":

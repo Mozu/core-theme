@@ -18,13 +18,16 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
         width:500,
         xtype: 'textfield'
     },
+
+    trackResetOnLoad:false,
+
     initComponent: function () {
         var me = this;
 
         this.items = [];
 
         this.customerIdField = Ext.widget({
-            xtype: "textfield",
+            xtype: "numberfield",
             name: 'customerid',
             flex: 1,
             margin: '0 0 0 0',
@@ -61,6 +64,8 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
         this.items = [
             {
                 name: 'keyword',
+                originalValue: "",
+                trackResetOnLoad:false,
                 fieldLabel: 'Keyword Search'
             },            
             {
@@ -89,7 +94,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     type: 'hbox'
                 },
                 items: [{
-                    xtype: 'datefield',                    
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",
                     name: 'activatedatefrom',
@@ -99,7 +104,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     html: 'to',
                     margin: '7 10'
                 }, {
-                    xtype: 'datefield',                    
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;                    
                     altFormats: "c",                 
                     name: 'activatedateto',
@@ -114,7 +119,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     type: 'hbox'
                 },
                 items: [{
-                    xtype: 'datefield',                    
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",
                     name: 'expirationdatefrom',
@@ -124,7 +129,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     html: 'to',
                     margin: '7 10'
                 }, {
-                    xtype: 'datefield',                    
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;                    
                     altFormats: "c",                 
                     name: 'expirationdateto',
@@ -140,7 +145,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     type: 'hbox'
                 },
                 items: [{
-                    xtype: 'datefield',                    
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",
                     name: 'createdatefrom',
@@ -150,7 +155,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     html: 'to',
                     margin: '7 10'
                 }, {
-                    xtype: 'datefield',                    
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",                 
                     name: 'createdateto',
@@ -165,7 +170,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     type: 'hbox'
                 },
                 items: [{
-                    xtype: 'datefield',
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",
                     name: 'updatedatefrom',
@@ -175,7 +180,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                     html: 'to',
                     margin: '7 10'
                 }, {
-                    xtype: 'datefield',                    
+                    xtype: 'datetime',
                     // allows the field to consume an iso foramt value;
                     altFormats: "c",
                     name: 'updatedateto',

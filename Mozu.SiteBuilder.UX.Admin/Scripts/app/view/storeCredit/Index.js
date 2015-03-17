@@ -5,7 +5,9 @@
 
 Ext.define('Taco.view.storeCredit.Index', {
     extend: 'Taco.view.storeCredit.Grid',
-    alias: 'widget.storecreditlist'
+    alias: 'widget.storecreditlist',
+    stateful: true,
+    stateId: 'statefulStoreCreditGrid'
 });
 
 

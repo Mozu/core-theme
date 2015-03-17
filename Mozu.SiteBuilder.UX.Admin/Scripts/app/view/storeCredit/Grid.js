@@ -5,9 +5,10 @@ Ext.define('Taco.view.storeCredit.Grid', {
     extend: 'Taco.core.ux.browser.SearchList',
     
     requires: [
-        'Taco.model.StoreCredit', 
-        'Taco.store.StoreCredits', 
-        'Taco.view.storeCredit.Edit',        
+        'Taco.model.StoreCredit',
+        'Taco.store.StoreCredits',
+        'Taco.store.StoreCreditsGrid',
+        'Taco.view.storeCredit.Edit',
         'Taco.view.storeCredit.AdvancedSearchForm',
         'Ext.Date',        
         'Ext.form.Panel',        
@@ -40,10 +41,14 @@ Ext.define('Taco.view.storeCredit.Grid', {
     showActionsColumn: true,
 
     hideSearchToolbar: false,
+
+    enableActionColumn: true,
+
+    excludeCustomerColumns:false,
     
     title: "Store Credits",
 
-    store: { type: 'Taco.store.StoreCredits', autoLoad: true },
+    store: { type: 'Taco.store.StoreCreditsGrid', autoLoad: true },
 
     autoScroll: true,
 
@@ -66,24 +71,34 @@ Ext.define('Taco.view.storeCredit.Grid', {
 
     onCreate: Ext.emptyFn,
 
-    stateful: true,
-    stateId: 'statefulStoreCreditGrid',
-
     statics: {
         
     },
         
     initComponent: function () {
         var me = this;
-        this.columns = this.getColumnConfig();
+
+        me.columns = me.getColumnConfig();
+
+        if (me.adaptColumns) {
+            me.adaptColumns(me.columns);
+        }
+
         me.callParent(arguments);
     },
     
+    // override the default visibility of the columns
+    hiddenColumns: [],
+
+    // override wether to include the columns; Allows for the column configurations to be reused but allows the subclass to control if they are available
+    disabledColumns: [],
+
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
-        var me = this,            
-        columns = [
-        {
+        var me = this,
+            columns = [];
+
+        columns.push({
             dataIndex: 'code',
             stateId: 'code',
             text: 'Code',
@@ -93,35 +108,16 @@ Ext.define('Taco.view.storeCredit.Grid', {
             dataIndex: 'creditType',
             stateId: 'creditType',
             text: 'Type',
-            sortable:true,
+            sortable: true,
             minWidth: 60
-        } ,{
+        }, {
             dataIndex: 'initialBalance',
             stateId: 'initialBalance',
             text: 'Issued Amount',
-            renderer: function (value, metaData, record) {
+            renderer: function(value, metaData, record) {
                 return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
             },
             width: 120
-        }, {
-            dataIndex: 'customer',
-            stateId: 'customer',
-            text: 'Customer',
-            sortable: false,
-            flex: 1,
-            minWidth: 120,
-            renderer: function (customer) {
-                if (customer) {
-                    return '<span style="white-space:nowrap">' +customer.firstName + ' ' + customer.lastName + '(' + customer.id + ')</span>';
-                }
-            }
-        }, {
-            dataIndex: 'activationDate',
-            stateId: 'activationDate',
-            text: 'Activation Date',
-            width: 130,
-            xtype: 'datecolumn',
-            format: 'n/j/Y g:i a',
         }, {
             dataIndex: 'currentBalance',
             stateId: 'currentBalance',
@@ -130,40 +126,64 @@ Ext.define('Taco.view.storeCredit.Grid', {
             sortable: true,
             renderer: function (value, metaData, record) {
                 return Taco.app.context.formatCurrencyFromCode(record.get('currencyCode'), value);
-                
             }
-        }, {
-            dataIndex: 'customerId',
-            stateId: 'customerId',
-            text: 'Customer Id',
-            flex: 1,
-            minWidth: 120,
-            hidden: true
-        }, {
-            dataIndex: 'customer',
-            stateId: 'customerEmail',
-            text: 'Customer Email',
-            sortable: false,
-            flex: 1,
-            minWidth: 120,
-            hidden: true,
-            renderer: function (customer) { return customer.emailAddress; }
+        },{
+            dataIndex: 'activationDate',
+            stateId: 'activationDate',
+            text: 'Activation Date',
+            width: 130,
+            xtype: 'datecolumn',
+            format: 'n/j/Y g:i a',
         }, {
             dataIndex: 'expirationDate',
             stateId: 'expirationDate',
             text: 'Expires On',
             width: 130,
-            hidden: true,
+            hidden: false,
             xtype: 'datecolumn',
             format: 'n/j/Y g:i a',
-        }, {
+        });
+
+        if (!this.excludeCustomerColumns) {
+            columns.push({
+                dataIndex: 'customer',
+                stateId: 'customer',
+                text: 'Customer',
+                sortable: false,
+                flex: 1,
+                minWidth: 120,
+                renderer: function (customer) {
+                    if (customer) {
+                        return '<span style="white-space:nowrap">' + customer.firstName + ' ' + customer.lastName + '(' + customer.id + ')</span>';
+                    }
+                }
+            }, {
+                dataIndex: 'customerId',
+                stateId: 'customerId',
+                text: 'Customer Id',
+                flex: 1,
+                minWidth: 120,
+                hidden: true
+            }, {
+                dataIndex: 'customer',
+                stateId: 'customerEmail',
+                text: 'Customer Email',
+                sortable: false,
+                flex: 1,
+                minWidth: 120,
+                hidden: true,
+                renderer: function (customer) { return customer.emailAddress; }
+            });
+        }
+        
+        columns.push({
             dataIndex: 'createdDate',
             stateId: 'createdDate',
             text: 'Create Date',
             width: 130,
             hidden: true,
             sortable: true,
-            getSortParam: function () {
+            getSortParam: function() {
                 return "createdate";
             },
             xtype: 'datecolumn',
@@ -175,7 +195,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
             width: 130,
             hidden: true,
             sortable: true,
-            getSortParam: function () {
+            getSortParam: function() {
                 return "updatedate";
             },
             xtype: 'datecolumn',
@@ -187,25 +207,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
             width: 130,
             hidden: true,
             sortable: false,
-            renderer: function (val, creditRecord) {
-                var store = Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers');
-                var rec = store.getById(val);
-                var name = "";
-                if (rec) {
-                    name = rec.get("fullName");
-                } else {
-                    name = "system";
-                }
-                return name;
-            }
-        },{
-            dataIndex: 'createBy',
-            stateId: 'createBy',
-            text: 'Created By',
-            width: 130,
-            hidden: true,
-            sortable: false,
-            renderer: function (val, creditRecord) {
+            renderer: function(val, creditRecord) {
                 var store = Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers');
                 var rec = store.getById(val);
                 var name = "";
@@ -217,33 +219,58 @@ Ext.define('Taco.view.storeCredit.Grid', {
                 return name;
             }
         }, {
-            xtype: 'taco.menucolumn',
-            text: 'Actions',
-            onMenuShow: function (menu, eventData) {
-                var customerMenu = menu.items.get('customerMenu');
-                customerMenu.setVisible(eventData.record.get('customer'));
-            },
-            menuItems: [{
-                text: 'Edit',
-                menuColumnHandler: 'editMenuColumnHandler'
-            }, {
-                text: 'Delete',
-                menuColumnHandler: 'destroyMenuColumnHandler'
-            }, {
-                text: 'Go To Customer Account',
-                itemId: 'customerMenu',
-                
-                menuColumnHandler: function (event, item) {
-                    Taco.core.StateManager.attemptNavigate('customer/edit/' + item.record.get('customerId'));
+            dataIndex: 'createBy',
+            stateId: 'createBy',
+            text: 'Created By',
+            width: 130,
+            hidden: true,
+            sortable: false,
+            renderer: function(val, creditRecord) {
+                var store = Taco.core.data.StoreManager.getOrCreate('Taco.store.AdminUsers');
+                var rec = store.getById(val);
+                var name = "";
+                if (rec) {
+                    name = rec.get("fullName");
+                } else {
+                    name = "system";
                 }
-            }]
-        }]
-        
-        
-        
+                return name;
+            }
+        });
 
+
+
+        if (this.enableActionColumn) {
+            columns.push({
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                onMenuShow: function(menu, eventData) {
+                    var customerMenu = menu.items.get('customerMenu');
+                    customerMenu.setVisible(eventData.record.get('customer'));
+                },
+                menuItems: [
+                    {
+                        text: 'Edit',
+                        menuColumnHandler: 'editMenuColumnHandler'
+                    }, {
+                        text: 'Delete',
+                        menuColumnHandler: 'destroyMenuColumnHandler'
+                    }, {
+                        text: 'Go To Customer Account',
+                        itemId: 'customerMenu',
+
+                        menuColumnHandler: function(event, item) {
+                            Taco.core.StateManager.attemptNavigate('customer/edit/' + item.record.get('customerId'));
+                        }
+                    }
+                ]
+            });
+        }
         return columns;
     },
+
+    // template method that allows the grid instance to adjust the columns before instantiation;
+    adaptColumns : Ext.emptyFn,
 
     onItemClick: function (view, record, elm, index, e) {
         // console.log(e.target);

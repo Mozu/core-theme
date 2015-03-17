@@ -215,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                     }
 
                     return retVal;
-                case "name":
+                case "discountName":
                     return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.escapedValue);
                 case "id":
                     return String.Format("{0} cont \"{1}\"", ID_PROPERTY, filter.value);

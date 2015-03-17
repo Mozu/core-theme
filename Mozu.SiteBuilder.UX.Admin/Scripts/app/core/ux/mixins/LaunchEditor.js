@@ -91,5 +91,12 @@ Ext.define('Taco.core.ux.mixins.LaunchEditor', {
         Ext.defer(function () {
             Taco.core.StateManager.attemptNavigate(Taco.core.StateManager.getCurrentState().metaData.controller + '/edit/' + record.getId(), complexMetaData);
         }, 1, this);
+    },
+
+    editMenuColumnHandler: function (item, eventData) {
+        var record = eventData.record,
+            metaData = { id: record.getId() };
+
+        this.launchEditor(record, metaData);
     }
 });

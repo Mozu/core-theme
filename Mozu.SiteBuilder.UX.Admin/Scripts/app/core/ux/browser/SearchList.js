@@ -80,9 +80,8 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         // this plugin will auto select the first record in the grid and manage reselection of the selected item after a store load
         if (this.enableAutoSelect !== false) {            
             this.plugins = this.plugins || [];
-            this.plugins.push("autoselect");
+            this.plugins.push(Ext.create('Taco.core.ux.grid.plugins.AutoSelect'));
         }
-
 
         // Initialize the LaunchEditor Mixin Defined in SearchList 
         if (this.launchEditorOnClick) {
@@ -123,8 +122,10 @@ Ext.define('Taco.core.ux.browser.SearchList', {
         this.mixins.rowEditable.constructor.apply(this);
         
         // initialize the search toolbar mixin
-        this.mixins.searchable.constructor.apply(this);
-        me.dockedItems.push(me.createSearchToolbar());
+        if (me.enableSearch) {
+            this.mixins.searchable.constructor.apply(this);
+            me.dockedItems.push(me.createSearchToolbar());
+        }
         
         if (me.secondToolbarItems) {
             me.dockedItems.push(me.createSecondToolbar());

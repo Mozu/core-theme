@@ -98,6 +98,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         form = this.getAdvancedForm();
 
+        // force the form to reset to clean state; this allows the form to be reset to empty values; otherwise the form will reset to the values that initialized it.
+        form.trackResetOnLoad = false;
+
         if (this.quickFilterData && this.enableQuickFilters) {
             form.insert(0, {
                 xtype: 'combo',
@@ -167,7 +170,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     onBeforeSelect:function (combo, record) {
         var newValue = record.get('field1'),
             picker = combo.getPicker();
-
+        
         if (newValue && combo.findRecordByValue(newValue)) {
             this.setAdvancedFilterValues(newValue);
             this.setTextFilterValue(newValue);
@@ -208,6 +211,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @param  {Object} value An object containing field keys and values.
      */
     doFilter: function (value) {
+        
         var existingFilter = this.getAdvancedSearchFromStore();
         if (this.hasContextChanged) {
             this.hasContextChanged = false;
@@ -354,6 +358,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * request to the server.
      */
     handleDialogSave: function () {
+        
         this.syncAndFilter(this.getAdvancedForm().getForm().getValues());
     },
 
@@ -374,6 +379,21 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                 mousedown: collapseIf,
                 scope: this
             });
+            
+            // annoyingly the form fields do not reset because they are updating the original value when they are being set.
+            // clear out any previuos values left in the form from previous showing.
+            var form = dialog.getForm().form,
+                fields = form.getFields().items,
+                fLen = fields.length;
+                Ext.suspendLayouts();
+
+            for (var f = 0; f < fLen; f++) {
+                var field = fields[f];
+                // need to manually null out the original value since the setValues on the form sets this value on the field and it never resets to empty;
+                field.originalValue = null;
+                field.reset();
+            }
+            Ext.resumeLayouts(true);
         }
 
         this.setAdvancedFilterValues(jsonValue);
@@ -462,12 +482,13 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         var form,
             comboFields;
 
-        if (this.modal && !Ext.isEmpty(values)) {
+        
+        //if (this.modal && !Ext.isEmpty(values)) {
+        if (this.modal && !Ext.Object.isEmpty(values)) {
+        
             form = this.modal.getForm();
             comboFields = form.query('combo');
-
-            // clear out any previuos values left in the form;
-            form.getForm().reset(true);
+            
             // reload the values using the current state pulled from the search box.
             form.getForm().setValues(values);
 
