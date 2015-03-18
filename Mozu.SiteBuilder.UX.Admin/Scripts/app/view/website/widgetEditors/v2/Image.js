@@ -537,13 +537,21 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
     },
 
     handleUploadFile: function (files) {
-        this.down('#imageField').onUploadFile(files)
+        this.down('#imageField').onUploadFile(files);
+    },
+
+    filterOutNonImages: function() {
+        this.filterBy(function(record){
+            return ['gif', 'jpeg', 'pjpeg', 'png', 'tiff', 'jpg'].indexOf(record.get('fileType')) !== -1 ;
+        });
     },
 
     toggleAssociator: function (state, button, store) {
         if (state) {
             if (!this.associator) {
                 this.associator = Ext.create('Taco.view.fileManager.Associator', {closeAction: 'hide'});
+                this.associator.store.load(this.filterOutNonImages.bind(this.associator.store));
+
             } else {
                 this.associator.show();
             }
