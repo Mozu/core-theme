@@ -83,6 +83,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
                 },
                 items: [{
                     xtype: 'container',
+                    margin: '40px 0 0 0',
                     layout: {
                         type: 'hbox',
                         align: 'bottom'
