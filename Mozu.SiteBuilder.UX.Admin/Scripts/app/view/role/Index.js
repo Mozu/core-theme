@@ -5,8 +5,7 @@
 
 Ext.define('Taco.view.role.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
-    requires: ['Taco.model.Role', 'Taco.store.Roles'],
-
+    requires: ['Taco.model.Role', 'Taco.store.Roles', 'Taco.view.role.EditModal'],
     modelName: 'Taco.model.Role',
     store: { type: 'Taco.store.Roles' },
     editorName: 'Taco.view.role.Edit',
@@ -14,8 +13,24 @@ Ext.define('Taco.view.role.Index', {
     // this is the title. 
     typeName: "Roles",
 
-    initComponent: function () {       
-        
+    initComponent: function () {
+        var me = this;
+
+        me.header = {
+            title: 'Roles',
+            actions: [{
+                xtype: 'button',
+                ui: 'action-primary',
+                scale: 'medium',
+                itemId: 'createActionButton',
+                text: 'Create New Roles',
+                margin: '0 0 0 10',
+                handler: function () {
+                    me.launchEditor();
+                }
+            }]
+        };
+
         if (!this.store) {
             this.store = Ext.create('Taco.store.Roles', {
                 autoLoad: true
@@ -67,13 +82,7 @@ Ext.define('Taco.view.role.Index', {
 
        
     },
-
-   
-
     onDeleteRole: function (view, index, idx, action, e, record) {
-
-
-
         Ext.MessageBox.show({
             title: 'Confirm',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -90,5 +99,11 @@ Ext.define('Taco.view.role.Index', {
                 }
             }
         });
+    },
+    launchEditor: function (record) {
+        var editor = Ext.create('Taco.view.role.EditModal', {
+            record: record
+        });
+        editor.show();
     }
 });

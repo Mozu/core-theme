@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
@@ -32,6 +33,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<BehaviorCategory>> Get(int? id)
         {
             var behaviorCategory = await _permissionsRepository.GetCategory(id);
+
+            return behaviorCategory == null ? EmptySingle2<BehaviorCategory>(false) : Single2(behaviorCategory);
+        }
+
+        [HttpGetRoute(UriTemplate = "behaviors")]
+        public async Task<Response<BehaviorCategory>> GetCategoryBehaviors(FilterCollection extFilter)
+        {
+            var searchId = 0;
+            if (!extFilter.IsNullOrEmpty())
+            {
+                foreach (var filter in extFilter.Where(filter => filter.property.ToLowerInvariant() == "id"))
+                {
+                    searchId = (int)filter.value;
+                }
+            }
+            
+            var behaviorCategory = await _permissionsRepository.GetCategory(searchId);
 
             return behaviorCategory == null ? EmptySingle2<BehaviorCategory>(false) : Single2(behaviorCategory);
         }
