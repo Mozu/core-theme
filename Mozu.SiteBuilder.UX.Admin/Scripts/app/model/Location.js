@@ -60,8 +60,15 @@ Ext.define('Taco.model.Location', {
                 return data;
             }
         }, {
-            "name": "isDeleted", // this is tbd
-            "type": "boolean"
+            name: "isDisabled",
+            type: "boolean",
+            defaultValue: false
+        }, {
+            name: 'status',
+            convert:function(v, record) {
+                return record.get('isDisabled') ? 'Disabled' : 'Active';
+            },
+            persist: false
         }, {
             "name": "name",
             "type": "string",

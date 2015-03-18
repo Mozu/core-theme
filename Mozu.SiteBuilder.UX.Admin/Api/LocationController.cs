@@ -61,10 +61,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<HttpResponseMessage> Edit(DC.Location l)
+        public async Task<HttpResponseMessage> Edit(DC.Location loc)
         {
             
-            var resp = (await _locationWebApiClient.UpdateLocation(l.Code, l)).ReadAsSync();
+            var resp = (await _locationWebApiClient.UpdateLocation(loc.Code, loc)).ReadAsSync();
             EnsureLocationContract(resp);
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }

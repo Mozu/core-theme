@@ -7,6 +7,7 @@ Ext.define('Taco.view.location.Index', {
     requires: [
         'Taco.store.Locations',
         'Taco.model.Location'
+        //'Taco.view.product.AdvancedSearchForm'
     ],
 
     // used by create button
@@ -21,7 +22,9 @@ Ext.define('Taco.view.location.Index', {
     
     store: { type: 'Taco.store.Locations' },
 
-    
+    //advancedSearchConfig: {
+    //    advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
+    //},
 
    
     useTilePanel: false,
@@ -145,7 +148,12 @@ Ext.define('Taco.view.location.Index', {
                 text: 'Address',
                 sortable: false,
                 flex:1
-
+            }, {
+                dataIndex: 'status',
+                stateId: 'status',
+                text: 'Status',
+                sortable: false,
+                flex: 1
             }, {
                 xtype: 'taco.menucolumn',
                 text: 'Actions',
