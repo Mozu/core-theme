@@ -230,10 +230,19 @@ Ext.define('Taco.view.account.Users', {
         var actions;
         var me = this;
 
+        Taco.user.sites.forEach(function (site) {
+            if (site.roleId == 1) {
+                me.isSuperAdmin = true;
+            };
+        });
+        var canDelete = true;
+        if (Taco.user.id == record.get('id')) {
+            canDelete = false;
+        }
         actions = [
                 {
                     text: 'Delete',
-                    disabled: (Taco.user.id == record.get('id')) ? true : false,
+                    disabled: (!me.isSuperAdmin || !canDelete) ? true : false,
                     handler: function (item, event) {
                         if (item.scope.basegrid.selModel.getSelection()[0].get('type') == 'user') {
                             item.scope.basegrid.selModel.getSelection()[0].destroy();
