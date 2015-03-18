@@ -105,13 +105,13 @@
   background-color: white;
   border: 1px solid #bfbfbf;
   font-family: SourceSansProRegular, MyriadWebProRegular, helvetica, arial, verdana, sans-serif;
-  height: 450px;
+  height: 380px;
   left: 50%;
-  margin-left: -225px;
-  margin-top: -225px;
+  margin-left: -190px;
+  margin-top: -190px;
   position: fixed;
   top: 50%;
-  width: 460px;
+  width: 380px;
   z-index: 100003;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -169,14 +169,14 @@
 /* line 67, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-shadow {
   background-color: #333333;
-  height: 510px;
+  height: 460px;
   left: 50%;
-  margin-left: -255px;
-  margin-top: -255px;
+  margin-left: -230px;
+  margin-top: -230px;
   opacity: 0.9;
   position: fixed;
   top: 50%;
-  width: 520px;
+  width: 460px;
   z-index: 100002;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
