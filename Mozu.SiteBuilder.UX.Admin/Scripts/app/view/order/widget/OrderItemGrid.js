@@ -244,7 +244,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     hidden: false,
-                    align: 'center'
+                    align: 'center',
+                    renderer: function (value, meta, record) {
+                        return 1 + this.store.indexOf(record);
+                    }
                     //dataIndex: ''
                 },
                 {
