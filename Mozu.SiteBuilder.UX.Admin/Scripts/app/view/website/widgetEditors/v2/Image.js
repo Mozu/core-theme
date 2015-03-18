@@ -550,7 +550,7 @@ Ext.define('Taco.view.website.widgetEditors.v2.Image', {
         if (state) {
             if (!this.associator) {
                 this.associator = Ext.create('Taco.view.fileManager.Associator', {closeAction: 'hide'});
-                this.associator.store.load(this.filterOutNonImages.bind(this.associator.store));
+                this.mon(this.associator.store, 'load', this.filterOutNonImages, this.associator.store, {single: true});
 
             } else {
                 this.associator.show();
