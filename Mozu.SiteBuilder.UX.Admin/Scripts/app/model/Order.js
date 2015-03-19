@@ -2327,13 +2327,25 @@ Ext.define('Taco.model.Order', {
     resendEmail: function (config) {
         var me = this,
             config = config || {},
-            url = (config.type && config.type === "shipment") ? '/admin/app/order/shipping/package/resendshipmentemail' : '/admin/app/order/resendconfirmationemail',
+            url,
             confirmTpl = config.confirmTpl || new Ext.XTemplate([
                 '<p>Successfully resent e-mail</p>'
             ]),
             confirmData = config.confirmData || me.data,
             confirmSuccess = (config.confirmSuccess==false) ? false :  true,
             msg;
+
+        switch (config.type) {
+            case "shipment":
+                url = '/admin/app/order/shipping/package/resendshipmentemail';
+                break;
+            case "refund":
+                url = '/admin/app/order/refunds/resendemail';
+                break;
+            default:
+                url = '/admin/app/order/resendconfirmationemail';
+                break;
+        }
             
         Ext.apply(config, {
             method: 'POST',
@@ -2358,7 +2370,10 @@ Ext.define('Taco.model.Order', {
         config.errorMsg = config.errorMsg || 'Error resending email';
         this.addErrorHandling(config);            
         Ext.Ajax.request(config);
-    },
+    }
+
+
+    //,
 
     // service call to resend the 
     // @param {Object} config  A configuration object     
@@ -2368,12 +2383,12 @@ Ext.define('Taco.model.Order', {
     //         refundId: '987654321'
     //     }
     // }
-    resendRefundEmail: function(config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/refunds/resendemail',
-            method: 'POST'
-        });
+    //resendRefundEmail: function(config) {
+    //    Ext.apply(config, {
+    //        url: '/admin/app/order/refunds/resendemail',
+    //        method: 'POST'
+    //    });
 
-        Ext.Ajax.request(config);
-    }
+    //    Ext.Ajax.request(config);
+    //}
 });

@@ -151,15 +151,14 @@ Ext.define('Taco.view.order.subform.Payment', {
                     text: 'Resend Email',
                     menuColumnHandler: function (item, eventData) {
                         var cfg = {
+                            type:"refund",
                             jsonData: {
                                 orderId: eventData.record.get('orderId'),
                                 refundId: eventData.record.get('id')
                             }
                         };
 
-                        if (record.resendRefundEmail) {
-                            record.resendRefundEmail(cfg);
-                        }
+                        record.resendEmail(cfg);
                     }
                 }]
             }]
