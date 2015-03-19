@@ -237,6 +237,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
             columns: [
                 {
+                    dataIndex: 'lineId',
                     text: 'Line',
                     draggable: false,
                     resizable: true,
@@ -248,7 +249,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     renderer: function (value, meta, record) {
                         return 1 + this.store.indexOf(record);
                     }
-                    //dataIndex: ''
                 },
                 {
                     text: 'Code',
@@ -382,6 +382,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         }
                 },
                 {
+                    dataIndex: 'fulfillmentStatus',
                     text: 'Status',
                     draggable: false,
                     resizable: true,
@@ -389,8 +390,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     hidden: false,
-                    align: 'left'
-                    //dataIndex: ''
+                    align: 'left',
+                    renderer: function (value) {
+                        return value || 'Pending';
+                    }
                 },
                 {
                     text: 'Fulfillment',
