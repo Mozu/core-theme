@@ -203,10 +203,9 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             this.setVisible(true);
         }
 
-
         if (isLineItem) {
             orderMaxLabel = orderMaxLabelWhenInline;
-            if (Ext.Array.contains(["Percentage", "Fixed","Free"], discountType)) {
+            if (Ext.Array.contains(["Percentage", "FixedPrice","Free"], discountType)) {
                 orderMaxVisible = true;
                 lineItemMaxVisible = true;
             } else if (discountType == "Amount") {
@@ -215,14 +214,14 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             }
         } else {
             // order or not selected
-            if (discountType == "Percentage") {
+            if (Ext.Array.contains(["Percentage", "FixedPrice", "Free"], discountType)) {
                 orderMaxLabel = orderMaxLabelWhenOrder;
                 orderMaxVisible = true;
                 lineItemMaxVisible = false;
             } else if (discountType == "Amount") {
                 orderMaxVisible = false;
                 lineItemMaxVisible = false;
-            }
+            } 
         }
 
         // need to update the label since it will be visible. the line item max never gets a label change. 
