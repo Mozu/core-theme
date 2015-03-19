@@ -61,6 +61,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string Id { get; set; }
 
+        /// <summary>
+        /// The line ID of the product. This should be shared with all bundled products if applicable.
+        /// </summary>
+        public int LineId { get; set; }
+
         public string ProductCode { get; set; }
         
         // public string OriginalCartItemId { get; set; }

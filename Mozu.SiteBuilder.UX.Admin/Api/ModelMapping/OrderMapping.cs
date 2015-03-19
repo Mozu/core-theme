@@ -523,6 +523,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
                   .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
                   .ForMember(x => x.FulfillmentMethod, op => op.ResolveUsing(dc => dc.FulfillmentMethod))
+                  // TODO (JK): Add this back in when contract has LineId!
+                  //.ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
 
                   .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
                       ? dc.HandlingAmount : null))
@@ -956,6 +958,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                   .ForMember(dc => dc.Data, op => op.Ignore())
+                  //.ForMember(dc => dc.LineId, op => op.Ignore()) // TODO: (JK) This needs to be moved to the mapper when the contract is ready.
             
                   ;
         }
