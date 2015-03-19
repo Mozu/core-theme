@@ -150,7 +150,11 @@
                         {% if payment.paymentType == "CreditCard" %}
                             <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
                             <td>{{ payment.billingInfo.card.cardNumberPartOrMask }}</td>
-                            <td>{% if payment.billingInfo.card.expireMonth %}{{ payment.billingInfo.card.expireMonth }}/{{ payment.billingInfo.card.expireYear }}{% endif %}</td>
+                            <td>
+                                {% if payment.billingInfo.card.expireMonth %}
+                                    {{ payment.billingInfo.card.expireMonth }}/{{ payment.billingInfo.card.expireYear }}
+                                {% endif %}
+                            </td>
                         {% else %}
                             {% if payment.paymentType == "Check" %}
                                 <td>Check</td>
@@ -160,11 +164,16 @@
                                 {% endfor %}
                                 </td>
                                 <td>N/A</td>
-                            {% endif %}
-                            {% if payment.paymentType == "StoreCredit" %}
-                                <td>Gift Card/Store Credit</td>
-                                <td>{{ payment.billingInfo.storeCreditCode }}</td>
-                                <td>N/A</td>
+                            {% else %}
+                                {% if payment.paymentType == "StoreCredit" %}
+                                    <td>Gift Card/Store Credit</td>
+                                    <td>{{ payment.billingInfo.storeCreditCode }}</td>
+                                    <td>N/A</td>
+                                {% else %}
+                                    <td>{{ payment.paymentType }}</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                         <td>
