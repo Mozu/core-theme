@@ -586,6 +586,14 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         var button = this.down('#advancedFilter');
 
         if (modal && button && !this.isDestroyed && !modal.isDestroyed && !e.within(modal.el, false, true) && !e.within(button.el) && !e.getTarget('.x-layer', 10)) {
+
+            var target = Ext.fly(e.target);
+            var isMask = target.hasCls("x-mask");
+            var isBoundList = target.up('.x-boundlist');
+            //need to check to see if user is interacting with a combo boundlist or its loading mask;
+            if (isMask || isBoundList) {
+                return;
+            }
             modal.close();
         }
     },
