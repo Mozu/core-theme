@@ -23,8 +23,6 @@ Ext.define('Taco.view.role.EditModal', {
     initComponent: function () {
         var me = this;
 
-        console.log(me.record.raw.behaviors);
-
         me.behaviorCatGridCategoryStore = Ext.create('Taco.store.BehaviorCategories', {});
         me.behaviorCatGridCategoryRoleStore = Ext.create('Taco.store.BehaviorCategoryRoles', {
             filters: [
@@ -201,8 +199,49 @@ Ext.define('Taco.view.role.EditModal', {
     updateRole: function(record) {
         console.log('update record');
     },
-    createRole: function() {
-        console.log('create roll');
+    createRole: function () {
+        var roleBehaviors = [];
+        var name = this.form.getValues().name;
+
+        Ext.Ajax.request({
+            url: '/admin/app/roles/create',
+            jsonData: {
+                id: 0,
+                name: name,
+                isEditable: false
+            },
+            success: function (response) {
+                var res = Ext.JSON.decode(response.responseText);
+                if (res.success) {
+                    this.selectedItemStore.each(function (rec) {
+                        var item = {
+                            id: rec.get('id'),
+                            roleId: res.items.id,//get this from the first ajax response
+                            name: rec.get('name'),
+                            checked: true
+                        };
+                        roleBehaviors.push(item);
+                    });
+
+                    Ext.Ajax.request({
+                        url: '/admin/app/rolebehaviors/edit',
+                        jsonData: roleBehaviors,
+                        success: function (response) {
+                            var res = Ext.JSON.decode(response.responseText);
+                            if (res.success) {
+                                Taco.app.fireEvent('RoleSaved');
+                                Ext.ComponentQuery.query('window[title="Create Role"]')[0].close();
+                            } else {
+                                Taco.MessageBox.alert('Error', 'There was a problem creating a role: ' + res.message);
+                            }
+                        }
+                    }, this);
+                } else {
+                    Taco.MessageBox.alert('Error', 'There was a problem creating a role: ' + res.message);
+                }
+            },
+            scope: this
+        }, this);
     },
     updateBehaviorGrid: function (id) {
         var me = this;

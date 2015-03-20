@@ -78,7 +78,12 @@ Ext.define('Taco.view.role.Index', {
 
         this.callParent(arguments);
 
-       // this.store.load();
+        Taco.app.on({
+            RoleSaved: function () {
+                this.store.load();
+            },
+            scope: me
+        });
 
        
     },
