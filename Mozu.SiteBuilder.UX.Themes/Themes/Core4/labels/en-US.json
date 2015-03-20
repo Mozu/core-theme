@@ -271,7 +271,7 @@
   "returnNumber"         : "RMA #",
   "enterStoreCredit"     : "Enter Store Credit Number",
   "storeCreditNumber"    : "Store Credit Number",
-  "creditDate"           : "Credit Date",
+  "creditDate"           : "Activation Date",
   "creditAmount"         : "Credit Amount",
   "remaining"            : "Remaining",
   "totalCreditBalance"   : "Total Credit Balance",
