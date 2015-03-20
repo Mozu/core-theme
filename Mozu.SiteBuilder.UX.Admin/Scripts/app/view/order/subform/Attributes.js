@@ -40,10 +40,10 @@ Ext.define('Taco.view.order.subform.Attributes', {
                 flex: 3,
                 renderer: function (value, meta, record, index) {
                     var att = Ext.Array.findBy(me.record.get('attributes'), function (attribute) {
-                        return attribute.fullyQualifiedName === record.get('id');
+                        return (attribute.fullyQualifiedName || '').toLowerCase() === (record.get('id') || '').toLowerCase();
                     });
 
-                    return (att && !Ext.isEmpty(att.values) ? att.values.join(', ') : '--');
+                    return (att && !Ext.isEmpty(att.values) ? att.values.join(', ').replace(/\n/g, '<br>') : '--');
                 }
             }]
         }];
