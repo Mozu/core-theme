@@ -126,6 +126,18 @@ Ext.define('Taco.view.location.Index', {
                 }, {
                     xtype: 'taco.menucolumn',
                     text: 'Actions',
+                    onMenuShow: function (menu, eventData) {
+                        var disableMenuItem = menu.down("#disableMenuItem"),
+                            enableMenuItem = menu.down("#enableMenuItem");
+                        // need to disable the delete menu option when discount has been used
+                        if (eventData.record.get('isDisabled')) {
+                            enableMenuItem.show();
+                            disableMenuItem.hide();
+                        } else {
+                            disableMenuItem.show();
+                            enableMenuItem.hide();
+                        }
+                    },
                     menuItems: [
                         {
                             text: 'Edit',
@@ -154,12 +166,39 @@ Ext.define('Taco.view.location.Index', {
 
                                 Taco.app.StateManager.attemptNavigate('locations/duplicate/' + record.getId(), metaData);
                             }
+                        }, {
+                            text: 'Disable',
+                            itemId: "disableMenuItem",
+                            requiredBehaviors: {
+                                model: 'Taco.model.Location',
+                                behavior: 'update'
+                            },
+                            menuColumnHandler: function (item, eventData) {
+                                me.setDisabledStatus(eventData.record, true);
+                            }
+                        }, {
+                            text: 'Enable',
+                            itemId: "enableMenuItem",
+                            requiredBehaviors: {
+                                model: 'Taco.model.Location',
+                                behavior: 'update'
+                            },
+                            menuColumnHandler: function(item, eventData) {
+                                me.setDisabledStatus(eventData.record, false);
+                            }
                         }
                     ]
 
                 }
             ];
         return columns;
+    },
+
+    setDisabledStatus: function(record, disable) {
+        var me = this;
+        record.set('isDisabled', disable);
+        record.store.sync();
+        me.getView().refresh();
     },
 
     onItemClick: function (view, record, elm, index, e) {
