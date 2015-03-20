@@ -34,6 +34,7 @@ using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -134,6 +135,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> Preview(string id)
         {
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
+            var queryStringParams = Request.GetQueryNameValuePairs();
             if (emailTemplate == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find an email template for the current Theme.");
@@ -145,11 +147,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic , id, StringComparison.OrdinalIgnoreCase));
                 if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof (Order))
                 {
-                    var str = JsonConvert.SerializeObject(model, CaseInsensitiveJsonSerializerSettings.Default);
+                    var str = JsonConvert.SerializeObject(MergeEmailParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
                     model = Convert(str, emailTypeInfo);    
                 }
-                
+
+                else
+                {
+                    model = MergeEmailParams(queryStringParams, model);
+                }
             }
+
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
             var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
 
@@ -178,6 +185,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["rmaLocation"] = await GetDirectShipLocationOrDefault();
 
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTemplate.Template, model));
+        }
+
+        private JObject MergeEmailParams(IEnumerable<KeyValuePair<String, String>> query, object model)
+        {
+
+            var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
+
+            JObject emailParams = JsonConvert.DeserializeObject<JObject>(z.Value);
+
+            var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
+            returnObj.Merge(emailParams);
+            return returnObj;
         }
 
         [HttpPost]
