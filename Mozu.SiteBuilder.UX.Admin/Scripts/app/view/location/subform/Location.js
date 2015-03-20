@@ -311,7 +311,6 @@ Ext.define('Taco.view.location.subform.Location', {
             }];
 
         this.callParent(arguments);
-        this.record.setDirty();
     },
 
     beforeSave: function () {
