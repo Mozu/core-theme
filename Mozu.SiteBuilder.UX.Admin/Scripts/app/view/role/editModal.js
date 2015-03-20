@@ -21,9 +21,9 @@ Ext.define('Taco.view.role.EditModal', {
         itemId: 'primaryAction'
     }],
     initComponent: function () {
-
         var me = this;
-        this.roleid = 10;
+
+        console.log(me.record.raw.behaviors);
 
         me.behaviorCatGridCategoryStore = Ext.create('Taco.store.BehaviorCategories', {});
         me.behaviorCatGridCategoryRoleStore = Ext.create('Taco.store.BehaviorCategoryRoles', {
@@ -34,9 +34,51 @@ Ext.define('Taco.view.role.EditModal', {
                 comparison: 'eq'
             }]
         });
-        //me.behaviorCatGridCategoryRoleStore.load();
+
+        me.selectedItemStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'parentId', 'parentName', 'name'],
+            groupField: 'parentName',
+            queryMode: 'local'
+        });
 
         me.behaviorCatGridCategoryStore.load();
+
+        me.behaviorCatGridCategoryRoleStore.on('load', function (it) {
+            var recsToSelect = [];
+            var category = this.catGrid.getSelectionModel().getSelection()[0];
+            var selectedRecs = this.selectedItemStore.getGroups(category.get('name'));
+            if (selectedRecs) {
+                selectedRecs.children.forEach(function (rec) {                  
+                    var index = this.behaviorCatGridCategoryRoleStore.find('id', rec.get('id'));
+                    if (index != -1) {
+                        recsToSelect.push(this.behaviorCatGridCategoryRoleStore.getAt(index));
+                    }  
+                }, this);
+                if (recsToSelect.length > 0) {
+                    this.selModel.select(recsToSelect);
+                }
+                
+            } 
+        }, me);
+
+        me.selModel = Ext.create('Ext.selection.CheckboxModel', {
+            selType: 'checkboxmodel',
+            checkOnly: true,
+            showHeaderCheckbox: true,
+            mode: "MULTI",
+            headerWidth: 37,
+            listeners: {
+                select: function (it, selected) {
+                    var category = this.scope.catGrid.getSelectionModel().getSelection()[0];
+                    this.scope.selectedItemStore.add({ id: selected.get('id'), parentId: category.get('id'), parentName: category.get('name'), name: selected.get('name') });
+                },
+                deselect: function (it, selected) {
+                    var record = this.scope.selectedItemStore.find('id', selected.get('id'));
+                    this.scope.selectedItemStore.removeAt(record);
+                }
+            },
+            scope: me
+        });
 
         me.catGrid = Ext.create('Ext.grid.Panel', {
             store: me.behaviorCatGridCategoryStore,
@@ -67,41 +109,28 @@ Ext.define('Taco.view.role.EditModal', {
             columns: [
                 { text: 'Name', dataIndex: 'name', flex: 1 }
             ],
-            selModel: Ext.create('Ext.selection.RowModel', {
-                listeners: {
-                    select: function (it, rec) {
-                        //this.scope.updateBehaviorGrid(rec.get('id'));
-                    }
-                },
-                scope: me
-            }, me),
+            selModel: me.selModel,
             viewConfig: {
                 deferEmptyText: false
             },
             emptyText: 'Please select a category'
         });
 
-        me.selectedGrid = Ext.create('Ext.grid.Panel', {
-            store: me.behaviorCatGridCategoryStore,
+        me.selectedItemsGrid = Ext.create('Ext.grid.Panel', {
+            store: me.selectedItemStore,
             height: 400,
             width: 300,
-            columns: [
-                { text: 'Name', dataIndex: 'id', flex: 1 }
-            ],
-            selModel: Ext.create('Ext.selection.RowModel', {
-                listeners: {
-                    select: function (it, rec) {
-                        //this.scope.updateBehaviorGrid(rec.get('id'));
-                    }
-                },
-                scope: me
-            }, me),
-            viewConfig: {
-                deferEmptyText: false,
-                stripeRows: me.showStripedRows
-            },
-            emptyText: 'No items selected'
+            columns: [{
+                dataIndex: "name",
+                hideable: false,
+                flex: 1
+            }],
+            features: [{
+                ftype: 'grouping', groupHeaderTpl: '{name}'
+            }]
         });
+
+
         me.form = Ext.create('Ext.form.Panel', {
             flex: 1,
             items: [
@@ -149,7 +178,7 @@ Ext.define('Taco.view.role.EditModal', {
                                     text: 'Assigned Behavior',
                                     padding: '10 10 10 0',
                                 },
-                                me.selectedGrid
+                                me.selectedItemsGrid
                             ]
                         }]
                 }]
@@ -182,5 +211,6 @@ Ext.define('Taco.view.role.EditModal', {
             value: Number(id),
             comparison: 'eq'
         })]);
+
     }
 });
