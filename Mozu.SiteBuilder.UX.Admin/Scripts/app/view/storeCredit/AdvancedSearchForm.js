@@ -29,6 +29,8 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
         this.customerIdField = Ext.widget({
             xtype: "numberfield",
             name: 'customerid',
+            hideTrigger: true,
+            minValue: 0,
             flex: 1,
             margin: '0 0 0 0',
             // this helps with the reset working. not sure why but this seems to help

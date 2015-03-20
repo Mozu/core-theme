@@ -293,7 +293,7 @@
   "digitalCreditAvailable"  : "You have the following gift cards & store credits available:",
   "digitalCreditsAnchor"  : "giftcards",
 
-  "creditDate"           : "Credit Date",
+  "creditDate"           : "Activation Date",
   "creditAmount"         : "Credit Amount",
   "remaining"            : "Remaining",
   "totalCreditBalance"   : "Total Credit Balance",

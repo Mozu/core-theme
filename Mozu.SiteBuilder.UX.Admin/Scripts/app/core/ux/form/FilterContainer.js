@@ -264,7 +264,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The value of the field, specified by returnIndex, on the record that was found.
      */
     findNearestRecord: function (store, dataIndex, rawValue) {
-        return store.getById(rawValue) || store.getById(parseInt(rawValue,10)) || store.findRecord(dataIndex, rawValue, 0, false, false, false);
+        return store.getById(rawValue) || store.getById(parseInt(rawValue, 10)) || store.findRecord(dataIndex, rawValue, 0, false, false, false);
     },
 
     /**
@@ -544,12 +544,42 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The nested values object, containing both textfield and JSON values objects.
      */
     syncAndFilter: function (values) {
-        var form = this.getAdvancedForm(),
-            stores = this.filterStores,
-            syncedValues = {};
+        var me = this,
+            form = me.getAdvancedForm(),
+            stores = me.filterStores,
+            syncedValues = {},
+            remoteFilterCalls = [];
 
         syncedValues['json'] = Ext.apply({}, values);
         syncedValues['text'] = Ext.apply({}, values);
+
+        function finalCallback() {
+            //keep calling this finalCallback until all of the queued up calls have completed;
+
+            if (Ext.Array.findBy(remoteFilterCalls, function(task) {
+                return task.loading;
+            })) {
+                //wait until all remote records have loaded;
+                return;
+            };
+            
+            me.setTextFilterValue(syncedValues['text']);
+            me.doFilter(syncedValues['json']);
+        }
+
+        function processRecord(task) {
+            var fieldName = task.fieldName,
+                displayField = task.displayField,
+                record = task.record;
+
+            if (record) {
+                syncedValues['json'][fieldName] = record.getId();
+                syncedValues['text'][fieldName] = record.get(displayField);
+            } else {
+                delete syncedValues['json'][fieldName];
+                delete syncedValues['text'][fieldName];
+            }
+        }
 
         Ext.Object.each(values, function (fieldName, rawValue) {
             var displayField,
@@ -558,25 +588,78 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             if (Ext.isEmpty(rawValue)) {
                 delete syncedValues['json'][fieldName];
                 delete syncedValues['text'][fieldName];
-            }
+            } else {
 
-            if (stores.containsKey(fieldName)) {
-                displayField = form.getForm().findField(fieldName).displayField;
+                if (stores.containsKey(fieldName)) {
+                    displayField = form.getForm().findField(fieldName).displayField;
 
-                record = this.findNearestRecord(stores.getByKey(fieldName), displayField, rawValue);
+                    var store = stores.getByKey(fieldName),
+                        isRemoteFilter = store.remoteFilter;
 
-                if (record) {
-                    syncedValues['json'][fieldName] = record.getId();
-                    syncedValues['text'][fieldName] = record.get(displayField);
+                    record = this.findNearestRecord(store, displayField, rawValue);
+
+                    if (record) {
+                        processRecord({
+                            fieldName: fieldName,
+                            displayField: displayField,
+                            record: record
+                        });
+                    } else {
+                        if (isRemoteFilter) {
+                            // have store query the service for the record;
+                            remoteFilterCalls.push({
+                                loading: true,
+                                fieldName: fieldName,
+                                displayField: displayField,
+                                rawValue: rawValue,
+                                store: store,
+                                record: null
+                            });
+                        } else {
+                            // need to clear out any queries that don't come back in local store
+                            delete syncedValues['json'][fieldName];
+                            delete syncedValues['text'][fieldName];
+                        }
+                    }
+                    
+                        //syncedValues['json'][fieldName] = record.getId();
+                        //syncedValues['text'][fieldName] = record.get(displayField);
                 } else {
-                    delete syncedValues['json'][fieldName];
-                    delete syncedValues['text'][fieldName];
+
+                    //syncedValues['json'][fieldName] = rawValue;
+                    //syncedValues['text'][fieldName] = rawValue;
+
+                    //delete syncedValues['json'][fieldName];
+                    //delete syncedValues['text'][fieldName];
                 }
             }
+            
+
         }, this);
 
-        this.setTextFilterValue(syncedValues['text']);
-        this.doFilter(syncedValues['json']);
+        if (remoteFilterCalls.length) {
+
+            Ext.Array.each(remoteFilterCalls, function (task) {
+
+                var options = {
+                    params: {
+                        query: task.rawValue
+                    },
+                    callback: function(records, operation, success) {
+                        task.loading = false;
+                        task.record = records[0];
+                        processRecord(task);
+                        finalCallback();
+                    },
+                    rawQuery: true
+                };
+
+                task.store.load(options);
+            });
+        }
+
+        finalCallback();
+        
 
         return syncedValues;
     },
