@@ -64,7 +64,7 @@ Ext.define('Taco.model.Location', {
             type: "boolean",
             defaultValue: false
         }, {
-            name: 'status',
+            name: 'statusDescription',
             convert:function(v, record) {
                 return record.get('isDisabled') ? 'Disabled' : 'Active';
             },

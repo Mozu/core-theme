@@ -2,195 +2,190 @@
  * @class Taco.view.location.Index
  */
 Ext.define('Taco.view.location.Index', {
-    extend: 'Taco.core.ux.browser.BrowserPage',
+    extend: 'Taco.core.ux.browser.SearchList',
   
     requires: [
         'Taco.store.Locations',
-        'Taco.model.Location'
-        //'Taco.view.product.AdvancedSearchForm'
+        'Taco.model.Location',
+        'Taco.view.location.AdvancedSearchForm',
+        'Ext.form.Panel',
+        'Taco.core.ux.BaseGrid',
+        'Ext.tip.QuickTipManager',
+        'Taco.core.ux.TextFilter',
+        'Taco.view.location.Edit',
+        'Taco.core.ux.FilterableDataView',
+        'Taco.core.ux.grid.MenuColumn'
     ],
 
-    // used by create button
-    typeName: 'Location',
-    
-    gridHeaderLabel: 'Locations',
+    //mixins: {
+    //    deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
+    //},
+
+    launchEditorOnClick: true,
+
+    // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
+    modelName: 'Taco.model.Location',
+
+    store: { type: 'Taco.store.Locations' },
+
+    enableNavHeader: true,
+
+    // adds the "taco-content-navcontainer-padding" class
+    // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
+    addContentViewPadding: true,
+
+    enableSearch: true,
+    enablePaging: true,
+    enableRowEditing: false,
+    enableAutoSelect: true,
+    createButtonEnabled: true,
+    saveButtonEnabled: false,
+    cancelButtonEnabled: false,
+
+    createButtonText: "Create New Location",
+
+    showActionsColumn: true,
+
+    hideSearchToolbar: false,
+
+    title: "Locations",
+
+    autoScroll: true,
     
     editorName: 'Taco.view.location.Edit',
     
-    //plural: false,
-    modelName: 'Taco.model.Location',
-    
-    store: { type: 'Taco.store.Locations' },
+    enableQuickFilters: false,
 
-    //advancedSearchConfig: {
-    //    advancedFormCls: 'Taco.view.product.AdvancedSearchForm'
-    //},
+    advancedSearchConfig: {
+        advancedFormCls: 'Taco.view.location.AdvancedSearchForm',
 
-   
-    useTilePanel: false,
-    //launchEditorOnClick: false,
-    
-    filterFormConf: {
-        width: 600,
-        cls: Taco.baseCSSPrefix + 'combofilter-form orders',
-        items: [{
-            xtype: 'container',
-            justify: false,
-            defaults: {
-                xtype: 'textfield',
-                width: 560
-            },
-            items: [
-            {
-                name: 'name',
-                fieldLabel: 'Name',
-                width: 160
-            },
-            {
-                name: 'code',
-                fieldLabel: 'Code',
-                width: 160
-            },
-            {
-                name: 'state',
-                fieldLabel: 'State',
-                width: 80
-            },
-            {
-                name: 'postalorzipcode',
-                fieldLabel: 'Zip Code',
-                width: 80
-            },
-            {
-                name: 'locationtypecode',
-                fieldLabel: 'Location Type Code',
-                width: 160
-            }]
-        }]
+        quickFilterData: []
     },
 
-    /*
-    supported  service search fields
-    code, type.code, name, state, zip, country, supportsinventory
-    */
+    onCreate: Ext.emptyFn,
 
-    filterProperties: [
-        {
-            property: 'all',
-            text: 'All',
-            isDefault: true
-        },
-        {
-            name: 'name',
-            text: 'Name'
-        },
-        {
-            name: 'code',
-            text: 'Code'
-        },
-        {
-            name: 'state',
-            text: 'State'
-        },
-        {
-            name: 'postalorzipcode',
-            text: 'Zip Code'
-        },
-        {
-            name: 'locationtypecode',
-            text: 'Location Type Code'
-        }
-    ],
-    
-    
+    stateful: true,
+    stateId: 'statefulLocationGrid',
 
-    /*
-    header: {
-        actions:[]
+    statics: {
+        
     },
-    */    
 
-    gridPanelConf: {
-      
-        selModel: {},
-        stateful: true,
-        stateId: 'statefulLocationsGrid',
-        columns: [
-            {
-                dataIndex: 'code',
-                stateId: 'code',
-                sortable:false,
-                width: 150,
-                text: 'Code'
+    initComponent: function () {
+        var me = this;
 
-            }, {
-                dataIndex: 'name',
-                stateId: 'name',
-                sortable: false,
-                width:200,
-                text: 'Name'
-           
-            }, {
-                width: 200,
-                text: "Location Types",
-                dataIndex: 'locationTypes',
-                sortable: false,
-                stateId: 'locationTypes',
-                xtype: "templatecolumn",
-                tpl: [
-                    '<tpl for="locationTypes">',
+        this.columns = this.getColumnConfig();
+
+        // initialize the delete mixin
+        //this.mixins.deleteFromGrid.init.apply(this);
+        
+        me.callParent(arguments);
+    },
+    
+    // override this method and adjust the columns if your need a grid with a subset of columns;
+    getColumnConfig: function () {
+        var me = this,
+            columns = [
+                {
+                    dataIndex: 'code',
+                    stateId: 'code',
+                    sortable: false,
+                    width: 150,
+                    text: 'Code'
+
+                }, {
+                    dataIndex: 'name',
+                    stateId: 'name',
+                    sortable: false,
+                    width: 200,
+                    text: 'Name'
+
+                }, {
+                    width: 200,
+                    text: "Location Types",
+                    dataIndex: 'locationTypes',
+                    sortable: false,
+                    stateId: 'locationTypes',
+                    xtype: "templatecolumn",
+                    tpl: [
+                        '<tpl for="locationTypes">',
                         '<tpl if="xindex &gt; 1">, </tpl>{name}',
-                    '</tpl>'
-                ]
-            }, {
-                dataIndex: 'addressToString',
-                stateId: 'address',
-                text: 'Address',
-                sortable: false,
-                flex:1
-            }, {
-                dataIndex: 'status',
-                stateId: 'status',
-                text: 'Status',
-                sortable: false,
-                flex: 1
-            }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                menuItems: [
-                    {
-                        text: 'Edit',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Location',
-                            behavior: 'update'
-                        },
-                        menuColumnHandler: function (item, eventData) {
-                            var record = eventData.record;
-                            Ext.defer(function () {
-                                Taco.core.StateManager.attemptNavigate('locations/edit/' + record.getId(), { complexMetaData: { record: record } });
-                            }, 1, this);
+                        '</tpl>'
+                    ]
+                }, {
+                    dataIndex: 'addressToString',
+                    stateId: 'address',
+                    text: 'Address',
+                    sortable: false,
+                    flex: 1
+                }, {
+                    dataIndex: 'statusDescription',
+                    stateId: 'statusDescription',
+                    text: 'Status',
+                    sortable: false
+                }, {
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    menuItems: [
+                        {
+                            text: 'Edit',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Location',
+                                behavior: 'update'
+                            },
+                            menuColumnHandler: function(item, eventData) {
+                                var record = eventData.record;
+                                Ext.defer(function() {
+                                    Taco.core.StateManager.attemptNavigate('locations/edit/' + record.getId(), { complexMetaData: { record: record } });
+                                }, 1, this);
 
+                            }
+                        }, {
+                            text: 'Duplicate',
+                            requiredBehaviors: {
+                                model: 'Taco.model.Location',
+                                behavior: 'create'
+                            },
+                            menuColumnHandler: function(item, eventData) {
+                                var record = eventData.record,
+                                    metaData = {
+                                        id: record.getId()
+                                    };
+
+                                Taco.app.StateManager.attemptNavigate('locations/duplicate/' + record.getId(), metaData);
+                            }
                         }
-                    },{
-                        text: 'Duplicate',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Location',
-                            behavior: 'create'
-                        },
-                        menuColumnHandler: function (item, eventData) {
-                            var record = eventData.record,
-                                metaData = {
-                                    id: record.getId()
-                                };
+                    ]
 
-                            Taco.app.StateManager.attemptNavigate('locations/duplicate/' + record.getId(), metaData);
-                        }
-                    }
-                ]
+                }
+            ];
+        return columns;
+    },
 
-            }
-        ]
-    }
+    onItemClick: function (view, record, elm, index, e) {
+        if (e.target.className === 'taco-launch-editor') {
+            e.preventDefault();
+            this.launchEditor(record);
+            Taco.app.StateManager.addState('locations/edit/' + record.getId(), { id: record.getId() });
+        }
+    },
+
+    doCreate : function () {
+        var controller = "locations";
+        Taco.app.StateManager.attemptNavigate(controller + '/create');
+    },
+
+
+    launchEditor: function (record) {
+        Ext.defer(function () {
+            Taco.core.StateManager.attemptNavigate('locations/edit/' + record.getId(), { complexMetaData: { record: record } });
+        }, 1, this);
+        return;
+    },
+
+    //getDeletePromptMessage: function (record) {
+    //    return record.getDeletePromptMessage();
+    //}
 
    
 });

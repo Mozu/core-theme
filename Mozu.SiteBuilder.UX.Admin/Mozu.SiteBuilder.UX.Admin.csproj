@@ -965,6 +965,7 @@
     <Content Include="Scripts\app\view\discount\Grid.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
+    <Content Include="Scripts\app\view\location\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\AuditLogInfo.js" />
     <Content Include="Scripts\app\view\order\modal\BulkActionMessage.js" />
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
