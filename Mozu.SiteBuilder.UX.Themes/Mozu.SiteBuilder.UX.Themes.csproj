@@ -794,8 +794,12 @@
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PostDeploy.ps1" />
-    <Content Include="PreDeploy.ps1" />
+    <Content Include="PostDeploy.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PreDeploy.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="JSLintNet.json" />
