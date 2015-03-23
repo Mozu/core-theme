@@ -49,7 +49,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             autoLoad:false
         });
 
-        
+        this.loadSecondToolbar();
         
         this.callParent(arguments);
     },
@@ -65,21 +65,16 @@ Ext.define('Taco.view.location.inventory.Index', {
 
     useTilePanel: false,
     
-    
-    secondToolbarItems: [
-        {
-            xtype:"component",
-            html: 'Inventory for: ',
-            margin: '0 10 0 0',
-            padding: '2 0 0 0'
-        }, {
-            xtype: "taco-locationpickerfield",
+    loadSecondToolbar: function () {
+        var me = this;
+
+        this.locationPicker = Ext.widget("taco-locationpickerfield", {
             emptyText: "Choose a location",
-            flex:null,
+            flex: null,
             width: 300,
             forceSelection: true,
             editable: false,
-            extraFilters: [{ id:"status", property: 'status', value: 'all'}],
+            extraFilters: [{ id: "status", property: 'status', value: 'all'}],
             listeners: {
                 select: {
                     fn: function (combo, records, eOpts) {
@@ -89,6 +84,12 @@ Ext.define('Taco.view.location.inventory.Index', {
                             store = gridPanel.store,
                             code = record.get('code');
 
+                        if (record.get('isDisabled')) {
+                            this.fireEvent('locationchange', this, true);
+                        } else {
+                            this.fireEvent('locationchange', this, false);
+                        }
+
                         // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
                         // adding a filter with the same id will be treated like an update
                         store.extraFilters.add({ id: "locationCode", property: 'locationCode', value: code });
@@ -96,8 +97,20 @@ Ext.define('Taco.view.location.inventory.Index', {
                     }
                 }
             }
-        }
-    ],
+        });
+
+        this.mon(this.locationPicker, 'locationchange', me.onLocationChange, me);
+
+        this.secondToolbarItems = [
+            {
+                xtype: "component",
+                html: 'Inventory for: ',
+                margin: '0 10 0 0',
+                padding: '2 0 0 0'
+            },
+            this.locationPicker
+        ];
+    },
     
     filterFormConf: {
         width: 600,
@@ -337,7 +350,19 @@ Ext.define('Taco.view.location.inventory.Index', {
         ]
         
     },
-    
+
+    onLocationChange: function (locationPicker, isDisabled) {
+        var createBtn = Ext.ComponentQuery.query('button[itemId=createActionButton]');
+        if (!createBtn || createBtn.length === 0) {
+            return;
+        }
+        if (isDisabled) {
+            createBtn[0].disable();
+        } else {
+            createBtn[0].enable();
+        }
+    },
+
     onRowEditorUpdate : function() {
         this.callParent(arguments);
     }
