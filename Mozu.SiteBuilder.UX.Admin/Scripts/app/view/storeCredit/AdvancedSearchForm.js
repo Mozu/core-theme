@@ -206,7 +206,8 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                         currencyCode: Taco.app.context.getCurrent().currencyCode,
                         align: 'right',
                         unitAtEnd: false,
-                        minValue: 0
+                        minValue: 0,
+                        maxValue: 100000000000000000000
                     }, {
                         xtype: 'component',
                         html: 'to',
@@ -220,7 +221,8 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                         currencyCode: Taco.app.context.getCurrent().currencyCode,
                         align: 'right',
                         unitAtEnd: false,
-                        minValue: 0
+                        minValue: 0,
+                        maxValue: 100000000000000000000
                     }
                 ]
             },
