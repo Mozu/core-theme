@@ -103,9 +103,9 @@ Ext.define('Taco.view.location.AdvancedSearchForm', {
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'name'],
                             data: [
-                                { id: 'all', name: 'All' },
                                 { id: 'active', name: 'Active' },
-                                { id: 'disabled', name: 'Disabled' }
+                                { id: 'disabled', name: 'Disabled' },
+                                { id: 'all', name: 'All' }
                             ]
                         })
                     }, {

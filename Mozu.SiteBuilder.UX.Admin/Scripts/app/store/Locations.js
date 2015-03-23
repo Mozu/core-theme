@@ -9,7 +9,7 @@ Ext.define('Taco.store.Locations', {
     pageSize: 25,
     storeManagerConfig: {
         clearFilters: true,
-        contextLevel: 's',
+        //contextLevel: 's',
         clearSort: true,
         autoLoad: true
     },

@@ -13,9 +13,9 @@ Ext.define('Taco.view.location.inventory.Index', {
 
     // used by create button
     typeName: 'Location Inventory',
-    
-    
-    
+
+
+
 
     contextConfig: {
         supportedLevels: ['m','c'],
@@ -79,6 +79,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             width: 300,
             forceSelection: true,
             editable: false,
+            extraFilters: [{ id:"status", property: 'status', value: 'all'}],
             listeners: {
                 select: {
                     fn: function (combo, records, eOpts) {
