@@ -812,6 +812,7 @@
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
+    <Content Include="Scripts\app\model\BehaviorNode.js" />
     <Content Include="Scripts\app\model\BehaviorCategoryRole.js" />
     <Content Include="Scripts\app\model\BehaviorCategory.js" />
     <Content Include="Scripts\app\model\AccountUserTree.js" />
@@ -896,6 +897,7 @@
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\AccountUsersTree.js" />
     <Content Include="Scripts\app\store\AuditLog.js" />
+    <Content Include="Scripts\app\store\BehaviorNodes.js" />
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />

@@ -6,7 +6,8 @@ Ext.define('Taco.view.role.EditModal', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.store.BehaviorCategories',
-        'Taco.store.BehaviorCategoryRoles'
+        'Taco.store.BehaviorCategoryRoles',
+        'Taco.store.BehaviorNodes'
     ],
     autoShow: true,
     scale: 'large',
@@ -22,6 +23,23 @@ Ext.define('Taco.view.role.EditModal', {
     }],
     initComponent: function () {
         var me = this;
+        var roleId = -1;
+        var roleName = '';
+
+        if (me.record) {
+            me.title = 'Edit Role';
+            roleId = me.record.get('id');
+            roleName = me.record.get('name');
+        }
+        me.selectedItemStore = Ext.create('Taco.store.BehaviorNodes', {
+            groupField: 'categoryName',
+            filters: [{
+                property: 'roleId',
+                value: roleId,
+                comparison: 'eq'
+            }]
+        });
+        me.selectedItemStore.load();
 
         me.behaviorCatGridCategoryStore = Ext.create('Taco.store.BehaviorCategories', {});
         me.behaviorCatGridCategoryRoleStore = Ext.create('Taco.store.BehaviorCategoryRoles', {
@@ -31,12 +49,6 @@ Ext.define('Taco.view.role.EditModal', {
                 value: 1,
                 comparison: 'eq'
             }]
-        });
-
-        me.selectedItemStore = Ext.create('Ext.data.Store', {
-            fields: ['id', 'parentId', 'parentName', 'name'],
-            groupField: 'parentName',
-            queryMode: 'local'
         });
 
         me.behaviorCatGridCategoryStore.load();
@@ -68,7 +80,7 @@ Ext.define('Taco.view.role.EditModal', {
             listeners: {
                 select: function (it, selected) {
                     var category = this.scope.catGrid.getSelectionModel().getSelection()[0];
-                    this.scope.selectedItemStore.add({ id: selected.get('id'), parentId: category.get('id'), parentName: category.get('name'), name: selected.get('name') });
+                    this.scope.selectedItemStore.add({ id: selected.get('id'), categoryId: category.get('id'), categoryName: category.get('name'), name: selected.get('name') });
                 },
                 deselect: function (it, selected) {
                     var record = this.scope.selectedItemStore.find('id', selected.get('id'));
@@ -125,7 +137,11 @@ Ext.define('Taco.view.role.EditModal', {
             }],
             features: [{
                 ftype: 'grouping', groupHeaderTpl: '{name}'
-            }]
+            }],
+            viewConfig: {
+                deferEmptyText: false
+            },
+            emptyText: 'Please select a role'
         });
 
 
@@ -137,7 +153,8 @@ Ext.define('Taco.view.role.EditModal', {
                     name: 'name',
                     width: 400,
                     fieldLabel: 'Name',
-                    allowBlank: false
+                    allowBlank: false,
+                    value: roleName
                 },
                 {
                     xtype: 'panel',
@@ -198,6 +215,63 @@ Ext.define('Taco.view.role.EditModal', {
     },
     updateRole: function(record) {
         console.log('update record');
+
+        //update role
+        ///admin/app/roles/update
+        /*
+            id: 6019 //role id
+            isEditable: true // is editable or not
+            name: "newasdf11" //role name
+        */
+
+        //update behaviors
+        ///admin/app/rolebehaviors/edit
+        //{id: "16", name: "Product Category Read", checked: true, roleId: 6019, parentId: "cat1", leaf: false}
+
+        var roleBehaviors = [];
+        var name = this.form.getValues().name;
+
+        this.selectedItemStore.each(function (rec) {
+            var item = {
+                id: rec.get('id'),
+                roleId: this.record.get('id'),//get this from the first ajax response
+                name: rec.get('name'),
+                checked: true
+            };
+            roleBehaviors.push(item);
+        }, this);
+
+        Ext.Ajax.request({
+            url: '/admin/app/roles/update',
+            jsonData: {
+                id: this.record.get('id'),
+                name: name,
+                isEditable: true
+            },
+            success: function (response) {
+                var res = Ext.JSON.decode(response.responseText);
+                if (res.success) {
+                    Ext.Ajax.request({
+                        url: '/admin/app/rolebehaviors/edit',
+                        jsonData: roleBehaviors,
+                        success: function (response) {
+                            var res = Ext.JSON.decode(response.responseText);
+                            if (res.success) {
+                                Ext.ComponentQuery.query('window[title="Edit Role"]')[0].close();
+                            } else {
+                                Taco.MessageBox.alert('Error', 'There was a problem adding the behaviors to the role: ' + res.message);
+                            }
+                        }
+                    }, this);
+
+                    Taco.app.fireEvent('RoleSaved');
+                } else {
+                    Taco.MessageBox.alert('Error', 'There was a problem updating the role name: ' + res.message);
+                }
+            },
+            scope: this
+        }, this);
+
     },
     createRole: function () {
         var roleBehaviors = [];
