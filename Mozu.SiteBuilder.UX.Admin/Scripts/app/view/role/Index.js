@@ -11,7 +11,7 @@ Ext.define('Taco.view.role.Index', {
     editorName: 'Taco.view.role.Edit',
 
     // this is the title. 
-    typeName: "Roles",
+    typeName: "Role",
 
     initComponent: function () {
         var me = this;
@@ -176,16 +176,16 @@ Ext.define('Taco.view.role.Index', {
     },
     deleteRecord: function (item, event) {
         Ext.MessageBox.show({
-            title: 'Confirm',
+            title: 'Warning',
             // pushes the buttons to the right to be consistant with our dialog ux.
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: "Are you sure you want to delete this role?",
+            msg: "Are you sure you want to delete this role? Click Yes to proceed.",
             closable: false,
-            buttons: Ext.Msg.YESNO,
+            buttons: Ext.Msg.OKCANCEL,
             fn: function (val) {
-                if (val === 'yes') {
+                if (val === 'ok') {
                     item.scope.gridPanel.getSelectionModel().getSelection()[0].destroy();
                 }
             }
