@@ -211,6 +211,14 @@ Ext.define('Taco.view.location.subform.Location', {
                 ]*/            
         });
 
+        this.allowNoStockFulfillment = Ext.widget("checkbox", {
+            name: "allowFulfillmentWithNoStock",
+            boxLabel: 'Validate inventory level on fulfillment',
+            width: 300,
+            margin: "0 0 0 25",
+            disabled: !this.record.get('supportsInventory')
+        });
+
         this.items = [
             this.locationTypeIds,
             this.fulfillmentTypeIds,
@@ -304,11 +312,18 @@ Ext.define('Taco.view.location.subform.Location', {
             }, {
                 xtype: "checkbox",
                 name: "supportsInventory",
-                width: 200,
-                fieldLabel: 'Supports Inventory Flag',
-                boxLabel: "Enabled",
-                allowOnlyWhitespace: true
-            }];
+                width: 300,
+                boxLabel: 'Location supports inventory',
+                handler: function (chkbox, isChecked) {
+                    if (isChecked) {
+                        me.allowNoStockFulfillment.enable();
+                    } else {
+                        me.allowNoStockFulfillment.disable();
+                    }
+                }
+            },
+            this.allowNoStockFulfillment
+        ];
 
         this.callParent(arguments);
     },
