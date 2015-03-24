@@ -192,7 +192,6 @@ Ext.define('Taco.view.role.Index', {
         });
     },
     launchEditor: function (record, action) {
-        console.log('ere');
         //This is a work around bc the single click calls launch Editor twice
         //3/24/15 BF
         if (Ext.ComponentQuery.query('window[title*="Role"]').length == 0) {
