@@ -125,13 +125,7 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
                             boxLabel: 'Return Closed',
                             checked: !emailSettings.returnClosed,
                             name: 'emailSettings.returnClosed'
-                        },
-                        //{
-                        //    boxLabel: 'Return Cancelled',
-                        //    checked: !emailSettings.returnCancelled,
-                        //    name: 'emailSettings.returnCancelled'
-                        //}
-                        ]
+                        }]
                     }, {
                         xtype: 'fieldcontainer',
                         defaults: {
@@ -143,16 +137,6 @@ Ext.define('Taco.view.generalSettings.subform.Notifications', {
                             checked: !emailSettings.backInStock,
                             name: 'emailSettings.backInStock'
                         }, {
-                            boxLabel: 'Store Credit Created',
-                            checked: !emailSettings.storeCreditCreated,
-                            name: 'emailSettings.storeCreditCreated'
-                        },
-                        //{
-                        //    boxLabel: 'Store Credit Updated',
-                        //    checked: !emailSettings.storeCreditUpdated,
-                        //    name: 'emailSettings.storeCreditUpdated'
-                        //},
-                        {
                             boxLabel: 'Gift Card Created',
                             checked: !emailSettings.giftCardCreated,
                             name: 'emailSettings.giftCardCreated'
