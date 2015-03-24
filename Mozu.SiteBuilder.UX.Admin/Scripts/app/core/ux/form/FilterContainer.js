@@ -219,11 +219,23 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         else if (existingFilter && Ext.Object.equals(existingFilter, value)) {
             return;
         }
+        
+        // need to format dates before jsonEncoding the value to maintain the timezone information;
+        Ext.Object.each(value, function (fieldName, rawValue) {
+            if (!Ext.isEmpty(rawValue)) {                
+                if (Ext.isDate(rawValue)) {
+                    value[fieldName] = Ext.Date.format(rawValue, 'c');
+                }
+            }
+        }, this);
+        
         var filterString = Ext.JSON.encodeValue(value);
+
 
         if (filterString === this.currentFilterString) {
             return;
         }
+
         if (this.store.isLoading()) {
             this.store.abort();
         }
@@ -520,7 +532,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         var simpleValue = [];
 
         Ext.Object.each(values, function (fieldName, rawValue) {
-            if (!Ext.isEmpty(rawValue)) {
+            if (!Ext.isEmpty(rawValue)) {                
                 if (fieldName === this.defaultFieldName) {
                     simpleValue.push(rawValue);
                 } else {
@@ -552,7 +564,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
         syncedValues['json'] = Ext.apply({}, values);
         syncedValues['text'] = Ext.apply({}, values);
-
+        
         function finalCallback() {
             //keep calling this finalCallback until all of the queued up calls have completed;
 
