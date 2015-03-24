@@ -101,5 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public bool IsLeaf { get { return _isLeaf.HasValue ? _isLeaf.Value : !Expandable; } set { _isLeaf = value; } }
 
         public bool IsHidden { get; set; }
+
+        public bool IsEmpty { get; set; }
     }
 }

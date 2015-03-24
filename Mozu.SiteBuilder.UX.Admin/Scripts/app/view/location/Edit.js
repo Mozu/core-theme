@@ -46,13 +46,23 @@ Ext.define('Taco.view.location.Edit', {
 
         this.callParent(arguments);
 
+        this.form.on('dirtychange', function () {
+            var isValid = false;
+            me.requiresSave = me.form.isDirty();
 
-
+            isValid = me.requiresSave && !me.form.hasInvalidField();
+            if (isValid) {
+                me.saveActionButton.setDisabled(false);
+            } else {
+                me.saveActionButton.setDisabled(true);
+            }
+        }, me);
 
         this.form.on('savesuccess', function() {
             
         });
     },
+
     afterDuplicate: function () {
         Taco.app.fireEvent('setmessage', "Please enter a code.", 'info');
         
@@ -60,7 +70,7 @@ Ext.define('Taco.view.location.Edit', {
 
             var codeField = this.form.findField("code");
             if (codeField) {
-                codeField.validate()
+                codeField.validate();
             }
 
         }, this);

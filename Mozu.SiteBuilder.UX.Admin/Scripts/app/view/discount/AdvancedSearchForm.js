@@ -12,27 +12,16 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
         xtype: 'textfield'
     },
     initComponent: function () {
-        var me = this
+        var me = this;
 
-
-
-
-
-
-        this.items = []
-        
         this.items = [
             {
                 name: 'keyword',
                 fieldLabel: 'Keyword Search',
-                name:"keyword"
-            },            
-            {
+            }, {
                 name: 'discountName',
                 fieldLabel: 'Discount Name',
-                name: "name"
             },
-
 
             {
                 xtype: 'fieldcontainer',
@@ -76,7 +65,6 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                     })
                 }]
             },
-
 
             {
                 xtype: 'fieldcontainer',
@@ -188,9 +176,6 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                 }]
             },
 
-            
-
-            
             {
                 xtype: 'fieldcontainer',
                 fieldLabel: 'Usage Count',

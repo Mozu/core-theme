@@ -52,12 +52,13 @@ $glyph-redo: "\E60D";
 $glyph-template: "\E60F";
 $glyph-tree-category: "\E610";
 $glyph-tree-sub-category: "\E613";
+$glyph-folder: "\E614";$glyph-move: "\E609";
 
-//test
-$glyph-tree-sub-cat1: "\E611";
-$glyph-tree-sub-cat2: "\E612";
-$glyph-tree-sub-cat3: "\E613";
-
+// font set for chorizo -- because these are being compiled using compass, they cannot be encased in ""
+// optimized at 16px
+$glyph-chorizo-pencil: "E025";
+$glyph-chorizo-trash: "E02A";
+$glyph-chorizo-move: "E609";
 
 
 // optimized at 32px
@@ -98,4 +99,9 @@ $glyph-dropvideo: "\E07E";
     vertical-align: baseline;
     -webkit-font-smoothing: antialiased;
   }
+}
+
+// function to take string code, and turn into char code for chorizo
+@function char-from-code($iso-char) {
+  @return unquote('\"\\#{$iso-char}\"');
 }

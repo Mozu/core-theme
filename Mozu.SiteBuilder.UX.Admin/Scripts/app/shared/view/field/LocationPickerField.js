@@ -5,17 +5,17 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.taco-locationpickerfield',
     requires: [
-        
+
     ],
-    
+
     config: {
-    
+
     },
-    
+
     cls : "taco-locationpickerfield",
-    
+
     autoSelectFirstRecord: true,
-    
+
     //itemsPerPage: 30,
     displayField: 'name',
     hideLabel: true,
@@ -23,7 +23,7 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     emptyText: "Search",
     selectOnFocus: false,
     matchFieldWidth : false,
-
+    extraFilters: null,
     // note: cant set flex in the base class as it messes up the width when used in as an editor by rowEditor. flex must be set by the instance if needed;
     //flex: 1,
     listConfig: {
@@ -55,9 +55,9 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
     initComponent: function(eOpts) {
         var me = this;
         
-        
+
         if (!me.store) {
-            
+
             me.store = Taco.core.data.StoreManager.getOrCreate({
                 createOnly: true,
                 type: 'Taco.store.Locations',
@@ -76,6 +76,11 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
                 }],
                 autoLoad: true
             });
+
+            if (me.extraFilters) {
+                me.store.extraFilters.add(me.extraFilters);
+            }
+
         }
 
         if (me.autoSelectFirstRecord) {

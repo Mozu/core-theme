@@ -289,7 +289,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         // actually, "Sequence" does not appear to follow any rules, so sometimes it's zero indexed.
                         // we have to do a Math.Max to guard against negative numbers.
                         Index = Math.Max(cat.Sequence.GetValueOrDefault(1) - 1, 0),
-                        IsHidden = !cat.IsDisplayed
+                        IsHidden = !cat.IsDisplayed,
+                        IsEmpty = !cat.Count.HasValue || cat.Count.Value <= 0
                     });
 
                 // recursively deal with children

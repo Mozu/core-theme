@@ -35,15 +35,14 @@ Ext.define('Taco.view.location.Form', {
     },
 
     buildForm: function () {
-        
         var subformCfg = {
-                record: this.record,
-                orderForm: this
-            },
-            items = [];
+            record: this.record,
+        };
         
-        items.push(Ext.create('Taco.view.location.subform.Location', subformCfg));
-        items.push(Ext.create('Taco.view.location.subform.StoreHours', subformCfg));
-        this.items = items;
+        this.items = [
+            Ext.create('Taco.view.location.subform.Location', subformCfg),
+            Ext.create('Taco.view.location.subform.StoreHours', subformCfg)
+        ];
+
     }
 })

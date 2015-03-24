@@ -16,6 +16,6 @@
         remoteSort: true,
         sortInfo: {
             field: 'name',
-            direction: 'asc' | 'desc'
+            direction: 'asc' || 'desc'
         }
     });

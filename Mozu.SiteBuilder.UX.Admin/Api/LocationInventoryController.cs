@@ -89,6 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 // now do a lookup of the location names for all the location codes.
                 var locationCodes = inventories.Items.Select(i => i.LocationCode).Distinct();
                 string locationFilter = String.Join(" or ", locationCodes.Select(lc => "code eq \"" + lc + "\""));
+                locationFilter += " and (isDisabled eq true or isDisabled ne true)";
                 var locations = (await _locationWebApiClient.GetLocations(filter: locationFilter)).ReadAsSync().Items;
                 inventories.Items =
                     (from i in inventories.Items
