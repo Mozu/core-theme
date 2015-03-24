@@ -17,15 +17,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class LocationController : BaseController
     {
         private ILocationAdminWebApiClient _locationWebApiClient;
-        private ILocationTypeWebApiClient _locationTypeWebApiClient;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocationController(ILocationAdminWebApiClient locationWebApiClient, ILocationTypeWebApiClient locationTypeWebApiClient)
+        public LocationController(ILocationAdminWebApiClient locationWebApiClient)
         {
             _locationWebApiClient = locationWebApiClient;
-            _locationTypeWebApiClient = locationTypeWebApiClient;
         }
 
 
@@ -42,11 +40,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 string filter = extFilter.ToFilterString();
+                //string sort = pagingParams.sort.ToSortString();
                 locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filter)).ReadAsSync();
             }
 
             // default RegularHours to an object for pass through.
-            locations.Items.ForEach(loc => EnsureLocationContract(loc));
+            locations.Items.ForEach(EnsureLocationContract);
 
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(locations.Items, (int)locations.TotalCount));
         }
@@ -61,10 +60,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<HttpResponseMessage> Edit(DC.Location l)
+        public async Task<HttpResponseMessage> Edit(DC.Location loc)
         {
             
-            var resp = (await _locationWebApiClient.UpdateLocation(l.Code, l)).ReadAsSync();
+            var resp = (await _locationWebApiClient.UpdateLocation(loc.Code, loc)).ReadAsSync();
             EnsureLocationContract(resp);
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }

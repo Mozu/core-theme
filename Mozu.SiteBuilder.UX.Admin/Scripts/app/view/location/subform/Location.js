@@ -72,6 +72,27 @@ Ext.define('Taco.view.location.subform.Location', {
             })
         });
 
+        this.statusSelector = Ext.widget({
+            xtype: 'selectfield',
+            width: 400,
+            fieldLabel: 'Status',
+            name: 'isDisabled',
+            itemId: "statusSelector",
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'isDisabled',
+            required: true,
+            allowOnlyWhitespace: false,
+            store: Ext.create('Ext.data.Store', {
+                autoLoad: true,
+                fields: ['isDisabled', 'name'],
+                data: [
+                    { isDisabled: false, name: 'Active' },
+                    { isDisabled: true, name: 'Disabled' }
+                ]
+            })
+        });
+
         me.shippingContextField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
             name: 'shippingOriginContact',
             width: 400,
@@ -193,6 +214,7 @@ Ext.define('Taco.view.location.subform.Location', {
         this.items = [
             this.locationTypeIds,
             this.fulfillmentTypeIds,
+            this.statusSelector,
             {
                 xtype: "textfield",
                 name: "name",
@@ -289,6 +311,7 @@ Ext.define('Taco.view.location.subform.Location', {
             }];
 
         this.callParent(arguments);
+        this.record.setDirty();
     },
 
     beforeSave: function () {
@@ -313,6 +336,8 @@ Ext.define('Taco.view.location.subform.Location', {
             lat: form.findField("lat").getValue(),
             lng: form.findField("lng").getValue()
         });
+
+        me.record.set('isDisabled', me.statusSelector.getValue());
 
         // need to manually mark dirty since the setValue with complex data doesn't trigger the dirty state on the model
         me.record.setDirty();

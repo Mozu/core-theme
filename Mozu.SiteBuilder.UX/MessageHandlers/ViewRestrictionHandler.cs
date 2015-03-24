@@ -79,13 +79,6 @@ namespace Mozu.SiteBuilder.UX.MessageHandlers
             return await ShowTheOriginalRequest(request, cancellationToken, apiContext, viewMode);
         }
 
-        private Uri CreateUnauthLink(ISettings settings)
-        {
-            var builder = new UriBuilder(settings.LoginPath);
-            builder.Path = "unauthorized/index";
-            return builder.Uri;
-        }
-
         //TESTING ONLY
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
@@ -98,6 +91,17 @@ namespace Mozu.SiteBuilder.UX.MessageHandlers
             IPAddress casted;
             if (IPAddress.TryParse(ip, out casted)) return _mozuInternalIps.Value.Includes(casted);
             return false;       
+        }
+        private static Uri CreateUnauthLink(ISettings settings)
+        {
+            return CreateLinkForLoginApp(settings, "unauthorized/index").Uri;
+        }
+
+        private static UriBuilder CreateLinkForLoginApp(ISettings settings, string route)
+        {
+            var builder = new UriBuilder(settings.LoginPath);
+            builder.Path = string.Format("login/{0}", route.Trim());
+            return builder;
         }
 
         private static bool AdminHasBehavior(DataViewModeType viewMode, string adminToken)
@@ -148,8 +152,7 @@ namespace Mozu.SiteBuilder.UX.MessageHandlers
 
         private Uri CreateLoginLink(ISettings settings, string pathAndQuery, string postbackHostValue)
         {
-            var builder = new UriBuilder(settings.LoginPath);
-            builder.Path = "login/to";
+            var builder = CreateLinkForLoginApp(settings, "to");
             var queryDict = new Dictionary<string, string> {
                 { "scopeType", "Tenant" },
                 { "redirectUrl", pathAndQuery},
