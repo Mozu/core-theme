@@ -56,6 +56,8 @@ Ext.define('Taco.view.role.EditModal', {
             }]
         });
 
+        me.selectedItemStore.load();
+
         me.behaviorCatGridCategoryStore = Ext.create('Taco.store.BehaviorCategories', {});
         me.behaviorCatGridCategoryRoleStore = Ext.create('Taco.store.BehaviorCategoryRoles', {
             filters: [
@@ -267,7 +269,7 @@ Ext.define('Taco.view.role.EditModal', {
                         success: function (response) {
                             var res = Ext.JSON.decode(response.responseText);
                             if (res.success) {
-                                Ext.ComponentQuery.query('window[title*="Role"]')[0].close();
+                                Ext.ComponentQuery.query('window[title*="Role"]')[0].destroy();
                             } else {
                                 Taco.MessageBox.alert('Error', 'There was a problem adding the behaviors to the role: ' + res.message);
                             }
@@ -314,7 +316,7 @@ Ext.define('Taco.view.role.EditModal', {
                             var res = Ext.JSON.decode(response.responseText);
                             if (res.success) {
                                 Taco.app.fireEvent('RoleSaved');
-                                Ext.ComponentQuery.query('window[title*="Role"]')[0].close();
+                                Ext.ComponentQuery.query('window[title*="Role"]')[0].destroy();
                             } else {
                                 Taco.MessageBox.alert('Error', 'There was a problem creating a role: ' + res.message);
                             }

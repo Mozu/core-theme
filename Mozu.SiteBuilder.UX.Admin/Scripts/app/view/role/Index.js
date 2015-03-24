@@ -181,7 +181,7 @@ Ext.define('Taco.view.role.Index', {
             rightJustifyButtons: true,
             // reverses the order of the buttons
             reverseOrder: true,
-            msg: "Are you sure you want to delete this role? Click Yes to proceed.",
+            msg: "Are you sure you want to delete this role? Click Ok to proceed.",
             closable: false,
             buttons: Ext.Msg.OKCANCEL,
             fn: function (val) {
@@ -192,26 +192,31 @@ Ext.define('Taco.view.role.Index', {
         });
     },
     launchEditor: function (record, action) {
-        switch(action) {
-            case 'create':
-            case 'dup':
-            case 'edit':
-            case 'view':
-                break;
-            default:
-                //catches the single click to edit stuff
-                if (record.get('isEditable')) {
-                    action = 'edit';
-                } else {
-                    action = 'view';
-                }
-                break;
+        console.log('ere');
+        //This is a work around bc the single click calls launch Editor twice
+        //3/24/15 BF
+        if (Ext.ComponentQuery.query('window[title*="Role"]').length == 0) {
+            switch (action) {
+                case 'create':
+                case 'dup':
+                case 'edit':
+                case 'view':
+                    break;
+                default:
+                    //catches the single click to edit stuff
+                    if (record.get('isEditable')) {
+                        action = 'edit';
+                    } else {
+                        action = 'view';
+                    }
+                    break;
+            }
+            var editor = Ext.create('Taco.view.role.EditModal', {
+                record: record,
+                action: action
+            });
+            editor.show();
         }
-        var editor = Ext.create('Taco.view.role.EditModal', {
-            record: record,
-            action: action
-        });
-        editor.show();
     },
     onDeleteRole: function (view, index, idx, action, e, record) {
     },
