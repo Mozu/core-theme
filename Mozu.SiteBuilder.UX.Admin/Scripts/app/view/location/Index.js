@@ -197,8 +197,17 @@ Ext.define('Taco.view.location.Index', {
     setDisabledStatus: function(record, disable) {
         var me = this;
         record.set('isDisabled', disable);
-        record.store.sync();
-        me.getView().refresh();
+        record.store.sync({
+            success: function (m) { 
+                var successMsg = ((disable) ? 'Disabled ' : 'Enabled ') + record.get('name') + '.';
+                Taco.app.fireEvent('setmessage', successMsg, 'info');
+                record.store.reload();
+            },
+            failure: function (m) {
+                Taco.core.util.ExceptionWhiner.handleSyncFailure(m);
+                record.store.reload();
+            }
+        });
     },
 
     onItemClick: function (view, record, elm, index, e) {
