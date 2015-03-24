@@ -318,7 +318,7 @@ Ext.define('Taco.view.location.subform.Location', {
                     if (isChecked) {
                         me.allowNoStockFulfillment.enable();
                     } else {
-                        me.allowNoStockFulfillment.disable();
+                        me.allowNoStockFulfillment.setValue(false).disable();
                     }
                 }
             },

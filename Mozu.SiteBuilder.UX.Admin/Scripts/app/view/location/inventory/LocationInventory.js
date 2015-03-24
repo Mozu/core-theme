@@ -135,7 +135,6 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     xtype: "numberfield",
                     hideTrigger: true,
                     defaultValue: 0,
-                    minValue:0,
                     mouseWheelEnabled: false,
                     selectOnFocus: true,
                     allowBlank: false
