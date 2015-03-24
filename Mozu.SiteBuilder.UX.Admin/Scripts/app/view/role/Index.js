@@ -26,7 +26,7 @@ Ext.define('Taco.view.role.Index', {
                 text: 'Create New Roles',
                 margin: '0 0 0 10',
                 handler: function () {
-                    me.launchEditor();
+                    me.launchEditor('', 'create');
                 }
             }]
         };
@@ -62,20 +62,36 @@ Ext.define('Taco.view.role.Index', {
                             return value;
                         }
                     }
-                }
-            ],
-            actions: [
-                {
-                    tooltip: 'Delete',
-                    iconCls: 'taco-action-delete',
-                    eventName: 'deleterole'
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'isEditable',
+                    stateId: "isEditable",
+                    text: 'Role Type',
+                    flex: 1,
+                    renderer: function (value, metaData, record) {
+
+                        if (record.get('isEditable')) {
+                            return 'Custom Role';
+                        } else {
+                            return 'System Role';
+                        }
+                    }
+                }, {
+                    xtype: 'taco.menucolumn',
+                    text: 'Actions',
+                    stateId: 'actionsColumn',
+                    scope: me,
+                    items: [
+                    {
+                        text: 'flerp'
+                    }],
+                    handler: function (grid, foo, bar, snerst, evt, record, row) {
+                        this.launchContextMenu(evt, record, row);
+                    }
                 }
             ]
-
         };
         
-       
-
         this.callParent(arguments);
 
         Taco.app.on({
@@ -87,7 +103,78 @@ Ext.define('Taco.view.role.Index', {
 
        
     },
-    onDeleteRole: function (view, index, idx, action, e, record) {
+    launchContextMenu: function(evt, record, row) {
+        var actions;
+        var me = this;
+
+        if (!record.get('isEditable')) {
+            actions = [
+                {
+                    text: 'View',
+                    handler: function (item, event) {
+                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'view');
+                    },
+                    scope: me
+                },
+                {
+                    text: 'Duplicate',
+                    handler: function (item, event) {
+                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'dup');
+                    },
+                    scope: me
+                }
+            ];
+        } else {
+            actions = [
+                {
+                    text: 'Edit',
+                    handler: function (item, event) {
+                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'edit');
+                    },
+                    scope: me
+                },
+                {
+                    text: 'Duplicate',
+                    handler: function (item, event) {
+                        me.launchEditor(item.scope.gridPanel.getSelectionModel().getSelection()[0], 'dup');
+                    },
+                    scope: me
+                },
+                {
+                    text: 'Delete',
+                    handler: function (item, event) {
+                        me.deleteRecord(item, event);
+                    },
+                    scope: me
+                }
+            ];
+        }
+
+
+        var menu = Ext.create('Ext.menu.Menu', {
+            showSeparator: false,
+            items: actions,
+            record: record,
+            cls: 'dc-flydown-menu',
+            shadow: false,
+            plain: true,
+            listeners: {
+                beforeshow: function (view, eOpts) {
+                    me.actionMenuOpen = true;
+                },
+                beforehide: function (view, eOpts) {
+                    me.actionMenuOpen = false;
+                }
+            }
+        });
+
+        if (row) {
+            menu.showBy(row, 'tr-br', [-1, -1]);
+        } else {
+            menu.showAt(evt.getXY());
+        }
+    },
+    deleteRecord: function (item, event) {
         Ext.MessageBox.show({
             title: 'Confirm',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -99,16 +186,33 @@ Ext.define('Taco.view.role.Index', {
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
                 if (val === 'yes') {
-                    this.store.remove(record);
-                    this.store.sync();
+                    item.scope.gridPanel.getSelectionModel().getSelection()[0].destroy();
                 }
             }
         });
     },
-    launchEditor: function (record) {
+    launchEditor: function (record, action) {
+        switch(action) {
+            case 'create':
+            case 'dup':
+            case 'edit':
+            case 'view':
+                break;
+            default:
+                //catches the single click to edit stuff
+                if (record.get('isEditable')) {
+                    action = 'edit';
+                } else {
+                    action = 'view';
+                }
+                break;
+        }
         var editor = Ext.create('Taco.view.role.EditModal', {
-            record: record
+            record: record,
+            action: action
         });
         editor.show();
-    }
+    },
+    onDeleteRole: function (view, index, idx, action, e, record) {
+    },
 });

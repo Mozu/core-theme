@@ -26,11 +26,27 @@ Ext.define('Taco.view.role.EditModal', {
         var roleId = -1;
         var roleName = '';
 
-        if (me.record) {
-            me.title = 'Edit Role';
-            roleId = me.record.get('id');
-            roleName = me.record.get('name');
+        switch(me.action) {
+            case 'create':
+                me.title = 'Create Role';
+                break;
+            case 'edit':
+                roleId = me.record.get('id');
+                roleName = me.record.get('name');
+                me.title = 'Edit Role';
+                break;
+            case 'dup':
+                roleId = me.record.get('id');
+                roleName = 'Copy Of ' + this.record.get('name');
+                me.title = 'Duplicate Role';
+                break;
+            case 'view':
+                roleId = me.record.get('id');
+                roleName = this.record.get('name');
+                me.title = 'View Role';
+                break;
         }
+
         me.selectedItemStore = Ext.create('Taco.store.BehaviorNodes', {
             groupField: 'categoryName',
             filters: [{
@@ -81,10 +97,12 @@ Ext.define('Taco.view.role.EditModal', {
                 select: function (it, selected) {
                     var category = this.scope.catGrid.getSelectionModel().getSelection()[0];
                     this.scope.selectedItemStore.add({ id: selected.get('id'), categoryId: category.get('id'), categoryName: category.get('name'), name: selected.get('name') });
+                    this.scope.isValid();
                 },
                 deselect: function (it, selected) {
                     var record = this.scope.selectedItemStore.find('id', selected.get('id'));
                     this.scope.selectedItemStore.removeAt(record);
+                    this.scope.isValid();
                 }
             },
             scope: me
@@ -154,7 +172,13 @@ Ext.define('Taco.view.role.EditModal', {
                     width: 400,
                     fieldLabel: 'Name',
                     allowBlank: false,
-                    value: roleName
+                    value: roleName,
+                    listeners: {
+                        change: function (it, newVal) {
+                            this.scope.isValid();
+                        }
+                    },
+                    scope: me
                 },
                 {
                     xtype: 'panel',
@@ -202,13 +226,17 @@ Ext.define('Taco.view.role.EditModal', {
         this.items = [this.form];
 
         this.callParent(arguments);
+
+        this.isValid();
     },
     doSave: function () {
-        if (this.record) {
-            //update rec
+        if (this.action == 'edit') {
+            //update role
+            console.log('update');
             this.updateRole(this.record);
         } else {
-            //create invite
+            //create role
+            console.log('creating');
             this.createRole();
         }
 
@@ -257,7 +285,7 @@ Ext.define('Taco.view.role.EditModal', {
                         success: function (response) {
                             var res = Ext.JSON.decode(response.responseText);
                             if (res.success) {
-                                Ext.ComponentQuery.query('window[title="Edit Role"]')[0].close();
+                                Ext.ComponentQuery.query('window[title*="Role"]')[0].close();
                             } else {
                                 Taco.MessageBox.alert('Error', 'There was a problem adding the behaviors to the role: ' + res.message);
                             }
@@ -304,7 +332,7 @@ Ext.define('Taco.view.role.EditModal', {
                             var res = Ext.JSON.decode(response.responseText);
                             if (res.success) {
                                 Taco.app.fireEvent('RoleSaved');
-                                Ext.ComponentQuery.query('window[title="Create Role"]')[0].close();
+                                Ext.ComponentQuery.query('window[title*="Role"]')[0].close();
                             } else {
                                 Taco.MessageBox.alert('Error', 'There was a problem creating a role: ' + res.message);
                             }
@@ -325,5 +353,31 @@ Ext.define('Taco.view.role.EditModal', {
             comparison: 'eq'
         })]);
 
+    },
+    isValid: function () {
+        var isVal = false;
+        var name = this.form.getValues()['name'];
+        var items = this.selectedItemStore;
+        var isEditable = true;
+
+        if (this.record) {
+            isEditable = this.record.get('isEditable');
+        }
+
+        if (this.action == 'dup') {
+            isVal = true;
+        }else if ((this.action == 'edit' || this.action == 'create') && name != '' && items.count() > 0) {
+            isVal = true;
+        } else if (!isEditable) {
+            isVal = false;
+        }
+
+
+        debugger;
+        if (!isVal) {
+            Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+        } else {
+            Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+        }
     }
 });

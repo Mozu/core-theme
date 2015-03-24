@@ -1,7 +1,7 @@
 ﻿
 Ext.define('Taco.model.BehaviorNode', {
     extend: 'Taco.core.data.Model',
-
+    idProperty: 'id',
     fields: [
         {
             name: 'id',
