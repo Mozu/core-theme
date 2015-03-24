@@ -60,6 +60,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         refundAmountField.emptyText = this.suggestRefund().toFixed(2);
         refundAmountField.applyEmptyText();
         refundAmountField.setMaxValue(isCreditCard ? this.suggestRefund() : Number.MAX_VALUE);
+        refundAmountField.maxText = Ext.String.format(refundAmountField.initialConfig.maxText, this.order.formatCurrency(this.suggestRefund()));
         refundAmountField.validate();
 
         // show or hide the excess store credit "override" checkbox
@@ -216,8 +217,8 @@ Ext.define('Taco.view.order.modal.Refund', {
                     var method = record.get('transactionMethod');
                     var type = record.get('transactionType');
 
-                    if ((method === 'Check' && !value) || (method === 'StoreCredit' && type === 'Payment')) {
-                        return '--';
+                    if (!value) {
+                        return '';
                     }
 
                     return me.order.formatCurrency(value);
@@ -330,7 +331,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     allowBlank: false,
                     minValue: Number.MIN_VALUE,
                     emptyText: this.suggestRefund().toFixed(2),
-                    maxText: ('Amount must be less than or equal to ' + this.order.formatCurrency(this.suggestRefund())),
+                    maxText: 'Amount must be less than or equal to {0}',
                     minText: ('Amount must be greater than ' + this.order.formatCurrency(0)),
                     listeners: {
                         change: {
