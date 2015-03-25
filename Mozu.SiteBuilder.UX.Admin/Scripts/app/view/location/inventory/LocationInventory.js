@@ -237,6 +237,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
                                     productCodeField.setValue(record.get("productCode"));
                                     combo.setValue(record.get("productName"));
+                                    // not sure why the setValue doesn't trigger the form validation to get revalidated. Do it manually;
+                                    rowEditor.updateButton(rowEditor.form.isValid())
                                 }
                             }
                         }
@@ -264,7 +266,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     stateId: 'locationName',
                     editor: {
                         xtype: "taco-locationpickerfield",
-                        editableOnCreateOnly: false,
+                        editableOnCreateOnly: true,
                         autoSelectFirstRecord: false,
                         forceSelection: true,
                         editable: false,
@@ -310,6 +312,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                                     } else {
                                         locationCodeField.setValue(locationCode);
                                         combo.setValue(record.get("name"));
+                                        // not sure why the setValue doesn't trigger the form validation to get revalidated. Do it manually;
+                                        rowEditor.updateButton(rowEditor.form.isValid())
                                     }
                                 }
                             }
