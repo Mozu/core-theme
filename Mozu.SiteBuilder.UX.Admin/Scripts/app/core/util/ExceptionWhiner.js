@@ -48,6 +48,22 @@ Ext.define('Taco.core.util.ExceptionWhiner', {
                 '</tpl>',
             '</ul>'
         )
+    },
+
+    /**
+     * Handles data store sync failure and fires error setmessage event if
+     * exception wasn't already handled.
+     * @param {Object} from service with exceptions list.
+     */
+    handleSyncFailure: function (m) {
+        var errText;
+        if (m.exceptions && this.wasHandled(m.exceptions)) {
+            return;
+        }
+        errText = (m.exceptions) 
+            ? this.createHtmlList(m.exceptions)
+            : "Unknown error.";
+        Taco.app.fireEvent('setmessage', errText, 'error');
     }
 
 });

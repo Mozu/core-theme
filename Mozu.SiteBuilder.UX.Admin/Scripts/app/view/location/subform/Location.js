@@ -72,6 +72,27 @@ Ext.define('Taco.view.location.subform.Location', {
             })
         });
 
+        this.statusSelector = Ext.widget({
+            xtype: 'selectfield',
+            width: 400,
+            fieldLabel: 'Status',
+            name: 'isDisabled',
+            itemId: "statusSelector",
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'isDisabled',
+            required: true,
+            allowOnlyWhitespace: false,
+            store: Ext.create('Ext.data.Store', {
+                autoLoad: true,
+                fields: ['isDisabled', 'name'],
+                data: [
+                    { isDisabled: false, name: 'Active' },
+                    { isDisabled: true, name: 'Disabled' }
+                ]
+            })
+        });
+
         me.shippingContextField = Ext.create('Taco.core.ux.form.field.EditableDisplayField', {
             name: 'shippingOriginContact',
             width: 400,
@@ -190,9 +211,18 @@ Ext.define('Taco.view.location.subform.Location', {
                 ]*/            
         });
 
+        this.allowNoStockFulfillment = Ext.widget("checkbox", {
+            name: "allowFulfillmentWithNoStock",
+            boxLabel: 'Validate inventory level on fulfillment',
+            width: 300,
+            margin: "0 0 0 25",
+            disabled: !this.record.get('supportsInventory')
+        });
+
         this.items = [
             this.locationTypeIds,
             this.fulfillmentTypeIds,
+            this.statusSelector,
             {
                 xtype: "textfield",
                 name: "name",
@@ -282,11 +312,18 @@ Ext.define('Taco.view.location.subform.Location', {
             }, {
                 xtype: "checkbox",
                 name: "supportsInventory",
-                width: 200,
-                fieldLabel: 'Supports Inventory Flag',
-                boxLabel: "Enabled",
-                allowOnlyWhitespace: true
-            }];
+                width: 300,
+                boxLabel: 'Location supports inventory',
+                handler: function (chkbox, isChecked) {
+                    if (isChecked) {
+                        me.allowNoStockFulfillment.enable();
+                    } else {
+                        me.allowNoStockFulfillment.setValue(false).disable();
+                    }
+                }
+            },
+            this.allowNoStockFulfillment
+        ];
 
         this.callParent(arguments);
     },
@@ -313,6 +350,8 @@ Ext.define('Taco.view.location.subform.Location', {
             lat: form.findField("lat").getValue(),
             lng: form.findField("lng").getValue()
         });
+
+        me.record.set('isDisabled', me.statusSelector.getValue());
 
         // need to manually mark dirty since the setValue with complex data doesn't trigger the dirty state on the model
         me.record.setDirty();

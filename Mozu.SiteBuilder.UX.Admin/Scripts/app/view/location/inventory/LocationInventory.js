@@ -135,7 +135,6 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     xtype: "numberfield",
                     hideTrigger: true,
                     defaultValue: 0,
-                    minValue:0,
                     mouseWheelEnabled: false,
                     selectOnFocus: true,
                     allowBlank: false
@@ -270,13 +269,24 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                         editable: false,
                         msgTarget: "qtip",                        
                         allowBlank: false,
+                        extraFilters: [{ id: "status", property: 'status', value: 'all' }],
                         onEditorShow: function (field, editor, context) {
                             // need to add the locationCode to the locationInventory;
-                            
+
+                            var filterDisabled = function(item) {
+                                return !item.get('isDisabled');
+                            };
+
+                            if (!context.record.get('locationCode')) {
+                                this.store.filterBy(filterDisabled);
+                            } else {
+                                this.store.clearFilter();
+                            }
+
                             var filters = editor.grid.store.filters,
                                 locationCode = null,
                                 locationFilter = filters.findBy(function (item, index) {
-                                    return (item.property == "locationCode")
+                                    return (item.property == "locationCode");
                                 });
 
                             if (!locationFilter) {

@@ -3,6 +3,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
@@ -42,7 +43,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return  List2(tree.Assign(roleBehavior).Nodes);
         }
+        
+        [HttpGetRoute(UriTemplate = "nodes/read")]
+        public async Task<Response<List<Mozu.SiteBuilder.UX.Models.Users.BehaviorCategoryBehavior>>> GetRoleBehaviorsNodes(FilterCollection extFilter)
+        {
+            
+            var roleId = (int)extFilter[0].value;
 
+            RoleBehavior roleBehavior = null;
+            if (roleId > -1)
+            {
+                roleBehavior = await _permissionsRepository.GetRoleBehavior(roleId);
+            }
+            else
+            {
+                roleBehavior = new RoleBehavior() { Children = new List<int>(), RoleId = -1 };
+            }
+
+
+            var tree = await _permissionsRepository.GetBehaviorTree();
+
+            tree.Nodes.ForEach(x => x.Children.ForEach(y => y.RoleId = roleId));
+
+
+            var nodes = new List<BehaviorCategoryBehavior>();
+            foreach (var category in tree.Assign(roleBehavior).Nodes)
+            {
+                var categoryId = category.Id.Replace("cat", "");
+                var categoryName = category.Name;
+                foreach (var behavior in category.Children)
+                {
+                    if (behavior.Selected.HasValue && behavior.Selected.Value)
+                    {
+                        var node = new BehaviorCategoryBehavior();
+                        node.Id = behavior.Id;
+                        node.Name = behavior.Name;
+                        node.CategoryId = categoryId;
+                        node.CategoryName = categoryName;
+                        nodes.Add(node);
+                    }
+                }
+            }
+
+            return List2<BehaviorCategoryBehavior>(nodes);
+        }
+        
 		[HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<RoleBehavior>>> EditRoleBehaviors([FromBody] List<RoleBehavior> behaviors)
         {

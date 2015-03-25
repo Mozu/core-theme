@@ -24,4 +24,6 @@
 
 	{{ labels.giftCardEmailClosing|string_format(domainName)|safe }}
 
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
 {% endblock body-content %}

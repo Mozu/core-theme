@@ -62,12 +62,12 @@
             .append($('<ul class="mz-cms-tools"><li class="mz-cms-drag-handle"><li class="mz-cms-pencil"></li></li><li class="mz-cms-trash"></li></ul>'));
 
         this.$drag = this.element.find('.mz-cms-drag-handle')
-            .html('<i class="fa fa-arrows fa-lg"></i>');
+            .html('<i class="chorizo-icon drag-handle"></i>');
         this.$edit = this.element.find('.mz-cms-pencil')
-            .html('<i class="fa fa-pencil fa-lg"></i>')
+            .html('<i class="chorizo-icon pencil"></i>')
             .on('click', $.proxy(this._editingState, this));
         this.$trash = this.element.find('.mz-cms-trash')
-            .html('<i class="fa fa-trash-o fa-lg"></i>')
+            .html('<i class="chorizo-icon trash"></i>')
             .on('click', $.proxy(this.remove, this));
     };
 

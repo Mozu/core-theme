@@ -284,9 +284,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.17.1-dev1502142129-s\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Location.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Location.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Location.Contracts.1.13.1\lib\net45\Mozu.Location.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Location.Contracts.1.17.1-dev1503181615-s\lib\net45\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.PaymentService.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Mozu.PaymentService.Contracts.1.8.0.1\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
@@ -301,7 +301,7 @@
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.17.1-dev1503102106-s\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.17.1-dev1503181624-s\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Provisioning.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -823,8 +823,12 @@
     <Content Include="ThemeTemplates\ExtendsCore4\theme.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PostDeploy.ps1" />
-    <Content Include="PreDeploy.ps1" />
+    <Content Include="PostDeploy.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PreDeploy.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="JSLintNet.json" />
