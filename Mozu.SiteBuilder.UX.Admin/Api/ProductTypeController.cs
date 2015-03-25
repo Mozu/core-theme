@@ -60,8 +60,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     return FailureList2<ProductType>("Invalid id parameter passed." + e.ToString());
                 }
 
-                var resultSingle = await _productTypeClient.GetProductType(id);
-                DC.ProductType prod = resultSingle.ReadAsAsync().Result;
+                var resultSingleTask = _productTypeClient.GetProductType(id);
+
+                // orchestraiting the merging of the attributes data with the product type data;
+                var attTask2 =
+                    _attributeController.GetAttributesRaw(new PagingParamaters() {pageSize = 2000, startIndex = 0},
+                        new FilterCollection() {ResponseGroups = "LocalizedContent,Values"});
+                await Task.WhenAll(resultSingleTask, attTask2);
+
+                DC.ProductType prod = resultSingleTask.Result.ReadAsSync();
+
+
+
+                var atts2 = attTask2.Result.Item1.ToDictionary(x => x.AttributeFQN);
+                Mozu.ProductAdmin.Contracts.Attribute att2;
+             
+                if (prod.Properties != null)
+                {
+                    foreach (var prop in prod.Properties)
+                    {
+                        if (atts2.TryGetValue(prop.AttributeFQN, out att2))
+                        {
+                            prop.AttributeDetail = att2;
+                        }
+                    }
+                }
+
+
+
                 return List2(Mapper.Map<ProductType>(prod));
             }
 
