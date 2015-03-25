@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Handlers
     [TestFixture]
     public class ViewRestrictionHandlerTests
     {
-        [Test]
+        [Test, Ignore]
         public void handler_is_in_pipeline()
         {
             var config = new HttpConfiguration();
