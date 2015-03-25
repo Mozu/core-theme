@@ -263,7 +263,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     stateId: 'locationName',
                     editor: {
                         xtype: "taco-locationpickerfield",
-                        editableOnCreateOnly: false,
+                        editableOnCreateOnly: true,
                         autoSelectFirstRecord: false,
                         forceSelection: true,
                         editable: false,

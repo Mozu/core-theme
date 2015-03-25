@@ -61,6 +61,11 @@ Ext.define('Taco.model.LocationInventory', {
         "type": "string",
             "useNull": true,
             "persist": true
+    }, {
+        name: 'adjustmentType',
+        type: "string",
+        defaultValue: "Absolute",
+        useNull: true
     },
 
     // is this still relevant?

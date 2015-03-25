@@ -52,11 +52,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [JsonProperty(PropertyName = "locationName")]
             public string LocationName { get; set; }
 
-            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName)
+            [JsonProperty(PropertyName = "adjustmentType")]
+            public string AjustmentType { get; set; }
+
+            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute")
             {
                 // use some automapper magic.
                 Mapper.DynamicMap<DC.LocationInventory, SuperchargedLocationInventory>(locbase, this);
                 this.LocationName = locationName;
+                this.AjustmentType = adjustmentType;
             }
         }
 
@@ -121,7 +125,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<HttpResponseMessage> Edit(List<DC.LocationInventory> locationInventories)
+        public async Task<HttpResponseMessage> Edit(List<SuperchargedLocationInventory> locationInventories)
         {
             var tasks = new List<Task<ServiceClientResponse<List<DC.LocationInventory>>>>();
 
@@ -132,7 +136,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                      select new DC.LocationInventoryAdjustment { 
                          LocationCode = li.LocationCode, 
                          ProductCode = li.ProductCode, 
-                         Type = DC.LocationInventoryAdjustment.TypeConst.Absolute, 
+                         Type = string.IsNullOrEmpty(li.AjustmentType) 
+                            ? DC.LocationInventoryAdjustment.TypeConst.Absolute
+                            : li.AjustmentType,
                          Value = li.StockOnHand.GetValueOrDefault(0) 
                      }).ToList();
                 tasks.Add( _locationInventoryClient.UpdateLocationInventory( adjustments, locationCodeGroup.Key ) );
