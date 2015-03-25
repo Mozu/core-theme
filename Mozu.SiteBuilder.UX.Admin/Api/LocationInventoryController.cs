@@ -53,14 +53,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string LocationName { get; set; }
 
             [JsonProperty(PropertyName = "adjustmentType")]
-            public string AjustmentType { get; set; }
+            public string AdjustmentType { get; set; }
+            
+            [JsonProperty(PropertyName = "adjustmentValue")]
+            public int? AdjustmentValue { get; set; }
+            
 
-            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute")
+            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute", int adjustmentValue = 0)
             {
                 // use some automapper magic.
                 Mapper.DynamicMap<DC.LocationInventory, SuperchargedLocationInventory>(locbase, this);
                 this.LocationName = locationName;
-                this.AjustmentType = adjustmentType;
+                this.AdjustmentType = adjustmentType;
+                this.AdjustmentValue = adjustmentValue;
             }
         }
 
@@ -136,10 +141,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                      select new DC.LocationInventoryAdjustment { 
                          LocationCode = li.LocationCode, 
                          ProductCode = li.ProductCode, 
-                         Type = string.IsNullOrEmpty(li.AjustmentType) 
-                            ? DC.LocationInventoryAdjustment.TypeConst.Absolute
-                            : li.AjustmentType,
-                         Value = li.StockOnHand.GetValueOrDefault(0) 
+                         Type = !string.IsNullOrEmpty(li.AdjustmentType) 
+                            ? li.AdjustmentType
+                            : DC.LocationInventoryAdjustment.TypeConst.Absolute,
+                         Value = li.AdjustmentValue.GetValueOrDefault(0) 
                      }).ToList();
                 tasks.Add( _locationInventoryClient.UpdateLocationInventory( adjustments, locationCodeGroup.Key ) );
             });

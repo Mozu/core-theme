@@ -52,21 +52,33 @@ Ext.define('Taco.model.LocationInventory', {
         "defaultValue": 0,
         "type": "int",
         "useNull": true,
-            persist: true
-        },
-
-
-        {
+         persist: true
+    }, {
+        name: "stockOnHandIncrement",
+        type: "int",
+        useNull: true,
+        persist: false
+    }, {
+        name: "stockOnHandDecrement",
+        type: "int",
+        useNull: true,
+        persist: false
+    }, {
         "name": "productCode",
         "type": "string",
-            "useNull": true,
-            "persist": true
+        "useNull": true,
+        "persist": true
     }, {
         name: 'adjustmentType',
         type: "string",
         defaultValue: "Absolute",
         useNull: true
-    },
+    }, {
+        name: 'adjustmentValue',
+        type: "int",
+        defaultValue: "0",
+        useNull: true
+    }, 
 
     // is this still relevant?
     {
@@ -109,6 +121,22 @@ Ext.define('Taco.model.LocationInventory', {
     getContextualValue:function(fieldName) {
         return this.get(fieldName);
     },
+
+    setAdjustmentValue: function () {
+        if (this.get('stockOnHandIncrement')) {
+            this.set('adjustmentValue', this.get('stockOnHandIncrement'));
+            this.set('adjustmentType', 'Delta');
+            this.set('stockOnHandIncrement', '');
+        } else if (this.get('stockOnHandDecrement')) {
+            this.set('adjustmentValue', (-1* Math.abs(this.get('stockOnHandDecrement'))) );
+            this.set('adjustmentType', 'Delta');
+            this.set('stockOnHandDecrement', '');
+        } else {
+            this.set('adjustmentValue', this.get('stockOnHand'));
+            this.set('adjustmentType', 'Absolute');
+        }
+    },
+
     proxy: {
         type: 'ajax',
         api: {

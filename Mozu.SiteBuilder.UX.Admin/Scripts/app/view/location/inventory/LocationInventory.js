@@ -37,7 +37,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     
     enableAutoSelect: false,
 
-    stateful: true,
+    stateful: false,
     stateId: 'statefulLocationInventoryGrid',
 
     secondToolbarItems: [
@@ -85,8 +85,16 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     },
 
     initColumnConfig: function () {
-        var me = this;
-        
+        var me = this,
+            disableFieldOnCreate = function (field, editor, context) {
+                if (!context.record.get('locationCode')) {
+                    field.disable();
+                } else {
+                    field.enable();
+                }
+            };
+
+
         this.columns = [
             {
                 width: 100,
@@ -124,11 +132,42 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
             }
             */
             }, {
+                dataIndex: 'stockOnHandIncrement',
+                width: 100,
+                itemId: "stockOnHandIncrement",
+                stateId: 'stockOnHandIncrement',
+                text: 'Add',
+                editor: {
+                    emptyText: "Increment",
+                    msgTarget: "qtip",
+                    xtype: "numberfield",
+                    mouseWheelEnabled: false,
+                    selectOnFocus: true,
+                    allowBlank: true,
+                    onEditorShow: disableFieldOnCreate
+                }
+            }, {
+                dataIndex: 'stockOnHandDecrement',
+                width: 100,
+                itemId: "stockOnHandDecrement",
+                stateId: 'stockOnHandDecrement',
+                text: 'Reduce',
+                editor: {
+                    emptyText: "Decrement",
+                    msgTarget: "qtip",
+                    xtype: "numberfield",
+                    fieldStyle: "text-align:right;",
+                    mouseWheelEnabled: false,
+                    selectOnFocus: true,
+                    allowBlank: true,
+                    onEditorShow: disableFieldOnCreate
+                }
+            }, {
                 dataIndex: 'stockOnHand',
                 width: 100,
                 itemId: "stockOnHand",
                 stateId: 'stockOnHand',
-                text: 'On Hand',
+                text: 'On Hand Total',
                 editor: {
                     emptyText: "On Hand",
                     msgTarget: "qtip",
@@ -340,7 +379,9 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         return true;
     },
      
-    onRowEditorUpdate : function() {
+    onRowEditorUpdate: function (editor, context, opts) {
+        var locInvRecord = context.record;
+        locInvRecord.setAdjustmentValue();
         this.callParent(arguments);
     }
 });
