@@ -129,6 +129,9 @@ Ext.define('Taco.model.Location', {
             "name": "supportsInventory",
             "type": "boolean"
         }, {
+            "name": "allowFulfillmentWithNoStock",
+            "type": "boolean"
+        }, {
             "name": "regularHours",
             "type": "object",
             convert: function (val, record) {

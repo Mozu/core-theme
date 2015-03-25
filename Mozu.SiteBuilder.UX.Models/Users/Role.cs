@@ -71,6 +71,22 @@ namespace Mozu.SiteBuilder.UX.Models.Users
     }
 
     [DataContract]
+    public class BehaviorCategoryBehavior : ModelBase
+    {
+        [DataMember(Name = "id")]
+        public string Id { get; set; }
+
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+
+        [DataMember(Name = "categoryId")]
+        public string CategoryId { get; set; }
+
+        [DataMember(Name = "categoryName")]
+        public string CategoryName { get; set; }
+    }
+
+    [DataContract]
     public class BehaviorTree : ModelBase
     {
         private const string BehaviorCategoryCls = "behavior-category";
