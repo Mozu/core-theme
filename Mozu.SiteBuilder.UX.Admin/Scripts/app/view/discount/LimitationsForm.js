@@ -31,7 +31,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             align: 'right',
             unitAtEnd: false,
             minValue: 0,
-            hidden: this.record.get('scope') === 'Order'
+            hidden: this.record.get('scope') === 'Order',
+            emptyText: 'Unlimited'
         });
 
         this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
@@ -44,7 +45,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             currencyCode: Taco.app.context.getCurrent().currencyCode,
             align: 'right',
             unitAtEnd: false,
-            minValue: 0
+            minValue: 0,
+            emptyText: 'Unlimited'
         });
 
         this.redemptionLimits = Ext.create('Ext.form.field.Number', {
@@ -64,7 +66,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             width: 240,
             fieldLabel: 'Max Redemptions (per Order)',
             hidden: this.record.get('scope') === 'Order',
-            minValue: 0
+            minValue: 0,
+            emptyText: 'Unlimited'
         });
 
         this.redemptionContainer = Ext.create('Ext.container.Container', {
@@ -80,13 +83,32 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             items: [this.redemptionLimits, this.maxRedemptionsPerOrder]
         });
 
+        this.redemptionCountContainer = Ext.create('Ext.container.Container', {
+            layout: {
+                type: 'hbox',
+                align: 'bottom'
+            },
+            width: 500,
+            margin: "5px 0px 10px 0px",
+            hidden: !this.record.get('currentRedemptionCount'),
+            items: [
+                {
+                    xtype: 'label',
+                    flex: 1,
+                    cls: 'taco-readonly-display',
+                    margin: "0px 20px 0px 0px",
+                    text: "Already redeemed: " + this.record.get('currentRedemptionCount') 
+                }
+            ]
+        });
+
         this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
             name: 'requiresCoupon',
             boxLabel: 'Create coupon',
             labelAlign: 'right',
             listeners: {
                 change: function (cb, newValue) {
-                    this.couponCodeBox[newValue ? 'show' : 'hide']();  
+                    this.couponCodeBox[newValue ? 'show' : 'hide']();
                 },
                 scope: this
             }
@@ -135,7 +157,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.items = [
             {
                 xtype: 'component',
-                html: 'Discount limitations specify the limit a coupon/discount can be redeemed.',
+                html: 'Discount limitations specify restrictions on discount and coupon redemption.',
                 margin: '15 0 0 0'
             }, {
                 xtype: 'container',
@@ -151,6 +173,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 items: [this.maxDiscountLineItemValue, this.maxDiscountOrderValue]
             },
             this.redemptionContainer,            
+            this.redemptionCountContainer,
             this.requiresCouponInput,
             this.couponCodeBox,
             this.oneTimeUsePerShopper
@@ -160,12 +183,70 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.callParent(arguments);
     },
 
-    setFieldVisibility: function (isLineItem) {
-        this.maxRedemptionsPerOrder.setVisible(isLineItem);
-        this.maxDiscountLineItemValue.setVisible(isLineItem);
+    //setFieldVisibility: function (isLineItem, appliesToShipping, discountType) {
+    setFieldVisibility: function (scopeType, targetType, discountType) {
+        var me = this,
+            appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem'),
+            orderMaxVisible = false,
+            lineItemMaxVisible = false,
+            orderMaxLabel,
+            orderMaxLabelWhenOrder = "Max Discount Value",
+            orderMaxLabelWhenInline = "Max Discount Value (Per Order)";
+
+
+
+
+        if ((!isLineItem && !isOrder) || !targetType) {
+            this.setVisible(false);
+            return;
+        } else {
+            this.setVisible(true);
+        }
+
+        if (isLineItem) {
+            orderMaxLabel = orderMaxLabelWhenInline;
+            if (Ext.Array.contains(["Percentage", "FixedPrice","Free"], discountType)) {
+                orderMaxVisible = true;
+                lineItemMaxVisible = true;
+            } else if (discountType == "Amount") {
+                orderMaxVisible = true;
+                lineItemMaxVisible = false;
+            }
+        } else {
+            // order or not selected
+            if (Ext.Array.contains(["Percentage", "FixedPrice", "Free"], discountType)) {
+                orderMaxLabel = orderMaxLabelWhenOrder;
+                orderMaxVisible = true;
+                lineItemMaxVisible = false;
+            } else if (discountType == "Amount") {
+                orderMaxVisible = false;
+                lineItemMaxVisible = false;
+            } 
+        }
+
+        // need to update the label since it will be visible. the line item max never gets a label change. 
+        if (orderMaxLabel) {
+            me.maxDiscountOrderValue.setFieldLabel(orderMaxLabel);
+        }
+
+        //set the visibility of the order and lineitem max fields as defined above;
+        me.maxDiscountOrderValue.setVisible(orderMaxVisible);
+        me.maxDiscountLineItemValue.setVisible(lineItemMaxVisible);
+
+        // need to reset the fields when they are hidden;
+        if (!orderMaxVisible && me.maxDiscountOrderValue.getValue()) {
+            me.maxDiscountOrderValue.setValue(null);
+        }
+
+        if (!lineItemMaxVisible && me.maxDiscountLineItemValue.getValue()) {
+            me.maxDiscountLineItemValue.setValue(null);
+        }
+
+        me.maxRedemptionsPerOrder.setVisible(isLineItem);
         if (!isLineItem) {
-            this.maxRedemptionsPerOrder.setValue(null);
-            this.maxDiscountLineItemValue.setValue(null);
+            me.maxRedemptionsPerOrder.setValue(null);
         }
     },
 

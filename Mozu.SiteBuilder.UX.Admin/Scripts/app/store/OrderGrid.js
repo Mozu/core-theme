@@ -9,7 +9,12 @@
         remoteSort: true,
         remoteFilter: true,
         storeManagerConfig: {
-          //  createOnly:false,
-            autoLoad: true
-        }
+            // createOnly:false,
+           autoLoad: true
+        },
+
+        sorters: [{
+            property: 'submittedDate',
+            direction: 'DESC'
+        }]
     });

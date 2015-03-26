@@ -395,7 +395,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     },
 
     initReturnActions: function () {
-
+        
         return Ext.create('Ext.toolbar.Toolbar', {
             defaults: {
                 xtype: 'button',
@@ -497,14 +497,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                                 returnIds: [this.record.getId()],
                                 actionName: "Authorize"
                             },
-                            enabledWhen: ["Created", "Authorized", "Pending", "Received", "Refunded"]
+                            enabledWhen: ["Authorized", "Pending", "Received", "Refunded"]
                         }, {
                             text: "RMA Received",
                             jsonData: {
                                 returnIds: [this.record.getId()],
                                 actionName: "Receive"
                             },
-                            enabledWhen: ["Received", "Refunded"]
+                            enabledWhen: ["Received"]
                         }, {
                             text: "RMA Refunded",
                             jsonData: {
@@ -526,14 +526,17 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                                 actionName: "Close"
                             },
                             enabledWhen: ["Closed"]
-                        }, {
-                            text: "RMA Cancelled",
-                            jsonData: {
-                                returnIds: [this.record.getId()],
-                                actionName: "Cancel"
-                            },
-                            enabledWhen: ["Cancelled"]
                         }
+
+                        // disabling per #51821
+                        //, {
+                        //    text: "RMA Cancelled",
+                        //    jsonData: {
+                        //        returnIds: [this.record.getId()],
+                        //        actionName: "Cancel"
+                        //    },
+                        //    enabledWhen: ["Cancelled"]
+                        //}
                     ]
                 }
             }],
@@ -689,7 +692,10 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         var record = this.getRecord();
         var validActions = record.get('availableActions');
 
-        validActions.push("resendEmailButton");
+
+        if (record.get('status') != "Cancelled") {
+            validActions.push("resendEmailButton");
+        }
 
         // remove the Refund action if the return type is not Refund
         if (record.get('type') === 'Replace') {

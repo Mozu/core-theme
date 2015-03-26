@@ -8,15 +8,15 @@ Ext.define('Taco.view.storeCredit.Edit', {
     initComponent: function () {
         var me = this;
 
-        this.additionalActions = [{
-            xtype: 'resendemailbutton',
-            margin: '0 10 0 0',                        
-            emailUrl: '/admin/app/customer/resendcreditcreatedemail',
-            jsonData: {
-                code: this.record.getId()
-            },
-            hidden: this.record.phantom
-        }];
+        //this.additionalActions = [{
+        //    xtype: 'resendemailbutton',
+        //    margin: '0 10 0 0',                        
+        //    emailUrl: '/admin/app/customer/resendcreditcreatedemail',
+        //    jsonData: {
+        //        code: this.record.getId()
+        //    },
+        //    hidden: this.record.phantom
+        //}];
 
         this.callParent(arguments);
     }

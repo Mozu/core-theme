@@ -96,13 +96,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password)
         {
             return await LoginAndTrack(() => _authTicketWebApiClient.CreateUserAuthTicket(new CustomerUserAuthInfo()
-            {
+             {
                 Username = email,
                 Password = password
 
             }));
-        }
-
+                }
+            
         protected async Task<ServiceClientResponse<StreamContent>> DoResetPassword(ResetPasswordInfo info)
         {
             var res = (await _customerAccountWebApiClient.ResetPassword(info));
@@ -176,6 +176,41 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Login", new { ReturnUrl = returnUrl });
         }
 
+        [System.Web.Http.HttpGet]
+        public ActionResult AjaxForgotPassword(string returnUrl = null)
+        {
+
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "forgot-password",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+
+            };
+
+
+            return View("Forgot-Password", new { ReturnUrl = returnUrl });
+        }
+
+        [System.Web.Http.HttpGet]
+        public ActionResult CreateAccount(string returnUrl = null)
+        {
+            var pc = this.PageContext;
+            pc.CmsContext= new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "signup",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            return View("Signup", new { ReturnUrl = returnUrl });
+        }
+
         public class LoginDetails
         {
             public string email { get; set; }
@@ -185,30 +220,30 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpPost]
         public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
-        {
-
-            var res = await DoCreateAccount(authInfo);
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                return res.ResponseMessage;
-            }
+         {
+           
+             var res = await DoCreateAccount(authInfo);
+             if (res.ResponseMessage.IsSuccessStatusCode)
+             {
+                 return res.ResponseMessage;
+             }
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
-            {
+             {
                 Message = string.Format("Login as {0} failed. Please try again.", authInfo.Account.EmailAddress)
-            });
-        }
+                                                                             });
+             }
 
-        [AcceptVerbs("OPTIONS", "POST")]
-        public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
-        {
+         [AcceptVerbs("OPTIONS", "POST")]
+         public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
+         {
             if (Request.Method.Method == "OPTIONS")
-            {
+             {
                 return Request.CreateResponse(HttpStatusCode.OK);
-            }
+             }
             var res = await DoCreateAccount(authInfo);
 
-            return res.ResponseMessage;
-        }
+             return res.ResponseMessage;
+         }
 
         [System.Web.Http.HttpPost]
         public async Task<HttpResponseMessage> Login(LoginDetails details)
@@ -228,7 +263,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 redir.Headers.Location = MakeRedirectUri(returnUrl);
                 return redir;
-
+                
             }
             else
             {
@@ -244,14 +279,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string password = details.password;
             string returnUrl = details.returnUrl;
             var res = await DoLogin(email, password);
-
+                    
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 return new
-                {
+                    {
                     Message = string.Format("Logged in as {0}.", email)
-                };
-            }
+                    };
+                }
             else
             {
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, new
@@ -260,7 +295,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
         }
-
+            
         [HttpPost]
         public async Task<HttpResponseMessage> Pants(HttpRequestMessage request)
         {
@@ -269,16 +304,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [HttpPost, HttpOptions]
-        public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
-        {
+         public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
+         {
             if (Request.Method.Method == "OPTIONS")
-            {
+             {
                 return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            var res = await DoResetPassword(info);
+             }
+             var res = await DoResetPassword(info);
 
-            return res.ResponseMessage;
-        }
+             return res.ResponseMessage;
+         }
 
          [HttpGet]
          public async Task<ActionResult> ResetPassword(string t, string u)

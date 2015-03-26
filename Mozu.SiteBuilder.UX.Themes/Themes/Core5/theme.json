@@ -80,6 +80,13 @@
         "template": "email/order-confirmation",
         "title": "Order Confirmation"
     }, {
+        "id": "refund.created",
+        "properties": {
+
+        },
+        "template": "email/order-refund-issued",
+        "title": "Refund Issued"
+     }, {
         "id": "return.created",
         "properties": {},
         "template": "email/product-return-changed",
@@ -265,6 +272,20 @@
         "id": "login",
         "template": "login",
         "title": "Login",
+        "userCreatable": false
+    },
+    {
+        "entityType": "signup",
+        "id": "signup",
+        "template": "signup",
+        "title": "Sign Up",
+        "userCreatable": false
+    },
+    {
+        "entityType": "forgotpassword",
+        "id": "forgotpassword",
+        "template": "forgot-password",
+        "title": "Forgot Password",
         "userCreatable": false
     }],
     "settings": {

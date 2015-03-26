@@ -25,10 +25,6 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         return this.store.sum('amtToApply');
     },
 
-    selModel: Ext.create('Ext.selection.CellModel', {
-        enableFieldTabbing: true
-        //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
-    }),
     viewConfig: {
         stripeRows: false,
         onRowFocus: Ext.emptyFn,
@@ -43,6 +39,10 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
         var me = this;
         this.orderBalance = this.order.getNewPaymentAmountHint();
 
+        this.selModel = Ext.create('Ext.selection.CellModel', {
+            enableFieldTabbing: true
+            //    enableKeyNav: false // to disable cell traversal when clicks on keys(es: TAB) 
+        });
 
         Ext.apply(me, {
             plugins: [
@@ -131,7 +131,7 @@ Ext.define('Taco.view.order.widget.GiftCardGrid', {
     },
     startInitialFocus: function () {
         var me = this;
-        if (this.store.count() > 0) {
+        if (me.rendered && this.store.count() > 0) {
             me.getSelectionModel().setCurrentPosition({ row: 0, column: 2 });
             me.view.focusRow(0);
         }

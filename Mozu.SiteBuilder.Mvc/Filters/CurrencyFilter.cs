@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {
-            if (value == null)
+            if (value == null || (value.ToString() == string.Empty))
             {
                 return string.Empty;
             }

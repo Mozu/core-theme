@@ -41,7 +41,11 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                         {
                             url: relPath + 'unit/view/customers/subform/information.t.js',
                             title: 'Customer Information Subform'
-                        }, 
+                        },
+                        {
+                            url: relPath + 'unit/view/customers/subform/information-create.t.js',
+                            title: 'Create Customer Information Subform'
+                        },
                         {
                             url: relPath + 'unit/view/customers/modal/createCustomer.t.js',
                             title: 'Create Customer Modal'

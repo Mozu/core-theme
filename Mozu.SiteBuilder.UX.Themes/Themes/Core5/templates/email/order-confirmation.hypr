@@ -23,7 +23,8 @@
                     <b>{{ labels.shippingMethod }}</b>: {{ model.fulfillmentInfo.shippingMethodName }}<br>
                 </td>
             </tr>
-
+			
+			{% ifnotequal model.total 0 %}
            <tr>
 
                 <td>
@@ -37,6 +38,7 @@
                         {% endif %}
                 </td>
             </tr>
+			{% endifnotequal %}
         </tbody>
     </table>
 

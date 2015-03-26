@@ -93,6 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //todo:what?
                 // .ForMember(x => x.IsHiddenWhenOutOfStock, op => op.ResolveUsing(dc => dc.i))
                 .ForMember(x => x.ProductTypeId, op => op.ResolveUsing(dc => dc.ProductTypeId))
+                
                 .ForMember(x => x.MasterCatalogId, op => op.ResolveUsing(x => x.MasterCatalogId))
                 //todo:what?
                 //  .ForMember(x => x.IsBackOrderAllowed, op => op.ResolveUsing(dc => dc.IsBackOrderAllowed))
@@ -128,6 +129,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     : NULLCOST.Cost))
 
                 //ignores
+                .ForMember(x => x.ProductTypeName, op => op.Ignore())
                 .ForMember(m => m.ListPrice, op => op.Ignore())
                 .ForMember(m => m.StockOnHand, op => op.Ignore())
                 .ForMember(m => m.StockOnHandAdjustment, op => op.Ignore())

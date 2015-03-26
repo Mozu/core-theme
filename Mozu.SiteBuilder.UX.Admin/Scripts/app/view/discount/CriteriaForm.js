@@ -6,15 +6,14 @@
 Ext.define('Taco.view.discount.CriteriaForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-criteria',
-    requires: [
-        'Taco.view.discount.widget.CategoryPicker'
-    ],
     ui: 'subform',
     margin: '0 0 39 0',
+
     title: 'Target Criteria',
 
     initComponent: function () {
-        var productStore,
+        var catStore,
+            productStore,
             zoneStore,
             shippingStore,
             me = this;
@@ -30,8 +29,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             checked: this.record.get('includeAllProducts'),
             listeners: {
                 change: function () {
+                    // need to just kick off a wholesale reflow of the visibility;
                     this.parentForm.setFieldVisibility();
-                    enableDisableCriteriaQuantities();
                 },
                 scope: this
             }
@@ -61,24 +60,43 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
         });
 
-        this.categoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
-            catStore: this.record.getCategoryStore(),
-            record: this.record
+
+        
+        catStore = this.record.getCategoryStore();
+        catStore.clearFilter(true);
+        catStore.load();
+
+        // reset the list's dirty state when its store first loads
+        catStore.on({
+            load: function () {
+                this.categoryList.resetOriginalValue();
+            },
+            single: true,
+            scope: this
+        });
+        // MultiSelect is the most optimal Field that uses BoundList without a trigger
+        this.categoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'categories',
+            width: 382,
+            margin: 0,
+            store: catStore,
+            getStore: function () {
+                return catStore;
+            },
+            queryMode: 'local',
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            displayField: 'nameAndCode',
+            valueField: 'id',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
-        function enableDisableCriteriaQuantities() {
-            //var fn = me.includeAllProductsInput.getValue() ? disableCmp : enableCmp;
-            var isVisible = me.includeAllProductsInput.getValue() ? false : true;
-
-            me.productsBox.setVisible(isVisible);
-            me.categoriesBox.setVisible(isVisible);
-
-
-            //var box = me.productsBox.down('radio').getValue() ? me.productsBox : me.categoriesBox;
-            //Ext.Array.each(box.query('[isFormField]'), fn);
-
-
-        }
 
         function toggleEnabledCriteriaQuantities(toEnable) {
             var toDisable = toEnable === me.productsBox ? me.categoriesBox : me.productsBox,
@@ -87,7 +105,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
             Ext.Array.each(toDisable.query('[isFormField]'), function (cmp) {
                 if (cmp.xtype !== "radio") {
-                    cmp.setValue('');
                     cmp.disable();
                 }
                 if (cmp.itemId === "maxQuantity") cmp.setValue(maximumQuantity);
@@ -110,8 +127,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 {
                     xtype: 'radio',
                     name: 'typeOfMinimumToEnforce',
+                    itemId: 'typeOfMinimumToEnforceCategories',
                     value: 'category',
-                    handler: function(box, isChecked) {
+                    handler: function (box, isChecked) {
                         toggleEnabledCriteriaQuantities(isChecked ? me.categoriesBox : me.productsBox);
                     },
                     padding: '0 10px 0 0'
@@ -121,15 +139,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     itemId: 'maxQuantity',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 1,
                     allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
                         change: function (f, newValue) {
+                            // need to copy this value to a hidden field that is the primary conduit for persisting this change.
+                            // Note: me.maximumQuantityPerRedemptionTB field is only visible when the "applies to all products" radio is selected
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
-                        },
-                        scope: this
+                        }
                     }
                 }, {
                     xtype: 'component',
@@ -137,23 +155,68 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     padding: '0 10px 0 10px',
                     cls: 'x-form-item-label x-unselectable x-form-item-label-left'
                 },
-                this.categoryPanel
+                this.categoryList,
+                {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Add',
+                    margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
+                    handler: function () {
+                        this.launchCategoryModal(this.categoryList);
+                    },
+                    scope: this
+                }
             ]
         });
 
-        this.excludeCategoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
-            catStore: this.record.getCategoryStore(),
-            record: this.record,
+
+        this.excludeCategoryList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'excludedCategories',
-            listWidth: 520
+            width: 520,
+            margin: 0,
+            store: catStore,
+            getStore: function () {
+                return catStore;
+            },
+            queryMode: 'local',
+            hideTrigger: true,
+            triggerOnClick: false,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            displayField: 'nameAndCode',
+            valueField: 'id',
+            fieldLabel: 'Exclude products in the following categories',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            }
         });
 
-        this.excludeCategoriesBox = Ext.create('Ext.form.FieldContainer', {
-            layout: 'hbox',
-            width: 600,
-            fieldLabel: 'Exclude products in the following categories',
+        this.excludeCategoriesBox = Ext.create('Ext.container.Container', {
+            layout: 'auto',
             items: [
-                this.excludeCategoryPanel
+                this.excludeCategoryList,
+                {
+                    xtype: 'button',
+                    scale: 'medium',
+                    ui: 'action',
+                    text: 'Add',
+                    margin: '0 0 0 10',
+                    width: 70,
+                    style: {
+                        verticalAlign: 'bottom'
+                    },
+                    handler: function () {
+                        this.launchCategoryModal(this.excludeCategoryList);
+                    },
+                    scope: this
+                }
             ]
         });
 
@@ -208,12 +271,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     itemId: 'maxQuantity',
                     hideTrigger: true,
                     width: 80,
-                    minValue: 1,
                     allowBlank: true,
                     labelAlign: 'right',
                     hideLabel: true,
                     listeners: {
                         change: function (f, newValue) {
+                            // need to copy this value to a hidden field that is the primary conduit for persisting this change.
+                            // Note: me.maximumQuantityPerRedemptionTB field is only visible when the "applies to all products" radio is selected
                             me.maximumQuantityPerRedemptionTB.setValue(newValue);
                         }
                     }
@@ -286,6 +350,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             ]
         });
 
+        // this field is only visible when the applies to all products radio is selectd.
+        // this field is hidden when the applies to specific products radio is selectd
+        // when hidden this field is used to persist number value in the following fields;
+        // Select the quantity of product from the categories that the shopper will receive the discount on:
+        // Select the quantity of products from the categories that the shopper will recieve the discount on:
         this.maximumQuantityPerRedemptionTB = Ext.widget({
             xtype: 'numberfield',
             name: 'maximumQuantityPerRedemption',
@@ -300,23 +369,24 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer', {
             width: 600,
             margin: '10 0 0 0',
-            fieldLabel: "Exclude products that have line item discounts for the following types:",
+            fieldLabel: "Exclude products that already have:",
             items: [
                 {
                     xtype: 'checkbox',
                     name: 'excludeItemsWithExistingProductDiscounts',
-                    boxLabel: 'Line Item Product Discounts',
+                    boxLabel: 'Product Discounts',
                     width: 300,
-                    value: this.record.get('excludeItemsWithExistingProductDiscounts') === true
+                    value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
                 }, {
                     xtype: 'checkbox',
                     name: 'excludeItemsWithExistingShippingDiscounts',
-                    boxLabel: 'Line Item Shipping Discounts',
+                    boxLabel: 'Shipping Discounts',
                     width: 300,
-                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') === true
+                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
                 }
+                
             ]
-        });
+        })
 
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
@@ -372,7 +442,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             //displayField: 'Value',
             displayField: 'name',
             fieldLabel: 'Select Shipping Methods',
-            valueField: 'code'
+            valueField: 'code',
 
         });
 
@@ -402,7 +472,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             //displayField: 'Value',
             displayField: 'code',
             fieldLabel: 'Select Shipping Zones',
-            valueField: 'code'
+            valueField: 'code',
 
         });
 
@@ -436,15 +506,38 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         //}, this, { single: true })
 
         this.on('boxready', function () {
-            //var products = this.record.get('products');
+            var products = this.record.get('products');
             var categories = this.record.get('categories');
-            var activeQuantityMeasure = (categories && categories.length) ? me.categoriesBox : me.productsBox;            
+            var activeQuantityMeasure = (categories && categories.length) ? this.categoriesBox : this.productsBox;            
             
             activeQuantityMeasure.down('radio').setValue(true);
             toggleEnabledCriteriaQuantities(activeQuantityMeasure);
-            enableDisableCriteriaQuantities();
         }, this);
 
+    },
+
+    /**
+     * Opens a modal with a TreePanel.
+     * @private
+     */
+    launchCategoryModal: function (list) {
+        var me = this,
+            treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+
+        this.modal = Ext.create('Taco.view.category.Modal', {
+            store: treeStore
+        });
+
+        this.modal.on({
+            savesuccess: function (modal, values) {
+                list.addValue(values);
+                me.reloadStore(list);
+            },
+            aftercancelclose: function () {
+                me.reloadStore(list);
+            },
+            scope: this
+        });
     },
 
     /**
@@ -485,7 +578,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     },
 
     reloadStore: function (list) {
-        var store = list.store,
+        var store = list.getStore(),
             proxy = store.getProxy();
         if (proxy.extraParams) {
             proxy.extraParams = {};
@@ -493,7 +586,28 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         store.load();
     },
 
-    setShippingListVisibility: function (appliesToShipping) {
+    /**
+     * Removes a value from the list if the close icon was clicked.
+     * @private
+     */
+    onCategoryListItemClick: function (view, record, item, index, e) {
+        var closeBtn = e.getTarget('.x-boundlist-item-close', 10),
+            list = view.ownerCt,
+            value, store;
+        if (closeBtn) {
+            store = view.getStore();
+            value = Ext.Array.remove(list.getValue(), record.getId());
+            store.remove(record);
+            list.setValue(value);
+            return false;
+        }
+    },
+
+    setShippingListVisibility: function (scopeType, targetType, discountType) {
+        var appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem');
+
         this.shippingList.setVisible(appliesToShipping);
         this.shippingZoneList.setVisible(appliesToShipping);
         if (!appliesToShipping) {
@@ -502,20 +616,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
     },
 
-    //todo: gm split prodCat containter into include and exclude. On includeAll checked, then only show exclude.
-    setProductCategoryContainerVisibility: function (isLineItem) {
-        //this.productCategoryContainer.setVisible(isLineItem);
-        //always visible now
-        this.productCategoryContainer.setVisible(true);       
+
+    
+    setProductCategoryContainerVisibility: function (scopeType, targetType, discountType) {
+        var me = this,
+            isLineItem = (scopeType === 'LineItem');
 
         //reset the hidden fields
         if (!isLineItem) {
             this.includeSpecificProductsInput.setValue(true);
-            this.categoryPanel.setValue('');
-            this.productList.setValue('');
-            
-            //this.excludeCategoryList.setValue('');
-            //this.productExcludeList.setValue('');
         } else {
             // order level
             this.findField("excludeItemsWithExistingShippingDiscounts").setValue(false)
@@ -526,30 +635,73 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         // setup line item;
         
-        this.includeAllProductsInput.setVisible(isLineItem)
+
+        this.includeAllProductsInput.setVisible(isLineItem);
         this.appliesToSaleProducts.setVisible(true)
 
-        this.includeSpecificProductsInput.setVisible(isLineItem)
-        this.productsBox.setVisible(isLineItem)
-        this.categoriesBox.setVisible(isLineItem);
+        this.includeSpecificProductsInput.setVisible(isLineItem);
 
-        this.excludeCategoriesBox.setVisible(true)
-        this.productsExcludeBox.setVisible(true)
-        this.maximumQuantityPerRedemptionTB.setVisible(isLineItem)
+        if (isLineItem) {
+            var includeAllProductsSelected = me.includeAllProductsInput.getValue() ? false : true;
+            // optionaly hide or show these based on the selection of the "applies to all products radio button"
+            me.productsBox.setVisible(includeAllProductsSelected);
+            me.categoriesBox.setVisible(includeAllProductsSelected);
+        } else {
+            this.productsBox.setVisible(false);
+            this.categoriesBox.setVisible(false);
+        }
 
+        this.excludeCategoriesBox.setVisible(true);
+        this.productsExcludeBox.setVisible(true);
 
+        // even though this field is hidden it will continue to persist its value; see notes where this field is initialized; 
+        this.maximumQuantityPerRedemptionTB.setVisible(isLineItem && this.includeAllProductsInput.checked);
     },
 
-    setFieldVisibility: function (isLineItem, appliesToShipping) {        
-        // always visible now. shows for order and lineItem
+    setFieldVisibility: function (scopeType, targetType, discountType) {
+        var appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem');
+
+        this.scopeType = scopeType;
+        this.targetType = targetType;
+        this.discountType = discountType;
+
+        this.appliesToShipping = appliesToShipping;
+        this.isOrder = isOrder;
+        this.isLineItem = isLineItem;
+        
+        // if order or line item combo has a selection;
+        if ((!isLineItem && !isOrder) || !targetType) {
+            this.setVisible(false);
+            return;
+        } else {
         this.setVisible(true);        
-        this.setProductCategoryContainerVisibility(isLineItem);        
-        this.setShippingListVisibility(appliesToShipping);
+        }
+        
+        this.setProductCategoryContainerVisibility(scopeType, targetType, discountType);
+        this.setShippingListVisibility(scopeType, targetType, discountType);
+        
+
     },
 
-    beforeSave: function() {
-        this.record.set('categories', this.categoryPanel.getValue());
-        this.record.set('excludedCategories', this.excludeCategoryPanel.getValue());
+    beforeSave: function () {
+        var me = this;
+        // need to clear out the selected values from the disabled productlist and categorieslist;
+        var radio = me.down('#typeOfMinimumToEnforceCategories');
+        if (radio) {
+            var categoriesActive = radio.getValue();
+            // need to manually set the value on the record for the disabled field since a disabled field doesn't get its data is not updated automatically
+            if (categoriesActive) {
+                me.productList.setValue('');
+                me.record.set("products", []);
+            } else {
+                me.categoryList.setValue('');
+                me.record.set("categories", []);
+            }
+        }
+
+        return true;
     },
 
     onDestroy: function () {

@@ -285,7 +285,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? ProductTypeId { get; set; }
+
+        public string ProductTypeName { get; set; }
         
+
         /// <summary>
         /// Hide when out of stock.
         /// </summary>

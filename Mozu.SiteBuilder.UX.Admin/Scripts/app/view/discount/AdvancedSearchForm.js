@@ -4,7 +4,8 @@
 Ext.define('Taco.view.discount.AdvancedSearchForm', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
-        'Ext.form.FieldContainer'
+        'Ext.form.FieldContainer',
+        'Taco.core.ux.form.DateTime'
     ],
 
     defaults: {
@@ -54,6 +55,9 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                             {
                                 name: "Active",
                                 id: "Active"
+                            }, {
+                                name: "Scheduled",
+                                id: "Scheduled"
                             }, {
                                 name: "Ended",
                                 id: "Ended"
@@ -107,6 +111,9 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                             }, {
                                 name: "Amount",
                                 id: "Amount"
+                            }, {
+                                name: "Fixed Price",
+                                id: "FixedPrice"
                             }
                         ]
                     })

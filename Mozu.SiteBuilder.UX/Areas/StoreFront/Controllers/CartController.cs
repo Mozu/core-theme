@@ -107,9 +107,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("cart", jCart); // Mapper.Map<VMCart>(cart));
         }
 
-        private Models.StoreFront.Commerce.Cart CreateCartWithLocations(Cart cart, LocationCollection locations)
+        private UX.Models.StoreFront.Commerce.Cart CreateCartWithLocations(Cart cart, LocationCollection locations)
         {
-            var cartbase = Mapper.Map<Models.StoreFront.Commerce.Cart>(cart);
+            var cartbase = Mapper.Map<UX.Models.StoreFront.Commerce.Cart>(cart);
             if (locations != null && locations.Items.Any())
             {
                 foreach (var cartItem in cartbase.Items.Where(item => item.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
@@ -120,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             return cartbase;
         }
-
+        
         public class CheckoutModel
         {
             public string Id { get; set; }

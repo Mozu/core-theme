@@ -1,14 +1,14 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2014-12-18
+ * Mozu Hypr Live - v1.0.0 - 2015-03-13
  *
- * Copyright (c) 2014 Volusion, Inc.
+ * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2014-12-18
+ * Mozu Hypr Live - v1.0.0 - 2015-03-13
  *
- * Copyright (c) 2014 Volusion, Inc.
+ * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
@@ -5752,6 +5752,50 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
         }
         return '';
     });
+
+
+    function createAscendingComparator(key) {
+        return function(a, b) {
+            if (a && b) {
+                if (a[key] < b[key]) return -1;
+                if (a[key] > b[key]) return 1;
+            }
+            return 0;
+        };
+    }
+
+    function createDescendingComparator(key) {
+        return function(a, b) {
+            if (a && b) {
+                if (a[key] > b[key]) return -1;
+                if (a[key] < b[key]) return 1;
+            }
+            return 0;
+        };
+    }
+
+    function createDictSortFilter(comparator) {
+        return function(dictList, key) {
+            var sorted = dictList.slice();
+
+            // peek for the proper casing
+            key = key.toLowerCase();
+            for (var i in sorted[0]) {
+                if (sorted[0].hasOwnProperty(i) && i.toLowerCase() === key) {
+                    key = i;
+                    break;
+                }
+            }
+
+            sorted.sort(comparator(key));
+            return sorted;
+        }
+    }
+
+    HyprLive.engine.setFilter('dictsort', createDictSortFilter(createAscendingComparator));
+
+    HyprLive.engine.setFilter('dictsortreversed', createDictSortFilter(createDescendingComparator));
+
 
 }());
 			return HyprLive;

@@ -158,6 +158,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 '<tpl if="payment.amountCredited != 0">',
                 lbl('Amount Credited: ', '{[values.orderRecord.formatCurrency(values.payment.amountCredited)]}'),
                 '</tpl>',
+                '<tpl if="payment.amountRefunded != 0">',
+                lbl('Amount Refunded: ', '{[values.orderRecord.formatCurrency(values.payment.amountRefunded)]}'),
+                '</tpl>'
             ],
             data: {
                 cls: cls,
@@ -309,8 +312,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                                 ' Transaction ID: {gatewayTransactionId}',
                                              '</tpl>',
                                         '</tpl>',
-                                        '<span class="seperator">|</span>',
+                                        '<tpl if="gatewayResponseCode">',
+                                            '<span class="seperator">|</span>',
                                             'Response Code: {gatewayResponseCode} ',
+                                        '</tpl>',
                                         '<tpl if="gatewayResponseText">',
                                             '<br />',
                                             'Response Message: {gatewayResponseText} ',

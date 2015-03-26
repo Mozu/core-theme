@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
                 themeTs.Ticks.ToString("X2"),
                 string.IsNullOrEmpty(cdn) ? null : (cdn + "/"), 
                 (pc.IsDebugMode ? "&debug=true" : ""),
-                (apiContext.DataViewMode == DataViewModeType.Pending ? "&dm=p":"") );
+                (apiContext.DataViewMode == DataViewModeType.Pending ? "&dv=p":"") );
                 
              
 

@@ -10,6 +10,7 @@ using Mozu.Core.Crypto;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement;
+using Mozu.Tenant.Contracts;
 using Newtonsoft.Json.Linq;
 using Constants = Mozu.Core.Api.Contracts.Constants;
 
@@ -17,8 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
 {
     public interface ISecureCapabilityConfigUrlHelper
     {
-        Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant);
-
+        Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant, Entitlement entitlement = null);
 
         SecureForm BulidSecureForm(string hashKey, Dictionary<string, string> body);
     }
@@ -45,17 +45,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
             _httpSpecDateProvider = httpSpecDateProvider;
         }
 
-
-
-
-        public Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant)
+        public Capability BuildSecureUrl(Capability capability, Tenant.Contracts.Tenant tenant, Entitlement entitlement = null)
         {
+            if (entitlement != null)
+            {
+                capability.Version = entitlement.ApplicationVersion;
+            }
+
             if (string.IsNullOrEmpty(capability.UIConfigurationUrl) || string.IsNullOrEmpty(capability.AppHashKey))
             {
                 LoggingService.LoggerFor<SecureCapabilityConfigUrlHelper>().Warn(string.Format("Missing UIConfigUrl or AppHashKey for app {0} and capability {1}", capability.AppId, capability.Id));
                 return capability;
             }
-                
+
             var retUrl = BuildReturnUrl(tenant, capability.Id);
             var body = string.Format("{0}={1}&{2}={3}", X_VOL_TENANT_DOMAIN, tenant.Domain.DomainName, X_VOL_RETURN_URL, retUrl);
             var dt = _httpSpecDateProvider.GetRfc1123Format();
@@ -70,6 +72,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.SecurityHelpers
             capability.UIConfigurationUrl = secureUrl;
             capability.TenantDomain = tenant.Domain.DomainName;
             capability.ConfigReturnUrl = retUrl;
+
+            
+
             return capability;
         }
 

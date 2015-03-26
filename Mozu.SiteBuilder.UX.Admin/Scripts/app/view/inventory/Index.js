@@ -13,7 +13,7 @@ Ext.define('Taco.view.inventory.Index', {
         'Taco.view.inventory.QuantityEdit',
         'Taco.view.location.inventory.LocationInventory',
         'Taco.store.InventoriedProducts',
-        'Taco.view.inventory.AdvancedSearchForm'
+        'Taco.view.product.AdvancedSearchForm'
     ],
 
     typeName: 'Inventory',

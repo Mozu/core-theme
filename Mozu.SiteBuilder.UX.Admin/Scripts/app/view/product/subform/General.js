@@ -18,7 +18,8 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.shared.view.field.Image',
         'Taco.core.ux.form.SelectField',
         'Taco.store.ProductTypes',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.shared.view.field.ProductTypePickerField'
     ],
     statics: {
         sizes: {},
@@ -33,9 +34,7 @@ Ext.define('Taco.view.product.subform.General', {
     margin: '0 0 20 0',
     bodyPadding:"0",
     initComponent: function () {
-
-
-
+    
         var me = this,
             readOnly,
             requiredContent,
@@ -97,29 +96,10 @@ Ext.define('Taco.view.product.subform.General', {
         // field width when part of a two column layout
         var twoColumnFieldWidth = (fullFieldWidth / 2)  -  (defaultFieldMargin/2)
 
-        // get the data from the preloaded product type store;
-        var tempProductTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
-
-        // need to cache the data because other stores are requesting the store to be loaded and its reseting the filters;
-        var data = Ext.clone(tempProductTypeStore.data.items);
-
-        this.productTypeStore = Ext.create('Ext.data.Store', {
-            model: "Taco.model.ProductType",
-            data:data
-        });
-
-        // filter out the base productType, its not allowed to be a basis for products
-        // note: the store is set to auto clear filters so this filter should not effect other stores.
-        this.productTypeStore.filter([
-            {
-                filterFn: function (item) {
-                    return !item.get('isBase');
-                }
-            }
-        ]);
-
+        
         if (productTypeId) {
-            productTypeRecord = this.productTypeStore.getById(productTypeId);
+            productTypeRecord = this.record.productTypeRecord;
+            
             if (productTypeRecord)
                 isDigitalCredit = (productTypeRecord.get("goodsType") === 'DigitalCredit');
         }
@@ -187,22 +167,26 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             });
 
+            
 
-            this.productTypeField = Ext.widget({                
-                xtype: 'combobox',
+
+            this.productTypeField = Ext.widget({
+                xtype: 'taco-producttypepickerfield',
                 fieldLabel: 'Product Type',
                 name: 'productTypeId',
+                includeBaseProductType:false,
                 readOnly: !this.product.phantom,
                 required: true,
                 allowBlank: false,
-                editable: false,
-                queryMode: 'local',                
+                minChars: 1,
+                autoFetchDisplayValue: true,
+                autoLoad:false,
                 width: twoColumnFieldWidth,
                 margin: '0 50 0 0',
-                displayField: 'name',
-                valueField: 'id',
-                //  queryCaching: true,
-                store: this.productTypeStore,
+                // extension method that allows the combo to use a preloaded record for its display value;
+                getDisplayRecord : function() {
+                    return (me.record.productTypeRecord) ? me.record.productTypeRecord : null;
+                },
                 listeners: {
                     change: {
                         scope: this,
@@ -210,6 +194,7 @@ Ext.define('Taco.view.product.subform.General', {
                     }
                 }
             });
+
 
             this.productUsageField = Ext.widget({
                 xtype: 'selectfield',
@@ -231,7 +216,7 @@ Ext.define('Taco.view.product.subform.General', {
 
                         var prodTypeId = me.productTypeField.getValue();
                         if (prodTypeId) {
-                            var prodTypeRecord = me.productTypeStore.getById(prodTypeId);
+                            var prodTypeRecord = me.record.productTypeRecord;
                             var isDigitalCreditProdType = (prodTypeRecord.get("goodsType") === 'DigitalCredit');
                             me.setDigitalCreditDefaults(isDigitalCreditProdType, value);
                         }
@@ -367,6 +352,7 @@ Ext.define('Taco.view.product.subform.General', {
             //flex:1,
             width: defaultFieldWidth,
             name: 'price',
+            itemId: 'price',
             required: true,
             allowBlank: false,
             hideTrigger: true,
@@ -802,10 +788,9 @@ Ext.define('Taco.view.product.subform.General', {
         this.callParent(arguments);
 
         this.on('afterrender', function () {
-            
-            
 
 
+            
             
            
 
@@ -899,8 +884,10 @@ Ext.define('Taco.view.product.subform.General', {
     loadRecord: function (record) {
 
         var me = this;
-        me.updatePriceUI();        
+        me.updatePriceUI();
+        
         me.callParent(arguments);
+        
     },
 
     /**
@@ -1002,6 +989,10 @@ Ext.define('Taco.view.product.subform.General', {
             parentForm,
             product;
 
+        
+        // cache the record for the other forms in case they need it to control their layout;
+        me.record.productTypeRecord = productTypeRecord;
+
         parentForm = me.up('productsiteform, productglobalform');
 
         if (!parentForm) {
@@ -1014,7 +1005,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         // when the user changes the productType field we need to update the available productUsages based on the selected productType
         me.filterProductUsageField(productUsages);
-
+        
         //need to set the productTypeId for variations to work.
         product = parentForm.product || parentForm.record;
         product.set('productTypeId', value);
