@@ -246,6 +246,7 @@ Ext.define('Taco.view.attribute.Form', {
                         xtype: 'checkboxgroup',
                         fieldLabel: 'Attribute Type',
                         hidden: !me.record.supportsAttributeType(),
+                        disabled: !me.record.supportsAttributeType(),
                         allowBlank: !me.record.supportsAttributeType(),
                         vertical: true,
                         columns: 1,
@@ -748,6 +749,7 @@ Ext.define('Taco.view.attribute.Form', {
                 forceSelection: true,
                 allowOnlyWhitespace: !this.record.supportsValueType(),
                 hidden: !this.record.supportsValueType(),
+                disabled: !this.record.supportsValueType(),
                 readOnly: this.isEdit(),
                 store: [
                     ['ShopperEntered', 'Shopper Entered'],
