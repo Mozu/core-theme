@@ -251,8 +251,12 @@
                                         <td>
                                             <div class="label">Shipping Method</div>
                                             <div>
-                                                {% if package.shippingMethodCode == model.fulfillmentInfo.shippingMethodCode %}{{ model.fulfillmentInfo.shippingMethodName }}
-                                                {% else %}{{ package.shippingMethodCode }}
+                                                {% if package.shippingMethodCode == model.fulfillmentInfo.shippingMethodCode %}
+                                                    {{ model.fulfillmentInfo.shippingMethodName }}
+                                                {% else %}
+                                                    {% if package.shippingMethodName %}{{ package.shippingMethodName }}
+                                                    {% else %}{{ package.shippingMethodCode }}
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                         </td><td>
