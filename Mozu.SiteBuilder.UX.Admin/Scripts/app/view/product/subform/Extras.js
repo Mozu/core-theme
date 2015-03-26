@@ -54,7 +54,7 @@ Ext.define('Taco.view.product.subform.Extras', {
             extraEditor;
         
         this.productType = this.product.productTypeRecord;
-
+        
         if (!this.productType) {
             return;
         }
@@ -75,9 +75,23 @@ Ext.define('Taco.view.product.subform.Extras', {
         } else {
 
 
-            me.availableAttributes = Ext.create('Taco.store.ProductTypes', {
+            //me.availableAttributes = Ext.create('Taco.store.ProductTypes', {
+            //    data: [].concat(me.productTypeExtras.data.items)
+            //});
+
+            
+            me.availableAttributes = Ext.create('Ext.data.Store', {
+                model: 'Taco.model.ProductType',
+                remoteSort: false,
+                remoteFilter: false,
+                sorters: [{
+                    property: 'name',
+                    direction: 'ASC'
+                }],
                 data: [].concat(me.productTypeExtras.data.items)
             });
+
+            
 
             me.availableAttributes.addFilter([
                 new Ext.util.Filter({
@@ -88,7 +102,7 @@ Ext.define('Taco.view.product.subform.Extras', {
                 })
             ]);
 
-
+            
             me.adderCombo = Ext.widget({
                 xtype: 'combo',
                 store: me.availableAttributes,
@@ -98,7 +112,9 @@ Ext.define('Taco.view.product.subform.Extras', {
                 itemId: 'extraAdder',
                 displayField: 'adminName',
                 emptyText: 'Add Extra',
-
+                listConfig: {
+                    emptyText:"No extras available"
+                },
                 maxWidth: 200,
                 queryMode: 'local',
                 listeners: {
