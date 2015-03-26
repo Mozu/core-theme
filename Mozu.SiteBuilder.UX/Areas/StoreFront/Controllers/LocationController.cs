@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Net.Http;
-using Mozu.CommerceRuntime.Contracts.Carts;
-using Mozu.SiteBuilder.Mvc.ActionFilters;
+﻿using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Filters;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Web.Http;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-
-
     [ContextInitialization]
-    
+    [DataViewModeEnforcement]
     public class LocationController : BaseApiController
     {
         //

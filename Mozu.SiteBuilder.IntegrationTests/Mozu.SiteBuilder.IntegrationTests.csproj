@@ -494,7 +494,6 @@
     <Compile Include="ClientRepositories\RestServiceClientTests.cs" />
     <Compile Include="ClientRepositories\UserRepositoryTests.cs" />
     <Compile Include="Admin\Api\BirstTokenGeneratorTest.cs" />
-    <Compile Include="Handlers\ViewRestrictionHandlerTests.cs" />
     <Compile Include="Hypr\IncludeContext.cs" />
     <Compile Include="MappingTestFixture.cs" />
     <Compile Include="Mvc\CMS\CmsServiceWrapperTests.cs" />
@@ -571,6 +570,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Handlers\" />
     <Folder Include="Mvc\Providers\" />
   </ItemGroup>
   <ItemGroup>
