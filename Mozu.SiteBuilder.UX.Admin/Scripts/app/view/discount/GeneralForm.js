@@ -6,13 +6,20 @@
 Ext.define('Taco.view.discount.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-general',
+    //require: [
+    //    'Ext.tip.*',
+    //    'Ext.Button',
+    //    'Ext.window.MessageBox'
+    //],
     ui: 'subform',
     margin: '0 0 39 0',
 
     title: 'General',
 
     initComponent: function() {
-        var me = this;
+        var me = this,
+            tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp');
+
 
         this.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
@@ -51,9 +58,14 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         });
 
+        Ext.tip.QuickTipManager.init();
+
         this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'scope',
             fieldLabel: "Discount Applies To",
+            afterLabelTextTpl: new Ext.Template(
+                '<span id="scopeTooltip" class="scopeTooltip"></span>',{ compiled: true}
+                ),
             labelAlign: 'top',
             editable: false,
             allowBlank: false,
@@ -61,6 +73,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             displayField: 'text',
             valueField: 'value',
             width: 295,
+            //tooltip: tooltipStore.findRecord('key', 'discount.general.scope').get('value'),
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
@@ -69,13 +82,38 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 ]
             }),
             listeners: {
-                change: function (myself, newVal) {
+                change: function(myself, newVal) {
                     this.parentForm.setFieldVisibility();
                     this.filterFixedPriceOptionWhenOrderProduct(newVal, null);
+                },
+                render: function(cmp, opts) {
+                    var renderLabel = Ext.get('scopeTooltip'),
+                        tooltipBtn = Ext.create('Ext.Button', {
+                            itemId: 'discountScopeButton',
+                            text: '?',
+                            //tooltip: 'Click for tooltip',
+                            renderTo: renderLabel
+                        });
+                    Ext.create('Ext.tip.ToolTip', {
+                        target: tooltipBtn.getEl(),
+                        title: 'My Tip Title',
+                        html: tooltipStore.findRecord('key', 'discount.general.scope').get('value'),
+                        autoHide: false,
+                        closable: true,
+                    });
                 },
                 scope: this
             }
         });
+
+        
+        
+        //var tip = Ext.create('Ext.tip.ToolTip',
+        //    {
+        //        target: 'scope',
+        //        html: 'scoppy'
+        //    }
+        // );
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',

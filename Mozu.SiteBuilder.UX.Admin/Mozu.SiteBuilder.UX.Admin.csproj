@@ -954,6 +954,7 @@
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\store\StoreCreditsGrid.js" />
     <Content Include="Scripts\app\store\StoreCredits.js" />
+    <Content Include="Scripts\app\store\TooltipHelp.js" />
     <Content Include="Scripts\app\store\Wishlists.js" />
     <Content Include="Scripts\app\view\account\userFormModal.js" />
     <Content Include="Scripts\app\view\account\Users.js" />
