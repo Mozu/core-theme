@@ -60,33 +60,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     return FailureList2<ProductType>("Invalid id parameter passed." + e.ToString());
                 }
 
-                var resultSingleTask = _productTypeClient.GetProductType(id);
 
-                // orchestraiting the merging of the attributes data with the product type data;
-                var attTask2 =
-                    _attributeController.GetAttributesRaw(new PagingParamaters() {pageSize = 2000, startIndex = 0},
-                        new FilterCollection() {ResponseGroups = "LocalizedContent,Values"});
-                await Task.WhenAll(resultSingleTask, attTask2);
-
-                DC.ProductType prod = resultSingleTask.Result.ReadAsSync();
-
-
-
-                var atts2 = attTask2.Result.Item1.ToDictionary(x => x.AttributeFQN);
-                Mozu.ProductAdmin.Contracts.Attribute att2;
-             
-                if (prod.Properties != null)
-                {
-                    foreach (var prop in prod.Properties)
-                    {
-                        if (atts2.TryGetValue(prop.AttributeFQN, out att2))
-                        {
-                            prop.AttributeDetail = att2;
-                        }
-                    }
-                }
-
-
+                var resultSingle = await _productTypeClient.GetProductType(id);
+                DC.ProductType prod = resultSingle.ReadAsAsync().Result;
 
                 return List2(Mapper.Map<ProductType>(prod));
             }
@@ -123,33 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 /* responseGroups: */ null
                 );
 
-
-            //todo after service adds in attributemetadata
-
-            var attTask = _attributeController.GetAttributesRaw(new PagingParamaters() {pageSize = 2000, startIndex = 0}, new FilterCollection() {ResponseGroups= "LocalizedContent,Values"});
-            await Task.WhenAll(gpttask, attTask);
             var res = gpttask.Result.ReadAsSync();
-            var atts = attTask.Result.Item1.ToDictionary(x => x.AttributeFQN);
-            Mozu.ProductAdmin.Contracts.Attribute att;
-            foreach (var pt in res.Items)
-            {
-                if (pt.Properties == null)
-                {
-                    continue;
-                }
-                foreach (var prop in pt.Properties)
-                {
-                    if (atts.TryGetValue(prop.AttributeFQN, out att))
-                    {
-                        prop.AttributeDetail = att;
-                    }
-                }
-            }
-
-
-
-             
-
 
             return List2(Mapper.Map<List<ProductType>>(res.Items), (int)res.TotalCount);
         }
