@@ -810,6 +810,8 @@
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Pageable.js" />
+    <Content Include="Scripts\app\core\ux\TooltipHelper.js" />
+    <Content Include="Scripts\app\core\util\Valid.js" />
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />

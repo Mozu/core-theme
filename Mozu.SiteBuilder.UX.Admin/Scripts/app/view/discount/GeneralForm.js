@@ -6,20 +6,16 @@
 Ext.define('Taco.view.discount.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-general',
-    //require: [
-    //    'Ext.tip.*',
-    //    'Ext.Button',
-    //    'Ext.window.MessageBox'
-    //],
+    require: [
+        'Taco.core.util.Validation'
+    ],
     ui: 'subform',
     margin: '0 0 39 0',
 
     title: 'General',
 
     initComponent: function() {
-        var me = this,
-            tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp');
-
+        var me = this;
 
         this.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
@@ -60,12 +56,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         Ext.tip.QuickTipManager.init();
 
-        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', {
+        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', Taco.core.util.Validation.addTooltip('discount.general.scope', {
             name: 'scope',
             fieldLabel: "Discount Applies To",
-            afterLabelTextTpl: new Ext.Template(
-                '<span id="scopeTooltip" class="scopeTooltip"></span>',{ compiled: true}
-                ),
             labelAlign: 'top',
             editable: false,
             allowBlank: false,
@@ -73,7 +66,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
             displayField: 'text',
             valueField: 'value',
             width: 295,
-            //tooltip: tooltipStore.findRecord('key', 'discount.general.scope').get('value'),
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
@@ -83,37 +75,15 @@ Ext.define('Taco.view.discount.GeneralForm', {
             }),
             listeners: {
                 change: function(myself, newVal) {
-                    this.parentForm.setFieldVisibility();
-                    this.filterFixedPriceOptionWhenOrderProduct(newVal, null);
+                    me.parentForm.setFieldVisibility();
+                    me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
                 },
                 render: function(cmp, opts) {
-                    var renderLabel = Ext.get('scopeTooltip'),
-                        tooltipBtn = Ext.create('Ext.Button', {
-                            itemId: 'discountScopeButton',
-                            text: '?',
-                            //tooltip: 'Click for tooltip',
-                            renderTo: renderLabel
-                        });
-                    Ext.create('Ext.tip.ToolTip', {
-                        target: tooltipBtn.getEl(),
-                        title: 'My Tip Title',
-                        html: tooltipStore.findRecord('key', 'discount.general.scope').get('value'),
-                        autoHide: false,
-                        closable: true,
-                    });
+                    console.log('original renderer ' + this.fieldLabel);  //need to figure out scope issue here, perhaps convention of origRenderer so can reference me from within orig function, like me = scope;
                 },
-                scope: this
+                scope: me
             }
-        });
-
-        
-        
-        //var tip = Ext.create('Ext.tip.ToolTip',
-        //    {
-        //        target: 'scope',
-        //        html: 'scoppy'
-        //    }
-        // );
+        }));
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',
@@ -159,8 +129,8 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 }
             ]
         });
-
-        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
+        
+        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', Taco.core.util.Validation.addTooltip('discount.general.amountType', {
             name: 'amountType',
             fieldLabel: "Discount Type",
             labelAlign: 'top',
@@ -195,7 +165,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 },
                 scope: this
             }
-        });
+        }));
 
         this.amountInput = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'amount',

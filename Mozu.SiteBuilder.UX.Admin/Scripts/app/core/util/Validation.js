@@ -58,6 +58,48 @@ Ext.define('Taco.core.util.Validation', {
             return validationMsg;
         }
         return true;
+    },
+
+    addTooltip: function (tooltipKey, config) {
+        var spanLabel,
+            origRenderer = null,
+            tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp'),
+            tooltipRenderer = function (cmp, opts) {
+                if (origRenderer) {
+                    origRenderer.call(cmp, opts);
+                }
+                var renderLabel = Ext.get(tooltipKey),
+                    tooltipBtn = Ext.create('Ext.Button', {
+                        itemId: tooltipKey + '.button',
+                        text: '?',
+                        //tooltip: 'Click for tooltip',
+                        renderTo: renderLabel
+                    });
+                Ext.create('Ext.tip.ToolTip', {
+                    target: tooltipBtn.getEl(),
+                    title: 'My Tip Title',
+                    html: tooltipStore.findRecord('key', tooltipKey).get('value'),
+                    autoHide: false,
+                    closable: true,
+                });
+        };
+
+        if (!config.afterLabelTextTpl) {
+            spanLabel = '<span id="' + tooltipKey + '"></span>';
+            config.afterLabelTextTpl = new Ext.Template(
+                spanLabel, { compiled: true }
+            );
+        }
+
+        if (!config.listeners) {
+            config.listeners = {};
+        }
+        if (config.listeners.render) {
+            origRenderer = config.listeners.render;
+        }
+        config.listeners.render = tooltipRenderer;
+
+        return config;
     }
     
 
