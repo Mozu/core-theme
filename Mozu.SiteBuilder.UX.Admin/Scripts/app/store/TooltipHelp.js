@@ -16,7 +16,12 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Line item: Applies a discount to individual items.<br/><br/>Order: Applies a discount to order subtotals.'
         }, {
             key: 'discount.general.amountType',
-            value: 'Options vary by discount configuration.<br/>Percentage: Take a percentage off the price<br/>Amount: Take an amount off the price<br/>Free: Give away a free item or shipping<br/>Fixed Price: Specify a discounted price that stays constant'
+            value: 'Options vary by discount configuration.<br/><br/>Percentage: Take a percentage off the price<br/>Amount: Take an amount off the price<br/>Free: Give away a free item or shipping<br/>Fixed Price: Specify a discounted price that stays constant'
+        },
+
+        {
+            key: 'discount.conditions.minOrderAmount',
+            value: 'Order subtotal (pre-discount) must meet or exceed the specified amount.'
         }
 
    ]

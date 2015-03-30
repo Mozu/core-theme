@@ -56,7 +56,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         Ext.tip.QuickTipManager.init();
 
-        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', Taco.core.util.Validation.addTooltip('discount.general.scope', {
+        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', Taco.core.util.Validation.addTooltip('discount.general.scope', me, {
             name: 'scope',
             fieldLabel: "Discount Applies To",
             labelAlign: 'top',
@@ -130,7 +130,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             ]
         });
         
-        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', Taco.core.util.Validation.addTooltip('discount.general.amountType', {
+        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', Taco.core.util.Validation.addTooltip('discount.general.amountType', me, {
             name: 'amountType',
             fieldLabel: "Discount Type",
             labelAlign: 'top',

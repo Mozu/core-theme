@@ -344,4 +344,25 @@
     font-style: italic;
   }
 
+  .#{$vprefix}tooltip-help { 
+    padding-left: 5px;
+    font-family:mozicons;
+    font-size: px-to-rem(10);
+    font-weight:normal!important;
+    line-height:0.3;
+    vertical-align:top;
+    .#{$vprefix}icon-tooltip-help::after { 
+        content: $glyph-tooltip-help;
+        vertical-align:text-top;
+    }
+    
+  }
+
+  .#{$vprefix}tooltip-help-content { 
+      font-size:12px;
+      font-family:'SourceSansProRegular', 'helvetica', 'arial', 'verdana', 'sans-serif';
+      padding: 0px 10px 10px 10px;
+      background-color: #EAEAEA;
+  }
+
 }

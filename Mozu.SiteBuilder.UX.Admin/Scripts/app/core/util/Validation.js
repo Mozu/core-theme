@@ -60,10 +60,43 @@ Ext.define('Taco.core.util.Validation', {
         return true;
     },
 
-    addTooltip: function (tooltipKey, config) {
+    addTooltip: function (tooltipKey, scope, config) {
         var spanLabel,
+            tipContent,
             origRenderer = null,
             tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp'),
+            onClickAnywhereCloseTip = function (evt) {
+                scope.mun(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
+                if (!tipContent) {
+                    return;
+                }
+                evt.stopEvent();
+                tipContent.destroy();
+                tipContent = null;
+            },
+
+            onTooltipClick = function(btn, evt) {
+                if (!tipContent) {
+                    tipContent = Ext.create('Ext.tip.ToolTip', {
+                        target: btn.getEl(),
+                        cls: Taco.baseCSSPrefix + 'tooltip-help-content',
+                        html: tooltipStore.findRecord('key', tooltipKey).get('value'),
+                        focusOnToFront: true,
+                        autoHide: false,
+                        closable: true,
+                        listeners: {
+                            hide: function () {
+                                tipContent.destroy();
+                                tipContent = null;
+                            }
+                        }
+                    });
+                }
+                evt.stopEvent();
+                tipContent.showBy(btn);
+                scope.mon(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
+            },
+
             tooltipRenderer = function (cmp, opts) {
                 if (origRenderer) {
                     origRenderer.call(cmp, opts);
@@ -73,23 +106,13 @@ Ext.define('Taco.core.util.Validation', {
                         ui: 'link',
                         cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
                         text: '',
-                        glyph: 'XE615@mozicons', //''XE615@mozicons',
-                        handler: Ext.bind(function (btn) {
-                            console.log('clicked');
-                            
-                        }, this),
+                        handler: function(btn, evt) {
+                            onTooltipClick(btn, evt);
+                        },
                         itemId: tooltipKey + '.button',
-                        //text: '?',
-                        //tooltip: 'Click for tooltip',
+                        tooltip: 'Click for info',
                         renderTo: renderLabel
                     });
-                Ext.create('Ext.tip.ToolTip', {
-                    target: tooltipBtn.getEl(),
-                    title: 'My Tip Title',
-                    html: tooltipStore.findRecord('key', tooltipKey).get('value'),
-                    autoHide: false,
-                    closable: true,
-                });
         };
 
         if (!config.afterLabelTextTpl) {
