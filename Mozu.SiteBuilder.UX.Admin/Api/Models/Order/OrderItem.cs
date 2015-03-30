@@ -119,5 +119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         #endregion
 
         public string ParentProductCode { get; set; }
+
+        public decimal? DutyAmount { get; set; }
     }
 }
