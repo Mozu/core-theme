@@ -24,12 +24,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Filters;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [SslOnlyActionFilter]
     [ContextInitialization]
     [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
+    [DataViewModeEnforcementAttribute]
     public class CheckoutController : BaseApiController
     {
        

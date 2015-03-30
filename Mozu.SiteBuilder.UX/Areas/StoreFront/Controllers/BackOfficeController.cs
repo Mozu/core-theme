@@ -20,6 +20,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.TestData;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
@@ -32,6 +33,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     /// Since this is an administrator wormholing into storefront, this controller opts out of
     /// the normal pipeline and implements its own security checks.
     /// </summary>
+    [DataViewModeEnforcementAttribute]
     public class BackOfficeController : ApiControllerBase
     {
         private ISiteBuilderApiContext _apiContext;

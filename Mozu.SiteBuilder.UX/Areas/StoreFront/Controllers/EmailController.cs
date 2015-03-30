@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
-
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -20,17 +19,29 @@ using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.TestData;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.Email;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.SEO;
@@ -49,6 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     }
     
     [ContextInitialization]
+    [DataViewModeEnforcement]
     public class EmailController : CmsPagesController
     {
         private readonly ISitesWebApiClient _sitesWebApiClient;

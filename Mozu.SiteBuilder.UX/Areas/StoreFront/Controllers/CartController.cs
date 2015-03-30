@@ -24,11 +24,13 @@ using IOrderWebApiClient = Mozu.CommerceRuntime.Contracts.Clients.IOrderWebApiCl
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Core.Extensions;
 using Newtonsoft.Json.Serialization;
+using Mozu.SiteBuilder.UX.Filters;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [ClientCacheHeaders(ForceRevalidate = true)]
+    [DataViewModeEnforcementAttribute]
     public class CartController : BaseApiController
     {
         private readonly ICartWebApiClient _cartClient;

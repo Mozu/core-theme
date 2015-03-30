@@ -474,7 +474,6 @@
     <Compile Include="Areas\Misc\Models\Account.cs" />
     <Compile Include="Areas\Misc\Models\TagInfo.cs" />
     <Compile Include="Areas\StoreFront\Controllers\AuthController.cs" />
-    <Compile Include="Areas\StoreFront\Controllers\BlogsController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CartController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CmsPagesController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\AddressSchemesController.cs" />
@@ -493,6 +492,7 @@
     <Compile Include="Areas\StoreFront\Controllers\CheckoutController.cs" />
     <Compile Include="Filters\StorefrontErrorFilterAttribute.cs" />
     <Compile Include="Filters\InitSettingsAttribute.cs" />
+    <Compile Include="Filters\DataViewModeEnforcementAttribute.cs" />
     <Compile Include="Filters\VisitTrackingFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -505,7 +505,6 @@
     <Compile Include="Hypr\Tags\VisitTrackingPixelTag.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MessageHandlers\ViewRestrictionHandler.cs" />
     <Compile Include="Messaging\CacheItemsInvalidConsumer.cs" />
     <Compile Include="Messaging\VisitEventPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -619,6 +618,7 @@
     <Folder Include="Areas\Misc\Views\Shared\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
     <Folder Include="Hypr\Et\" />
+    <Folder Include="MessageHandlers\" />
     <Folder Include="Tags\CMS\" />
   </ItemGroup>
   <ItemGroup>

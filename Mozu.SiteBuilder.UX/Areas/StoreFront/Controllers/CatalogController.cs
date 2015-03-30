@@ -35,13 +35,14 @@ using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
+using Mozu.SiteBuilder.UX.Filters;
 using DC = Mozu.ProductRuntime.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [NoSslActionFilter]
     [ContextInitialization]
-
+    [DataViewModeEnforcementAttribute]
     public class CatalogController : BaseApiController
     {
         private readonly ISiteBuilderApiContext _apiCtx;

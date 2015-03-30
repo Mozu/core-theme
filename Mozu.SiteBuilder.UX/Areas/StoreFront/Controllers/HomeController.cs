@@ -1,33 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-//
-using Autofac;
+﻿using Autofac;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
+    [DataViewModeEnforcement]
     public class HomeController : BaseApiController
     {
-        // private INavigationRuntimeFactory _navigationRuntimeFactory;
-
-
-        public HomeController()
-        {
-
-        }
+        public HomeController() { }
 
         //
         // GET: /StoreFront/Home/

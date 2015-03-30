@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Customer.Contracts.Clients;
@@ -18,18 +15,17 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Customers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Filters;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [HotOnlyAuthActionFilter]
     [SslOnlyActionFilter]
+    [DataViewModeEnforcement]
     public class MyAccountController : BaseApiController
     {
         private const string DEFAULT_WISHLIST_NAME = "my_wishlist";
