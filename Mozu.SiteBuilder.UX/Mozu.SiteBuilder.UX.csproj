@@ -457,6 +457,7 @@
     <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
+    <Compile Include="Areas\StoreFront\ModelMapping\JObjectMapping.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPackageItem.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPickupItem.cs" />
     <Compile Include="Configuration\ApplicationConstants.cs" />
