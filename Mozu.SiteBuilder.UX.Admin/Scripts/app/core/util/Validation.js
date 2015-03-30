@@ -70,8 +70,16 @@ Ext.define('Taco.core.util.Validation', {
                 }
                 var renderLabel = Ext.get(tooltipKey),
                     tooltipBtn = Ext.create('Ext.Button', {
+                        ui: 'link',
+                        cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
+                        text: '',
+                        glyph: 'XE615@mozicons', //''XE615@mozicons',
+                        handler: Ext.bind(function (btn) {
+                            console.log('clicked');
+                            
+                        }, this),
                         itemId: tooltipKey + '.button',
-                        text: '?',
+                        //text: '?',
                         //tooltip: 'Click for tooltip',
                         renderTo: renderLabel
                     });
@@ -85,7 +93,7 @@ Ext.define('Taco.core.util.Validation', {
         };
 
         if (!config.afterLabelTextTpl) {
-            spanLabel = '<span id="' + tooltipKey + '"></span>';
+            spanLabel = '<span id="' + tooltipKey + '" class="' + Taco.baseCSSPrefix + 'tooltip-help"></span>';
             config.afterLabelTextTpl = new Ext.Template(
                 spanLabel, { compiled: true }
             );
