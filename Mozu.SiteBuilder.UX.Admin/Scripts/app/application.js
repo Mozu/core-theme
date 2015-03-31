@@ -123,7 +123,9 @@ Ext.define('Taco.Application', {
         'Ext.layout.container.Absolute',
         'Ext.form.field.Radio',
         'Taco.core.ux.form.field.SingleImageField',
-        'Ext.ux.form.MultiSelect'
+        'Ext.ux.form.MultiSelect',
+        'Taco.store.TooltipHelp',
+        'Taco.core.ux.form.TooltipSupport'
     ],
     controllers: [
         //'Analytics',
