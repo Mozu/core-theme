@@ -77,10 +77,10 @@
                     </tr>
                 {% endif %}
 
-                {% if model.taxDutyTotal > 0 %}
+                {% if model.dutyTotal > 0 %}
                 <tr>
                     <td colspan="5">Duties and Taxes</td>
-                    <td>{{ model.taxDutyTotal|currency }}</td>
+                    <td>{% filter currency %} {{ model.dutyTotal|add:model.taxTotal}} {% endfilter %}</td>
                 </tr>
                 {% else %}
                 <tr>
