@@ -62,6 +62,7 @@
                 </td>
             </tr>
             {% endif %}
+            {% endif %}
             <tr class="mz-ordersummary-shippingtotal">
               <td align="right" colspan="4">
                 <span class="mz-ordersummary-totalname">{{ labels.shippingHandling }}:</span>
