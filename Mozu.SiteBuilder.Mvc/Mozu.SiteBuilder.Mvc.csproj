@@ -501,6 +501,9 @@
     <Compile Include="Catalog\AdminCategoryTreeProvider.cs" />
     <Compile Include="Catalog\ICategoryTreeProvider.cs" />
     <Compile Include="Catalog\RuntimeCategoryTreeProvider.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\UserClaimsExtensions.cs" />
+    <Compile Include="RequestUrlFinderOuter.cs" />
     <Compile Include="CMS\CmsItemDocumentInitilizer.cs" />
     <Compile Include="CMS\CmsServiceWrapper.cs" />
     <Compile Include="CMS\DefinitionProvider.cs" />

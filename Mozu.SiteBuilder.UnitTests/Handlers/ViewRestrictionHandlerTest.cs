@@ -41,6 +41,7 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
             InitObjectUnderTest();
 
             var message = HttpRequestMessageHelpers.CreateFromContainer(MockContainer.Container);
+            MockContainer.WithRegisteredRequest(message).WithUrlFinder();
             message.RequestUri = new Uri(testcase.Route ?? "http://localhost/admin/test");
             var actionContext = MockOutMessage(message);
 
@@ -192,6 +193,17 @@ namespace Mozu.SiteBuilder.UnitTests.Handlers
                 if (ctx.GeneralSettings == null) ctx.GeneralSettings.Returns(new UX.Models.Settings.GeneralSettings());
                 ctx.GeneralSettings.IsRequiredLoginForLiveEnabled = ctx.GeneralSettings.IsRequiredLoginForStagingEnabled = false;
             });
+        }
+
+        public static AutoSubstitute WithRegisteredRequest(this AutoSubstitute container, HttpRequestMessage request)
+        {
+            container.Provide<HttpRequestMessage>(request);
+            return container;
+        }
+        public static AutoSubstitute WithUrlFinder(this AutoSubstitute container)
+        {
+            container.Provide<IRequestUrlFinderOuter>(new RequestUrlFinderOuter(container.Resolve<HttpRequestMessage>()));
+            return container;
         }
 
         public static AutoSubstitute WhenScopeIsShopper(this AutoSubstitute container)

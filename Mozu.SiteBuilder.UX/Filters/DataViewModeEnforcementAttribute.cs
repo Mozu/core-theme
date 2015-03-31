@@ -7,17 +7,16 @@ using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
@@ -57,8 +56,8 @@ namespace Mozu.SiteBuilder.UX.Filters
             // else we are in a locked-down state. Is there an admin logged in(or is our IP mozu/volusion identified)?
             if (!HasAdminCookie(adminToken) && !IsVolusionIp(MessageLoggingHelper.GetClientIpAddress(request)))
             {
-                string hostHeaderValue = GetHostHeaderValue(request);
-                return RedirectTo(CreateLoginLink(settings, request.RequestUri.PathAndQuery, hostHeaderValue));
+                string host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
+                return RedirectTo(CreateLoginLink(settings, request.RequestUri, host));
             }
 
             // now that we have an admin, is that admin authed?
@@ -68,12 +67,10 @@ namespace Mozu.SiteBuilder.UX.Filters
             return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
         }
 
-        private static string GetHostHeaderValue(HttpRequestMessage request)
+        private static string GetHostValue(IRequestUrlFinderOuter finder)
         {
-            IEnumerable<string> hostValues;
-            var hostHeaderPresent = request.Headers.TryGetValues("host", out hostValues);
-            var hostHeaderValue = hostHeaderPresent ? hostValues.First() : request.RequestUri.Host;
-            return hostHeaderValue;
+            var requestUrl = finder.GetRequestUrl();
+            return new UriBuilder(requestUrl).Uri.Host;
         }
 
         private static void CreateShopperClaimsForSite(ISiteBuilderApiContext apiContext, IAuthenticationHelper authhelper)
@@ -169,13 +166,13 @@ namespace Mozu.SiteBuilder.UX.Filters
             return !adminToken.IsNullOrEmpty();
         }
 
-        private Uri CreateLoginLink(ISettings settings, string pathAndQuery, string postbackHostValue)
+        private Uri CreateLoginLink(ISettings settings, Uri requestUri, string postbackHostValue)
         {
             var builder = CreateLinkForLoginApp(settings, "to");
             var queryDict = new Dictionary<string, string> {
                 { "scopeType", "Tenant" },
-                { "redirectUrl", pathAndQuery},
-                { "postbackUrl",  new UriBuilder("https", postbackHostValue, 80, "/auth/pants").Uri.ToString()}
+                { "redirectUrl", requestUri.PathAndQuery},
+                { "postbackUrl",  new UriBuilder(requestUri.Scheme, postbackHostValue, requestUri.Port, "/auth/pants").Uri.ToString()}
             };
             builder.Query = queryDict.ToQueryString();
             return builder.Uri;
@@ -210,33 +207,6 @@ namespace Mozu.SiteBuilder.UX.Filters
             var response = new HttpResponseMessage(HttpStatusCode.Redirect);
             response.Headers.Location = redirectUrl;
             return response;
-        }
-    }
-
-    public static class UserClaimExtensions
-    {
-        private static ConcurrentDictionary<Type, int> cachedThings = new ConcurrentDictionary<Type, int>();
-        public static bool HasBehavior<T>(this LightweightUserClaims claims) where T : BehaviorDefinition, new()
-        {
-            var tid = cachedThings.GetOrAdd(typeof(T), t => new T().Id);
-            return claims.BehaviorIds.Contains(tid);
-        }
-    }
-
-    public static class DictionaryExtensions
-    {
-        /// <summary>
-        /// creates a query string from a dictionary of string, string.  This query string is NOT prepended with '?'. This is so you can set a System.Web.Uri's Query property with this and not get duplicate '?' characters.
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public static string ToQueryString(this Dictionary<string, string> values)
-        {
-            var strings =
-                values
-                .Where(x => !x.Value.IsNullOrEmpty())
-                .Select((x, i) => string.Format("{0}{1}={2}", i == 0 ? string.Empty : "&", x.Key, HttpUtility.UrlEncode(x.Value)));
-            return string.Join(string.Empty, strings);
         }
     }
 }

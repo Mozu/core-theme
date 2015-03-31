@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.Configuration;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
-using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Security;
-using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Models;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Visit;
@@ -26,50 +19,30 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
-
-
-    public class PagingParmaters
+    public class PagingParameters
     {
         public string FacetValueFilter { get; set; }
         public int? PageSize { get; set; }
         public int? StartIndex { get; set; }
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(FacetValueFilter))
-            {
-                sb.Append("facetValueFilter=").Append(HttpUtility.UrlEncode(FacetValueFilter));
-            }
-            if (PageSize.HasValue)
-            {
-                if (sb.Length > 0)
-                {
-                    sb.Append("&");
-                }
-                sb.Append("pageSize=").Append(PageSize.Value);
-            }
-            if (StartIndex.HasValue)
-            {
-                if (sb.Length > 0)
-                {
-                    sb.Append("&");
-                }
-                sb.Append("startIndex=").Append(StartIndex.Value);
-            }
-            return sb.ToString();
+            return new Dictionary<string, string> {
+                {"facetValueFilter", FacetValueFilter},
+                {"pageSize", PageSize.ToString() },
+                {"startIndex", StartIndex.ToString() }
+            }.ToQueryString();
         }
 
-        public static PagingParmaters Create(HttpRequestMessage request)
+        public static PagingParameters Create(HttpRequestMessage request)
         {
-            PagingParmaters sp;
-            if (!request.RequestUri.TryReadQueryAs<PagingParmaters>(out sp))
+            PagingParameters sp;
+            if (!request.RequestUri.TryReadQueryAs(out sp))
             {
-                sp = new PagingParmaters();
+                sp = new PagingParameters();
             }
             return sp;
         }
     }
-
 
     public static class CmsContextExtensions
     {
@@ -94,37 +67,29 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
     } 
 
-
-    public class SortingParamaters
+    public class SortingParameters
     {
         public string Sort { get; set; }
-        public static SortingParamaters Create(HttpRequestMessage request)
+        public static SortingParameters Create(HttpRequestMessage request)
         {
-            SortingParamaters sp;
-            if (!request.RequestUri.TryReadQueryAs<SortingParamaters>(out sp))
+            SortingParameters sp;
+            if (!request.RequestUri.TryReadQueryAs(out sp))
             {
-                sp = new SortingParamaters();
+                sp = new SortingParameters();
             }
             return sp;
         }
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(Sort))
+            return new Dictionary<string, string>
             {
-                sb.Append("sort=").Append(HttpUtility.UrlEncode(Sort));
-            }
-            
-            return sb.ToString();
+                {"sort", Sort}
+            }.ToQueryString();
         }
-
     }
-
-  
-
    
-    public class PageContext : Mozu.SiteBuilder.UX.Models.IEditableContext
+    public class PageContext : IEditableContext
     {
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
@@ -133,7 +98,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
 
-        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context)
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
@@ -141,34 +106,35 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             _mobileDetectionProvider = mobileDetectionProvider;
             _context = context;
-            this.IsEditMode = _apiContext.IsEditMode;
-            IEnumerable<string> values;
 
-            HandledByProxy = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
-
-            IsSecure = IsheaderTrue(Mozu.Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
+            IsEditMode = _apiContext.IsEditMode;
+            HandledByProxy = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
+            IsSecure = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
             Now = apiContext.Now.Value;
-            if (requestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
-            {
-                this.Url = values.FirstOrDefault();
-            }
-            else
-            {
-                this.Url = requestMessage.RequestUri.ToString();
-            }
-            Sorting = SortingParamaters.Create(requestMessage);
-            Pagination = PagingParmaters.Create(requestMessage);
-            var uriBuilder = new UriBuilder(Url);
-            var host = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-            uriBuilder.Port = 443;
-            uriBuilder.Scheme = "https";
-            var secure = uriBuilder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-
-            SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : host;
-
-
+            Url = requestURLGetter.GetRequestUrl();
+            Sorting = SortingParameters.Create(requestMessage);
+            Pagination = PagingParameters.Create(requestMessage);
+            SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
         }
 
+        private static string CreateDefaultUrl(string url)
+        {
+            return GetSchemeAndServer(new UriBuilder(url).Uri);
+        }
+
+        private static string GetSchemeAndServer(Uri uri)
+        {
+            return uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+        }
+
+        private static string CreateSecureUrl(string url)
+        {
+            var uriBuilder = new UriBuilder(url);
+            var host = GetSchemeAndServer(uriBuilder.Uri);
+            uriBuilder.Port = 443;
+            uriBuilder.Scheme = "https";
+            return GetSchemeAndServer(uriBuilder.Uri);
+        }
 
         [System.Runtime.Serialization.IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
@@ -204,17 +170,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get { return _apiContext.IsDebugMode; }
         }
-        public SortingParamaters Sorting
+        public SortingParameters Sorting
         {
             get; set;
         }
 
-        public PagingParmaters Pagination
+        public PagingParameters Pagination
         {
             get; set;
         }
 
-        bool IsheaderTrue(string headerName, HttpRequestMessage requestMessage)
+        bool IsHeaderTrue(string headerName, HttpRequestMessage requestMessage)
         {
             IEnumerable<string> values;
             if (requestMessage.Headers.TryGetValues(headerName, out values))
