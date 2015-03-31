@@ -810,6 +810,8 @@
     <Content Include="Scripts\app\core\ux\mixins\RowEditable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Searchable.js" />
     <Content Include="Scripts\app\core\ux\mixins\Pageable.js" />
+    <Content Include="Scripts\app\core\ux\form\TooltipSupport.js" />
+    <Content Include="Scripts\app\core\util\Valid.js" />
     <Content Include="Scripts\app\core\ux\window\Alert.js" />
     <Content Include="Scripts\app\core\ux\window\Drawer.js" />
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
@@ -954,6 +956,7 @@
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\store\StoreCreditsGrid.js" />
     <Content Include="Scripts\app\store\StoreCredits.js" />
+    <Content Include="Scripts\app\store\TooltipHelp.js" />
     <Content Include="Scripts\app\store\Wishlists.js" />
     <Content Include="Scripts\app\view\account\userFormModal.js" />
     <Content Include="Scripts\app\view\account\Users.js" />
@@ -1839,7 +1842,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\packages\mozuadmintheme\.sencha\package\plugin.xml" />
-    <Content Include="Scripts\packages\mozuadmintheme\.sencha\package\sub-builds.xml" />
+    <Content Include="Scripts\packages\mozuadmintheme\.sencha\package\sub-builds.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\packages\mozuadmintheme\build.xml" />
     <Content Include="Scripts\packages\mozuadmintheme\docs\package.png" />
     <Content Include="Scripts\packages\mozuadmintheme\docs\screenshots\screenshot-1.png" />

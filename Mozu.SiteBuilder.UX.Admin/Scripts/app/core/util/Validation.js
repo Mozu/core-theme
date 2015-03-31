@@ -59,6 +59,5 @@ Ext.define('Taco.core.util.Validation', {
         }
         return true;
     }
-    
 
 });

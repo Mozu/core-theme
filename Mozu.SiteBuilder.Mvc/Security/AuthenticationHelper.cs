@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
             AdminAccessTokenCookieName = "sb-admin-at-" + env;
             StoreFrontAccessTokenCookieName = "sb-sf-at-" + env;
             StoreFrontRefershCookieName = "sb-sf-rt-" + env;
-            AdminRefreshCookieName = "mzrt-" + env;
+            AdminRefreshCookieName = Mozu.Core.TokenCookie.CookieRefreshToken;
 
             bool handledByProxy = IsheaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, httpRequestMessage);
 
