@@ -36,19 +36,35 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                 }
             }, {
                 dataIndex: 'stockOnHand',
-                width: 100,
+                width: 150,
                 itemId: "stockOnHand",
                 stateId: 'stockOnHand',
-                text: 'On Hand Total',
+                text: 'On Hand',
                 editor: {
                     emptyText: "On Hand",
                     msgTarget: "qtip",
                     xtype: "numberfield",
+                    fieldLabel: '',
+                    labelPad: 1,
+                    labelAlign: 'left',
+                    labelWidth: 50,
                     hideTrigger: true,
                     defaultValue: 0,
                     mouseWheelEnabled: false,
                     selectOnFocus: true,
-                    allowBlank: false
+                    allowBlank: true,
+                    onEditorShow: function (field, editor, context) {
+                        var adjustmentMode = Ext.ComponentQuery.query('#adjustmentMode')[0].getValue(),
+                            onHandTotal = context.record.get('stockOnHand') || 0,
+                            isNew = !context.record.get('locationCode') || !context.record.get('productCode');
+                        if (isNew || adjustmentMode === 'Absolute') {
+                            field.setFieldLabel('');
+                            field.setValue(onHandTotal);
+                        } else {
+                            field.setFieldLabel(onHandTotal.toString() + ' +');
+                            field.setValue('');
+                        }
+                    },
                 }
             }
         ];
