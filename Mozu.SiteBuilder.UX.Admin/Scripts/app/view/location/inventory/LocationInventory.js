@@ -294,8 +294,11 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     },
      
     onRowEditorUpdate: function (editor, context, opts) {
-        var locInvRecord = context.record;
-        locInvRecord.setAdjustmentValue();
+        var locInvRecord = context.record,
+            invMode = this.down('#adjustmentMode');
+        if (invMode) {
+            locInvRecord.set('adjustmentType', invMode.getValue());
+        }
         this.callParent(arguments);
     }
 });

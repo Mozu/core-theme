@@ -55,17 +55,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [JsonProperty(PropertyName = "adjustmentType")]
             public string AdjustmentType { get; set; }
             
-            [JsonProperty(PropertyName = "adjustmentValue")]
-            public int? AdjustmentValue { get; set; }
-            
-
-            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute", int adjustmentValue = 0)
+            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute")
             {
                 // use some automapper magic.
                 Mapper.DynamicMap<DC.LocationInventory, SuperchargedLocationInventory>(locbase, this);
                 this.LocationName = locationName;
                 this.AdjustmentType = adjustmentType;
-                this.AdjustmentValue = adjustmentValue;
             }
         }
 
@@ -144,7 +139,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                          Type = !string.IsNullOrEmpty(li.AdjustmentType) 
                             ? li.AdjustmentType
                             : DC.LocationInventoryAdjustment.TypeConst.Absolute,
-                         Value = li.AdjustmentValue.GetValueOrDefault(0) 
+                         Value = li.StockOnHand.GetValueOrDefault(0) 
                      }).ToList();
                 tasks.Add( _locationInventoryClient.UpdateLocationInventory( adjustments, locationCodeGroup.Key ) );
             });
