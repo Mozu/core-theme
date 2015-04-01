@@ -60,7 +60,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     }
     
     [ContextInitialization]
-    [DataViewModeEnforcement]
     public class EmailController : CmsPagesController
     {
         private readonly ISitesWebApiClient _sitesWebApiClient;
