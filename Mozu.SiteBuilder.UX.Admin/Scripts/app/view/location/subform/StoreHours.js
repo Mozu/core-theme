@@ -36,31 +36,31 @@ Ext.define('Taco.view.location.subform.StoreHours', {
             {
                 name: "sunday",
                 fieldLabel: 'Sunday',
-                value: hoursData.sunday.label
+                value: (hoursData.sunday) ? hoursData.sunday.label: ""
             }, {
                 name: "monday",
                 fieldLabel: 'Monday',
-                value: hoursData.monday.label
+                value: (hoursData.monday) ? hoursData.monday.label: ""
             }, {
                 name: "tuesday",
                 fieldLabel: 'Tuesday',
-                value: hoursData.tuesday.label
+                value: (hoursData.tuesday) ? hoursData.tuesday.label: ""
             }, {
                 name: "wednesday",
                 fieldLabel: 'Wednesday',
-                value: hoursData.wednesday.label
+                value: (hoursData.wednesday) ? hoursData.wednesday.label: ""
             }, {
                 name: "thursday",
                 fieldLabel: 'Thursday',
-                value: hoursData.thursday.label
+                value: (hoursData.thursday) ? hoursData.thursday.label: ""
             }, {
                 name: "friday",
                 fieldLabel: 'Friday',
-                value: hoursData.friday.label
+                value: (hoursData.friday) ? hoursData.friday.label : ""
             }, {
                 name: "saturday",
                 fieldLabel: 'Saturday',
-                value: hoursData.saturday.label
+                value: (hoursData.saturday) ? hoursData.saturday.label: ""
             }
         ];
         
@@ -73,6 +73,12 @@ Ext.define('Taco.view.location.subform.StoreHours', {
         
         for (var i = 0; i < me.items.items.length; i++) {
             var field = me.items.items[i];
+            // some data in the app is missing some of the days of the week. not sure why. hardening the code to allow for this condition;
+            
+            if (!hours[field.name] || !hours[field.name].label) {
+                //data object missing days of the week; adding them back here to allow for persistance;
+                hours[field.name] = { label : "" }
+            }
             hours[field.name].label = field.getValue();
         }
         
