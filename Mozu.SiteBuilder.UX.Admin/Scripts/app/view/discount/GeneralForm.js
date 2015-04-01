@@ -79,9 +79,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     me.parentForm.setFieldVisibility();
                     me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
                 },
-                render: function(cmp, opts) {
-                    console.log('original renderer ' + this.fieldLabel);  //need to figure out scope issue here, perhaps convention of origRenderer so can reference me from within orig function, like me = scope;
-                },
                 scope: me
             }
         }));

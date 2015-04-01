@@ -1,36 +1,94 @@
 ﻿/** 
  * @class Taco.core.ux.TooltipLabel
- * wrapper/decorator for adding tooltip support to field with fieldLabel or boxLabel.
+ * Wrapper/decorator for adding tooltip support to field with fieldLabel or boxLabel.
  * */
 Ext.define('Taco.core.ux.TooltipLabel', {
     singleton: true,
 
-    //requires: [
-    //    'Ext.Button',
-    //    'Ext.tip.ToolTip',
-    //    'Taco.store.TooltipHelp'
-    //],
+    requires: [
+        'Ext.Button',
+        'Ext.tip.ToolTip',
+        'Taco.store.TooltipHelp'
+    ],
 
     constructor: function (config) {
         this.initConfig(config);
     },
     config: {
-        test:false
+
     },
 
+    /**
+    * Wraps field config to add tooltip support with info icon.
+    *
+    * Params:
+    * ========
+    * tooltipKey = key in Taco.store.TooltipHelp
+    * scope = caller's this reference
+    * config = field or fieldcontainer with label or checkbox with boxlabel
+    *
+    * Sample:
+    * ========
+    *   this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox',
+    *       Taco.core.ux.TooltipLabel.wrapConfig('discount.general.scope', me, {
+    *        name: 'scope',
+    *        fieldLabel: "Discount Applies To",
+    *        labelAlign: 'top',
+    *        ...
+    *       })
+    *   );
+    *
+    **/
     wrapConfig: function (tooltipKey, scope, config) {
         var spanLabel = '<span id="' + tooltipKey + '" class="' + Taco.baseCSSPrefix + 'tooltip-help"></span>',
-            tipContent,
             tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp'),
+            tipContent,
 
-            onClickAnywhereCloseTip = function (evt) {
-                scope.mun(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
-                if (!tipContent) {
-                    return;
+            attachAfterLabelTpl = function() {
+                if(config.boxLabel) {
+                    config.afterBoxLabelTextTpl = new Ext.Template(
+                        spanLabel, {
+                            compiled: true
+                        }
+                    );
+                        } else {
+                            config.afterLabelTextTpl = new Ext.Template(
+                        spanLabel, { compiled: true
+                        }
+                    );
                 }
-                evt.stopEvent();
-                tipContent.destroy();
-                tipContent = null;
+            },
+
+            tooltipButtonRenderer = function(cmp, opts) {
+                var renderLabel = Ext.get(tooltipKey),
+                    tooltipBtn = Ext.create('Ext.Button', {
+                        ui: 'link',
+                        cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
+                        text: '',
+                        handler: function(btn, evt) {
+                            onTooltipClick(btn, evt);
+                        },
+                        itemId: tooltipKey + '.button',
+                        tooltip: {
+                            text: 'Click for info',
+                            cls: Taco.baseCSSPrefix + 'tooltip',
+                        },
+                        renderTo: renderLabel
+                    });
+            },
+
+            attachRenderer = function(tooltipRenderer) {
+                if (!config.listeners) {
+                    config.listeners = {};
+                }
+
+                if (!config.listeners.render) {
+                    config.listeners.render = tooltipRenderer;
+                } else if (!config.listeners.afterrender) {
+                    config.listeners.afterrender = tooltipRenderer;
+                } else {
+                    throw 'Tooltip label requires either empty render or afterrender listener.';
+                }
             },
 
             onTooltipClick = function (btn, evt) {
@@ -55,46 +113,18 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                 scope.mon(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
             },
 
-            tooltipRenderer = function (cmp, opts) {
-                var renderLabel = Ext.get(tooltipKey),
-                    tooltipBtn = Ext.create('Ext.Button', {
-                        ui: 'link',
-                        cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
-                        text: '',
-                        handler: function (btn, evt) {
-                            onTooltipClick(btn, evt);
-                        },
-                        itemId: tooltipKey + '.button',
-                        tooltip: {
-                            text: 'Click for info',
-                            cls: Taco.baseCSSPrefix + 'tooltip',
-                        },
-                        renderTo: renderLabel
-                    });
+            onClickAnywhereCloseTip = function(evt) {
+                scope.mun(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
+                if (!tipContent) {
+                    return;
+                }
+                evt.stopEvent();
+                tipContent.destroy();
+                tipContent = null;
             };
 
-        if (config.boxLabel) {
-            config.afterBoxLabelTextTpl = new Ext.Template(
-                spanLabel, { compiled: true }
-            );
-        } else {
-            config.afterLabelTextTpl = new Ext.Template(
-                spanLabel, { compiled: true }
-            );
-        }
-
-        if (!config.listeners) {
-            config.listeners = {};
-        }
-        
-        if (!config.listeners.render) {
-            config.listeners.render = tooltipRenderer;
-        } else if (!config.listeners.afterrender) {
-            config.listeners.afterrender = tooltipRenderer;
-        } else {
-            throw new Error('Tooltip label requires empty render or afterrender listener.');
-        }
-
+        attachAfterLabelTpl();
+        attachRenderer(tooltipButtonRenderer);
         return config;
     }
 
