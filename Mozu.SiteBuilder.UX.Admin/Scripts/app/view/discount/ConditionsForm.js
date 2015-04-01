@@ -150,18 +150,18 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             //this.maximumDiscountAmountInput,
             this.minimumLifetimeValueAmount,
             this.segmentsBox,
-            {
-                xtype: 'component',
-                html: 'Required item purchase',
-                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
-            },
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumQuantityRequiredProducts', me, {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Required item purchase',
+                margin: '0 0 0 0'
+            }),
             this.productsBox,
             //this.minimumProductSubtotalBeforeDiscounts,
-            {
-                xtype: 'component',
-                html: 'Required category purchase',
-                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
-            },
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumQuantityProductsRequiredInCategories', me, {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Required category purchase',
+                margin: '0 0 0 0'
+            }),
             this.categoriesBox,
             this.minimumCategorySubtotalBeforeDiscounts
         ];

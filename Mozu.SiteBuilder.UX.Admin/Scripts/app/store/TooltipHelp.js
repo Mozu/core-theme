@@ -24,10 +24,10 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.conditions.customerSegments',
             value: 'If specified, only customers within the segment(s) are eligible for the discount.'
         }, {
-            key: 'discount.conditions.productsBox',
+            key: 'discount.conditions.minimumQuantityRequiredProducts',
             value: 'Customer must purchase a minimum quantity of any of the specified items.'
         }, {
-            key: 'discount.conditions.categoryBox',
+            key: 'discount.conditions.minimumQuantityProductsRequiredInCategories',
             value: 'Customer must purchase a minimum quantity from any of the specified categories.'
         }, {
             key: 'discount.conditions.minimumCategorySubtotalBeforeDiscounts',
