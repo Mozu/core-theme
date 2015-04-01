@@ -48,7 +48,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                     labelPad: 1,
                     labelAlign: 'left',
                     labelWidth: 50,
-                    hideTrigger: true,
+                    hideTrigger: false,
                     defaultValue: 0,
                     mouseWheelEnabled: false,
                     selectOnFocus: true,
@@ -60,9 +60,11 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                         if (isNew || adjustmentMode === 'Absolute') {
                             field.setFieldLabel('');
                             field.setValue(onHandTotal);
+                            field.hideTrigger = true;
                         } else {
                             field.setFieldLabel(onHandTotal.toString() + ' +');
-                            field.setValue('');
+                            field.setValue(0);
+                            field.hideTrigger = false;
                         }
                     },
                 }

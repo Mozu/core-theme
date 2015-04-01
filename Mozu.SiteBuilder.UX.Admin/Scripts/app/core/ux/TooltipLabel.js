@@ -1,8 +1,8 @@
 ﻿/** 
- * @class Taco.core.ux.form.TooltipSupport
- * wrapper/decorator for adding tooltip support to field with label.
+ * @class Taco.core.ux.TooltipLabel
+ * wrapper/decorator for adding tooltip support to field with fieldLabel or boxLabel.
  * */
-Ext.define('Taco.core.ux.form.TooltipSupport', {
+Ext.define('Taco.core.ux.TooltipLabel', {
     singleton: true,
 
     //requires: [
@@ -19,10 +19,11 @@ Ext.define('Taco.core.ux.form.TooltipSupport', {
     },
 
     wrapConfig: function (tooltipKey, scope, config) {
-        var spanLabel,
+        var spanLabel = '<span id="' + tooltipKey + '" class="' + Taco.baseCSSPrefix + 'tooltip-help"></span>',
             tipContent,
             origRenderer = null,
             tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp'),
+
             onClickAnywhereCloseTip = function (evt) {
                 scope.mun(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
                 if (!tipContent) {
@@ -73,8 +74,11 @@ Ext.define('Taco.core.ux.form.TooltipSupport', {
                     });
             };
 
-        if (!config.afterLabelTextTpl) {
-            spanLabel = '<span id="' + tooltipKey + '" class="' + Taco.baseCSSPrefix + 'tooltip-help"></span>';
+        if (config.boxLabel) {
+            config.afterBoxLabelTextTpl = new Ext.Template(
+                spanLabel, { compiled: true }
+            );
+        } else {
             config.afterLabelTextTpl = new Ext.Template(
                 spanLabel, { compiled: true }
             );
