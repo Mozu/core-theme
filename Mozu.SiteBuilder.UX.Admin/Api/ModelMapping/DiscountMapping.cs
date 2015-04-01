@@ -125,7 +125,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     : null))
                 //todo: confirm false as default Greg Murray on 2014-01-27 
                 .ForMember(x => x.RequiresCoupon,
-                    opt => opt.ResolveUsing(x => (x.Conditions != null) ? x.Conditions.RequiresCoupon : false))
+                    opt => opt.ResolveUsing(x => (x.Conditions != null) && x.Conditions.RequiresCoupon))
                 .ForMember(x => x.CouponCode, opt => opt.ResolveUsing(x => (x.Conditions != null)
                     ? x.Conditions.CouponCode
                     : null))
@@ -168,8 +168,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     ? null
                                     : dc.Amount))
                 .ForMember(x => x.DoesNotApplyToSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToSalePrice))
-                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content.Name))
-                .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content.FriendlyDescription));
+                .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.Name : string.Empty))
+                .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.FriendlyDescription : string.Empty));
             
                 
             // To data contract

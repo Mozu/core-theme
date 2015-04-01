@@ -217,7 +217,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 this.setLoading(true);
                 return api.action('customer', 'createStorefront', payload).then(function () {
                     if (self.redirectTemplate) {
-                        window.location.pathname = 'templates/' + self.redirectTemplate;
+                        window.location.pathname = self.redirectTemplate;
                     }
                     else {
                         window.location.reload();
@@ -248,7 +248,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var signupPage = new SignupPopover();
             signupPage.formSelector = 'form[name="mz-signupform"]';
             signupPage.pageType = 'signup';
-            signupPage.redirectTemplate = 'my_account';
+            signupPage.redirectTemplate = 'myaccount';
             signupPage.init(this);
         });
         $('[data-mz-action="loginpage-submit"]').each(function(){

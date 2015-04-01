@@ -55,17 +55,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [JsonProperty(PropertyName = "adjustmentType")]
             public string AdjustmentType { get; set; }
             
-            [JsonProperty(PropertyName = "adjustmentValue")]
-            public int? AdjustmentValue { get; set; }
-            
-
-            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute", int adjustmentValue = 0)
+            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute")
             {
                 // use some automapper magic.
                 Mapper.DynamicMap<DC.LocationInventory, SuperchargedLocationInventory>(locbase, this);
                 this.LocationName = locationName;
                 this.AdjustmentType = adjustmentType;
-                this.AdjustmentValue = adjustmentValue;
             }
         }
 
@@ -95,16 +90,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 string filterString = extFilter.ToFilterString();
                 inventories = (await _productClient.GetLocationInventories(productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
 
+                if (inventories.TotalCount == 0)
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.OK,
+                        List2<DC.LocationInventory>(inventories.Items, (int) inventories.TotalCount));
+                }
                 // now do a lookup of the location names for all the location codes.
                 var locationCodes = inventories.Items.Select(i => i.LocationCode).Distinct();
                 string locationFilter = String.Join(" or ", locationCodes.Select(lc => "code eq \"" + lc + "\""));
                 locationFilter += " and (isDisabled eq true or isDisabled ne true)";
-                var locations = (await _locationWebApiClient.GetLocations(filter: locationFilter)).ReadAsSync().Items;
+                var locations =
+                    (await _locationWebApiClient.GetLocations(filter: locationFilter)).ReadAsSync().Items;
                 inventories.Items =
                     (from i in inventories.Items
-                     let loc = locations.First(l => l.Code.Equals(i.LocationCode, StringComparison.OrdinalIgnoreCase))
-                     select new SuperchargedLocationInventory(i, loc.Name)
-                    ).ToList<DC.LocationInventory>();
+                        let loc =
+                            locations.First(l => l.Code.Equals(i.LocationCode, StringComparison.OrdinalIgnoreCase))
+                        select new SuperchargedLocationInventory(i, loc.Name)
+                        ).ToList<DC.LocationInventory>();
             }
             else
             {
@@ -144,7 +146,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                          Type = !string.IsNullOrEmpty(li.AdjustmentType) 
                             ? li.AdjustmentType
                             : DC.LocationInventoryAdjustment.TypeConst.Absolute,
-                         Value = li.AdjustmentValue.GetValueOrDefault(0) 
+                         Value = li.StockOnHand.GetValueOrDefault(0) 
                      }).ToList();
                 tasks.Add( _locationInventoryClient.UpdateLocationInventory( adjustments, locationCodeGroup.Key ) );
             });

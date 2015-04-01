@@ -125,7 +125,7 @@ Ext.define('Taco.Application', {
         'Taco.core.ux.form.field.SingleImageField',
         'Ext.ux.form.MultiSelect',
         'Taco.store.TooltipHelp',
-        'Taco.core.ux.form.TooltipSupport'
+        'Taco.core.ux.TooltipLabel'
     ],
     controllers: [
         //'Analytics',

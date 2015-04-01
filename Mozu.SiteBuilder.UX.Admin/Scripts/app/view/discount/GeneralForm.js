@@ -7,7 +7,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-general',
     require: [
-        'Taco.core.ux.form.TooltipSupport'
+        'Taco.core.ux.TooltipLabel'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -57,7 +57,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
         Ext.tip.QuickTipManager.init();
 
         this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox',
-            Taco.core.ux.form.TooltipSupport.wrapConfig('discount.general.scope', me, {
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.scope', me, {
             name: 'scope',
             fieldLabel: "Applies To",
             labelAlign: 'top',
@@ -78,9 +78,6 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 change: function(myself, newVal) {
                     me.parentForm.setFieldVisibility();
                     me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
-                },
-                render: function(cmp, opts) {
-                    console.log('original renderer ' + this.fieldLabel);  //need to figure out scope issue here, perhaps convention of origRenderer so can reference me from within orig function, like me = scope;
                 },
                 scope: me
             }
@@ -132,7 +129,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
         });
         
         this.amountTypeInput = Ext.create('Ext.form.field.ComboBox',
-            Taco.core.ux.form.TooltipSupport.wrapConfig('discount.general.amountType', me, {
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.amountType', me, {
                 name: 'amountType',
                 fieldLabel: "Type",
                 labelAlign: 'top',
