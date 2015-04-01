@@ -21,7 +21,6 @@ Ext.define('Taco.core.ux.TooltipLabel', {
     wrapConfig: function (tooltipKey, scope, config) {
         var spanLabel = '<span id="' + tooltipKey + '" class="' + Taco.baseCSSPrefix + 'tooltip-help"></span>',
             tipContent,
-            origRenderer = null,
             tooltipStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.TooltipHelp'),
 
             onClickAnywhereCloseTip = function (evt) {
@@ -57,9 +56,6 @@ Ext.define('Taco.core.ux.TooltipLabel', {
             },
 
             tooltipRenderer = function (cmp, opts) {
-                if (origRenderer) {
-                    origRenderer.call(cmp, opts);
-                }
                 var renderLabel = Ext.get(tooltipKey),
                     tooltipBtn = Ext.create('Ext.Button', {
                         ui: 'link',
@@ -69,7 +65,10 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                             onTooltipClick(btn, evt);
                         },
                         itemId: tooltipKey + '.button',
-                        tooltip: 'Click for info',
+                        tooltip: {
+                            text: 'Click for info',
+                            cls: Taco.baseCSSPrefix + 'tooltip',
+                        },
                         renderTo: renderLabel
                     });
             };
@@ -87,10 +86,14 @@ Ext.define('Taco.core.ux.TooltipLabel', {
         if (!config.listeners) {
             config.listeners = {};
         }
-        if (config.listeners.render) {
-            origRenderer = config.listeners.render;
+        
+        if (!config.listeners.render) {
+            config.listeners.render = tooltipRenderer;
+        } else if (!config.listeners.afterrender) {
+            config.listeners.afterrender = tooltipRenderer;
+        } else {
+            throw new Error('Tooltip label requires empty render or afterrender listener.');
         }
-        config.listeners.render = tooltipRenderer;
 
         return config;
     }
