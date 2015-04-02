@@ -58,30 +58,31 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox',
             Taco.core.ux.TooltipLabel.wrapConfig('discount.general.scope', me, {
-            name: 'scope',
-            fieldLabel: "Discount Applies To",
-            labelAlign: 'top',
-            editable: false,
-            allowBlank: false,
-            forceSelection: true,
-            displayField: 'text',
-            valueField: 'value',
-            width: 295,
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['text', 'value'],
-                data: [
-                    ["LineItem", "LineItem"],
-                    ["Order", "Order"]
-                ]
-            }),
-            listeners: {
-                change: function(myself, newVal) {
-                    me.parentForm.setFieldVisibility();
-                    me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
-                },
-                scope: me
-            }
-        }));
+                name: 'scope',
+                fieldLabel: "Discount Applies To",
+                labelAlign: 'top',
+                editable: false,
+                allowBlank: false,
+                forceSelection: true,
+                displayField: 'text',
+                valueField: 'value',
+                width: 295,
+                store: Ext.create('Ext.data.ArrayStore', {
+                    fields: ['text', 'value'],
+                    data: [
+                        ["LineItem", "LineItem"],
+                        ["Order", "Order"]
+                    ]
+                }),
+                listeners: {
+                    change: function(myself, newVal) {
+                        me.parentForm.setFieldVisibility();
+                        me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
+                    },
+                    scope: me
+                }
+            })
+        );
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',

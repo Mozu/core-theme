@@ -340,9 +340,14 @@ Ext.define('Taco.view.location.inventory.Index', {
         }
     },
 
-    onRowEditorUpdate: function (editor, context, opts) {
-        var locInvRecord = context.record;
-        locInvRecord.set('adjustmentType', this.adjustmentMode.getValue());
+    onRowEditorUpdate: function (editor, context) {
+        var locInvRecord = context.record,
+            adjustmentType = this.adjustmentMode.getValue();
+
+        locInvRecord.set('adjustmentType', adjustmentType);
+        if (adjustmentType === 'Delta') {
+            Taco.view.location.inventory.InventoryStockColumns.removeDeltaListener(editor);
+        }
         this.callParent(arguments);
     }
 });

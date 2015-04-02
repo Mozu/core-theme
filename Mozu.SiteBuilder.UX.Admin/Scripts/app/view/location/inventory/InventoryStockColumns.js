@@ -11,7 +11,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
     config: {
         
     },
-
+    
     getInventoryStockColumns: function (primaryKeyFieldName) {
         var disableFieldOnCreate = function (field, editor, context) {
             if (!context.record.get(primaryKeyFieldName)) {
@@ -41,7 +41,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                 stateId: 'stockOnHand',
                 text: 'On Hand',
                 editor: {
-                    emptyText: "On Hand",
+                    emptyText: "add",
                     msgTarget: "qtip",
                     xtype: "numberfield",
                     fieldLabel: '',
@@ -56,20 +56,38 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                     onEditorShow: function (field, editor, context) {
                         var adjustmentMode = Ext.ComponentQuery.query('#adjustmentMode')[0].getValue(),
                             onHandTotal = context.record.get('stockOnHand') || 0,
-                            isNew = !context.record.get('locationCode') || !context.record.get('productCode');
+                            isNew = !context.record.get('locationCode') || !context.record.get('productCode'),
+
+                            setupDeltaEditor = function () {
+                                context.record.set('originalStockOnHand', onHandTotal);
+                                field.setFieldLabel(onHandTotal.toString() + ' +');
+                                context.record.set('stockOnHand', null);
+                                field.hideTrigger = false;
+                                editor.addListener('canceledit', function listenToDeltaCancelEvent(rowEditor, container) {
+                                    container.record.set('stockOnHand', container.record.get('originalStockOnHand'));
+                                    Taco.view.location.inventory.InventoryStockColumns.removeDeltaListener(rowEditor);
+                                }, this);
+                            };
+
                         if (isNew || adjustmentMode === 'Absolute') {
                             field.setFieldLabel('');
-                            field.setValue(onHandTotal);
                             field.hideTrigger = true;
                         } else {
-                            field.setFieldLabel(onHandTotal.toString() + ' +');
-                            field.setValue(0);
-                            field.hideTrigger = false;
+                            setupDeltaEditor();
                         }
                     },
                 }
             }
         ];
+    },
+
+    removeDeltaListener: function(rowEditor) {
+        var deltaListeners = Ext.Array.filter(rowEditor.events.canceledit.listeners, function (item) {
+            return item.fn.name === 'listenToDeltaCancelEvent';
+        });
+        Ext.Array.each(deltaListeners, function (deltaItem) {
+            Ext.Array.remove(rowEditor.events.canceledit.listeners, deltaItem);  //removeListener didn't work
+        });
     }
 
 });
