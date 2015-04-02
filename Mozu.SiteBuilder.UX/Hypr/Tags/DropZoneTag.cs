@@ -338,7 +338,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             var scopeString = arguments.GetValueOrDefault("scope", () => DetermineZoneScopeDefault(arguments));
             ZoneScope scope;
-            if (Enum.TryParse(scopeString, out scope))
+            if (Enum.TryParse(scopeString, true, out scope))
             {
                 return scope;
             }
