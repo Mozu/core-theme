@@ -183,7 +183,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var dict = new Dictionary<string, object> { { "model", pc } };
             var nodes = getTemplateFunction(template).Nodes;
 
-            return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, new[] { "model" }) };
+            return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, dict.Keys) };
         }
     }
 }
