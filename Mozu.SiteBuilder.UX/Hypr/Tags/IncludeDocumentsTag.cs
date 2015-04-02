@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     /// 
     /// view= optional entity view to use 
     /// </summary>
-    [ParserNodes.DescriptionAttribute("tbd")]
+    [ParserNodes.Description("tbd")]
     [Name("include_documents")]
     public class IncludeDocumentsTag : SimpleTagBaseAsync
     {
