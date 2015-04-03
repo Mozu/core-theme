@@ -45,16 +45,13 @@ Ext.define('Taco.core.ux.TooltipLabel', {
             tipContent,
 
             attachAfterLabelTpl = function() {
-                if(config.boxLabel) {
+                if (config.boxLabel) {
                     config.afterBoxLabelTextTpl = new Ext.Template(
-                        spanLabel, {
-                            compiled: true
-                        }
+                        spanLabel, { compiled: true }
                     );
-                        } else {
-                            config.afterLabelTextTpl = new Ext.Template(
-                        spanLabel, { compiled: true
-                        }
+                } else {
+                    config.afterLabelTextTpl = new Ext.Template(
+                        spanLabel, { compiled: true }
                     );
                 }
             },

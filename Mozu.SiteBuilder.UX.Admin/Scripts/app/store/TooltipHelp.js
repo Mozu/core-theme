@@ -10,7 +10,7 @@ Ext.define('Taco.store.TooltipHelp', {
     data: [
         {
             key: 'discount.general.create',
-            value: 'This page is intended to show the default layout of the page before any field selections are made.\\n\\nIn reality, the Conditions and Limitations sections will not show up until selections are made.'
+            value: 'This page is intended to show the default layout of the page before any field selections are made.<br/><br/>In reality, the Conditions and Limitations sections will not show up until selections are made.'
         }, {
             key: 'discount.general.scope',
             value: 'Line item: Applies a discount to individual items.<br/><br/>Order: Applies a discount to order subtotals.'
@@ -33,8 +33,14 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.conditions.minimumCategorySubtotalBeforeDiscounts',
             value: 'Subtotal of all items from specified categories (pre-discount) must meet or exceed the specified amount.'
         }, {
+            key: 'discount.conditions.minimumLifetimeValueAmount',
+            value: 'If specified, only customers whose lifetime value meets or exceeds this amount are eligible for the discount. '
+        }, {
             key: 'discount.criteria.appliesToSalePrice',
             value: 'When checked, the discount applies to the product\'s sale price, if it exists. When unchecked, either the discount applies to the product\'s base price or the sale price is honored (whichever is better for the customer).'
+        }, {
+            key: 'discount.criteria.excludeLineItemDiscounts',
+            value: 'You can also use the "Restrict discounts on this product" setting on individual products to exclude them from discounts. '
         }, {
             key: 'discount.limitations.maximumDiscountValuePerRedemption',
             value: 'A redemption occurs each time a discount is applied. If your discount is a buy one, get two free, each two free items is one redemption. This field limits the maximum combined value of the two free items.'

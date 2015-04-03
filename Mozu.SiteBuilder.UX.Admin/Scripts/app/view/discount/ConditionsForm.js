@@ -114,18 +114,20 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             })
         );
 
-        this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'minimumLifetimeValueAmount',
-            hidden: this.record.get('scope') !== 'Order',
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            forcePrecision: true,
-            unitAtEnd: false,
-            hideTrigger: true,
-            width: 600,
-            fieldLabel: 'Minimum Lifetime Value Amount',
-            emptyText: 'No Customer Value limit',
-            minValue: 0
-        });
+        this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.CurrencyField',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumLifetimeValueAmount', me, {
+                name: 'minimumLifetimeValueAmount',
+                hidden: this.record.get('scope') !== 'Order',
+                currencyCode: Taco.app.context.getCurrent().currencyCode,
+                forcePrecision: true,
+                unitAtEnd: false,
+                hideTrigger: true,
+                width: 600,
+                fieldLabel: 'Minimum Lifetime Value Amount',
+                emptyText: 'No Customer Value limit',
+                minValue: 0
+            })
+        );
 
         this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
             name: 'oneTimeUsePerShopper',
