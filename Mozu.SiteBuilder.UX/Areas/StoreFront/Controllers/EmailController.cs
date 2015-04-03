@@ -191,7 +191,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
                 vr.ViewName = emailTemplate.Template;
-                var doc = (DC.Document) vr.Model;
+                var doc = JsonConvert.DeserializeObject<DC.Document>(vr.Model.ToString());
                 if (doc != null)
                 {
                     doc.Set("page_type_definition", id);
