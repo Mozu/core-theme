@@ -167,7 +167,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof (Order))
                 {
                     var str = JsonConvert.SerializeObject(MergeEmailParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
-                    model = Convert(str, emailTypeInfo);    
+                    model = await Convert(str, emailTypeInfo);    
                 }
                 
                 else
