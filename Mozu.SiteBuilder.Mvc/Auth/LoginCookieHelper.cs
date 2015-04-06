@@ -26,7 +26,6 @@ namespace Mozu.SiteBuilder.Mvc.Auth
             authHelper.SaveAdminAccessToken(formAccessToken);
 
             formRedirectUrl = string.IsNullOrEmpty(formRedirectUrl) ? defaultRedirectUrl : formRedirectUrl;
-
             return CreateRedirectTo(request, formRedirectUrl);
         }
 
@@ -41,13 +40,8 @@ namespace Mozu.SiteBuilder.Mvc.Auth
         private static Uri GenerateRedirectUriFromUnknownPath(HttpRequestMessage request, string formRedirectUrl)
         {
             var incomingUri = new Uri(formRedirectUrl, UriKind.RelativeOrAbsolute);
-            var resolvedUri = incomingUri.IsAbsoluteUri ? incomingUri : new Uri(EnsureSlash(formRedirectUrl), UriKind.RelativeOrAbsolute);
+            var resolvedUri = incomingUri.IsAbsoluteUri ? incomingUri : new Uri(request.RequestUri, incomingUri);
             return resolvedUri;
-        }
-
-        private static string EnsureSlash(string formRedirectUrl)
-        {
-            return formRedirectUrl.StartsWith("/") ? formRedirectUrl : "/" + formRedirectUrl;
         }
     }
 }
