@@ -29,6 +29,7 @@ Ext.define('Taco.view.actionmanagement.Index', {
                 itemId: 'configfield',
                 name: 'expression',
                 height: 500,
+                resizable: true,
                 showGutter: true,
                 mode: 'json',
                 theme: 'ace/theme/monokai'

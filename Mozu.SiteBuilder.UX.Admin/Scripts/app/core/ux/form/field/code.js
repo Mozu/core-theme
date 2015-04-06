@@ -9,7 +9,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
     requires: [
     ],
     componentLayout: 'taco-codefieldlayout',
-   
+    theme: "ace/theme/textmate",
     // height: 300,
     //  width: 800,
     minHeight: 300,
@@ -50,7 +50,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
             if (me.readOnly) {
                 me.editor.setReadOnly(true);
             }
-            me.editor.setTheme("ace/theme/textmate");
+            me.editor.setTheme(me.theme);
 
             me.editor.getSession().setMode("ace/mode/" + me.mode);
 
