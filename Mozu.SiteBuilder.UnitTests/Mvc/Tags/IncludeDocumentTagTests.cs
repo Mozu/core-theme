@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
 {
     [Category("Hypr")]
+    [Ignore("test is not finished yet")]
     [TestFixture]
     public class IncludeDocumentTagTests : TemplateTestBase
     {
