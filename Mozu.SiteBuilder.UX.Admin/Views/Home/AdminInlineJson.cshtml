@@ -1,4 +1,4 @@
-﻿@using System.Diagnostics
+﻿<p></p>@using System.Diagnostics
 @using System.Web.Configuration
 @using Mozu.Core.Api.Contracts
 @using Mozu.SiteBuilder.Mvc
@@ -33,6 +33,8 @@
                                  testHarnessMode = Context.Request["testHarnessMode"] == "true",
                                  adminRelPath = Url.Content("~"),
                                  cdnPrefix = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost"),
+                                 SiteBuilderHelperToggle = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("SiteBuilderHelpToggle"),
+                                 DrupalLink = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("drupalserver"),
                                  User = new
                                             {
                                                 id = user.Id, behaviors, taContext,
