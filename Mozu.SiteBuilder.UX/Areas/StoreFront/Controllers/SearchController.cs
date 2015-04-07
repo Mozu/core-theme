@@ -151,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             };
 
-            return View(searchPageType, pc.ToJObject());
+            return View(searchPageType, pc);
             
             //if (pc.TotalCount > 0)
             //{
