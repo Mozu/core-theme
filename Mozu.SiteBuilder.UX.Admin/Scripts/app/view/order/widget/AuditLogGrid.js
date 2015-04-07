@@ -72,7 +72,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
                 },
                 scope: me
             },
-            listeners: {
+            /*listeners: {
                 'load': function (store, records, options) {
                     // TODO - right here determine how to handle the extra data. IE the data before "Create Order" event.
                     if (records[0].subject !== 'CreateOrder') {
@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
                         store.data = records.slice(i);
                     }
                 }
-            }
+            }*/
         });
 
         // Get the columns for this grid!
