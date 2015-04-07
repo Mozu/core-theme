@@ -53,8 +53,8 @@ namespace Mozu.SiteBuilder.UX.Filters
                 return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
             }
 
-            // else we are in a locked-down state. Is there an admin logged in(or is our IP mozu/volusion identified)?
-            if (!HasAdminCookie(adminToken) && !IsVolusionIp(MessageLoggingHelper.GetClientIpAddress(request)))
+            // else we are in a locked-down state. Is there an admin logged in?
+            if (!HasAdminCookie(adminToken))
             {
                 string host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
                 return RedirectTo(CreateLoginLink(settings, request.RequestUri, host));
@@ -88,12 +88,6 @@ namespace Mozu.SiteBuilder.UX.Filters
             };
         }
 
-        private bool IsVolusionIp(string ip)
-        {
-            IPAddress casted;
-            if (IPAddress.TryParse(ip, out casted)) return _mozuInternalIps.Value.Includes(casted);
-            return false;
-        }
         private static Uri CreateUnauthLink(ISettings settings)
         {
             return CreateLinkForLoginApp(settings, "unauthorized/index").Uri;
