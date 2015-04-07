@@ -143,7 +143,7 @@ Ext.define('Taco.view.category.Form', {
         } 
 
         // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-        this.record.set("categroryImages", uploadedImages);
+        this.record.set("categoryImages", uploadedImages);
         return true;
     }
 });
