@@ -129,7 +129,7 @@ Ext.define('Taco.shared.view.field.Image', {
             itemSelector: 'li.item'
         });
 
-        this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.imageView.refresh, this.imageView);
+        this.imageView.mon(Taco.core.util.UploadManager, 'complete', this.onImageUploadComplete, this, this.imageView);
 
         this.uploadAction = Ext.widget({
             xtype: 'button',
@@ -537,6 +537,17 @@ Ext.define('Taco.shared.view.field.Image', {
 
     onAssociatorSave: function (associator, selectedRecords) {
         this.selectedImages.add(selectedRecords);
+    },
+
+    onImageUploadComplete: function (uploadedFile) {
+        var existingImages = this.getValue(),
+            match = Ext.Array.findBy(existingImages, function(existingImg) {
+                return existingImg.cmsId === uploadedFile.document.get('cmsId');
+            });
+        if (match) {
+            match.isUploaded = true;
+        }
+        this.imageView.refresh();
     },
 
     onDestroy: function () {
