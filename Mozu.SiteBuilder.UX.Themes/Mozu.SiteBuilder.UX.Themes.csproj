@@ -1993,12 +1993,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OctoPack.2.1.3\build\OctoPack.targets'))" />
-    <Error Condition="!Exists('..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets'))" />
   </Target>
   <Import Project="..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets')" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets" Condition="Exists('..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets')" />
+  
 </Project>

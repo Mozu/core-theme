@@ -6,6 +6,9 @@
 Ext.define('Taco.view.discount.CriteriaForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-criteria',
+    requires: [
+        'Taco.core.ux.TooltipLabel'
+    ],
     ui: 'subform',
     margin: '0 0 39 0',
 
@@ -46,19 +49,21 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             checked: !this.record.get('includeAllProducts')
         });
 
-        this.appliesToSaleProducts = Ext.widget({
-            xtype: 'checkbox',
-            name: 'appliesToSalePrice',
-            boxLabel: 'Applies to On Sale Products',
-            width: 300,
-            value: this.record.get('doesNotApplyToSalePrice') !== true,
-            listeners: {
-                change: function (field, newValue) {
-                    this.record.set('doesNotApplyToSalePrice', !newValue);
-                },
-                scope: this
-            }
-        });
+        this.appliesToSaleProducts = Ext.widget(
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.appliesToSalePrice', me, {
+                xtype: 'checkbox',
+                name: 'appliesToSalePrice',
+                boxLabel: 'Applies to On Sale Products',
+                width: 300,
+                value: this.record.get('doesNotApplyToSalePrice') !== true,
+                listeners: {
+                    change: function (field, newValue) {
+                        this.record.set('doesNotApplyToSalePrice', !newValue);
+                    },
+                    scope: this
+                }
+            })
+        );
 
 
         
@@ -366,27 +371,28 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             fieldLabel: 'Maximum Quantity Per Redemption'
         });
 
-        this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer', {
-            width: 600,
-            margin: '10 0 0 0',
-            fieldLabel: "Exclude products that already have:",
-            items: [
-                {
-                    xtype: 'checkbox',
-                    name: 'excludeItemsWithExistingProductDiscounts',
-                    boxLabel: 'Product Discounts',
-                    width: 300,
-                    value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
-                }, {
-                    xtype: 'checkbox',
-                    name: 'excludeItemsWithExistingShippingDiscounts',
-                    boxLabel: 'Shipping Discounts',
-                    width: 300,
-                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
-                }
-                
-            ]
-        })
+        this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.excludeLineItemDiscounts', me, {
+                width: 600,
+                margin: '10 0 0 0',
+                fieldLabel: "Exclude products that already have:",
+                items: [
+                    {
+                        xtype: 'checkbox',
+                        name: 'excludeItemsWithExistingProductDiscounts',
+                        boxLabel: 'Product Discounts',
+                        width: 300,
+                        value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
+                    }, {
+                        xtype: 'checkbox',
+                        name: 'excludeItemsWithExistingShippingDiscounts',
+                        boxLabel: 'Shipping Discounts',
+                        width: 300,
+                        value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
+                    }
+                ]
+            })
+        );
 
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,

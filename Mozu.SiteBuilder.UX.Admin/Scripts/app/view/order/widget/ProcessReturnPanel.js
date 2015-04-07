@@ -489,7 +489,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                                 returnIds: [this.record.getId()],
                                 actionName: "Create"
                             },
-                            enabledWhen: ["Created", "Authorized", "Pending", "Received","Refunded"]
+                            enabledWhen: ["Created", "Authorized", "Pending", "Received", "Refunded", "Restocked", "Closed"]
                             
                         }, {
                             text: "RMA Authorized",
@@ -497,14 +497,14 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                                 returnIds: [this.record.getId()],
                                 actionName: "Authorize"
                             },
-                            enabledWhen: ["Authorized", "Pending", "Received", "Refunded"]
+                            enabledWhen: ["Authorized", "Pending", "Received", "Refunded", "Restocked", "Closed"]
                         }, {
                             text: "RMA Received",
                             jsonData: {
                                 returnIds: [this.record.getId()],
                                 actionName: "Receive"
                             },
-                            enabledWhen: ["Received"]
+                            enabledWhen: ["Received", "Restocked"]
                         }, {
                             text: "RMA Refunded",
                             jsonData: {

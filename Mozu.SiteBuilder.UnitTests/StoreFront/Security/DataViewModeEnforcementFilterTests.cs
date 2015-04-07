@@ -20,7 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 
-namespace Mozu.SiteBuilder.UnitTests.Handlers
+namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
 {
     [TestFixture]
     [Category("Live/Pending permissions")]

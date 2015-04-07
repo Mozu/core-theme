@@ -7,7 +7,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-general',
     require: [
-        'Taco.core.ux.form.TooltipSupport'
+        'Taco.core.ux.TooltipLabel'
     ],
     ui: 'subform',
     margin: '0 0 39 0',
@@ -16,6 +16,16 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
     initComponent: function() {
         var me = this;
+
+        if (!this.isEdit()) {
+            //could be moved to form form if more than one requirement for tooltip on create label
+            this.header = Taco.core.ux.TooltipLabel.wrapConfig('discount.general.create', me, {
+                xtype: 'fieldcontainer',
+                fieldLabel: this.createTitle,
+                labelCls: Taco.baseCSSPrefix + 'header-create-label',
+                margin: '20 0 40 0'
+            });
+        }
 
         this.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
@@ -57,34 +67,32 @@ Ext.define('Taco.view.discount.GeneralForm', {
         Ext.tip.QuickTipManager.init();
 
         this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox',
-            Taco.core.ux.form.TooltipSupport.wrapConfig('discount.general.scope', me, {
-            name: 'scope',
-            fieldLabel: "Discount Applies To",
-            labelAlign: 'top',
-            editable: false,
-            allowBlank: false,
-            forceSelection: true,
-            displayField: 'text',
-            valueField: 'value',
-            width: 295,
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['text', 'value'],
-                data: [
-                    ["LineItem", "LineItem"],
-                    ["Order", "Order"]
-                ]
-            }),
-            listeners: {
-                change: function(myself, newVal) {
-                    me.parentForm.setFieldVisibility();
-                    me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
-                },
-                render: function(cmp, opts) {
-                    console.log('original renderer ' + this.fieldLabel);  //need to figure out scope issue here, perhaps convention of origRenderer so can reference me from within orig function, like me = scope;
-                },
-                scope: me
-            }
-        }));
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.scope', me, {
+                name: 'scope',
+                fieldLabel: "Discount Applies To",
+                labelAlign: 'top',
+                editable: false,
+                allowBlank: false,
+                forceSelection: true,
+                displayField: 'text',
+                valueField: 'value',
+                width: 295,
+                store: Ext.create('Ext.data.ArrayStore', {
+                    fields: ['text', 'value'],
+                    data: [
+                        ["LineItem", "LineItem"],
+                        ["Order", "Order"]
+                    ]
+                }),
+                listeners: {
+                    change: function(myself, newVal) {
+                        me.parentForm.setFieldVisibility();
+                        me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
+                    },
+                    scope: me
+                }
+            })
+        );
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',
@@ -132,7 +140,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
         });
         
         this.amountTypeInput = Ext.create('Ext.form.field.ComboBox',
-            Taco.core.ux.form.TooltipSupport.wrapConfig('discount.general.amountType', me, {
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.amountType', me, {
                 name: 'amountType',
                 fieldLabel: "Discount Type",
                 labelAlign: 'top',

@@ -11,7 +11,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
     config: {
         
     },
-
+    
     getInventoryStockColumns: function (primaryKeyFieldName) {
         var disableFieldOnCreate = function (field, editor, context) {
             if (!context.record.get(primaryKeyFieldName)) {
@@ -35,54 +35,59 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                     return value || 0;
                 }
             }, {
-                dataIndex: 'stockOnHandIncrement',
-                width: 100,
-                itemId: "stockOnHandIncrement",
-                stateId: 'stockOnHandIncrement',
-                text: 'Add',
-                editor: {
-                    emptyText: "Increment",
-                    msgTarget: "qtip",
-                    xtype: "numberfield",
-                    mouseWheelEnabled: false,
-                    selectOnFocus: true,
-                    allowBlank: true,
-                    onEditorShow: disableFieldOnCreate
-                }
-            }, {
-                dataIndex: 'stockOnHandDecrement',
-                width: 100,
-                itemId: "stockOnHandDecrement",
-                stateId: 'stockOnHandDecrement',
-                text: 'Reduce',
-                editor: {
-                    emptyText: "Decrement",
-                    msgTarget: "qtip",
-                    xtype: "numberfield",
-                    fieldStyle: "text-align:right;",
-                    mouseWheelEnabled: false,
-                    selectOnFocus: true,
-                    allowBlank: true,
-                    onEditorShow: disableFieldOnCreate
-                }
-            }, {
                 dataIndex: 'stockOnHand',
-                width: 100,
+                width: 150,
                 itemId: "stockOnHand",
                 stateId: 'stockOnHand',
-                text: 'On Hand Total',
+                text: 'On Hand',
                 editor: {
-                    emptyText: "On Hand",
+                    emptyText: "add",
                     msgTarget: "qtip",
                     xtype: "numberfield",
-                    hideTrigger: true,
+                    fieldLabel: '',
+                    labelPad: 1,
+                    labelAlign: 'left',
+                    labelWidth: 50,
+                    hideTrigger: false,
                     defaultValue: 0,
                     mouseWheelEnabled: false,
                     selectOnFocus: true,
-                    allowBlank: false
+                    allowBlank: true,
+                    onEditorShow: function (field, editor, context) {
+                        var adjustmentMode = Ext.ComponentQuery.query('#adjustmentMode')[0].getValue(),
+                            onHandTotal = context.record.get('stockOnHand') || 0,
+                            isNew = !context.record.get('locationCode') || !context.record.get('productCode'),
+
+                            setupDeltaEditor = function () {
+                                context.record.set('originalStockOnHand', onHandTotal);
+                                field.setFieldLabel(onHandTotal.toString() + ' +');
+                                context.record.set('stockOnHand', null);
+                                field.hideTrigger = false;
+                                editor.addListener('canceledit', function listenToDeltaCancelEvent(rowEditor, container) {
+                                    container.record.set('stockOnHand', container.record.get('originalStockOnHand'));
+                                    Taco.view.location.inventory.InventoryStockColumns.removeDeltaListener(rowEditor);
+                                }, this);
+                            };
+
+                        if (isNew || adjustmentMode === 'Absolute') {
+                            field.setFieldLabel('');
+                            field.hideTrigger = true;
+                        } else {
+                            setupDeltaEditor();
+                        }
+                    },
                 }
             }
         ];
+    },
+
+    removeDeltaListener: function(rowEditor) {
+        var deltaListeners = Ext.Array.filter(rowEditor.events.canceledit.listeners, function (item) {
+            return item.fn.name === 'listenToDeltaCancelEvent';
+        });
+        Ext.Array.each(deltaListeners, function (deltaItem) {
+            Ext.Array.remove(rowEditor.events.canceledit.listeners, deltaItem);  //removeListener didn't work
+        });
     }
 
 });

@@ -132,12 +132,18 @@ Ext.define('Taco.view.category.Form', {
     
     // Called before the updateTask of Taco.core.ux.form.Form is executed; Return false to cancel the save; Can be used to manipulate the record data prior to saving;
     beforeSave: function () {
-        var me = this,
-            form = me.getForm(),
+        var uploadedImages = [],
+            form = this.getForm(),
             categoryImagesField = form.findField("categoryImages");
         
+        if (categoryImagesField) {
+            uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
+                return img.isUploaded;
+            });
+        } 
+
         // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-        me.record.set("categroryImages", categoryImagesField.getValue());
+        this.record.set("categoryImages", uploadedImages);
         return true;
     }
 });

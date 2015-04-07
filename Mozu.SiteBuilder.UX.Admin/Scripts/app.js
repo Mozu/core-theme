@@ -58,6 +58,7 @@ Ext.application({
         'SiteSelection',
         'Redirects',
         'SiteRoutes',
-        'BusinessIntelligence'
+        'BusinessIntelligence',
+        'ActionManagement'
     ],
 });

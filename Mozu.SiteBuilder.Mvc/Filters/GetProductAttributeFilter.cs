@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NDjango.Interfaces;
+using NDjango.FiltersCS.List;
 
 namespace Mozu.SiteBuilder.Mvc.Filters
 {
@@ -12,31 +13,25 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     [Name("get_product_attribute")]
     public class GetProductAttributeFilter : IFilterWithContext
     {
-        public object Perform(object value)
-        {
-            return null;
-        }
+        static readonly FindWhereFilter findWhere = new FindWhereFilter();
+        static readonly IFilterWithContext prop = new NDjango.Filters.PropFilter();
 
-        public object PerformWithParam(object value, object parameter)
-        {
-            return null;
-        }
-
+        public object Perform(object value) { return null; }
+        public object PerformWithParam(object value, object parameter) { return null; }
         public object DefaultValue { get{return null;} }
+
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {
-            var attributes = GetAttributesFrom(value, context);
-            var findWhereFilter = new NDjango.FiltersCS.List.FindWhereFilter();
+            var attributes = GetAttributesFrom(value, context);  
             var attrName = parameter.First().ToString();
-            var matchingProductProperty = findWhereFilter.PerformWithParamAndContext(attributes, new []{"attributeFQN", attrName}, context); // this will firstordefault, so returning null is fine.
+            var matchingProductProperty = findWhere.PerformWithParamAndContext(attributes, new []{"attributeFQN", attrName}, context); // this will firstordefault, so returning null is fine.
             return matchingProductProperty;
         }
 
         private static IEnumerable<object> GetAttributesFrom(object value, IContext context)
         {
-            var propFilter = new NDjango.Filters.PropFilter() as IFilterWithContext;
-            var properties = propFilter.PerformWithParam(value, "properties") as IEnumerable<object> ?? Enumerable.Empty<object>();
-            var options = propFilter.PerformWithParam(value, "options") as IEnumerable<object> ?? Enumerable.Empty<object>();
+            var properties = prop.PerformWithParam(value, "properties") as IEnumerable<object> ?? Enumerable.Empty<object>();
+            var options = prop.PerformWithParam(value, "options") as IEnumerable<object> ?? Enumerable.Empty<object>();
             return properties.Concat(options);
         }
     }

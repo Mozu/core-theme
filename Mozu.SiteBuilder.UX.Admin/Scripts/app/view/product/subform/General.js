@@ -1117,16 +1117,18 @@ Ext.define('Taco.view.product.subform.General', {
     },
 
     beforeSave: function () {
-        var me = this,
-            form = me.getForm(),
+        var uploadedImages = [],
+            form = this.getForm(),
             productImagesField = form.findField("productImages");
 
         if (productImagesField) {
-            // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-            me.record.set("productImages", productImagesField.getValue());
-        } else {
-            me.record.set("productImages", []);
+            uploadedImages = Ext.Array.filter(productImagesField.getValue(), function(img) {
+                return img.isUploaded;
+            });
         }
+
+        // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+        this.record.set("productImages", uploadedImages);
         return true;
     }
 

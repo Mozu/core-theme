@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var view = _viewEngine.FindModuleView("widgets/" + def.DisplayTemplate);
             if (view != null)
             {
-                var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd.ToJObject() });
+                var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd });
                 await view.AsyncRender(viewContext, tw);
                 RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }

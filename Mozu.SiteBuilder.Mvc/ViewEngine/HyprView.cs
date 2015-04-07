@@ -58,27 +58,25 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         private static void AddClientApiContextData(Dictionary<string, object> requestContext, ClientApiContext clientApiContext)
         {
-            requestContext["apiContext"] = clientApiContext.ToJObject();
+            requestContext["apiContext"] = clientApiContext;
         }
 
         private static void AddNavigationContextData(Dictionary<string, object> requestContext, NavigationContext navigationContext)
         {
-            requestContext["navigation"] = navigationContext.ToJObject();
+            requestContext["navigation"] = navigationContext;
         }
 
         private static void AddSiteContextData(Dictionary<string, object> requestContext, SiteContext siteContext)
         {
-            var jSiteContext = siteContext.ToJObject();
-            requestContext["siteContext"] = jSiteContext;
-            requestContext["themeSettings"] = jSiteContext["themeSettings"];
-            requestContext["labels"] = jSiteContext["labels"];
+            requestContext["siteContext"] = siteContext;
+            requestContext["themeSettings"] = siteContext.ThemeSettings;
+            requestContext["labels"] = siteContext.Labels;
         }
 
         private static void AddPageContextData(Dictionary<string, object> requestContext, PageContext pageContext)
         {
-            var jPageContext = pageContext.ToJObject();
-            requestContext["pageContext"] = jPageContext;
-            requestContext["user"] = jPageContext["user"];
+            requestContext["pageContext"] = pageContext;
+            requestContext["user"] = pageContext.User;
         }
 
         private static void AddViewContextData(Dictionary<string, object> requestContext, HyprViewContext viewContext)

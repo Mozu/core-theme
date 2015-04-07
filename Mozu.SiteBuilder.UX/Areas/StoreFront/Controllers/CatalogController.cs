@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiCtx = apiCtx;
         }
 
-        [CodeBlockViewActionFilter(AfterSlotId = "storefront.filters.product.after")]
+       // [CodeBlockViewActionFilter(AfterSlotId = "storefront.filters.product.after")]
         [HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode)
         {
