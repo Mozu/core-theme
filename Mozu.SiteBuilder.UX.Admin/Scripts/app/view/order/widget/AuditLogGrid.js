@@ -71,6 +71,23 @@ Ext.define('Taco.view.order.widget.AuditLogGrid', {
                     read: '/admin/app/order/changemessages?orderId=' + this.orderId
                 },
                 scope: me
+            },
+            listeners: {
+                'load': function (store, records, options) {
+                    // TODO - right here determine how to handle the extra data. IE the data before "Create Order" event.
+                    if (records[0].subject !== 'CreateOrder') {
+                        var found = false;
+                        var i = 1;
+                        while (!found) {
+                            if (records[i].subject === 'CreateOrder') {
+                                found = true;
+                            }
+                            ++i;
+                        }
+
+                        store.data = records.slice(i);
+                    }
+                }
             }
         });
 
