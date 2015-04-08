@@ -503,16 +503,14 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             ]
         });
 
-        if (paymentData[0].newValue.toLowerCase() === 'new') {
-            itemsList.push({
-                flex: 1,
-                padding: '2 2',
-                data: paymentData[0],
-                tpl: [
-                    '<div>Payment Type: {paymentType}</div>'
-                ]
-            });
-        }
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: paymentData[0],
+            tpl: [
+                '<div>Payment Type: {paymentType}</div>'
+            ]
+        });
 
         itemsList.push({
             flex: 1,
@@ -527,12 +525,27 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                             isNegative,
                             amt;
                             
-                        if (v.newValue.toLowerCase() === 'collected') {
-                            amt = v.amountCollected;
-                        } else if (v.newValue.toLowerCase() === 'new' || v.newValue.toLowerCase() === 'pending' || v.newValue.toLowerCase() === 'voided') {
-                            amt = v.amountRequested;
-                        } else {
-                            amt = v.amountCredited;
+                        switch(v.newValue.toLowerCase()) {
+                            case 'collected':
+                            {
+                                amt = v.amountCollected;
+                                break;
+                            }
+                            case 'new':
+                            // FALL THROUGH ALL OF THESE
+                            case 'pending':
+                            case 'voided':
+                            case 'declined':
+                            case 'authorized':
+                            {
+                                amt = v.amountRequested;
+                                break;
+                            }
+                            default:
+                            {
+                                amt = v.amountCredited;
+                                break;
+                            }
                         }
 
                         amt = amt - 0;
