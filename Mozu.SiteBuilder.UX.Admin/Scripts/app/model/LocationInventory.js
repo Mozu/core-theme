@@ -52,7 +52,13 @@ Ext.define('Taco.model.LocationInventory', {
         "defaultValue": 0,
         "type": "int",
         "useNull": true,
-         persist: true
+        persist: true
+    }, {
+        "name": "originalStockOnHand",
+        "defaultValue": 0,
+        "type": "int",
+        "useNull": true,
+         persist: false
     }, {
         "name": "productCode",
         "type": "string",

@@ -17,6 +17,16 @@ Ext.define('Taco.view.discount.GeneralForm', {
     initComponent: function() {
         var me = this;
 
+        if (!this.isEdit()) {
+            //could be moved to form form if more than one requirement for tooltip on create label
+            this.header = Taco.core.ux.TooltipLabel.wrapConfig('discount.general.create', me, {
+                xtype: 'fieldcontainer',
+                fieldLabel: this.createTitle,
+                labelCls: Taco.baseCSSPrefix + 'header-create-label',
+                margin: '20 0 40 0'
+            });
+        }
+
         this.nameInput = Ext.create('Ext.form.field.Text', {
             name: 'name',
             fieldLabel: "Name",
@@ -81,7 +91,8 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 },
                 scope: me
             }
-        }));
+            })
+        );
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',
@@ -183,7 +194,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                         } else {
                             me.amountInput.setValue(this.amountInput.value);
                         }
-                        
+
                         me.amountInput.clearInvalid();
                         // notify the parent form. limitations will need to adjust to the value;
                         // see this.maxDiscountOrderValue

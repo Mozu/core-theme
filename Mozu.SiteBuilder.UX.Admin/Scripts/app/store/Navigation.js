@@ -387,7 +387,7 @@ Ext.define('Taco.store.Navigation', {
                     },
                     {
                         "id": "usersRoles",
-                        "label": "Users and Roles",
+                        "label": "Users &amp; Roles",
                         "items": [
                             {
                                 "id": "users",
@@ -422,9 +422,19 @@ Ext.define('Taco.store.Navigation', {
                         "address": "entities",
                         "visible": !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
                     }, {
-                        "id": "provisioning",
-                        "label": "Structure",
-                        "address": "provisioning"
+                        "id": "sysAdmin",
+                        "label": "System Administration",
+                        "items": [
+                            {
+                                "id": "provisioning",
+                                "label": "Catalog And Site Structure",
+                                "address": "provisioning"
+                            }, {
+                                "id": "actionmanagement",
+                                "label": "Action Management",
+                                "address": "actionmanagement"
+                            }
+                        ]
                     }
                 ]
             }, {

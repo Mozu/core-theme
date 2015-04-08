@@ -371,27 +371,28 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             fieldLabel: 'Maximum Quantity Per Redemption'
         });
 
-        this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer', {
-            width: 600,
-            margin: '10 0 0 0',
-            fieldLabel: "Exclude products that already have:",
-            items: [
-                {
-                    xtype: 'checkbox',
-                    name: 'excludeItemsWithExistingProductDiscounts',
-                    boxLabel: 'Product Discounts',
-                    width: 300,
-                    value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
-                }, {
-                    xtype: 'checkbox',
-                    name: 'excludeItemsWithExistingShippingDiscounts',
-                    boxLabel: 'Shipping Discounts',
-                    width: 300,
-                    value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
-                }
-                
-            ]
-        })
+        this.excludeLineItemDiscounts = Ext.create('Ext.form.FieldContainer',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.excludeLineItemDiscounts', me, {
+                width: 600,
+                margin: '10 0 0 0',
+                fieldLabel: "Exclude products that already have:",
+                items: [
+                    {
+                        xtype: 'checkbox',
+                        name: 'excludeItemsWithExistingProductDiscounts',
+                        boxLabel: 'Product Discounts',
+                        width: 300,
+                        value: this.record.get('excludeItemsWithExistingProductDiscounts') == true
+                    }, {
+                        xtype: 'checkbox',
+                        name: 'excludeItemsWithExistingShippingDiscounts',
+                        boxLabel: 'Shipping Discounts',
+                        width: 300,
+                        value: this.record.get('excludeItemsWithExistingShippingDiscounts') == true
+                    }
+                ]
+            })
+        );
 
         this.productCategoryContainer = Ext.create('Ext.container.Container', {
             width: 600,
