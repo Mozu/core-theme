@@ -23,6 +23,16 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     currentFilterString: '{}',
 
     /**
+     * The characters to use for delimiting field from value 
+     */
+    keyValueDelimiter: ':',
+
+    /**
+     * Used to cached adv search field names for comparison to user entered keys
+     */
+    advSearchFields: null,
+
+    /**
      * @cfg {String} [defaultFieldName="keyword"]
      * The key or fieldName to use for textfield input without a corresponding field in the form.
      * When JSON data is sent to the server, this will be used as the key for what the server
@@ -452,7 +462,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The object containing field keys and values.
      */
     parseTextFilterValue: function (field) {
-        var value = field.getValue(),
+        var me = this,
+            value = field.getValue(),
             jsonValue = {},
             values,
             lastKey;
@@ -460,30 +471,52 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
         if (!Ext.isEmpty(value)) {
             values = value.split(' ');
 
-            Ext.Array.each(values, function (item, index, all) {
-                var colonIndex = item.indexOf(':'),
-                    key,
-                    val;
+            Ext.Array.each(values, function (item, index) {
+                var colonIndex = item.indexOf(me.keyValueDelimiter),
+                    key = (colonIndex !== -1) ? Ext.String.createVarName(item.substr(0, colonIndex)) : 'keyword',
+                    val,
+                    isKeywordSearch = (colonIndex === -1 || !me.isFieldSupported(key)),
 
-                if (colonIndex !== -1) {
-                    key = Ext.String.createVarName(item.substr(0, colonIndex));
-                    val = item.substr(colonIndex + 1);
-                    lastKey = key;
+                    addKeyword = function () {
+                        if (index === 0) {
+                            key = lastKey = 'keyword';
+                            jsonValue[key] = item;
+                        } else if (!Ext.isEmpty(lastKey)) {
+                            jsonValue[lastKey] = Ext.String.trim([jsonValue[lastKey], item].join(' '));
+                        }
+                    },
 
-                    jsonValue[key] = val;
+                    addKeyValue = function () {
+                        val = item.substr(colonIndex + me.keyValueDelimiter.length);
+                        lastKey = key;
+                        jsonValue[key] = val;
+                    };
+
+                if (isKeywordSearch) {
+                    addKeyword();
                 } else {
-                    if (index === 0) {
-                        key = lastKey = 'keyword';
-                        jsonValue[key] = item;
-                    } else if (!Ext.isEmpty(lastKey)) {
-                        jsonValue[lastKey] = Ext.String.trim([jsonValue[lastKey], item].join(' '));
-                    }
+                    addKeyValue();
                 }
             }, this);
         }
 
         return jsonValue;
     },
+
+    isFieldSupported: function (key) {
+        var match;
+        if (!this.advancedForm || !key) {
+            return !(!key);
+        }
+        if (!this.advSearchFields) {
+            this.advSearchFields = Ext.Array.pluck(this.advancedForm.query('[name]'), 'name');
+        }
+        match = Ext.Array.findBy(this.advSearchFields, function (fld) {
+            return (fld.toLowerCase() === key.toLowerCase());
+        });
+        return match !== null;
+    },
+
 
     /**
      * Set the values in the advanced filters dialog's form fields.
@@ -529,7 +562,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
 
     serializeFilterValue:function (values) {
-        var simpleValue = [];
+        var me = this,
+            simpleValue = [];
 
         Ext.Object.each(values, function (fieldName, rawValue) {
             if (!Ext.isEmpty(rawValue)) {                
@@ -537,9 +571,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                     simpleValue.push(rawValue);
                 } else {
                     if (Ext.isDate(rawValue)) {
-                        simpleValue.push([fieldName, Ext.Date.format(rawValue, 'c')].join(':'));
+                        simpleValue.push([fieldName, Ext.Date.format(rawValue, 'c')].join(me.keyValueDelimiter));
                     } else {
-                        simpleValue.push([fieldName, rawValue].join(':'));
+                        simpleValue.push([fieldName, rawValue].join(me.keyValueDelimiter));
                     }
                 }
             }
