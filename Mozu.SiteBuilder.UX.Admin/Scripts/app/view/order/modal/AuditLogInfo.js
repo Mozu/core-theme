@@ -514,49 +514,47 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             });
         }
 
-        if (paymentData[0].newValue.toLowerCase() !== 'voided') {
-            itemsList.push({
-                flex: 1,
-                padding: '2 2',
-                data: paymentData[0],
-                tpl: [
-                    '<div>Amount: {[this.getCurrencyFormat(values)]}</div>',
-                    {
-                        // This needs to take the newValue into effect.
-                        getCurrencyFormat: function(v) {
-                            var retVal,
-                                isNegative,
-                                amt;
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: paymentData[0],
+            tpl: [
+                '<div>Amount: {[this.getCurrencyFormat(values)]}</div>',
+                {
+                    // This needs to take the newValue into effect.
+                    getCurrencyFormat: function(v) {
+                        var retVal,
+                            isNegative,
+                            amt;
                             
-                            if (v.newValue.toLowerCase() === 'collected') {
-                                amt = v.amountCollected;
-                            } else if (v.newValue.toLowerCase() === 'new' || v.newValue.toLowerCase() === 'pending') {
-                                amt = v.amountRequested;
-                            } else {
-                                amt = v.amountCredited;
-                            }
-
-                            amt = amt - 0;
-
-                            if (amt < 0) {
-                                isNegative = true;
-                                amt = -amt;
-                            }
-                            amt = Taco.app.context.getCurrent().formatCurrency(amt);
-
-
-                            if (isNegative) {
-                                retVal = '(' + amt + ')';
-                            } else {
-                                retVal = amt;
-                            }
-
-                            return retVal;
+                        if (v.newValue.toLowerCase() === 'collected') {
+                            amt = v.amountCollected;
+                        } else if (v.newValue.toLowerCase() === 'new' || v.newValue.toLowerCase() === 'pending' || v.newValue.toLowerCase() === 'voided') {
+                            amt = v.amountRequested;
+                        } else {
+                            amt = v.amountCredited;
                         }
+
+                        amt = amt - 0;
+
+                        if (amt < 0) {
+                            isNegative = true;
+                            amt = -amt;
+                        }
+                        amt = Taco.app.context.getCurrent().formatCurrency(amt);
+
+
+                        if (isNegative) {
+                            retVal = '(' + amt + ')';
+                        } else {
+                            retVal = amt;
+                        }
+
+                        return retVal;
                     }
-                ]
-            });
-        }
+                }
+            ]
+        });
 
         itemsList.push({
             flex: 1,
