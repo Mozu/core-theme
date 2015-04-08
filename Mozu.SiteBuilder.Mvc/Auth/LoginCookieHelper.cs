@@ -40,8 +40,12 @@ namespace Mozu.SiteBuilder.Mvc.Auth
         private static Uri GenerateRedirectUriFromUnknownPath(HttpRequestMessage request, string formRedirectUrl)
         {
             var incomingUri = new Uri(formRedirectUrl, UriKind.RelativeOrAbsolute);
-            var resolvedUri = incomingUri.IsAbsoluteUri ? incomingUri : new Uri(request.RequestUri, incomingUri);
-            return resolvedUri;
+           
+            if (!incomingUri.IsAbsoluteUri && formRedirectUrl != null && formRedirectUrl.Length != 0 && formRedirectUrl[0] != '/')
+            {
+                incomingUri =  new Uri("/"+ formRedirectUrl, UriKind.Relative);
+            }
+            return incomingUri;
         }
     }
 }
