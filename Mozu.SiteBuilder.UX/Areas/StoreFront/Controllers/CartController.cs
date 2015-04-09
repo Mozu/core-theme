@@ -25,6 +25,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Core.Extensions;
 using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.UX.Filters;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -38,6 +39,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICookieProvider _cookieProvider;
         private readonly ILocationRuntimeWebApiClient _locationClient;
         private readonly ISettings _settings;
+        private Lazy<JsonSerializerSettings> _cartSerializer = new Lazy<JsonSerializerSettings>(() => new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
         public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings)
         {
@@ -90,23 +92,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var cartVM = CreateCartWithLocations(cart, locations);
-            var jCart = cartVM.ToJObject(new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+            var jCart = cartVM.ToJObject(_cartSerializer.Value);
 
             if (error != null)
             {
-                var messages = new JArray();
-                if (PageContext.IsDebugMode)
-                {
-                    throw error;
-                }
-                else
-                {
-                    messages.Add(new { message = error.Message }.ToJObject());
-                }
-                jCart.Add("messages", messages);
+                if (PageContext.IsDebugMode) throw error;
+                jCart.Add("messages", new JArray(new { message = error.Message }.ToJObject(_cartSerializer.Value)));
             }
 
-            return View("cart", jCart); // Mapper.Map<VMCart>(cart));
+            return View("cart", jCart);
         }
 
         private UX.Models.StoreFront.Commerce.Cart CreateCartWithLocations(Cart cart, LocationCollection locations)
@@ -147,7 +141,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 // add visit id to UserClaims bag for this call.
                 var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(apiContext => {
-                    apiContext.UserClaims = apiContext.UserClaims.Copy<LightweightUserClaims>();
+                    apiContext.UserClaims = apiContext.UserClaims.Copy();
                     apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
                 });
                 order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();

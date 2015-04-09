@@ -117,20 +117,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
             //and properties.endDate gt {1} and properties.beginDate lt {1} 
 
-            var res = (dynamic)(await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex));
-            
-            
+            var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex);
        
-            object  model = null;
-            if (res.HasException)
+            object model = null;
+            if (res.HasException && sbContext.IsEditMode)
             {
-                if (sbContext.IsEditMode)
-                {
-                    throw (Exception)res.ReadException();
-                }
-              
+                throw res.ReadException();
             }
-            else if ( res.ResponseMessage.IsSuccessStatusCode)
+
+            if ( res.ResponseMessage.IsSuccessStatusCode)
             {
                model = res.ReadAsSync();
             }

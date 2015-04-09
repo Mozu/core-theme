@@ -13,10 +13,10 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'This page is intended to show the default layout of the page before any field selections are made.<br/><br/>In reality, the Conditions and Limitations sections will not show up until selections are made.'
         }, {
             key: 'discount.general.scope',
-            value: 'Line item: Applies a discount to individual items.<br/><br/>Order: Applies a discount to order subtotals.'
+            value: '<b>Line item:</b> Applies a discount to individual items.<br/><br/><b>Order:</b> Applies a discount to order subtotals.'
         }, {
             key: 'discount.general.amountType',
-            value: 'Options vary by discount configuration.<br/><br/>Percentage: Take a percentage off the price<br/>Amount: Take an amount off the price<br/>Free: Give away a free item or shipping<br/>Fixed Price: Specify a discounted price that stays constant'
+            value: 'Options vary by discount configuration.<br/><br/><b>Percentage:</b> Take a percentage off the price<br/><b>Amount:</b> Take an amount off the price<br/><b>Free:</b> Give away a free item or shipping<br/><b>Fixed Price:</b> Specify a discounted price that stays constant'
         }, {
             key: 'discount.conditions.minOrderAmount',
             value: 'Order subtotal (pre-discount) must meet or exceed the specified amount.'

@@ -94,9 +94,24 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                         target: btn.getEl(),
                         cls: Taco.baseCSSPrefix + 'tooltip-help-content',
                         html: tooltipStore.findRecord('key', tooltipKey).get('value'),
+                        padding: '0 5 5 5',
                         focusOnToFront: true,
                         autoHide: false,
-                        closable: true,
+                        closable: false,
+                        dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'top',
+                            margin: '5 5 0 0',
+                            minHeight: 10,
+                            items: [
+                                '->',
+                                {
+                                    xtype: 'button',
+                                    text: '',
+                                    glyph: 'XE011@mozicons'
+                                }
+                            ]
+                        }],
                         listeners: {
                             hide: function () {
                                 tipContent.destroy();

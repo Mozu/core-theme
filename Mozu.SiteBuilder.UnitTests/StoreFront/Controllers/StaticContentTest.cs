@@ -14,7 +14,7 @@ using Mozu.Core;
 using System.Net.Http;
 
 
-namespace Mozu.SiteBuilder.UnitTests.Handlers
+namespace Mozu.SiteBuilder.UnitTests.StoreFront.Controllers
 {
     [TestFixture]
     [Category("StaticContent")]

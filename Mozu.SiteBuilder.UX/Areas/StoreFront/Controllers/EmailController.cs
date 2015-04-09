@@ -206,12 +206,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTemplate.Template, model));
         }
 
-        private JObject MergeEmailParams(IEnumerable<KeyValuePair<String, String>> query, object model)
+        private JObject MergeEmailParams(IEnumerable<KeyValuePair<string, string>> query, object model)
         {
 
             var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
 
-            JObject emailParams = JsonConvert.DeserializeObject<JObject>(z.Value);
+            var emailParams = JsonConvert.DeserializeObject<JObject>(z.Value, CaseInsensitiveJsonSerializerSettings.Default);
 
             var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
             returnObj.Merge(emailParams);
@@ -340,9 +340,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             if (eti == null || eti.ModelType == null)
             {
-                return JsonConvert.DeserializeObject(json);
+                return JsonConvert.DeserializeObject(json, CaseInsensitiveJsonSerializerSettings.Default);
             }
-            var obj = JsonConvert.DeserializeObject(json, eti.ModelType);
+            var obj = JsonConvert.DeserializeObject(json, eti.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
             var order = obj as Order;
             if (order != null)
             {
