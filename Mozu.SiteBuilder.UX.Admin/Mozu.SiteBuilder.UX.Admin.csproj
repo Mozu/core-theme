@@ -769,6 +769,7 @@
     <Content Include="Scripts\app\core\data\cache\ProxyCache.js" />
     <Content Include="Scripts\app\core\util\Common.js" />
     <Content Include="Scripts\app\core\util\ExceptionWhiner.js" />
+    <Content Include="Scripts\app\core\util\Filter.js" />
     <Content Include="Scripts\app\core\util\Validation.js" />
     <Content Include="Scripts\app\core\ux\action\DeleteMenuItem.js" />
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
@@ -2113,6 +2114,15 @@
     <None Include="Tests\Automation\junitToTrx.xslt" />
     <Content Include="Tests\Automation\launcher-common.js" />
     <Content Include="Tests\Automation\phantomjs-launcher.js" />
+    <Content Include="Tests\teams\Catalog\index.html" />
+    <Content Include="Tests\teams\Catalog\testSuite.js" />
+    <Content Include="Tests\teams\Commerce\index.html" />
+    <Content Include="Tests\teams\Commerce\testSuite.js" />
+    <Content Include="Tests\teams\Common\index.html" />
+    <Content Include="Tests\teams\Common\testSuite.js" />
+    <Content Include="Tests\teams\DX\index.html" />
+    <Content Include="Tests\teams\DX\testSuite.js" />
+    <Content Include="Tests\unit\core\util\Filter.t.js" />
     <Content Include="Tests\customunit\core\ux\form\field\BaseImageField.t.js" />
     <Content Include="Tests\customunit\view\product\subforms\allow-changing-product-code.t.js" />
     <Content Include="Tests\customunit\view\settings\shipping\Zones-t.js" />

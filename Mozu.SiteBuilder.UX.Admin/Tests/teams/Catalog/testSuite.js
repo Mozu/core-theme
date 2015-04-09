@@ -59,6 +59,15 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                 expanded: false,
                 items: [
                     {
+                        group: 'Filtering',
+                        expanded: false,
+                        items: [
+                            {
+                              url: relPath + "unit/core/util/Filter.t.js",
+                              title: "Filter convert to JSON"
+                            }
+                        ]
+                    },{
                         group: 'Location',
                         expanded: false,
                         items: [

@@ -13,7 +13,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
     requires: [
-        'Taco.core.ux.form.field.QuickFilter'
+        'Taco.core.ux.form.field.QuickFilter',
+        'Taco.core.util.Filter'
     ],
 
     /**
@@ -462,45 +463,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The object containing field keys and values.
      */
     parseTextFilterValue: function (field) {
-        var me = this,
-            value = field.getValue(),
-            jsonValue = {},
-            values,
-            lastKey;
-
-        if (!Ext.isEmpty(value)) {
-            values = value.split(' ');
-
-            Ext.Array.each(values, function (item, index) {
-                var colonIndex = item.indexOf(me.keyValueDelimiter),
-                    key = (colonIndex !== -1) ? Ext.String.createVarName(item.substr(0, colonIndex)) : 'keyword',
-                    val,
-                    isKeywordSearch = (colonIndex === -1 || !me.isFieldSupported(key)),
-
-                    addKeyword = function () {
-                        if (index === 0) {
-                            key = lastKey = 'keyword';
-                            jsonValue[key] = item;
-                        } else if (!Ext.isEmpty(lastKey)) {
-                            jsonValue[lastKey] = Ext.String.trim([jsonValue[lastKey], item].join(' '));
-                        }
-                    },
-
-                    addKeyValue = function () {
-                        val = item.substr(colonIndex + me.keyValueDelimiter.length);
-                        lastKey = key;
-                        jsonValue[key] = val;
-                    };
-
-                if (isKeywordSearch) {
-                    addKeyword();
-                } else {
-                    addKeyValue();
-                }
-            }, this);
-        }
-
-        return jsonValue;
+        return Taco.core.util.Filter.toJSON(field.getValue(), this.getAdvSearchFieldNames(), this.keyValueDelimiter);
     },
 
     isFieldSupported: function (key) {
@@ -515,6 +478,18 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
             return (fld.toLowerCase() === key.toLowerCase());
         });
         return match !== null;
+    },
+
+    //returns names of each adv search field and caches result.
+    getAdvSearchFieldNames: function() {
+        if (this.advSearchFields)
+            return this.advSearchFields;
+
+        if (!this.advancedForm) {
+            return [];
+        }
+        this.advSearchFields = Ext.Array.pluck(this.advancedForm.query('[name]'), 'name');
+        return this.advSearchFields;
     },
 
 
