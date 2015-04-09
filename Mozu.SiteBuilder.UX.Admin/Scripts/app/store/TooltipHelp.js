@@ -9,9 +9,6 @@ Ext.define('Taco.store.TooltipHelp', {
     remoteFilter: false,    
     data: [
         {
-            key: 'discount.general.create',
-            value: 'This page is intended to show the default layout of the page before any field selections are made.<br/><br/>In reality, the Conditions and Limitations sections will not show up until selections are made.'
-        }, {
             key: 'discount.general.scope',
             value: '<b>Line item:</b> Applies a discount to individual items.<br/><br/><b>Order:</b> Applies a discount to order subtotals.'
         }, {
