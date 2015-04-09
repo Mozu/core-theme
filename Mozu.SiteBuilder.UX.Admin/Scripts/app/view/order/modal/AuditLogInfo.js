@@ -548,10 +548,6 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                             }
                         }
 
-                        if (v.paymentType.indexOf('StoreCredit') >= 0) {
-                            amt = v.amountCredited;
-                        }
-
                         amt = amt - 0;
 
                         if (amt < 0) {
