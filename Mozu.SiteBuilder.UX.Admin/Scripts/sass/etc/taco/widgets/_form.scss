@@ -357,6 +357,11 @@
     font-weight:normal!important;
     line-height:0.3;
     vertical-align:top;
+
+    a {
+        text-decoration: none;
+    }
+
     .#{$vprefix}icon-tooltip-help::after { 
         content: $glyph-tooltip-help;
         vertical-align:text-top;
