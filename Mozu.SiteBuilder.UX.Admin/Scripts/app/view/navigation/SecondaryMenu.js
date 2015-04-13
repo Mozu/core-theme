@@ -63,15 +63,16 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             }
         },
 
-        //{
-        //    xtype: 'button',
-        //    ui: 'link',
-        //    scale: 'medium',
-        //    text: 'Help',
-        //    handler: function () {
-        //        Taco.app.refreshStyle();
-        //    }
-        //},
+        {
+           xtype: 'button',
+           ui: 'link',
+           scale: 'medium',
+           text: 'Help',
+           hidden: Taco.siteBuilderHelperToggle !== 'on',
+           handler: function () { 
+                window.open(Taco.drupalLink);
+           }
+        },
 
         {
             xtype: 'button',
