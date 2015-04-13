@@ -17,7 +17,6 @@ Ext.define('Taco.model.Product', {
         'Taco.model.BundledProduct',
         'Taco.store.ProductTypes'
     ],
-    // requiredStores: ['Taco.store.ProductTypes'],
     statics: {
         publishBulk: function (cfg) {
             this.doPublish(Ext.apply({}, {
@@ -76,6 +75,10 @@ Ext.define('Taco.model.Product', {
             name: "productTypeId",
             type: "int",
             useNull: true
+        },
+        {
+            name: "productTypeName",
+            type:"string"
         },
         {
             name: 'productUsage',

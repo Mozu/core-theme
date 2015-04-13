@@ -749,7 +749,8 @@ Ext.define('Taco.view.website.Index', {
       
             this.pageSettings.removeAll(true);
 
-            this.iframe.getWin().location.href = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme+'&cb='+ new Date().getTime());
+            this.setIFrameLocation(config);
+
             Taco.core.StateManager.addState('website/page' + config.url);
 
             if (config.view === 'page') {
@@ -775,6 +776,19 @@ Ext.define('Taco.view.website.Index', {
         }
 
     },
+
+    setIFrameLocation: function(config) {
+
+        var url = Ext.String.urlAppend(config.url, 'iseditmode=true&SBTHEME=' + this.selectedTheme+'&cb='+ new Date().getTime()),
+            emailQueryParams = window.emailParams;
+
+        if (emailQueryParams) {
+            url += '&queryParams=' + JSON.stringify(emailQueryParams);
+        }
+
+        this.iframe.getWin().location.href = url;
+    },
+
     setActiveButton: function(item) {
         var cardButtons = {
             0: '#pageEditorTabButton',
@@ -801,8 +815,6 @@ Ext.define('Taco.view.website.Index', {
                 return;
             }
         }
- 
-        // this.url = this.url.substring(0,1) === '/' ? this.url : '/' + this.url;
        
         this.navigate({ url: this.url });
         

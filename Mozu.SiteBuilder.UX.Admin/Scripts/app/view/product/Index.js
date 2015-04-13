@@ -27,27 +27,27 @@ Ext.define('Taco.view.product.Index', {
         requiresContextOfType: ['m', 'c', 's']
     },
 
-    statics: {
+    //statics: {
 
-        // this logic will preload the product types store befofre loading this view;
-        factory: function (cfg, callback, scope) {
-            cfg = Ext.apply(cfg,
-            {
-                productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes')
-            });
-            Ext.create('Taco.core.ux.form.Tasks', {
-                finalCallback: function () {
-                    callback.call(scope || this, Ext.create('Taco.view.product.Index', cfg));
-                },
-                tasks: [
-                    {
-                        storeToLoad: cfg.productTypeStore
-                    }
-                ],
-                autoExecute: true
-            });
-        }
-    },
+    //    // this logic will preload the product types store befofre loading this view;
+    //    factory: function (cfg, callback, scope) {
+    //        cfg = Ext.apply(cfg,
+    //        {
+    //            productTypeStore: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes')
+    //        });
+    //        Ext.create('Taco.core.ux.form.Tasks', {
+    //            finalCallback: function () {
+    //                callback.call(scope || this, Ext.create('Taco.view.product.Index', cfg));
+    //            },
+    //            tasks: [
+    //                {
+    //                    storeToLoad: cfg.productTypeStore
+    //                }
+    //            ],
+    //            autoExecute: true
+    //        });
+    //    }
+    //},
 
 
 
@@ -122,16 +122,11 @@ Ext.define('Taco.view.product.Index', {
                 hidden: true
             },
             {
-                dataIndex: "productTypeId",
-                stateId: 'productTypeId',
+                dataIndex: "productTypeName",
+                stateId: 'productTypeName',
                 text: 'Product Type',
-                hidden: true,
                 sortable: false,
-                renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
-                    view.productTypeStore = view.productTypeStore || Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
-                    var ptRecord = view.productTypeStore.getById(value);
-                    return ptRecord ? ptRecord.data.name : '';
-                }
+                hidden: true
              },
             {
                 dataIndex: "productUsage",

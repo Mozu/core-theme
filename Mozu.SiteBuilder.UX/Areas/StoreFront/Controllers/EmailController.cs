@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,34 +10,55 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
-
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.TestData;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.Email;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.SEO;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    public class ReturnEmail : Mozu.CommerceRuntime.Contracts.Returns.Return
+    {
+        public bool isMock { get; set; }
+        public Mozu.CommerceRuntime.Contracts.Orders.Order order { get; set; }
+    }
+    
     [ContextInitialization]
     public class EmailController : CmsPagesController
     {
@@ -45,6 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
+        private IOrderWebApiClient _orderWebApiClient;
 
         static EmailController()
         {
@@ -52,28 +75,33 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                    {
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Returns.Return),
+                                               ModelType = typeof (ReturnEmail),
                                                Topic = Topics.ReturnCreated
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Returns.Return),
+                                               ModelType = typeof (ReturnEmail),
                                                Topic = Topics.ReturnAuthorized
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Returns.Return),
+                                               ModelType = typeof (ReturnEmail),
                                                Topic = Topics.ReturnRejected
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Returns.Return),
+                                               ModelType = typeof (ReturnEmail),
                                                Topic = Topics.ReturnClosed
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Mozu.CommerceRuntime.Contracts.Returns.Return),
+                                               ModelType = typeof (ReturnEmail),
                                                Topic = Topics.ReturnChanged
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (Order),
+                                               Topic = Topics.RefundCreated
                                            },
                                        new EmailTypeInfo
                                            {
@@ -94,16 +122,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (GiftCardEmailOrderCredit),
                                                Topic = Topics.GiftCardCreated
-                                           },
-                                           new EmailTypeInfo
-                                           {
-                                                ModelType = typeof(Mozu.Customer.Contracts.CustomerAccount),
-                                                Topic = Topics.NewUserCreated
-                                           },
-                                           new EmailTypeInfo
-                                           {
-                                                ModelType = typeof(Mozu.Customer.Contracts.CustomerAccount),
-                                                Topic = Topics.PasswordReset
                                            }
                                    };
         }
@@ -117,7 +135,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IServiceClientBase<ISitesWebApiClient> sitesWebApiClient,
             ILogger logger,
             IServiceClientBase<ILocationRuntimeWebApiClient> locationRuntimeWebApiClient,
-            ISiteRouteHandler siteRouteHandler
+            ISiteRouteHandler siteRouteHandler,
+            IOrderWebApiClient orderWebApiClient
             )
             : base(docRepo, docTypeRepo, cmsService,
                 customerAccountWebApiClient, hyprViewEngine, siteRouteHandler)
@@ -126,6 +145,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _logger = logger;
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
+            _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
         }
 
         //
@@ -134,6 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> Preview(string id)
         {
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
+            var queryStringParams = Request.GetQueryNameValuePairs();
             if (emailTemplate == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find an email template for the current Theme.");
@@ -145,11 +166,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic , id, StringComparison.OrdinalIgnoreCase));
                 if (emailTypeInfo != null && emailTypeInfo.ModelType == typeof (Order))
                 {
-                    var str = JsonConvert.SerializeObject(model, CaseInsensitiveJsonSerializerSettings.Default);
-                    model = Convert(str, emailTypeInfo);    
+                    var str = JsonConvert.SerializeObject(MergeEmailParams(queryStringParams, model), CaseInsensitiveJsonSerializerSettings.Default);
+                    model = await Convert(str, emailTypeInfo);    
                 }
                 
+                else
+                {
+                    model = MergeEmailParams(queryStringParams, model);
             }
+            }
+
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
             var res = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
 
@@ -165,7 +191,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
                 vr.ViewName = emailTemplate.Template;
-                var doc = (DC.Document) vr.Model;
+                var doc = JsonConvert.DeserializeObject<DC.Document>(vr.Model.ToString());
                 if (doc != null)
                 {
                     doc.Set("page_type_definition", id);
@@ -178,6 +204,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["rmaLocation"] = await GetDirectShipLocationOrDefault();
 
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTemplate.Template, model));
+        }
+
+        private JObject MergeEmailParams(IEnumerable<KeyValuePair<string, string>> query, object model)
+        {
+
+            var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
+
+            var emailParams = JsonConvert.DeserializeObject<JObject>(z.Value, CaseInsensitiveJsonSerializerSettings.Default);
+
+            var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
+            returnObj.Merge(emailParams);
+            return returnObj;
         }
 
         [HttpPost]
@@ -212,7 +250,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification);
 
-            var model = Convert(notification.Payload, emailTypeInfo);
+            var model = await Convert(notification.Payload, emailTypeInfo);
             
             try
             {
@@ -298,13 +336,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return stringWriter.ToString();
         }
 
-        private static object Convert(string json, EmailTypeInfo eti)
+        private async Task<object> Convert(string json, EmailTypeInfo eti)
         {
             if (eti == null || eti.ModelType == null)
             {
-                return JsonConvert.DeserializeObject(json);
+                return JsonConvert.DeserializeObject(json, CaseInsensitiveJsonSerializerSettings.Default);
             }
-            var obj = JsonConvert.DeserializeObject(json, eti.ModelType);
+            var obj = JsonConvert.DeserializeObject(json, eti.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
             var order = obj as Order;
             if (order != null)
             {
@@ -345,9 +383,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                   
                 }
             }
+            
+            if (obj is ReturnEmail)
+            {
+                var returnEmail = (ReturnEmail)obj;
+                  
+                if (returnEmail.isMock)
+                {
+                    returnEmail.order = TestDataBroker.GetFileContents<Order>("order.changed").First();
+                }
+                else
+                {
+                    returnEmail.order = (await _orderWebApiClient.GetOrder(returnEmail.OriginalOrderId)).ReadAsSync();
+                }
+
+            }
           
             return obj;
-
         }
 
         public class MyPackageItem : PackageItem
@@ -370,6 +422,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ReturnAuthorized = "return.authorized";
             public const string ReturnRejected = "return.rejected";
             public const string ReturnClosed = "return.closed";
+            public const string RefundCreated = "refund.created";
             public const string InStockNotification = "product.instock";
             public const string GiftCardCreated = "giftcard.created";
         }

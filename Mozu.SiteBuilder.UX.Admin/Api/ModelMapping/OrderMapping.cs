@@ -9,8 +9,11 @@ using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using PaymentsDC = Mozu.CommerceRuntime.Contracts.Payments;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
+using RefundsDC = Mozu.CommerceRuntime.Contracts.Refunds;
 using ShippingDC = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
+// disable warning 618: Some discount contracts are marked 'Obsolete' but we really need them.
+#pragma warning disable 618
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class OrderMapping : Profile
@@ -29,6 +32,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcShippingDiscount_to_ShippingDiscount();
             Map_DcPayment_to_OrderPayment();
             Map_DcPaymentInteraction_to_PaymentInteraction();
+            Map_DcRefund_to_Refund();
             Map_DcPackage_to_OrderPackage();
             Map_DcPackageItem_to_OrderPackageItem();
             Map_DcPickupItem_to_OrderPickupItem();
@@ -97,6 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus ))
                 .ForMember(x => x.PaymentStatus, op => op.ResolveUsing(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.ResolveUsing(dc => dc.Payments != null ? dc.Payments.OrderByDescending(p => p.AuditInfo.CreateDate) : null))
+                .ForMember(x => x.Refunds, op => op.ResolveUsing(dc => dc.Refunds))
                 .ForMember(x => x.Packages, op => op.ResolveUsing(dc => dc.Packages))
                 .ForMember(x => x.Pickups, op => op.ResolveUsing(dc => dc.Pickups))
                 .ForMember(x => x.DigitalPackages, op => op.ResolveUsing(dc => dc.DigitalPackages ?? new List<ShippingDC.DigitalPackage>()))
@@ -114,6 +119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingTotal, op => op.ResolveUsing(dc => dc.ShippingTotal))
                 .ForMember(x => x.TaxTotal, op => op.ResolveUsing(dc => dc.TaxTotal))
                 .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
+                .ForMember(x => x.AmountRefunded, op => op.ResolveUsing(dc => dc.AmountRefunded))
 
                 .ForMember(x => x.IsDraft, op => op.ResolveUsing(dc => dc.IsDraft ?? false ))
                 .ForMember(x => x.HasDraft, op => op.ResolveUsing(dc => dc.HasDraft ?? false))
@@ -121,7 +127,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
 
                 .ForMember(x => x.ValidationResults, op => op.ResolveUsing(dc => dc.ValidationResults))
-                .ForMember(x => x.FraudScore, op => op.ResolveUsing(dc => {
+                .ForMember(x => x.FraudScore, op => op.ResolveUsing(dc =>
+                {
                     if (dc.ValidationResults != null)
                     {
                         var fraudScores =
@@ -155,6 +162,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
                 .AfterMap(MapAvailableBulkActions)
+                .AfterMap(InterpolateRefundsIntoPaymentInteractions)
                 .AfterMap((dc, order) =>
                 {
                     if (order.Packages == null)
@@ -196,7 +204,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                          select actualQuantity
                         ).Sum();
 
-                    if (order.Packages != null) {
+                    if (order.Packages != null)
+                    {
                         shippedItemCount =
                         (from i in order.Packages
                          where i.Status == "Fulfilled"
@@ -212,7 +221,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         ).Sum();
                     }
                                         
-                    if (order.Pickups!= null) {
+                    if (order.Pickups != null)
+                    {
                         pickedupItemCount =
                         (from i in order.Pickups
                          where i.Status == "Fulfilled"
@@ -233,7 +243,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     unfulfilledItemCount = Math.Max(0, totalItemCount - fulfilledItemCount);
 
-                    order.OrderSummary = new OrderSummary {
+                    order.OrderSummary = new OrderSummary
+                    {
                         TotalAmount = totalAmount,
                         AmountCollected = amountCollected,
                         Balance = balance,
@@ -247,7 +258,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     };
 
                     // authorizationInfo duplicates OrderSummary and should go away soon.
-                    order.AuthorizationInfo = new OrderAuthorizationInfo {
+                    order.AuthorizationInfo = new OrderAuthorizationInfo
+                    {
                         TotalAmount = totalAmount,
                         AmountCollected = amountCollected
                     };
@@ -323,7 +335,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     if (quantityAtThisLocation <= 0)
                                         continue;
 
-                                    order.UnpickedupItems.Add(new OrderPickupItem {
+                                    order.UnpickedupItems.Add(new OrderPickupItem
+                                    {
                                         ProductCode = productCode,
                                         ProductName = order.GetProductName(productCode),
                                         Quantity = quantityAtThisLocation,
@@ -340,7 +353,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         if (desiredDigitalQuantity > digitallyFulfilled)
                         {
                             int remainingQuantity = desiredDigitalQuantity - digitallyFulfilled;
-                            order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem {
+                            order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem
+                            {
                                 ProductCode = productCode,
                                 ProductName = order.GetProductName(productCode),
                                 Quantity = remainingQuantity,
@@ -381,7 +395,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         (   
                             from item in order.Items
                             where item.ProductUsage != "Bundle"
-                            select new OrderReturnableItem {
+                            select new OrderReturnableItem
+                            {
                                 OrderItemId = item.Id,
                                 ProductCode = item.ProductCode,
                                 ProductName = item.ProductName,
@@ -394,7 +409,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         (
                             from item in order.Items
                             from bp in item.BundledProducts
-                            select new OrderReturnableItem {
+                            select new OrderReturnableItem
+                            {
                                 OrderItemId = null,
                                 ProductCode = bp.ProductCode,
                                 ProductName = bp.Name,
@@ -412,9 +428,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // we have to do some backflips in case line items were split:
                     // we don't want to count one item being fulfilled as 
                     // one fulfilled in each line item.
-                    order.ReturnableItems.GroupBy(ri => ri.ProductCode).Each(group => {
+                    order.ReturnableItems.GroupBy(ri => ri.ProductCode).Each(group =>
+                    {
                         int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key);
-                        group.Each(returnItem => {
+                        group.Each(returnItem =>
+                        {
                             int numToMarkFulfilled = Math.Min(returnItem.QuantityOrdered, totalQuantityFulfilled);
                             returnItem.QuantityFulfilled = numToMarkFulfilled;
                             totalQuantityFulfilled -= numToMarkFulfilled;
@@ -448,6 +466,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // ship package
             if (dc.Packages != null && dc.Packages.Count == 1 && dc.Packages[0].AvailableActions.Contains(SHIP))
                 order.AvailableBulkActions.Add(SHIP);
+        }
+
+        /// <summary>
+        /// Inject transactions from refunds into Order.Payments for consistency in the view.
+        /// A transaction of type "Credit" on the refund will be named to type "Refund".
+        /// </summary>
+        private void InterpolateRefundsIntoPaymentInteractions(OrdersDC.Order dc, Order order)
+        {
+            foreach (var p in order.Payments)
+            {
+                var correspondingRefunds = dc.Refunds.Where(r => r.Payment != null && r.Payment.Id == p.Id);
+                if (correspondingRefunds.Count() == 0) continue;
+
+                var uncopiedInteractions = correspondingRefunds.SelectMany(r => r.Payment.Interactions).Where(i => !p.Interactions.Any(pi => pi.Id == i.Id)).ToList();
+                if (uncopiedInteractions.Count == 0) continue;
+
+                foreach (var refundInteraction in uncopiedInteractions)
+                {
+                    var riMapped = Mapper.Map<PaymentInteraction>(refundInteraction);
+                    if (riMapped.InteractionType == "Credit")
+                    {
+                        riMapped.InteractionType = "Refund";
+                    }
+                    var indexToInsertAt = p.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
+                    p.Interactions.Insert(Math.Max(indexToInsertAt, 0), riMapped);
+                    p.AmountRefunded += riMapped.Amount.GetValueOrDefault();
+                }
+            }
         }
 
         private void Map_DcOrderItem_to_OrderItem()
@@ -689,6 +735,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? dc.AuditInfo.CreateDate : null))
                 //ignores
                 .ForMember(x => x.IsManual, op => op.Ignore()) //calculated field
+                .ForMember(x => x.AmountRefunded, op => op.Ignore()) // calculated field
                 .AfterMap((dc, payment) =>
                 {
                     if (payment == null || payment.PaymentType == PaymentsDC.PaymentTypeConst.CHECK)
@@ -735,6 +782,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(x => x.CanEdit, op => op.Ignore()) //calc field returns IsManual
                 .ForMember(x => x.CanDelete, op => op.Ignore()) //ditto
+                ;
+        }
+
+        private void Map_DcRefund_to_Refund()
+        {
+            Mapper.CreateMap<RefundsDC.Refund, OrderRefund>()
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.OrderId, op => op.ResolveUsing(dc => dc.OrderId))
+                .ForMember(x => x.Reason, op => op.ResolveUsing(dc => dc.Reason))
+                .ForMember(x => x.Payment, op => op.ResolveUsing(dc => dc.Payment))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.CreatedBy, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateBy : null))
                 ;
         }
 
@@ -803,7 +862,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ChangeMessages, op => op.ResolveUsing(dc => dc.ChangeMessages))
                 .ForMember(x => x.OrderId, op => op.Ignore())
 
-                .AfterMap((dc, x) => {
+                .AfterMap((dc, x) =>
+                {
                     // set FulfillmentLocationCode on all items.
                     x.Items.ForEach(pickupItem => pickupItem.FulfillmentLocationCode = x.FulfillmentLocationCode);
                 })
@@ -928,7 +988,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                
                   .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                   .ForMember(dc => dc.UnitPrice, op => op.Ignore())
-                  .ForMember(dc => dc.Product, op => op.ResolveUsing(x => {
+                  .ForMember(dc => dc.Product, op => op.ResolveUsing(x =>
+                  {
                       return new ProductsDC.Product
                       {
                           ProductCode = x.ProductCode,
@@ -961,6 +1022,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                   .ForMember(dc => dc.Data, op => op.Ignore())
+                  .ForMember(dc => dc.DutyAmount, op => op.Ignore())
             
                   ;
         }
@@ -969,8 +1031,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         { 
             Mapper.CreateMap<OrderItemDiscount, DiscountDC.AppliedProductDiscount>()
                 .ForMember(dc => dc.ProductQuantity, op => op.ResolveUsing(x => x.Quantity))
-                .ForMember(dc => dc.Discount, op => op.ResolveUsing(x => {
-                    return new DiscountDC.Discount {
+                .ForMember(dc => dc.Discount, op => op.ResolveUsing(x =>
+                {
+                    return new DiscountDC.Discount
+                    {
                         Id = x.DiscountId,
                         Name = x.Description
                     };
@@ -1004,12 +1068,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<ShippingDiscount, DiscountDC.ShippingDiscount>()
                 .ForMember(dc => dc.MethodCode, op => op.ResolveUsing(x => x.MethodCode))
-                .ForMember(dc => dc.Discount, op => op.ResolveUsing(x => {
-                    return new DiscountDC.AppliedDiscount {
+                .ForMember(dc => dc.Discount, op => op.ResolveUsing(x =>
+                {
+                    return new DiscountDC.AppliedDiscount
+                    {
                         CouponCode = x.CouponCode,
                         Impact = x.Total,
                         Excluded = !x.IsActive,
-                        Discount = new DiscountDC.Discount {
+                        Discount = new DiscountDC.Discount
+                        {
                             Id = x.DiscountId,
                             Name = x.Description
                         }

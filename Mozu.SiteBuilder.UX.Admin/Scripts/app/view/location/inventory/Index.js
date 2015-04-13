@@ -8,14 +8,12 @@ Ext.define('Taco.view.location.inventory.Index', {
         'Taco.shared.view.field.ProductPickerField',
         'Taco.shared.view.field.LocationPickerField',
         'Taco.model.LocationInventory',
-        'Taco.store.LocationInventories'
+        'Taco.store.LocationInventories',
+        'Taco.view.location.inventory.InventoryStockColumns'
     ],
 
     // used by create button
     typeName: 'Location Inventory',
-
-
-
 
     contextConfig: {
         supportedLevels: ['m','c'],
@@ -50,6 +48,8 @@ Ext.define('Taco.view.location.inventory.Index', {
         });
 
         this.loadSecondToolbar();
+
+        this.initGridPanelConf();
         
         this.callParent(arguments);
     },
@@ -99,6 +99,34 @@ Ext.define('Taco.view.location.inventory.Index', {
             }
         });
 
+        this.adjustmentMode = Ext.widget({
+            xtype: 'selectfield',
+            name: 'adjustmentMode',
+            itemId: "adjustmentMode",
+            fieldLabel: 'Adjustment Mode',
+            labelAlign: 'left',
+            labelWidth: 125,
+            width: 250,
+            required: false,
+            queryMode: 'local',
+            value: 'Delta',
+            displayField: 'name',
+            valueField: 'id',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['id', "name"],
+                data: [
+                    {
+                        name: "Add",
+                        id: "Delta"
+                    }, {
+                        name: "Set",
+                        id: "Absolute"
+                    }
+                ]
+            })
+
+        });
+
         this.mon(this.locationPicker, 'locationchange', me.onLocationChange, me);
 
         this.secondToolbarItems = [
@@ -108,10 +136,12 @@ Ext.define('Taco.view.location.inventory.Index', {
                 margin: '0 10 0 0',
                 padding: '2 0 0 0'
             },
-            this.locationPicker
+            this.locationPicker,
+            '->',
+            this.adjustmentMode
         ];
     },
-    
+
     filterFormConf: {
         width: 600,
         cls: Taco.baseCSSPrefix + 'combofilter-form orders',
@@ -167,26 +197,15 @@ Ext.define('Taco.view.location.inventory.Index', {
     },
     */
     
-
-    gridPanelConf: {
-        
-        viewConfig: {
-            deferEmptyText: false,            
-            emptyText: "No products with inventory at this location."
-        },
-        selModel: {},
-        enableColumnHide: false,
-        sortableColumns: false,
-        stateful: true,
-        stateId: 'statefulLocationInventoriesGrid',
-        columns: [
+    initGridPanelConf: function () {
+        var gridColumns = [
             {
                 dataIndex: 'productCode',
                 stateId: 'productCode',
                 width: 100,
                 text: 'Product Code',
                 menuDisabled: true,
-                
+
                 editor: {
                     // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
                     xtype: "displayfield",
@@ -196,9 +215,9 @@ Ext.define('Taco.view.location.inventory.Index', {
             }, {
                 dataIndex: 'productName',
                 stateId: 'productName',
-                flex:1,
+                flex: 1,
                 text: 'Product Name',
-                
+
                 menuDisabled: true,
                 // product selector
                 editor: {
@@ -207,22 +226,22 @@ Ext.define('Taco.view.location.inventory.Index', {
                     msgTarget: "qtip",
                     allowBlank: false,
                     productType: 'inventory',
-                    onEditorShow: function (field, editor, context) {
+                    onEditorShow: function(field, editor, context) {
                         // need to add the locationCode to the locationInventory;
                         var store = editor.grid.store,
                             locationFilter = store.extraFilters.getByKey("locationCode"),
                             locationCode;
-                        
+
                         if (!locationFilter) {
                             return false;
                         }
-                    
+
                         locationCode = locationFilter.value;
                         context.record.set("locationCode", locationCode);
                     },
                     listeners: {
                         select: {
-                            fn: function (combo, records, eOpts) {                                
+                            fn: function(combo, records, eOpts) {
                                 var record = records[0],
                                     rowEditor = combo.up('roweditor'),
                                     productCodeField = rowEditor.form.findField("productCode"),
@@ -232,14 +251,14 @@ Ext.define('Taco.view.location.inventory.Index', {
                                     existingRecord = store.findRecord('productCode', productCode),
                                     // the column to set focus in when opening the editor;
                                     columnHeader = grid.getTopLevelVisibleColumnManager().getHeaderById("stockOnHand");
-                            
+
                                 // check to see if a record already exists in the current store data with this product code;
                                 // note that this does not check the service for an existing record that is not loaded in the current page of the store;
                                 // the service is expected to return an error when persisting a new record with the same productCode;
                                 if (existingRecord) {
                                     // cancel the create and select the existing record and start editing it;
                                     combo.collapse();
-                                    grid.editingPlugin.cancelEdit();                                    
+                                    grid.editingPlugin.cancelEdit();
                                     grid.editingPlugin.startEdit(existingRecord, columnHeader);
                                 } else {
                                     productCodeField.setValue(productCode);
@@ -250,104 +269,63 @@ Ext.define('Taco.view.location.inventory.Index', {
                     }
                 }
 
-            }, {
-                width: 100,
-                text: "Available",
-                stateId: 'available',
-                menuDisabled: true,
-                
-                dataIndex: 'stockAvailable'
-                
-                /*
-                ,editor: {
-                    emptyText: "Available",
-                    msgTarget: "qtip",
-                    xtype: "numberfield",
-                    hideTrigger: true,
-                    mouseWheelEnabled: false,
-                    selectOnFocus: true,
-                    allowBlank: false
-                }
-                */
-            }, {
-                width: 100,
-                text: 'On Reserve',
-                stateId: 'onReserve',
-                menuDisabled: true,
-                
-                dataIndex: 'stockReserved'
-                /*,
-                editor: {
-                    emptyText: "On Reserve",
-                    msgTarget: "qtip",
-                    xtype: "numberfield",
-                    hideTrigger: true,
-                    mouseWheelEnabled: false,
-                    selectOnFocus: true,
-                    allowBlank: false
-                }
-                */
-            }, {
-                dataIndex: 'stockOnHand',
-                itemId: "stockOnHand",
-                stateId: 'onReserve',
-                width: 100,
-                menuDisabled: true,
-                
-                text: 'On Hand',
-                editor: {
-                    emptyText: "On Hand",
-                    msgTarget: "qtip",
-                    xtype: "numberfield",
-                    hideTrigger: true,
-                    defaultValue: 0,
-                    mouseWheelEnabled: false,
-                    selectOnFocus: true,
-                    allowBlank: false
-                }
-            }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                menuDisabled: true,                
-                menuItems: [
-                    {
-                        text: 'Remove Inventory',
-                        /*
-                        requiredBehaviors: {
-                            model: 'Taco.model.LocationInventory',
-                            behavior:'destroy'
-                        },
-                        */
-                        //menuColumnHandler: 'destroyMenuColumnHandler',
-                        menuColumnHandler: function(item, eventData) {
-                            var record = eventData.record,
-                                store = eventData.grid.store;
-                            
-                            Taco.model.LocationInventory.removeInventory({
-                                records: [record],
-                                store: store
-                            });
-                        }
-                    }, {
-                        text: 'Edit Product',
-                        /*
-                        requiredBehaviors: {
-                            model: 'Taco.model.Product',
-                            behavior: 'update'
-                        },
-                        */
-                        menuColumnHandler: function(item, eventData) {
-                            var record = eventData.record;                            
-                            var code = record.get("parentProductCode") || record.get("productCode")
-                            Ext.defer(function () {                                
-                                Taco.core.StateManager.attemptNavigate('products/edit/' + code);
-                            }, 1, this);
-                        }
-                    }
-                ]
             }
-        ]
-        
+        ];
+        gridColumns = gridColumns.concat(Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('productCode'));
+        gridColumns.push({
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            menuDisabled: true,
+            menuItems: [
+                {
+                    text: 'Remove Inventory',
+                    /*
+                requiredBehaviors: {
+                    model: 'Taco.model.LocationInventory',
+                    behavior:'destroy'
+                },
+                */
+                    menuColumnHandler: function(item, eventData) {
+                        var record = eventData.record,
+                            store = eventData.grid.store;
+
+                        Taco.model.LocationInventory.removeInventory({
+                            records: [record],
+                            store: store
+                        });
+                    }
+                }, {
+                    text: 'Edit Product',
+                    /*
+                requiredBehaviors: {
+                    model: 'Taco.model.Product',
+                    behavior: 'update'
+                },
+                */
+                    menuColumnHandler: function(item, eventData) {
+                        var record = eventData.record;
+                        var code = record.get("parentProductCode") || record.get("productCode");
+                        Ext.defer(function() {
+                            Taco.core.StateManager.attemptNavigate('products/edit/' + code);
+                        }, 1, this);
+                    }
+                }
+            ]
+        });
+
+        this.gridPanelConf = {
+            viewConfig: {
+                deferEmptyText: false,
+                emptyText: "No products with inventory at this location."
+            },
+            selModel: {},
+            enableColumnHide: false,
+            sortableColumns: false,
+            //stateful: true,
+            //stateId: 'statefulLocationInventoriesGrid',
+            columns: gridColumns
+        };
+
     },
 
     onLocationChange: function (locationPicker, isDisabled) {
@@ -362,7 +340,14 @@ Ext.define('Taco.view.location.inventory.Index', {
         }
     },
 
-    onRowEditorUpdate : function() {
+    onRowEditorUpdate: function (editor, context) {
+        var locInvRecord = context.record,
+            adjustmentType = this.adjustmentMode.getValue();
+
+        locInvRecord.set('adjustmentType', adjustmentType);
+        if (adjustmentType === 'Delta') {
+            Taco.view.location.inventory.InventoryStockColumns.removeDeltaListener(editor);
+        }
         this.callParent(arguments);
     }
 });

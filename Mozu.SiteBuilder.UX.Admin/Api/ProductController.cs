@@ -185,7 +185,54 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 : (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
                         sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
 
+
+            // need to call the productType service and get the productType name to saturate each product record;
+            var productTypes = new List<int?>();
+            // gather up all of hte product types
+
+            foreach (var product in prodCollection.Items)
+            {
+                var productType = product.ProductTypeId;
+                productTypes.Add(productType);
+            }
+
+            // de-duplicate
+            productTypes = productTypes.Distinct().ToList();
+
+            var productTypeFilter = "";
+            var filterSeperator = "";
+
+            foreach (var productTypeId in productTypes)
+            {
+                productTypeFilter += String.Format("{1}id eq {0}", productTypeId, filterSeperator); ;
+                filterSeperator = " or ";   
+            }
+
+            // call the productType service and retrieve records for all productTypes;
+            var pttask = (await _productTypeWebApiClient.GetProductTypes(
+                /* startIndex:     */ null,
+                /* pageSize:       */ null,
+                /* sortBy:         */ null,
+                /* filter:         */ productTypeFilter,
+                /* responseGroups: */ null
+                )).ReadAsSync();
+
             var mapped = prodCollection.Items.Map<List<Product>>();
+
+            var ptLookUp  = pttask.Items.ToDictionary(x => x.Id, y => y.Name);
+
+            // iterate product records and add productTypeName
+            foreach (var product in mapped)
+            {
+                string productName;
+
+                //var productTypeName = ptLookUp.FirstOrDefault(productType);
+                if (product.ProductTypeId.HasValue && ptLookUp.TryGetValue(product.ProductTypeId, out productName))
+                {
+                    product.ProductTypeName = productName;
+                };
+            }
+
             return List2(mapped, (int)prodCollection.TotalCount);
         }
 

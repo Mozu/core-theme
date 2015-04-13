@@ -8,7 +8,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         'Taco.shared.view.field.ProductPickerField',
         'Taco.shared.view.field.LocationPickerField',
         'Taco.model.LocationInventory',
-        'Taco.store.LocationInventories'
+        'Taco.store.LocationInventories',
+        'Taco.view.location.inventory.InventoryStockColumns'
     ],
 
     // used by create button
@@ -37,7 +38,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     
     enableAutoSelect: false,
 
-    stateful: true,
+    stateful: false,
     stateId: 'statefulLocationInventoryGrid',
 
     secondToolbarItems: [
@@ -86,105 +87,53 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
     initColumnConfig: function () {
         var me = this;
-        
-        this.columns = [
-            {
-                width: 100,
-                text: "Available",
-                stateId: 'stockAvailable',
-                dataIndex: 'stockAvailable'
-                /*
-            ,editor: {
-                emptyText: "Available",
-                msgTarget: "qtip",
-                xtype: "numberfield",
-                hideTrigger: true,
-                mouseWheelEnabled: false,
-                selectOnFocus: true,
-                allowBlank: false
-            }
-            */
-            }, {
-                width: 100,
-                text: 'On Reserve',
-                dataIndex: 'stockReserved',
-                stateId: 'stockReserved',
-                renderer: function (value) {
-                    return value || 0;
-                }
-                /*,
-            editor: {
-                emptyText: "On Reserve",
-                msgTarget: "qtip",
-                xtype: "numberfield",
-                hideTrigger: true,
-                mouseWheelEnabled: false,
-                selectOnFocus: true,
-                allowBlank: false
-            }
-            */
-            }, {
-                dataIndex: 'stockOnHand',
-                width: 100,
-                itemId: "stockOnHand",
-                stateId: 'stockOnHand',
-                text: 'On Hand',
-                editor: {
-                    emptyText: "On Hand",
-                    msgTarget: "qtip",
-                    xtype: "numberfield",
-                    hideTrigger: true,
-                    defaultValue: 0,
-                    mouseWheelEnabled: false,
-                    selectOnFocus: true,
-                    allowBlank: false
-                }
-            }, {
-                xtype: 'taco.menucolumn',
-                text: 'Actions',
-                menuDisabled: true,
-                stateId: 'actionsColumn',
-                sortable: false,
-                menuItems: [
-                    {
-                        text: 'Remove Inventory',
-                        /*
-                        requiredBehaviors: {
-                            model: 'Taco.model.LocationInventory',
-                            behavior:'destroy'
-                        },
-                        */
-                        //menuColumnHandler: 'destroyMenuColumnHandler',
-                        menuColumnHandler: function(item, eventData) {
-                            var record = eventData.record,
-                                store = eventData.grid.store;
 
-                            Taco.model.LocationInventory.removeInventory({
-                                records: [record],
-                                store: store
-                            });
-                        }
-                    }, {
-                        text: 'Edit Location',
-                        /*
-                        requiredBehaviors: {
-                            model: 'Taco.model.Product',
-                            behavior: 'update'
-                        },
-                        */
-                        menuColumnHandler: function(item, eventData) {
-                            var record = eventData.record;
+        this.columns = Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('locationCode');
+        this.columns.push({
+            xtype: 'taco.menucolumn',
+            text: 'Actions',
+            menuDisabled: true,
+            stateId: 'actionsColumn',
+            sortable: false,
+            menuItems: [
+                {
+                    text: 'Remove Inventory',
+                    /*
+                    requiredBehaviors: {
+                        model: 'Taco.model.LocationInventory',
+                        behavior:'destroy'
+                    },
+                    */
+                    //menuColumnHandler: 'destroyMenuColumnHandler',
+                    menuColumnHandler: function(item, eventData) {
+                        var record = eventData.record,
+                            store = eventData.grid.store;
 
-                            Ext.defer(function() {
-                                Taco.core.StateManager.attemptNavigate('locations/edit/' + record.get("locationCode"));
-                            }, 1, this);
-
-                        }
+                        Taco.model.LocationInventory.removeInventory({
+                            records: [record],
+                            store: store
+                        });
                     }
-                ]
-            }
-        ];
-        
+                }, {
+                    text: 'Edit Location',
+                    /*
+                    requiredBehaviors: {
+                        model: 'Taco.model.Product',
+                        behavior: 'update'
+                    },
+                    */
+                    menuColumnHandler: function(item, eventData) {
+                        var record = eventData.record;
+
+                        Ext.defer(function() {
+                            Taco.core.StateManager.attemptNavigate('locations/edit/' + record.get("locationCode"));
+                        }, 1, this);
+
+                    }
+                }
+            ]
+        });
+
         //if (me.showProductColumns) {
 
             this.columns.unshift(
@@ -236,6 +185,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
                                     productCodeField.setValue(record.get("productCode"));
                                     combo.setValue(record.get("productName"));
+                                    // not sure why the setValue doesn't trigger the form validation to get revalidated. Do it manually;
+                                    rowEditor.updateButton(rowEditor.form.isValid())
                                 }
                             }
                         }
@@ -263,7 +214,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                     stateId: 'locationName',
                     editor: {
                         xtype: "taco-locationpickerfield",
-                        editableOnCreateOnly: false,
+                        editableOnCreateOnly: true,
                         autoSelectFirstRecord: false,
                         forceSelection: true,
                         editable: false,
@@ -320,6 +271,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                                     } else {
                                         locationCodeField.setValue(locationCode);
                                         combo.setValue(record.get("name"));
+                                        // not sure why the setValue doesn't trigger the form validation to get revalidated. Do it manually;
+                                        rowEditor.updateButton(rowEditor.form.isValid())
                                     }
                                 }
                             }
@@ -340,7 +293,12 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
         return true;
     },
      
-    onRowEditorUpdate : function() {
+    onRowEditorUpdate: function (editor, context, opts) {
+        var locInvRecord = context.record,
+            invMode = this.down('#adjustmentMode');
+        if (invMode) {
+            locInvRecord.set('adjustmentType', invMode.getValue());
+        }
         this.callParent(arguments);
     }
 });

@@ -3,21 +3,22 @@
         font-size: 16px;
     }
 
+    .#{$prefix}grid-group-hd-not-collapsible {
+        display: none;
+    }
+
     .total-label {
         color: $color-neutral-60;
-        display: block;
         font-size: 12px;
-        padding-bottom: 3px;
         padding-left: 20px;
         text-transform: uppercase;
     }
 
     .total-value {
         color: $color;
-        display: block;
-        font-size: 24px;
+        font-size: 16px;
         font-weight: 600;
-        padding-left: 20px;
+        padding-left: 4px;
     }
 
     // .#{$vprefix}currencyfield td[id$="sideErrorCell"] {

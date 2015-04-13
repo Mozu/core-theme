@@ -24,6 +24,7 @@
                 </td>
             </tr>
 
+			{% ifnotequal model.total 0 %}
            <tr>
 
                 <td>
@@ -37,6 +38,8 @@
                         {% endif %}
                 </td>
             </tr>
+
+			{% endifnotequal %}
         </tbody>
     </table>
 

@@ -1,14 +1,14 @@
+using Mozu.SiteBuilder.Mvc.Navigation;
+using Mozu.SiteBuilder.UX.Controllers;
+using Mozu.SiteBuilder.UX.Filters;
+using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Collections.Generic;
 using System.Linq;
-
-using Mozu.SiteBuilder.Mvc.Navigation;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.SiteBuilder.UX.Models.Navigation;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
 
+    [DataViewModeEnforcement]
     public class NavigationController : BaseApiController
     {
         private readonly INavigationRepository _navigationRepository;
@@ -21,13 +21,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public List<INavigationNode > Primary()
         {
             return GetPrimaryNodes();
-            
         }
 
         public List<INavigationNode> Secondary(string parentId)
         {
             return  GetSecondaryNodes(parentId);
-           
         }
 
         private List<INavigationNode> GetPrimaryNodes()

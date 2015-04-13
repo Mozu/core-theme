@@ -3299,9 +3299,9 @@ ApiInterfaceConstructor.prototype = {
         var makeRequest = function () {
             var contextHeaders = me.getRequestHeaders();
             xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
-                // update context with response headers
+            // update context with response headers
                 if (!runningOptions.silent) {
-                    me.fire('success', rawJSON, xhr, requestConf);
+            me.fire('success', rawJSON, xhr, requestConf);
                 }
             deferred.resolve(rawJSON, xhr);
             }, function (error) {
@@ -3328,14 +3328,14 @@ ApiInterfaceConstructor.prototype = {
 
         makeRequest();
         if (!runningOptions.silent) {
-            this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
+        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
         }
 
         deferred.promise.otherwise(function(error) {
             var res;
             if (!cancelled) {
                 if (!runningOptions.silent) {
-                    me.fire('error', error, xhr, requestConf);
+                me.fire('error', error, xhr, requestConf);
                 }
                 throw error;
             }
@@ -3371,8 +3371,8 @@ ApiInterfaceConstructor.prototype = {
         if (!runningOptions) runningOptions = {};
 
         if (!runningOptions.silent) {
-            obj.fire('action', actionName, data);
-            me.fire('action', obj, actionName, data);
+        obj.fire('action', actionName, data);
+        me.fire('action', obj, actionName, data);
         }
         var requestConf = ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
 
@@ -3384,8 +3384,8 @@ ApiInterfaceConstructor.prototype = {
             if (requestConf.returnType) {
                 var returnObj = ApiObject.create(requestConf.returnType, rawJSON, me);
                 if (!runningOptions.silent) {
-                    obj.fire('spawn', returnObj);
-                    me.fire('spawn', returnObj, obj);
+                obj.fire('spawn', returnObj);
+                me.fire('spawn', returnObj, obj);
                 }
                 return returnObj;
             } else {
@@ -3393,17 +3393,17 @@ ApiInterfaceConstructor.prototype = {
                     obj.data = utils.clone(rawJSON);
                 delete obj.unsynced;
                 if (!runningOptions.silent) {
-                    obj.fire('sync', rawJSON, obj.data);
-                    me.fire('sync', obj, rawJSON, obj.data);
+                obj.fire('sync', rawJSON, obj.data);
+                me.fire('sync', obj, rawJSON, obj.data);
                 }
                 return obj;
             }
         }, function(errorJSON) {
             if (!requestConf.suppressErrors) {
                 if (!runningOptions.silent) {
-                    obj.fire('error', errorJSON);
-                    me.fire('error', errorJSON, obj);
-                }
+            obj.fire('error', errorJSON);
+            me.fire('error', errorJSON, obj);
+            }
             }
             throw errorJSON;
         });
@@ -3445,7 +3445,7 @@ ApiInterfaceConstructor.prototype.createSync = function(type, conf, runningOptio
     var newApiObject = ApiObject.create(type, conf, this);
     newApiObject.unsynced = true;
     if (!runningOptions || !runningOptions.silent) {
-        this.fire('spawn', newApiObject);
+    this.fire('spawn', newApiObject);
     }
     return newApiObject;
 };
@@ -3588,7 +3588,7 @@ module.exports=
     "orders": {
         "template": "{+orderService}{?_*}",
         "defaultParams": {
-            "filter": "Status ne Created and Status ne Validated and Status ne Pending",
+            "filter": "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored",
             "startIndex": 0,
             "pageSize": 5
         },
@@ -3680,6 +3680,25 @@ module.exports=
             "returnType": "order",
             "noBody": true,
             "includeSelf": true
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons",
+            "includeSelf": true
         }
     },
     "cartitem": {
@@ -3718,7 +3737,7 @@ module.exports=
     },
     "customer": {
         "template": "{+customerService}{id}",
-        "defaults": {
+        "defaults": { 
             "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
         },
         "shortcutParam": "id",

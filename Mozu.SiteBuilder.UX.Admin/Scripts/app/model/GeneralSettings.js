@@ -45,6 +45,7 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "catalogId", 
           "type": "string" ,
             convert: function (value, record) {
+                if (!Taco.app.context.getSite()) return '';
                 return Taco.app.context.getSite().catalogId;
             }
         },
@@ -52,12 +53,14 @@ Ext.define('Taco.model.GeneralSettings', {
             "name": "catalogName",
             "type": "string",
             convert: function (value,record) {
+                if (!Taco.app.context.getSite()) return '';
                 return Taco.app.context.findCatalog(Taco.app.context.getSite().catalogId).name;
             }
         },
         {
             "name": "isMozuWebSite", "type": "boolean",
             convert: function (value, record) {
+                if (!Taco.app.context.getSite()) return '';
                 return Taco.app.context.getSite().isMozuRendered;
             }
         },
@@ -66,7 +69,9 @@ Ext.define('Taco.model.GeneralSettings', {
         // todo: need to get this implemnted in the service or remove from the client pending service implementation;
         
         { "name": "robotsOverride", "type": "text"},
-        { "name": "robotsOverrideEnabled", "type": "boolean"}
+        { "name": "robotsOverrideEnabled", "type": "boolean"},
+
+        { name: 'supressedEmailTransactions', type: 'auto', defaultValue: {} }
         
     ],
     proxy: {

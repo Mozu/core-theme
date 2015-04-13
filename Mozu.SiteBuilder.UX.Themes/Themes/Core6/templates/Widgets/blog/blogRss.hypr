@@ -1,4 +1,0 @@
-﻿<div {% data_attributes Model%} >
-
-    <a href="/blogs/rss"><img src="http://support.volusion.com/misc/feed.png"/>&nbsp;Subscribe</a>
-</div>

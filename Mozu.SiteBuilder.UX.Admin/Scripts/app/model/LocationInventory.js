@@ -52,16 +52,29 @@ Ext.define('Taco.model.LocationInventory', {
         "defaultValue": 0,
         "type": "int",
         "useNull": true,
-            persist: true
-        },
-
-
-        {
+        persist: true
+    }, {
+        "name": "originalStockOnHand",
+        "defaultValue": 0,
+        "type": "int",
+        "useNull": true,
+         persist: false
+    }, {
         "name": "productCode",
         "type": "string",
-            "useNull": true,
-            "persist": true
-    },
+        "useNull": true,
+        "persist": true
+    }, {
+        name: 'adjustmentType',
+        type: "string",
+        defaultValue: "Absolute",
+        useNull: true
+    }, {
+        name: 'adjustmentValue',
+        type: "int",
+        defaultValue: "0",
+        useNull: true
+    }, 
 
     // is this still relevant?
     {
@@ -104,6 +117,7 @@ Ext.define('Taco.model.LocationInventory', {
     getContextualValue:function(fieldName) {
         return this.get(fieldName);
     },
+
     proxy: {
         type: 'ajax',
         api: {

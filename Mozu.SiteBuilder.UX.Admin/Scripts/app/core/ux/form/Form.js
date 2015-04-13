@@ -285,7 +285,7 @@ Ext.define('Taco.core.ux.form.Form', {
         if (this.originalTitle) {
             return;
         }
-
+        
         tplInput = this.isEdit() ? this.editTitle : this.createTitle;
         data = Ext.apply({}, {
             record: this.record

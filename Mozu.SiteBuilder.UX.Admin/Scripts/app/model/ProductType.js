@@ -55,6 +55,14 @@ Ext.define('Taco.model.ProductType', {
         });
 
     },
+    // manipulate a record that is set to be duplicated prior to loading it in the view. Called by app\core\Controller.js
+    beforeDuplicate: function () {
+        this.raw = undefined;
+        var suffix = " - Copy";
+        this.data.name = this.data.name + suffix;
+        this.commit();
+        this.setDirty();
+    },
     validations: [
      { type: 'length', name: 'name', min: 3, max: 100 },
      { type: 'presence', name: 'name' }

@@ -406,7 +406,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         }
 
         if (resendEmailButton) {
-            resendEmailButton.setVisible(canSendEmail);
+        resendEmailButton.setVisible(canSendEmail);
         }
     },
 
@@ -456,15 +456,6 @@ Ext.define('Taco.view.order.subform.Detail', {
                 handler: me.openPrintWindow,
                 scope: me
             }, {
-                text: 'Edit Details',
-                xtype: "button",
-                ui: "action",
-                itemId: "editOrderButton",
-                scale: "medium",
-                handler: this.editOrder,
-                scope: me,
-                disabled: !canEdit
-            },{
                 xtype: 'resendemailbutton',
                 itemId: "resendEmailButton",
                 margin: '0 0 0 10',
@@ -473,6 +464,15 @@ Ext.define('Taco.view.order.subform.Detail', {
                     orderId: this.record.getId()
                 },
                 hidden: !canSendEmail
+            },{
+                text: 'Edit Details',
+                xtype: "button",
+                ui: "action",
+                itemId: "editOrderButton",
+                scale: "medium",
+                handler: this.editOrder,
+                scope: me,
+                disabled: !canEdit
             }
         ];
 

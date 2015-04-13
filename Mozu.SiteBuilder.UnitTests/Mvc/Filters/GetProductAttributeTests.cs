@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
 
         private static List<TestDescriptor> GetTests()
         {
-            
+
             return new List<TestDescriptor>
             {
                 new TestDescriptor
@@ -47,6 +47,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                     Name = "will match options as well",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { {"product", new{Options = new[]{new {attributeFQN = "availability", value = "test"}}}} },
+                    Expected = "{ attributeFQN = availability, value = test }"
+                },
+                new TestDescriptor {
+                    Name = "matches property value case insensitvely",
+                    Template = getavailability.Replace("availability", "Availability"),
+                    Context = new Dictionary<string, object> { { "product", new {Properties = new[] { new { attributeFQN = "availability", value = "test" } } }}},
                     Expected = "{ attributeFQN = availability, value = test }"
                 }
             };

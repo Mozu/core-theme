@@ -109,19 +109,12 @@ Ext.define('Taco.view.product.subform.Properties', {
     },
 
     initComponent: function () {
-        this.productTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
 
         this.items = [this.getEmptyComponent()];
 
         this.callParent(arguments);
 
-        this.on('afterrender', function () {
-            if (this.productTypeStore.loading) {
-                this.productTypeStore.on('load', this.loadByProductTypeId, this, { single: true });
-            } else {
-                this.loadByProductTypeId();
-            }
-        }, this, { single: true, delay: 40 });
+        this.loadByProductTypeId();
     },
 
     beforeSave: function () {
@@ -166,7 +159,8 @@ Ext.define('Taco.view.product.subform.Properties', {
         if (!id) {
             return;
         }
-        this.productType = type = this.productTypeStore.getById(id);
+        
+        this.productType = type = this.product.productTypeRecord;
         if (!type) {
             return;
         }

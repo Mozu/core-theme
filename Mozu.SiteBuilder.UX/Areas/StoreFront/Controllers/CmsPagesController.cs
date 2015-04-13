@@ -1,43 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http.Routing;
-using Autofac;
-using Magnum.Extensions;
+﻿using Autofac;
+using Mozu.Content.Contracts;
+using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
+using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.SiteBuilder.UX.Models;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using Mozu.SiteBuilder.UX.Models.Navigation;
-using Newtonsoft.Json.Linq;
-using DC = Mozu.Content.Contracts;
-using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
-
-using AutoMapper;
-using Mozu.Content.Contracts.Clients;
-using Mozu.Customer.Contracts.Clients;
-using Mozu.Core.Collections;
-using Mozu.Core.Api.Client;
-
-using Mozu.Content.Contracts;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Models.CMS;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
-using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
-    
+    [DataViewModeEnforcementAttribute]
     public class CmsPagesController : BaseApiController
     {
 
@@ -283,7 +268,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            var result = View(template, vm.ToJObject());
+            var result = View(template, vm);
 
             
             return this.Request.CreateResponse(HttpStatusCode.OK, result);

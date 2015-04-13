@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             var view = viewEngine.FindModuleView(viewName);
             var viewData = new ViewDataDictionary
             {
-                Model = model.ToJObject()
+                Model = model
             };
 
             var hvc = new HyprViewContext(viewContext.RequestMessage, viewData, viewContext);

@@ -282,7 +282,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '<div class="product-options">',
                             '<tpl for="options">',
                                 '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{[this.getAttributeName(values)]}',
-                                ': {value}',
+                                ': {[this.getAttributeValue(values)]}',
                             '</span>',
                             '</tpl>',
                             '<tpl for="bundledProducts">',
@@ -307,6 +307,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             getAttributeName: function (val) {
                                 var rec = me.attributeStore.getById(val.attributeFQN)
                                 return (rec) ? rec.get('name') :  ''
+                            }
+                        },
+                        {
+                            getAttributeValue: function (val) {
+                                return val.value ? val.value : val.shopperEnteredValue;
                             }
                         }
                         /*,

@@ -59,6 +59,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
         public static void RunTemplate(TestDescriptor desc, ITemplateManager manager)
         {
+            NDjango.Utilities.UtilConfig.Comparer = new NDjango.FiltersCS.DjangoComparer();
+            
             var context = SetupContext(desc);
             var template = manager.GetTemplate(desc.Template);
             var renderer = new TemplateRenderer(manager, template, context);

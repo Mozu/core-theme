@@ -123,7 +123,10 @@ Ext.define('Taco.Application', {
         'Ext.layout.container.Absolute',
         'Ext.form.field.Radio',
         'Taco.core.ux.form.field.SingleImageField',
-        'Ext.ux.form.MultiSelect'
+        'Ext.ux.form.MultiSelect',
+        'Taco.store.TooltipHelp',
+        'Taco.core.ux.TooltipLabel',
+        'Taco.core.util.Filter'
     ],
     controllers: [
         //'Analytics',
@@ -571,6 +574,10 @@ Ext.define('Taco.Application', {
             });
         };
 
-
+        Ext.apply(Ext.util.Format, {
+            siteCurrency: function (value, siteId) {
+                return Taco.app.context.findSite(siteId).formatCurrency(value);
+            }
+        });
     }
 });

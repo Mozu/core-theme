@@ -6,6 +6,9 @@
 Ext.define('Taco.view.discount.GeneralForm', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-general',
+    require: [
+        'Taco.core.ux.TooltipLabel'
+    ],
     ui: 'subform',
     margin: '0 0 39 0',
 
@@ -51,31 +54,35 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
         });
 
-        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox', {
-            name: 'scope',
-            fieldLabel: "Discount Applies To",
-            labelAlign: 'top',
-            editable: false,
-            allowBlank: false,
-            forceSelection: true,
-            displayField: 'text',
-            valueField: 'value',
-            width: 295,
-            store: Ext.create('Ext.data.ArrayStore', {
-                fields: ['text', 'value'],
-                data: [
-                    ["LineItem", "LineItem"],
-                    ["Order", "Order"]
-                ]
-            }),
-            listeners: {
-                change: function (myself, newVal) {
-                    this.parentForm.setFieldVisibility();
-                    this.filterFixedPriceOptionWhenOrderProduct(newVal, null);
-                },
-                scope: this
-            }
-        });
+        Ext.tip.QuickTipManager.init();
+
+        this.scopeTypeInput = Ext.create('Ext.form.field.ComboBox',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.scope', me, {
+                name: 'scope',
+                fieldLabel: "Discount Applies To",
+                labelAlign: 'top',
+                editable: false,
+                allowBlank: false,
+                forceSelection: true,
+                displayField: 'text',
+                valueField: 'value',
+                width: 295,
+                store: Ext.create('Ext.data.ArrayStore', {
+                    fields: ['text', 'value'],
+                    data: [
+                        ["LineItem", "LineItem"],
+                        ["Order", "Order"]
+                    ]
+                }),
+                listeners: {
+                    change: function(myself, newVal) {
+                        me.parentForm.setFieldVisibility();
+                        me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
+                    },
+                    scope: me
+                }
+            })
+        );
 
         this.targetTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'target',
@@ -121,38 +128,45 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 }
             ]
         });
+        
+        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.general.amountType', me, {
+                name: 'amountType',
+                fieldLabel: "Discount Type",
+                labelAlign: 'top',
+                allowBlank: false,
+                editable: false,
+                forceSelection: true,
+                displayField: 'name',
+                valueField: 'value',
+                width: 295,
+                store: this.discountTypeData,
+                queryMode: 'local',
+                listeners: {
+                    change: function (me, newV, oldV) {
+                        if (newV == 'Percentage') {
+                            this.amountInput.unitString = '%';
+                            this.amountInput.unitAtEnd = true;
+                        } else if (newV == 'Free') {
+                            this.amountInput.setDisabled(true);
+                            this.amountInput.setValue(null);
+                            this.parentForm.setFieldVisibility();
+                            return;
+                        } else {
+                            this.amountInput.unitString = Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol;
+                            this.amountInput.unitAtEnd = false;
+                        }
+                        this.amountInput.setDisabled(false);
+                        this.amountInput.setValue(this.amountInput.value);
 
-        this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
-            name: 'amountType',
-            fieldLabel: "Discount Type",
-            labelAlign: 'top',
-            allowBlank: false,
-            editable: false,
-            forceSelection: true,
-            displayField: 'name',
-            valueField: 'value',
-            width: 295,
-            store: this.discountTypeData,
-            queryMode: 'local',
-            listeners: {
-                change: function (me, newV, oldV) {
-                    if (newV == 'Percentage') {
-                        this.amountInput.unitString = '%';
-                        this.amountInput.unitAtEnd = true;
-                    } else if (newV == 'Free') {
-                        this.amountInput.setDisabled(true);
-                        this.amountInput.setValue(null);
-                        return;
-                    } else {
-                        this.amountInput.unitString = Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol;
-                        this.amountInput.unitAtEnd = false;
-                    }
-                    this.amountInput.setDisabled(false);
-                    this.amountInput.setValue(this.amountInput.value);
-                },
-                scope: this
-            }
-        });
+                        // notify the parent form. limitations will need to adjust to the value;
+                        // see this.maxDiscountOrderValue
+                        this.parentForm.setFieldVisibility();
+                    },
+                    scope: this
+                }
+            })
+        );
 
         this.amountInput = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'amount',

@@ -144,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             var dict = new Dictionary<string, object> { { "model", model } };
             var nodes = getTemplateFunction(template).Nodes;
-            return new[] { WalkResultHelpers.ContextAdditions(dict), WalkResultHelpers.Nodes(nodes) };
+            return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, Enumerable.Empty<string>()) };
         }
     }
 }

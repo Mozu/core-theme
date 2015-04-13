@@ -13,7 +13,7 @@ Ext.define('Taco.view.inventory.Index', {
         'Taco.view.inventory.QuantityEdit',
         'Taco.view.location.inventory.LocationInventory',
         'Taco.store.InventoriedProducts',
-        'Taco.view.inventory.AdvancedSearchForm'
+        'Taco.view.product.AdvancedSearchForm'
     ],
 
     typeName: 'Inventory',
@@ -122,6 +122,8 @@ Ext.define('Taco.view.inventory.Index', {
                 }
             }]
         };
+
+        this.loadSecondToolbar();
         
         this.callParent(arguments);
 
@@ -136,10 +138,43 @@ Ext.define('Taco.view.inventory.Index', {
         );
     },
 
+    loadSecondToolbar: function () {
+
+        this.adjustmentMode = Ext.widget({
+            xtype: 'selectfield',
+            name: 'adjustmentMode',
+            itemId: "adjustmentMode",
+            fieldLabel: 'Adjustment Mode',
+            labelAlign: 'left',
+            labelWidth: 125,
+            width: 250,
+            margin: '0 0 10 0',
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'id',
+            value: 'Delta',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['id', "name"],
+                data: [
+                    {
+                        name: "Add",
+                        id: "Delta"
+                    }, {
+                        name: "Set",
+                        id: "Absolute"
+                    }
+                ]
+            })
+
+        });
+
+        this.secondToolbarItems = ['->', this.adjustmentMode];
+    },
+
     createItemBrowser: function (conf) {
         this.itemBrowser = Ext.create('Taco.core.ux.browser.ItemBrowser', {
             itemStore: this.store,
-            secondToolbarItems: this.secondToolbarItems,
+            secondToolbarItems: [],
             options: this.options,
             itemType: this.token,
             typeName: this.typeName,
@@ -160,7 +195,7 @@ Ext.define('Taco.view.inventory.Index', {
             region: "center",
             showProductColumns: false,
             showLocationColumns: true,
-            secondToolbarItems: [],
+            secondToolbarItems: this.secondToolbarItems,
             viewConfig: {
                 deferEmptyText: false,
                 emptyText: "No inventory at this location."

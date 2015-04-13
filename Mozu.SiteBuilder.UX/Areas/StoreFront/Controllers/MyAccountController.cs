@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Customer.Contracts.Clients;
@@ -18,18 +15,17 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Customers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Filters;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [HotOnlyAuthActionFilter]
     [SslOnlyActionFilter]
+    [DataViewModeEnforcement]
     public class MyAccountController : BaseApiController
     {
         private const string DEFAULT_WISHLIST_NAME = "my_wishlist";
@@ -97,9 +93,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             var cardsTask = _customerAccountWebApiClient.GetAccountCards(account.Id);
-            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "Status ne Created and Status ne Validated and Status ne Pending");
+            var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored");
             var returnHistoryTask = _returnApiClient.GetReturns(0, 5, null);
-            var storeCreditsTask = _creditApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\"", account.Id, DateTime.UtcNow.ToString("o")));
+            var storeCreditsTask = _creditApiClient.GetCredits(0, 25, "activationDate DESC", String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\"", account.Id, DateTime.UtcNow.ToString("o")));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
 
             var shipTask = GetShippableCountries();

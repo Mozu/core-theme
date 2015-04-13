@@ -1,19 +1,21 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using Mozu.Core;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
-using System.IO;
-using Mozu.SiteBuilder.Mvc.Models.CMS.Admin;
-using Mozu.Core;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
-using Mozu.SiteBuilder.Mvc.Extensions;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
+    [DataViewModeEnforcement]
     public class WidgetsController : BaseApiController
     {
         private readonly HyprViewEngine _viewEngine;
@@ -48,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var view = _viewEngine.FindModuleView("widgets/" + def.DisplayTemplate);
             if (view != null)
             {
-                var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd.ToJObject() });
+                var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd });
                 await view.AsyncRender(viewContext, tw);
                 RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }

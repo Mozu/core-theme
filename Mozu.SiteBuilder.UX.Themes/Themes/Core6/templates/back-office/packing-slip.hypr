@@ -76,72 +76,19 @@
         </tr></thead>
         <tbody>
         {% for item in model.items %} <!-- model represents the package -->
-            <tr>
-                <td>{{ item.productCode }}</td>
-               
-                    {% with order.items|findwhere('product.productCode', item.productCode) as currentItem %}
-                        {% if currentItem %}
-                            <td>
-                                <div class="product-name">{{ currentItem.product.name }}</div>
-                            </td>
- 
-                            <td>{{ item.quantity }}</td>
-                            <td>
-                            <span>
-                                <script type="text/javascript">
-                                    // do as we say, not as we do
-                                    // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
-                                    var value = Number({{ currentItem.product.measurements.weight.value }}),
-                                        quantity = Number({{ item.quantity }});
-                                    document.write(quantity * value);
-                                </script>
-                            </span> {{ currentItem.product.measurements.weight.unit }}
-                            </td>
- 
-                        {% else %}
-                            {% with order.items|findwhere('product.variationProductCode', item.productCode) as currentVariantItem %}
-                                {% if currentVariantItem %}
-                                    <td>
-                                            <div class="product-name">{{ currentVariantItem.product.name }}</div>
-                                    </td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td>
-                                        <span>
-                                            <script type="text/javascript">
-                                                // do as we say, not as we do
-                                                // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
-                                                var value = Number({{ currentVariantItem.product.measurements.weight.value }}),
-                                                    quantity = Number({{  item.quantity }});
-                                                document.write(quantity * value);
-                                            </script>
-                                        </span> {{ currentVariantItem.product.measurements.weight.unit }}
-                                    </td>                             
-                                {% else %}
-                                    {% for orderitem in order.items %}
-                                        {% if orderitem.product.bundledProducts %}
-                                            {% for bproduct in orderitem.product.bundledProducts %}
-                                                {% if bproduct.productCode == item.productCode %}
-                                                    <td><div class="product-name">{{ bproduct.name }}</div></td>
-                                                    <td>{{ item.quantity }}</td>
-                                                    <td>
-                                                        <span>
-                                                            <script type="text/javascript">
-                                                                // do as we say, not as we do
-                                                                // TODO: replace docwrite with server-rendered total weight as soon as model makes it available
-                                                                var value = Number({{ bproduct.measurements.weight.value }}),
-                                                                    quantity = Number({{  item.quantity }});
-                                                                document.write(quantity * value);
-                                                            </script>
-                                                        </span> {{ bproduct.measurements.weight.unit }}
-                                                    </td>
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            {% endwith %}
-                        {% endif %}
-                    {% endwith %}
+           <tr>
+                <td>
+					{{ item.productCode }}
+				</td>
+				<td>
+                    <div class="product-name">{{ item.productname }}</div>
+                </td>
+                <td>
+					{{ item.quantity }}
+				</td>
+				<td>
+					{{ item.adjustedweight.value }} {{ item.adjustedweight.unit }}
+				</td>
             </tr>
         {% endfor %}
         </tbody>

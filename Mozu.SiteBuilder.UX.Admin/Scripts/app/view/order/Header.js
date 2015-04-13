@@ -42,7 +42,14 @@ Ext.define('Taco.view.order.Header', {
              * @param {Taco.view.order.header} header The Header object that fired the event
              * @param {Taco.model.CustomerAccount} record The record of the Customer Account
              */
-            'customerchanged'
+            'customerchanged',
+            /**
+             * @event customerloaded
+             * Fired when the header loads a customer record
+             * @param {Taco.view.order.header} header The Header object that fired the event
+             * @param {Taco.model.CustomerAccount} record The record of the Customer Account
+             */
+            'customerloaded'
         ]);
 
         // after the record is reloaded we will need to refresh the ui
@@ -75,7 +82,8 @@ Ext.define('Taco.view.order.Header', {
         var me = this;
 
         this.record.loadCustomer({
-            callback: function () {
+            callback: function (record) {
+                me.fireEvent('customerloaded', me, record);
                 me.loadItems();
             }
         });
@@ -118,7 +126,13 @@ Ext.define('Taco.view.order.Header', {
             flex: 27,
             tpl: [
                 '<div class="order-number">', '<span class="label">Order #</span>{orderNumber}', '</div>',
-                '<div class="create-date">', '<span class="label">Order Date:</span>{createDate:date("m/d/Y h:i a")}', '</div>',
+                '<div class="create-date">', 
+                    '<tpl if="submittedDate">',
+                        '<span class="label">Order Date:</span>{submittedDate:date("m/d/Y h:i a")}',
+                    '<tplelse>',
+                        '<span class="label">Order Create Date:</span>{createDate:date("m/d/Y h:i a")}',
+                    '</tpl>',
+                '</div>',
                 '<div class="update-date">', '<span class="label">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</div>',
                 '<div class="site">', '<span class="label">Site:</span><a href="/_gosite/{siteId}" target="_blank">{siteName}</a>', '</div>',
                 '<div class="channel">', '<span class="label">Channel:</span><span data-handle="channelName">{channelName}', '</div>',
@@ -162,9 +176,9 @@ Ext.define('Taco.view.order.Header', {
                             '<tr>',
                                 '<td>Collected:</td>',
                                 '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</td>',
-                            '</tr><tpl if="orderSummary.amountRefunded &gt; 0"><tr>',
+                            '</tr><tpl if="amountRefunded"><tr>',
                                 '<td>Refunded:</td>',
-                                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountRefunded)]}</td>',
+                                '<td>{[values.orderRecord.formatCurrency(values.amountRefunded)]}</td>',
                             '</tr></tpl><tr>',
                                 '<td>Balance:</td>',
                                 '<td>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</td>',
@@ -238,7 +252,7 @@ Ext.define('Taco.view.order.Header', {
                         }, this);
 
                         return retVal;
-                    }
+                    },
                 }
             ],
             data: Ext.apply(this.record.getData(), {

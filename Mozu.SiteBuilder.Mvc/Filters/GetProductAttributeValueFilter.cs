@@ -13,20 +13,14 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     [Name("get_product_attribute_value")]
     class GetProductAttributeValueFilter : IFilterWithContext
     {
-        public object Perform(object value)
-        {
-            return null;
-        }
-
-        public object PerformWithParam(object value, object parameter)
-        {
-            return null;
-        }
-
+        static readonly GetProductAttributeFilter getProductAttribute = new GetProductAttributeFilter();
+        public object Perform(object value) { return null; }
+        public object PerformWithParam(object value, object parameter) { return null; }
         public object DefaultValue { get { return null; } }
+
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {
-            var attr = new GetProductAttributeFilter().PerformWithParamAndContext(value, parameter, context);
+            var attr = getProductAttribute.PerformWithParamAndContext(value, parameter, context);
             return attr != null ? GetAttrValue(attr) : null;
         }
 

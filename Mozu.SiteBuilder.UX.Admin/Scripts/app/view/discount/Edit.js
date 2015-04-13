@@ -42,7 +42,7 @@ Ext.define('Taco.view.discount.Edit', {
         url: "/discounts/edit/",
         nextButtonTipTpl: "Next Discount <div style='padding-top:10px;'>{name}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
         previousButtonTipTpl: "Previous Discount <div style='padding-top:10px;'>{name}</div><div style='margin-top:5px;border-top:1px solid #ccc;padding-top:10px;text-align:center;color:#ccc;font-size:11px;'>{shortCutTip}</div>",
-        stateId: "statefulDiscountsGrid"
+        stateId: "statefulDiscountGrid"
     },
 
     initComponent: function () {

@@ -18,14 +18,6 @@
             "priority": 0.2
         },
         {
-            "documentTypes": [
-                "post@mozu"
-            ],
-            "id": "post@mozu",
-            "path": "post.js",
-            "priority": 0.2
-        },
-        {
             "id": "about-us@mozu",
             "path": "about-us.js"
         },
@@ -95,6 +87,14 @@
             },
             "template": "email/order-confirmation",
             "title": "Order Confirmation"
+        },
+        {
+            "id": "refund.created",
+            "properties": {
+
+            },
+            "template": "email/order-refund-issued",
+            "title": "Refund Issued"
         },
         {
             "id": "return.created",
@@ -334,6 +334,20 @@
             "id": "login",
             "template": "login",
             "title": "Login",
+            "userCreatable": false
+        },
+        {
+            "entityType": "signup",
+            "id": "signup",
+            "template": "signup",
+            "title": "Sign Up",
+            "userCreatable": false
+        },
+         {
+            "entityType": "forgotpassword",
+            "id": "forgotpassword",
+            "template": "forgot-password",
+            "title": "Forgot Password",
             "userCreatable": false
         }
     ],
@@ -747,6 +761,12 @@
                     "fieldLabel": "Number to display",
                     "name": "numberToDisplay",
                     "xtype": "mz-input-number"
+                },
+                {
+                    "anchor": "100%",
+                    "fieldLabel": "Hide Empty Child Nodes",
+                    "name": "hideEmptyChildNodes",
+                    "xtype": "mz-input-checkbox"
                 }
             ],
             "icon": "/resources/admin/widgets/22_category_navigation.png",
