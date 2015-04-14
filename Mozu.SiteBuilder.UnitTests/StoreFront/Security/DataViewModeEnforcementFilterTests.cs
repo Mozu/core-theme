@@ -13,6 +13,7 @@ using NUnit.Framework;
 using Should;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -43,7 +44,7 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
             var message = HttpRequestMessageHelpers.CreateFromContainer(MockContainer.Container);
             MockContainer.WithRegisteredRequest(message).WithUrlFinder();
             message.RequestUri = new Uri(testcase.Route ?? "http://localhost/admin/test");
-            var actionContext = MockOutMessage(message);
+            var actionContext = MockOutMessage(message, MockContainer.Resolve<IHttpController>());
 
             var source = new CancellationTokenSource();
             var response = await ObjectUnderTest.ExecuteAuthorizationFilterAsync(actionContext, source.Token, () => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)));
@@ -51,10 +52,9 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
             testcase.EvalFunc(response).ShouldBeTrue(string.Format("assertion on case {0} failed", testcase.Name));
         }
 
-        private static HttpActionContext MockOutMessage(HttpRequestMessage message)
+        private static HttpActionContext MockOutMessage(HttpRequestMessage message, IHttpController controller)
         {
-            var controller = Substitute.For<IHttpController>();
-            var controllerContext = new HttpControllerContext(new HttpRequestContext(), message, new HttpControllerDescriptor(), controller);
+            var controllerContext = new HttpControllerContext(new HttpRequestContext(), message, new HttpControllerDescriptor() {ControllerType = controller.GetType(), ControllerName = controller.GetType().FullName }, controller);
             var actionDesc = Substitute.For<HttpActionDescriptor>();
             var actionContext = new HttpActionContext(controllerContext, actionDesc);
             return actionContext;
@@ -65,49 +65,49 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
             yield return new HandlerTest()
             {
                 Name = "Shopper can't go through when pending locked down",
-                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsShopper().WithSiteId(),
+                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsShopper().WithSiteId().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
             {
                 Name = "Shopper can't go through when live locked down",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper().WithSiteId(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper().WithSiteId().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
             {
                 Name = "Admin can go through when locked down and pending behavior",
-                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsAdmin().WithPermission<Core.Behaviors.PublishPreviewBehavior>(),
+                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsAdmin().WithPermission<Core.Behaviors.PublishPreviewBehavior>().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.OK
             };
             yield return new HandlerTest()
             {
                 Name = "Admin can't go through when locked down and no pending behavior",
-                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsAdmin().WithoutPermission().WithSiteId(),
+                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsAdmin().WithoutPermission().WithSiteId().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
             {
                 Name = "Admin can't go through when live locked down and no permission",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WithoutPermission().WithSiteId(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WithoutPermission().WithSiteId().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.Redirect
             };
             yield return new HandlerTest()
             {
                 Name = "Admin can go through when live locked down and has permission",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsAdmin().WithPermission<Core.Behaviors.ViewLiveBehavior>(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsAdmin().WithPermission<Core.Behaviors.ViewLiveBehavior>().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.OK
             };
             yield return new HandlerTest()
             {
                 Name = "Admin can go through when live isn't locked down",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenEverythingIsOpen().WhenScopeIsAdmin().WithPermission<Core.Behaviors.ViewLiveBehavior>(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenEverythingIsOpen().WhenScopeIsAdmin().WithPermission<Core.Behaviors.ViewLiveBehavior>().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.OK
             };
             yield return new HandlerTest()
             {
                 Name = "Shopper can go through when live isn't locked down",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenEverythingIsOpen().WhenScopeIsShopper().WithPermission<Core.Behaviors.ViewLiveBehavior>(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenEverythingIsOpen().WhenScopeIsShopper().WithPermission<Core.Behaviors.ViewLiveBehavior>().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.OK
             };
 
@@ -115,20 +115,26 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
             {
                 Name = "Requests to storefront pants go through all the time",
                 Route = "http://localhost/auth/pants",
-                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsShopper(),
+                SetupFunc = mc => mc.WhenIsPendingRequest().WhenPendingIsLockedDown().WhenScopeIsShopper().WithoutIgnoreAttribute(),
                 EvalFunc = msg => msg.StatusCode == System.Net.HttpStatusCode.OK
             };
             yield return new HandlerTest()
             {
                 Name = "Unauth redirect has correct path",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsAdmin().WithSiteId(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsAdmin().WithSiteId().WithoutIgnoreAttribute(),
                 EvalFunc = msg => IsRedirectTo(msg, "login/unauthorized/index")
             };
             yield return new HandlerTest()
             {
                 Name = "Login redirect has correct path",
-                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper().WithSiteId(),
+                SetupFunc = mc => mc.WhenIsLiveRequest().WhenLiveIsLockedDown().WhenScopeIsShopper().WithSiteId().WithoutIgnoreAttribute(),
                 EvalFunc = msg => IsRedirectTo(msg, "login/to")
+            };
+            yield return new HandlerTest()
+            {
+                Name = "controllers with ignore attr do not go through",
+                SetupFunc = mc => mc.WithIgnoreAttribute(),
+                EvalFunc = mc => mc.IsSuccessStatusCode && mc.StatusCode == HttpStatusCode.OK
             };
         }
 
@@ -261,6 +267,31 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.Security
             updater(i);
             container.Provide(i);
             return container;
+        }
+
+        public static AutoSubstitute WithIgnoreAttribute(this AutoSubstitute container)
+        {
+            var ctrl = container.Provide<IHttpController>(new MockTestIgnoreController());
+            return container;
+        }
+        public static AutoSubstitute WithoutIgnoreAttribute(this AutoSubstitute container)
+        {
+            var ctrl = container.Provide<IHttpController>(new MockTestController());
+            return container;
+        }
+
+        [DataViewModeEnforcement]
+        public class MockTestController : IHttpController
+        {
+            public Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [IgnoreDataViewMode]
+        public class MockTestIgnoreController : MockTestController
+        {
         }
     }
 }
