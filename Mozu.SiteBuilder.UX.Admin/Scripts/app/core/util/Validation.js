@@ -9,8 +9,9 @@ Ext.define('Taco.core.util.Validation', {
         this.initConfig(config);
     },
     config: {
-        seoFriendlyRegex: new RegExp(/^[a-z0-9-_\.()]*[a-z0-9-_()]$/i),  //not il18n friendly
-        queryStringRegex: new RegExp(/^[^%*&+:<>?\\/]*[^%*&+:<>?\\/\.]$/)   
+        seoFriendlyRegex: new RegExp(/^[a-z0-9-_\.()]*[a-z0-9-_()]$/i), //not il18n friendly
+        queryStringRegex: new RegExp(/^[^%*&+:<>?\\/]*[^%*&+:<>?\\/\.]$/),
+        replaceInvalidSeoRegex: new RegExp(/[^@a-zA-Z\d%\.]+|[\.]+$/g)
     },
 
     /*  a utility method to store recurring regex and other validation functions.
@@ -58,6 +59,14 @@ Ext.define('Taco.core.util.Validation', {
             return validationMsg;
         }
         return true;
+    },
+
+    toValidSeoSlug: function(slug, replaceString) {
+        if (!slug) {
+            return slug;
+        }
+        replaceString = replaceString || '-';
+        return slug.replace(Taco.core.util.Validation.getReplaceInvalidSeoRegex(), replaceString).toLowerCase();
     }
 
 });
