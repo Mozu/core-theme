@@ -7,7 +7,8 @@ Ext.define('Taco.view.attribute.Form', {
     requires: [
         'Taco.view.option.valueEditor.MultiValue',
         'Taco.shared.view.field.Product',
-        'Taco.core.ux.form.SlugField'
+        'Taco.core.ux.form.SlugField',
+        'Taco.core.ux.form.DateRange'
     ],
     createTitle: 'Create New Attribute',
     alias: ['widget.taco-attributeform'],
@@ -532,26 +533,16 @@ Ext.define('Taco.view.attribute.Form', {
                         cls: 'taco-date-value-input',
                         items: [
                             {
-                                xtype: 'datefield',
+                                xtype: 'daterange',
                                 name: 'minDate',
-                                listeners: {
-                                    change: {
-                                        scope: this,
-                                        fn: 'onDateChange'
-                                    }
-                                }
+                                endDateFieldName: 'maxDate'
                             }, {
                                 xtype: 'label',
                                 text: 'to'
                             }, {
-                                xtype: 'datefield',
+                                xtype: 'daterange',
                                 name: 'maxDate',
-                                listeners: {
-                                    change: {
-                                        scope: this,
-                                        fn: 'onDateChange'
-                                    }
-                                }
+                                startDateFieldName: 'minDate'
                             }
                         ],
                         listeners: {
@@ -786,22 +777,6 @@ Ext.define('Taco.view.attribute.Form', {
         ];
 
 
-    },
-
-    /**
-     * Make sure minDate is not greater than maxDate.
-     */
-    onDateChange: function (field, newValue, oldValue) {
-        var isMax = field.getName() === 'maxDate',
-            otherField = isMax ? field.previousSibling('[name="minDate"]') : field.nextSibling('[name="maxDate"]'),
-            otherValue = otherField.getValue(),
-            minValue = isMax ? otherValue : newValue,
-            maxValue = isMax ? newValue : otherValue;
-
-        if (otherValue && minValue > maxValue) {
-            field.setValue(otherValue);
-            otherField.setValue(newValue);
-        }
     },
 
     onInputTypeChange: function (input, value) {
