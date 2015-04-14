@@ -101,11 +101,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 locationFilter += " and (isDisabled eq true or isDisabled ne true)";
                 var locations =
                     (await _locationWebApiClient.GetLocations(filter: locationFilter)).ReadAsSync().Items;
-                inventories.Items =
+                inventories.Items =          
                     (from i in inventories.Items
-                        let loc =
-                            locations.First(l => l.Code.Equals(i.LocationCode, StringComparison.OrdinalIgnoreCase))
-                        select new SuperchargedLocationInventory(i, loc.Name)
+                     join loc in locations on i.LocationCode.ToLowerInvariant() equals loc.Code.ToLowerInvariant()
+                     select new SuperchargedLocationInventory(i, loc.Name)
                         ).ToList<DC.LocationInventory>();
             }
             else
