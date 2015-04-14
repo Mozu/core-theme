@@ -74,7 +74,10 @@ Ext.define('Taco.view.location.inventory.Index', {
             width: 300,
             forceSelection: true,
             editable: false,
-            extraFilters: [{ id: "status", property: 'status', value: 'all'}],
+            extraFilters: [
+                { id: "status", property: 'status', value: 'all' },
+                { id: "supportsInventory", property: 'supportsInventory', value: 'true' }
+            ],
             listeners: {
                 select: {
                     fn: function (combo, records, eOpts) {
