@@ -42,6 +42,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Value of the selected option
         /// </summary>
         public string OptionValue { get; set; }
+
+        /// <summary>
+        /// Value of the LineId
+        /// </summary>
+        public int LineId { get; set; }
+
+        /// <summary>
+        /// FulfillmentStatus of the BundledProduct
+        /// </summary>
+        public string FulfillmentStatus { get; set; }
+
+        
     }
 
 

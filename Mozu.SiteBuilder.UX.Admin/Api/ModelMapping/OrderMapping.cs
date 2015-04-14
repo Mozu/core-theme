@@ -402,7 +402,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ProductName = item.ProductName,
                                 QuantityOrdered = item.Quantity,
                                 UnitPrice = item.UnitPrice,
-                                Key = item.Id
+                                Key = item.Id,
+                                OrderLineId = item.LineId
                             }
                         )
                         .Union
@@ -419,7 +420,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ParentItemId = item.Id,
                                 ParentProductCode = item.ProductCode,
                                 ParentProductName = item.ProductName,
-                                Key = item.Id + "-" + bp.ProductCode
+                                Key = item.Id + "-" + bp.ProductCode,
+                                OrderLineId = item.LineId
                             }
                         )
                         .ToList();
@@ -428,7 +430,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // we have to do some backflips in case line items were split:
                     // we don't want to count one item being fulfilled as 
                     // one fulfilled in each line item.
-                    order.ReturnableItems.GroupBy(ri => ri.ProductCode).Each(group =>
+                    // Now it is grouped by OrderLineId.
+                    // TODO (JK): NEED TO REVIEW! This may be messed up by line id now!
+                    order.ReturnableItems.GroupBy(ri => ri.OrderLineId).Each(group =>
                     {
                         int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key);
                         group.Each(returnItem =>
@@ -512,6 +516,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreditValue, op => op.ResolveUsing(dc => dc.CreditValue))
                 .ForMember(x => x.OptionAttributeFQN, op => op.ResolveUsing(dc => dc.OptionAttributeFQN))
                 .ForMember(x => x.OptionValue, op => op.ResolveUsing(dc => dc.OptionValue))
+                .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))
+                .ForMember(x => x.LineId, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<BundledProduct, ProductsDC.BundledProduct>()
@@ -526,8 +532,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.CreditValue, op => op.ResolveUsing(x => x.CreditValue))
                 .ForMember(dc => dc.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 .ForMember(dc => dc.OptionValue, op => op.ResolveUsing(x => x.OptionValue))
+                .ForMember(dc => dc.FulfillmentStatus, op => op.ResolveUsing(x => x.FulfillmentStatus))
                 .ForMember(dc => dc.AllocationId, op => op.Ignore())
                 .ForMember(dc => dc.AllocationExpiration, op => op.Ignore())
+                .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))
+                
 
                 ;
         
@@ -602,8 +611,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.UnitWeight))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
-                //TODO: (JK) I thought a bundled product was also an order item from Commerce? need to investigate.
-                //.ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
+                .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
+                .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))
             
                 //ignores
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
@@ -837,6 +846,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 //ignores, handled in Order mapping or FillPackageItemDetails.
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -956,6 +966,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
+                .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
                 .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPackageItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
                 ;
         }
@@ -1122,9 +1133,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             if (packageItem == null || order == null || order.Items == null)
                 return;
-
-            var itemInOrder = order.Items.FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
-            var itemInBundle = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
+            // use the packageItem's LineId here!
+            var itemInOrder = order.Items.FirstOrDefault(i => i.LineId == packageItem.LineId);
+            var itemInBundle = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(i => i.LineId == packageItem.LineId);
 
             if (itemInOrder != null)
             {
@@ -1132,12 +1143,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 packageItem.ProductName = itemInOrder.ProductName;
                 packageItem.Total = itemInOrder.Total;
                 packageItem.UnitPrice = itemInOrder.UnitPrice;
+                packageItem.LineId = itemInOrder.LineId;
                 packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
             }
             else if (itemInBundle != null)
             {
                 packageItem.ProductCode = itemInBundle.ProductCode;
                 packageItem.ProductName = itemInBundle.Name;
+                packageItem.LineId = itemInBundle.LineId;
                 packageItem.Total = 0;
                 packageItem.UnitPrice = 0;
                 packageItem.Weight = itemInBundle.UnitWeight.HasValue ? packageItem.Quantity * itemInBundle.UnitWeight : null;
@@ -1149,12 +1162,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (pickupItem == null || order == null || order.Items == null)
                 return;
 
-            var itemInOrder = order.Items.FirstOrDefault(i => i.ProductCode == pickupItem.ProductCode);
+            var itemInOrder = order.Items.FirstOrDefault(i => i.LineId == pickupItem.LineId);
 
             if (itemInOrder == null)
                 return;
 
+            pickupItem.ProductCode = itemInOrder.ProductCode;
             pickupItem.ProductName = itemInOrder.ProductName;
+            pickupItem.LineId = itemInOrder.LineId;
         }
     }
 }

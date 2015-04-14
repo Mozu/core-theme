@@ -22,6 +22,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ParentItemId { get; set; }
         public string ParentProductCode { get; set; }
         public string ParentProductName { get; set; }
-
+        public int OrderLineId { get; set; }
     }
 }

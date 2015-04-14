@@ -17,6 +17,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public string OrderItemId { get; set; }
 
         /// <summary>
+        /// The OrderLineId that this ReturnItem is associated with. If order item is present, the orderLineId should be present also.
+        /// </summary>
+        public int OrderLineId { get; set; }
+
+        /// <summary>
         /// Need ProductCode or OrderItemId.
         /// </summary>
         public string ProductCode { get; set; }
