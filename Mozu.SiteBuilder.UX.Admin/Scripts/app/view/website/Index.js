@@ -251,8 +251,8 @@ Ext.define('Taco.view.website.Index', {
                 ui: 'action',
                 scale: 'medium',
                 buttonGroup: 'isSavable',
-                itemId: 'cancelActionButton',
-                handler: me.cancelActionHandler,
+                itemId: 'revertActionButton',
+                handler: me.revertActionHandler,
                 scope: me,
                 text: 'Cancel',
                 margin: '0 0 0 10'
