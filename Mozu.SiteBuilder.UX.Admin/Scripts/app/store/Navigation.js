@@ -433,6 +433,11 @@ Ext.define('Taco.store.Navigation', {
                                 "id": "actionmanagement",
                                 "label": "Action Management",
                                 "address": "actionmanagement"
+                            },
+                            {
+                                "id": "ipblocking",
+                                "label": "IP Blocking",
+                                "address": "ipblocking"
                             }
                         ]
                     }

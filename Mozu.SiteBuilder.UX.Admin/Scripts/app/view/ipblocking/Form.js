@@ -1,0 +1,128 @@
+/**
+ * The IP Blocking editor view
+ */
+
+Ext.define('Taco.view.ipblocking.Form', {
+    extend: 'Taco.core.ux.form.Form',
+    requires: ['Taco.core.ux.form.FileInputButton'],
+    ui: 'subform',
+    //store: { type: 'Taco.store.IpBlocking' },
+    createTitle: 'IP Blocking',
+    layout: {
+        type: 'vbox',
+        align: 'left'
+    },
+
+    initComponent: function () {
+
+        this.store = Taco.core.data.StoreManager.getOrCreate('Taco.store.IpBlocking');
+
+        this.store.load({callback: this.installRecord, scope: this});
+
+        this.buildFormComponents();
+
+        this.callParent(arguments);
+    },
+
+    installRecord: function(records) {
+        var ip = records[0].get('ipAddress'),
+            downloadDate = records[0].get('downloadDate') ? records[0].get('downloadDate') : 'You have not uploaded a file yet. You can download a sample file by clicking the download button.';
+
+        this.loadRecord(records[0]);
+        this.record = records[0];
+        this.down('#ip-address').update('Your IP address is: <strong>' + ip + '</strong>');
+        this.down('#download-date').update('<strong>Date uploaded: </strong>' + downloadDate);
+    },
+
+    downloadFile: function() {
+        window.location.href = '/admin/app/redirects/export?siteid=' + Taco.app.context.getSiteId();
+    },
+
+    buildFormComponents: function() {
+
+        var header, explanation, formField, uploadGroup, downloadGroup;
+
+        header = {
+            xtype: 'component',
+            margin: '20 0 0 0',
+            html: 'Your IP address is',
+            id: 'ip-address'
+        };
+
+        explanation = {
+            xtype: 'component',
+            margin: '20 0 0 0',
+            html: 'Upload the .CSV file containing the rules you would like to apply to your website.'
+        };
+
+        formField = {
+            xtype: 'fieldcontainer',
+            defaultType: 'checkboxfield',
+            margin: '20 0 0 0',
+            width: '100%',
+            items: [
+                {
+                    boxLabel  : 'Enabling this setting will block all IP addresses from accessing both your Mozu Storefront and administration area. This setting must be enabled for IP security rules to take affect.',
+                    fieldLabel: 'Enable IP Address Security Rules',
+                    labelAlign: 'top',
+                    name: 'isEnabled'
+                }
+            ]
+        };
+
+        uploadGroup = {
+            xtype: 'container',
+            margin: '20 0 0 0',
+            layout: {
+                type: 'hbox'
+            },
+            items: [
+                {
+                    xtype: 'tacofilefield',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Upload File',
+                    listeners: {
+                        change: function (cmp, v) {
+                           //alert('fule uploaded');
+                        },
+                        boxready: function(cmp) {
+                            cmp.fileInputEl.set({ multiple: 'single', accept: '.csv' });
+                        }
+                    }
+                },
+                {
+                    xtype: 'component',
+                    margin: '8 0 0 10',
+                    id: 'download-date'
+                }
+            ]
+        };
+
+        downloadGroup = {
+            xtype: 'container',
+            layout: {
+                type: 'hbox'
+            },
+            margin: '20 0 0 0',
+            items: [
+                {
+                    xtype: 'button',
+                    ui: 'action',
+                    scale: 'medium',
+                    text: 'Download',
+                    width: 117,
+                    handler: this.downloadFile
+                }
+            ]
+        };
+
+        this.items = [
+            header,
+            explanation,
+            formField,
+            uploadGroup,
+            downloadGroup
+        ];
+    }
+});

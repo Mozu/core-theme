@@ -19,7 +19,7 @@ Ext.define('Taco.view.provisioning.Index', {
 
         this.catalogTreeStore = Ext.create('Ext.data.TreeStore', {
             model: 'Taco.model.Provisionable',
-            root: { path: "/" },
+            root: { path: '/' },
             proxy: {
                 type: 'ajax',
                 url: '/admin/app/provisioning/catalogs',
@@ -70,7 +70,7 @@ Ext.define('Taco.view.provisioning.Index', {
                     store: this.catalogTreeStore,
                     rootVisible: false,
                     stateful: true,
-                    stateId: "statefulCatalogStructureGrid",
+                    stateId: 'statefulCatalogStructureGrid',
 
                     dockedItems: [
                         {
@@ -92,10 +92,10 @@ Ext.define('Taco.view.provisioning.Index', {
                         }
                     ],
                     columns: [
-                        { xtype: 'treecolumn', stateId:"name", text: 'Name', dataIndex: 'name', flex: 1 },
-                        { text: 'Currency', stateId: "currency", dataIndex: 'defaultCurrencyCode' },
-                        { text: 'Locale', stateId: "locate", dataIndex: 'defaultLocaleCode' },
-                        { text: 'Status', stateId: "status", dataIndex: 'status' },
+                        { xtype: 'treecolumn', stateId: 'name', text: 'Name', dataIndex: 'name', flex: 1 },
+                        { text: 'Currency', stateId: 'currency', dataIndex: 'defaultCurrencyCode' },
+                        { text: 'Locale', stateId: 'locate', dataIndex: 'defaultLocaleCode' },
+                        { text: 'Status', stateId: 'status', dataIndex: 'status' },
                         {
                             xtype: 'taco.menucolumn',
                             text: 'Actions',
@@ -126,7 +126,7 @@ Ext.define('Taco.view.provisioning.Index', {
                     flex: 1,
                     margin: '0 0 0 10',
                     autoHeight: true,
-                    stateId: "statefulSitesGrid",
+                    stateId: 'statefulSitesGrid',
                     stateful:true,
                     dockedItems: [
                         {

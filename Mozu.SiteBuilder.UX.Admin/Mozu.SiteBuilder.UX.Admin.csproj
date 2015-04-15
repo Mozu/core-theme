@@ -471,6 +471,7 @@
     <Compile Include="Api\EmailTestController.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyAggregateExceptionResponseBuilder.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyExceptionResponseBuilderCollection.cs" />
+    <Compile Include="Api\IpBlockingController.cs" />
     <Compile Include="Api\ModelMapping\InvitationMapping.cs" />
     <Compile Include="Api\ModelMapping\InvitationRoleMapping.cs" />
     <Compile Include="Api\ModelMapping\LocalizationMapping.cs" />
