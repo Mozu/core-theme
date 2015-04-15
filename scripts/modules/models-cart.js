@@ -1,4 +1,4 @@
-﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive'], function(_, Backbone, Hypr) {
+﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api"], function (_, Backbone, Hypr, api) {
 
     var CartItemProduct = Backbone.MozuModel.extend({
         helpers: ['mainImage'],
@@ -67,6 +67,39 @@
         },
         removeItem: function (id) {
             return this.get('items').get(id).apiModel.del();
+        },
+        addCoupon: function () {
+            var me = this;
+            var code = this.get('couponCode');
+            var orderDiscounts = me.get('orderDiscounts');
+            if (orderDiscounts && _.findWhere(orderDiscounts, { couponCode: code })) {
+                // to maintain promise api
+                var deferred = api.defer();
+                deferred.reject();
+                deferred.promise.otherwise(function () {
+                    me.trigger('error', {
+                        message: Hypr.getLabel('promoCodeAlreadyUsed', code)
+                    });
+                });
+                return deferred.promise;
+            }
+            this.isLoading(true);
+            return this.apiAddCoupon(this.get('couponCode')).then(function () {
+                me.set('couponCode', '');
+                var productDiscounts = _.flatten(_.pluck(_.pluck(me.get('items').models, 'attributes'), 'productDiscounts'));
+                var shippingDiscounts = _.flatten(_.pluck(_.pluck(me.get('items').models, 'attributes'), 'shippingDiscounts'));
+
+                var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts);
+                var lowerCode = code.toLowerCase();
+                if (!allDiscounts || !_.find(allDiscounts, function (d) {
+                    return d.couponCode.toLowerCase() === lowerCode;
+                })) {
+                    me.trigger('error', {
+                        message: Hypr.getLabel('promoCodeError', code)
+                    });
+                }
+                me.isLoading(false);
+            });
         }
     });
 

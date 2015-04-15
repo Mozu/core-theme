@@ -1,0 +1,70 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.signUp %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-signuppage {% endblock body-tag-classes %}
+
+{% block body-content %}
+    <div class="mz-l-container">
+        <h1 class="mz-pagetitle">{{ labels.signUp }}</h1>
+        {% dropzone "signup-top" scope="template" %}
+        <form method="post" class="mz-signupform mz-signup-page" name="mz-signupform">
+           {% include "modules/common/message-bar" with model=model.messages %}
+           <input type="hidden" name="returnUrl" value="{{ model.returnUrl }}" />
+           <div class="mz-l-formfieldgroup">
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label for="firstName">{{ labels.firstName }}</label>
+                    </div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <input type="text" name="firstName" data-mz-signup-firstname />
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label for="lastName">{{ labels.lastName }}</label>
+                    </div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <input type="text" name="lastName" data-mz-signup-lastname />
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label for="emailAddress">{{ labels.emailAddress }}</label>
+                    </div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <input type="email" name="emailAddress" data-mz-signup-emailaddress />
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label for="password">{{ labels.password }}</label>
+                    </div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <input type="password" name="password" data-mz-signup-password />
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell">
+                        <label for="confirmPassword">{{ labels.confirmPassword }}</label>
+                    </div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <input type="password" name="confirmPassword" data-mz-signup-confirmpassword />
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <button class="mz-button mz-button-large mz-sign-up-page-button" data-mz-action="signuppage-submit">{{ labels.signUp }}</button>
+                    </div>
+                </div>
+                <div class="mz-l-formfieldgroup-row">
+                    <div class="mz-l-formfieldgroup-cell"></div>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock body-content %}

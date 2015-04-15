@@ -752,10 +752,14 @@
                     activePayments = this.activePayments(),
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
+                    paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
 
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
                 if (!fulfillmentComplete) return this.stepStatus('new');
+                if (paymentTypeIsPayPal && window.location.href.indexOf('PaypalExpress=') === -1) {
+                    return this.stepStatus("incomplete"); // This should handle back button/reload cases!
+                }
                 if (thereAreActivePayments && (balanceZero || (this.get('paymentType') === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1) ) ) return this.stepStatus("complete");
                 return this.stepStatus("incomplete");
 
