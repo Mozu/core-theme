@@ -59,6 +59,8 @@ Ext.define('Taco.view.product.subform.SEO', {
 
 
         }, this, { single: true, delay: 16 });
+
+        this.mon(Taco.app, 'productduplicated', this.manageListeners, this, true);
     },
 
     manageListeners: function (attach) {

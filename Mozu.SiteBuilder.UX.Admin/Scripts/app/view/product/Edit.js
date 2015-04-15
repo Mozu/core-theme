@@ -67,7 +67,7 @@
 
     afterDuplicate: function () {
         Taco.app.fireEvent('setmessage', "Please enter a product code.", 'info');
-
+        Taco.app.fireEvent('productduplicated', true);
     },
 
     initComponent: function () {
