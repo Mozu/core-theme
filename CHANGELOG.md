@@ -1,6 +1,10 @@
 Core4 Changelog
 ===============
 
+v4.3.0
+------
+* Fixed bugs in `templates/modules/common/order-summary.hypr.live`.
+
 v4.2.1
 ------
 * Put back the CHANGELOG.md and the bower.json file, which caused build problems when removed.
