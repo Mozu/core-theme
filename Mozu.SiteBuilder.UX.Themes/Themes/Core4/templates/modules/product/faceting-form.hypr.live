@@ -12,12 +12,14 @@
             {% for fval in facet.values %}
             <li>
                 <a href="#" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ fval.value }}" data-mz-facet-value="{{ fval.filterValue }}" data-mz-facet="{{ facet.field }}">{{ fval.label }}</a>
-                {% if fval.childrenFacetValues.length > 0 or fval.childrenFacetValues.count > 0%}
+                {% if fval.childrenFacetValues.length > 0 or fval.childrenFacetValues.count > 0 %}
                 <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
                 {% for child in fval.childrenFacetValues %}
-                <li>
-                    <a href="#" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ child.value }}" data-mz-facet-value="{{ child.filterValue }}" data-mz-facet="{{ facet.field }}">{{ child.label }}</a>
-                </li>
+                  {% if child.isDisplayed %}
+                    <li>
+                      <a href="#" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ child.value }}" data-mz-facet-value="{{ child.filterValue }}" data-mz-facet="{{ facet.field }}">{{ child.label }}</a>
+                    </li>
+                  {% endif %}
                 {% endfor %}
                 </ul>
                 {% endif %}
