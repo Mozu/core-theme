@@ -18,11 +18,17 @@
     <div class="mz-l-stack">
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.payments }}</h4>
-            {% for payment in model.payments %}
-            {% if payment.status != "Voided" and payment.status != "Declined" %}
-            {% include "modules/checkout/checkout-payment" with model=payment %}
-            {% endif %}
-            {% endfor %}
+			{% if model.total == 0 %}
+				{% with model.total|currency as total %}
+					<h4 class="mz-confirmation-nopaymentrequired">{{ labels.noPaymentWasRequired|string_format(total) }}</h4>
+				{% endwith %}
+			{% else %}
+				{% for payment in model.payments %}
+				{% if payment.status != "Voided" and payment.status != "Declined" %}
+				{% include "modules/checkout/checkout-payment" with model=payment %}
+				{% endif %}
+				{% endfor %}
+			{% endif %}
         </div>
         {% if model.hasDirectShip %}
         <div class="mz-l-stack-section">

@@ -12,7 +12,7 @@
 		<dd>{{ model.returnNumber }}</dd>
 
 		<dt>{{ labels.orderDate }}:</dt>
-		<dd>{{ model.auditInfo.createDate }}</dd>
+		<dd>{{ model.order.submittedDate }}</dd>
 
 		<dt>{{ labels.returnRequestDate }}</dt>
 		<dd>{{ model.rmaDeadline }}</dd>

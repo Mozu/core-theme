@@ -751,11 +751,16 @@
                     activePayments = this.activePayments(),
                     thereAreActivePayments = activePayments.length > 0,
                     paymentTypeIsCard = activePayments && !!_.findWhere(activePayments, { paymentType: 'CreditCard' }),
+                    paymentTypeIsPayPal = activePayments && !!_.findWhere(activePayments, { paymentType: 'PaypalExpress' }),
                     balanceZero = this.parent.get('amountRemainingForPayment') === 0;
 
                 if (paymentTypeIsCard) return this.stepStatus("incomplete"); // initial state for CVV entry
+
                 if (!fulfillmentComplete) return this.stepStatus('new');
-                if (thereAreActivePayments && (balanceZero || (this.get('paymentType') === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1) ) ) return this.stepStatus("complete");
+
+                if (paymentTypeIsPayPal && window.location.href.indexOf('PaypalExpress=') === -1) return this.stepStatus("incomplete"); // This should handle back button/reload cases!
+
+                if (thereAreActivePayments && (balanceZero || (this.get('paymentType') === "PaypalExpress" && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus("complete");
                 return this.stepStatus("incomplete");
 
             },
@@ -934,7 +939,12 @@
                 this.isLoading(true);
                 return this.apiAddCoupon(this.get('couponCode')).then(function () {
                     me.set('couponCode', '');
-                    var allDiscounts = me.get('orderDiscounts').concat('shippingDiscounts').concat('handlingDiscounts').concat(_.flatten(_.pluck(me.get('items'), 'productDiscounts'))).concat(_.flatten(_.pluck(me.get('items'), 'shippingDiscounts')));
+
+                    var productDiscounts = _.flatten(_.pluck(me.get('items'), 'productDiscounts'));
+                    var shippingDiscounts = _.flatten(_.pluck(_.flatten(_.pluck(me.get('items'), 'shippingDiscounts')), 'discount'));
+                    var orderShippingDiscounts = _.flatten(_.pluck(me.get('shippingDiscounts'), 'discount'));
+
+                    var allDiscounts = me.get('orderDiscounts').concat(productDiscounts).concat(shippingDiscounts).concat(orderShippingDiscounts);
                     var lowerCode = code.toLowerCase();
                     if (!allDiscounts || !_.find(allDiscounts, function(d) {
                         return d.couponCode.toLowerCase() === lowerCode;

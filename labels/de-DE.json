@@ -6,6 +6,7 @@
     "logIn"   : "Einloggen",
 
     "signUp"   : "Anmeldung",
+    "forgotPassword"       : "Passwort Vergessen",
     "viewCart"   : "Einkaufswagen",
     "search"   : "Suche",
     "of"   : "von",
@@ -208,6 +209,7 @@
     "giftMessage"   : "Geschenk-Nachricht",
     "customerAlreadyExists"   : "Ein Kunde ist bereits als {0} registriert. <a href = \"",
     "noPaymentRequired"   : "Ihr Gesamt ist {0}, so dass keine Zahlungsmethode erforderlich ist.",
+    "noPaymentWasRequired"   : "Ihr Gesamt wurde {0} , so dass keine Zahlungsmethode erforderlich war .",
     "giftCardEmailBanner"   : "<- <a href = \"",
     "giftCardEmailGreeting"   : "Hallo {0} {1},",
     "giftCardEmailImage"   : "<- <a href = \"",

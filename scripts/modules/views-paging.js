@@ -5,9 +5,15 @@ define(['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu'], function(
 
     var PagingBaseView = Backbone.MozuView.extend({
         initialize: function() {
+            var me = this;
             if (!this.model._isPaged) {
                 throw "Cannot bind a Paging view to a model that does not have the Paging mixin!";
             }
+
+            //handle browser's back button to make sure startIndex is updated.
+            Backbone.history.on('route', function () {
+                me.model.syncIndex(Backbone.history.fragment);
+            });
         },
         render: function() {
             Backbone.MozuView.prototype.render.apply(this, arguments);

@@ -1,10 +1,13 @@
-﻿/**
+/**
  * Adds a login popover to all login links on a page.
  */
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _) {
 
     var usePopovers = function() {
         return !Modernizr.mq('(max-width: 480px)');
+    },
+    isTemplate = function(path) {
+        return require.mozuData('pagecontext').cmsContext.template.path === path;
     },
     returnFalse = function () {
         return false;
@@ -85,7 +88,17 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.$el = $(el);
             this.loading = false;
             this.setMethodContext();
-            this.$el.on('click', this.createPopover);
+            if (!this.pageType){
+                this.$el.on('click', this.createPopover);
+            }
+            else {
+               this.$el.on('click', this.doFormSubmit.bind(this));
+            }    
+        },
+        doFormSubmit: function(e){
+            e.preventDefault();
+            this.$parent = this.$el.closest(this.formSelector);
+            this[this.pageType]();
         }
     });
 
@@ -129,10 +142,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 return false;
             }
         },
-        slideRight: function () {
+        slideRight: function (e) {
+            if (e) e.preventDefault();
             this.$slideboxOuter.css('left', -this.panelWidth);
         },
-        slideLeft: function () {
+        slideLeft: function (e) {
+            if (e) e.preventDefault();
             this.$slideboxOuter.css('left', 0);
         },
         login: function () {
@@ -146,7 +161,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.setLoading(true);
             api.action('customer', 'resetPasswordStorefront', {
                 EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).then(this.displayResetPasswordMessage, this.displayApiMessage);
+            }).then(this.displayResetPasswordMessage.bind(this), this.displayApiMessage);
         },
         handleLoginComplete: function () {
             window.location.reload();
@@ -207,7 +222,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         }
     });
 
-
     $(document).ready(function() {
         $docBody = $(document.body);
         $('[data-mz-action="login"]').each(function() {
@@ -224,6 +238,24 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var popover = new LoginPopover();
             popover.init(this);
             $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="signuppage-submit"]').each(function(){
+            var signupPage = new SignupPopover();
+            signupPage.formSelector = 'form[name="mz-signupform"]';
+            signupPage.pageType = 'signup';
+            signupPage.init(this);
+        });
+        $('[data-mz-action="loginpage-submit"]').each(function(){
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-loginform"]';
+            loginPage.pageType = 'login';
+            loginPage.init(this);
+        });
+        $('[data-mz-action="forgotpasswordpage-submit"]').each(function(){
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-forgotpasswordform"]';
+            loginPage.pageType = 'retrievePassword';
+            loginPage.init(this);
         });
     });
 

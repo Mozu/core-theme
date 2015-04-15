@@ -3,12 +3,12 @@
     "hyprlive",
     "modules/backbone-mozu-model"], function ($, Hypr, Backbone) {
 
-        var defaultPageSize = Hypr.getThemeSetting('defaultPageSize');
-
-        var sorts = [
+        var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
+            defaultSort = Hypr.getThemeSetting('defaultSort'),
+            sorts = [
             {
                 "text": Hypr.getLabel('default'),
-                "value": ""
+                "value": defaultSort
             },
             {
                 "text": Hypr.getLabel('sortByPriceAsc'),
@@ -34,8 +34,7 @@
                 "text": Hypr.getLabel('sortByDateAsc'),
                 "value": "createDate asc"
             }
-        ],
-            defaultSort = Hypr.getThemeSetting('defaultSort');
+        ];
 
         var PagedCollection = Backbone.MozuPagedCollection = Backbone.MozuModel.extend({
             helpers: ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage', 'sorts', 'currentSort'],
@@ -77,7 +76,7 @@
                 var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                     pageSize = this.get("pageSize"),
                     startIndex = this.get("startIndex"),
-                    sortBy = $.deparam().sortBy || this.currentSort() || this.defaultSort;
+                    sortBy = $.deparam().sortBy || this.currentSort() || defaultSort;
                 conf.pageSize = pageSize;
                 if (startIndex) conf.startIndex = startIndex;
                 if (sortBy) conf.sortBy = sortBy;
@@ -93,6 +92,16 @@
             nextPage: function() {
                 try {
                     return this.apiModel.nextPage(this.lastRequest);
+                } catch (e) { }
+            },
+
+            syncIndex: function (currentUriFragment) {
+                try {
+                    var uriStartIndex = parseInt(($.deparam(currentUriFragment).startIndex || 0), 10);
+                    if (!isNaN(uriStartIndex) && uriStartIndex !== this.apiModel.getIndex()) {
+                        this.lastRequest.startIndex = uriStartIndex;
+                        return this.apiModel.setIndex(uriStartIndex, this.lastRequest);
+                    }
                 } catch (e) { }
             },
 
