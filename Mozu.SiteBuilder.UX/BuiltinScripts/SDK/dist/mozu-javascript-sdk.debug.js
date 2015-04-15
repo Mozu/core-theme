@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-03-19
+ * Mozu JavaScript SDK - v0.3.0 - 2015-04-14
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3299,9 +3299,9 @@ ApiInterfaceConstructor.prototype = {
         var makeRequest = function () {
             var contextHeaders = me.getRequestHeaders();
             xhr = utils.request(method, url, contextHeaders, data, function (rawJSON) {
-            // update context with response headers
+                // update context with response headers
                 if (!runningOptions.silent) {
-            me.fire('success', rawJSON, xhr, requestConf);
+                    me.fire('success', rawJSON, xhr, requestConf);
                 }
             deferred.resolve(rawJSON, xhr);
             }, function (error) {
@@ -3328,14 +3328,14 @@ ApiInterfaceConstructor.prototype = {
 
         makeRequest();
         if (!runningOptions.silent) {
-        this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
+            this.fire('request', xhr, canceller, deferred.promise, requestConf, conf);
         }
 
         deferred.promise.otherwise(function(error) {
             var res;
             if (!cancelled) {
                 if (!runningOptions.silent) {
-                me.fire('error', error, xhr, requestConf);
+                    me.fire('error', error, xhr, requestConf);
                 }
                 throw error;
             }
@@ -3371,8 +3371,8 @@ ApiInterfaceConstructor.prototype = {
         if (!runningOptions) runningOptions = {};
 
         if (!runningOptions.silent) {
-        obj.fire('action', actionName, data);
-        me.fire('action', obj, actionName, data);
+            obj.fire('action', actionName, data);
+            me.fire('action', obj, actionName, data);
         }
         var requestConf = ApiReference.getRequestConfig(actionName, type, data || obj.data, me.context, obj);
 
@@ -3384,8 +3384,8 @@ ApiInterfaceConstructor.prototype = {
             if (requestConf.returnType) {
                 var returnObj = ApiObject.create(requestConf.returnType, rawJSON, me);
                 if (!runningOptions.silent) {
-                obj.fire('spawn', returnObj);
-                me.fire('spawn', returnObj, obj);
+                    obj.fire('spawn', returnObj);
+                    me.fire('spawn', returnObj, obj);
                 }
                 return returnObj;
             } else {
@@ -3393,17 +3393,17 @@ ApiInterfaceConstructor.prototype = {
                     obj.data = utils.clone(rawJSON);
                 delete obj.unsynced;
                 if (!runningOptions.silent) {
-                obj.fire('sync', rawJSON, obj.data);
-                me.fire('sync', obj, rawJSON, obj.data);
+                    obj.fire('sync', rawJSON, obj.data);
+                    me.fire('sync', obj, rawJSON, obj.data);
                 }
                 return obj;
             }
         }, function(errorJSON) {
             if (!requestConf.suppressErrors) {
                 if (!runningOptions.silent) {
-            obj.fire('error', errorJSON);
-            me.fire('error', errorJSON, obj);
-            }
+                    obj.fire('error', errorJSON);
+                    me.fire('error', errorJSON, obj);
+                }
             }
             throw errorJSON;
         });
@@ -3445,7 +3445,7 @@ ApiInterfaceConstructor.prototype.createSync = function(type, conf, runningOptio
     var newApiObject = ApiObject.create(type, conf, this);
     newApiObject.unsynced = true;
     if (!runningOptions || !runningOptions.silent) {
-    this.fire('spawn', newApiObject);
+        this.fire('spawn', newApiObject);
     }
     return newApiObject;
 };
@@ -3486,7 +3486,7 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{{+storefrontUserService}../../receiver{?receiverVersion}"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityList": {
         "template": "{+entityListService}{listName}/entities{?_*}",
@@ -3737,7 +3737,7 @@ module.exports=
     },
     "customer": {
         "template": "{+customerService}{id}",
-        "defaults": { 
+        "defaults": {
             "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
         },
         "shortcutParam": "id",
@@ -4300,6 +4300,8 @@ var ApiReference = {
 
     headerPrefix: 'x-vol-',
 
+    methods: objectTypes,
+
     getActionsFor: function(typeName) {
         ApiCollection = ApiCollection || require('./collection');
         if (!objectTypes[typeName]) return false;
@@ -4428,14 +4430,22 @@ module.exports = ApiReference;
 //# sourceUrl=src/types/cart.js
 
 var utils = require('../utils');
+var errors = require('../errors');
+
+errors.register({
+    'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}'
+})
+
 module.exports = {
-    count: function() {
+    count: function () {
         var items = this.prop('items');
         if (!items || !items.length) return 0;
-        return utils.reduce(items, function(total, item) { return total + item.quantity; }, 0);
+        return utils.reduce(items, function (total, item) {
+            return total + item.quantity;
+        }, 0);
     },
 
-    addExtendedProperty: function(extendedProperty) {
+    addExtendedProperty: function (extendedProperty) {
         // Expect extendedPropert to contain a key/value pair, if it doesn't we need to fail with incorrect data.
         if (!extendedProperty) {
             extendedProperty = {};
@@ -4445,10 +4455,10 @@ module.exports = {
             // Fill in the data from extendedProperty here!
             'key': extendedProperty.key,
             'value': extendedProperty.value
-    });
+        });
     },
 
-    addExtendedProperties: function(extendedProperties) {
+    addExtendedProperties: function (extendedProperties) {
         // Expect extendedProperties to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
         if (!extendedProperties) {
             extendedProperties = [];
@@ -4464,9 +4474,17 @@ module.exports = {
         }
 
         return this.api.action(this, 'addExtendedProperties', extendedPropertyKeys);
+    },
+    addCoupon: function (couponCode) {
+        var self = this;
+        return this.applyCoupon(couponCode).then(function () {
+            return self.get();
+        }, function (reason) {
+            errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
+        });
     }
 };
-},{"../utils":36}],26:[function(require,module,exports){
+},{"../errors":17,"../utils":36}],26:[function(require,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
