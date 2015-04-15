@@ -9,9 +9,54 @@ Ext.define('Taco.core.util.Validation', {
         this.initConfig(config);
     },
     config: {
+
         seoFriendlyRegex: new RegExp(/^[a-z0-9-_\.()]*[a-z0-9-_()]$/i), //not il18n friendly
+        //  NODE                     EXPLANATION
+        //--------------------------------------------------------------------------------
+        //  ^                        the beginning of the string
+        //--------------------------------------------------------------------------------
+        //  [a-z0-9-_\.()]*          any character of: 'a' to 'z', '0' to '9',
+        //                           '-', '_', '\.', '(', ')' (0 or more times
+        //                           (matching the most amount possible))
+        //--------------------------------------------------------------------------------
+        //  [a-z0-9-_()]             any character of: 'a' to 'z', '0' to '9',
+        //                           '-', '_', '(', ')'
+        //--------------------------------------------------------------------------------
+        //  $                        before an optional \n, and the end of the
+        //                           string
+
+
         queryStringRegex: new RegExp(/^[^%*&+:<>?\\/]*[^%*&+:<>?\\/\.]$/),
+        //  NODE                     EXPLANATION
+        //--------------------------------------------------------------------------------
+        //  ^                        the beginning of the string
+        //--------------------------------------------------------------------------------
+        //  [^%*&+:<>?\\/]*          any character except: '%', '*', '&', '+',
+        //                           ':', '<', '>', '?', '\\', '/' (0 or more
+        //                           times (matching the most amount possible))
+        //--------------------------------------------------------------------------------
+        //[^%*&+:<>?\\/\.]           any character except: '%', '*', '&', '+',
+        //                           ':', '<', '>', '?', '\\', '/', '\.'
+        //--------------------------------------------------------------------------------
+        //  $                        before an optional \n, and the end of the
+        //                           string
+
+
         replaceInvalidSeoRegex: new RegExp(/[^@a-zA-Z\d%\.]+|[\.]+$/g)
+        //  NODE                     EXPLANATION
+        //--------------------------------------------------------------------------------
+        //  [^@a-zA-Z\d%\.]+         any character except: '@', 'a' to 'z', 'A'
+        //                           to 'Z', digits (0-9), '%', '\.' (1 or more
+        //                           times (matching the most amount possible))
+        //--------------------------------------------------------------------------------
+        //  |                        OR
+        //--------------------------------------------------------------------------------
+        //  [\.]+                    any character of: '\.' (1 or more times
+        //                           (matching the most amount possible))
+        //--------------------------------------------------------------------------------
+        //  $                        before an optional \n, and the end of the
+        //                           string
+
     },
 
     /*  a utility method to store recurring regex and other validation functions.

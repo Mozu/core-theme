@@ -79,7 +79,8 @@ Ext.define('Taco.core.ux.form.SlugField', {
 
         if (typeof value === 'string') {
             currentValue = me.getValue();
-            newValue = Taco.core.util.Validation.toValidSeoSlug(currentValue);
+            newValue = value.replace(/((?!(@|[A-Z]|[a-z]|\d|[%]|[\.])).)+/g, '-').toLowerCase(); //Taco.core.util.Validation.toValidSeoSlug(currentValue);
+            //newValue = Taco.core.util.Validation.toValidSeoSlug(currentValue);
 
             if (currentValue === newValue) {
                 return false;
