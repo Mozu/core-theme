@@ -17,6 +17,10 @@
                             input: 'product standard',
                             expected: 'product-standard'
                         }, {
+                            scenario: 'should convert text to lowercase',
+                            input: 'PRODUCT Standard',
+                            expected: 'product-standard'
+                        }, {
                             scenario: 'should allow a period within the string',
                             input: 'product.standard',
                             expected: 'product.standard'
@@ -32,6 +36,10 @@
                             scenario: 'should replace sequential special characters with a single hyphen',
                             input: 'gx200*((',
                             expected: 'gx200-'
+                        }, {
+                            scenario: 'should replace "%" with a hyphen',
+                            input: 'gx200%fx',
+                            expected: 'gx200-fx'
                         }
                     ];
                     next();

@@ -10,7 +10,9 @@ Ext.define('Taco.core.util.Validation', {
     },
     config: {
 
-        seoFriendlyRegex: new RegExp(/^[a-z0-9-_\.()]*[a-z0-9-_()]$/i), //not il18n friendly
+        //not il18n friendly
+        seoFriendlyRegex: new RegExp(/^[a-z0-9-_\.()]*[a-z0-9-_()]$/i), 
+        //RegEx documentation below is taken from http://rick.measham.id.au/paste/explain.pl
         //  NODE                     EXPLANATION
         //--------------------------------------------------------------------------------
         //  ^                        the beginning of the string
@@ -42,11 +44,11 @@ Ext.define('Taco.core.util.Validation', {
         //                           string
 
 
-        replaceInvalidSeoRegex: new RegExp(/[^@a-zA-Z\d%\.]+|[\.]+$/g)
+        replaceInvalidSeoRegex: new RegExp(/[^@a-zA-Z\d\.]+|[\.]+$/g)
         //  NODE                     EXPLANATION
         //--------------------------------------------------------------------------------
-        //  [^@a-zA-Z\d%\.]+         any character except: '@', 'a' to 'z', 'A'
-        //                           to 'Z', digits (0-9), '%', '\.' (1 or more
+        //  [^@a-zA-Z\d\.]+         any character except: '@', 'a' to 'z', 'A'
+        //                           to 'Z', digits (0-9), '\.' (1 or more
         //                           times (matching the most amount possible))
         //--------------------------------------------------------------------------------
         //  |                        OR
