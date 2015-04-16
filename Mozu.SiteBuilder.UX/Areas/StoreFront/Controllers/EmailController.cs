@@ -60,6 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     }
     
     [ContextInitialization]
+    [IgnoreDataViewMode]
     public class EmailController : CmsPagesController
     {
         private readonly ISitesWebApiClient _sitesWebApiClient;
@@ -191,7 +192,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
                 vr.ViewName = emailTemplate.Template;
-                var doc = JsonConvert.DeserializeObject<DC.Document>(vr.Model.ToString());
+                var doc = (DC.Document) vr.Model;
                 if (doc != null)
                 {
                     doc.Set("page_type_definition", id);

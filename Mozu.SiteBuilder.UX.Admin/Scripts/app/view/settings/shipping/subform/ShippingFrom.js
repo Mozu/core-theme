@@ -43,7 +43,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingFrom', {
 
             fieldLabel: 'Shipping From',
             editable: false,            
-            forceSelection: true,            
+            forceSelection: false,            
             displayField: 'name',
             valueField: 'code',
             allowBlank: true,

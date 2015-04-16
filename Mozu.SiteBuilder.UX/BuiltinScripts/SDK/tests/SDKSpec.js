@@ -201,6 +201,39 @@ describe('Mozu SDK', function() {
         });
     });
 
+    describe("the collection of URL templates", function() {
+        it("should all parse successfully", function() {
+            var methods = Mozu.ApiReference.methods;
+
+            function testTemplate(name, str) {
+                    try {
+                        Mozu.Utils.uritemplate.parse(str);
+                    } catch (e) {
+                        throw new Error('Error in ' + name + ' template: ' + e.toString());
+                    }
+            }
+
+            function walkTemplateStrings(name, obj) {
+                Object.keys(obj).forEach(function(k) {
+                    if (typeof obj[k] === "object") {
+                        walkTemplateStrings(name + '.' + k, obj[k])
+                    } else if (k === "template" || k === "useIframeTransport") {
+                        expect(testTemplate(name + '.' + k, obj[k])).not.to.throw;
+                    }
+                })
+            }
+
+            Object.keys(methods).forEach(function(name) {
+                if (typeof methods[name] === "string") {
+                    expect(testTemplate(name, methods[name])).not.to.throw;
+                } else {
+                    walkTemplateStrings(name, methods[name])
+                }
+            });
+
+        });
+    });
+
     describe("the ApiContext object", function() {
         var tenant = Mozu.Tenant(1);
         

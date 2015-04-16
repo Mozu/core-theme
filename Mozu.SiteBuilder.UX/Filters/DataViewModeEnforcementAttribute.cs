@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
 using Mozu.Core;
-using Mozu.Core.Api.Handlers.Message;
 using Mozu.Core.Behaviors;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
@@ -22,13 +21,16 @@ using System.Web.Http.Filters;
 
 namespace Mozu.SiteBuilder.UX.Filters
 {
+
+    public class IgnoreDataViewModeAttribute : Attribute { };
+
     public class DataViewModeEnforcementAttribute : FilterAttribute, IAuthorizationFilter
     {
-        static Lazy<InternalIpRanges> _mozuInternalIps;
         public override bool AllowMultiple { get { return false; } }
 
         public async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
+            
             var request = actionContext.Request;
             var resolver = GetRequestScope(request);
             var apiContext = resolver.Resolve<ISiteBuilderApiContext>();
@@ -38,7 +40,6 @@ namespace Mozu.SiteBuilder.UX.Filters
 
             var settings = resolver.Resolve<ISettings>();
             var authhelper = resolver.Resolve<IAuthenticationHelper>();
-            if (_mozuInternalIps == null) _mozuInternalIps = new Lazy<InternalIpRanges>(() => new InternalIpRanges(settings.AppSettings("mozu_internal_ips")));
 
             // fixup claims to ensure that even anonymous viewers get claims.
             if (apiContext.UserClaims == null && apiContext.SiteId.HasValue) CreateShopperClaimsForSite(apiContext, authhelper);
@@ -48,7 +49,8 @@ namespace Mozu.SiteBuilder.UX.Filters
             var adminToken = authhelper.GetAdminAccessToken();
             var viewMode = apiContext.DataViewMode;
 
-            if (!IsLockedDown(viewMode, GetLockDownToggles(siteContext.GeneralSettings)))
+            if (!IsLockedDown(viewMode, GetLockDownToggles(siteContext.GeneralSettings))
+                || IsControllerIgnoringDataViewMode(actionContext.ControllerContext))
             {
                 return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
             }
@@ -65,6 +67,11 @@ namespace Mozu.SiteBuilder.UX.Filters
 
             // hooray, now we can see the thing!
             return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
+        }
+
+        private bool IsControllerIgnoringDataViewMode(HttpControllerContext controllerContext)
+        {
+            return controllerContext.ControllerDescriptor.GetCustomAttributes<IgnoreDataViewModeAttribute>().Any();
         }
 
         private static string GetHostValue(IRequestUrlFinderOuter finder)

@@ -752,11 +752,6 @@
     <Content Include="Themes\Core4\templates\pages\reset-password.hypr" />
     <Content Include="Themes\Core4\templates\pages\search-results.hypr" />
     <Content Include="Themes\Core4\templates\pages\WidgetTEsting\test.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\blogarchive.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\blogRss.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\recentposts.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\tagcollection.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\tags.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\deal-of-the-day.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\featuredproducts.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\related-products.hypr" />
@@ -1462,9 +1457,6 @@
     <Content Include="Themes\Core5\templates\pages\blank-page.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\blog.hypr" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Themes\Core5\templates\pages\cart.hypr" />
   </ItemGroup>
   <ItemGroup>
@@ -1501,9 +1493,6 @@
     <Content Include="Themes\Core5\templates\pages\parent-category.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\post.hypr" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Themes\Core5\templates\pages\product-location.hypr" />
   </ItemGroup>
   <ItemGroup>
@@ -1514,24 +1503,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\pages\search-results.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\WidgetTEsting\test.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\blogarchive.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\blogRss.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\recentposts.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\tagcollection.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\tags.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\Widgets\catalog\deal-of-the-day.hypr">
@@ -1803,7 +1774,6 @@
     <Content Include="Themes\Core6\templates\pages\404.hypr" />
     <Content Include="Themes\Core6\templates\pages\about-us.hypr" />
     <Content Include="Themes\Core6\templates\pages\blank-page.hypr" />
-    <Content Include="Themes\Core6\templates\pages\blog.hypr" />
     <Content Include="Themes\Core6\templates\pages\cart.hypr" />
     <Content Include="Themes\Core6\templates\pages\category.hypr" />
     <Content Include="Themes\Core6\templates\pages\checkout.hypr" />
@@ -1816,17 +1786,11 @@
     <Content Include="Themes\Core6\templates\pages\my-account.hypr" />
     <Content Include="Themes\Core6\templates\pages\no-search-results.hypr" />
     <Content Include="Themes\Core6\templates\pages\parent-category.hypr" />
-    <Content Include="Themes\Core6\templates\pages\post.hypr" />
     <Content Include="Themes\Core6\templates\pages\product-location.hypr" />
     <Content Include="Themes\Core6\templates\pages\product.hypr" />
     <Content Include="Themes\Core6\templates\pages\reset-password.hypr" />
     <Content Include="Themes\Core6\templates\pages\search-results.hypr" />
     <Content Include="Themes\Core6\templates\pages\WidgetTEsting\test.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\blogarchive.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\blogRss.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\recentposts.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\tagcollection.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\tags.hypr" />
     <Content Include="Themes\Core6\templates\Widgets\catalog\deal-of-the-day.hypr" />
     <Content Include="Themes\Core6\templates\Widgets\catalog\featuredproducts.hypr" />
     <Content Include="Themes\Core6\templates\Widgets\catalog\related-products.hypr" />
@@ -1882,6 +1846,10 @@
     <Content Include="Themes\Core6\templates\modules\common\coupon-code-field.hypr.live" />
     <Content Include="Themes\Core5\templates\modules\common\coupon-code-field.hypr.live" />
     <Content Include="Themes\Core4\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core5\templates\pages\forgot-password.hypr" />
+    <Content Include="Themes\Core5\templates\pages\signup.hypr" />
+    <Content Include="Themes\Core6\templates\pages\forgot-password.hypr" />
+    <Content Include="Themes\Core6\templates\pages\signup.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1995,5 +1963,4 @@
     <Error Condition="!Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OctoPack.2.1.3\build\OctoPack.targets'))" />
   </Target>
   <Import Project="..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets')" />
-  
 </Project>

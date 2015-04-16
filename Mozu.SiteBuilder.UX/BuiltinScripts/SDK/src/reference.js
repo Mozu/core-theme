@@ -41,6 +41,8 @@ var ApiReference = {
 
     headerPrefix: 'x-vol-',
 
+    methods: objectTypes,
+
     getActionsFor: function(typeName) {
         ApiCollection = ApiCollection || require('./collection');
         if (!objectTypes[typeName]) return false;

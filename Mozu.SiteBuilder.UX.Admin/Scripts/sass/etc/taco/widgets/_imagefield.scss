@@ -6,7 +6,7 @@
     font-weight: normal;
     background-repeat: no-repeat;
     padding-top: px-to-rem(30);
-    background-image: url(/admin/Scripts/resources/images/image-drop.png);
+    background-image: url(../../resources/images/image-drop.png);
 
     @include transition(background-color 0.3s ease-in);
 

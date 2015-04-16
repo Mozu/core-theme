@@ -13,7 +13,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
     extend: 'Ext.form.FieldContainer',
     alias: 'widget.taco-filtercontainer',
     requires: [
-        'Taco.core.ux.form.field.QuickFilter'
+        'Taco.core.ux.form.field.QuickFilter',
+        'Taco.core.util.Filter'
     ],
 
     /**
@@ -21,6 +22,16 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @property {String} [currentFilterString={}]
      */
     currentFilterString: '{}',
+
+    /**
+     * The characters to use for delimiting field from value 
+     */
+    keyValueDelimiter: ':',
+
+    /**
+     * Used to cached adv search field names for comparison to user entered keys
+     */
+    advSearchFields: null,
 
     /**
      * @cfg {String} [defaultFieldName="keyword"]
@@ -452,38 +463,35 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The object containing field keys and values.
      */
     parseTextFilterValue: function (field) {
-        var value = field.getValue(),
-            jsonValue = {},
-            values,
-            lastKey;
-
-        if (!Ext.isEmpty(value)) {
-            values = value.split(' ');
-
-            Ext.Array.each(values, function (item, index, all) {
-                var colonIndex = item.indexOf(':'),
-                    key,
-                    val;
-
-                if (colonIndex !== -1) {
-                    key = Ext.String.createVarName(item.substr(0, colonIndex));
-                    val = item.substr(colonIndex + 1);
-                    lastKey = key;
-
-                    jsonValue[key] = val;
-                } else {
-                    if (index === 0) {
-                        key = lastKey = 'keyword';
-                        jsonValue[key] = item;
-                    } else if (!Ext.isEmpty(lastKey)) {
-                        jsonValue[lastKey] = Ext.String.trim([jsonValue[lastKey], item].join(' '));
-                    }
-                }
-            }, this);
-        }
-
-        return jsonValue;
+        return Taco.core.util.Filter.toJSON(field.getValue(), this.getAdvSearchFieldNames(), this.keyValueDelimiter);
     },
+
+    isFieldSupported: function (key) {
+        var match;
+        if (!this.advancedForm || !key) {
+            return !(!key);
+        }
+        if (!this.advSearchFields) {
+            this.advSearchFields = Ext.Array.pluck(this.advancedForm.query('[name]'), 'name');
+        }
+        match = Ext.Array.findBy(this.advSearchFields, function (fld) {
+            return (fld.toLowerCase() === key.toLowerCase());
+        });
+        return match !== null;
+    },
+
+    //returns names of each adv search field and caches result.
+    getAdvSearchFieldNames: function() {
+        if (this.advSearchFields)
+            return this.advSearchFields;
+
+        if (!this.advancedForm) {
+            return [];
+        }
+        this.advSearchFields = Ext.Array.pluck(this.advancedForm.query('[name]'), 'name');
+        return this.advSearchFields;
+    },
+
 
     /**
      * Set the values in the advanced filters dialog's form fields.
@@ -529,7 +537,8 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
 
 
     serializeFilterValue:function (values) {
-        var simpleValue = [];
+        var me = this,
+            simpleValue = [];
 
         Ext.Object.each(values, function (fieldName, rawValue) {
             if (!Ext.isEmpty(rawValue)) {                
@@ -537,9 +546,9 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
                     simpleValue.push(rawValue);
                 } else {
                     if (Ext.isDate(rawValue)) {
-                        simpleValue.push([fieldName, Ext.Date.format(rawValue, 'c')].join(':'));
+                        simpleValue.push([fieldName, Ext.Date.format(rawValue, 'c')].join(me.keyValueDelimiter));
                     } else {
-                        simpleValue.push([fieldName, rawValue].join(':'));
+                        simpleValue.push([fieldName, rawValue].join(me.keyValueDelimiter));
                     }
                 }
             }

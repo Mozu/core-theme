@@ -24,6 +24,7 @@ Ext.define('Taco.view.account.userFormModal', {
     initComponent: function() {
         var me = this;
         me.title = (me.record) ? 'Edit User' : 'Add User';
+
         me.roles = Ext.create('Taco.store.Roles', {
             autoLoad: true/*,
             filters: [
@@ -62,9 +63,9 @@ Ext.define('Taco.view.account.userFormModal', {
             }
 
             if (!this.isValid()) {
-                Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].disable();
             } else {
-                Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+                Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].enable();
             }
         }, me);
 
@@ -77,9 +78,9 @@ Ext.define('Taco.view.account.userFormModal', {
             listeners: {
                 selectionchange: function (it) {
                     if (!this.scope.isValid()) {
-                        Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                        Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].disable();
                     } else {
-                        Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+                        Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].enable();
                     }
 
                 }
@@ -194,6 +195,10 @@ Ext.define('Taco.view.account.userFormModal', {
         this.items = [this.form];
 
         this.callParent(arguments);
+
+        if (me.record == null) {
+            Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].text = 'Invite User';
+        } 
     },
 
     doSave: function() {

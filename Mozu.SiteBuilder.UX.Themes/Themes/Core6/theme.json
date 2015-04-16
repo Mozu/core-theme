@@ -18,14 +18,6 @@
             "priority": 0.2
         },
         {
-            "documentTypes": [
-                "post@mozu"
-            ],
-            "id": "post@mozu",
-            "path": "post.js",
-            "priority": 0.2
-        },
-        {
             "id": "about-us@mozu",
             "path": "about-us.js"
         },
@@ -769,6 +761,12 @@
                     "fieldLabel": "Number to display",
                     "name": "numberToDisplay",
                     "xtype": "mz-input-number"
+                },
+                {
+                    "anchor": "100%",
+                    "fieldLabel": "Hide Empty Child Nodes",
+                    "name": "hideEmptyChildNodes",
+                    "xtype": "mz-input-checkbox"
                 }
             ],
             "icon": "/resources/admin/widgets/22_category_navigation.png",

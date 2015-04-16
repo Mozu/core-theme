@@ -282,7 +282,7 @@ Ext.define('Taco.core.ux.form.Form', {
         var tplInput, data, tpl;
 
 
-        if (this.originalTitle || this.header) {
+        if (this.originalTitle) {
             return;
         }
         

@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
-    [DataViewModeEnforcementAttribute]
+    [DataViewModeEnforcement]
     public class CmsPagesController : BaseApiController
     {
 
@@ -268,7 +268,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-            var result = View(template, vm.ToJObject());
+            var result = View(template, vm);
 
             
             return this.Request.CreateResponse(HttpStatusCode.OK, result);

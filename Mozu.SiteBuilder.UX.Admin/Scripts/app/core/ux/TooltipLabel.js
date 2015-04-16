@@ -108,7 +108,8 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                                 {
                                     xtype: 'button',
                                     text: '',
-                                    glyph: 'XE011@mozicons'
+                                    glyph: 'XE011@mozicons',
+                                    overCls: ''
                                 }
                             ]
                         }],

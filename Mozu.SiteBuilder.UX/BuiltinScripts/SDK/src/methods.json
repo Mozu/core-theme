@@ -22,7 +22,7 @@
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{{+storefrontUserService}../../receiver{?receiverVersion}"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityList": {
         "template": "{+entityListService}{listName}/entities{?_*}",

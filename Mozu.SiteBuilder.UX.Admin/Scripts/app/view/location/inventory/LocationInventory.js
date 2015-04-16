@@ -220,7 +220,10 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                         editable: false,
                         msgTarget: "qtip",                        
                         allowBlank: false,
-                        extraFilters: [{ id: "status", property: 'status', value: 'all' }],
+                        extraFilters: [
+                            { id: "status", property: 'status', value: 'all' },
+                            { id: "supportsInventory", property: 'supportsInventory', value: 'true' }
+                        ],
                         onEditorShow: function (field, editor, context) {
                             // need to add the locationCode to the locationInventory;
 
