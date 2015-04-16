@@ -298,7 +298,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                         });
                     }
                 }, {
-                    text: 'Edit Product',
+                    text: 'Edit Base Product',
                     /*
                 requiredBehaviors: {
                     model: 'Taco.model.Product',
@@ -307,7 +307,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                 */
                     menuColumnHandler: function(item, eventData) {
                         var record = eventData.record;
-                        var code = record.get("parentProductCode") || record.get("productCode");
+                        var code = record.get("baseProductCode") || record.get("productCode");
                         Ext.defer(function() {
                             Taco.core.StateManager.attemptNavigate('products/edit/' + code);
                         }, 1, this);
