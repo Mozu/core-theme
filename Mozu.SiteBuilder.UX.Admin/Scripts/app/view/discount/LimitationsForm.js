@@ -120,6 +120,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                     me.couponCodeBox[newValue ? 'show' : 'hide']();
                     me.couponCodeInput.setDisabled(!newValue);
                     me.couponCodeInput.validate();
+                    me.parentForm.getForm().checkValidity();
                 },
                 scope: this
             }
@@ -129,6 +130,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             name: 'couponCode',
             allowBlank: false,
             width: 520,
+            disabled: !(this.record.get('couponCode') || this.record.get('requiresCoupon')),
             validator: Taco.core.util.Validation.validateQueryString
         });
 
@@ -263,6 +265,8 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         if (!isLineItem) {
             me.maxRedemptionsPerOrder.setValue(null);
         }
+
+        
     },
 
     onDestroy: function () {
