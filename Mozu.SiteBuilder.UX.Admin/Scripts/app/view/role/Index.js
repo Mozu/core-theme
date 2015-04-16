@@ -38,9 +38,8 @@ Ext.define('Taco.view.role.Index', {
         }
 
         this.gridPanelConf = {
-         //   store: this.store,
+            //   store: this.store,
             listeners: {
-               // itemclick: this.onItemClick,
                 deleterole: this.onDeleteRole,
                 scope: this
             },
@@ -48,48 +47,52 @@ Ext.define('Taco.view.role.Index', {
             stateful: true,
             stateId: "statefulRolesGrid",
             columns: [
-                {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'name',
-                    stateId:"name",
-                    text: 'Name',
-                    flex: 1,
-                    renderer: function (value, metaData, record) {
+            {
+                xtype: 'gridcolumn',
+                dataIndex: 'name',
+                stateId: "name",
+                text: 'Role Name',
+                flex: 1,
+                renderer: function(value, metaData, record) {
 
-                        if (record.get('isEditable')) {
-                            return '<a href="#" class="taco-launch-editor">' + value + '</a>';
-                        } else {
-                            return value;
-                        }
+                    if (record.get('isEditable')) {
+                        return '<a href="#" class="taco-launch-editor">' + value + '</a>';
+                    } else {
+                        return value;
                     }
-                }, {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'isEditable',
-                    stateId: "isEditable",
-                    text: 'Role Type',
-                    flex: 1,
-                    renderer: function (value, metaData, record) {
+                }
+            }, {
+                xtype: 'gridcolumn',
+                dataIndex: 'isEditable',
+                stateId: "isEditable",
+                text: 'Role Type',
+                flex: 1,
+                renderer: function(value, metaData, record) {
 
-                        if (record.get('isEditable')) {
-                            return 'Custom Role';
-                        } else {
-                            return 'System Role';
-                        }
+                    if (record.get('isEditable')) {
+                        return 'Custom Role';
+                    } else {
+                        return 'System Role';
                     }
-                }, {
-                    xtype: 'taco.menucolumn',
-                    text: 'Actions',
-                    stateId: 'actionsColumn',
-                    scope: me,
-                    items: [
-                    {
-                        text: 'flerp'
-                    }],
+                }
+            }, {
+                xtype: 'taco.menucolumn',
+                text: 'Actions',
+                stateId: 'actionsColumn',
+                scope: me,
+                items: [{
+                    text: 'flerp'
+                }],
+                getMenu: function (eventData) {
+                    var record = eventData.record;
+                    return this.up().grid.scope.getContextMenu(record);
+                },
                     handler: function (grid, foo, bar, snerst, evt, record, row) {
                         this.launchContextMenu(evt, record, row);
                     }
                 }
-            ]
+            ],
+            scope: me
         };
         
         this.callParent(arguments);
@@ -103,7 +106,8 @@ Ext.define('Taco.view.role.Index', {
 
        
     },
-    launchContextMenu: function(evt, record, row) {
+    getContextMenu: function (record) {
+        //Generates the context menu to be shown
         var actions;
         var me = this;
 
@@ -148,8 +152,7 @@ Ext.define('Taco.view.role.Index', {
                     scope: me
                 }
             ];
-        }
-
+        };
 
         var menu = Ext.create('Ext.menu.Menu', {
             showSeparator: false,
@@ -167,6 +170,12 @@ Ext.define('Taco.view.role.Index', {
                 }
             }
         });
+
+        return menu;
+    },
+    launchContextMenu: function(evt, record, row) {
+        var me = this;
+        var menu = me.getContextMenu(record);
 
         if (row) {
             menu.showBy(row, 'tr-br', [-1, -1]);
@@ -190,6 +199,9 @@ Ext.define('Taco.view.role.Index', {
                 }
             }
         });
+    },
+    getActionEvents: function() {
+        console.log('ere');
     },
     launchEditor: function (record, action) {
         //This is a work around bc the single click calls launch Editor twice
