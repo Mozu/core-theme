@@ -22,7 +22,7 @@ using Mozu.SiteBuilder.UX.Messaging;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [SslOnlyActionFilter]
+    
     public class AuthController : BaseApiController
     {
         
@@ -55,6 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext.SetUser(user);
         }
 
+        [SslOnlyActionFilter]
         async Task<ServiceClientResponse<CustomerAuthTicket>> LoginAndTrack(Func<Task<ServiceClientResponse<CustomerAuthTicket>>> loginFunc)
         {
             var response = await loginFunc();
@@ -143,6 +144,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
+        [SslOnlyActionFilter]
         public HttpResponseMessage LogOut(string returnUrl = null)
         {
             DoLogout();
@@ -158,6 +160,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
+        [SslOnlyActionFilter]
         public ActionResult Login(string returnUrl = null)
         {
 
@@ -177,6 +180,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
+        [SslOnlyActionFilter]
         public ActionResult AjaxForgotPassword(string returnUrl = null)
         {
 
@@ -196,6 +200,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
+        [SslOnlyActionFilter]
         public ActionResult CreateAccount(string returnUrl = null)
         {
             var pc = this.PageContext;
@@ -219,6 +224,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
+        [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
            
@@ -233,8 +239,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                                              });
              }
 
-         [AcceptVerbs("OPTIONS", "POST")]
-         public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
+        [AcceptVerbs("OPTIONS", "POST")]
+        [SslOnlyActionFilter]
+        public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
             if (Request.Method.Method == "OPTIONS")
              {
@@ -246,6 +253,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
          }
 
         [System.Web.Http.HttpPost]
+        [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> Login(LoginDetails details)
         {
             string email = details.email;
@@ -273,6 +281,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
+        [SslOnlyActionFilter]
         public async Task<object> AjaxLogin(LoginDetails details)
         {
             string email = details.email;
@@ -304,7 +313,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [HttpPost, HttpOptions]
-         public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
+        [SslOnlyActionFilter]
+        public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
          {
             if (Request.Method.Method == "OPTIONS")
              {
@@ -315,8 +325,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              return res.ResponseMessage;
          }
 
-         [HttpGet]
-         public async Task<ActionResult> ResetPassword(string t, string u)
+        [HttpGet]
+        [SslOnlyActionFilter]
+        public async Task<ActionResult> ResetPassword(string t, string u)
          {
              var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
 
@@ -340,8 +351,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              public object[] messages { get; set; }
          }
 
-         [HttpPost]
-         public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
+        [HttpPost]
+        [SslOnlyActionFilter]
+        public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
          {
              var res = await DoResetPasswordConfirm(info);
              var ex = res.ReadException();
