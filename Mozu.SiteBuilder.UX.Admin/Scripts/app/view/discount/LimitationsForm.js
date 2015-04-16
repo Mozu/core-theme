@@ -25,7 +25,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             Taco.core.ux.TooltipLabel.wrapConfig('discount.limitations.maximumDiscountValuePerRedemption', me, {
                 name: 'maximumDiscountValuePerRedemption',
                 itemId: 'maxDiscountValuePerRedemption',
-                fieldLabel: "Max Discount Value (per Redemption)",
+                fieldLabel: "Max Discount Value (Per Redemption)",
                 forcePrecision: true,
                 labelAlign: 'top',
                 width: 250,
@@ -42,7 +42,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.maxDiscountOrderValue = Ext.create('Taco.core.ux.form.CurrencyField', {
             name: 'maximumDiscountValuePerOrder',
             itemId: 'maxDiscountValuePerOrder',
-            fieldLabel: "Max Discount Value (per Order)",
+            fieldLabel: "Max Discount Value (Per Order)",
             forcePrecision: true,
             labelAlign: 'top',
             width: 250,
@@ -70,7 +70,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             itemId: 'maxRedemptionsPerOrder',
             hideTrigger: true,
             width: 250,
-            fieldLabel: 'Max Redemptions (per Order)',
+            fieldLabel: 'Max Redemptions (Per Order)',
             hidden: this.record.get('scope') === 'Order',
             minValue: 0,
             emptyText: 'Unlimited'
@@ -111,24 +111,33 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.requiresCouponInput = Ext.create('Ext.form.field.Checkbox', {
             name: 'requiresCoupon',
             boxLabel: 'Create coupon',
+            padding: {
+                top:10
+            },
             labelAlign: 'right',
             listeners: {
                 change: function (cb, newValue) {
-                    this.couponCodeBox[newValue ? 'show' : 'hide']();
+                    me.couponCodeBox[newValue ? 'show' : 'hide']();
+                    me.couponCodeInput.setDisabled(!newValue);
+                    me.couponCodeInput.validate();
                 },
                 scope: this
             }
         });
+
         this.couponCodeInput = Ext.create('Ext.form.field.Text', {
             name: 'couponCode',
+            allowBlank: false,
             width: 520,
             validator: Taco.core.util.Validation.validateQueryString
         });
-        this.couponCodeBox = Ext.create('Ext.container.Container', {
+
+        this.couponCodeBox = Ext.create('Ext.form.FieldContainer', {
             layout: {
                 type: 'hbox',
                 align: 'top'
             },
+            //fieldLabel:"Coupon Code",
             hidden: !(this.record.get('couponCode') || this.record.get('requiresCoupon')),
             items: [
                 this.couponCodeInput,

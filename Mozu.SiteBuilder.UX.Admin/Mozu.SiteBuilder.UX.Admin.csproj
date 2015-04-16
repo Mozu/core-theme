@@ -863,6 +863,7 @@
     <Content Include="Scripts\app\overrides\form\field\ComboBox.js" />
     <Content Include="Scripts\app\overrides\form\field\Display.js" />
     <Content Include="Scripts\app\overrides\form\field\HtmlEditor.js" />
+    <Content Include="Scripts\app\overrides\form\field\Radio.js" />
     <Content Include="Scripts\app\overrides\form\field\Number.js" />
     <Content Include="Scripts\app\overrides\grid\plugin\CellEditing.js" />
     <Content Include="Scripts\app\overrides\grid\plugin\RowEditing.js" />

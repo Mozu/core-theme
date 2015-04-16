@@ -80,12 +80,13 @@ Ext.define('Taco.view.discount.GeneralForm', {
             store: Ext.create('Ext.data.ArrayStore', {
                 fields: ['text', 'value'],
                 data: [
-                    ["LineItem", "LineItem"],
+                    ["Line Item", "LineItem"],
                     ["Order", "Order"]
                 ]
             }),
             listeners: {
-                change: function(myself, newVal) {
+                change: function (myself, newVal, oldVal) {
+                    this.record.fireEvent( "scopeChange", myself, newVal, oldVal);
                     me.parentForm.setFieldVisibility();
                     me.filterFixedPriceOptionWhenOrderProduct(newVal, null);
                 },
