@@ -96,7 +96,8 @@ Ext.define('Taco.view.capability.Form', {
                 '<div><span>Initialized: </span><span>{[values.data.initialized]}</span></div>',
 //                '<div><span>License Dates: </span><span>{[Ext.util.Format.date(values.data.effectiveStartDate, "Y") === "0000" ? "thru" : (Ext.util.Format.date(values.data.effectiveStartDate, "m/d/Y") + " -")]} {[Ext.util.Format.date(values.data.effectiveEndDate, "m/d/Y")]}</span></div>',
                 '<div><span>Purchase Date: </span><span>{[Ext.util.Format.date(values.data.createDate, "m/d/Y")]}</span></div>',
-                '<div><span>License Type: </span><span>{[values.data.licenseType]}</span></div>'
+                '<div><span>License Type: </span><span>{[values.data.licenseType]}</span></div>',
+                '<div><span>Version: </span><span>{[values.data.version]}</span></div>'
             ] 
         });
         

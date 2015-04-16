@@ -40,14 +40,6 @@ Ext.define('Taco.view.order.Grid', {
     
     title: "Orders",
 
-    store: { 
-        type: 'Taco.store.Orders',
-        sorters: [{
-            property: 'submittedDate',
-            direction: 'DESC'
-        }],
-    },  
-
     autoScroll: true,
 
     enableQuickFilters:true,
@@ -161,7 +153,6 @@ Ext.define('Taco.view.order.Grid', {
     getBulkActions: function (menu) {
         var me = this;
         var selection = this.getSelectionModel().getSelection();
-        var context = Taco.app.context.getCurrent();
         var allAvailableBulkActions = Ext.Array.flatten(Ext.Array.map(selection, function (o) { return o.get('availableBulkActions') }));
 
         menu.items.each(function (item) {
@@ -749,5 +740,4 @@ Ext.define('Taco.view.order.Grid', {
         });
 
     }
-
 });

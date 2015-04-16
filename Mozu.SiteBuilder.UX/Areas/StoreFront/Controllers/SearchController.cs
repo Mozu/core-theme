@@ -1,10 +1,8 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -15,11 +13,13 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Filters;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [NoSslActionFilter]
     [ContextInitialization]
+    [DataViewModeEnforcement]
     public class SearchController : BaseApiController
     {
         private readonly IProductCategoryRuntimeWebApiClient _catClient;
@@ -151,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             };
 
-            return View(searchPageType, pc.ToJObject());
+            return View(searchPageType, pc);
             
             //if (pc.TotalCount > 0)
             //{

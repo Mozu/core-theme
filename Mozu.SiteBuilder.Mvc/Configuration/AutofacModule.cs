@@ -20,9 +20,9 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
 
 using NDjango;
 using NDjango.FiltersCS;
-using NDjango.Interfaces;
 using Module = Autofac.Module;
 using Mozu.SiteBuilder.Mvc.Logging;
+using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -32,10 +32,10 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
         {
             builder.RegisterClassesMatchingInterfaceName(typeof(IShippingWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Core.CodeBlocks.CodeBlockDescriptor	).Assembly);
+            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Core.CodeBlocks.CodeBlockDescriptor	).Assembly);
              
             builder.RegisterType<MozuVirtualPathProvider>().As<IMozuVirtualPathProvider>().InstancePerRequest();
-         
+            
             //contexts
             builder.RegisterType<ClientApiContext>().InstancePerRequest();
             builder.RegisterType<NavigationContext>().InstancePerRequest();

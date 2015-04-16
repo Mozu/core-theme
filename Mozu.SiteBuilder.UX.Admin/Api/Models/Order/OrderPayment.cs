@@ -37,6 +37,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public decimal AmountCredited { get; set; }
 
+        public decimal AmountRefunded { get; set; }
+
         public List<PaymentInteraction> Interactions { get; set; }
 
 

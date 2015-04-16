@@ -37,9 +37,11 @@ Ext.define('Taco.core.ux.form.UnitField', {
             errors = me.callParent(arguments),
             format = Ext.String.format,
             num;
-
         // unitfield will always fail numberfield's NaN validation
         errors = Ext.Array.remove(errors, format(me.nanText, value));
+        // need to remove the default error for min value when its 0 since we reapply it below
+        errors = Ext.Array.remove(errors, format(me.minText, me.minValue));
+
         value = Ext.isDefined(value) ? value : this.processRawValue(this.getRawValue());
         value = me.stripUnitString(value);
 
@@ -57,7 +59,7 @@ Ext.define('Taco.core.ux.form.UnitField', {
 
         if (me.minValue === 0 && num < 0) {
             Ext.Array.include(errors, this.negativeText);
-        }
+        } 
         else if (num < me.minValue) {
             errors.push(format(me.minText, me.minValue));
         }

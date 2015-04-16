@@ -85,6 +85,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.form.field.ComboBox',
         'Taco.overrides.form.field.Number',
         'Taco.overrides.form.field.HtmlEditor',
+        'Taco.overrides.form.field.Radio',
         'Taco.overrides.grid.Panel',
         'Taco.overrides.grid.RowEditor',
         'Taco.overrides.grid.RowEditorButtons',
@@ -123,7 +124,10 @@ Ext.define('Taco.Application', {
         'Ext.layout.container.Absolute',
         'Ext.form.field.Radio',
         'Taco.core.ux.form.field.SingleImageField',
-        'Ext.ux.form.MultiSelect'
+        'Ext.ux.form.MultiSelect',
+        'Taco.store.TooltipHelp',
+        'Taco.core.ux.TooltipLabel',
+        'Taco.core.util.Filter'
     ],
     controllers: [
         //'Analytics',
@@ -571,6 +575,10 @@ Ext.define('Taco.Application', {
             });
         };
 
-
+        Ext.apply(Ext.util.Format, {
+            siteCurrency: function (value, siteId) {
+                return Taco.app.context.findSite(siteId).formatCurrency(value);
+            }
+        });
     }
 });

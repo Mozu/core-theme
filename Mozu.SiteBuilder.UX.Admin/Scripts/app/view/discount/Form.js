@@ -20,6 +20,11 @@ Ext.define('Taco.view.discount.Form', {
     editTitle: '{[values.record.data.name]}',
 
     initComponent: function () {
+
+        // Note: the record will act as an event bus for the subForms. 
+        // User interactions in a subform that cause changes in other forms will communicate via events on the record.
+        // Each subform will listen for and react to these changes.
+
         this.items = [{
             xtype: 'taco-discount-general',
             itemId: 'general',
@@ -65,17 +70,18 @@ Ext.define('Taco.view.discount.Form', {
     },
 
     setFieldVisibility: function () {
-        var isLineItem = this.general.isLineItem(),
+        var scopeType = this.general.scopeTypeInput.getValue(),
+            targetType = this.general.targetTypeInput.getValue(),
+            discountType = this.general.amountTypeInput.getValue(),
+            isLineItem = this.general.isLineItem(),
             isOrder = this.general.isOrder(),
-            appliesToShipping  = this.general.appliesToShipping();
+            appliesToShipping = this.general.appliesToShipping();
+            
         
-        // only show the target criteria form if the discount applies to combo has a selection
-        if (isOrder || isLineItem) {
-            this.criteria.setFieldVisibility(isLineItem, appliesToShipping);
-        }
-        
-        this.conditions.setFieldVisibility(isLineItem, appliesToShipping);
-        this.limitations.setFieldVisibility(isLineItem, appliesToShipping);
+        // need to pass all info necessary to the subforms to control their own visibility and fields.
+        this.criteria.setFieldVisibility(scopeType, targetType, discountType);
+        this.conditions.setFieldVisibility(scopeType, targetType, discountType);
+        this.limitations.setFieldVisibility(scopeType, targetType, discountType);
         this.loadNavItems();
     },
 

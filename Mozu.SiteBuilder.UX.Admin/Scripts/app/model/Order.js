@@ -7,6 +7,8 @@ Ext.define('Taco.model.Order', {
     'Taco.model.Return',
     'Taco.model.ShippingMethod',
     'Taco.model.InternalNote',
+    'Taco.model.OrderPayment',
+    'Taco.model.OrderRefund',
     'Taco.store.ShippingMethods',
     'Ext.data.association.HasOne'
     ],
@@ -292,7 +294,13 @@ Ext.define('Taco.model.Order', {
             name: 'total',
             type: 'float',
             useNull: true
-        }, {
+        },
+        {
+            name: 'amountRefunded',
+            type: 'float',
+            useNull: true
+        },
+        {
             name: 'returnStatus',
             type: 'string',
             useNull: true,
@@ -393,6 +401,12 @@ Ext.define('Taco.model.Order', {
 
         {
             name: 'payments',
+            type: 'auto',
+            useNull: true,
+            defaultValue: []
+        },
+        {
+            name: 'refunds',
             type: 'auto',
             useNull: true,
             defaultValue: []
@@ -811,6 +825,11 @@ Ext.define('Taco.model.Order', {
             type: 'hasMany',
             model: 'Taco.model.OrderPayment',
             name: 'payments',
+            reader: 'json'
+        }, {
+            type: 'hasMany',
+            model: 'Taco.model.OrderRefund',
+            name: 'refunds',
             reader: 'json'
         }, {
             type: 'hasMany',
@@ -2175,18 +2194,18 @@ Ext.define('Taco.model.Order', {
 
 
     /**
- * service call to update the customer note.
- * @param {Object} config  A configuration object     
- * config object:
-    {
-        jsonData: {   
-            // include one or both adjustment types.
-            orderId: '987654321',
-            note: ''
+     * service call to update the customer note.
+     * @param {Object} config  A configuration object     
+     * config object:
+        {
+            jsonData: {   
+                // include one or both adjustment types.
+                orderId: '987654321',
+                note: ''
+            }
         }
-    }
- *
- */
+     *
+     */
     setCustomerNote: function (config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/setcustomernote',
@@ -2260,6 +2279,21 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    createRefund: function (refund, options) {
+        var data = Ext.apply({}, refund, {
+            orderId: this.getId()
+        });
+
+        options.errorMsg = options.errorMsg || 'Error saving refund.';
+        this.addErrorHandling(options);
+
+        Ext.Ajax.request(Ext.apply({}, options, {
+            url: '/admin/app/order/refunds',
+            method: 'POST',
+            jsonData: data
+        }));
+    },
+
     getInternalNotes: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.InternalNote',
@@ -2267,69 +2301,94 @@ Ext.define('Taco.model.Order', {
             foreignProperty: 'orderId'
         });
     },
-    /**
-    * service call to resend an order email
-    * @param {Object} config  A configuration object     
-    * config object:
-    * 
-       {
-           jsonData: {
-               orderId: '987654321', // optional
 
-               confirmSuccess: false, // suppress the automatic confirmation
+    // service call to resend an order email
+    // @param {Object} config  A configuration object     
+    // config object:
+    //    {
+    //        jsonData: {
+    //            orderId: '987654321', // optional
 
-               confirmTpl: null, // optionaly pass in alternate confirmation XTemplate
+    //            confirmSuccess: false, // suppress the automatic confirmation
 
-               confirmData: null,  // optionaly pass in alternate confirmation data;  order record applied by default;
+    //            confirmTpl: null, // optionaly pass in alternate confirmation XTemplate
 
-               success: Ext.emptyFn, // optionaly pass in success callback
+    //            confirmData: null,  // optionaly pass in alternate confirmation data;  order record applied by default;
 
-               failure: Ext.emptyFn, // optionaly pass in failure callback
+    //            success: Ext.emptyFn, // optionaly pass in success callback
 
-               // required for reseding shipment notifications.                   
-               type:"shipment",
-               packageId: 'asdf' 
-           }
-       }
+    //            failure: Ext.emptyFn, // optionaly pass in failure callback
 
-    *
-    */
-    resendEmail: function (config) {            
+    //            // required for reseding shipment notifications.                   
+    //            type:"shipment",
+    //            packageId: 'asdf' 
+    //        }
+    //    }
+    resendEmail: function (config) {
         var me = this,
             config = config || {},
-            url = (config.type && config.type === "shipment") ? '/admin/app/order/shipping/package/resendshipmentemail' : '/admin/app/order/resendconfirmationemail',
+            url,
             confirmTpl = config.confirmTpl || new Ext.XTemplate([
                 '<p>Successfully resent e-mail</p>'
             ]),
             confirmData = config.confirmData || me.data,
-            confirmSuccess = config.confirmSuccess || true,
+            confirmSuccess = (config.confirmSuccess==false) ? false :  true,
             msg;
-            
-            Ext.apply(config, {
-                method: 'POST',
-                orderId: config.orderId || me.getId(),
-                url: url
-            });
 
-            if (confirmSuccess) {
-                Ext.apply(config, {                   
-                    success: function () {
-                        msg = confirmTpl.apply(confirmData);
-                        Taco.MessageBox.show({
-                            title: 'Resend E-mail',
-                            buttons: Ext.Msg.OK,
-                            msg: msg
-                        });
-                    }
-                });
-            }
-
-            // add in boilerplate error handling code;
-            config.errorMsg = config.errorMsg || 'Error resending email';
-            this.addErrorHandling(config);            
-            Ext.Ajax.request(config);
+        switch (config.type) {
+            case "shipment":
+                url = '/admin/app/order/shipping/package/resendshipmentemail';
+                break;
+            case "refund":
+                url = '/admin/app/order/refunds/resendemail';
+                break;
+            default:
+                url = '/admin/app/order/resendconfirmationemail';
+                break;
         }
-    },
-    function () {
+            
+        Ext.apply(config, {
+            method: 'POST',
+            orderId: config.orderId || me.getId(),
+            url: url
+        });
 
-    });
+        if (confirmSuccess) {
+            Ext.apply(config, {                   
+                success: function () {
+                    msg = confirmTpl.apply(confirmData);
+                    Taco.MessageBox.show({
+                        title: 'Resend E-mail',
+                        buttons: Ext.Msg.OK,
+                        msg: msg
+                    });
+                }
+            });
+        }
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || 'Error resending email';
+        this.addErrorHandling(config);            
+        Ext.Ajax.request(config);
+    }
+
+
+    //,
+
+    // service call to resend the 
+    // @param {Object} config  A configuration object     
+    // config object:
+    // {
+    //     jsonData: {   
+    //         refundId: '987654321'
+    //     }
+    // }
+    //resendRefundEmail: function(config) {
+    //    Ext.apply(config, {
+    //        url: '/admin/app/order/refunds/resendemail',
+    //        method: 'POST'
+    //    });
+
+    //    Ext.Ajax.request(config);
+    //}
+});

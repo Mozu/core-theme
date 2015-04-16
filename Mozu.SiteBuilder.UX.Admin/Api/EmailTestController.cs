@@ -29,6 +29,14 @@ using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
+
+    public class ReturnEmail : Mozu.CommerceRuntime.Contracts.Returns.Return
+    {
+        public bool isMock { get; set; }
+     
+    }
+
+
     [WebApi("app/emailTesting", SuppressDescriptorGeneration = true)]
     public class EmailTestController : BaseController
     {
@@ -120,6 +128,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     break;
 
                 }
+                case "refund.created":
+                {
+                    RefundEmail(req.email);
+                    break;
+                }
                 case "return.authorized":
                 case "return.rejected":
                 case "return.closed":
@@ -187,14 +200,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        void RefundEmail(string email)
+        {
+            var orders = TestDataBroker.GetFileContents<Order>("refund.created");
+            foreach (var order in orders)
+            {
+                SendRefundEmail(order, "refund.created", email);
+            }
+            if (orders.Count() == 0)
+            {
+                throw new Exception("no test data found for refund.created");
+            }
+        }
+        
         void ReturnEmail(string email, string id)
         {
-            var returns = TestDataBroker.GetFileContents<Return>(id);
+            var returns = TestDataBroker.GetFileContents<ReturnEmail>(id);
             foreach (var ret in returns)
             {
-              SendReturnEmail(ret,id,email);
-
-
+                ret.isMock = true;
+                SendReturnEmail(ret,id,email);
             }
             if (returns.Count() == 0)
             {
@@ -511,6 +536,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                               To = new Dictionary<string, string> {{toEmail, toEmail}},
                                           }
                           };
+
+            SetSenderData(message.EmailData);
+
+            _publisher.Publish(message);
+        }
+
+        public void SendRefundEmail(Order order, string topicName, string toEmail)
+        {
+            var message = new SendOrderEmail
+            {
+                OrderId = order.Id,
+                MessagePublishingContext = _emailPublishUtility.CreateMessagePublishingContext(order.AuditInfo.CreateBy, order.CustomerAccountId),
+                EmailData = new EmailData
+                {
+                    RendererServiceId = ServiceIdRenderEmailTenant,
+                    Topic = topicName,
+                    Content = JsonConvert.SerializeObject(order),
+                    To = new Dictionary<string, string> { { toEmail, toEmail } },
+                }
+            };
 
             SetSenderData(message.EmailData);
 

@@ -3,16 +3,16 @@
         data-mz-contextify='.mz-sitenav-link[href="{{ navigation.currentNode.url }}"]'
         data-mz-contextify-attr='class'
         data-mz-contextify-val='is-current'>
-      {% partial_cache %}
-      {% for link in navigation.tree %}
-      {% if not link.isHidden  and  forloop.counter0 < themeSettings.maxTopLevelNavItems %}
-        
+        {% partial_cache %}
+        {% for link in navigation.tree %}
+        {% if not link.isHidden and not link.isEmpty and forloop.counter0 < themeSettings.maxTopLevelNavItems %}
         <li class="mz-sitenav-item">
           <div class="mz-sitenav-item-inner">
             <a class="mz-sitenav-link" href="{{link.url}}">{{link.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}}</a>
             {% if link.items %}
             <ul class="mz-sitenav-sub">
               {% for sublink in link.items %}
+                    {% if not sublink.isHidden and not sublink.isEmpty %}
               <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
                 <a class="mz-sitenav-link" href="{{sublink.url}}">{{ sublink.name|safe }}</a>
                 {%comment%}
@@ -20,14 +20,17 @@
                 {% if sublink.items %}
                 <ul class="mz-sitenav-sub-sub">
                   {% for subsublink in sublink.items %}
+                            {% if not subsublink.isHidden and not subsublink.isEmpty %}
                   <li class="mz-sitenav-item">
-                    <a class="mz-sitenav-link" href="{{subsublink.url}}">{{ sublink.name|safe }}</a>
+                          <a class="mz-sitenav-link" href="{{subsublink.url}}">{{ subsublink.name|safe }}</a>
                   </li>
+                            {% endif %}
                   {% endfor %}
                 </ul>
                 {% endif %}
                 {%endcomment%}
               </li>
+                    {% endif %}
               {% endfor %}
             </ul>
             {% endif %}
@@ -41,21 +44,22 @@
                 <a class="mz-sitenav-link" href="javascript:;">{{ labels.navMore }}</a>
                 <ul class="mz-sitenav-sub">
                     {% for sublink in navigation.tree %}
-                        {% if sublink.index >= themeSettings.maxTopLevelNavItems %}
+                    {% if sublink.index >= themeSettings.maxTopLevelNavItems and not sublink.isHidden and not sublink.isEmpty %}
                         <li data-mz-role="sitemenu-item" class="mz-sitenav-item">
                                 <a class="mz-sitenav-link" href="{{sublink.url}}">{{sublink.name|safe}}</a>
                               {% if sublink.items %}
-                              {%comment%}
-                              <!-- uncoment out  this block to get 3rd laver of nav -->
+                        {% comment %}
+                        <!-- uncomment out  this block to get 3rd laver of nav -->
                                        <ul class="mz-sitenav-sub-sub">
                                             {% for subsublink in sublink.items %}
+                            {% if not subsublink.isHidden and not subsublink.isEmpty %}
                                                 <li class="mz-sitenav-item">
                                                     <a class="mz-sitenav-link" href="{{subsublink.url}}">{{subsublink.name|safe}}</a>
                                                 </li>
+                            {% endif %}
                                             {% endfor %}
                                         </ul>
-
-                              {%endcomment%}
+                        {% endcomment %}
                               {% endif %}
                             </li>
                         {% endif %}
@@ -68,4 +72,3 @@
         {% require_script "modules/contextify" %}
     </ul>
 </nav>
-    

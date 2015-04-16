@@ -235,7 +235,7 @@ Ext.define('Taco.view.account.Users', {
         Ext.Ajax.request({
             url: '/admin/app/account/invitations/resend',
             jsonData: item.scope.treelist.getSelectionModel().getSelection()[0].data,//item.data,
-            success: function(response) {
+            success: function (response) {
                 var res = Ext.JSON.decode(response.responseText);
                 if (!res.success) {
                     Ext.MessageBox.alert('Error', 'There was a problem resending the invite: ' + res.message);
@@ -278,7 +278,7 @@ Ext.define('Taco.view.account.Users', {
                             });
                             break;
                         case 'roll':
-                            
+
                             var childIds = [],
                                 userid = item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.get('id'),
                                 deleteRecId = item.scope.treelist.getSelectionModel().getSelection()[0].get('id');

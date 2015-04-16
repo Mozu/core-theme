@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
-              
+                .ForMember(m => m.SupressedEmailTransactions, op => op.ResolveUsing(x => x.SupressedEmailTransactions))
                 .ForMember(m => m.ChannelId, op => op.Ignore())
                 .ForMember(m => m.TemplateSiteId, op => op.ResolveUsing(dc => dc.TemplateSiteId))
                 .ForMember(m => m.DesktopTheme, opt => opt.ResolveUsing(x =>
@@ -107,6 +107,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.ViewAuthorizations, opt => opt.ResolveUsing((GeneralSettings x) => Mapper.Map<GDC.General.ViewAuthorizations>(x)));
                 
            
+            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.EmailTransactionSettings, EmailTransactionSettings>();
+            Mapper.CreateMap<EmailTransactionSettings, Mozu.SiteSettings.General.Contracts.EmailTransactionSettings>();
         }
         static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
         static ThemeSelection  Deserialize(string val)

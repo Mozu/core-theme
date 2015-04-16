@@ -18,7 +18,9 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.shared.view.field.Image',
         'Taco.core.ux.form.SelectField',
         'Taco.store.ProductTypes',
-        'Taco.core.ux.form.CurrencyField'
+        'Taco.core.ux.form.CurrencyField',
+        'Taco.shared.view.field.ProductTypePickerField',
+        'Taco.core.ux.form.DateRange'
     ],
     statics: {
         sizes: {},
@@ -31,10 +33,8 @@ Ext.define('Taco.view.product.subform.General', {
     },
     title: 'General',
     margin: '0 0 20 0',
-    bodyPadding:"0",
+    bodyPadding: '0',
     initComponent: function () {
-
-
 
         var me = this,
             readOnly,
@@ -47,13 +47,8 @@ Ext.define('Taco.view.product.subform.General', {
             isDigitalCredit = false,
             productUsage = this.product.get("productUsage"),
             productTypeId = this.product.get('productTypeId'),
-            productTypeRecord = null,
-            invalidDateText = "{0} is not a valid date - it must be in the format mm/dd/yy";
-
-        
-        
-
-
+            productTypeRecord = null;
+            
         var currentGlobalMapValue = this.product.get("map");
 
         //isMapEnabled = (this.productInCatalogInfo ? (this.productInCatalogInfo.get('map') !== null) : (this.product.get("map") !== null));
@@ -85,8 +80,6 @@ Ext.define('Taco.view.product.subform.General', {
 
         me.record = this.product;
         me.currencyCode = me.productInCatalogInfo ? me.productInCatalogInfo.getCatalog().currencyCode : me.product.getCurrencyCode();
-        //used for data range validation key value lookup, since multiple pair of fields
-        me.dateRangeFieldMap = {};
 
         // horizontal space between fields
         var defaultFieldMargin = 50;
@@ -97,29 +90,10 @@ Ext.define('Taco.view.product.subform.General', {
         // field width when part of a two column layout
         var twoColumnFieldWidth = (fullFieldWidth / 2)  -  (defaultFieldMargin/2)
 
-        // get the data from the preloaded product type store;
-        var tempProductTypeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductTypes');
-
-        // need to cache the data because other stores are requesting the store to be loaded and its reseting the filters;
-        var data = Ext.clone(tempProductTypeStore.data.items);
-
-        this.productTypeStore = Ext.create('Ext.data.Store', {
-            model: "Taco.model.ProductType",
-            data:data
-        });
-
-        // filter out the base productType, its not allowed to be a basis for products
-        // note: the store is set to auto clear filters so this filter should not effect other stores.
-        this.productTypeStore.filter([
-            {
-                filterFn: function (item) {
-                    return !item.get('isBase');
-                }
-            }
-        ]);
-
+        
         if (productTypeId) {
-            productTypeRecord = this.productTypeStore.getById(productTypeId);
+            productTypeRecord = this.record.productTypeRecord;
+            
             if (productTypeRecord)
                 isDigitalCredit = (productTypeRecord.get("goodsType") === 'DigitalCredit');
         }
@@ -187,22 +161,26 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             });
 
+            
 
-            this.productTypeField = Ext.widget({                
-                xtype: 'combobox',
+
+            this.productTypeField = Ext.widget({
+                xtype: 'taco-producttypepickerfield',
                 fieldLabel: 'Product Type',
                 name: 'productTypeId',
+                includeBaseProductType:false,
                 readOnly: !this.product.phantom,
                 required: true,
                 allowBlank: false,
-                editable: false,
-                queryMode: 'local',                
+                minChars: 1,
+                autoFetchDisplayValue: true,
+                autoLoad:false,
                 width: twoColumnFieldWidth,
                 margin: '0 50 0 0',
-                displayField: 'name',
-                valueField: 'id',
-                //  queryCaching: true,
-                store: this.productTypeStore,
+                // extension method that allows the combo to use a preloaded record for its display value;
+                getDisplayRecord : function() {
+                    return (me.record.productTypeRecord) ? me.record.productTypeRecord : null;
+                },
                 listeners: {
                     change: {
                         scope: this,
@@ -210,6 +188,7 @@ Ext.define('Taco.view.product.subform.General', {
                     }
                 }
             });
+
 
             this.productUsageField = Ext.widget({
                 xtype: 'selectfield',
@@ -231,7 +210,7 @@ Ext.define('Taco.view.product.subform.General', {
 
                         var prodTypeId = me.productTypeField.getValue();
                         if (prodTypeId) {
-                            var prodTypeRecord = me.productTypeStore.getById(prodTypeId);
+                            var prodTypeRecord = me.record.productTypeRecord;
                             var isDigitalCreditProdType = (prodTypeRecord.get("goodsType") === 'DigitalCredit');
                             me.setDigitalCreditDefaults(isDigitalCreditProdType, value);
                         }
@@ -281,49 +260,31 @@ Ext.define('Taco.view.product.subform.General', {
             });
 
             this.discountsRestrictedStartField = Ext.widget({
-                xtype: 'datefield',
+                xtype: 'daterange',
                 fieldLabel: 'Restriction Effective Date',
                 width: defaultFieldWidth,
                 margin:"0 0 0 50",
                 name: 'discountsRestrictedStartDate',
                 itemId: 'discountDateRangeStart',
-                endDateField: 'discountDateRangeEnd',
+                endDateFieldName: 'discountsRestrictedEndDate',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                allowBlank: !isDiscountRestricted,
-                emptyText: 'mm/dd/yy',
-                invalidText: invalidDateText,
-                listeners: {
-                    change: {
-                        scope: me,
-                        fn: me.onDateRangeChange
-                    }
-                }
+                allowBlank: !isDiscountRestricted  
             });
-            me.dateRangeFieldMap['discountDateRangeStart'] = this.discountsRestrictedStartField;
-
+            
             this.discountsRestrictedEndField = Ext.widget({
-                xtype: 'datefield',
+                xtype: 'daterange',
                 fieldLabel: 'Restriction End Date',
                 name: 'discountsRestrictedEndDate',
                 width: defaultFieldWidth,
                 margin: "0 0 0 50",
                 itemId: 'discountDateRangeEnd',
-                startDateField: 'discountDateRangeStart',
+                startDateFieldName: 'discountsRestrictedStartDate',
                 pickerOffset: 4,
                 disabled: !isDiscountRestricted,
-                allowBlank: !isDiscountRestricted,
-                invalidText: invalidDateText,
-                emptyText: 'mm/dd/yy',
-                listeners: {
-                    change: {
-                        scope: me,
-                        fn: me.onDateRangeChange
-                    }
-                }
+                allowBlank: !isDiscountRestricted
             });
-            me.dateRangeFieldMap['discountDateRangeEnd'] = this.discountsRestrictedEndField;
-
+            
             this.mfgPartNumField = Ext.widget({
                 xtype: 'textfield',
                 fieldLabel: 'Manufacturer Part Number',
@@ -367,6 +328,7 @@ Ext.define('Taco.view.product.subform.General', {
             //flex:1,
             width: defaultFieldWidth,
             name: 'price',
+            itemId: 'price',
             required: true,
             allowBlank: false,
             hideTrigger: true,
@@ -481,28 +443,18 @@ Ext.define('Taco.view.product.subform.General', {
         };
 
         this.mapStartField = Ext.widget({
-            xtype: 'datefield',
+            xtype: 'daterange',
             fieldLabel: 'MAP Effective Date',
             name: 'mapStartDate',
             width: defaultFieldWidth,
             margin:"0 0 0 50",
             itemId: 'mapstartdt',
-            endDateField: 'mapenddt',
+            endDateFieldName: 'mapEndDate',
             pickerOffset: 4,
             disabled: !isMapEnabled,
-            //allowBlank: !isMapEnabled,
-            allowBlank: true,
-            invalidText: invalidDateText,
-            emptyText: 'mm/dd/yy',
-            listeners: {
-                change: {
-                    scope: me,
-                    fn: me.onDateRangeChange
-                }
-            }
+            allowBlank: true
         });
-        me.dateRangeFieldMap['mapstartdt'] = this.mapStartField;
-
+        
         this.mapEndField = Ext.widget({
             xtype: 'datefield',
             fieldLabel: 'MAP End Date',
@@ -510,22 +462,12 @@ Ext.define('Taco.view.product.subform.General', {
             itemId: 'mapenddt',
             width: defaultFieldWidth,
             margin: "0 0 0 50",
-            startDateField: 'mapstartdt',
+            startDateFieldName: 'mapStartDate',
             pickerOffset: 4,
             disabled: !isMapEnabled,
-            //allowBlank: !isMapEnabled,
-            allowBlank: true,
-            invalidText: invalidDateText,
-            emptyText: 'mm/dd/yy',
-            listeners: {
-                change: {
-                    scope: me,
-                    fn: me.onDateRangeChange
-                }
-            }
+            allowBlank: true
         });
-        me.dateRangeFieldMap['mapenddt'] = this.mapEndField;
-
+        
         readOnly = this.isEdit() || !(this.isSingleSite || this.isGlobal);
         visable = !readOnly || this.isEdit();
         requiredContent = this.isSingleSite || this.isGlobal;
@@ -802,10 +744,9 @@ Ext.define('Taco.view.product.subform.General', {
         this.callParent(arguments);
 
         this.on('afterrender', function () {
-            
-            
 
 
+            
             
            
 
@@ -899,8 +840,10 @@ Ext.define('Taco.view.product.subform.General', {
     loadRecord: function (record) {
 
         var me = this;
-        me.updatePriceUI();        
+        me.updatePriceUI();
+        
         me.callParent(arguments);
+        
     },
 
     /**
@@ -1002,6 +945,10 @@ Ext.define('Taco.view.product.subform.General', {
             parentForm,
             product;
 
+        
+        // cache the record for the other forms in case they need it to control their layout;
+        me.record.productTypeRecord = productTypeRecord;
+
         parentForm = me.up('productsiteform, productglobalform');
 
         if (!parentForm) {
@@ -1014,7 +961,7 @@ Ext.define('Taco.view.product.subform.General', {
 
         // when the user changes the productType field we need to update the available productUsages based on the selected productType
         me.filterProductUsageField(productUsages);
-
+        
         //need to set the productTypeId for variations to work.
         product = parentForm.product || parentForm.record;
         product.set('productTypeId', value);
@@ -1096,46 +1043,19 @@ Ext.define('Taco.view.product.subform.General', {
         dateField.setDisabled(false);
     },
 
-    //modified from http://docs.sencha.com/extjs/4.2.2/#!/example/form/adv-vtypes.html
-
-    onDateRangeChange: function (field, val, oldVal, eOpts) {
-        var me = eOpts.scope, date = field.parseDate(val);
-
-        //invalid date.  Null value ok to clear max|min
-        if (!date && val != null) {
-            return false;
-        }
-        if (field.startDateField) { 
-            //var start = field.up('form').down('#' + field.startDateField);
-            var start = me.dateRangeFieldMap[field.startDateField];
-            if (start == null) {
-                return true;
-            }
-            start.setMaxValue(date);
-            start.validate();
-        } else if (field.endDateField) {
-            //var end = field.up('form').down('#' + field.endDateField);
-            var end = me.dateRangeFieldMap[field.endDateField];
-            if (end == null) {
-                return true;
-            }
-            end.setMinValue(date);
-            end.validate();
-        }
-        return true;
-    },
-
     beforeSave: function () {
-        var me = this,
-            form = me.getForm(),
+        var uploadedImages = [],
+            form = this.getForm(),
             productImagesField = form.findField("productImages");
 
         if (productImagesField) {
-            // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-            me.record.set("productImages", productImagesField.getValue());
-        } else {
-            me.record.set("productImages", []);
+            uploadedImages = Ext.Array.filter(productImagesField.getValue(), function(img) {
+                return img.isUploaded;
+            });
         }
+
+        // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+        this.record.set("productImages", uploadedImages);
         return true;
     }
 

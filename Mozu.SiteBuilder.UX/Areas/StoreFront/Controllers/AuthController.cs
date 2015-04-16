@@ -22,7 +22,7 @@ using Mozu.SiteBuilder.UX.Messaging;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    [SslOnlyActionFilter]
+    
     public class AuthController : BaseApiController
     {
         
@@ -55,6 +55,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext.SetUser(user);
         }
 
+        [SslOnlyActionFilter]
         async Task<ServiceClientResponse<CustomerAuthTicket>> LoginAndTrack(Func<Task<ServiceClientResponse<CustomerAuthTicket>>> loginFunc)
         {
             var response = await loginFunc();
@@ -96,13 +97,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password)
         {
             return await LoginAndTrack(() => _authTicketWebApiClient.CreateUserAuthTicket(new CustomerUserAuthInfo()
-            {
+             {
                 Username = email,
                 Password = password
 
             }));
-        }
-
+                }
+            
         protected async Task<ServiceClientResponse<StreamContent>> DoResetPassword(ResetPasswordInfo info)
         {
             var res = (await _customerAccountWebApiClient.ResetPassword(info));
@@ -143,6 +144,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
+        [SslOnlyActionFilter]
         public HttpResponseMessage LogOut(string returnUrl = null)
         {
             DoLogout();
@@ -158,6 +160,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
+        [SslOnlyActionFilter]
         public ActionResult Login(string returnUrl = null)
         {
 
@@ -176,6 +179,43 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("Login", new { ReturnUrl = returnUrl });
         }
 
+        [System.Web.Http.HttpGet]
+        [SslOnlyActionFilter]
+        public ActionResult AjaxForgotPassword(string returnUrl = null)
+        {
+
+            var pc = this.PageContext;
+            pc.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "forgot-password",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+
+            };
+
+
+            return View("Forgot-Password", new { ReturnUrl = returnUrl });
+        }
+
+        [System.Web.Http.HttpGet]
+        [SslOnlyActionFilter]
+        public ActionResult CreateAccount(string returnUrl = null)
+        {
+            var pc = this.PageContext;
+            pc.CmsContext= new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = "signup",
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
+
+            return View("Signup", new { ReturnUrl = returnUrl });
+        }
+
         public class LoginDetails
         {
             public string email { get; set; }
@@ -184,33 +224,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
+        [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
-        {
-
-            var res = await DoCreateAccount(authInfo);
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                return res.ResponseMessage;
-            }
+         {
+           
+             var res = await DoCreateAccount(authInfo);
+             if (res.ResponseMessage.IsSuccessStatusCode)
+             {
+                 return res.ResponseMessage;
+             }
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
-            {
+             {
                 Message = string.Format("Login as {0} failed. Please try again.", authInfo.Account.EmailAddress)
-            });
-        }
+                                                                             });
+             }
 
         [AcceptVerbs("OPTIONS", "POST")]
+        [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
-        {
+         {
             if (Request.Method.Method == "OPTIONS")
-            {
+             {
                 return Request.CreateResponse(HttpStatusCode.OK);
-            }
+             }
             var res = await DoCreateAccount(authInfo);
 
-            return res.ResponseMessage;
-        }
+             return res.ResponseMessage;
+         }
 
         [System.Web.Http.HttpPost]
+        [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> Login(LoginDetails details)
         {
             string email = details.email;
@@ -228,7 +271,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 redir.Headers.Location = MakeRedirectUri(returnUrl);
                 return redir;
-
+                
             }
             else
             {
@@ -238,20 +281,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
+        [SslOnlyActionFilter]
         public async Task<object> AjaxLogin(LoginDetails details)
         {
             string email = details.email;
             string password = details.password;
             string returnUrl = details.returnUrl;
             var res = await DoLogin(email, password);
-
+                    
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 return new
-                {
+                    {
                     Message = string.Format("Logged in as {0}.", email)
-                };
-            }
+                    };
+                }
             else
             {
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, new
@@ -260,7 +304,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
         }
-
+            
         [HttpPost]
         public async Task<HttpResponseMessage> Pants(HttpRequestMessage request)
         {
@@ -269,19 +313,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [HttpPost, HttpOptions]
+        [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
-        {
+         {
             if (Request.Method.Method == "OPTIONS")
-            {
+             {
                 return Request.CreateResponse(HttpStatusCode.OK);
-            }
-            var res = await DoResetPassword(info);
+             }
+             var res = await DoResetPassword(info);
 
-            return res.ResponseMessage;
-        }
+             return res.ResponseMessage;
+         }
 
-         [HttpGet]
-         public async Task<ActionResult> ResetPassword(string t, string u)
+        [HttpGet]
+        [SslOnlyActionFilter]
+        public async Task<ActionResult> ResetPassword(string t, string u)
          {
              var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
 
@@ -305,8 +351,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              public object[] messages { get; set; }
          }
 
-         [HttpPost]
-         public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
+        [HttpPost]
+        [SslOnlyActionFilter]
+        public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
          {
              var res = await DoResetPasswordConfirm(info);
              var ex = res.ReadException();

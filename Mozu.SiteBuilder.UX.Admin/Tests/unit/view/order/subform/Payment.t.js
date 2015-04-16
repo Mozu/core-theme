@@ -60,39 +60,9 @@ StartTest(function(t) {
             });
             m.record.commit();
         },
-
-        function(next) {
-            t.diag("panel header bound to record");
-            m.panel.on('rerender', next, { single: true });
-            t.isHandleHtml(m.panel, 'order-payment-status', 'Fully Paid', 'panel header reflects fully paid status');
-            m.record.set({
-                authorizationInfo: {
-                    amountCollected: 0,
-                    totalAmount: 1045.85
-                }
-            });
-
-            m.record.commit();
-            //t.waitForMs(500, next);
-        },
-
-        function(next) {
-            t.isHandleHtml(m.panel, 'order-payment-status', 'Unpaid', 'panel header reflects unpaid status and updates');
-            m.panel.on('rerender', next, { single: true });
-            m.record.set({
-                authorizationInfo: {
-                    amountCollected: 1000,
-                    totalAmount: 1045.85
-                }
-            });
-
-            m.record.commit();
-            //t.waitForMs(500, next);
-        },
-
         
         function(next) {
-            t.isHandleHtml(m.panel, 'order-payment-status', 'Partially Paid', 'panel header reflects partially paid status and updates');
+            t.isHandleHtml(m.panel, 'order-payment-status', 'Unpaid', 'panel header reflects partially paid status and updates');
 
             t.diag("payment actions should be available when order is pending");
 

@@ -22,7 +22,7 @@
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{{+storefrontUserService}../../receiver{?receiverVersion}"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityList": {
         "template": "{+entityListService}{listName}/entities{?_*}",
@@ -124,7 +124,7 @@
     "orders": {
         "template": "{+orderService}{?_*}",
         "defaultParams": {
-            "filter": "Status ne Created and Status ne Validated and Status ne Pending",
+            "filter": "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored",
             "startIndex": 0,
             "pageSize": 5
         },
@@ -215,6 +215,25 @@
             "template": "{+orderService}?cartId={id}",
             "returnType": "order",
             "noBody": true,
+            "includeSelf": true
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons",
             "includeSelf": true
         }
     },

@@ -19,6 +19,7 @@ using NDjango.FiltersCS.Compatibility;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using System.Threading.Tasks;
+using Microsoft.FSharp.Core;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -142,7 +143,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var zoneId = arguments.GetValueOrDefault("zoneId", () => (string)arguments.First().Value);
             if (HasVisited(zoneId, httpContext))
             {
-                throw new RenderingError("Zone " + zoneId + "already rendered", null);
+                throw new RenderingError(string.Format("Zone {0} already rendered", zoneId), null);
             }
 
             var siteContext = context.SiteContext();
@@ -338,7 +339,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             var scopeString = arguments.GetValueOrDefault("scope", () => DetermineZoneScopeDefault(arguments));
             ZoneScope scope;
-            if (Enum.TryParse(scopeString, out scope))
+            if (Enum.TryParse(scopeString, true, out scope))
             {
                 return scope;
             }

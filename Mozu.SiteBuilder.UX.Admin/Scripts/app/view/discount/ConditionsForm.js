@@ -11,7 +11,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         'Taco.view.product.Modal',
         'Taco.view.customers.segments.Modal',
         'Taco.core.ux.form.CurrencyField',
-        'Taco.view.discount.widget.CategoryPicker'
+        'Taco.view.discount.widget.CategoryPicker',
+        'Taco.core.ux.TooltipLabel'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
@@ -21,16 +22,19 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     title: 'Discount Conditions',
 
     initComponent: function () {
-        this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'minimumOrderAmount',
-            fieldLabel: "Minimum Order Amount (pre-discount)",
-            forcePrecision: true,
-            labelAlign: 'top',
-            width: 600,
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            align: 'right',
-            unitAtEnd: false
-        });
+        var me = this;
+        this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minOrderAmount', me, {
+                name: 'minimumOrderAmount',
+                fieldLabel: "Minimum Order Amount",
+                forcePrecision: true,
+                labelAlign: 'top',
+                width: 600,
+                currencyCode: Taco.app.context.getCurrent().currencyCode,
+                align: 'right',
+                unitAtEnd: false
+            })
+        );
 
         //this.maximumDiscountAmountInput = Ext.create('Taco.core.ux.form.CurrencyField', {
         //    name: 'maximumDiscountAmount',
@@ -95,32 +99,35 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         //    minValue: 0
         //});
 
-        this.minimumCategorySubtotalBeforeDiscounts = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'minimumCategorySubtotalBeforeDiscounts',
+        this.minimumCategorySubtotalBeforeDiscounts = Ext.create('Taco.core.ux.form.CurrencyField', 
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumCategorySubtotalBeforeDiscounts', me, {
+                name: 'minimumCategorySubtotalBeforeDiscounts',
+                // hidden: this.record.get('scope') !== 'Order',
+                currencyCode: Taco.app.context.getCurrent().currencyCode,
+                forcePrecision: true,
+                unitAtEnd: false,
+                hideTrigger: true,
+                width: 600,
+                fieldLabel: 'Minimum category purchase amount',
+                //  emptyText: 'No Customer Value limit',
+                minValue: 0
+            })
+        );
 
-            // hidden: this.record.get('scope') !== 'Order',
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            forcePrecision: true,
-            unitAtEnd: false,
-            hideTrigger: true,
-            width: 600,
-            fieldLabel: 'Minimum Product Category Purchase Amount (pre-discount)',
-            //  emptyText: 'No Customer Value limit',
-            minValue: 0
-        });
-
-        this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.CurrencyField', {
-            name: 'minimumLifetimeValueAmount',
-            hidden: this.record.get('scope') !== 'Order',
-            currencyCode: Taco.app.context.getCurrent().currencyCode,
-            forcePrecision: true,
-            unitAtEnd: false,
-            hideTrigger: true,
-            width: 600,
-            fieldLabel: 'Minimum Lifetime Value Amount',
-            emptyText: 'No Customer Value limit',
-            minValue: 0
-        });
+        this.minimumLifetimeValueAmount = Ext.create('Taco.core.ux.form.CurrencyField',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumLifetimeValueAmount', me, {
+                name: 'minimumLifetimeValueAmount',
+                hidden: this.record.get('scope') !== 'Order',
+                currencyCode: Taco.app.context.getCurrent().currencyCode,
+                forcePrecision: true,
+                unitAtEnd: false,
+                hideTrigger: true,
+                width: 600,
+                fieldLabel: 'Minimum Lifetime Value Amount',
+                emptyText: 'No Customer Value limit',
+                minValue: 0
+            })
+        );
 
         this.oneTimeUsePerShopper = Ext.create('Ext.form.field.Checkbox', {
             name: 'oneTimeUsePerShopper',
@@ -145,22 +152,21 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             //this.maximumDiscountAmountInput,
             this.minimumLifetimeValueAmount,
             this.segmentsBox,
-            {
-                xtype: 'component',
-                html: 'Shopper must purchase a quantity of any one of the following items:',
-                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
-            },
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumQuantityRequiredProducts', me, {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Required item purchase',
+                margin: '0 0 0 0'
+            }),
             this.productsBox,
             //this.minimumProductSubtotalBeforeDiscounts,
-            {
-                xtype: 'component',
-                html: 'Shopper must purchase a quantity of any item(s) from the following categories:',
-                cls: 'x-form-item-label x-unselectable x-form-item-label-top'
-            },
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minimumQuantityProductsRequiredInCategories', me, {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Required category purchase',
+                margin: '0 0 0 0'
+            }),
             this.categoriesBox,
             this.minimumCategorySubtotalBeforeDiscounts
         ];
-
 
         this.callParent(arguments);
         this.onProductsCategoriesChange(true);
@@ -195,7 +201,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             displayField: 'productName',
             hideLable: true,
             listeners: {
-                change: this.onProductsCategoriesChange,
+                change: function (cmp, newValue, oldValue) {
+                    if (Ext.isEmpty(newValue) !== Ext.isEmpty(oldValue)) {
+                        this.onBuyItemConditionChange();
+                    }
+                    this.onProductsCategoriesChange();
+                },
                 scope: this
             },
             // fieldLabel: 'Purchase one of the following items',
@@ -248,29 +259,32 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
 
     buildSegments: function () {
-        var segStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
+        var me = this,
+            segStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CustomerSegments');
 
-        this.segmentsList = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'customerSegments',
-            width: 520,
-            margin: 0,
-            store: segStore,
-            getStore: function () {
-                return segStore;
-            },
-            hideTrigger: true,
-            triggerOnClick: false,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: false,
-            displayField: 'code',
-            fieldLabel: 'Customer Segments',
-            valueField: 'id',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            }
-        });
+        this.segmentsList = Ext.create('Ext.ux.form.field.BoxSelect',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.customerSegments', me, {
+                name: 'customerSegments',
+                width: 520,
+                margin: 0,
+                store: segStore,
+                getStore: function () {
+                    return segStore;
+                },
+                hideTrigger: true,
+                triggerOnClick: false,
+                forceSelection: true,
+                disableKeyFilter: true,
+                typeAhead: false,
+                displayField: 'code',
+                fieldLabel: 'Customer Segments',
+                valueField: 'id',
+                style: {
+                    display: 'inline-table',
+                    verticalAlign: 'bottom'
+                }
+            })
+        );
 
         this.segmentsBox = Ext.create('Ext.container.Container', {
             layout: 'auto',
@@ -296,16 +310,28 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     },
 
     buildCategory: function () {
+        var me = this
         
         this.conditionalCategoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
             catStore: this.record.getCategoryStore(),
             record: this.record,
             name: 'conditionalCategories',
-            listWidth: 407
+            listWidth: 407,
+            listeners: {
+                scope: me,
+                change: function (cmp, newValue,oldValue) {
+                    if (newValue.length && !this.minimumQuantityProductsRequiredInCategories.getValue()) {
+                        this.minimumQuantityProductsRequiredInCategories.setValue(1);
+                    }
+                }
+            }
         });
 
         Ext.defer(function () {
-            this.mon(this.conditionalCategoryPanel, "change", function(newVal) {
+            this.mon(this.conditionalCategoryPanel, "change", function(cmp, newValue, oldValue) {
+                if (Ext.isEmpty(newValue) !== Ext.isEmpty(oldValue)) {
+                    this.onBuyItemConditionChange();
+                }
                 this.onProductsCategoriesChange();
             }, this);
         }, 3000, this);
@@ -359,6 +385,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             savesuccess: function (modal, values) {
                 list.addValue(values);
                 me.reloadStore(list);
+                if (values.length && !this.minimumQuantityRequiredProducts.getValue()) {
+                    this.minimumQuantityRequiredProducts.setValue(1);
+                }
             },
             aftercancelclose: function () {
                 me.reloadStore(list);
@@ -393,6 +422,21 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 scope: this
             }
         });
+    },
+
+    hasBuyItemConditions : function() {
+        var categoryList = this.conditionalCategoryPanel.getValue(),
+            productList = this.productList.getValue(),
+            hasProducts = productList && productList.length,
+            hasCats = (categoryList && categoryList.length);
+        return (hasProducts || hasCats);
+    },
+
+    onBuyItemConditionChange: function () {
+        var me = this;
+        var hasBuyItems = me.hasBuyItemConditions();
+        // fire event on the record so that any other subforms can be notified of the change;
+        me.record.fireEvent("buyitemconditionchange", hasBuyItems);
     },
 
     onProductsCategoriesChange: function (delayed) {
@@ -463,7 +507,19 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     },
 
-    setFieldVisibility: function (isLineItem) {
+    setFieldVisibility: function (scopeType, targetType, discountType) {
+        var appliesToShipping = (targetType == "Shipping"),
+            isOrder = (scopeType === 'Order'),
+            isLineItem = (scopeType === 'LineItem');
+
+
+        if ((!isLineItem && !isOrder) || !targetType) {
+            this.setVisible(false);
+            return;
+        } else {
+            this.setVisible(true);
+        }
+
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);
     },
 

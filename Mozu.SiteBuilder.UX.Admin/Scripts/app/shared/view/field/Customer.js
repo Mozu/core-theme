@@ -24,10 +24,20 @@ Ext.define('Taco.shared.view.field.Customer', {
         '<tpl for=".">',
             '<tpl if="lastName">',
                 '<div class="x-boundlist-item">{lastNameSafe}, {firstNameSafe} - ({id}) - {emailAddressSafe}</div>',
+            '<tpl elseif="contacts.length">',
+                '<div class="x-boundlist-item">{[this.getNames(values.contacts)]} - ({id}) - {[values.emailAddressSafe || "(no email address)"]}</div>',
             '<tpl else>',
                 '<div class="x-boundlist-item">Customer {id}</div>',
             '</tpl>',
-        '</tpl>'
+        '</tpl>',
+        {
+            getNames: function (contacts) {
+                var lastName = Ext.util.Format.htmlEncode(contacts[0].lastName);
+                var firstName = Ext.util.Format.htmlEncode(contacts[0].firstName);
+
+                return Ext.String.format('{0}, {1}', lastName, firstName);
+            }
+        }
     ),
     
     displayTpl: Ext.create('Ext.XTemplate',

@@ -59,6 +59,18 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                 expanded: false,
                 items: [
                     {
+                        group: 'Util',
+                        expanded: false,
+                        items: [
+                            {
+                              url: relPath + "unit/core/util/Filter.t.js",
+                              title: "Filter to JSON"
+                            }, {
+                              url: relPath + "unit/core/util/Validation.t.js",
+                              title: "Validation"
+                            }
+                        ]
+                    },{
                         group: 'Location',
                         expanded: false,
                         items: [

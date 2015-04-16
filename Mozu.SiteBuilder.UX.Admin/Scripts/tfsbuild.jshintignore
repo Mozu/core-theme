@@ -71,6 +71,7 @@ app\core\ux\ScrollSpy.js
 app\store\Discounts.js
 app\core\ux\mixins\LaunchEditor.js
 app\core\ux\grid\ActionColumn.js
+app\core\ux\form\Tasks.js
 app\core\ux\form\Form.js
 app\core\ux\form\field\BaseImageField.js
 app\core\ux\browser\SearchList.js

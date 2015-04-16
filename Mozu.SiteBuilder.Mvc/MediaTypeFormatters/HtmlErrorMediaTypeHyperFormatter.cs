@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
             var viewDataDictionary = new ViewDataDictionary()
             {
-                Model = model.ToJObject()
+                Model = model
             };
 
 

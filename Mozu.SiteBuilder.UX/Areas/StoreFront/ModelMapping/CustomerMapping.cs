@@ -21,20 +21,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
         protected override void Configure()
         {
-            Mapper.CreateMap<CustomerAccount, Models.Customers.CustomerAccount>();
-            Mapper.CreateMap<Models.Customers.CustomerAccount, CustomerAccount>();
+            Mapper.CreateMap<CustomerAccount, UX.Models.Customers.CustomerAccount>();
+            Mapper.CreateMap<UX.Models.Customers.CustomerAccount, CustomerAccount>();
 
           //  Mapper.CreateMap<CustomerAccountGroup, Models.Customers.CustomerGroup>();
        //     Mapper.CreateMap<Models.Customers.CustomerGroup, CustomerAccountGroup>();
 
-            Mapper.CreateMap<CustomerAccountContact, Models.Customers.CustomerAccountContact>();
-            Mapper.CreateMap<Models.Customers.CustomerAccountContact, CustomerAccountContact>();
+            Mapper.CreateMap<CustomerAccountContact, UX.Models.Customers.CustomerAccountContact>();
+            Mapper.CreateMap<UX.Models.Customers.CustomerAccountContact, CustomerAccountContact>();
 
-            Mapper.CreateMap<CustomerAccountNote, Models.Customers.CustomerAccountNote>();
-            Mapper.CreateMap<Models.Customers.CustomerAccountNote, CustomerAccountNote>();
+            Mapper.CreateMap<CustomerAccountNote, UX.Models.Customers.CustomerAccountNote>();
+            Mapper.CreateMap<UX.Models.Customers.CustomerAccountNote, CustomerAccountNote>();
 
-            Mapper.CreateMap<Contact, Models.Customers.Contact>();
-            Mapper.CreateMap<Models.Customers.Contact, Contact>();
+            Mapper.CreateMap<Contact, UX.Models.Customers.Contact>();
+            Mapper.CreateMap<UX.Models.Customers.Contact, Contact>();
 
             Mapper.CreateMap<CurrencyAmount, Mozu.Customer.Contracts.CurrencyAmount>();
             Mapper.CreateMap<Mozu.Customer.Contracts.CurrencyAmount, CurrencyAmount>();
@@ -48,8 +48,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             Mapper.CreateMap<Address, Mozu.Core.Api.Contracts.Address>();
             Mapper.CreateMap<Mozu.Core.Api.Contracts.Address, Address>();
 
-            Mapper.CreateMap<CustomerGroup, Models.Customers.CustomerGroup>();
-            Mapper.CreateMap<Models.Customers.CustomerGroup, CustomerGroup>();
+            Mapper.CreateMap<CustomerGroup, UX.Models.Customers.CustomerGroup>();
+            Mapper.CreateMap<UX.Models.Customers.CustomerGroup, CustomerGroup>();
         }
     }
 }

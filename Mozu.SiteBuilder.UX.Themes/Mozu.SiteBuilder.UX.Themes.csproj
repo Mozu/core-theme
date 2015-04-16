@@ -16,10 +16,14 @@
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\Volusion.SiteBuilder\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <UpgradeBackupLocation>
@@ -117,306 +121,6 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoMapper, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.3.3.0\lib\net40\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoMapper.Net4, Version=3.3.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.3.3.0\lib\net40\AutoMapper.Net4.dll</HintPath>
-    </Reference>
-    <Reference Include="Burrows, Version=0.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Burrows.0.3.3.0\lib\net45\Burrows.dll</HintPath>
-    </Reference>
-    <Reference Include="Burrows.Autofac, Version=0.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Burrows.Autofac.0.3.3.0\lib\net45\Burrows.Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Burrows.Log4Net, Version=0.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Burrows.Log4Net.0.3.3.0\lib\net45\Burrows.Log4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="ClearScript, Version=5.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ClearScript.Installer.1.0.5.61\lib\net45\ClearScript.dll</HintPath>
-    </Reference>
-    <Reference Include="ClearScript.Manager">
-      <HintPath>..\packages\ClearScript.Manager.1.3.4.26813\lib\net45\ClearScript.Manager.dll</HintPath>
-    </Reference>
-    <Reference Include="ClearScript.NodeEmulation, Version=1.0.2.15380, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ClearScript.NodeEmulation.1.0.4\lib\net45\ClearScript.NodeEmulation.dll</HintPath>
-    </Reference>
-    <Reference Include="FiftyOne.Foundation, Version=2.1.15.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\51Degrees.mobi.2.1.15.1\lib\NET40\FiftyOne.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentValidation, Version=5.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentValidation.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharpx.Collections, Version=1.9.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FSharpx.Collections.1.9.6\lib\net35\FSharpx.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Jolt, Version=0.4.4478.17179, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.dll</HintPath>
-    </Reference>
-    <Reference Include="Jolt.Testing.GeneratedTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6adcb4232d754f0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Jolt.1.0.0\lib\net40\Jolt.Testing.GeneratedTypes.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Magnum, Version=2.1.3.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Magnum.2.1.3\lib\NET40\Magnum.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Json, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsonValue.0.6.0\lib\40\Microsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Server.Common, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsonValue.0.6.0\lib\40\Microsoft.Server.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure">
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Web.XmlTransform">
-      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Bson, Version=1.10.0.62, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Driver, Version=1.10.0.62, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.AdminUser.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1503101519-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.2-dev1503022230ext-s\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Content.Contracts.1.13.1\lib\Mozu.Content.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Api, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Api.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Api.Client, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Api.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Api.Contracts, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Caching, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Caching.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.CodeBlocks, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.CodeBlocks.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Extensible.Contracts, Version=1.14.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.14.5\lib\net45\Mozu.Core.Extensible.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.FilterParsing, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.FilterParsing.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Messaging, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.1.14.1\lib\net451\Mozu.Core.Messaging.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.14.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.14.12\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.Mongo, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.Mongo.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.ThirdParty, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.ThirdParty.Contracts, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.ThirdParty.Mapping, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1503091640-s\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Customer.Contracts, Version=1.15.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.15.2\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.InstalledApplications.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.17.1-dev1502142129-s\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Location.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Location.Contracts.1.17.1-dev1503181615-s\lib\net45\Mozu.Location.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.PaymentService.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.8.0.1\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.PricingRuntime.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.13.2\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1503132134-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.17.1-dev1503181624-s\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Provisioning.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.13.1\lib\net451\Mozu.Provisioning.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Reference.Contracts, Version=1.14.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.14.3\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.14.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.14.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.13.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.17.1-dev1502041514-s\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.17.1-dev1502041514-s\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Tenant.Contracts">
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.17.1-dev1501291833-svr\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="RabbitMQ.Client, Version=3.3.5.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RabbitMQ.Client.3.3.5\lib\net30\RabbitMQ.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Sprache">
-      <HintPath>..\packages\Sprache.2.0.0.45\lib\portable-net4+netcore45+win8+wp8+sl5+MonoAndroid1+MonoTouch1\Sprache.dll</HintPath>
-    </Reference>
-    <Reference Include="Stact, Version=1.1.2.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Stact.1.1.2\lib\NET40\Stact.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration.Install" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Activation" />
-    <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="Microsoft.CSharp">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
     </Compile>
@@ -788,12 +492,6 @@
     <Content Include="SampleThemes\Test\stylesheets\base\global.less" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mozu.SiteBuilder.UX\Mozu.SiteBuilder.UX.csproj">
-      <Project>{64E108C3-DDB5-4FA8-8C17-778F64B028BA}</Project>
-      <Name>Mozu.SiteBuilder.UX</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\catalog\" />
     <Folder Include="SampleThemes\helloWorld\MetaData\PageTypes\commerce\" />
     <Folder Include="SampleThemes\helloWorld\Modules\" />
@@ -808,9 +506,6 @@
     <Folder Include="Themes\Core6\templates\modules\entities\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Properties\PublishProfiles\demo wp.pubxml" />
   </ItemGroup>
   <ItemGroup>
@@ -1057,11 +752,6 @@
     <Content Include="Themes\Core4\templates\pages\reset-password.hypr" />
     <Content Include="Themes\Core4\templates\pages\search-results.hypr" />
     <Content Include="Themes\Core4\templates\pages\WidgetTEsting\test.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\blogarchive.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\blogRss.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\recentposts.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\tagcollection.hypr" />
-    <Content Include="Themes\Core4\templates\Widgets\blog\tags.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\deal-of-the-day.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\featuredproducts.hypr" />
     <Content Include="Themes\Core4\templates\Widgets\catalog\related-products.hypr" />
@@ -1767,9 +1457,6 @@
     <Content Include="Themes\Core5\templates\pages\blank-page.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\blog.hypr" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Themes\Core5\templates\pages\cart.hypr" />
   </ItemGroup>
   <ItemGroup>
@@ -1806,9 +1493,6 @@
     <Content Include="Themes\Core5\templates\pages\parent-category.hypr" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\post.hypr" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Themes\Core5\templates\pages\product-location.hypr" />
   </ItemGroup>
   <ItemGroup>
@@ -1819,24 +1503,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\pages\search-results.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\pages\WidgetTEsting\test.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\blogarchive.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\blogRss.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\recentposts.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\tagcollection.hypr" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Themes\Core5\templates\Widgets\blog\tags.hypr" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Core5\templates\Widgets\catalog\deal-of-the-day.hypr">
@@ -2042,7 +1708,9 @@
     <Content Include="Themes\Core6\templates\modules\common\login-popover.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\message-bar.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\order-list.hypr.live" />
-    <Content Include="Themes\Core6\templates\modules\common\order-listing.hypr.live" />
+    <Content Include="Themes\Core6\templates\modules\common\order-listing.hypr.live">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\Core6\templates\modules\common\order-summary.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\page-numbers.hypr.live" />
     <Content Include="Themes\Core6\templates\modules\common\page-sort.hypr.live" />
@@ -2106,7 +1774,6 @@
     <Content Include="Themes\Core6\templates\pages\404.hypr" />
     <Content Include="Themes\Core6\templates\pages\about-us.hypr" />
     <Content Include="Themes\Core6\templates\pages\blank-page.hypr" />
-    <Content Include="Themes\Core6\templates\pages\blog.hypr" />
     <Content Include="Themes\Core6\templates\pages\cart.hypr" />
     <Content Include="Themes\Core6\templates\pages\category.hypr" />
     <Content Include="Themes\Core6\templates\pages\checkout.hypr" />
@@ -2119,17 +1786,11 @@
     <Content Include="Themes\Core6\templates\pages\my-account.hypr" />
     <Content Include="Themes\Core6\templates\pages\no-search-results.hypr" />
     <Content Include="Themes\Core6\templates\pages\parent-category.hypr" />
-    <Content Include="Themes\Core6\templates\pages\post.hypr" />
     <Content Include="Themes\Core6\templates\pages\product-location.hypr" />
     <Content Include="Themes\Core6\templates\pages\product.hypr" />
     <Content Include="Themes\Core6\templates\pages\reset-password.hypr" />
     <Content Include="Themes\Core6\templates\pages\search-results.hypr" />
     <Content Include="Themes\Core6\templates\pages\WidgetTEsting\test.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\blogarchive.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\blogRss.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\recentposts.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\tagcollection.hypr" />
-    <Content Include="Themes\Core6\templates\Widgets\blog\tags.hypr" />
     <Content Include="Themes\Core6\templates\Widgets\catalog\deal-of-the-day.hypr" />
     <Content Include="Themes\Core6\templates\Widgets\catalog\featuredproducts.hypr" />
     <Content Include="Themes\Core6\templates\Widgets\catalog\related-products.hypr" />
@@ -2179,6 +1840,16 @@
     <Content Include="Themes\Core6\templates\modules\my-account\my-account-password.hypr.live" />
     <Content Include="Themes\Core5\stylesheets\back-office.less" />
     <Content Include="Themes\Core4\stylesheets\back-office.less" />
+    <Content Include="Themes\Core6\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core5\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core4\templates\email\order-refund-issued.hypr" />
+    <Content Include="Themes\Core6\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core5\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core4\templates\modules\common\coupon-code-field.hypr.live" />
+    <Content Include="Themes\Core5\templates\pages\forgot-password.hypr" />
+    <Content Include="Themes\Core5\templates\pages\signup.hypr" />
+    <Content Include="Themes\Core6\templates\pages\forgot-password.hypr" />
+    <Content Include="Themes\Core6\templates\pages\signup.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2276,6 +1947,9 @@
     <Exec Command="node ..\..\delete_node_modules.js" WorkingDirectory="$(ProjectDir)Themes\$(ThemeName)" />
     <ItemGroup>
       <Content Include="Themes\$(ThemeName)\**\*.*" Exclude="Themes\$(ThemeName)\node_modules" />
+      <None Include="web.QA2.config">
+        <DependentUpon>web.config</DependentUpon>
+      </None>
     </ItemGroup>
   </Target>
   <Target Name="AfterCompile">
@@ -2287,12 +1961,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\OctoPack.2.1.3\build\OctoPack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OctoPack.2.1.3\build\OctoPack.targets'))" />
-    <Error Condition="!Exists('..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets'))" />
   </Target>
   <Import Project="..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.0\tools\AutoMapper.targets')" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets" Condition="Exists('..\packages\ClearScript.Installer.1.0.5.61\build\ClearScript.Installer.targets')" />
 </Project>

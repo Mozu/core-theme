@@ -34,7 +34,7 @@
         {% if payment.billingInfo.paymentType == "CreditCard" %}
         <div class="mz-l-stack-section mz-checkout-payment">
             <h4 class="mz-l-stack-sectiontitle">{{ payment.billingInfo.paymentType }}</h4>
-            <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ model.card.cardNumberPartOrMask }}</span>
+            <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.card.cardNumberPartOrMask }}</span>
             <dl class="mz-propertylist">
                 <dt>{{ labels.billingAddress }}</dt>
                 <dd>
@@ -73,10 +73,12 @@
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-      {% include "modules/checkout/checkout-digital-credit" %}
-     
+      
       {% if model.nonStoreCreditTotal > 0 %}
-      <div class="mz-l-stack-section">
+      
+        {% include "modules/checkout/checkout-digital-credit" %}
+      
+        <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }}</h4>
             <div class="mz-l-formfieldgroup">
                 {% if model.savedPaymentMethods %}
@@ -158,9 +160,16 @@
         </div>
         
         {% else %}
+        
+         {% if model.activeStoreCredits and model.activeStoreCredits.length > 0 %}
+         
+            {% include "modules/checkout/checkout-digital-credit" %}
+            
+         {% endif %}
+        
         <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
-        {% endif %}
-        {% if user.isAnonymous %}
+      {% endif %}
+      {% if user.isAnonymous %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.billingContact }}</h4>
             <div class="mz-l-formfieldgroup">
@@ -185,7 +194,7 @@
                 </div>
             </div>
         </div>
-        {% endif %}
+      {% endif %}
     </div>
 
     <div class="mz-formstep-next">

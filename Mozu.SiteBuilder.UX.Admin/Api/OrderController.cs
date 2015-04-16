@@ -98,15 +98,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var responseGroups = "header,payment,packageheaders,availableactions";
                 var dcOrders = (await orderWebApiClient.CloneWithApiContext(x=> x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
                 
-                //trim out items for speedyness...
-                dcOrders.Items.ForEach(x=> { x.Items = new List<DCo.OrderItem>();
-                                               x.Packages = null;
-                                               x.ShopperNotes = null;
-                                               x.Pickups = null;
-                                               x.Shipments = null;
-                                               //x.ValidationResults = null;
-                   
-                });
                 return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
             }
         }
@@ -397,17 +388,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
 
             return Single2( Mapper.Map<Order>(dcOrder) );
-        }
-
-        public class ResendConfirmationEmailArgs
-        {
-            public string OrderId { get; set; }
-        }
-        [HttpPostRoute(UriTemplate = "resendconfirmationemail")]
-        public async Task<Response<Order>> ResendConfirmationEmail(ResendConfirmationEmailArgs args)
-        {
-            await (await _orderWebApiClient.ResendOrderConfirmationEmail(args.OrderId)).ReadAsAsync();
-            return this.EmptySingle2<Order>();
         }
     }
 }

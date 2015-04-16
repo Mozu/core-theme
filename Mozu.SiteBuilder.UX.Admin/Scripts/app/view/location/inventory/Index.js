@@ -74,7 +74,10 @@ Ext.define('Taco.view.location.inventory.Index', {
             width: 300,
             forceSelection: true,
             editable: false,
-            extraFilters: [{ id: "status", property: 'status', value: 'all'}],
+            extraFilters: [
+                { id: "status", property: 'status', value: 'all' },
+                { id: "supportsInventory", property: 'supportsInventory', value: 'true' }
+            ],
             listeners: {
                 select: {
                     fn: function (combo, records, eOpts) {
@@ -99,6 +102,34 @@ Ext.define('Taco.view.location.inventory.Index', {
             }
         });
 
+        this.adjustmentMode = Ext.widget({
+            xtype: 'selectfield',
+            name: 'adjustmentMode',
+            itemId: "adjustmentMode",
+            fieldLabel: 'Adjustment Mode',
+            labelAlign: 'left',
+            labelWidth: 125,
+            width: 250,
+            required: false,
+            queryMode: 'local',
+            value: 'Delta',
+            displayField: 'name',
+            valueField: 'id',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['id', "name"],
+                data: [
+                    {
+                        name: "Add",
+                        id: "Delta"
+                    }, {
+                        name: "Set",
+                        id: "Absolute"
+                    }
+                ]
+            })
+
+        });
+
         this.mon(this.locationPicker, 'locationchange', me.onLocationChange, me);
 
         this.secondToolbarItems = [
@@ -108,10 +139,12 @@ Ext.define('Taco.view.location.inventory.Index', {
                 margin: '0 10 0 0',
                 padding: '2 0 0 0'
             },
-            this.locationPicker
+            this.locationPicker,
+            '->',
+            this.adjustmentMode
         ];
     },
-    
+
     filterFormConf: {
         width: 600,
         cls: Taco.baseCSSPrefix + 'combofilter-form orders',
@@ -310,9 +343,14 @@ Ext.define('Taco.view.location.inventory.Index', {
         }
     },
 
-    onRowEditorUpdate: function (editor, context, opts) {
-        var locInvRecord = context.record;
-        locInvRecord.setAdjustmentValue();
+    onRowEditorUpdate: function (editor, context) {
+        var locInvRecord = context.record,
+            adjustmentType = this.adjustmentMode.getValue();
+
+        locInvRecord.set('adjustmentType', adjustmentType);
+        if (adjustmentType === 'Delta') {
+            Taco.view.location.inventory.InventoryStockColumns.removeDeltaListener(editor);
+        }
         this.callParent(arguments);
     }
 });

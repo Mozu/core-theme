@@ -69,13 +69,15 @@ Ext.define('Taco.model.Attribute', {
             }
         }, {
             name: 'minDate',
-            type: 'auto',
+            type: 'date',
+            dateFormat: 'c',
             convert: function (v, r) {
                 return r.convert(v, r);
             }
         }, {
             name: 'maxDate',
-            type: 'auto',
+            type: 'date',
+            dateFormat: 'c',
             convert: function (v, r) {
                 return r.convert(v, r);
             }

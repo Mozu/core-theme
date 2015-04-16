@@ -43,6 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.AppManagement
     {
         public string Id { get; set; }
         public string AppId { get; set; }
+        public string Version { get; set; }
         public string UIConfigurationUrl { get; set; }
 
         public string TenantDomain { get; set; }

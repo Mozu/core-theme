@@ -220,11 +220,12 @@ Ext.define('Taco.view.website.Tree', {
                 scope: this,
                 fn: function (targetNode, position, dragData) {
                     var roots = ['_unlinked', '_navigation', '_templates'],
+                        invalidDropZones = ['_templates', '_emailTemplates', '_backOffice'],
                         sourceId = dragData.records[0].getId(),
                         targetId = targetNode.getId(),
                         isValid = true;
 
-                    if (targetId === '_templates' || targetId.substr(0, 9) === 'templates') {
+                    if (Ext.Array.contains(invalidDropZones, targetId) || targetId.substr(0, 9) === 'templates') {
                         // cannot drop anything onto templates
                         isValid = false;
                     } else if (position === 'before' && Ext.Array.contains(roots, targetId)) {

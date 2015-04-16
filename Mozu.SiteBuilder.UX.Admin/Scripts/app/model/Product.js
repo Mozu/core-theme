@@ -17,7 +17,6 @@ Ext.define('Taco.model.Product', {
         'Taco.model.BundledProduct',
         'Taco.store.ProductTypes'
     ],
-    // requiredStores: ['Taco.store.ProductTypes'],
     statics: {
         publishBulk: function (cfg) {
             this.doPublish(Ext.apply({}, {
@@ -76,6 +75,10 @@ Ext.define('Taco.model.Product', {
             name: "productTypeId",
             type: "int",
             useNull: true
+        },
+        {
+            name: "productTypeName",
+            type:"string"
         },
         {
             name: 'productUsage',
@@ -879,16 +882,22 @@ Ext.define('Taco.model.Product', {
     beforeDuplicate: function () {
         var suffix = " - Copy";
 
-        this.raw = undefined
+        this.raw = undefined;
         this.set("productCode", "");
+        this.set("slug", "");
+        this.set("metaTitle", "");
         this.data.productName = this.data.productName + suffix;
 
         // need to check for any overriden site specific product names.
-        Ext.Array.each(this.data.productInCatalogs, function (record) {            
+        Ext.Array.each(this.data.productInCatalogs, function(record) {
             if (record.isContentOverridden) {
-                record.productName += suffix
+                record.productName += suffix;
             }
-        })
+            if (record.isSEOContentOverridden) {
+                record.slug = "";
+                record.metaTitle = "";
+            }
+        });
 
         this.commit();        
     },

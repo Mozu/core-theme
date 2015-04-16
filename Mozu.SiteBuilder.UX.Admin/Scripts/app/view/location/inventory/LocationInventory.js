@@ -185,6 +185,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
 
                                     productCodeField.setValue(record.get("productCode"));
                                     combo.setValue(record.get("productName"));
+                                    // not sure why the setValue doesn't trigger the form validation to get revalidated. Do it manually;
+                                    rowEditor.updateButton(rowEditor.form.isValid())
                                 }
                             }
                         }
@@ -218,7 +220,10 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                         editable: false,
                         msgTarget: "qtip",                        
                         allowBlank: false,
-                        extraFilters: [{ id: "status", property: 'status', value: 'all' }],
+                        extraFilters: [
+                            { id: "status", property: 'status', value: 'all' },
+                            { id: "supportsInventory", property: 'supportsInventory', value: 'true' }
+                        ],
                         onEditorShow: function (field, editor, context) {
                             // need to add the locationCode to the locationInventory;
 
@@ -269,6 +274,8 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                                     } else {
                                         locationCodeField.setValue(locationCode);
                                         combo.setValue(record.get("name"));
+                                        // not sure why the setValue doesn't trigger the form validation to get revalidated. Do it manually;
+                                        rowEditor.updateButton(rowEditor.form.isValid())
                                     }
                                 }
                             }
@@ -290,8 +297,11 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
     },
      
     onRowEditorUpdate: function (editor, context, opts) {
-        var locInvRecord = context.record;
-        locInvRecord.setAdjustmentValue();
+        var locInvRecord = context.record,
+            invMode = this.down('#adjustmentMode');
+        if (invMode) {
+            locInvRecord.set('adjustmentType', invMode.getValue());
+        }
         this.callParent(arguments);
     }
 });

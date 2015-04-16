@@ -457,46 +457,97 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
 
                 IDocumentListWebApiClient client = siteId == null ? _documentListWebApiClient : CloneWithSite(_documentListWebApiClient, siteId);
-                return _redirectEntryListTask = client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
+
+
+                return _redirectEntryListTask = client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 5000).GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
                 {
+                   
+                    string fallbackKey = CreateKey(null);
+                    Document doc = null;
                     Dictionary<string, RedirectEntry> ret = null;
-                    ServiceClientResponse<Document> gtRes = gdt.Result;
-                    if (!gtRes.ResponseMessage.IsSuccessStatusCode)
+                    try
                     {
-                        return new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
-                        //provision?
+                        ServiceClientResponse<Document> gtRes = gdt.Result;
+                        if (gtRes.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                        {
+                           return new Dictionary<string, RedirectEntry>();
+                        }
+
+                        doc = gdt.Result.ReadAsSync();
                     }
-                    Document doc = gdt.Result.ReadAsSync();
+                    catch (Exception ex)
+                    {
+                        _logger.Error("error looking up redirects metadoc", ex);
+                        ret = _cache[fallbackKey] as Dictionary<string, RedirectEntry> ?? new Dictionary<string, RedirectEntry>();
+
+                        return ret;
+                    }
+                   
                     string key = CreateKey(doc);
                     ret = _cache[key] as Dictionary<string, RedirectEntry>;
                     if (ret == null)
                     {
-                        lock (typeof (RedirectRepository))
+                        
+                        string lockStr = string.Intern(fallbackKey);
+                        lock (lockStr)
                         {
                             ret = _cache[key] as Dictionary<string, RedirectEntry>;
                             if (ret == null)
                             {
-                                ServiceClientResponse<StreamContent> res = client.GetDocumentContent("siteSettings@mozu", doc.Id).Result;
-                                if (res.ResponseMessage.IsSuccessStatusCode && res.ResponseMessage.Content.Headers.ContentLength > 0)
+                                
+                                try
                                 {
-                                    Stream stream = res.ResponseMessage.Content.ReadAsStreamAsync().Result;
-                                    var tr = new StreamReader(stream);
-                                    var jr = new JsonTextReader(tr);
-                                    try
+                                    
+                                    ServiceClientResponse<StreamContent> res = client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 8000).GetDocumentContent("siteSettings@mozu", doc.Id).ConfigureAwait(false).GetAwaiter().GetResult();
+
+                                    if (res.ResponseMessage.IsSuccessStatusCode && res.ResponseMessage.Content.Headers.ContentLength > 0)
                                     {
-                                        ret = JsonSerializer.CreateDefault().Deserialize<Dictionary<string, RedirectEntry>>(jr);
-                                        ret = new Dictionary<string, RedirectEntry>(ret, StringComparer.OrdinalIgnoreCase);
-                                        _cache[key] = ret;
+                                        Stream stream = res.ResponseMessage.Content.ReadAsStreamAsync().Result;
+                                        var tr = new StreamReader(stream);
+                                        var jr = new JsonTextReader(tr);
+                                        try
+                                        {
+                                            ret = JsonSerializer.CreateDefault().Deserialize<Dictionary<string, RedirectEntry>>(jr);
+                                            ret = new Dictionary<string, RedirectEntry>(ret, StringComparer.OrdinalIgnoreCase);
+                                            _cache[key] = ret;
+                                            _cache.Set(fallbackKey, ret, new CacheItemPolicy() {AbsoluteExpiration = ObjectCache.InfiniteAbsoluteExpiration});
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            _logger.Error(ex);
+                                            ret = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                            _cache[key] = ret;
+                                        }
                                     }
-                                    catch (Exception ex)
+                                    else
                                     {
-                                        _logger.Error(ex);
                                         ret = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                        _cache[key] = ret;
+                                       
                                     }
                                 }
-                                else
+                                
+                                catch (Exception ex)
                                 {
-                                    ret = new Dictionary<string, RedirectEntry>();
+                                    _logger.Error("error looking up redirects", ex);
+                                 
+                                    ret = _cache[fallbackKey] as Dictionary<string, RedirectEntry>;
+                                    if (ret == null)
+                                    {
+                                        ret = new Dictionary<string, RedirectEntry>(StringComparer.OrdinalIgnoreCase);
+                                        _cache.Set(key, ret, new CacheItemPolicy() { AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(10) });
+                                       
+                                    }
+                                    else
+                                    {
+                                        _cache.Set(key, ret, new CacheItemPolicy() { AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(30) });
+                                    }
+                                    
+                                    
+
+                                    
+                                    
                                 }
                             }
                         }
@@ -537,6 +588,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 doc = client.UpdateDocument("siteSettings@mozu", doc.Id, doc).Result.ReadAsSync();
                 string key = CreateKey(doc);
                 _cache[key] = redirects;
+                
 
                 return redirects;
             });
@@ -544,9 +596,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private string CreateKey(Document doc)
         {
-            DateTime? dateStamp = doc.ContentUpdateDate ?? doc.UpdateDate ?? doc.InsertDate;
+
+            DateTime? dateStamp = doc == null ? null : (doc.ContentUpdateDate ?? doc.UpdateDate ?? doc.InsertDate);
             string key = typeof (RedirectRepository).FullName + dateStamp + _siteBuilderApiContext.SiteId + (_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending);
             return key;
         }
+       
     }
 }

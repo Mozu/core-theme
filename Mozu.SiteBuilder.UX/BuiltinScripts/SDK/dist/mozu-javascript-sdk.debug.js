@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-03-19
+ * Mozu JavaScript SDK - v0.3.0 - 2015-04-14
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3486,7 +3486,7 @@ module.exports=
             "pageSize": 15
         },
         "collectionOf": "document",
-        "useIframeTransport": "{{+storefrontUserService}../../receiver{?receiverVersion}"
+        "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     },
     "entityList": {
         "template": "{+entityListService}{listName}/entities{?_*}",
@@ -3588,7 +3588,7 @@ module.exports=
     "orders": {
         "template": "{+orderService}{?_*}",
         "defaultParams": {
-            "filter": "Status ne Created and Status ne Validated and Status ne Pending",
+            "filter": "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored",
             "startIndex": 0,
             "pageSize": 5
         },
@@ -3679,6 +3679,25 @@ module.exports=
             "template": "{+orderService}?cartId={id}",
             "returnType": "order",
             "noBody": true,
+            "includeSelf": true
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+cartService}{id}/coupons",
             "includeSelf": true
         }
     },
@@ -4281,6 +4300,8 @@ var ApiReference = {
 
     headerPrefix: 'x-vol-',
 
+    methods: objectTypes,
+
     getActionsFor: function(typeName) {
         ApiCollection = ApiCollection || require('./collection');
         if (!objectTypes[typeName]) return false;
@@ -4409,14 +4430,22 @@ module.exports = ApiReference;
 //# sourceUrl=src/types/cart.js
 
 var utils = require('../utils');
+var errors = require('../errors');
+
+errors.register({
+    'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}'
+})
+
 module.exports = {
-    count: function() {
+    count: function () {
         var items = this.prop('items');
         if (!items || !items.length) return 0;
-        return utils.reduce(items, function(total, item) { return total + item.quantity; }, 0);
+        return utils.reduce(items, function (total, item) {
+            return total + item.quantity;
+        }, 0);
     },
 
-    addExtendedProperty: function(extendedProperty) {
+    addExtendedProperty: function (extendedProperty) {
         // Expect extendedPropert to contain a key/value pair, if it doesn't we need to fail with incorrect data.
         if (!extendedProperty) {
             extendedProperty = {};
@@ -4426,10 +4455,10 @@ module.exports = {
             // Fill in the data from extendedProperty here!
             'key': extendedProperty.key,
             'value': extendedProperty.value
-    });
+        });
     },
 
-    addExtendedProperties: function(extendedProperties) {
+    addExtendedProperties: function (extendedProperties) {
         // Expect extendedProperties to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
         if (!extendedProperties) {
             extendedProperties = [];
@@ -4445,9 +4474,17 @@ module.exports = {
         }
 
         return this.api.action(this, 'addExtendedProperties', extendedPropertyKeys);
+    },
+    addCoupon: function (couponCode) {
+        var self = this;
+        return this.applyCoupon(couponCode).then(function () {
+            return self.get();
+        }, function (reason) {
+            errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
+        });
     }
 };
-},{"../utils":36}],26:[function(require,module,exports){
+},{"../errors":17,"../utils":36}],26:[function(require,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
