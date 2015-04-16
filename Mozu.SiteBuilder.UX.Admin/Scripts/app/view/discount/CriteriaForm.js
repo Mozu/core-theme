@@ -649,9 +649,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     },
 
     handleCriteriaScopeChange: function(cmp, newValue, oldValue) {
-        debugger;
-
-
+        
         this.setProductCategoryContainerVisibility();
     },
 
