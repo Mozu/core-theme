@@ -256,203 +256,234 @@ Ext.define('Taco.view.order.Grid', {
 
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
-        var me = this,
-            columns = [
-                {
-                    stateId: 'orderNumber',
-                    dataIndex: 'orderNumber',
-                    text: 'Order Number',
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100
-                }, {
-                    stateId: 'submittedDate',
-                    dataIndex: 'submittedDate',
-                    text: 'Submitted Date',
-                    flex: 1,
-                    minWidth: 180,
-                    xtype: 'datecolumn',
-                    format: 'M d Y g:ia'
-                }, {
-                    stateId: 'createDate',
-                    dataIndex: 'createDate',
-                    text: 'Create Date',
-                    flex: 1,
-                    minWidth: 180,
-                    xtype: 'datecolumn',
-                    hidden: true,
-                    format: 'M d Y g:ia'
-                }, {
-                    stateId: 'firstName',
-                    dataIndex: 'billingContact',
-                    text: 'First Name',
-                    flex: 1,
-                    width: 120,
-                    sortable: false,
-                    getSortParam: function () {
-                        return 'billingContact.firstName';
-                    },
-                    renderer: function (value, metaData, record) {
-                        return (value.firstName) ? Ext.util.Format.htmlEncode(value.firstName) : "N/A";
-                        
+        var me = this;
+        var customers = Taco.core.data.StoreManager.getOrCreate('Taco.store.Customers');
+
+        var columns = [
+            {
+                stateId: 'orderNumber',
+                dataIndex: 'orderNumber',
+                text: 'Order Number',
+                flex: 1,
+                minWidth: 100,
+                width: 100
+            }, {
+                stateId: 'submittedDate',
+                dataIndex: 'submittedDate',
+                text: 'Submitted Date',
+                flex: 1,
+                minWidth: 180,
+                xtype: 'datecolumn',
+                format: 'M d Y g:ia'
+            }, {
+                stateId: 'createDate',
+                dataIndex: 'createDate',
+                text: 'Create Date',
+                flex: 1,
+                minWidth: 180,
+                xtype: 'datecolumn',
+                hidden: true,
+                format: 'M d Y g:ia'
+            }, {
+                stateId: 'firstName',
+                dataIndex: 'billingContact',
+                text: 'First Name',
+                flex: 1,
+                width: 120,
+                sortable: false,
+                getSortParam: function () {
+                    return 'billingContact.firstName';
+                },
+                renderer: function (value, metaData, record) {
+                    var firstName = value.firstName;
+                    var contacts;
+
+                    if (firstName) {
+                        return Ext.util.Format.htmlEncode(value.firstName);
+                    } else {
+                        contacts = customers.getById(record.get('customerId'));
+                        contacts = contacts ? contacts.get('contacts') : [];
+
+                        return contacts && contacts[0] ? Ext.util.Format.htmlEncode(contacts[0].firstName) : 'N/A';
                     }
-                }, {
-                    stateId: 'lastName',
-                    dataIndex: 'billingContact',
-                    text: 'Last Name',
-                    flex: 1,
-                    minWidth: 120,
-                    width: 120,
-                    sortable: false,
-                    getSortParam: function () {
-                        return 'billingContact.lastName';
-                    },
-                    renderer: function (value, metaData, record) {
-                        return (value.firstName) ? Ext.util.Format.htmlEncode(value.lastName) : "N/A";
-                    }
-                }, {
-                    stateId: 'orderTotal',
-                    dataIndex: 'total',
-                    text: 'Order Total',
-                    renderer: function (value, metaData, record) {
-                        return record.formatCurrency(value);
-                    },
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100
-                }, {
-                    stateId: 'orderStatus',
-                    dataIndex: 'orderStatus',
-                    text: 'Order Status',
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100,
-                    sortable: false
-                }, {
-                    stateId: 'paymentStatus',
-                    dataIndex: 'paymentStatus',
-                    text: 'Payment Status',
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100
-                }, {
-                    stateId: 'fulfillmentStatus',
-                    dataIndex: 'fulfillmentStatus',
-                    text: 'Fulfillment Status',
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100,
-                    sortable: false
-                }, {
-                    stateId: 'orderType',
-                    text: 'Order Type',
-                    dataIndex: "orderType",
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100,
-                    sortable: true
-                }, {
-                    stateId: 'channelName',
-                    text: 'Channel',
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100,
-                    sortable: false,
-                    renderer: function (value, metaData, record) {
-                        return record.getChannelName();
-                    }
-                }, {
-                    stateId: 'siteName',
-                    text: 'SiteName',
-                    dataIndex: "siteName",
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100,
-                    hidden: true,
-                    sortable: false
-                }, {
-                    stateId: 'customerEmail',
-                    text: 'Customer Email',
-                    dataIndex: 'billingContact',
-                    flex: 1,
-                    minWidth: 160,
-                    width: 260,
-                    sortable: false,
-                    hidden: true,
-                    renderer: function (value, metaData, record) {
-                        return value && value.email ? value.email : null;
-                    }
-                }, {
-                    stateId: 'customerState',
-                    text: 'Customer State',
-                    dataIndex: 'billingContact',
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100,
-                    sortable: false,
-                    hidden: true,
-                    renderer: function (value, metaData, record) {
-                        return value && value.stateOrProvince ? value.stateOrProvince : null;
-                    }
-                }, {
-                    stateId: 'paymentType',
-                    text: 'Payment Type',
-                    dataIndex: 'payments',
-                    flex: 1,
-                    minWidth: 120,
-                    width: 120,
-                    sortable: false,
-                    hidden: true,
-                    renderer: function (value, metaData, record) {
-                        return Ext.isArray(value) ? Ext.Array.unique(Ext.Array.pluck(value, 'paymentType')).join(', ') : null;
-                    }
-                }, {
-                    stateId: 'amountReceived',
-                    text: 'Amount Received',
-                    dataIndex: 'authorizationInfo',
-                    flex: 1,
-                    minWidth: 120,
-                    width: 120,
-                    sortable: false,
-                    hidden: true,
-                    renderer: function (value, metaData, record) {
-                        return record.formatCurrency(value.amountCollected);
-                    }
-                }, {
-                    stateId: 'remainingAmount',
-                    text: 'Remaining Amount',
-                    dataIndex: 'authorizationInfo',
-                    flex: 1,
-                    minWidth: 120,
-                    width: 120,
-                    sortable: false,
-                    hidden: true,
-                    
-                    renderer: function (value, metaData, record) {
-                        var amount = record.get('total') - value.amountCollected;
-                        return record.formatCurrency(amount);
-                    }
-                }, {
-                    stateId: 'ipAddress',
-                    text: 'IP Address',
-                    dataIndex: 'ipAddress',
-                    flex: 1,
-                    minWidth: 120,
-                    width: 120,
-                    sortable: false,
-                    hidden: true
-                }, {
-                    stateId: 'fraudScore',
-                    text: 'Fraud Score',
-                    dataIndex: 'fraudScore',
-                    itemId: 'fraudScore',
-                    flex: 1,
-                    minWidth: 100,
-                    width: 100,
-                    sortable: false,
-                    hidden: true
                 }
-            ];
+            }, {
+                stateId: 'lastName',
+                dataIndex: 'billingContact',
+                text: 'Last Name',
+                flex: 1,
+                minWidth: 120,
+                width: 120,
+                sortable: false,
+                getSortParam: function () {
+                    return 'billingContact.lastName';
+                },
+                renderer: function (value, metaData, record) {
+                    var lastName = value.lastName;
+                    var contacts;
+
+                    if (lastName) {
+                        return Ext.util.Format.htmlEncode(value.lastName);
+                    } else {
+                        contacts = customers.getById(record.get('customerId'));
+                        contacts = contacts ? contacts.get('contacts') : [];
+
+                        return contacts && contacts[0] ? Ext.util.Format.htmlEncode(contacts[0].lastName) : 'N/A';
+                    }
+                }
+            }, {
+                stateId: 'orderTotal',
+                dataIndex: 'total',
+                text: 'Order Total',
+                renderer: function (value, metaData, record) {
+                    return record.formatCurrency(value);
+                },
+                flex: 1,
+                minWidth: 100,
+                width: 100
+            }, {
+                stateId: 'orderStatus',
+                dataIndex: 'orderStatus',
+                text: 'Order Status',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: false
+            }, {
+                stateId: 'paymentStatus',
+                dataIndex: 'paymentStatus',
+                text: 'Payment Status',
+                flex: 1,
+                minWidth: 100,
+                width: 100
+            }, {
+                stateId: 'fulfillmentStatus',
+                dataIndex: 'fulfillmentStatus',
+                text: 'Fulfillment Status',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: false
+            }, {
+                stateId: 'orderType',
+                text: 'Order Type',
+                dataIndex: "orderType",
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: true
+            }, {
+                stateId: 'channelName',
+                text: 'Channel',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: false,
+                renderer: function (value, metaData, record) {
+                    return record.getChannelName();
+                }
+            }, {
+                stateId: 'siteName',
+                text: 'SiteName',
+                dataIndex: "siteName",
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                hidden: true,
+                sortable: false
+            }, {
+                stateId: 'customerEmail',
+                text: 'Customer Email',
+                dataIndex: 'billingContact',
+                flex: 1,
+                minWidth: 160,
+                width: 260,
+                sortable: false,
+                hidden: true,
+                renderer: function (value, metaData, record) {
+                    return value && value.email ? value.email : null;
+                }
+            }, {
+                stateId: 'customerState',
+                text: 'Customer State',
+                dataIndex: 'billingContact',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: false,
+                hidden: true,
+                renderer: function (value, metaData, record) {
+                    var stateOrProvince = value.stateOrProvince;
+                    var contacts;
+
+                    if (stateOrProvince) {
+                        return Ext.util.Format.htmlEncode(value.stateOrProvince);
+                    } else {
+                        contacts = customers.getById(record.get('customerId'));
+                        contacts = contacts ? contacts.get('contacts') : [];
+
+                        return contacts && contacts[0] ? Ext.util.Format.htmlEncode(contacts[0].stateOrProvince) : 'N/A';
+                    }
+                }
+            }, {
+                stateId: 'paymentType',
+                text: 'Payment Type',
+                dataIndex: 'payments',
+                flex: 1,
+                minWidth: 120,
+                width: 120,
+                sortable: false,
+                hidden: true,
+                renderer: function (value, metaData, record) {
+                    return Ext.isArray(value) ? Ext.Array.unique(Ext.Array.pluck(value, 'paymentType')).join(', ') : null;
+                }
+            }, {
+                stateId: 'amountReceived',
+                text: 'Amount Received',
+                dataIndex: 'authorizationInfo',
+                flex: 1,
+                minWidth: 120,
+                width: 120,
+                sortable: false,
+                hidden: true,
+                renderer: function (value, metaData, record) {
+                    return record.formatCurrency(value.amountCollected);
+                }
+            }, {
+                stateId: 'remainingAmount',
+                text: 'Remaining Amount',
+                dataIndex: 'authorizationInfo',
+                flex: 1,
+                minWidth: 120,
+                width: 120,
+                sortable: false,
+                hidden: true,
+                
+                renderer: function (value, metaData, record) {
+                    var amount = record.get('total') - value.amountCollected;
+                    return record.formatCurrency(amount);
+                }
+            }, {
+                stateId: 'ipAddress',
+                text: 'IP Address',
+                dataIndex: 'ipAddress',
+                flex: 1,
+                minWidth: 120,
+                width: 120,
+                sortable: false,
+                hidden: true
+            }, {
+                stateId: 'fraudScore',
+                text: 'Fraud Score',
+                dataIndex: 'fraudScore',
+                itemId: 'fraudScore',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                sortable: false,
+                hidden: true
+            }
+        ];
 
 
         // add the actions column if required
