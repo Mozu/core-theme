@@ -220,7 +220,7 @@
     </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1503101519-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1504161434-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.AppDev.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
