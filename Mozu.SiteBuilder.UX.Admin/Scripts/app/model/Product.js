@@ -649,6 +649,29 @@ Ext.define('Taco.model.Product', {
             foreignProperty: 'product'
         });
     },
+
+    getBundleItemTotals: function (bundledProducts) {
+        var price = 0,
+            salePrice = 0,
+            bundleItems = bundledProducts || this.getBundledProducts();
+
+        bundleItems.each(function (item) {
+            price += item.data.price * item.data.quantity;
+
+            if (item.data.salePrice !== null) {
+                salePrice += item.data.salePrice * item.data.quantity;
+            } else {
+                // no sale price for this item, use the full price
+                salePrice += item.data.price * item.data.quantity;
+            }
+        });
+
+        return {
+            price: price,
+            salePrice: salePrice
+        }
+    },
+
     getProperties: function () {
         return this.getOrCreateHasManyStore({
             model: 'Taco.model.ProductProperty',
