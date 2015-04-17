@@ -10,6 +10,8 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 using CLIENT=Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
@@ -85,6 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (updateFacetCalls.Count > 0)
             {
                 await Task.WhenAll(updateFacetCalls);
+                updateFacetCalls.Select(TaskHelper.Result).ThrowExceptionsIfAny();
             }
         }
 
@@ -97,6 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (newFacetCalls.Count > 0)
             {
                 await Task.WhenAll(newFacetCalls);
+                newFacetCalls.Select(TaskHelper.Result).ThrowExceptionsIfAny();
             }
         }
 
@@ -108,6 +112,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (deleteFacetCalls.Count > 0)
             {
                 await Task.WhenAll(deleteFacetCalls);
+                deleteFacetCalls.Select(TaskHelper.Result).ThrowExceptionsIfAny();
             }
         }
 

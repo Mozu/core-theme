@@ -58,7 +58,8 @@ Ext.define('Taco.view.inventory.Index', {
                 dataIndex: 'productCode',
                 stateId: "productCode",
                 text: 'Code',
-                width: 140
+                width: 140,
+                menuDisabled: true
             }, {
                 dataIndex: 'productName',
                 stateId: "productName",
@@ -66,6 +67,7 @@ Ext.define('Taco.view.inventory.Index', {
                 minWidth: 120,
                 resizable: false,
                 flex: 1,
+                menuDisabled: true,
                 renderer: function (value, metaData, record) {
                     var name = record.getContextualValue('productName');;
                     if (record.get('productUsage') == 'Configurable') {

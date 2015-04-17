@@ -780,30 +780,6 @@ Ext.define('Taco.view.product.subform.General', {
 
     },
 
-    
-    getBundleItemTotals : function (){
-        var me = this,
-            price = 0,
-            salePrice = 0,
-            bundledProducts = this.record.getBundledProducts();
-
-        bundledProducts.each(function (item) {
-            price += item.data.price * item.data.quantity;
-
-            if (item.data.salePrice) {
-                salePrice += item.data.salePrice * item.data.quantity;
-            } else {
-                // no sale price for this item, use the full price
-                salePrice += item.data.price * item.data.quantity;
-            }
-        });
-
-        return {
-            price: price,
-            salePrice:salePrice
-        }
-    },
-
     /**
     * when the productUsage changes, will need to alter the ux for price on the general form;
     */
@@ -822,7 +798,7 @@ Ext.define('Taco.view.product.subform.General', {
         if (productUsageValue == 'Bundle') {
             //store
             rollupBundleContainer.show();
-            bundleItemTotals = me.getBundleItemTotals();
+            bundleItemTotals = this.record.getBundleItemTotals();
 
             this.rollupBundlePriceField.update({
                 price: this.record.formatCurrency(bundleItemTotals.price)

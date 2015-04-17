@@ -59,6 +59,16 @@ var relPath = helpers.isBuildTask(window) ? '' : '../../',
                 expanded: false,
                 items: [
                     {
+                        group: 'Models',
+                        expanded: false,
+                        items: [
+                            {
+                                url: relPath + "unit/model/BundleProduct.t.js",
+                                title: "Bundle Product"
+                            }
+                        ]
+                    },
+                    {
                         group: 'Util',
                         expanded: false,
                         items: [

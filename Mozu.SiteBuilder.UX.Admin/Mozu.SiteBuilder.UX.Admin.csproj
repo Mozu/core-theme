@@ -220,7 +220,7 @@
     </Reference>
     <Reference Include="Mozu.AdminUser.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1503101519-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1504161434-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.AppDev.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -2178,6 +2178,7 @@
     <Content Include="Tests\customunit\core\ux\form\model-binds.t.js" />
     <Content Include="Tests\customunit\core\ux\grid\grid-action-buttons.js" />
     <Content Include="Tests\customunit\core\ux\tab\picker.t.js" />
+    <Content Include="Tests\unit\model\BundleProduct.t.js" />
     <Content Include="Tests\unit\platter\fields\SimpleFields.t.js" />
     <Content Include="Tests\unit\view\customers\contacts.t.js" />
     <Content Include="Tests\unit\view\customers\modal\contacts.t.js" />

@@ -1,0 +1,61 @@
+﻿    <h3 class="mz-formstep-header">
+        {{ labels.reviewOrder }}
+    </h3>
+    <div class="mz-formstep-body">
+        {% if model.isReady %}
+            <p class="mz-formstep-desc">{{ labels.reviewOrderText }}</p>
+
+            {% if themeSettings.requireCheckoutAgreeToTerms %}
+            <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows">
+            <label class='inline'>
+                <input type="checkbox" name="terms-and-conditions" id="mz-terms-and-conditions" data-mz-value="agreeToTerms" {% if model.agreeToTerms %} checked="checked"{% endif %}> {{ labels.agreeToTerms }}
+            </label>
+            <span class="mz-validationmessage" data-mz-validationmessage-for="agreeToTerms"></span>
+            </div>
+            {% endif %}
+
+            {% if not user or user.isAnonymous %}
+            <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows">
+                <label class='inline'>
+                    <input type="checkbox" name="create-new-account" data-mz-value="createAccount" {% if model.createAccount %} checked="checked"{% endif %} > {{ labels.createAccount }}
+                </label>
+            </div>
+
+                {% if model.createAccount %}
+                <div class="mz-l-formfieldgroup mz-create-account-fields">
+                    <div class="mz-l-formfieldgroup-row">
+                      <div class="mz-l-formfieldgroup-cell">
+                    <label for="new-account-email"> {{ labels.email }}<span class="is-required"> *</span> </label>
+                      </div>
+                      <div class="mz-l-formfieldgroup-cell">
+                        <input type="text" name="new-account-email" data-mz-value="emailAddress" value="{{ model.emailAddress|default(model.billingInfo.billingContact.email) }}">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="emailAddress"></span>
+                       </div>
+                    </div>
+                  <div class="mz-l-formfieldgroup-row">
+                      <div class="mz-l-formfieldgroup-cell">
+                    <label for="new-account-password"> {{ labels.password }}<span class="is-required"> *</span> </label>
+                      </div>
+                      <div class="mz-l-formfieldgroup-cell">
+                        <input type="password" name="new-account-password" data-mz-value="password" value="{{ model.password }}">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="password"></span>
+                       </div>
+                    </div>
+                  <div class="mz-l-formfieldgroup-row">
+                      <div class="mz-l-formfieldgroup-cell">
+                    <label for="new-account-password"> {{ labels.confirmPassword }}<span class="is-required"> *</span> </label>
+                      </div>
+                      <div class="mz-l-formfieldgroup-cell">
+                        <input type="password" name="new-account-confirm" data-mz-value="confirmPassword" value="{{ model.confirmPassword }}">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="confirmPassword"></span>
+                       </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+
+            <div class="mz-formstep-next">
+                <button type="button" class="mz-button mz-button-large" data-mz-action="submit">{{ labels.placeOrder }}</button>
+            </div>
+        {% endif %}
+    </div>

@@ -6,7 +6,8 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core6"
+        "name": "Core6",
+        "allowProduction": false
     },
     "editors": [
         {
