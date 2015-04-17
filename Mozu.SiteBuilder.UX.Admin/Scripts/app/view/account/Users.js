@@ -229,7 +229,6 @@ Ext.define('Taco.view.account.Users', {
                 }
             }
         });
-        debugger;
         /*if (row) {
             menu.showBy(row, 'tr-br', [-1, -1]);
         } else {*/
