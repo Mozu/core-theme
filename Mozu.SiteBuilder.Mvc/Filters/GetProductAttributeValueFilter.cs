@@ -13,6 +13,9 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     [Name("get_product_attribute_value")]
     class GetProductAttributeValueFilter : IFilterWithContext
     {
+
+        static readonly IFilterWithContext prop = new NDjango.Filters.PropFilter();
+
         static readonly GetProductAttributeFilter getProductAttribute = new GetProductAttributeFilter();
         public object Perform(object value) { return null; }
         public object PerformWithParam(object value, object parameter) { return null; }
@@ -31,25 +34,35 @@ namespace Mozu.SiteBuilder.Mvc.Filters
         /// <returns></returns>
         private static object GetAttrValue(object attr)
         {
-            var valuesProp = ResolverConfig.Resolver.ResolveMember(attr, "values");
-            if (FSharpOption<object>.get_IsNone(valuesProp)) return null;
 
-            var values = valuesProp.Value as IEnumerable<object>;
-            if (values == null) return null;
+            var values = prop.PerformWithParam(attr, "values");
+
+            if (values == null)
+            {
+                return null;
+            }
+
+            var safeValues = GetProductAttributeFilter.ToSafeEnumerable(values);
+
+            if (!safeValues.Any())
+            {
+                return null;
+            }
 
             // assuming for now that the first value is the one we want.
             // TODO: reevaluate this, but remember to stay in sync with HyprLive changes
-            var value = values.First();
+            var value = safeValues.First();
             return GetMatchedValue(value);
         }
 
         private static object GetMatchedValue(object value)
         {
-            var stringValueProp = ResolverConfig.Resolver.ResolveMember(value, "stringValue");
-            if (FSharpOption<object>.get_IsSome(stringValueProp) && stringValueProp.Value != null) return stringValueProp.Value;
 
-            var valueProp = ResolverConfig.Resolver.ResolveMember(value, "value");
-            return FSharpOption<object>.get_IsNone(valueProp) ? null : valueProp.Value;
+            var stringValueProp = prop.PerformWithParam(value, "stringValue");
+            if (stringValueProp != null) return stringValueProp;
+
+            var valueProp = prop.PerformWithParam(value, "value");
+            return valueProp;
         }
     }
 }
