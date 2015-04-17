@@ -16,8 +16,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         sortable: false,
         menuDisabled: true,
         hidden: false,
-        align: 'center'
-        //dataIndex: ''
+        align: 'center',
+        dataIndex: 'orderLineId'
     }, {
         dataIndex: 'productCode',
         text: 'Code',
@@ -48,8 +48,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         sortable: false,
         menuDisabled: true,
         hidden: false,
-        align: 'left'
-        //dataIndex: ''
+        align: 'left',
+        dataIndex: 'orderFulfillmentStatus'
     }, {
         dataIndex: 'returnType',
         text: 'Type',
@@ -247,7 +247,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'number',  name: 'quantityFulfilled' },
                 { type: 'number',  name: 'quantityReturned', defaultValue: 0 },
                 { type: 'string', name: 'orderItemId' },
-                { type: 'string', name: 'parentItemId'}
+                { type: 'string', name: 'parentItemId' },
+                { type: 'int', name: 'orderLineId' },
+                { type: 'string', name: 'orderFulfillmentStatus' }
             ],
             data: []
         });

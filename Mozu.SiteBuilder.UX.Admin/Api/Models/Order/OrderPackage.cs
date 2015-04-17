@@ -15,6 +15,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         //todo: to pass mapping unit test, please review or add ignore - Greg Murray on 2014-05-21 
         public string Code { get; set; }
 
+        public int LineId { get; set; }
+
         public string OrderId { get; set; }
 
         public string ShipmentId { get; set; }

@@ -63,6 +63,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 name: 'fulfillmentLocationCode',
                 type: 'string',
                 useNull: true
+            }, {
+                name: 'lineId',
+                type: 'int',
+                unseNull: false
             }]
         });
 
@@ -115,8 +119,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
             sortable: false,
             menuDisabled: true,
             hidden: false,
-            align: 'center'
-            //dataIndex: ''
+            align: 'center',
+            dataIndex: 'lineId'
         }, {
             text: 'Code',
             draggable: false,

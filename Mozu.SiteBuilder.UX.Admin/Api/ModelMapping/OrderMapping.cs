@@ -269,25 +269,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     // fill out UnpackagedItems and UnpickedupItems lists
 
+                    // TODO: CHANGE THIS FOR LineID!!
                     // get all the product codes in the order.
-                    var productCodes = order.Items.Where(item => item.ProductUsage != "Bundle").Select(item => item.ProductCode).ToList();
-                    productCodes.AddRange(order.Items.Where(i => i.BundledProducts != null).SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.ProductCode));
-                    productCodes = productCodes.Distinct().ToList();
+                    var itemLineIds = order.Items.Where(item => item.ProductUsage != "Bundle").Select(item => item.LineId).ToList();
+                    itemLineIds.AddRange(order.Items.Where(i => i.BundledProducts != null).SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.LineId));
+                    itemLineIds = itemLineIds.Distinct().ToList();
 
                     order.UnpackagedItems = new List<OrderPackageItem>();
                     order.UnpickedupItems = new List<OrderPickupItem>();
                     order.UndeliveredDigitalItems = new List<OrderDigitalPackageItem>();
 
-                    foreach (var productCode in productCodes)
+                    foreach (var lineId in itemLineIds)
                     {
-                        var productName = order.GetProductName(productCode);
-                        var desiredPackageQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
-                        var desiredPickupQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
-                        var desiredDigitalQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.DIGITAL);
-                        var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var isPackagedStandAlone = order.IsProductPackagedStandAlone(productCode);
+                        // This is now an order item, I don't need to call the previous methods!
+                        var orderItem = order.Items.Find(i =>i.LineId == lineId);
+
+                        var desiredPackageQuantity = 0;
+                        var desiredPickupQuantity = 0;
+                        var desiredDigitalQuantity = 0;
+
+                        //desiredPackageQuantity = order.GetDesiredQuantityByFulfillmentMethod(lineId, CommerceDC.FulfillmentMethodConst.SHIP);
+                        if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.SHIP)
+                        {
+                            desiredPackageQuantity = orderItem.Quantity;
+                        }
+
+                        //desiredPickupQuantity = order.GetDesiredQuantityByFulfillmentMethod(lineId, CommerceDC.FulfillmentMethodConst.PICKUP);
+                        if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.PICKUP)
+                        {
+                            desiredPickupQuantity = orderItem.Quantity;
+                        }
+
+                        //desiredDigitalQuantity = order.GetDesiredQuantityByFulfillmentMethod(lineId, CommerceDC.FulfillmentMethodConst.DIGITAL);
+                        if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.DIGITAL)
+                        {
+                            desiredDigitalQuantity = orderItem.Quantity;
+                        }
+
+                        var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+                        var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+                        var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
 
                         // if there are more desired products than created packages contain, add this product to unpackagedItems.
                         if (desiredPackageQuantity > packagedQuantity)
@@ -295,22 +316,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             int remainingQuantity = desiredPackageQuantity - packagedQuantity;
 
                             // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
-                            if (desiredPickupQuantity - pickedQuantity < 0)
-                                remainingQuantity += desiredPickupQuantity - pickedQuantity;
+                            // I don't think we need to do this anymore.  On a line item, it can only be shipped, picked up, or digital.
+                            //if (desiredPickupQuantity - pickedQuantity < 0)
+                            //    remainingQuantity += desiredPickupQuantity - pickedQuantity;
 
                             if (remainingQuantity > 0)
                             {
-                                var fulfillmentLocationForThisProduct = order.GetAFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
-
                                 order.UnpackagedItems.Add(new OrderPackageItem
                                 {
-                                    ProductCode = productCode,
-                                    ProductName = order.GetProductName(productCode),
-                                    Weight = order.GetUnitWeight(productCode) * remainingQuantity,
+                                    ProductCode = orderItem.ProductCode,
+                                    ProductName = orderItem.ProductName,
+                                    Weight = orderItem.UnitWeight * remainingQuantity,
                                     Quantity = remainingQuantity,
                                     FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
-                                    FulfillmentLocationCode = fulfillmentLocationForThisProduct,
-                                    IsPackagedStandAlone = isPackagedStandAlone
+                                    FulfillmentLocationCode = orderItem.FulfillmentLocationCode,
+                                    IsPackagedStandAlone = orderItem.IsPackagedStandAlone,
+                                    LineId = orderItem.LineId
                                 });
                             }
                         }
@@ -321,32 +342,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             int remainingQuantity = desiredPickupQuantity - pickedQuantity;
 
                             // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
-                            if (desiredPackageQuantity - packagedQuantity < 0)
-                                remainingQuantity += desiredPackageQuantity - packagedQuantity;
+                            // I don't think we need to do this anymore.  On a line item, it can only be shipped, picked up, or digital.
+                            //if (desiredPackageQuantity - packagedQuantity < 0)
+                            //    remainingQuantity += desiredPackageQuantity - packagedQuantity;
 
                             if (remainingQuantity > 0)
                             {
-                                // Dictionary that is fullfilmentLocationCode : quantity
-                                var fulfillmentLocationsForThisProduct = order.GetAllFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
-
-                                foreach (var f in fulfillmentLocationsForThisProduct)
+                                order.UnpickedupItems.Add(new OrderPickupItem
                                 {
-                                    var quantityAtThisLocation = Math.Min(remainingQuantity, f.Value - order.GetNumberOfPickedUpItemsByProductCodeAndLocationCode(productCode, f.Key));
-
-                                    if (quantityAtThisLocation <= 0)
-                                        continue;
-
-                                    order.UnpickedupItems.Add(new OrderPickupItem
-                                    {
-                                        ProductCode = productCode,
-                                        ProductName = order.GetProductName(productCode),
-                                        Quantity = quantityAtThisLocation,
-                                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
-                                        FulfillmentLocationCode = f.Key
-                                    });
-
-                                    remainingQuantity -= f.Value;
-                                }
+                                    ProductCode = orderItem.ProductCode,
+                                    ProductName = orderItem.ProductName,
+                                    Quantity = remainingQuantity,
+                                    FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
+                                    FulfillmentLocationCode = orderItem.FulfillmentLocationCode,
+                                    LineId = orderItem.LineId
+                                });
                             }
                         }
 
@@ -356,14 +366,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             int remainingQuantity = desiredDigitalQuantity - digitallyFulfilled;
                             order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem
                             {
-                                ProductCode = productCode,
-                                ProductName = order.GetProductName(productCode),
+                                ProductCode = orderItem.ProductCode,
+                                ProductName = orderItem.ProductName,
                                 Quantity = remainingQuantity,
                                 GiftCardCode = null,
 
                                 // TODO: are these accurate in the case of a bundle? should they even be included?
-                                UnitPrice = order.GetUnitPrice(productCode),
-                                Total = order.GetUnitPrice(productCode) * remainingQuantity,
+                                UnitPrice = orderItem.UnitPrice,
+                                Total = orderItem.UnitPrice * remainingQuantity,
+                                LineId = orderItem.LineId
                             });
                         }
 
@@ -404,7 +415,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 QuantityOrdered = item.Quantity,
                                 UnitPrice = item.UnitPrice,
                                 Key = item.Id,
-                                OrderLineId = item.LineId
+                                OrderLineId = item.LineId,
+                                OrderFulfillmentStatus = item.FulfillmentStatus
                             }
                         )
                         .Union
@@ -422,7 +434,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ParentProductCode = item.ProductCode,
                                 ParentProductName = item.ProductName,
                                 Key = item.Id + "-" + bp.ProductCode,
-                                OrderLineId = item.LineId
+                                OrderLineId = item.LineId,
+                                OrderFulfillmentStatus = item.FulfillmentStatus
                             }
                         )
                         .ToList();
