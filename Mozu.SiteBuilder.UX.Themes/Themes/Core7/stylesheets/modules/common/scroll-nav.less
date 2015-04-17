@@ -1,0 +1,20 @@
+﻿.mz-scrollnav {
+    .mz-scrollnav-item {
+        margin: @gutter/4 0;
+        &.active .mz-scrollnav-link {
+            font-weight: bold;
+            color: #444;
+        }
+    }
+    .mz-scrollnav-link {
+        .permalink(#999);
+    }
+    &.affix {
+        position: fixed;
+        top: @gutter;
+    }
+
+    &.affix-bottom {
+        position: absolute;
+    }
+}

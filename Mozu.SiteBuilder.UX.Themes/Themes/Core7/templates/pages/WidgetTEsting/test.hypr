@@ -1,0 +1,12 @@
+{% extends "page" %}
+
+
+	
+{% block body-content %}
+
+ {% dropzone "testzone1" scope="page" span=12 %}
+  {% dropzone "testzone2" scope="page" span=12 %}
+{% endblock body-content %}
+
+
+ 

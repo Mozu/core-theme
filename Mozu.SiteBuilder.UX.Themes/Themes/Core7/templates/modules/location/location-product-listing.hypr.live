@@ -1,0 +1,20 @@
+﻿{% extends "modules/product/product-listing" %}
+
+{% block module-classes %} mz-productlisting-forlocation {% endblock module-classes %}
+
+{% block product-code %}
+<div class="mz-productlisting-productcode">{{model.variationProductCode|default(model.productCode)}}</div>
+{% endblock product-code %}
+
+{% block product-extrainfo %}
+<dl class="mz-productlisting-description mz-propertylist">
+    {% for option in model.options %}
+    <dt>{{ option.attributeDetail.name }}</dt>
+    <dd>{{ option.value }}</dd>
+    {% endfor %}
+    {% if model.measurements.packageWeight.value %}
+    <dt>{{ labels.packageWeight }}</dt>
+    <dd>{{ model.measurements.packageWeight.value }} {{model.measurements.packageWeight.unit }}</dd>
+    {% endif %}
+</dl>
+{% endblock product-extrainfo %}
