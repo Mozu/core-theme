@@ -168,7 +168,6 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             this.minimumCategorySubtotalBeforeDiscounts
         ];
 
-
         this.callParent(arguments);
         this.onProductsCategoriesChange(true);
     },
@@ -202,7 +201,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             displayField: 'productName',
             hideLable: true,
             listeners: {
-                change: this.onProductsCategoriesChange,
+                change: function (cmp, newValue, oldValue) {
+                    if (Ext.isEmpty(newValue) !== Ext.isEmpty(oldValue)) {
+                        this.onBuyItemConditionChange();
+                    }
+                    this.onProductsCategoriesChange();
+                },
                 scope: this
             },
             // fieldLabel: 'Purchase one of the following items',
@@ -306,16 +310,28 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     },
 
     buildCategory: function () {
+        var me = this
         
         this.conditionalCategoryPanel = Ext.create('Taco.view.discount.widget.CategoryPicker', {
             catStore: this.record.getCategoryStore(),
             record: this.record,
             name: 'conditionalCategories',
-            listWidth: 407
+            listWidth: 407,
+            listeners: {
+                scope: me,
+                change: function (cmp, newValue,oldValue) {
+                    if (newValue.length && !this.minimumQuantityProductsRequiredInCategories.getValue()) {
+                        this.minimumQuantityProductsRequiredInCategories.setValue(1);
+                    }
+                }
+            }
         });
 
         Ext.defer(function () {
-            this.mon(this.conditionalCategoryPanel, "change", function(newVal) {
+            this.mon(this.conditionalCategoryPanel, "change", function(cmp, newValue, oldValue) {
+                if (Ext.isEmpty(newValue) !== Ext.isEmpty(oldValue)) {
+                    this.onBuyItemConditionChange();
+                }
                 this.onProductsCategoriesChange();
             }, this);
         }, 3000, this);
@@ -369,6 +385,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             savesuccess: function (modal, values) {
                 list.addValue(values);
                 me.reloadStore(list);
+                if (values.length && !this.minimumQuantityRequiredProducts.getValue()) {
+                    this.minimumQuantityRequiredProducts.setValue(1);
+                }
             },
             aftercancelclose: function () {
                 me.reloadStore(list);
@@ -403,6 +422,21 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 scope: this
             }
         });
+    },
+
+    hasBuyItemConditions : function() {
+        var categoryList = this.conditionalCategoryPanel.getValue(),
+            productList = this.productList.getValue(),
+            hasProducts = productList && productList.length,
+            hasCats = (categoryList && categoryList.length);
+        return (hasProducts || hasCats);
+    },
+
+    onBuyItemConditionChange: function () {
+        var me = this;
+        var hasBuyItems = me.hasBuyItemConditions();
+        // fire event on the record so that any other subforms can be notified of the change;
+        me.record.fireEvent("buyitemconditionchange", hasBuyItems);
     },
 
     onProductsCategoriesChange: function (delayed) {

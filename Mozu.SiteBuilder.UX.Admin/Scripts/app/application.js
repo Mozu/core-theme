@@ -85,6 +85,7 @@ Ext.define('Taco.Application', {
         'Taco.overrides.form.field.ComboBox',
         'Taco.overrides.form.field.Number',
         'Taco.overrides.form.field.HtmlEditor',
+        'Taco.overrides.form.field.Radio',
         'Taco.overrides.grid.Panel',
         'Taco.overrides.grid.RowEditor',
         'Taco.overrides.grid.RowEditorButtons',

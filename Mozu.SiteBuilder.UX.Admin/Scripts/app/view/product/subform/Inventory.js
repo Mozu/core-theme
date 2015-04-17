@@ -220,7 +220,7 @@ Ext.define('Taco.view.product.subform.Inventory', {
                 buttons: Ext.Msg.YESNO,
                 fn: function (rec) {
                     if (rec === 'yes') {
-                        var saveButton = productEditor.down("#save").toggle(true);
+                        var saveButton = productEditor.down("#saveActionButton").toggle(true);
                     }
                 }
             });

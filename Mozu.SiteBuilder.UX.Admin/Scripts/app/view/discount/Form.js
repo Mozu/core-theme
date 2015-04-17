@@ -20,6 +20,11 @@ Ext.define('Taco.view.discount.Form', {
     editTitle: '{[values.record.data.name]}',
 
     initComponent: function () {
+
+        // Note: the record will act as an event bus for the subForms. 
+        // User interactions in a subform that cause changes in other forms will communicate via events on the record.
+        // Each subform will listen for and react to these changes.
+
         this.items = [{
             xtype: 'taco-discount-general',
             itemId: 'general',

@@ -1,0 +1,5 @@
+﻿{% extends "modules/common/paging-controls" %}
+{% block page-sizes %}
+<option {% if model.pageSize == 5 %}selected="selected"{% endif %} value="5">5</option>
+{% parent %}
+{% endblock page-sizes %}

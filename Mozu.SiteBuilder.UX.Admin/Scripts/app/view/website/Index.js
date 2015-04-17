@@ -251,8 +251,8 @@ Ext.define('Taco.view.website.Index', {
                 ui: 'action',
                 scale: 'medium',
                 buttonGroup: 'isSavable',
-                itemId: 'revertActionButton',
-                handler: me.revertActionHandler,
+                itemId: 'cancelActionButton',
+                handler: me.getRevertModal,
                 scope: me,
                 text: 'Cancel',
                 margin: '0 0 0 10'
@@ -1245,6 +1245,37 @@ Ext.define('Taco.view.website.Index', {
             leftoffset.setWidth(availableWidth / 2);
             rightoffset.setWidth(availableWidth / 2);
         }
+    },
+    getRevertModal: function() {
+
+        var me = this;
+        
+        Ext.create('Taco.core.ux.window.Modal', {
+            scale: 'small',
+            title: 'Discard Changes?',
+            modal: true,
+            closeAction: 'destroy',
+            height: 200,
+            primaryText: 'Ok',
+            secondaryText: 'Review Changes',
+            primaryHandler: function() {
+                me.cancel();
+                this.save();
+            },
+            items: [{
+                xtype: 'container',
+                layout: { 
+                    type: 'hbox' 
+                },
+                items: [
+                    Ext.create('Ext.panel.Panel', {
+                        width: '100%',
+                        html: 'This page has unsaved changes. Press Ok to discard all changes, or Review Changes to stay on the current page.'
+                    })
+                ]
+            }]
+        }).show();
+
     },
 });
 

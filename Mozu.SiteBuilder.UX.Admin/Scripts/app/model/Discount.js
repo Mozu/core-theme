@@ -95,8 +95,13 @@ Ext.define('Taco.model.Discount', {
             useNull: true,
             defaultValue: null
         },
+        
         {
             name: "doesNotApplyToSalePrice",
+            type: 'bool'
+        },
+        {
+            name: "doesNotApplyToProductsWithSalePrice",
             type: 'bool'
         },
 

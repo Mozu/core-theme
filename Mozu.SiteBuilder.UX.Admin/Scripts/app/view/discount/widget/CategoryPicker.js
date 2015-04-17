@@ -57,11 +57,10 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
-            }
-            ,
+            },
             listeners: {
-                change: function (myself, newValue) {
-                    this.fireEvent('change', { categories: newValue });
+                change: function (cmp, newValue,oldValue) {
+                    this.fireEvent('change', cmp, newValue, oldValue);
                 },
                 scope: this
             }

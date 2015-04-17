@@ -1,0 +1,48 @@
+﻿.mz-l-formfieldgroup {
+    display: table;
+    .mz-l-formfieldgroup-row {
+        display: table-row;
+    }
+    .mz-l-formfieldgroup-cell {
+        display: table-cell;
+        padding-right: @gutter/2;
+        padding-bottom: @gutter/2;
+        label {
+            text-align: right;
+            display: block;
+            min-width: 100px;
+            @media (max-width: 600px) {
+                min-width: auto;
+                text-align: left;
+            }
+        }
+    }
+    .mz-l-formfieldgroup-actions > .mz-l-formfieldgroup-cell {
+        text-align: right;
+    }
+    label {
+        input[type="radio"],
+        input[type="checkbox"] {
+            display: inline-block;
+            margin-right: @gutter/4;
+        }
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="email"],
+    select {
+        width: 220px;
+        box-sizing: border-box;
+        &.is-invalid {
+            background-color: @errorBackground;
+        }
+        &.mz-l-formfieldgroup-halfsize {
+            width: 100px;
+            margin-right: 10px;
+        }
+    }
+    &.mz-l-formfieldgroup-norows {
+        margin-bottom: @gutter/2;
+    }
+}
