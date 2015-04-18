@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Pants(HttpRequestMessage request)
         {
-            return await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, _apiContext, _authHelper, "/admin");
+            return await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, _apiContext, _authHelper, "/admin", false);
         }
 
         public bool _handledByRP { get; set; }

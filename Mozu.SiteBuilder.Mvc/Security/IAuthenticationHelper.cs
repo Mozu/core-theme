@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
     {
         //void LogOut(IApiContext context);
        // void SaveAuthTicket(UserAuthTicket ticket );
-        void SaveAdminAccessToken(string accessToken);
+        void SaveAdminAccessToken(string accessToken, bool isForStoreFrontAccess);
         string GetAdminAccessToken();
         string GetProfileToken();
         string GetAdminRefreshToken();

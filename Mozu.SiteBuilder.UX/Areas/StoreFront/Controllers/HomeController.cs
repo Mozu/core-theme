@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     Path = "home"
                 }
             };
-
+            PageContext.PageType = string.IsNullOrEmpty(PageContext.PageType) ? "web_page" : PageContext.PageType;
 
             return this.View("home");
 

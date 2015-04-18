@@ -172,7 +172,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Filters
                     {
                         TenantAdminUserAuthTicket ticket = res.ReadAsSync();
 
-                        authHelper.SaveAdminAccessToken(ticket.AccessToken);
+                        authHelper.SaveAdminAccessToken(ticket.AccessToken, false);
 
                         context.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
                     }

@@ -204,7 +204,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.Title = vm.Get<string>("title") as string;
             pc.MetaDescription = vm.Get<string>("meta_description") as string;
             pc.MetaTitle = vm.Get<string>("meta_title") as string;
-            pc.PageType = (string) (vm.Get<string>("page_type"));
+            pc.PageType = "web_page";
 
 
            
@@ -266,7 +266,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             }
 
-
+            
 
             var result = View(template, vm);
 

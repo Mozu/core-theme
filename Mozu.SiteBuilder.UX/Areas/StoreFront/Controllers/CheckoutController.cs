@@ -160,6 +160,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             };
+            pc.PageType = "checkout";
             //var id = OrderId;
             var id = orderId;
             if (string.IsNullOrWhiteSpace(id)) return Redirect("/cart");
@@ -323,6 +324,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             };
+            pc.PageType = "confirmation";
 
 
             if (order == null)
