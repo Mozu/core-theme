@@ -72,6 +72,13 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                 keyNavEnabled: false,
                 mouseWheelEnabled: false,
                 width: 160
+            },{
+            xtype: 'textfield',
+                name: 'id',
+                fieldLabel: 'Custom ID',
+                allowBlank: this.isCreate,
+                selectOnFocus: true,
+                width: "100%"
             }]
         });
 
