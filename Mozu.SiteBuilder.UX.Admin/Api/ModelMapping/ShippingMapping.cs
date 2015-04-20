@@ -22,12 +22,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         protected override void Configure()
         {
             Mapper.CreateMap<MSC.CustomTableRate, CustomTableRate>()
-                .ForMember(x => x.Name, opt => opt.ResolveUsing(x => (x.Content != null)
-                    ? x.Content.Name : null))
-                .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.Id))
-                .ForMember(x => x.Amount, opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER
-                    ? (x.Value*100) : x.Value))
-                .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType));
+                .ForMember(x => x.Name, 
+                    opt => opt.ResolveUsing(x => (x.Content != null) ? x.Content.Name : null))
+                .ForMember(x => x.Amount, 
+                    opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER ? (x.Value*100) : x.Value));
 
             Mapper.CreateMap<CustomTableRate, MSC.CustomTableRate>()
                 .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new MSC.CustomTableRateContent
@@ -36,10 +34,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                             //,
                                                                             Name = x.Name
                                                                         }))
-                .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Value, opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER
-                    ? (x.Amount/100) : x.Amount))
-                .ForMember(x => x.RateType, opt => opt.ResolveUsing(x => x.RateType));
+                    ? (x.Amount/100) : x.Amount));
 
 
             Mapper.CreateMap<CarrierConfiguration, MSC.CarrierConfiguration>().ConvertUsing(
@@ -82,10 +78,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     return dest;
                 });
-
-
-           
-         
 
             Mapper.CreateMap<Feature, Models.Feature>();
             Mapper.CreateMap<Models.Feature, Feature>();
