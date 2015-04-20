@@ -10,15 +10,12 @@ Ext.define('Taco.model.SiteShippingSettings', {
         { name: 'siteShippingOriginAddress', type: 'auto' },
 
 
-
-
         // new omnichannel fields that need to be added to the integration layer
         { name: 'shippingLocationCode', type: 'string' },
         { name: 'inStorePickupLabel', type: 'string' },
         { name: 'enableInStorePickup', type: 'boolean' },
         { name: 'storePickupLocationTypeCodes', type: 'auto', defaultValue: [] },
        
-        
 
         // existing fields
         { name: 'activeRateProviders', type: 'auto', defaultValue: [] },
@@ -34,8 +31,6 @@ Ext.define('Taco.model.SiteShippingSettings', {
     ],
 
 
-
-    
     // when this store has an update operation, we need to get the storeManager to clear the following stores since their data is no longer valid
     invalidateCachedStores: [
         'Taco.store.ShippingMethods'
