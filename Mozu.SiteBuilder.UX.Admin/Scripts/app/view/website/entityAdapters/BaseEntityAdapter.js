@@ -27,10 +27,14 @@ Ext.define('Taco.view.website.entityAdapters.BaseEntityAdapter', {
         return this.get();
     },
     getPageSettings: function() {
+
         var me = this,
             doc = this.getDocument(),
             customerEditor,
             ret = [];
+        
+        this.manager.pageSettings.removeAll();
+            
         if (!customerEditor) {
             customerEditor = me.manager.entityEditors.findEditor(doc);
         }

@@ -34,7 +34,8 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
      * @private
      */
     getMenu: function (eventData) {
-        var menuColumnHandler, recurseItemFn,
+        var me = this,
+            menuColumnHandler, recurseItemFn,
             getHandler = function(handler) {
                 if (Ext.isString(handler)) {
                     return function (item, eventData) {
@@ -53,6 +54,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         
         menuColumnHandler = function (item) {
             item.menuColumnHandler(item, item.eventData);
+            me.menu.hide();
         };
 
         recurseItemFn = function(item) {
