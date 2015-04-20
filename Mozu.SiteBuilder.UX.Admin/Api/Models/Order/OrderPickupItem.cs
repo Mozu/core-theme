@@ -15,5 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string FulfillmentLocationCode { get; set; }
 
         public int LineId { get; set; }
+
+        public string FulfillmentStatus { get; set; }
     }
 }

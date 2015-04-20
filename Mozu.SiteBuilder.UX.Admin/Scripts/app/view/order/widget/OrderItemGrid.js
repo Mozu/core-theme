@@ -148,15 +148,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         // attach a listener to the ownerCt which is the Ext.grid.CellEditor class. This will let me fix an issue where the value in the combo is getting set to the display tpl text of the column.
                         // will also allow me to auto load the combo store and expande the menu;                        
                         var editor = combo.ownerCt;
-                        me.mon(editor, 'beforestartedit', function (cellEditor, el, value, eOpts) {
-        
+                        me.mon(editor, 'beforestartedit', function(cellEditor, el, value, eOpts) {
+
                             // reset the value for the field to empty text so that we get the full set of location options but still allow the user to type in search terms. This is the primary reason why I had to use the beforestartedit with canceled return; Criminy!
                             value = '';
-                            
+
                             // BEGIN COPIED CODE: from Ext.Editor.startEdit();
                             // need to return false to cancel the edit and then do what the original method did but with the value reset to '', store loaded, and menu expanded;
                             cellEditor.startValue = value;
-                            cellEditor.show();                                
+                            cellEditor.show();
                             var field = cellEditor.field;
                             // temporarily suspend events on field to prevent the 'change' event from firing when reset() and setValue() are called
                             field.suspendEvents();
@@ -173,11 +173,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
                             // expand first so that the loading mask appears inside the expanded menu;
                             field.expand();
-                            field.store.load();                            
+                            field.store.load();
 
                             // cancel the default editor snerst since I am doing it here;
                             return false;
-                        }, me)
+                        }, me);
                     },
                     select: this.onFulfillmentChange,
                     scope: me
@@ -392,10 +392,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     menuDisabled: true,
                     hidden: false,
-                    align: 'left',
-                    renderer: function (value) {
-                        return value || 'Pending';
-                    }
+                    align: 'left'
                 },
                 {
                     text: 'Fulfillment',
@@ -467,11 +464,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 },
                 {
                     text: 'Row Total',
-                    width:80,
+                    width: 80,
                     draggable: false,
                     resizable: false,
                     menuDisabled: true,
-                    width: this.getRowTotalColumnWidth(),
                     sortable: false,
                     align: 'right',
                     
@@ -548,25 +544,25 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
             // pass focus to the add product field; 
             if (this.addProductToolbar) {
-                me.mon(me, 'boxready', function () {
+                me.mon(me, 'boxready', function() {
 
                     // need to listen for focus on the grid el.
-                    me.mon(me.el, 'focus', function () {
+                    me.mon(me.el, 'focus', function() {
                         if (me.store.getCount()) {
-                            me.focusGridTop()
+                            me.focusGridTop();
                         } else {
                             // no grid items to focus. pass focus to the productPickerField;
                             this.addProductToolbar.productPickerField.focus(null, 10);
                         }
-                    }, this)
+                    }, this);
 
 
                     this.addProductToolbar.productPickerField.focus(null, 10);
-                }, this)
+                }, this);
             }
 
             // listening for a custom event added to the cellSelectionModel via override; this is a cancellable event; retun false to prevent the key navigation to get processed by the grid;
-            me.mon(this.view, 'beforecellkeymove', function (view, pos, newPos, dir, e) {                
+            me.mon(this.view, 'beforecellkeymove', function(view, pos, newPos, dir, e) {
                 var me = this,
                     rowCount = me.store.getCount(),
                     cellCount = me.columns.length,
@@ -582,7 +578,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         column: cellIndex,
                         row: rowIndex
                     });
-                    
+
                     me.view.getSelectionModel().deselectAll();
 
                     //set focus on product picker field
@@ -591,14 +587,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 } else {
                     return true;
                 }
-            }, me)
+            }, me);
 
 
-
-
-            
-
-            /*
+/*
                 // this code should work but doesn't due to two bugs in Extjs related to keyEvents for grid.view;
                 bug 1. beforeKey events don't fire before the grid navigates to next cell;
                 bug 2. rowIndex is incorrect in the arguments that are passed when the events fire; this is working in the 4.2.3 nightly but not working in the 4.2.2 release;
@@ -626,8 +618,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             */
 
 
-
-                        }
+        }
     },
 
 
@@ -644,6 +635,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             plugin = me.getPlugin('cellEditing'),
             fulfillmentMethod = comboRecord.get('fulfillmentMethod'),
             fulfillmentLocationCode = comboRecord.get('locationCode'),
+            fulfillmentStatus = comboRecord.get('fulfillmentStatus'),
             orderId = me.record.get('id'),
             data= Ext.clone(gridRecord.data);
 
@@ -659,18 +651,19 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         gridRecord.set('fulfillmentLocationCode', fulfillmentLocationCode);
         gridRecord.set('fulfillmentId', fulfillmentMethod + '(' + fulfillmentLocationCode + ')');
         */
-        
+
         Ext.apply(data, {
             fulfillmentMethod: fulfillmentMethod,
-            fulfillmentLocationCode : fulfillmentLocationCode,
-            fulfillmentId: fulfillmentMethod + '(' + fulfillmentLocationCode + ')'
-        })
+            fulfillmentLocationCode: fulfillmentLocationCode,
+            fulfillmentId: fulfillmentMethod + '(' + fulfillmentLocationCode + ')',
+            filfillmentStatus: fulfillmentStatus
+        });
 
         plugin.completeEdit();
         gridRecord.set('fulfillmentMethod', fulfillmentMethod);
         gridRecord.set('fulfillmentLocationCode', fulfillmentLocationCode);
         gridRecord.set('fulfillmentId', fulfillmentMethod + '(' + fulfillmentLocationCode + ')');
-
+        gridRecord.set('fulfillmentStatus', fulfillmentStatus);
 
         me.record.editOrderItemFulfillmentMethod({
             jsonData: {
@@ -722,7 +715,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         this.mon(this, 'columnresize', function (columnHeader, column, width, eOpts) {
             // need to synchronize the width of the columns and the addProductToolbar fields when user resizes the columns                
             var columnIndex = columnHeader.columnManager.columns.indexOf(column);
-            var cell = this.addProductToolbar.items.items[columnIndex]
+            var cell = this.addProductToolbar.items.items[columnIndex];
             cell.setWidth(width);
         },this)
 
@@ -738,10 +731,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             grid : this,
             listeners: {
                 save: {
-                    fn: function (toolbar, configuredProduct) {                        
+                    fn: function (toolbar, configuredProduct) {
                         me.addConfiguredProduct([
                             configuredProduct
-                        ])
+                        ]);
                     },
                     scope:me
                     },
@@ -774,9 +767,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 rowIndex = 0;
             } else if (e.getKey() == e.UP) {
                 cellIndex = 1;
-                rowIndex = lastRow
+                rowIndex = lastRow;
             } else {
-                return
+                return;
             }
             
             // this line is required for extjs 4.2.2; not neaded for extjs 4.3 nightly;
@@ -906,8 +899,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             
         // if no position the grid didn't have a selection; could be the add item toolbar or the total panel fields;
         if (position) {
-            rowIndex = position.row
-            cellIndex = position.column
+            rowIndex = position.row;
+            cellIndex = position.column;
             // check to make sure the row is still there. It could have been deleted; 
             if (count == 0) {
                 this.addProductToolbar.productPickerField.focus(null, 10);

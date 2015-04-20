@@ -269,7 +269,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     // fill out UnpackagedItems and UnpickedupItems lists
 
-                    // TODO: CHANGE THIS FOR LineID!!
                     // get all the product codes in the order.
                     var itemLineIds = order.Items.Where(item => item.ProductUsage != "Bundle").Select(item => item.LineId).ToList();
                     itemLineIds.AddRange(order.Items.Where(i => i.BundledProducts != null).SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.LineId));
@@ -331,7 +330,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
                                     FulfillmentLocationCode = orderItem.FulfillmentLocationCode,
                                     IsPackagedStandAlone = orderItem.IsPackagedStandAlone,
-                                    LineId = orderItem.LineId
+                                    LineId = orderItem.LineId,
+                                    FulfillmentStatus = orderItem.FulfillmentStatus
                                 });
                             }
                         }
@@ -355,7 +355,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                     Quantity = remainingQuantity,
                                     FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
                                     FulfillmentLocationCode = orderItem.FulfillmentLocationCode,
-                                    LineId = orderItem.LineId
+                                    LineId = orderItem.LineId,
+                                    FulfillmentStatus = orderItem.FulfillmentStatus
                                 });
                             }
                         }
@@ -374,7 +375,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 // TODO: are these accurate in the case of a bundle? should they even be included?
                                 UnitPrice = orderItem.UnitPrice,
                                 Total = orderItem.UnitPrice * remainingQuantity,
-                                LineId = orderItem.LineId
+                                LineId = orderItem.LineId,
+                                FulfillmentStatus = orderItem.FulfillmentStatus
                             });
                         }
 
@@ -566,8 +568,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       .ForMember(x => x.ParentProductCode, op => op.ResolveUsing(dc => (dc.Product != null && !string.IsNullOrEmpty(dc.Product.VariationProductCode))
                       ? dc.Product.ProductCode 
                       : null))
-                  .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Product != null) 
+                  .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Product != null)
                       ? dc.Product.Name : null))
+                      .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => (dc.Product != null)
+                      ? dc.Product.FulfillmentStatus : null))
                   .ForMember(x => x.UnitPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
                       ? dc.UnitPrice.ExtendedAmount : null))
                   .ForMember(x => x.SalePrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
@@ -644,7 +648,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Total, op => op.Ignore())
                 .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
-                .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                 .ForMember(x => x.ParentProductCode, op => op.Ignore())
                 //todo: temp to get unit test to pass - Greg Murray on 2014-05-20 
                 .ForMember(x => x.ProductDiscount, op => op.Ignore())
@@ -1020,6 +1023,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       {
                           ProductCode = x.ProductCode,
                           Name = x.ProductName,
+                          FulfillmentStatus = x.FulfillmentStatus,
                           Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options)
                           // other stuff (price/measurements) are not important to make service calls.
                       };
