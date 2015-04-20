@@ -319,7 +319,7 @@
     </Reference>
     <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1503132134-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.1-dev1504162134-s\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -572,26 +572,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Dev.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.CI.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Demo.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.perf.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Prod.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="BuiltinScripts\SDK\package.json" />
@@ -606,9 +587,6 @@
     <Content Include="BuiltinScripts\RequireJS\src\banner.tpl" />
     <Content Include="BuiltinScripts\RequireJS\src\wrap_footer.tpl" />
     <Content Include="BuiltinScripts\RequireJS\src\wrap_header.tpl" />
-    <Content Include="Web.QA.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Misc\ModelMapping\" />
@@ -655,16 +633,10 @@
     <Content Include=".jshintrc" />
     <Content Include="BuiltinScripts\SDK\src\methods.json" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
-    <Content Include="Web.SI.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\DeveloperDocumentation\list.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-    <None Include="web.QA2.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

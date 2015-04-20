@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.Auth
     /// </summary>
     public static class LoginCookieHelper
     {
-        public static async Task<HttpResponseMessage> SetAdminUserCookie(HttpRequestMessage request, ICookieProvider cookieProvider, ISiteBuilderApiContext context, IAuthenticationHelper authHelper, string defaultRedirectUrl)
+        public static async Task<HttpResponseMessage> SetAdminUserCookie(HttpRequestMessage request, ICookieProvider cookieProvider, ISiteBuilderApiContext context, IAuthenticationHelper authHelper, string defaultRedirectUrl, bool isForStoreFrontAccess)
         {
             var form = await request.Content.ReadAsFormDataAsync();
             string formAccessToken = form["accessToken"];
@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Auth
             Contexts.SiteContext.Save(null, null, user.GetUserScope().Id.Value, false, DataViewModeType.NoneSet, cookieProvider, null);
 
             context.SetUser(user);
-            authHelper.SaveAdminAccessToken(formAccessToken);
+            authHelper.SaveAdminAccessToken(formAccessToken, isForStoreFrontAccess);
 
             formRedirectUrl = string.IsNullOrEmpty(formRedirectUrl) ? defaultRedirectUrl : formRedirectUrl;
             return CreateRedirectTo(request, formRedirectUrl);

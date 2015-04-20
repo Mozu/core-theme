@@ -89,6 +89,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             };
+            pc.PageType = "my_account";
 
 
 

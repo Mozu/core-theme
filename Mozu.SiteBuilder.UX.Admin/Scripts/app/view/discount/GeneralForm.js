@@ -145,61 +145,32 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 queryMode: 'local',
                 listeners: {
                     change: function (cmp, newV, oldV) {
-                        var amountInputLabel = "",
-                            amountInputVisible = true;
-
-                        function setCurrencyInput() {
-                            me.amountInput.unitString = Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol;
-                            me.amountInput.unitAtEnd = false;
-                        }
-                        
-                        switch (newV) {
-                            case "Percentage":
-                                me.amountInput.unitString = '%';
-                                me.amountInput.unitAtEnd = true;
-                                amountInputLabel = "Percentage Off";
-                                amountInputVisible = true;
-                                break;
-                            case "Free":
-                                amountInputVisible = false;
-                                break;
-                            case "Amount":
-                                setCurrencyInput();
-                                amountInputLabel = "Amount Off";
-                                amountInputVisible = true;
-                                break;
-                            case "FixedPrice":
-                                setCurrencyInput();
-                                amountInputLabel = "Price";
-                                amountInputVisible = true;
-                                break;
-                        }
-
-                        me.amountInput.setVisible(amountInputVisible);
-                        me.amountInput.setDisabled(!amountInputVisible);
-                        me.amountInput.setFieldLabel(amountInputLabel);
-                        
-                        
-                        if  (newV == 'Free') {
-                            me.amountInput.setValue(null);
-                        } else {
-                            me.amountInput.setValue(this.amountInput.value);
-                        }
-
-                        me.amountInput.clearInvalid();
-                        // notify the parent form. limitations will need to adjust to the value;
-                        // see this.maxDiscountOrderValue
-                        this.parentForm.setFieldVisibility();
+                        this.updateAmountField();
                     },
                     scope: this
                 }
             })
         );
+        
+        var amountFieldLabel = "";
+        switch (this.record.get("amountType")) {
+            case "Percentage":
+                amountFieldLabel = "Percentage Off";
+                break;
+            case "Free":
+                break;
+            case "Amount":
+                amountFieldLabel = "Amount Off";
+                break;
+            case "FixedPrice":
+                amountFieldLabel = "Price";
+                break;
+        }
 
         this.amountInput = Ext.create('Taco.core.ux.form.UnitField', {
             name: 'amount',
             allowBlank:false,
-            fieldLabel: 'Amount Off',
+            fieldLabel: amountFieldLabel,
             minValue: 0.01,
             width: 295,
             margin: '0 0 0 10',
@@ -238,6 +209,58 @@ Ext.define('Taco.view.discount.GeneralForm', {
         ];
 
         this.callParent(arguments);
+    },
+
+    updateAmountField : function() {
+        var me = this,
+            newValue = this.amountTypeInput.getValue(),
+            amountInputLabel = "",
+            amountInputVisible = true;
+
+        function setCurrencyInput() {
+            me.amountInput.unitString = Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol;
+            me.amountInput.unitAtEnd = false;
+        }
+                        
+        switch (newValue) {
+            case "Percentage":
+                me.amountInput.unitString = '%';
+                me.amountInput.unitAtEnd = true;
+                amountInputLabel = "Percentage Off";
+                amountInputVisible = true;
+                break;
+            case "Free":
+                amountInputVisible = false;
+                break;
+            case "Amount":
+                setCurrencyInput();
+                amountInputLabel = "Amount Off";
+                amountInputVisible = true;
+                break;
+            case "FixedPrice":
+                setCurrencyInput();
+                amountInputLabel = "Price";
+                amountInputVisible = true;
+                break;
+        }
+
+        me.amountInput.setVisible(amountInputVisible);
+        me.amountInput.setDisabled(!amountInputVisible);
+        me.amountInput.setFieldLabel(amountInputLabel);
+                        
+                        
+        if  (newValue == 'Free') {
+            me.amountInput.setValue(null);
+        } else {
+            me.amountInput.setValue(this.amountInput.value);
+        }
+
+        
+        me.amountInput.clearInvalid();
+        // notify the parent form. limitations will need to adjust to the value;
+        // see this.maxDiscountOrderValue
+        this.parentForm.setFieldVisibility();  
+
     },
 
     isOrder: function () {

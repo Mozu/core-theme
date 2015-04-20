@@ -308,7 +308,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Pants(HttpRequestMessage request)
         {
-            return await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, _apiContext, _authenticationHelper, "/");
+            return await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, _apiContext, _authenticationHelper, "/", true);
         }
 
 

@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Filters
             if (!HasAdminCookie(adminToken))
             {
                 string host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
-                return RedirectTo(CreateLoginLink(settings, request.RequestUri, host));
+                return RedirectTo(CreateLoginLink(settings, request.RequestUri, host, apiContext.TenantId ));
             }
 
             // now that we have an admin, is that admin authed?
@@ -167,11 +167,12 @@ namespace Mozu.SiteBuilder.UX.Filters
             return !adminToken.IsNullOrEmpty();
         }
 
-        private Uri CreateLoginLink(ISettings settings, Uri requestUri, string postbackHostValue)
+        private Uri CreateLoginLink(ISettings settings, Uri requestUri, string postbackHostValue, int tenantId)
         {
             var builder = CreateLinkForLoginApp(settings, "to");
             var queryDict = new Dictionary<string, string> {
                 { "scopeType", "Tenant" },
+                { "ScopeId", tenantId.ToString()},
                 { "redirectUrl", requestUri.PathAndQuery},
                 { "postbackUrl",  new UriBuilder(requestUri.Scheme, postbackHostValue, requestUri.Port, "/auth/pants").Uri.ToString()}
             };

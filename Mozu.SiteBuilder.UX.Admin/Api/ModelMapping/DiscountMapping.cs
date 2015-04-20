@@ -175,6 +175,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // To data contract
             Mapper.CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
+                .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, opt => opt.Ignore())
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => (x.AmountType == null || x.AmountType.EqualsIgnoreCase(DC.Discount.AmountTypes.FREE))
                     ? null
                     : x.Amount))
