@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-04-14
+ * Mozu JavaScript SDK - v0.3.0 - 2015-04-17
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -4070,18 +4070,18 @@ module.exports=
         },
         "save": {
             "verb": "POST",
-            "template": "{+paymentService}",
-            "returnType": "string"
+            "template": "{+paymentService}../../commerce/payments/cards/",
+            "returnType": "json"
         },
         "update": {
             "verb": "PUT",
-            "template": "{+paymentService}{cardId}",
+            "template": "{+paymentService}../../commerce/payments/cards/{cardId}",
             "returnType": "string"
         },
         "del": {
             "verb": "DELETE",
             "shortcutParam": "cardId",
-            "template": "{+paymentService}{cardId}"
+            "template": "{+paymentService}../../commerce/payments/cards/{cardId}"
         }
     },
     "creditcards": {
@@ -4568,15 +4568,19 @@ module.exports = (function() {
 
     function makePayload(obj) {
         var data = obj.data, maskCharacter = obj.maskCharacter, maskedData;
+        var cardNumber;
+
         if (!data.paymentOrCardType) errors.throwOnObject(obj, 'CARD_TYPE_MISSING');
         if (!data.cardNumberPartOrMask) errors.throwOnObject(obj, 'CARD_NUMBER_MISSING');
         if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
-        maskedData = transform.toCardData(data)
-        var cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
+
+        maskedData = transform.toCardData(data);
+        cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
         if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
 
         // only add numberPart if the current card number isn't already masked
-        if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
+        // if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
+        maskedData.cardIssueNumber = cardNumber;
         delete maskedData.cardNumber;
 
         return maskedData;
@@ -4617,9 +4621,9 @@ module.exports = (function() {
                 isUpdate = this.prop(transform.fields.cardId);
             return this.api.action(this, (isUpdate ? 'update' : 'save'), makePayload(this)).then(function (res) {
                 self.prop(transform.toStorefrontData({
-                    cardNumber: self.maskedCardNumber,
+                    cardNumber: [self.prop('cardNumber').replace(/\d/g, self.maskCharacter).slice(0, -4), res.numberPart].join(''),
                     cvv: !!(self.prop('cvv'))? self.prop('cvv').replace(/\d/g, self.maskCharacter) : '',
-                    cardId: isUpdate || res
+                    cardId: isUpdate || res.id
                 }));
                 self.fire('sync', utils.clone(self.data), self.data);
                 return self;
