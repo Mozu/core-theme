@@ -1,33 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Burrows.Exceptions;
-using MongoDB.Driver;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
-using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Api.Routing;
-using Mozu.Core.Domain;
 using Mozu.Core.Extensions;
 using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
-using Mozu.ProductAdmin.Contracts.Clients;
-//using Mozu.ShippingAdmin.Contracts;
 using Mozu.ShippingAdmin.Contracts.Clients;
 using Mozu.ShippingAdmin.Contracts.Profile;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
+//using Mozu.ShippingAdmin.Contracts;
 using DC = Mozu.ShippingAdmin.Contracts;
 //using Mozu.SiteSettings.Shipping.Contracts.Clients;
 //using Mozu.UspsShippingAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping;
+
 //using Mozu.SiteSettings.Shipping.Contracts.Clients;
 
 //using ShippingClass = Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping.ShippingClass;
@@ -58,13 +51,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         static ShippingController()
         {
             FeatureDic = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId] = "customrates";
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId] = "fedexrates";
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId] = "upsrates";
-            FeatureDic[Mozu.ShippingAdmin.Contracts.Constants.Usps.CarrierId] = "uspsrates";
+            FeatureDic[DC.Constants.Custom.CarrierId] = "customrates";
+            FeatureDic[DC.Constants.FedEx.CarrierId] = "fedexrates";
+            FeatureDic[DC.Constants.Ups.CarrierId] = "upsrates";
+            FeatureDic[DC.Constants.Usps.CarrierId] = "uspsrates";
 
             
-            
+      
         }
 
 
@@ -79,11 +72,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-
-
         public ShippingController(IApiContext apiCtx, ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, 
             ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient, 
-             Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient, 
+             ILocationSettingsWebApiClient locationSettingsWebApiClient, 
             ITargetRulesWebApiClient targetRulesWebApiClient, 
             IShippingProfileWebApiClient shippingProfileWebApiClient, 
             IShippingAdminProvisioningWebApiClient shippingAdminProvisioningWebApiClient
@@ -118,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.CarrierConfiguration custSettings = null;
             try
             {
-                custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
+                custSettings = (await _carrierConfigurationWebApiClient.GetConfiguration(DC.Constants.Custom.CarrierId)).ReadAsSync();
             }
             catch
             {
@@ -144,9 +135,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<SiteShippingSettings>> EditSettings(SiteShippingSettings settings)
         {
 
-
-
-
             if (!string.IsNullOrEmpty(settings.ShippingLocationCode))
             {
                 var ret1 = await _locationSettingsWebApiClient.UpdateLocationUsage("DS", new LocationUsage()
@@ -165,18 +153,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                                                                          LocationUsageTypeCode = "SP",
                                                                                          LocationTypeCodes = settings.EnableInStorePickup == true ? settings.StorePickupLocationTypeCodes : new List<string>()
                                                                                      });
-
             if (ret2.HasException)
             {
                 throw ret2.ReadException();
             }
-
           
-
-            var carrierConfiguration = (await _carrierConfigurationWebApiClient.GetConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId)).ReadAsSync();
-
+            var carrierConfiguration = (await _carrierConfigurationWebApiClient.GetConfiguration(DC.Constants.Custom.CarrierId)).ReadAsSync();
             carrierConfiguration.CustomTableRates = Mapper.Map<List<DC.CustomTableRate>>(settings.CustomRates);
-
 
             if (carrierConfiguration.CustomTableRates != null)
             {
@@ -186,14 +169,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 });
             }
 
-            var res = await _carrierConfigurationWebApiClient.UpdateConfiguration(Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId, carrierConfiguration);
+            var res = await _carrierConfigurationWebApiClient.UpdateConfiguration(DC.Constants.Custom.CarrierId, carrierConfiguration);
             if (res.HasException)
             {
                 throw (res.ReadException());
             }
 
-            
-
+           
             var profileCode = await GetProfileCode();
             var statesResponse = await _shippingProfileWebApiClient.UpdateStates(profileCode,
                 ToShippingStates(settings.EnabledStates));
@@ -227,7 +209,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "rules/read")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.TargetRule>>> RuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]string domain= null)
+        public async Task<Response<List<DC.TargetRule>>> RuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]string domain= null)
         {
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
@@ -244,7 +226,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "rules/edit")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.TargetRule>>> RuleEdit(List<Mozu.ShippingAdmin.Contracts.TargetRule> targets)
+        public async Task<Response<List<DC.TargetRule>>> RuleEdit(List<DC.TargetRule> targets)
         {
             var tasks = targets.Select(x => _targetRulesWebApiClient.UpdateTargetRule(x.Code, x)).ToList();
             await Task.WhenAll(tasks);
@@ -257,7 +239,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpPostRoute(UriTemplate = "rules/delete")]
-        public async Task<Response<List<bool>>> RuleDelete(List<Mozu.ShippingAdmin.Contracts.TargetRule> targets)
+        public async Task<Response<List<bool>>> RuleDelete(List<DC.TargetRule> targets)
         {
             var tasks = targets.Select(x => _targetRulesWebApiClient.DeleteTargetRule(  x.Code )).ToList();
             await Task.WhenAll(tasks);
@@ -276,7 +258,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpPostRoute(UriTemplate = "rules/create")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.TargetRule>>> RuleCreate(List<Mozu.ShippingAdmin.Contracts.TargetRule> targets)
+        public async Task<Response<List<DC.TargetRule>>> RuleCreate(List<DC.TargetRule> targets)
         {
             var tasks = targets.Select(x => _targetRulesWebApiClient.CreateTargetRule(x)).ToList();
             await Task.WhenAll(tasks);
@@ -320,7 +302,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "ShippingInclusionRules/read")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule>>> ShippingRuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<ShippingInclusionRule>>> ShippingRuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var profileCode = await GetProfileCode();
             if (!string.IsNullOrEmpty(pagingParams.id))
@@ -336,7 +318,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "ShippingInclusionRules/edit")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule>>> ShippingRuleEdit(List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule> shippingInclusionRules)
+        public async Task<Response<List<ShippingInclusionRule>>> ShippingRuleEdit(List<ShippingInclusionRule> shippingInclusionRules)
         {
             var profileCode = await GetProfileCode();
             var tasks = shippingInclusionRules.Select(x => _shippingProfileWebApiClient.UpdateShippingInclusionRule(profileCode, x.Id, x)).ToList();
@@ -350,7 +332,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpPostRoute(UriTemplate = "ShippingInclusionRules/delete")]
-        public async Task<Response<List<bool>>> ShippingRuleDelete(List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule> targets)
+        public async Task<Response<List<bool>>> ShippingRuleDelete(List<ShippingInclusionRule> targets)
         {
             var profileCode = await GetProfileCode();
             var tasks = targets.Select(x => _shippingProfileWebApiClient.DeleteShippingInclusionRule(profileCode, x.Id)).ToList();
@@ -367,7 +349,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "ShippingInclusionRules/create")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule>>> ShippingRuleCreate(List<Mozu.ShippingAdmin.Contracts.Profile.ShippingInclusionRule> shippingInclusionRules )
+        public async Task<Response<List<ShippingInclusionRule>>> ShippingRuleCreate(List<ShippingInclusionRule> shippingInclusionRules )
         {
             var profileCode = await GetProfileCode();
             var rules = (await _shippingProfileWebApiClient.GetShippingInclusionRules(profileCode)).ReadAsSync();
@@ -389,7 +371,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "HandlingRules/read")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule>>> ProductHandlingRuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string applysTo)
+        public async Task<Response<List<HandlingFeeRule>>> ProductHandlingRuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string applysTo)
         {
             var profileCode = await GetProfileCode();
             if (!string.IsNullOrEmpty(pagingParams.id))
@@ -424,7 +406,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         
 
         [HttpPostRoute(UriTemplate = "HandlingRules/edit")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule>>> ProductHandlingRuleEdit(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> handlingFeeRules)
+        public async Task<Response<List<HandlingFeeRule>>> ProductHandlingRuleEdit(List<HandlingFeeRule> handlingFeeRules)
         {
             var profileCode = await GetProfileCode();
             var appliesTo = handlingFeeRules.First().AppliesTo;
@@ -451,7 +433,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpPostRoute(UriTemplate = "HandlingRules/delete")]
-        public async Task<Response<List<bool>>> ProductHandlingRuleDelete(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> handlingFeeRules)
+        public async Task<Response<List<bool>>> ProductHandlingRuleDelete(List<HandlingFeeRule> handlingFeeRules)
         {
             var profileCode = await GetProfileCode();
             var appliesTo = handlingFeeRules.First().AppliesTo;
@@ -486,7 +468,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "HandlingRules/create")]
-        public async Task<Response<List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule>>> ProductHandlingRuleCreate(List<Mozu.ShippingAdmin.Contracts.Profile.HandlingFeeRule> handlingFeeRules)
+        public async Task<Response<List<HandlingFeeRule>>> ProductHandlingRuleCreate(List<HandlingFeeRule> handlingFeeRules)
         {
             var profileCode = await GetProfileCode();
         
@@ -632,21 +614,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var res = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
             var settings = Mapper.Map<List<CarrierConfiguration>>(res.Items );
-            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId ))
+            if (!settings.Any(x => x.id == DC.Constants.FedEx.CarrierId ))
             {
-                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.FedEx.CarrierId, IsConfigured = false });
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.FedEx.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId  ))
+            if (!settings.Any(x => x.id == DC.Constants.Ups.CarrierId  ))
             {
-                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.Ups.CarrierId, IsConfigured = false });
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.Ups.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.Usps .CarrierId ))
+            if (!settings.Any(x => x.id == DC.Constants.Usps .CarrierId ))
             {
-                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.Usps.CarrierId, IsConfigured = false });
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.Usps.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == Mozu.ShippingAdmin.Contracts.Constants.Custom .CarrierId))
+            if (!settings.Any(x => x.id == DC.Constants.Custom .CarrierId))
             {
-                settings.Add(new CarrierConfiguration() { id = Mozu.ShippingAdmin.Contracts.Constants.Custom.CarrierId , IsConfigured = false });
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.Custom.CarrierId , IsConfigured = false });
             }
             return List2<CarrierConfiguration>(settings);
         }
@@ -671,7 +653,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     setting.PreviousValue = dcConfigRes.ReadAsSync ();
                 }
                 
-                var dcConfig = Mapper.Map<Mozu.ShippingAdmin.Contracts.CarrierConfiguration>(setting);
+                var dcConfig = Mapper.Map<DC.CarrierConfiguration>(setting);
                 if (dcConfig.Settings == null || dcConfig.Settings.Count == 0 || dcConfig.Settings.All(x => x == null || string.IsNullOrEmpty(x.Value )))
                 {
                     continue;

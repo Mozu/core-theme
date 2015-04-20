@@ -55,12 +55,13 @@ namespace Mozu.SiteBuilder.Mvc.Security
             return false;
         }
 
-        void IAuthenticationHelper.SaveAdminAccessToken(string accessToken)
+        void IAuthenticationHelper.SaveAdminAccessToken(string accessToken, bool isForStoreFrontAccess)
         {
             var cookie = new HttpCookie(AdminAccessTokenCookieName);
            
             cookie[AccessToken] = accessToken;
-            cookie.Secure = this.ForceSSL;
+            //only the refresh token is secure
+            cookie.Secure = this.ForceSSL && !isForStoreFrontAccess;
             cookie.HttpOnly = true;
             CookieProvider.SaveResponseCookie(AdminAccessTokenCookieName, cookie);
            

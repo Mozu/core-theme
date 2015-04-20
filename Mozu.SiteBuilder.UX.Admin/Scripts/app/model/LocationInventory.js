@@ -78,7 +78,7 @@ Ext.define('Taco.model.LocationInventory', {
 
     // is this still relevant?
     {
-        "name": "parentProductCode",
+        "name": "baseProductCode",
         "type": "string",
         "useNull": true
     }, {

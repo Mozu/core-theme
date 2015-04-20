@@ -241,6 +241,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
             var v = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
+            if (this.PageContext != null)
+            {
+                this.PageContext.PageType = "email";
+            }
             object cmdContent = null;
             var vr = ((ObjectContent) v.Content).Value as ViewResult;
             if (vr != null)

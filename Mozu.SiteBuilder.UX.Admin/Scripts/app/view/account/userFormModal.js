@@ -49,7 +49,6 @@ Ext.define('Taco.view.account.userFormModal', {
                     var pushRec = this.roles.getAt(this.roles.find('name', this.record.get('role')));
 
                     if (pushRec) {
-                        console.log(pushRec);
                         selectedRecs.push(pushRec);
                     }
                 }

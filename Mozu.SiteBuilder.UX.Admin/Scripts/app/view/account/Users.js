@@ -137,11 +137,17 @@ Ext.define('Taco.view.account.Users', {
             },
             scope: me
         });
+        
+        me.mon(me.treelist, 'itemcontextmenu', function(it, rec, item, index, evt) {
+            evt.stopEvent();
+            me.launchContextMenu(evt, rec, index);
+        }, me);
     },
     launchContextMenu: function (evt, record, row) {
+
         var actions;
         var me = this;
-
+        
         if (record.get('leaf')) {
             //debugger
             actions = [
@@ -223,12 +229,11 @@ Ext.define('Taco.view.account.Users', {
                 }
             }
         });
-
-        if (row) {
+        /*if (row) {
             menu.showBy(row, 'tr-br', [-1, -1]);
-        } else {
+        } else {*/
             menu.showAt(evt.getXY());
-        }
+        //}
     },
     resendInvitation: function (item, event) {
         console.log(item.scope.treelist.getSelectionModel().getSelection()[0]);

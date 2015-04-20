@@ -19,12 +19,9 @@ Ext.define('Taco.view.settings.shipping.subform.Custom', {
     initComponent: function() {
         var me = this;
 
-
         this.rateList = Ext.create('Taco.view.settings.shipping.widget.RateList', {
             record: me.record
-        });
-
-        
+        });        
 
         me.items = [this.rateList];
         

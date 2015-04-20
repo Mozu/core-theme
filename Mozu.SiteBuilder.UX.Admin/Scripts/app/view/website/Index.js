@@ -69,7 +69,7 @@ Ext.define('Taco.view.website.Index', {
 
     initComponent: function () {
         var navStore,
-           productStore,
+            productStore,
             me = this;
 
 
@@ -520,7 +520,6 @@ Ext.define('Taco.view.website.Index', {
         this.tree.on('urlclick', this.onTreeUrlClick, this);
         this.tree.on('contentlistclick', this.onContentListClick, this);
         this.tree.on('navigationchange', this.onNavigationChange, this);
-        this.tree.on('navigationchange', this.onNavigationChange, this);
 
         this.tree.store.load({
             scope: this,
@@ -772,7 +771,6 @@ Ext.define('Taco.view.website.Index', {
             this.toggleCard(2);
             this.showHideButtons(['isCreatable']);
             Ext.resumeLayouts(true);
-
         }
 
     },
