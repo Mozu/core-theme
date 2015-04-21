@@ -22,6 +22,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         public bool DoesNotApplyToSalePrice { get; set; }
 
+        public bool DoesNotApplyToProductsWithSalePrice { get; set; }
+
+
         public string Scope { get; set; }
 
         //The field previously known as TargetType

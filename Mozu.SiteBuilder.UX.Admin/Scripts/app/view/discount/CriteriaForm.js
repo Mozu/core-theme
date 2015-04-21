@@ -102,6 +102,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                             this.appliesToSalePrice.setValue(false);
                         }
                         this.record.set('doesNotApplyToProductsWithSalePrice', !newValue);
+                        this.record.setDirty(true);
                     },
                     scope: this
                 }
@@ -119,6 +120,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 listeners: {
                     change: function (field, newValue) {
                         this.record.set('doesNotApplyToSalePrice', !newValue);
+                        this.record.setDirty(true);
                     },
                     scope: this
                 }
