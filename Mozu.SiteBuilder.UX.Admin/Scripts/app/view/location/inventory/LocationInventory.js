@@ -200,7 +200,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                 {
                     dataIndex: 'locationCode',
                     width: 150,
-                    text: 'location Code',
+                    text: 'Location Code',
                     stateId: 'locationCode',
                     editor: {
                         // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;

@@ -894,6 +894,7 @@
     <Content Include="Scripts\app\shared\view\field\CountryField.js" />
     <Content Include="Scripts\app\shared\view\field\LocationPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\Product.js" />
+    <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\ProductTypePickerField.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
