@@ -171,7 +171,6 @@ Ext.define('Taco.model.OrderItem', {
         {
             "name": "fulfillmentStatus",
             "type": "string",
-            "defaultValue": "Pending"
         },
 
         {

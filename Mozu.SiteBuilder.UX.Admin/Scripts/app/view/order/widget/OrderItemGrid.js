@@ -143,7 +143,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 autoSelectFirstRecord: false,
                 msgTarget: 'qtip',
                 listeners: {
-                    render: function (combo) {
+                    render: function(combo) {
                         var me = this;
                         // attach a listener to the ownerCt which is the Ext.grid.CellEditor class. This will let me fix an issue where the value in the combo is getting set to the display tpl text of the column.
                         // will also allow me to auto load the combo store and expande the menu;                        
@@ -182,7 +182,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     select: this.onFulfillmentChange,
                     scope: me
                 }
-            })
+            });
         }
 
 
@@ -712,12 +712,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
 
         // todo: syncronize the width of columns that are resized
-        this.mon(this, 'columnresize', function (columnHeader, column, width, eOpts) {
+        this.mon(this, 'columnresize', function(columnHeader, column, width, eOpts) {
             // need to synchronize the width of the columns and the addProductToolbar fields when user resizes the columns                
             var columnIndex = columnHeader.columnManager.columns.indexOf(column);
             var cell = this.addProductToolbar.items.items[columnIndex];
             cell.setWidth(width);
-        },this)
+        }, this);
 
 
 
