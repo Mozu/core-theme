@@ -348,8 +348,9 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 }
             },
             settings: {
-                apiBase: Taco.paymentApiBaseUrl,
-                framePath: "/../../Assets/pci_receiver.html",
+                // apiBase: Taco.paymentApiBaseUrl,
+                apiBase: 'https://payments.mozu-si.com/Mozu.PaymentService.WebApi/commerce/payments/cards/',
+                framePath: "/../../../Assets/pci_receiver.html",
                 siteId: me.record.get('siteId') || Taco.app.context.getSiteId(),
                 tenantId: me.record.get('tenantId') || Taco.app.context.getTenantId()
             }
