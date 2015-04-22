@@ -122,7 +122,7 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                     });
                 }
                 evt.stopEvent();
-                tipContent.showBy(btn);
+                tipContent.showBy(btn, 'bl-tr?', [0, -5]);
                 scope.mon(Ext.getBody(), 'click', onClickAnywhereCloseTip, this);
             },
 
