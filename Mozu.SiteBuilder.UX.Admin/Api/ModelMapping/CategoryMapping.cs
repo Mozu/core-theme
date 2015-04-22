@@ -32,10 +32,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.MetaKeywords, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.MetaTagKeywords : null)))
                 .ForMember(dest => dest.Slug, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Slug : null)))
                 .ForMember(dest => dest.CategoryImages, opt => opt.ResolveUsing(c => (c.Content != null ? c.Content.CategoryImages : null)))
+                .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(dc => dc.ChildCount.GetValueOrDefault() == 0))
+            
                 //ignores
                 .ForMember(dest => dest.Path, opt => opt.Ignore())
                 .ForMember(dest => dest.Code, opt => opt.Ignore())
                 .ForMember(dest => dest.Parent, opt => opt.Ignore())
+                .ForMember(dest => dest.CascadeDelete, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<DC.Category, CategoryTreeNode>()

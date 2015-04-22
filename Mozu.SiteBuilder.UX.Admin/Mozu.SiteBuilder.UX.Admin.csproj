@@ -988,6 +988,7 @@
     <Content Include="Scripts\app\view\order\modal\OverrideTotalWeight.js" />
     <Content Include="Scripts\app\view\order\subform\AuditLog.js" />
     <Content Include="Scripts\app\view\order\widget\AuditLogGrid.js" />
+    <Content Include="Scripts\app\view\category\ConfirmDeleteWithCheckboxModal.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />

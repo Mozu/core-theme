@@ -139,7 +139,12 @@ Ext.define('Taco.model.Category', {
             name: 'catalogId',
             type: 'int',
             persist: false
+        }, {
+            name: 'cascadeDelete',
+            type: 'boolean',
+            defaultValue: false
         }
+
     ],
 
     validations: [
@@ -167,9 +172,6 @@ Ext.define('Taco.model.Category', {
 
         return this.facetSetStore;
     },
-
-    
-
 
     proxy: {
       //  type: 'ajax',

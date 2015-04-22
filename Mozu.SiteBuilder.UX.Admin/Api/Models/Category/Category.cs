@@ -48,6 +48,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Path { get; set; }
 
+        [JsonProperty(PropertyName = "leaf")]
+        public bool IsLeaf { get; set; }
+        
+        public bool CascadeDelete { get; set; }
 
         [JsonIgnore]
         public Category Parent { get; set; }
