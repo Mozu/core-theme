@@ -13,6 +13,28 @@
         return sign + (symbolIsSuffix ? s + symbol : symbol + s);
     }
 
+    var decimalPlacesRE = /\.\d+/;
+
+    function getPrecision(num) {
+        if (parseInt(num) === num) return 0;
+        return num.toString().match(decimalPlacesRE)[0].length;
+    }
+
+    function getHighestPrecision(nums) {
+        return nums.reduce(function(highest, num) {
+            return Math.max(highest, getPrecision(num));
+        }, 0);
+    }
+
+    function ensureNumeric(fn, precision) {
+        return function() {
+            var args = Array.prototype.map.call(arguments, Number);
+            var precision = getHighestPrecision(args);
+            var c = Math.pow(10, precision);
+            return Math.round(c * fn.apply(this, args))/c;
+        }
+    }
+
     var currencyInfo,
         RoundingTypeConst = {
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
@@ -36,6 +58,14 @@
     HyprLive.engine.setFilter('divisibleby', function (num, divisor) {
         return num && num % divisor === 0;
     });
+
+    HyprLive.engine.setFilter('divide', ensureNumeric(function(num, divisor) {
+        return num / divisor;
+    }));
+
+    HyprLive.engine.setFilter('add', ensureNumeric(function(num, addend) {
+        return num + addend;
+    }));
 
     HyprLive.engine.setFilter('add_url_param', function (url, param, value) {
         return url + (url.indexOf('?') === -1 ? '?' : '&') + encodeURIComponent(param) + '=' + encodeURIComponent(value);
