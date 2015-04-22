@@ -8,22 +8,5 @@
     {% block search-box %}
         {% include "modules/page-header/search-box" %}
     {% endblock search-box %}
-    
-    <div id="pinky-bumpus">
-        {% include "modules/pinky-bumpus" %}
-    </div>
-
-    <button id="pibble" style="position: fixed; bottom: 400px; left: 0;">pibble</button>
-    <script>
-        document.getElementById('pibble').addEventListener('click', function() {
-            var t = require('hyprlive').getTemplate('modules/pinky-bumpus');
-            var pb = document.getElementById('pinky-bumpus');
-            console.log('old contents', pb.innerHTML);
-            var npb = t.render();
-            console.log('new contents', npb);
-            console.log('new === old?', pb.innerHTML === npb);
-            pb.innerHTML = npb;
-        });
-    </script>
 
 </header>
