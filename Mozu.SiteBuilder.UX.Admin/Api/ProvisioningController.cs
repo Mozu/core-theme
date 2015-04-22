@@ -21,13 +21,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class ProvisioningController : BaseController
     {
         private readonly IProvisioningWebApiClient _provisioningWebApiClient;
-        private readonly ITenantsWebApiClient _tenantsWebApiClient;
+        private readonly ITenantsWebApiClient _systemTenantsWebApiClient;
+        private readonly ITenantsWebApiClient _userTenantsWebApiClient;
 
 
         public ProvisioningController(IProvisioningWebApiClient provisioningWebApiClient, ITenantsWebApiClient tenantsWebApiClient)
         {
             _provisioningWebApiClient = provisioningWebApiClient;
-            _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
+            _systemTenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
+            _userTenantsWebApiClient = tenantsWebApiClient;
         }
         
         public class ProvisionRequest{
@@ -55,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "sites")]
         public async Task<Response<List<Site>>> GetSites()
         {
-            var tenantInfo = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
+            var tenantInfo = (await _systemTenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
             var activeMcs = tenantInfo.MasterCatalogs.Where(IsActive);
             var activeMCIds = activeMcs.Select(Id<BaseTenantEntityInternal, int>).ToArray();
             var activeCatIds = activeMcs.SelectMany(x => x.Catalogs).Where(IsActive).Select(Id<BaseTenantEntityInternal, int>).ToArray();
@@ -66,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "catalogs")]
         public async Task<Response<List<Provisionable>>> GetCatalogs()
         {
-            var tenantInfo = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
+            var tenantInfo = (await _systemTenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId, false)).ReadAsSync();
             var res = new Provisionable
             {
                 Path = "/",
@@ -121,13 +123,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "RenameEntity")]
         public async Task<bool> RenameEntity(Provisionable entity)
         {
-            var tenant = (await _tenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
+            var tenant = (await _systemTenantsWebApiClient.GetTenantInternal(SbApiContext.TenantId)).ReadAsSync();
         
             if (entity.ItemType == "site")
             {
                 var site = tenant.Sites.First(x => x.Id == entity.Id);
                 site.Name = entity.Name;
-                var res = await _tenantsWebApiClient.UpdateSite(SbApiContext.TenantId, entity.Id, site);
+                var res = await _userTenantsWebApiClient.UpdateSite(SbApiContext.TenantId, entity.Id, site);
                 
 
              
@@ -143,7 +145,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var catalog = tenant.MasterCatalogs.SelectMany(x => x.Catalogs).First(x => x.Id == entity.Id);
                 catalog.Name = entity.Name;
-                var res = await _tenantsWebApiClient.UpdateCatalog(this.SbApiContext.TenantId, entity.Id, catalog);
+                var res = await _userTenantsWebApiClient.UpdateCatalog(this.SbApiContext.TenantId, entity.Id, catalog);
 
                 if (res.ResponseMessage.IsSuccessStatusCode)
                 {
@@ -155,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var catalog = tenant.MasterCatalogs.First(x => x.Id == entity.Id);
                 catalog.Name = entity.Name;
-                var res = await _tenantsWebApiClient.UpdateMasterCatalog(this.SbApiContext.TenantId, entity.Id, catalog);
+                var res = await _userTenantsWebApiClient.UpdateMasterCatalog(this.SbApiContext.TenantId, entity.Id, catalog);
 
                 if (res.ResponseMessage.IsSuccessStatusCode)
                 {
