@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-04-20
+ * Mozu JavaScript SDK - v0.3.0 - 2015-04-22
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -4066,22 +4066,22 @@ module.exports=
     },
     "creditcard": {
         "defaults": {
-            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver_v2.html"
+            "useIframeTransport": "{+paymentService}../../../Assets/mozu_receiver_v2.html"
         },
         "save": {
             "verb": "POST",
-            "template": "{+paymentService}../../commerce/payments/cards/",
+            "template": "{+paymentService}",
             "returnType": "json"
         },
         "update": {
             "verb": "PUT",
-            "template": "{+paymentService}../../commerce/payments/cards/{cardId}",
+            "template": "{+paymentService}{cardId}",
             "returnType": "string"
         },
         "del": {
             "verb": "DELETE",
             "shortcutParam": "cardId",
-            "template": "{+paymentService}../../commerce/payments/cards/{cardId}"
+            "template": "{+paymentService}{cardId}"
         }
     },
     "creditcards": {
