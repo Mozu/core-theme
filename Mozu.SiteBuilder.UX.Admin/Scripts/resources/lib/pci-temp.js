@@ -378,7 +378,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
     //this function takes a boolean which forces it to build a payload that doesn't include the saved card ID
     // so that we can accurately string compare it with a prior post that may not have contained a saved card ID
     makePayload = function (isTest) {
-        var merchantPayload = {}, //MerchantId: settings.get('merchantID') },
+        var merchantPayload = {},
             cardID = fields.getValue("HiddenCardID", true),
             cardNumber = fields.getValue("CardNumber", isTest);
 
@@ -388,6 +388,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         }
 
         merchantPayload.NumberPart = (cardNumber.indexOf(settings.get('maskCharacter')) === -1) ? getMask("nocache", isTest).toSend : '';
+        merchantPayload.CardIssueNumber = cardNumber;
 
         for (var i = 0; i < _requiredFields.length; i++) {
             merchantPayload[_requiredFields[i]] = fields.getValue(_requiredFields[i], isTest);
@@ -449,7 +450,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
             // run the request!
             var requestUri = (cardID) ? apiCall.update.uri(cardID) : apiCall.save.uri();
             var requestMethod = (cardID) ? apiCall.update.method : apiCall.save.method;
-            request(requestUri, payload, requestMethod, settings.get('merchantID'), settings.get('siteId'), settings.get('tenantId'));
+            request(requestUri, payload, requestMethod, null, settings.get('siteId'), settings.get('tenantId'));
             return true;
         } else {
             // fields haven't changed, so just run success function
@@ -464,9 +465,9 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         document.getElementsByTagName("body")[0].removeChild(_receiver);
         // parse JSON
         response = JSON.parse(response);
-        if (response.IsSuccessful) {
+        if (response.isSuccessful) {
             // set CardId if CardID is a DOM element
-            if (response.CardId) fields.setValue('HiddenCardID', response.CardId);
+            if (response.id) fields.setValue('HiddenCardID', response.id);
             // get cached mask, no reason to run this function twice
             var mask = getMask("cached", true);
             // send the response, mask, and original xhr to success function

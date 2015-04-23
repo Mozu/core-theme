@@ -602,12 +602,12 @@
     },
     "creditcard": {
         "defaults": {
-            "useIframeTransport": "{+paymentService}../../Assets/mozu_receiver_v2.html"
+            "useIframeTransport": "{+paymentService}../../../Assets/mozu_receiver_v2.html"
         },
         "save": {
             "verb": "POST",
             "template": "{+paymentService}",
-            "returnType": "string"
+            "returnType": "json"
         },
         "update": {
             "verb": "PUT",

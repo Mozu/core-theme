@@ -212,9 +212,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete/?force={force}")]
         public async Task<Response<List<Category>>> DeleteCategory(List<Category> categories, [FromUri]bool force = true)
         {
-            // Always force deletion of children for now
-
-            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById( category.Id ,force )).ToList();
+            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById(category.Id, category.CascadeDelete)).ToList();  //, force:true, moveChildren:true
             await Task.WhenAll(tasks);
             AnyExceptionsThenThrow(tasks);
 

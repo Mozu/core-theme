@@ -275,6 +275,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal TaxTotal { get; set; }
 
         /// <summary>
+        /// Final cost of taxes plus the duty fees of the order.
+        /// </summary>
+        public decimal TaxDutyTotal {
+            get {
+                if (DutyTotal > 0) {
+                    return DutyTotal + TaxTotal;
+                }
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Final cost of all duty fees associated with the order.
+        /// </summary>
+        public decimal DutyTotal { get; set; }
+
+        /// <summary>
         /// Final price of the order.
         /// </summary>
         public decimal Total { get; set; }

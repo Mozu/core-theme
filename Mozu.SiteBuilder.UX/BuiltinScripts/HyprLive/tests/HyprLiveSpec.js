@@ -84,6 +84,13 @@
             expect(Hypr.engine.render(tpt3, { locals: { n: 5 } })).to.equal('no');
             expect(Hypr.engine.render(tpt3, { locals: { n: 6 } })).to.equal('6');
         });
+        it("has a divide filter that divides the value by the argument", function() {
+            var plain = '{{ num|divide(3) }}';
+            var operatedOn = '{% if num|divide(4) > 2 %}bigger than 8{% else %}8 or less{% endif %}'
+            expect(Hypr.engine.render(plain, { locals: { num: 9 } })).to.equal('3');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 12 } })).to.equal('bigger than 8');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 7 } })).to.equal('8 or less');
+        });
         it('has an add_url_param filter that adds a parameter intelligently to a url', function() {
             var url = 'http://example.com/',
                 urlWithQuery = url + '?one=two',

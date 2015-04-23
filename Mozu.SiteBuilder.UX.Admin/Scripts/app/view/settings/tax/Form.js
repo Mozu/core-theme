@@ -34,7 +34,8 @@ Ext.define('Taco.view.settings.tax.Form', {
             store: this.statesStore,
             queryMode: 'local',
             displayField: 'value',
-            valueField: 'code'
+            valueField: 'code',
+            minWidth: 200
         });
 
         this.taxFreeCheck = Ext.create('Ext.form.field.Checkbox', {

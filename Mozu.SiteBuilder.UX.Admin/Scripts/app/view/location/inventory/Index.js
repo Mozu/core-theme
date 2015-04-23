@@ -238,6 +238,8 @@ Ext.define('Taco.view.location.inventory.Index', {
                         if (!locationFilter) {
                             return false;
                         }
+                        //tfs #54780
+                        this.maxWidth = field.column.getWidth();
 
                         locationCode = locationFilter.value;
                         context.record.set("locationCode", locationCode);

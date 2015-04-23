@@ -19,10 +19,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Messaging;
+using Mozu.SiteBuilder.UX.Filters;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    
+    [DataViewModeEnforcementAttribute]
     public class AuthController : BaseApiController
     {
         
@@ -305,12 +306,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
             
-        [HttpPost]
-        public async Task<HttpResponseMessage> Pants(HttpRequestMessage request)
-        {
-            return await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, _apiContext, _authenticationHelper, "/", true);
-        }
-
+        
 
         [HttpPost, HttpOptions]
         [SslOnlyActionFilter]
@@ -362,4 +358,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
          }
     }
+
+    public class PantsController : BaseApiController
+    {
+        private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly ICookieProvider _cookieProvider;
+
+        public PantsController(IAuthenticationHelper authenticationHelper,  ICookieProvider cookieProvider)
+        {
+            _authenticationHelper = authenticationHelper;
+            _cookieProvider = cookieProvider;
+        }
+
+        [HttpPost]
+        public async Task<HttpResponseMessage> Pants(HttpRequestMessage request)
+        {
+            return await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, this.SbApiContext, _authenticationHelper, "/", true);
+        }
+    }
+
 }

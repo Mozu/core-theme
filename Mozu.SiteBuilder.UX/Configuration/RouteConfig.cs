@@ -263,6 +263,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "SiteThumbnail",
                 new {controller = "Resource", action = "SiteThumbnail"});
 
+            routes.MapHttpRoute(
+                "auth/pants",
+                "auth/pants",
+                new {controller = "Pants", action = "pants"});
+            
 
             routes.MapHttpRoute(
                 "StoreFront_Prefixed_default",

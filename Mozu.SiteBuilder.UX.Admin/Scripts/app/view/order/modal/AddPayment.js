@@ -349,7 +349,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             },
             settings: {
                 apiBase: Taco.paymentApiBaseUrl,
-                framePath: "/../../Assets/pci_receiver.html",
+                framePath: "/../../../Assets/pci_receiver.html",
                 siteId: me.record.get('siteId') || Taco.app.context.getSiteId(),
                 tenantId: me.record.get('tenantId') || Taco.app.context.getTenantId()
             }
