@@ -515,7 +515,7 @@ Ext.define('Taco.view.attribute.Form', {
 
             'Date': function (statics) {
                 var attributeType = statics.fieldCfg.attributeType;
-                this.record.set('dataType', 'dateTime');
+                //this.record.set('dataType', 'dateTime');
                 attributeType.readOnly = this.isEdit();
 
                 return [
@@ -792,9 +792,17 @@ Ext.define('Taco.view.attribute.Form', {
         }
 
         this.subform.removeAll();
+        
+        // BUG 54788 - need to clean up if user switches the input type combo.
+        if (this.record.phantom) {
+            if (inputType == 'Date') {
+                this.record.set('dataType', 'dateTime');
+            } else {
+                this.record.set('dataType', '');
+            }
+        }
 
         form = buildForms.apply(this, [this.statics()]);
-
 
         this.subform.add(form);
 

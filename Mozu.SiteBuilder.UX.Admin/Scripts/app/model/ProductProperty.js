@@ -17,20 +17,6 @@ Ext.define('Taco.model.ProductProperty', {
         {
             "name": "values",
             type: 'auto',
-            convert: function (v, r) {
-                var idx = 0, dateVal;
-                if (v && v.length) {
-                    for (idx; idx < v.length; idx++) {
-                        if (Ext.isNumeric(v[idx]))
-                            continue;
-                        dateVal = r.convertDate(v[idx]);
-                        if (dateVal) {
-                            v[idx] = dateVal;
-                        }
-                    }
-                }
-                return v;
-            },
             defaultValue: []
         },
         {
@@ -39,6 +25,9 @@ Ext.define('Taco.model.ProductProperty', {
             persist:false
         }
     ],
+
+    /*
+
     convert: function (v, r) {
 
         if (r.data.dataType == 'DateTime') {
@@ -60,7 +49,6 @@ Ext.define('Taco.model.ProductProperty', {
         return v === true || v === 'true' || v == 1;
     },
     convertDate: function (v) {
-
         if (!v) {
             return null;
         }
@@ -74,6 +62,8 @@ Ext.define('Taco.model.ProductProperty', {
         return v !== undefined && v !== null && v !== '' ?
             parseFloat(String(v).replace(Ext.data.Types.stripRe, ''), 10) : null;
     },
+
+    */
     idProperty: "attributeFQN"
    
 });
