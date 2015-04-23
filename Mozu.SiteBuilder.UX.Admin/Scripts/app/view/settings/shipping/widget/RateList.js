@@ -136,6 +136,27 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
         }, me);
 
         this.callParent(arguments);
+
+        // when saveTasks succeed, they fire this custom `received` event
+        // the first arg, `record`, doesn't actually contain the updated data
+        // but the operation does, so we have to extract it and do this the hard way
+        this.record.on({
+            received: {
+                scope: this,
+                fn: function (record, operation) {
+                    var resp = Ext.JSON.decode(operation.response.responseText, true);
+                    var newRates;
+
+                    if (resp && resp.items) {
+                        newRates = resp.items.customRates;
+                        record.set('customRates', newRates);
+
+                        this.store.removeAll();
+                        this.store.add(newRates);
+                    }
+                }
+            }
+        });
     },
 
     getTools: function () {
@@ -155,7 +176,8 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
     createItem: function () {
         
         var editor = Ext.create('Taco.view.settings.shipping.widget.RateEditor', {
-            record: null
+            record: null,
+            list: this
         });
         
         editor.on('savesuccess', this.onRecordChange, this);
@@ -163,7 +185,8 @@ Ext.define('Taco.view.settings.shipping.widget.RateList', {
     
     editItem: function (record) {
         var editor = Ext.create('Taco.view.settings.shipping.widget.RateEditor', {
-            record : record
+            record : record,
+            list: this
         });
         
         editor.on('savesuccess', this.onRecordChange, this);

@@ -107,7 +107,8 @@
                         }
                         tasks.callback(true);
                     },
-                    success: function () {
+                    success: function (record, operation) {
+                        task.saveRecord.fireEvent('received', record, operation);
                         tasks.callback();
                     }
                 });
