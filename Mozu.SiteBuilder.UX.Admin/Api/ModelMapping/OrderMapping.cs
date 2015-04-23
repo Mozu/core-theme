@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.AppDev.Contracts;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -1248,29 +1249,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             if (packageItem == null || order == null || order.Items == null)
                 return;
+            
             // use the packageItem's LineId here!
-            var itemInOrder = order.Items.FirstOrDefault(i => i.LineId == packageItem.LineId);
-            var itemInBundle = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(i => i.LineId == packageItem.LineId);
+            // Find the orderItem within the order:
+            var orderItem = order.Items.FirstOrDefault(i => i.LineId == packageItem.LineId);
 
-            if (itemInOrder != null)
+            if (orderItem == null)
+                return;
+
+            if (orderItem.BundledProducts.IsNullOrEmpty())
             {
-                packageItem.ProductCode = itemInOrder.ProductCode;
-                packageItem.ProductName = itemInOrder.ProductName;
-                packageItem.Total = itemInOrder.Total;
-                packageItem.UnitPrice = itemInOrder.UnitPrice;
-                packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
-                packageItem.LineId = itemInOrder.LineId;
-                packageItem.FulfillmentStatus = itemInOrder.FulfillmentStatus;
+                packageItem.ProductCode = orderItem.ProductCode;
+                packageItem.ProductName = orderItem.ProductName;
+                packageItem.Total = orderItem.Total;
+                packageItem.UnitPrice = orderItem.UnitPrice;
+                packageItem.Weight = orderItem.UnitWeight.HasValue ? packageItem.Quantity * orderItem.UnitWeight : null;
+                packageItem.LineId = packageItem.LineId;
+                packageItem.FulfillmentStatus = orderItem.FulfillmentStatus;
             }
-            else if (itemInBundle != null)
+            else
             {
-                packageItem.ProductCode = itemInBundle.ProductCode;
-                packageItem.ProductName = itemInBundle.Name;
+                var foundProduct = orderItem.BundledProducts.FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
+                if (foundProduct == null)
+                    return;
+                packageItem.ProductCode = foundProduct.ProductCode;
+                packageItem.ProductName = foundProduct.Name;
                 packageItem.Total = 0;
                 packageItem.UnitPrice = 0;
-                packageItem.Weight = itemInBundle.UnitWeight.HasValue ? packageItem.Quantity * itemInBundle.UnitWeight : null;
-                packageItem.LineId = itemInBundle.LineId;
-                packageItem.FulfillmentStatus = itemInBundle.FulfillmentStatus;
+                packageItem.Weight = foundProduct.UnitWeight.HasValue ? packageItem.Quantity*foundProduct.UnitWeight : null;
+                packageItem.LineId = packageItem.LineId;
+                packageItem.FulfillmentStatus = foundProduct.FulfillmentStatus;
             }
         }
 
