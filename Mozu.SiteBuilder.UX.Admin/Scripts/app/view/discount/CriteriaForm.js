@@ -676,7 +676,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.setVisible(true);        
         }
 
-
+        // only show if this is line item and product;
+        this.appliesToSalePrice.setVisible(this.isLineItem && !appliesToShipping);
         
         this.setProductCategoryContainerVisibility();
         this.setShippingListVisibility();
