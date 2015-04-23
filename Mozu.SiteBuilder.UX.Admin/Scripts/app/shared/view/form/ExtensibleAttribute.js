@@ -234,7 +234,10 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
             item['fullyQualifiedName'] = fqn;
             item['id'] = null;
 
-            if (field.getXType() != 'datefield') {
+
+
+            //if (field.getXType() != 'datefield') {
+            if (!Ext.isDate(val)) {
                 item['values'] = [val];
             } else {
                 item['values'] = [Ext.isEmpty(val) ? val : Ext.Date.format(val, 'c')];

@@ -8,7 +8,8 @@ Ext.define('Taco.view.product.subform.Properties', {
     extend: 'Taco.view.product.subform.Subform',
     alias: 'widget.productpropertiesform',
     requires: [
-        'Taco.core.ux.form.field.Product'
+        'Taco.core.ux.form.field.Product',
+        'Taco.core.ux.form.DateTime'
     ],
 
     title: 'Properties',
@@ -29,7 +30,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        value: (values && values.length) ? values[0] : null
+                        // BUG: 58777 - need to convert string dates to js dates. Normally this is done in the model but in this case the date is a child entity of an array and doesnt have a date type model to do the transform.
+                        value: (values && values.length) ? this.convertDate(values[0]) : null
                     }
                 ];
             },
@@ -117,6 +119,17 @@ Ext.define('Taco.view.product.subform.Properties', {
         this.loadByProductTypeId();
     },
 
+    convertDate: function (v) {
+        if (!v) {
+            return null;
+        }
+        if (Ext.isDate(v)) {
+            return v;
+        }
+        return Ext.Date.parse(v, 'c');
+
+    },
+
     beforeSave: function () {
         if (this.productType == null) {
             return;
@@ -133,6 +146,7 @@ Ext.define('Taco.view.product.subform.Properties', {
 
             if (field) {
                 values = field.getValue();
+
                 if (!Ext.isArray(values)) {
                     values = [values];
                 }

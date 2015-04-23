@@ -1,12 +1,12 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-03-13
+ * Mozu Hypr Live - v1.0.0 - 2015-04-22
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-03-13
+ * Mozu Hypr Live - v1.0.0 - 2015-04-22
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -5638,6 +5638,28 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
         return sign + (symbolIsSuffix ? s + symbol : symbol + s);
     }
 
+    var decimalPlacesRE = /\.\d+/;
+
+    function getPrecision(num) {
+        if (parseInt(num) === num) return 0;
+        return num.toString().match(decimalPlacesRE)[0].length;
+    }
+
+    function getHighestPrecision(nums) {
+        return nums.reduce(function(highest, num) {
+            return Math.max(highest, getPrecision(num));
+        }, 0);
+    }
+
+    function ensureNumeric(fn, precision) {
+        return function() {
+            var args = Array.prototype.map.call(arguments, Number);
+            var precision = getHighestPrecision(args);
+            var c = Math.pow(10, precision);
+            return Math.round(c * fn.apply(this, args))/c;
+        }
+    }
+
     var currencyInfo,
         RoundingTypeConst = {
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
@@ -5661,6 +5683,14 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
     HyprLive.engine.setFilter('divisibleby', function (num, divisor) {
         return num && num % divisor === 0;
     });
+
+    HyprLive.engine.setFilter('divide', ensureNumeric(function(num, divisor) {
+        return num / divisor;
+    }));
+
+    HyprLive.engine.setFilter('add', ensureNumeric(function(num, addend) {
+        return num + addend;
+    }));
 
     HyprLive.engine.setFilter('add_url_param', function (url, param, value) {
         return url + (url.indexOf('?') === -1 ? '?' : '&') + encodeURIComponent(param) + '=' + encodeURIComponent(value);

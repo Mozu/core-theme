@@ -439,6 +439,25 @@ Ext.define('Taco.model.Product', {
         {
             name: "properties",
             type: 'auto',
+            serialize: function (v, r) {
+                // BUG 58777
+                // need to format any property values that are dates so we can adjust for user timezone;
+                // iterate each property looking for date values and serialize them with timezone offset;
+                for (var i = 0; i < v.length;i++) {
+                    var property = v[i];
+                    var propertyValues = property.values;
+                    for (var j = 0; j < propertyValues.length;j++) {
+                        var value = propertyValues[j];
+                        if (Ext.isDate(value)) {
+                            propertyValues[j] = Ext.Date.format(value, "c");
+                        }
+                    }
+                }
+                return v;
+            },
+            convert: function(v, r) {
+                return v;
+            },
             defaultValue: []
         },
         {

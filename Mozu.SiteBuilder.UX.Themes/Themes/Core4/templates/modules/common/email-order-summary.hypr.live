@@ -45,6 +45,15 @@
                 <span class="mz-ordersummary-totalvalue">{{ model.discountedTotal|currency }}</span>
               </td>
             </tr>
+
+            {% if model.dutyTotal > 0 %}
+            <tr class="mz-ordersummary-tax">
+                <td align="right" colspan="4">
+                    <span class="mz-ordersummary-totalname">{{ labels.taxDuty }}:</span>
+                    <span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.dutyTotal|add:model.taxTotal}} {% endfilter %}</span>
+                </td>
+            </tr>
+            {% else %}
             {% if model.taxTotal %}
             <tr class="mz-ordersummary-tax">
                 <td align="right" colspan="4">
@@ -53,6 +62,8 @@
                 </td>
             </tr>
             {% endif %}
+            {% endif %}
+
             <tr class="mz-ordersummary-shippingtotal">
               <td align="right" colspan="4">
                 <span class="mz-ordersummary-totalname">{{ labels.shippingHandling }}:</span>

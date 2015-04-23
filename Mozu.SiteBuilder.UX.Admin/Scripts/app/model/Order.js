@@ -203,6 +203,10 @@ Ext.define('Taco.model.Order', {
             type: 'float',
             useNull: true
         }, {
+            name: 'taxDutyTotal',
+            type: 'float',
+            useNull: true
+        }, {
             name: 'feeTotal',
             type: 'float',
             useNull: true
