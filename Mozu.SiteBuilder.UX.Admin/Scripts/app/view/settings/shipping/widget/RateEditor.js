@@ -75,10 +75,16 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
             },{
             xtype: 'textfield',
                 name: 'id',
-                fieldLabel: 'Custom ID',
+                fieldLabel: 'Custom Code',
                 allowBlank: this.isCreate,
                 selectOnFocus: true,
-                width: "100%"
+                width: "100%",
+                validator: function (value) {
+                    var store = me.list.getStore();
+                    var ids = store.collect('id');
+
+                    return !Ext.Array.contains(ids, value) || ((me.record === store.getById(value)) || 'Custom Code must be unique or empty');
+                }
             }]
         });
 
