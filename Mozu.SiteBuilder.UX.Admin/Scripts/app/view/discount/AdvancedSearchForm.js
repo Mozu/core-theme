@@ -70,55 +70,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                 }]
             },
 
-            {
-                xtype: 'fieldcontainer',
-                layout: "hbox",
-                items: [{
-                    xtype: 'numberfield',
-                    name: 'amount',
-                    fieldLabel:"Amount",
-                    hideTrigger: true,
-                    minValue: 0,
-                    margin: { right: 40 },
-                    mouseWheelEnabled: true,
-                    selectOnFocus: true,
-                    flex:1
-
-                }, {
-                    xtype: 'combobox',
-                    name: 'type',
-                    fieldLabel: 'Type',
-                    valueField: 'id',
-                    displayField: 'name',
-                    queryMode: 'local',
-                    valueNotFoundText: 'not found',
-                    editable: false,
-                    forceSelection: true,
-                    trigger2Cls: 'x-form-clear-trigger',
-                    onTrigger2Click: function () {
-                        this.clearValue();
-                    },                    
-                    flex: 1,
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['id', "name"],
-                        data: [
-                            {
-                                name: "Free",
-                                id: "Free"
-                            }, {
-                                name: "Percentage",
-                                id: "Percentage"
-                            }, {
-                                name: "Amount",
-                                id: "Amount"
-                            }, {
-                                name: "Fixed Price",
-                                id: "FixedPrice"
-                            }
-                        ]
-                    })
-                }]
-            },
+            
 
 
             {
@@ -180,6 +132,57 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                             }
                         ]
                     })
+                }]
+            },
+
+            {
+                xtype: 'fieldcontainer',
+                layout: "hbox",
+                items: [ {
+                    xtype: 'combobox',
+                    name: 'type',
+                    fieldLabel: 'Type',
+                    valueField: 'id',
+                    displayField: 'name',
+                    queryMode: 'local',
+                    valueNotFoundText: 'not found',
+                    editable: false,
+                    forceSelection: true,
+                    trigger2Cls: 'x-form-clear-trigger',
+                    onTrigger2Click: function () {
+                        this.clearValue();
+                    },
+                    margin: { right: 40 },
+                    flex: 1,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['id', "name"],
+                        data: [
+                            {
+                                name: "Free",
+                                id: "Free"
+                            }, {
+                                name: "Percentage",
+                                id: "Percentage"
+                            }, {
+                                name: "Amount",
+                                id: "Amount"
+                            }, {
+                                name: "Fixed Price",
+                                id: "FixedPrice"
+                            }
+                        ]
+                    })
+                }, {
+                    xtype: 'numberfield',
+                    name: 'amount',
+                    fieldLabel: "Amount",
+                    hideTrigger: true,
+                    minValue: 0,
+                    
+                    mouseWheelEnabled: true,
+                    selectOnFocus: true,
+                    flex: 1
+
                 }]
             },
 
