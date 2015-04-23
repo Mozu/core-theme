@@ -58,20 +58,20 @@ Ext.define('Taco.core.ux.TooltipLabel', {
 
             tooltipButtonRenderer = function(cmp, opts) {
                 var renderLabel = Ext.get(tooltipKey),
-                    tooltipBtn = Ext.create('Ext.Button', {
-                        ui: 'link',
-                        cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
-                        text: '',
-                        handler: function(btn, evt) {
-                            onTooltipClick(btn, evt);
-                        },
-                        itemId: tooltipKey + '.button',
-                        tooltip: {
-                            text: 'Click for info',
-                            cls: Taco.baseCSSPrefix + 'tooltip',
-                        },
-                        renderTo: renderLabel
-                    });
+                tooltipBtn = Ext.create('Ext.Button', {
+                    ui: 'link',
+                    cls: Taco.baseCSSPrefix + 'icon-tooltip-help',
+                    text: '',
+                    handler: function(btn, evt) {
+                        onTooltipClick(btn, evt);
+                    },
+                    itemId: tooltipKey + '.button',
+                    tooltip: {
+                        text: 'Click for info',
+                        cls: Taco.baseCSSPrefix + 'tooltip',
+                    },
+                    renderTo: renderLabel
+                });
             },
 
             attachRenderer = function(tooltipRenderer) {
@@ -89,6 +89,7 @@ Ext.define('Taco.core.ux.TooltipLabel', {
             },
 
             onTooltipClick = function (btn, evt) {
+                Ext.tip.QuickTipManager.unregister(btn.getEl());
                 if (!tipContent) {
                     tipContent = Ext.create('Ext.tip.ToolTip', {
                         target: btn.getEl(),
