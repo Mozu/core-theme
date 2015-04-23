@@ -306,6 +306,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
         this.record[item.newPackage ? this.getCreateAction() : this.getMoveAction()]({
             jsonData: {
                 orderId: this.record.getId(),
+                lineId: item.lineId,
                 sourcePackageId: this.packageData ? this.packageData.id : null,
                 destinationPackageId: item.newPackage ? null : item.packageData.id,
                 items: this.getSelectedDataItems()
