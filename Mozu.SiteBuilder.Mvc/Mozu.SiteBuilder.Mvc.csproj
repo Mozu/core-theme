@@ -497,6 +497,7 @@
     <Compile Include="Catalog\ICategoryTreeProvider.cs" />
     <Compile Include="Catalog\RuntimeCategoryTreeProvider.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UserClaimsExtensions.cs" />
     <Compile Include="RequestUrlFinderOuter.cs" />
     <Compile Include="CMS\CmsItemDocumentInitilizer.cs" />
@@ -576,7 +577,6 @@
     <Compile Include="Customers\ICustomerGroupsRepository.cs" />
     <Compile Include="Customers\ICustomerRepository.cs" />
     <Compile Include="Debugging\RouteDebug\RouteDebug.cs" />
-    <Compile Include="Extensions\ContentServiceExtentions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Filters\AbsoluteUrlFilter.cs" />

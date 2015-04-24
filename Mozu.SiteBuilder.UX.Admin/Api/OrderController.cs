@@ -117,8 +117,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (ctx != null)
                 {
                     var ipStr = ctx.Request.Headers["X-Forwarded-For"] ?? ctx.Request.UserHostAddress;
-                    IPAddress ipaddress;
-                    if (IPAddress.TryParse(ipStr, out ipaddress) && ipaddress.AddressFamily != AddressFamily.InterNetworkV6)
+                    if (ipStr.IsIPAddressValid())
                     {
                         emptyOrder.IPAddress = ipStr;
                     }
