@@ -13,6 +13,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal UnitPrice { get; set; }
         public decimal Total { get; set; }
 
+        /// <summary>
+        /// The line id associated with the fulfillment.
+        /// </summary>
+        public int LineId { get; set; }
+
+        public string FulfillmentStatus { get; set; }
         
     }
 }

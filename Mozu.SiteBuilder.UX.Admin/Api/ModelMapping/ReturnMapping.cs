@@ -69,6 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.ProductLossTaxAmount, op => op.ResolveUsing(dc => dc.ProductLossTaxAmount))
             .ForMember(x => x.ShippingLossAmount, op => op.ResolveUsing(dc => dc.ShippingLossAmount))
             .ForMember(x => x.ShippingLossTaxAmount, op => op.ResolveUsing(dc => dc.ShippingLossTaxAmount))
+            .ForMember(x => x.OrderLineId, op => op.ResolveUsing(dc => dc.OrderLineId))
             .AfterMap((dc, x) => {
                 // for some reason, the service expects us to tell it how many of this item have been fulfilled. 
                 // since you can't have created a return that exceeds the # shipped, we should default this field to the quantity.
@@ -135,6 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.ProductLossTaxAmount, op => op.ResolveUsing(x => x.ProductLossTaxAmount))
             .ForMember(dc => dc.ShippingLossAmount, op => op.ResolveUsing(x => x.ShippingLossAmount))
             .ForMember(dc => dc.ShippingLossTaxAmount, op => op.ResolveUsing(x => x.ShippingLossTaxAmount))
+            .ForMember(dc => dc.OrderLineId, op => op.ResolveUsing(x => x.OrderLineId))
 
             //ignores
             .ForMember(dc => dc.BundledProducts, op => op.Ignore());

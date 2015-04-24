@@ -9,6 +9,16 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     title: 'Returnable Items',
 
     columns: [{
+        text: 'Line',
+        draggable: false,
+        resizable: true,
+        width: 50,
+        sortable: false,
+        menuDisabled: true,
+        hidden: false,
+        align: 'center',
+        dataIndex: 'orderLineId'
+    }, {
         dataIndex: 'productCode',
         text: 'Code',
         draggable: false,
@@ -30,6 +40,16 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             var parentBundleName = record.get('parentBundleName');
             return parentBundleName ? val + " <em class=\"taco-bundleditem-note\">(Bundled with <strong>" + parentBundleName + "</strong>)</em>" : val;
         }
+    }, {
+        text: 'Status',
+        draggable: false,
+        resizable: true,
+        width: 120,
+        sortable: false,
+        menuDisabled: true,
+        hidden: false,
+        align: 'left',
+        dataIndex: 'orderFulfillmentStatus'
     }, {
         dataIndex: 'returnType',
         text: 'Type',
@@ -227,7 +247,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'number',  name: 'quantityFulfilled' },
                 { type: 'number',  name: 'quantityReturned', defaultValue: 0 },
                 { type: 'string', name: 'orderItemId' },
-                { type: 'string', name: 'parentItemId'}
+                { type: 'string', name: 'parentItemId' },
+                { type: 'int', name: 'orderLineId' },
+                { type: 'string', name: 'orderFulfillmentStatus' }
             ],
             data: []
         });

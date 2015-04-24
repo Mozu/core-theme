@@ -32,7 +32,12 @@ Ext.define('Taco.model.OrderItem', {
             "name": "id",
             "type": "string",
             "useNull": true
-        },        
+        },
+        {
+            "name": "lineId",
+            "type": "int",
+            "useNull": false
+        },
         {
             "name": "productCode",
             "type": "string",
@@ -161,6 +166,11 @@ Ext.define('Taco.model.OrderItem', {
             convert: function (v, record) {          
                 return record.get("fulfillmentMethod") + "_" + record.get("fulfillmentLocationCode")
             }
+        },
+
+        {
+            "name": "fulfillmentStatus",
+            "type": "string",
         },
 
         {

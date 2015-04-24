@@ -7,6 +7,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
     public class OrderDigitalPackage
     {
         public string Id { get; set; }
+        public int LineId { get; set; }
         public string OrderId { get; set; }
         public string Code { get; set; }
 

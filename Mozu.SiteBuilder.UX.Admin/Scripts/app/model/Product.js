@@ -118,6 +118,11 @@ Ext.define('Taco.model.Product', {
             dateFormat: 'c'
         },
         {
+            "name": "fulfillmentStatus",
+            "type": "string",
+            "useNull": true
+        },
+        {
             name: "lastModifiedByUser",
             type: "auto",
             convert: function (v, record) {

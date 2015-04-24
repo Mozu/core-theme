@@ -146,11 +146,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             return topLevelQty + bundledQty;
         }
 
-        public static int GetFulfilledItemCount(this Order order, string productCode)
+        public static int GetFulfilledItemCount(this Order order, int lineId)
         {
-            int packageCount = order.Packages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-            int pickupCount = order.Pickups.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-            int digitalCount = order.DigitalPackages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
+            int packageCount = order.Packages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+            int pickupCount = order.Pickups.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+            int digitalCount = order.DigitalPackages.Where(p => p.Status == "Fulfilled").SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
 
             return packageCount + pickupCount + digitalCount;
         }

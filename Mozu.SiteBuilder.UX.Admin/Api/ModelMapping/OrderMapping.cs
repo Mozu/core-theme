@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.AppDev.Contracts;
 using Mozu.Core.Api.Contracts;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using CommerceDC = Mozu.CommerceRuntime.Contracts.Commerce;
 using DiscountDC = Mozu.CommerceRuntime.Contracts.Discounts;
@@ -166,26 +168,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .AfterMap(InterpolateRefundsIntoPaymentInteractions)
                 .AfterMap((dc, order) =>
                 {
-                    if (order.Packages == null)
+                    if (order.Packages.IsNullOrEmpty())
                         return;
 
                     // sort order packages by create date (for consistent ordering in UI)
                     order.Packages = order.Packages.OrderBy(p => p.CreateDate).ToList();
 
                     // add orderId to packages
-                    order.Packages.Each(p => p.OrderId = order.Id);
+                    EnumerableExtensions.Each(order.Packages, p => p.OrderId = order.Id);
 
                     // add item name, etc to packageItems
-                    order.Packages.SelectMany(p => p.Items).Each(packageItem => FillPackageItemDetails(packageItem, order));
+                    EnumerableExtensions.Each(order.Packages.SelectMany(p => p.Items), packageItem => FillPackageItemDetails(packageItem, order));
 
                     // add item name to pickup item
-                    order.Pickups.SelectMany(p => p.Items).Each(pickupItem => FillPickupItemDetails(pickupItem, order));
+                    EnumerableExtensions.Each(order.Pickups.SelectMany(p => p.Items), pickupItem => FillPickupItemDetails(pickupItem, order));
 
                     // add item name to digital items
-                    order.DigitalPackages.SelectMany(p => p.Items).Each(digitalItem => FillPackageItemDetails(digitalItem, order));
+                    EnumerableExtensions.Each(order.DigitalPackages.SelectMany(p => p.Items), digitalItem => FillPackageItemDetails(digitalItem, order));
 
                     // ensure weight on all packages
-                    order.Packages.Each(p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
+                    EnumerableExtensions.Each(order.Packages, p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
                 })
                 .AfterMap((dc, order) =>
                 {
@@ -270,103 +272,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // fill out UnpackagedItems and UnpickedupItems lists
 
                     // get all the product codes in the order.
-                    var productCodes = order.Items.Where(item => item.ProductUsage != "Bundle").Select(item => item.ProductCode).ToList();
-                    productCodes.AddRange(order.Items.Where(i => i.BundledProducts != null).SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.ProductCode));
-                    productCodes = productCodes.Distinct().ToList();
+                    var itemLineIds = order.Items.Select(item => item.LineId).ToList();
+
+                    // TODO Write LINQ 
+                    //itemLineIds.AddRange(order.Items.Where(i => i.BundledProducts != null).SelectMany(i => i.BundledProducts).Select(bundledItem => bundledItem.LineId));
+                    //itemLineIds = itemLineIds.Distinct().ToList();
 
                     order.UnpackagedItems = new List<OrderPackageItem>();
                     order.UnpickedupItems = new List<OrderPickupItem>();
                     order.UndeliveredDigitalItems = new List<OrderDigitalPackageItem>();
 
-                    foreach (var productCode in productCodes)
+                    foreach (var lineId in itemLineIds)
                     {
-                        var productName = order.GetProductName(productCode);
-                        var desiredPackageQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
-                        var desiredPickupQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
-                        var desiredDigitalQuantity = order.GetDesiredQuantityByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.DIGITAL);
-                        var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.ProductCode == productCode).Sum(i => i.Quantity);
-                        var isPackagedStandAlone = order.IsProductPackagedStandAlone(productCode);
-
-                        // if there are more desired products than created packages contain, add this product to unpackagedItems.
-                        if (desiredPackageQuantity > packagedQuantity)
+                        // This is now an order item, I don't need to call the previous methods!
+                        var orderItem = order.Items.Find(i =>i.LineId == lineId);
+                        if (orderItem.BundledProducts.IsNullOrEmpty())
                         {
-                            int remainingQuantity = desiredPackageQuantity - packagedQuantity;
-
-                            // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
-                            if (desiredPickupQuantity - pickedQuantity < 0)
-                                remainingQuantity += desiredPickupQuantity - pickedQuantity;
-
-                            if (remainingQuantity > 0)
-                            {
-                                var fulfillmentLocationForThisProduct = order.GetAFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.SHIP);
-
-                                order.UnpackagedItems.Add(new OrderPackageItem
-                                {
-                                    ProductCode = productCode,
-                                    ProductName = order.GetProductName(productCode),
-                                    Weight = order.GetUnitWeight(productCode) * remainingQuantity,
-                                    Quantity = remainingQuantity,
-                                    FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
-                                    FulfillmentLocationCode = fulfillmentLocationForThisProduct,
-                                    IsPackagedStandAlone = isPackagedStandAlone
-                                });
-                            }
+                            ResolveUnpackagedAmounts(lineId, order, orderItem);
                         }
-
-                        // if there are more desired products than created pickups contain, add this product to unpickedupItems.
-                        if (desiredPickupQuantity > pickedQuantity)
+                        else
                         {
-                            int remainingQuantity = desiredPickupQuantity - pickedQuantity;
-
-                            // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
-                            if (desiredPackageQuantity - packagedQuantity < 0)
-                                remainingQuantity += desiredPackageQuantity - packagedQuantity;
-
-                            if (remainingQuantity > 0)
-                            {
-                                // Dictionary that is fullfilmentLocationCode : quantity
-                                var fulfillmentLocationsForThisProduct = order.GetAllFulfillmentLocationCodeByFulfillmentMethod(productCode, CommerceDC.FulfillmentMethodConst.PICKUP);
-
-                                foreach (var f in fulfillmentLocationsForThisProduct)
-                                {
-                                    var quantityAtThisLocation = Math.Min(remainingQuantity, f.Value - order.GetNumberOfPickedUpItemsByProductCodeAndLocationCode(productCode, f.Key));
-
-                                    if (quantityAtThisLocation <= 0)
-                                        continue;
-
-                                    order.UnpickedupItems.Add(new OrderPickupItem
-                                    {
-                                        ProductCode = productCode,
-                                        ProductName = order.GetProductName(productCode),
-                                        Quantity = quantityAtThisLocation,
-                                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
-                                        FulfillmentLocationCode = f.Key
-                                    });
-
-                                    remainingQuantity -= f.Value;
-                                }
-                            }
+                            ResolveUnpackagedAmountsForBundledProduct(lineId, order, orderItem);
                         }
-
-                        // if there are more desired digital fulfillments than created digital fulfillments contain, add this product to undeliveredDigitalItems.
-                        if (desiredDigitalQuantity > digitallyFulfilled)
-                        {
-                            int remainingQuantity = desiredDigitalQuantity - digitallyFulfilled;
-                            order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem
-                            {
-                                ProductCode = productCode,
-                                ProductName = order.GetProductName(productCode),
-                                Quantity = remainingQuantity,
-                                GiftCardCode = null,
-
-                                // TODO: are these accurate in the case of a bundle? should they even be included?
-                                UnitPrice = order.GetUnitPrice(productCode),
-                                Total = order.GetUnitPrice(productCode) * remainingQuantity,
-                            });
-                        }
-
                     }
                 })
                 .AfterMap((dc, order) =>
@@ -403,7 +330,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ProductName = item.ProductName,
                                 QuantityOrdered = item.Quantity,
                                 UnitPrice = item.UnitPrice,
-                                Key = item.Id
+                                Key = item.Id,
+                                OrderLineId = item.LineId,
+                                OrderFulfillmentStatus = item.FulfillmentStatus
                             }
                         )
                         .Union
@@ -420,7 +349,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ParentItemId = item.Id,
                                 ParentProductCode = item.ProductCode,
                                 ParentProductName = item.ProductName,
-                                Key = item.Id + "-" + bp.ProductCode
+                                Key = item.Id + "-" + bp.ProductCode,
+                                OrderLineId = item.LineId,
+                                OrderFulfillmentStatus = item.FulfillmentStatus
                             }
                         )
                         .ToList();
@@ -429,10 +360,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // we have to do some backflips in case line items were split:
                     // we don't want to count one item being fulfilled as 
                     // one fulfilled in each line item.
-                    order.ReturnableItems.GroupBy(ri => ri.ProductCode).Each(group =>
+                    // Now it is grouped by OrderLineId.
+                    // TODO (JK): NEED TO REVIEW! This may be messed up by line id now!
+                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => ri.OrderLineId), group =>
                     {
                         int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key);
-                        group.Each(returnItem =>
+                        EnumerableExtensions.Each(@group, returnItem =>
                         {
                             int numToMarkFulfilled = Math.Min(returnItem.QuantityOrdered, totalQuantityFulfilled);
                             returnItem.QuantityFulfilled = numToMarkFulfilled;
@@ -440,6 +373,188 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         });
                     });
                 });
+        }
+
+        private void ResolveUnpackagedAmountsForBundledProduct(int lineId, Order order, OrderItem orderItem)
+        {
+            // for each item in the bundled product
+            foreach (var bundledProduct in orderItem.BundledProducts)
+            {
+                // Based off of fulfillment type look through packages for remaining quantity
+                var desiredPackageQuantity = 0;
+                var desiredPickupQuantity = 0;
+                var desiredDigitalQuantity = 0;
+
+                if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.SHIP)
+                {
+                    desiredPackageQuantity = bundledProduct.Quantity * orderItem.Quantity;
+                }
+
+                if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.PICKUP)
+                {
+                    desiredPickupQuantity = bundledProduct.Quantity * orderItem.Quantity;
+                }
+
+                if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.DIGITAL)
+                {
+                    desiredDigitalQuantity = bundledProduct.Quantity * orderItem.Quantity;
+                }
+
+                var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
+                var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
+                var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
+                // add new unpackaged item with remaining quantity to the order.UnpackagedItems
+                // make sure new entry contains, fulfillment status, line id, and other goodness
+                // if there are more desired products than created packages contain, add this product to unpackagedItems.
+                if (desiredPackageQuantity > packagedQuantity)
+                {
+                    int remainingQuantity = desiredPackageQuantity - packagedQuantity;
+
+                    order.UnpackagedItems.Add(new OrderPackageItem
+                    {
+                        ProductCode = bundledProduct.ProductCode,
+                        ProductName = bundledProduct.Name,
+                        Weight = bundledProduct.UnitWeight * remainingQuantity,
+                        Quantity = remainingQuantity,
+                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
+                        FulfillmentLocationCode = orderItem.FulfillmentLocationCode, // TODO: Can bundled components have different fulfillment locations?
+                        IsPackagedStandAlone = bundledProduct.IsPackagedStandAlone,
+                        LineId = orderItem.LineId,
+                        FulfillmentStatus = bundledProduct.FulfillmentStatus
+                    });
+                }
+
+                // if there are more desired products than created pickups contain, add this product to unpickedupItems.
+                if (desiredPickupQuantity > pickedQuantity)
+                {
+                    int remainingQuantity = desiredPickupQuantity - pickedQuantity;
+
+                    order.UnpickedupItems.Add(new OrderPickupItem
+                    {
+                        ProductCode = bundledProduct.ProductCode,
+                        ProductName = bundledProduct.Name,
+                        Quantity = remainingQuantity,
+                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
+                        FulfillmentLocationCode = orderItem.FulfillmentLocationCode, // TODO: Can bundled components have different fulfillment locations?
+                        LineId = orderItem.LineId,
+                        FulfillmentStatus = bundledProduct.FulfillmentStatus
+                    });
+                }
+
+                // if there are more desired digital fulfillments than created digital fulfillments contain, add this product to undeliveredDigitalItems.
+                if (desiredDigitalQuantity > digitallyFulfilled)
+                {
+                    int remainingQuantity = desiredDigitalQuantity - digitallyFulfilled;
+                    order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem
+                    {
+                        ProductCode = bundledProduct.ProductCode,
+                        ProductName = bundledProduct.Name,
+                        Quantity = remainingQuantity,
+                        GiftCardCode = null,
+                        UnitPrice = orderItem.UnitPrice,
+                        Total = orderItem.UnitPrice * remainingQuantity, // TODO: Why are we doing this here and not in pickup or unpackaged
+                        LineId = orderItem.LineId,
+                        FulfillmentStatus = bundledProduct.FulfillmentStatus
+                    });
+                }
+            }            
+        }
+
+        private void ResolveUnpackagedAmounts(int lineId, Order order, OrderItem orderItem)
+        {
+            var desiredPackageQuantity = 0;
+            var desiredPickupQuantity = 0;
+            var desiredDigitalQuantity = 0;
+
+            //desiredPackageQuantity = order.GetDesiredQuantityByFulfillmentMethod(lineId, CommerceDC.FulfillmentMethodConst.SHIP);
+            if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.SHIP)
+            {
+                desiredPackageQuantity = orderItem.Quantity;
+            }
+
+            //desiredPickupQuantity = order.GetDesiredQuantityByFulfillmentMethod(lineId, CommerceDC.FulfillmentMethodConst.PICKUP);
+            if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.PICKUP)
+            {
+                desiredPickupQuantity = orderItem.Quantity;
+            }
+
+            //desiredDigitalQuantity = order.GetDesiredQuantityByFulfillmentMethod(lineId, CommerceDC.FulfillmentMethodConst.DIGITAL);
+            if (orderItem.FulfillmentMethod == CommerceDC.FulfillmentMethodConst.DIGITAL)
+            {
+                desiredDigitalQuantity = orderItem.Quantity;
+            }
+
+            var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+            var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+            var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+
+            // if there are more desired products than created packages contain, add this product to unpackagedItems.
+            if (desiredPackageQuantity > packagedQuantity)
+            {
+                int remainingQuantity = desiredPackageQuantity - packagedQuantity;
+
+                // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
+                // I don't think we need to do this anymore.  On a line item, it can only be shipped, picked up, or digital.
+                //if (desiredPickupQuantity - pickedQuantity < 0)
+                //    remainingQuantity += desiredPickupQuantity - pickedQuantity;
+
+                order.UnpackagedItems.Add(new OrderPackageItem
+                {
+                    ProductCode = orderItem.ProductCode,
+                    ProductName = orderItem.ProductName,
+                    Weight = orderItem.UnitWeight * remainingQuantity,
+                    Quantity = remainingQuantity,
+                    FulfillmentMethod = CommerceDC.FulfillmentMethodConst.SHIP,
+                    FulfillmentLocationCode = orderItem.FulfillmentLocationCode,
+                    IsPackagedStandAlone = orderItem.IsPackagedStandAlone,
+                    LineId = orderItem.LineId,
+                    FulfillmentStatus = orderItem.FulfillmentStatus
+                });
+            }
+
+            // if there are more desired products than created pickups contain, add this product to unpickedupItems.
+            if (desiredPickupQuantity > pickedQuantity)
+            {
+                int remainingQuantity = desiredPickupQuantity - pickedQuantity;
+
+                // if more items have already been picked up than were intended for pickup, we have to subtract those items from potential shipping items.
+                // I don't think we need to do this anymore.  On a line item, it can only be shipped, picked up, or digital.
+                //if (desiredPackageQuantity - packagedQuantity < 0)
+                //    remainingQuantity += desiredPackageQuantity - packagedQuantity;
+
+                if (remainingQuantity > 0)
+                {
+                    order.UnpickedupItems.Add(new OrderPickupItem
+                    {
+                        ProductCode = orderItem.ProductCode,
+                        ProductName = orderItem.ProductName,
+                        Quantity = remainingQuantity,
+                        FulfillmentMethod = CommerceDC.FulfillmentMethodConst.PICKUP,
+                        FulfillmentLocationCode = orderItem.FulfillmentLocationCode,
+                        LineId = orderItem.LineId,
+                        FulfillmentStatus = orderItem.FulfillmentStatus
+                    });
+                }
+            }
+
+            // if there are more desired digital fulfillments than created digital fulfillments contain, add this product to undeliveredDigitalItems.
+            if (desiredDigitalQuantity > digitallyFulfilled)
+            {
+                int remainingQuantity = desiredDigitalQuantity - digitallyFulfilled;
+                order.UndeliveredDigitalItems.Add(new OrderDigitalPackageItem
+                {
+                    ProductCode = orderItem.ProductCode,
+                    ProductName = orderItem.ProductName,
+                    Quantity = remainingQuantity,
+                    GiftCardCode = null,
+
+                    // TODO: are these accurate in the case of a bundle? should they even be included?
+                    UnitPrice = orderItem.UnitPrice,
+                    Total = orderItem.UnitPrice * remainingQuantity,
+                    LineId = orderItem.LineId,
+                    FulfillmentStatus = orderItem.FulfillmentStatus
+                });
+            }
         }
 
         private void MapAvailableBulkActions(OrdersDC.Order dc, Order order)
@@ -513,6 +628,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreditValue, op => op.ResolveUsing(dc => dc.CreditValue))
                 .ForMember(x => x.OptionAttributeFQN, op => op.ResolveUsing(dc => dc.OptionAttributeFQN))
                 .ForMember(x => x.OptionValue, op => op.ResolveUsing(dc => dc.OptionValue))
+                .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))
+                .ForMember(x => x.LineId, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<BundledProduct, ProductsDC.BundledProduct>()
@@ -527,68 +644,71 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.CreditValue, op => op.ResolveUsing(x => x.CreditValue))
                 .ForMember(dc => dc.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
                 .ForMember(dc => dc.OptionValue, op => op.ResolveUsing(x => x.OptionValue))
+                .ForMember(dc => dc.FulfillmentStatus, op => op.Ignore())
                 .ForMember(dc => dc.AllocationId, op => op.Ignore())
                 .ForMember(dc => dc.AllocationExpiration, op => op.Ignore())
+                
 
                 ;
         
 
-        Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
+            Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
                 .ForMember(x=> x.ProductUsage , opt => opt.ResolveUsing(dc=> dc.Product != null ? dc.Product.ProductUsage : null ))
-                  .ForMember(x => x.BundledProducts , op => op.ResolveUsing(dc => (dc.Product != null) 
-                      ? dc.Product.BundledProducts : null))
-                  .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
-                  .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => (dc.Product != null) 
-                      ? (dc.Product.VariationProductCode ?? dc.Product.ProductCode) 
-                      : null))
-                      .ForMember(x => x.ParentProductCode, op => op.ResolveUsing(dc => (dc.Product != null && !string.IsNullOrEmpty(dc.Product.VariationProductCode))
-                      ? dc.Product.ProductCode 
-                      : null))
-                  .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Product != null) 
-                      ? dc.Product.Name : null))
-                  .ForMember(x => x.UnitPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
-                      ? dc.UnitPrice.ExtendedAmount : null))
-                  .ForMember(x => x.SalePrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
-                      ? dc.UnitPrice.SaleAmount : null))
-                  .ForMember(x => x.ListPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
-                      ? dc.UnitPrice.ListAmount : null))
-                  .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.Product != null && dc.Product.Measurements != null 
-                      ? dc.Product.Measurements.Weight : null))
-                  .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
-                  .ForMember(x => x.ActiveDiscount, op => op.ResolveUsing(dc => dc.ProductDiscounts != null 
-                      ? dc.ProductDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) 
-                      : null))
-                  .ForMember(x => x.Discounts, op => op.ResolveUsing(dc => dc.ProductDiscounts))
-                  .ForMember(x => x.ActiveShippingDiscount, op => op.ResolveUsing(dc => dc.ShippingDiscounts != null 
-                      ? dc.ShippingDiscounts.FirstOrDefault(d =>d.Discount != null &&  d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) 
-                      : null))
-                  .ForMember(x => x.ShippingDiscounts, op => op.ResolveUsing(dc => dc.ShippingDiscounts))
-                  .ForMember(x => x.Options, op => op.ResolveUsing(dc => (dc.Product != null) 
-                      ? dc.Product.Options : null))
-                  .ForMember(x => x.Subtotal, op => op.ResolveUsing(dc => dc.Subtotal))
-                  .ForMember(x => x.DisplaySubtotal, op => op.ResolveUsing(dc => dc.ExtendedTotal))
-                  .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
-                  .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
-                  .ForMember(x => x.FulfillmentMethod, op => op.ResolveUsing(dc => dc.FulfillmentMethod))
+                .ForMember(x => x.BundledProducts , op => op.ResolveUsing(dc => (dc.Product != null) 
+                    ? dc.Product.BundledProducts : null))
+                .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => (dc.Product != null) 
+                    ? (dc.Product.VariationProductCode ?? dc.Product.ProductCode) 
+                    : null))
+                .ForMember(x => x.ParentProductCode, op => op.ResolveUsing(dc => (dc.Product != null && !string.IsNullOrEmpty(dc.Product.VariationProductCode))
+                    ? dc.Product.ProductCode 
+                    : null))
+                .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => (dc.Product != null)
+                    ? dc.Product.Name : null))
+                .ForMember(x => x.UnitPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
+                    ? dc.UnitPrice.ExtendedAmount : null))
+                .ForMember(x => x.SalePrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
+                    ? dc.UnitPrice.SaleAmount : null))
+                .ForMember(x => x.ListPrice, op => op.ResolveUsing(dc => (dc.UnitPrice != null) 
+                    ? dc.UnitPrice.ListAmount : null))
+                .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.Product != null && dc.Product.Measurements != null 
+                    ? dc.Product.Measurements.Weight : null))
+                .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                .ForMember(x => x.ActiveDiscount, op => op.ResolveUsing(dc => dc.ProductDiscounts != null 
+                    ? dc.ProductDiscounts.FirstOrDefault(d => d.Excluded.HasValue && !d.Excluded.Value) 
+                    : null))
+                .ForMember(x => x.Discounts, op => op.ResolveUsing(dc => dc.ProductDiscounts))
+                .ForMember(x => x.ActiveShippingDiscount, op => op.ResolveUsing(dc => dc.ShippingDiscounts != null 
+                    ? dc.ShippingDiscounts.FirstOrDefault(d =>d.Discount != null &&  d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value) 
+                    : null))
+                .ForMember(x => x.ShippingDiscounts, op => op.ResolveUsing(dc => dc.ShippingDiscounts))
+                .ForMember(x => x.Options, op => op.ResolveUsing(dc => (dc.Product != null) 
+                    ? dc.Product.Options : null))
+                .ForMember(x => x.Subtotal, op => op.ResolveUsing(dc => dc.Subtotal))
+                .ForMember(x => x.DisplaySubtotal, op => op.ResolveUsing(dc => dc.ExtendedTotal))
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Total))
+                .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
+                .ForMember(x => x.FulfillmentMethod, op => op.ResolveUsing(dc => dc.FulfillmentMethod))
+                .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
+                .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
+                    ? dc.HandlingAmount : null))
 
-                  .ForMember(x => x.HandlingAmount, op => op.ResolveUsing(dc => (dc.HandlingAmount != null)
-                      ? dc.HandlingAmount : null))
-
-                  .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
-                  // handled by after mapper
-                  .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
+                .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
+                // handled by after mapper, this needs to be aggregated!
+                .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.Product.FulfillmentStatus))
                   
 
-                  .AfterMap((dc, orderItem) =>
-                  {
-                      if (orderItem.Discounts != null)
-                      {
-                          orderItem.Discounts.Each(d => d.Quantity = (d.Quantity == 0) 
-                              ? orderItem.Quantity : d.Quantity);
-                      }
-                  });
-            // TODO: shopper entered value
-            ;
+                .AfterMap((dc, orderItem) =>
+                {
+                    if (orderItem.Discounts != null)
+                    {
+                        EnumerableExtensions.Each(orderItem.Discounts, d => d.Quantity = (d.Quantity == 0) 
+                            ? orderItem.Quantity : d.Quantity);
+                    }
+
+
+                });
+            // TODO: shopper entered values
         }
 
 
@@ -602,6 +722,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.UnitWeight))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
+                //Coming from a bundled product, this is OK because the bundled product should already be aggregated
+                .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))
             
                 //ignores
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
@@ -619,7 +742,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Total, op => op.Ignore())
                 .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
-                .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                 .ForMember(x => x.ParentProductCode, op => op.Ignore())
                 //todo: temp to get unit test to pass - Greg Murray on 2014-05-20 
                 .ForMember(x => x.ProductDiscount, op => op.Ignore())
@@ -836,6 +958,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 //ignores, handled in Order mapping or FillPackageItemDetails.
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -874,6 +997,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ShippingDC.PickupItem, OrderPickupItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
+                .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 //ignores, handled in Order mapping
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
@@ -906,6 +1030,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.GiftCardCode, op => op.ResolveUsing(dc => dc.GiftCardCode))
+                .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 .ForMember(x => x.Weight, op => op.UseValue(null))
                 //ignores, handled in Order mapping
                 .ForMember(x => x.ProductName, op => op.Ignore())
@@ -955,6 +1080,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
+                .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
                 .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPackageItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
                 ;
         }
@@ -976,6 +1102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<OrderPickupItem, ShippingDC.PickupItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
+                .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
                 //todo: do we need this on our model? - Greg Murray on 2014-05-19 
                 .ForMember(dc => dc.FulfillmentItemType, op => op.ResolveUsing(( OrderPickupItem x) => ShippingDC.FulfillmentItemTypeConst.PHYSICAL))
                 ;
@@ -993,6 +1120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       {
                           ProductCode = x.ProductCode,
                           Name = x.ProductName,
+                          FulfillmentStatus = x.FulfillmentStatus,
                           Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options)
                           // other stuff (price/measurements) are not important to make service calls.
                       };
@@ -1002,6 +1130,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.ShippingDiscounts, op => op.ResolveUsing(x => x.ShippingDiscounts))
                   .ForMember(dc => dc.FulfillmentLocationCode, op => op.ResolveUsing(x => x.FulfillmentLocationCode))
                   .ForMember(dc => dc.FulfillmentMethod, op => op.ResolveUsing(x => x.FulfillmentMethod))
+                  .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
+                  
                   //ignores
                   .ForMember(dc => dc.OriginalCartItemId, op => op.Ignore())
                   .ForMember(dc => dc.LocaleCode, op => op.Ignore())
@@ -1119,25 +1249,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             if (packageItem == null || order == null || order.Items == null)
                 return;
+            
+            // use the packageItem's LineId here!
+            // Find the orderItem within the order:
+            var orderItem = order.Items.FirstOrDefault(i => i.LineId == packageItem.LineId);
 
-            var itemInOrder = order.Items.FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
-            var itemInBundle = order.Items.SelectMany(i => i.BundledProducts).FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
+            if (orderItem == null)
+                return;
 
-            if (itemInOrder != null)
+            if (orderItem.BundledProducts.IsNullOrEmpty())
             {
-                packageItem.ProductCode = itemInOrder.ProductCode;
-                packageItem.ProductName = itemInOrder.ProductName;
-                packageItem.Total = itemInOrder.Total;
-                packageItem.UnitPrice = itemInOrder.UnitPrice;
-                packageItem.Weight = itemInOrder.UnitWeight.HasValue ? packageItem.Quantity * itemInOrder.UnitWeight : null;
+                packageItem.ProductCode = orderItem.ProductCode;
+                packageItem.ProductName = orderItem.ProductName;
+                packageItem.Total = orderItem.Total;
+                packageItem.UnitPrice = orderItem.UnitPrice;
+                packageItem.Weight = orderItem.UnitWeight.HasValue ? packageItem.Quantity * orderItem.UnitWeight : null;
+                packageItem.LineId = packageItem.LineId;
+                packageItem.FulfillmentStatus = orderItem.FulfillmentStatus;
             }
-            else if (itemInBundle != null)
+            else
             {
-                packageItem.ProductCode = itemInBundle.ProductCode;
-                packageItem.ProductName = itemInBundle.Name;
+                var foundProduct = orderItem.BundledProducts.FirstOrDefault(i => i.ProductCode == packageItem.ProductCode);
+                if (foundProduct == null)
+                    return;
+                packageItem.ProductCode = foundProduct.ProductCode;
+                packageItem.ProductName = foundProduct.Name;
                 packageItem.Total = 0;
                 packageItem.UnitPrice = 0;
-                packageItem.Weight = itemInBundle.UnitWeight.HasValue ? packageItem.Quantity * itemInBundle.UnitWeight : null;
+                packageItem.Weight = foundProduct.UnitWeight.HasValue ? packageItem.Quantity*foundProduct.UnitWeight : null;
+                packageItem.LineId = packageItem.LineId;
+                packageItem.FulfillmentStatus = foundProduct.FulfillmentStatus;
             }
         }
 
@@ -1146,12 +1287,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (pickupItem == null || order == null || order.Items == null)
                 return;
 
-            var itemInOrder = order.Items.FirstOrDefault(i => i.ProductCode == pickupItem.ProductCode);
+            var itemInOrder = order.Items.FirstOrDefault(i => i.LineId == pickupItem.LineId);
 
             if (itemInOrder == null)
                 return;
 
+            pickupItem.ProductCode = itemInOrder.ProductCode;
             pickupItem.ProductName = itemInOrder.ProductName;
+            pickupItem.LineId = itemInOrder.LineId;
+            pickupItem.FulfillmentStatus = itemInOrder.FulfillmentStatus;
         }
     }
 }
