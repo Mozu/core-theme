@@ -191,7 +191,7 @@
             if (!cfg) {
                 selection = win.getSelection();
 
-                range = selection.getRangeAt();
+                range = selection.getRangeAt(0);
 
                 return {
                     container: range.commonAncestorContainer,
