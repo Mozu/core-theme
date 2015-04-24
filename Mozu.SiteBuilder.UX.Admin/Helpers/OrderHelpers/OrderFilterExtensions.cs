@@ -93,13 +93,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "modifiedby":
                     return string.Format("(updateby eq {0} or createby eq {0})", filter.value);
                 case "modifiedfrom":
-                    return string.Format("updatedate gt {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
-                    case "modifiedto":
-                    return string.Format("updatedate lt {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                    return string.Format("updatedate ge {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
+                case "modifiedto":
+                    return string.Format("updatedate le {0}", ((DateTime)filter.value).ToUniversalTime().ToString("s") + "Z");
                 case "orderstatus":
                     if (filter.value.ToString().ToLower() == "open")
                     {
-                    
                         return "(status.in  eq \"Submitted,Processing,Validated,Accepted,PendingReview\")";
                     }
                     return string.Format("status eq {0}", filter.value);

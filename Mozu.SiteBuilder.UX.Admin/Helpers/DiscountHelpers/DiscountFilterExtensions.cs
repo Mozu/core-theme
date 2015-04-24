@@ -236,13 +236,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 case "usagecountto":
                     return String.Format("{0} le \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);
                 case "startdatefrom":
-                    return String.Format("{0} gt \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "startdateto":
-                    return String.Format("{0} lt \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return String.Format("{0} le \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "enddatefrom":
-                    return String.Format("{0} gt \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return String.Format("{0} ge \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "enddateto":
-                    return String.Format("{0} lt \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "requirecoupon":
                     return String.Format("{0} eq {1}", REQUIRE_COUPON_PROPERTY, filter.value);
                 case "productcode":
@@ -278,7 +278,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 case "conditionscategoryid":
                     return String.Format("{0} eq \"{1}\"", CONDITIONS_CATEGORIES_CATEGORYID_PROPERTY, filter.value);
                 case "validondate":
-                    return String.Format("{0} lt \"{2}\" and ({1} gt \"{2}\" or {1} eq null)", START_DATE_PROPERTY, END_DATE_PROPERTY, DateTime.Parse((string)filter.value).ToUniversalTime().ToString("o"));
+                    return String.Format("{0} le \"{2}\" and ({1} ge \"{2}\" or {1} eq null)", START_DATE_PROPERTY, END_DATE_PROPERTY, DateTime.Parse((string)filter.value).ToUniversalTime().ToString("o"));
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

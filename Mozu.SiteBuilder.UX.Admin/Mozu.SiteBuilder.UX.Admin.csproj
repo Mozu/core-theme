@@ -698,8 +698,8 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeFilterExtensions.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
-    <Compile Include="Helpers\CustomerHelpers\CustomerFilterExtensions.cs" />
-    <Compile Include="Helpers\CustomerHelpers\CustomerSortExtensions.cs" />
+    <Compile Include="Helpers\DiscountHelpers\CustomerHelpers\CustomerFilterExtensions.cs" />
+    <Compile Include="Helpers\DiscountHelpers\CustomerHelpers\CustomerSortExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountPagingParametersExtensions.cs" />
     <Compile Include="Helpers\DiscountHelpers\DiscountFilterExtensions.cs" />
     <Compile Include="Helpers\FacetHelpers\IInheritedFacetHelper.cs" />
