@@ -63,7 +63,7 @@
                 if (this.query) lrClone.query = this.query;
                 var startIndex = this.get('startIndex');
                 if (startIndex) lrClone.startIndex = startIndex;
-                return _.isEmpty(lrClone) ? "" : "?" + $.param(lrClone);
+                return _.isEmpty(lrClone) ? "" : "?" + $.param(lrClone).replace(/\+/g, ' ');
             },
 
             buildRequest: function() {

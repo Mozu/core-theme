@@ -69,7 +69,8 @@
             getQueryString: function() {
                 var params = this.getQueryParams();
                 if (!params || _.isEmpty(params)) return "";
-                return "?" + $.param(params);
+                return "?" + $.param(params)
+                              .replace(/\+/g, ' ');
             },
 
             buildRequest: function() {
