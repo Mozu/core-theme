@@ -10,7 +10,7 @@ Ext.define('Taco.view.entityManager.Lists', {
         'Taco.store.EntitiesListsTree'
     ],
    // title: 'Simple Tree',
-    width: 200,
+    width: 250,
     height: '100%',
 
     rootVisible: false,
