@@ -2213,6 +2213,7 @@
     <Content Include="Themes\Core7\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core7\theme-ui.json" />
     <Content Include="Themes\Core7\theme.json" />
+    <None Include="Themes\Core7\templates\modules\pinky-bumpus.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
