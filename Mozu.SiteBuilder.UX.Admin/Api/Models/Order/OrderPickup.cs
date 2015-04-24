@@ -15,8 +15,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public string Id { get; set; }
 
-        public int LineId { get; set; }
-
         public string OrderId { get; set; }
 
         public string Code { get; set; }

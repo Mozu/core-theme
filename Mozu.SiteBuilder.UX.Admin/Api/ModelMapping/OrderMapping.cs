@@ -966,6 +966,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Weight, op => op.Ignore())
                 .ForMember(x => x.UnitPrice, op => op.Ignore())
                 .ForMember(x => x.Total, op => op.Ignore())
+                .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                 .ForMember(x => x.IsPackagedStandAlone, op => op.Ignore())
                 ;
         }
@@ -1002,6 +1003,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.FulfillmentMethod, op => op.Ignore())
                 .ForMember(x => x.FulfillmentLocationCode, op => op.Ignore())
+                .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                 ;
         }
 
@@ -1033,6 +1035,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 .ForMember(x => x.Weight, op => op.UseValue(null))
                 //ignores, handled in Order mapping
+                .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.UnitPrice, op => op.Ignore())
                 .ForMember(x => x.Total, op => op.Ignore())
