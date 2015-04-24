@@ -2213,6 +2213,7 @@
     <Content Include="Themes\Core7\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core7\theme-ui.json" />
     <Content Include="Themes\Core7\theme.json" />
+    <Content Include="packages.config" />
     <None Include="Themes\Core7\templates\modules\pinky-bumpus.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -2243,9 +2244,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Mozu.CommerceRuntime.Contracts">
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.2-dev1504132016Sta-s\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.6-dev1504241803Sta-s\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Core">
       <HintPath>..\packages\Mozu.Core.Prime.1.17.6-dev1504130135-s\lib\net451\Mozu.Core.dll</HintPath>
