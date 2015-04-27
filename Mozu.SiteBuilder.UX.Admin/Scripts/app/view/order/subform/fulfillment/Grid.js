@@ -63,6 +63,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 name: 'fulfillmentLocationCode',
                 type: 'string',
                 useNull: true
+            }, {
+                name: 'lineId',
+                type: 'int',
+                unseNull: false
+            }, {
+                name: 'fulfillmentStatus',
+                type: 'string',
+                useNull: true
             }]
         });
 
@@ -108,6 +116,16 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
         var columns = [];
 
         columns.push({
+            text: 'Line',
+            draggable: false,
+            resizable: true,
+            width: 50,
+            sortable: false,
+            menuDisabled: true,
+            hidden: false,
+            align: 'center',
+            dataIndex: 'lineId'
+        }, {
             text: 'Code',
             draggable: false,
             width: 140,
@@ -172,6 +190,16 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 dataIndex: 'fulfillmentLocationCode'
             });
         }
+
+        columns.push({
+            text: 'Status',
+            draggable: false,
+            width: 100,
+            sortable: false,
+            menuDisabled: true,
+            align: 'left',
+            dataIndex: 'fulfillmentStatus'
+        });
 
         columns.push({
             text: 'Quantity',

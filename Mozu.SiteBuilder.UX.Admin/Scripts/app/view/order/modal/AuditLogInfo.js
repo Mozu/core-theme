@@ -282,6 +282,12 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
     createOrderMessage: function (orderRecordData) {
         var itemsList = [];
         var orderData = orderRecordData.metadata;
+        var statusLabel = 'Order Status';
+        if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('fulfillment') > -1) {
+            statusLabel = 'Fulfillment Status';
+        } else if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('payment') > -1) {
+            statusLabel = 'Payment Status';
+        }
 
         if (orderData[0].hasOwnProperty('amount')) {
             if (orderRecordData.subject.indexOf('Return') > -1) {
@@ -332,7 +338,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: orderData[0],
                 tpl: [
-                    '<div>Order Status: {newValue}</div>'
+                    '<div>'+ statusLabel +': {newValue}</div>'
                 ]
             });
         }
@@ -503,60 +509,71 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             ]
         });
 
-        if (paymentData[0].newValue.toLowerCase() === 'new') {
-            itemsList.push({
-                flex: 1,
-                padding: '2 2',
-                data: paymentData[0],
-                tpl: [
-                    '<div>Payment Type: {paymentType}</div>'
-                ]
-            });
-        }
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: paymentData[0],
+            tpl: [
+                '<div>Payment Type: {paymentType}</div>'
+            ]
+        });
 
-        if (paymentData[0].newValue.toLowerCase() !== 'voided') {
-            itemsList.push({
-                flex: 1,
-                padding: '2 2',
-                data: paymentData[0],
-                tpl: [
-                    '<div>Amount: {[this.getCurrencyFormat(values)]}</div>',
-                    {
-                        // This needs to take the newValue into effect.
-                        getCurrencyFormat: function(v) {
-                            var retVal,
-                                isNegative,
-                                amt;
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: paymentData[0],
+            tpl: [
+                '<div>Amount: {[this.getCurrencyFormat(values)]}</div>',
+                {
+                    // This needs to take the newValue into effect.
+                    getCurrencyFormat: function(v) {
+                        var retVal,
+                            isNegative,
+                            amt;
                             
-                            if (v.newValue.toLowerCase() === 'collected') {
+                        switch(v.newValue.toLowerCase()) {
+                            case 'collected':
+                            {
                                 amt = v.amountCollected;
-                            } else if (v.newValue.toLowerCase() === 'new' || v.newValue.toLowerCase() === 'pending') {
+                                break;
+                            }
+                            case 'new':
+                            // FALL THROUGH ALL OF THESE
+                            case 'pending':
+                            case 'voided':
+                            case 'declined':
+                            case 'authorized':
+                            {
                                 amt = v.amountRequested;
-                            } else {
+                                break;
+                            }
+                            default:
+                            {
                                 amt = v.amountCredited;
+                                break;
                             }
-
-                            amt = amt - 0;
-
-                            if (amt < 0) {
-                                isNegative = true;
-                                amt = -amt;
-                            }
-                            amt = Taco.app.context.getCurrent().formatCurrency(amt);
-
-
-                            if (isNegative) {
-                                retVal = '(' + amt + ')';
-                            } else {
-                                retVal = amt;
-                            }
-
-                            return retVal;
                         }
+
+                        amt = amt - 0;
+
+                        if (amt < 0) {
+                            isNegative = true;
+                            amt = -amt;
+                        }
+                        amt = Taco.app.context.getCurrent().formatCurrency(amt);
+
+
+                        if (isNegative) {
+                            retVal = '(' + amt + ')';
+                        } else {
+                            retVal = amt;
+                        }
+
+                        return retVal;
                     }
-                ]
-            });
-        }
+                }
+            ]
+        });
 
         itemsList.push({
             flex: 1,

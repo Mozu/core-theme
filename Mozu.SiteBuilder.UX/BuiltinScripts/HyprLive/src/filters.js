@@ -21,17 +21,19 @@
     }
 
     function getHighestPrecision(nums) {
-        return nums.reduce(function(highest, num) {
+        return Math.min(Math.max(nums.reduce(function(highest, num) {
             return Math.max(highest, getPrecision(num));
-        }, 0);
+        }, 0), 2), 15);
     }
 
-    function ensureNumeric(fn, precision) {
+    function ensureNumeric(fn, forcePrecision) {
+        var useForcePrecision = arguments.length === 2;
         return function() {
             var args = Array.prototype.map.call(arguments, Number);
-            var precision = getHighestPrecision(args);
+            var precision = useForcePrecision ? forcePrecision : getHighestPrecision(args);
             var c = Math.pow(10, precision);
-            return Math.round(c * fn.apply(this, args))/c;
+            return Math.round(c * fn.apply(this, args)) / c;
+            return fn.apply(this, args);
         }
     }
 
@@ -61,10 +63,22 @@
 
     HyprLive.engine.setFilter('divide', ensureNumeric(function(num, divisor) {
         return num / divisor;
-    }));
+    }, 14));
 
     HyprLive.engine.setFilter('add', ensureNumeric(function(num, addend) {
         return num + addend;
+    }));
+
+    HyprLive.engine.setFilter('subtract', ensureNumeric(function(num, amt) {
+        return num - amt;
+    }));
+
+    HyprLive.engine.setFilter('multiply', ensureNumeric(function(num, term) {
+        return num * term;
+    }, 14));
+
+    HyprLive.engine.setFilter('mod', ensureNumeric(function(num, term) {
+        return num % term;
     }));
 
     HyprLive.engine.setFilter('add_url_param', function (url, param, value) {

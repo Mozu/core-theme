@@ -190,6 +190,7 @@ Ext.define('Taco.view.order.subform.Return', {
             items: Ext.Array.map(items, function (item) {
                 return {
                     orderItemId: item.data.orderItemId,
+                    orderLineId: item.data.orderLineId,
                     productCode: item.data.orderItemId ? null : item.data.productCode, // only provide product code when there is no orderItemId
                     returnReason: item.data.reason,
                     quantity: item.data.quantity,

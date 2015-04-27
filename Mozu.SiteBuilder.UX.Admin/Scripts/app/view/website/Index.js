@@ -765,12 +765,12 @@ Ext.define('Taco.view.website.Index', {
 
         //loading a content list
         else {
-            Taco.core.StateManager.addState('website/page' + config.url);
             Ext.suspendLayouts();
             this.showEntityManagerGrid(config.metaData);
             this.toggleCard(2);
             this.showHideButtons(['isCreatable']);
             Ext.resumeLayouts(true);
+            Taco.core.StateManager.addState('website/page' + config.url);
         }
 
     },

@@ -88,9 +88,34 @@
             var plain = '{{ num|divide(3) }}';
             var operatedOn = '{% if num|divide(4) > 2 %}bigger than 8{% else %}8 or less{% endif %}'
             expect(Hypr.engine.render(plain, { locals: { num: 9 } })).to.equal('3');
+            expect(Hypr.engine.render(plain, { locals: { num: 5 } })).to.equal('1.66666666666667');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 12 } })).to.equal('bigger than 8');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 7 } })).to.equal('8 or less');
         });
+        it("has an add filter that adds the value to the argument", function() {
+            var plain = '{{ num|add(3) }}';
+            var operatedOn = '{% if num|add(3) > 8 %}bigger than 5{% else %}5 or less{% endif %}'
+            expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('10');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 7 } })).to.equal('bigger than 5');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 3 } })).to.equal('5 or less');
+        });
+
+        it("has a subtract filter that subtracts the value from the argument", function() {
+            var plain = '{{ num|subtract(3) }}';
+            var operatedOn = '{% if num|subtract(3) > 5 %}bigger than 5{% else %}5 or less{% endif %}'
+            expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('4');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 9 } })).to.equal('bigger than 5');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 3 } })).to.equal('5 or less');
+        });
+
+        it("has a multiply filter that multiplies the value by the argument", function() {
+            var plain = '{{ num|multiply(3) }}';
+            var operatedOn = '{% if num|multiply(3) > 15 %}bigger than 5{% else %}5 or less{% endif %}'
+            expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('21');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 9 } })).to.equal('bigger than 5');
+            expect(Hypr.engine.render(operatedOn, { locals: { num: 3 } })).to.equal('5 or less');
+        });
+
         it('has an add_url_param filter that adds a parameter intelligently to a url', function() {
             var url = 'http://example.com/',
                 urlWithQuery = url + '?one=two',

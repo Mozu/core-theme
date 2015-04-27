@@ -96,7 +96,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: 'id',
                 flex: 1,
-                width: 150,
+                width: 125,
             });
         }
         view = view || {
@@ -115,7 +115,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: viewField.name,
                 flex: 1,
-                width: 150,
+                width: 125,
             });
         });
         if (me.listMetaData.entityType === 'cms') {

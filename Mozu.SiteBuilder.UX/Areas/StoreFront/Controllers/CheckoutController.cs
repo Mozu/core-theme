@@ -234,8 +234,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             }
             var ipAddress = this.HttpContext.Request.Headers["x-forwarded-for"] ?? this.HttpContext.Request.ServerVariables["REMOTE_ADDR"];
-            System.Net.IPAddress ipAddressStruct;
-            if (!System.Net.IPAddress.TryParse(ipAddress, out ipAddressStruct) || ipAddressStruct.AddressFamily != AddressFamily.InterNetwork)
+          //  System.Net.IPAddress ipAddressStruct;
+            if (!ipAddress.IsIPAddressValid())
             {
                 ipAddress = "127.0.0.1";
             }

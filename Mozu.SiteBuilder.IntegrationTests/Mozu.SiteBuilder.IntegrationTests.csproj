@@ -242,9 +242,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.4\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.6-dev1504241803Sta-s\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -373,11 +373,13 @@
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.17.1-dev1501291833-svr\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NDjango.Core40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.3\lib\net45\NDjango.Core40.dll</HintPath>
+    <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.5\lib\net45\NDjango.Core40.dll</HintPath>
     </Reference>
-    <Reference Include="NDjangoFilters.NDjangoExtension40">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.3\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.8, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.5\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
