@@ -282,6 +282,10 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
     createOrderMessage: function (orderRecordData) {
         var itemsList = [];
         var orderData = orderRecordData.metadata;
+        var statusLabel = 'Order Status';
+        if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('fulfillment') > -1) {
+            statusLabel = 'Fulfillment Status';
+        }
 
         if (orderData[0].hasOwnProperty('amount')) {
             if (orderRecordData.subject.indexOf('Return') > -1) {
@@ -332,7 +336,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 padding: '2 2',
                 data: orderData[0],
                 tpl: [
-                    '<div>Order Status: {newValue}</div>'
+                    '<div>'+ statusLabel +': {newValue}</div>'
                 ]
             });
         }
