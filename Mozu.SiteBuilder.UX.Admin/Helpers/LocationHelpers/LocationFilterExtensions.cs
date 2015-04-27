@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
-using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
@@ -26,8 +25,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
         {
             var statements = extFilter.Where(x => x.property != "all" && !string.IsNullOrEmpty((x.value ?? "").ToString()) ).Select(GetFilter).ToList();
             var allFilter = extFilter.FirstOrDefault(x => x.property == "all" && !string.IsNullOrEmpty( (x.value ?? "").ToString() ));
-            if (allFilter != null)
-                statements.Add(String.Format("({1} cont {0} or {2} eq {0} or {3} eq {0} or {4} eq {0} or {5} eq {0} or {6} eq {0})", allFilter.value, NAME, STATE, COUNTRYCODE, ZIPCODE, CODE, LOCATIONTYPECODE));
+            if (allFilter == null) 
+                return string.Join(" and ", statements);
+            
+            var escapedAllValue = allFilter.value.ToString();
+                
+            if (!escapedAllValue.StartsWith("\""))
+            {
+                escapedAllValue = "\"" + escapedAllValue;
+            }
+            if (!escapedAllValue.EndsWith("\""))
+            {
+                escapedAllValue += "\"";
+            }
+
+            statements.Add(String.Format("({1} cont {0} or {2} eq {0} or {3} eq {0} or {4} eq {0} or {5} eq {0} or {6} eq {0})",
+                escapedAllValue, NAME, STATE, COUNTRYCODE, ZIPCODE, CODE, LOCATIONTYPECODE));
 
             return string.Join(" and ", statements);
         }

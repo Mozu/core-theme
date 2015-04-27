@@ -469,6 +469,7 @@
     <Compile Include="Admin\Api\Models\PagingParametersTests.cs" />
     <Compile Include="Admin\Api\SecureCapabilityConfigUrlTest.cs" />
     <Compile Include="Admin\Helpers\FacetHelpers\InheritedFacetHelperTest.cs" />
+    <Compile Include="Admin\Helpers\LocationHelpers\LocationHelperTest.cs" />
     <Compile Include="Admin\Modules\ModuleTests.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\category\cdCategories.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\cdDiagramProductSearch.cs" />
