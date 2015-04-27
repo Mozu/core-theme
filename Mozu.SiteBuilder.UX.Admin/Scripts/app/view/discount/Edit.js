@@ -50,6 +50,10 @@ Ext.define('Taco.view.discount.Edit', {
             menuItems = [],
             delMenuItem;
 
+        if (me.isDuplicate) {
+            me.record.isDuplicate = true;
+        }
+
         menuItems.push({
             text: 'Duplicate',
             disabled: me.record.phantom,
@@ -94,7 +98,7 @@ Ext.define('Taco.view.discount.Edit', {
 
         this.callParent(arguments)
     },
-    afterDuplicate: function () {        
+    afterDuplicate: function () {
         if (this.record.get("couponCode")) {
             Taco.app.fireEvent('setmessage', "Please change the coupon code. Coupon codes must be unique", 'info');
             this.mon(this, 'afterrender', function () {

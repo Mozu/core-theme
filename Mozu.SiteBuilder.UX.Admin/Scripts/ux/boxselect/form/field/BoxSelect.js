@@ -1110,6 +1110,9 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
             if (me.hasFocus && me.inputElCt && me.listWrapper) {
                 me.inputElCt.scrollIntoView(me.listWrapper);
             }
+            // kick off a validation so the required fields get validated;
+            var isValid = me.isValid();
+
         }, 15);
     },
 
@@ -1169,6 +1172,22 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
             me.setValue(me.valueStore.getRange());
         }
     },
+
+
+    //isValid : function() {
+    //    var isValid = this.callParent(arguments);
+        
+    //    // combo checks validity by getting rawValue from input which is hobbled by box select preventing the field to initialze properly when its a required field (allowBlank = false);
+    //    // seems to be a timing issue;
+    //    // if there is a value and its not empty then we should assome this field is valid;
+      
+    //    if (!Ext.isEmpty(this.getValue())) {
+    //        isValid = true;
+    //    }
+
+        
+    //    return isValid;
+    //},
 
     /**
      * @inheritdoc

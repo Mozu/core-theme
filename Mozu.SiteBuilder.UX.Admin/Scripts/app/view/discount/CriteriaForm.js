@@ -19,11 +19,12 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             productStore,
             zoneStore,
             shippingStore,
-            me = this;
+            me = this
 
         // need to listen for changes to the buy product or category items field changes in the conditions subform to alter the maximumQuantityPerRedemptionTB filed;
-        me.mon(me.record, "buyitemconditionchange", function (hasBuyItems) {
-            me.handleBuyItemConditions(hasBuyItems);
+        me.mon(me.record, "buyitemconditionchange", function (hasBuyConditions) {
+            this.hasBuyConditions = hasBuyConditions;
+            me.handleBuyItemConditions();
         }, me);
 
         me.mon(me.record, "criteriascopechange", function (cmp, newValue,oldValue) {
@@ -47,8 +48,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 },
                 scope: this
             }
-        });
-
+       });
+        
         this.includeSpecificProductsInput = Ext.widget({
             xtype: 'radio',
             name: 'includeAllProductsRadio',
@@ -57,7 +58,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             inputValue: "products",
             width: 300,
             // default selection if the record is a create;
-            checked: ((this.record.phantom) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
+            checked: ((this.record.phantom &&!this.record.isDuplicate) || (!this.record.get('includeAllProducts') && this.record.get('products').length)),
             listeners: {
                 afterchange: function (cmp, newValue, oldValue) {
                     if (newValue) {
@@ -422,6 +423,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.excludeLineItemDiscounts,
                 this.productsBox,
                 this.categoriesBox,
+                this.maximumQuantityPerRedemptionTB,
                 {
                     xtype: 'component',
                     html: '<hr />',
@@ -429,7 +431,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 },
                 this.excludeCategoriesBox,
                 this.productsExcludeBox,
-                this.maximumQuantityPerRedemptionTB,
                 this.ApplyToProductsWithSalePrice,
                 this.appliesToSalePrice
             ]
@@ -594,7 +595,26 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
     },
 
-    
+    updateMaximumQuantityPerRedemptionField : function() {
+        var me = this,
+            isLineItem = (this.scopeType === 'LineItem');
+
+        if (isLineItem && this.hasBuyConditions) {
+            me.maximumQuantityPerRedemptionTB.enable();
+        } else {
+            me.maximumQuantityPerRedemptionTB.disable();
+            // value should always be 1 when there are no buy item conditions;
+            me.maximumQuantityPerRedemptionTB.setValue(1);
+        }
+
+        // value field only visible for line item
+        if (isLineItem) {
+            me.maximumQuantityPerRedemptionTB.setVisible(true);
+        } else {
+            me.maximumQuantityPerRedemptionTB.setVisible(false);
+        }
+    },
+
     /**
      * Handle the change of the buy item condition fields in the condition form, handle the 
      * @private
@@ -602,18 +622,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     handleBuyItemConditions: function (hasBuyItems) {
         var me = this;
 
-        if (hasBuyItems) {
-            me.maximumQuantityPerRedemptionTB.enable();
-        } else {
-            me.maximumQuantityPerRedemptionTB.disable();
-            // value should always be 1 when there are no buy item conditions;
-            me.maximumQuantityPerRedemptionTB.setValue(1);
-        }
+        this.updateMaximumQuantityPerRedemptionField();
     },
 
     setProductCategoryContainerVisibility: function () {
         var me = this,
-            isLineItem = (this.scopeType === 'LineItem')
+            isLineItem = (this.scopeType === 'LineItem'),
+            targetSpecifcProducts = this.includeSpecificProductsInput.checked;
         
         // show when order level;
         this.excludeLineItemDiscounts.setVisible(!isLineItem);
@@ -629,8 +644,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             }
             
             // optionaly hide or show these based on the selection of the "applies to all products radio button"
-            me.productsBox.setVisible(this.includeSpecificProductsInput.checked);
-            me.productList.setDisabled(!this.includeSpecificProductsInput.checked);
+            me.productsBox.setVisible(targetSpecifcProducts);
+            me.productList.setDisabled(!targetSpecifcProducts);
 
             me.categoriesBox.setVisible(this.includeSpecificCatagoriesInput.checked);
             me.categoryList.setDisabled(!this.includeSpecificCatagoriesInput.checked);
@@ -643,8 +658,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.categoryList.setDisabled(true);
         }
         
-        //this.excludeCategoriesBox.setVisible(true);
-        //this.productsExcludeBox.setVisible(true);
+        // only available when scope is specific categories or all
+        this.excludeCategoriesBox.setVisible(!targetSpecifcProducts);
+        this.productsExcludeBox.setVisible(!targetSpecifcProducts);
+
+        
 
         // this is to fix an issue where a required field is disabled on a subform and the save button does not get enabled/disabled properly. find the top most form and trigger a validity check.
         me.parentForm.getForm().checkValidity();
@@ -680,6 +698,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.appliesToSalePrice.setVisible(this.isLineItem && !appliesToShipping);
         
         this.setProductCategoryContainerVisibility();
+        this.updateMaximumQuantityPerRedemptionField();
         this.setShippingListVisibility();
     },
     
@@ -692,11 +711,14 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             record = this.record,
             noBuyConditions = (!this.record.get("conditionalCategories").length && !this.record.get("conditionalProducts").length),
             maximumQuantityPerRedemption = (noBuyConditions) ? 1 : record.get("maximumQuantityPerRedemption");
-        
+
+        // cache this so it can be used to determine visibility and behavior for some local fields;
+        this.hasBuyConditions = !noBuyConditions;
+
         this.callParent(arguments);
 
         //when creating default all of the fields to 1;
-        if (this.record.phantom) {
+        if (this.record.phantom && !this.record.isDuplicate) {
             // set the default values to 1 for a newly created discount. Values for disabled/hidden fields will be nulled out prior to saving;
             this.maximumQuantityPerRedemptionTB.setValue(1);
             this.maximumQuantityPerRedemptionTB.disable();

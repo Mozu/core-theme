@@ -60,8 +60,12 @@
 
         // if the view is loaded after a call to duplicate, this allows for any ui specific behavior to be added;
         // note that any data manipulation is performmed in the optional record.beforeDuplicate() 
-        if (me.isDuplicate && me.afterDuplicate) {
-            me.afterDuplicate();
+        if (me.isDuplicate) {
+            // make the record dirty so it can be saved without modification;
+            me.record.setDirty(true);
+            if (me.afterDuplicate) {
+                me.afterDuplicate();
+            }
         }
 
         this.callParent(arguments);
