@@ -285,6 +285,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         var statusLabel = 'Order Status';
         if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('fulfillment') > -1) {
             statusLabel = 'Fulfillment Status';
+        } else if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('payment') > -1) {
+            statusLabel = 'Payment Status';
         }
 
         if (orderData[0].hasOwnProperty('amount')) {
