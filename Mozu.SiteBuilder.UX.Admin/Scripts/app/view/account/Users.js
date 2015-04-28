@@ -10,11 +10,23 @@ Ext.define('Taco.view.account.Users', {
     ],
     initComponent: function () {
         var me = this;
+        me.canCreateUser = false;
+        me.canDeleteUser = false;
+        me.canUpdateUser = false;
 
-        Taco.user.sites.forEach(function (site) {
-            if (site.roleId == 1) {
-                me.isSuperAdmin = true;
+        Taco.user.behaviors.forEach(function (behavior) {
+            if (behavior == 29) {
+                me.canCreateUser = true;
             };
+
+            if (behavior == 30) {
+                me.canUpdateUser = true;
+            };
+
+            if (behavior == 31) {
+                me.canDeleteUser = true;
+            };
+
         });
 
         me.header = {
@@ -26,7 +38,7 @@ Ext.define('Taco.view.account.Users', {
                 itemId: 'createActionButton',
                 text: 'Add User',
                 margin: '0 0 0 10',
-                disabled: !me.isSuperAdmin,
+                disabled: !me.canCreateUser,
                 handler: function () {
                     me.launchEditor();
                 }
@@ -149,11 +161,11 @@ Ext.define('Taco.view.account.Users', {
         var me = this;
         
         if (record.get('leaf')) {
-            //debugger
+            
             actions = [
                 {
                     text: 'Delete Role',
-                    disabled: (record.parentNode.get('status') == 'Pending' || !me.isSuperAdmin) ? true : false,
+                    disabled: (record.parentNode.get('status') == 'Pending' || !me.canDeleteUser) ? true : false,
                     handler: function (item, event) {
                         //me.launchEditor(item.ownerCt.record);
                         me.deleteRecord(item, event);
@@ -165,7 +177,7 @@ Ext.define('Taco.view.account.Users', {
             actions = [
                 {
                     text: 'Delete User',
-                    disabled: !me.isSuperAdmin,
+                    disabled: !me.canDeleteUser,
                     handler: function (item, event) {
                         //me.launchEditor(item.ownerCt.record);
                         me.deleteRecord(item, event);
@@ -174,7 +186,7 @@ Ext.define('Taco.view.account.Users', {
                 },
                 {
                     text: 'Resend Invite',
-                    disabled: !me.isSuperAdmin,
+                    disabled: !me.canDeleteUser,
                     handler: function (item, event) {
                         me.resendInvitation(item, event);
                     },
@@ -191,10 +203,11 @@ Ext.define('Taco.view.account.Users', {
             if (Taco.user.id == record.get('id')) {
                 canDelete = false;
             }
+            
             actions = [
                 {
                     text: 'Edit',
-                    disabled: !me.isSuperAdmin,
+                    disabled: !me.canUpdateUser,
                     handler: function (item, event) {
                         me.launchEditor(item.ownerCt.record);
                     },
@@ -202,7 +215,7 @@ Ext.define('Taco.view.account.Users', {
                 },
                 {
                     text: 'Delete User',
-                    disabled: (!me.isSuperAdmin || !canDelete) ? true : false,
+                    disabled: (me.canDeleteUser && canDelete) ? false : true,
                     handler: function (item, event) {
                         //me.launchEditor(item.ownerCt.record);
                         me.deleteRecord(item, event);
