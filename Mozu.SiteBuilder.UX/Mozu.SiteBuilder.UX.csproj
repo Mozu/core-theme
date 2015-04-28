@@ -507,7 +507,7 @@
     <Compile Include="Messaging\CacheItemsInvalidConsumer.cs" />
     <Compile Include="Messaging\VisitEventPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tags\InlineStyle.cs" />
+    <Compile Include="Hypr\Tags\InlineStyle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
@@ -596,7 +596,6 @@
     <Folder Include="Areas\StoreFront\Views\Shared\" />
     <Folder Include="Hypr\Et\" />
     <Folder Include="MessageHandlers\" />
-    <Folder Include="Tags\CMS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
