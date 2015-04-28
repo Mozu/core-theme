@@ -55,23 +55,27 @@ Ext.define('Taco.view.entityManager.Grid', {
         //    }];
         //}
         me.callParent(arguments);
-        if (me.listMetaData.views.length > 0) {
-            menu = Ext.widget('menu');
-            Ext.Array.each(me.listMetaData.views, function(view) {
-                menu.add({
-                    text: view.name,
-                    view: view,
-                    handler: function(cmp) {
-                        me.initListView(cmp.view);
-                    }
-                });
-            });
-            this.gridPager.insert(this.gridPager.items.getCount() - 2, '-');
-            this.gridPager.insert(this.gridPager.items.getCount() - 2, {
-                text: 'views',
-                menu: menu
-            });
-        }
+
+        // not showing views data per #59712
+
+        // if (me.listMetaData.views.length > 0) {
+        //     menu = Ext.widget('menu');
+        //     Ext.Array.each(me.listMetaData.views, function(view) {
+        //         menu.add({
+        //             text: view.name,
+        //             view: view,
+        //             handler: function(cmp) {
+        //                 me.initListView(cmp.view);
+        //             }
+        //         });
+        //     });
+        //     this.gridPager.insert(this.gridPager.items.getCount() - 2, '-');
+        //     this.gridPager.insert(this.gridPager.items.getCount() - 2, {
+        //         text: 'views',
+        //         menu: menu
+        //     });
+        // }
+
         //me.insertDocked(0, me.Lists);
     },
     initListView: function(view) {
@@ -86,7 +90,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: 'document name',
                 flex: 1,
-                width: 150,
+                width: 150
             });
         } else {
             columns.push({
@@ -96,7 +100,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: 'id',
                 flex: 1,
-                width: 125,
+                width: 125
             });
         }
         view = view || {
@@ -115,7 +119,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: viewField.name,
                 flex: 1,
-                width: 125,
+                width: 125
             });
         });
         if (me.listMetaData.entityType === 'cms') {
@@ -126,7 +130,7 @@ Ext.define('Taco.view.entityManager.Grid', {
                 },
                 text: 'content type',
                 flex: 1,
-                width: 150,
+                width: 150
             });
         }
         columns.push({
@@ -173,6 +177,9 @@ Ext.define('Taco.view.entityManager.Grid', {
     },
     onCreate: function() {
         //do nothing
+    },
+    deleteRecordFromStore: function(record) {
+        record.destroy();
     },
     onCellClick: function(view, td, cellIndex, record, tr, rowIndex, e) {
             var me = this,

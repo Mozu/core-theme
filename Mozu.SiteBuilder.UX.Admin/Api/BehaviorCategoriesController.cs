@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.WebPages;
+using Burrows.Util;
+using MongoDB.Driver.Linq;
+using Mozu.Core.Actions;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Users;
@@ -27,15 +31,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<BehaviorCategory>>> GetAll()
         {
             var behaviorCategories = await _permissionsRepository.GetCategories();
+            //I'm ignoring these cats bc bug 60194
+		    int[] ignoreCats = {7, 16, 17, 18, 19, 22, 23, 24, 26, 28, 29, 35, 37, 38};
 
-            return behaviorCategories.IsNullOrEmpty() ? EmptyList2<BehaviorCategory>() : List2(behaviorCategories);
+		    var behaviors = (from behaviorCategory in behaviorCategories
+		        where !ignoreCats.Contains(behaviorCategory.Id)
+		        select new BehaviorCategory {Id = behaviorCategory.Id, Name = behaviorCategory.Name}).ToList();
+
+            return behaviors.IsNullOrEmpty() ? EmptyList2<BehaviorCategory>() : List2(behaviors);
         }
 
 		[HttpGetRoute(UriTemplate = "behaviorcategory/{id}")]
         public async Task<Response<BehaviorCategory>> Get(int? id)
         {
             var behaviorCategory = await _permissionsRepository.GetCategory(id);
-
+           
             return behaviorCategory == null ? EmptySingle2<BehaviorCategory>(false) : Single2(behaviorCategory);
         }
 

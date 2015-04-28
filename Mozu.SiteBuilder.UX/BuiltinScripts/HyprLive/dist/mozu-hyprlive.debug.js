@@ -1,12 +1,12 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-04-24
+ * Mozu Hypr Live - v1.0.0 - 2015-04-27
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-04-24
+ * Mozu Hypr Live - v1.0.0 - 2015-04-27
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -5651,14 +5651,17 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
         }, 0), 2), 15);
     }
 
+    function roundToPrecision(num, precision, down) {
+        var c = Math.pow(10, precision);
+        return Math[down ? "floor" : "round"](c * num) / c;
+    }
+
     function ensureNumeric(fn, forcePrecision) {
         var useForcePrecision = arguments.length === 2;
         return function() {
             var args = Array.prototype.map.call(arguments, Number);
             var precision = useForcePrecision ? forcePrecision : getHighestPrecision(args);
-            var c = Math.pow(10, precision);
-            return Math.round(c * fn.apply(this, args)) / c;
-            return fn.apply(this, args);
+            return roundToPrecision(fn.apply(this, args), precision);
         }
     }
 
@@ -5705,6 +5708,21 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
     HyprLive.engine.setFilter('mod', ensureNumeric(function(num, term) {
         return num % term;
     }));
+
+
+    function floatFormat(num, places, omitIfRound, roundDown) {
+        if ((parseInt(num) === num) && omitIfRound) return num;
+        return roundToPrecision(num, places, roundDown).toFixed(places);
+    }
+
+    HyprLive.engine.setFilter('floatformat', function(num, placesArg, roundingBehavior) {
+        var n = Number(num);
+        var places = parseInt(Number(placesArg));
+        if (num === '' || isNaN(n)) return '';
+        if (placesArg === undefined) places = -1;
+        if (isNaN(places)) return num;
+        return floatFormat(n, Math.abs(places), places < 0, roundingBehavior === "down");
+    });
 
     HyprLive.engine.setFilter('add_url_param', function (url, param, value) {
         return url + (url.indexOf('?') === -1 ? '?' : '&') + encodeURIComponent(param) + '=' + encodeURIComponent(value);

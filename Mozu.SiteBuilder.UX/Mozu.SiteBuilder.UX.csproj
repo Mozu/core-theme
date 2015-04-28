@@ -359,11 +359,11 @@
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.5\lib\net45\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.12\lib\net45\NDjango.Core40.dll</HintPath>
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.8, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.5\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.12\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -507,7 +507,7 @@
     <Compile Include="Messaging\CacheItemsInvalidConsumer.cs" />
     <Compile Include="Messaging\VisitEventPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tags\InlineStyle.cs" />
+    <Compile Include="Hypr\Tags\InlineStyle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
@@ -596,7 +596,6 @@
     <Folder Include="Areas\StoreFront\Views\Shared\" />
     <Folder Include="Hypr\Et\" />
     <Folder Include="MessageHandlers\" />
-    <Folder Include="Tags\CMS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
