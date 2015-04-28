@@ -116,6 +116,45 @@
             expect(Hypr.engine.render(operatedOn, { locals: { num: 3 } })).to.equal('5 or less');
         });
 
+        describe("has a floatformat filter that", function() {
+
+            function testFilter(fstr, n, output) {
+                it("works with num|floatformat" + fstr + " on " + n + " to produce " + output, function() {
+                    expect(Hypr.engine.render('{{ num|floatformat' + fstr + '}}', { locals: { num: n } })).to.equal(output);
+                });
+            }
+
+            testFilter('', 7.7117473, "7.7");
+            testFilter('', 7.7, "7.7");
+            testFilter('', "7.0", "7");
+            testFilter('', '0.7', '0.7');
+            testFilter('', '0.07', '0.1');
+            testFilter('', '0.007', '0.0');
+            testFilter('', '0.0', '0');
+            testFilter('(3)', '7.7', '7.700');
+            testFilter('(3)', '6.000000', '6.000');
+            testFilter('(3)', '6.200000', '6.200');
+            testFilter('(-3)', '6.200000', '6.200');
+            testFilter('(-3)', '13.1031', '13.103');
+            testFilter('(-2)', '11.1197', '11.12');
+            testFilter('(-2)', '11.0000', '11');
+            testFilter('(-2)', '11.000001', '11.00');
+            testFilter('(2)', '11.0000', '11.00');
+            testFilter('(2)', '11.000001', '11.00');
+            testFilter('(3)', '8.2798', '8.280');
+            testFilter('', 'foo', '');
+            testFilter('("bar")', '13.1031', '13.1031');
+            testFilter('(2)', '18.125', '18.13');
+            testFilter('("bar")', 'foo', '');
+            testFilter('', '¿Cómo esta usted?', '');
+            testFilter('', null, '');
+            testFilter('(0)', '13.125', '13');
+            testFilter('(0)', '13.925', '14');
+            testFilter('(0, "down")', '13.925', '13');
+            testFilter('(2, "down")', '13.248', '13.24');
+
+        });
+
         it('has an add_url_param filter that adds a parameter intelligently to a url', function() {
             var url = 'http://example.com/',
                 urlWithQuery = url + '?one=two',
