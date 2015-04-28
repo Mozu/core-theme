@@ -694,8 +694,13 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.setVisible(true);        
         }
 
-        // only show if this is line item and product;
+        
+        
+
+        
         this.appliesToSalePrice.setVisible(this.isLineItem && !appliesToShipping);
+        // only enabled if the other checkbox is checked;
+        this.appliesToSalePrice.setDisabled(!this.ApplyToProductsWithSalePrice.checked);
         
         this.setProductCategoryContainerVisibility();
         this.updateMaximumQuantityPerRedemptionField();
