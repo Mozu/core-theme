@@ -5724,7 +5724,7 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
         if (num === '' || isNaN(n)) return '';
         if (placesArg === undefined) places = -1;
         if (isNaN(places)) return num;
-        return floatFormat(n, Math.abs(places), places < 0, roundingBehavior === "down");
+        return floatFormat(n, Math.min(Math.abs(places), MAX_PLACES), places < 0, roundingBehavior === "down");
     });
 
     HyprLive.engine.setFilter('add_url_param', function (url, param, value) {
