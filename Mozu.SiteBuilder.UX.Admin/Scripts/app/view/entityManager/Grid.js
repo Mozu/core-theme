@@ -146,7 +146,6 @@ Ext.define('Taco.view.entityManager.Grid', {
                 text: 'Delete',
                 hideOnClick: false,
                 menuColumnHandler: function(item, eventData) {
-                    me.fireEvent('itemdelete', eventData.grid, eventData.record, eventData.grid.listMetaData);
                     me.deleteRecordFromStore(eventData.record);
                 }
             }]
@@ -178,6 +177,9 @@ Ext.define('Taco.view.entityManager.Grid', {
     },
     onCreate: function() {
         //do nothing
+    },
+    deleteRecordFromStore: function(record) {
+        record.destroy();
     },
     onCellClick: function(view, td, cellIndex, record, tr, rowIndex, e) {
             var me = this,
