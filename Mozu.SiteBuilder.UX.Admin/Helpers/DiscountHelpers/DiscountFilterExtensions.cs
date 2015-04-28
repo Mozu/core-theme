@@ -229,7 +229,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                     return String.Format("{0} eq \"{1}\"", TYPE_PROPERTY, filter.value);
                 case "effect":
                     return String.Format("{0} eq \"{1}\"", TARGET_TYPE_PROPERTY, filter.value);
-                case "level":
+                case "appliesto":
                     return String.Format("{0} eq \"{1}\"", LEVEL_PROPERTY, filter.value);
                 case "usagecountfrom":
                     return String.Format("{0} ge \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);

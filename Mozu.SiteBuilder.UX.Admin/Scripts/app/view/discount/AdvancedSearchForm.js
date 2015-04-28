@@ -78,7 +78,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                 layout: "hbox",
                 items: [{
                     xtype: 'combobox',
-                    name: 'Applies To',
+                    name: 'appliesto',
                     fieldLabel: 'Applies To',
                     valueField: 'id',
                     displayField: 'name',
