@@ -188,18 +188,16 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 menuDisabled: true,
                 align: 'left',
                 dataIndex: 'fulfillmentLocationCode'
+            }, {
+                text: 'Status',
+                draggable: false,
+                width: 100,
+                sortable: false,
+                menuDisabled: true,
+                align: 'left',
+                dataIndex: 'fulfillmentStatus'
             });
         }
-
-        columns.push({
-            text: 'Status',
-            draggable: false,
-            width: 100,
-            sortable: false,
-            menuDisabled: true,
-            align: 'left',
-            dataIndex: 'fulfillmentStatus'
-        });
 
         columns.push({
             text: 'Quantity',
