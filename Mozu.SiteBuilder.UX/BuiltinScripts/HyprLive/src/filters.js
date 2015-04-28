@@ -15,9 +15,12 @@
 
     var decimalPlacesRE = /\.\d+/;
 
+    var MAX_PLACES = 10;
+
     function getPrecision(num) {
-        if (parseInt(num) === num) return 0;
-        return num.toString().match(decimalPlacesRE)[0].length;
+        if (isNaN(num) || (parseInt(num) === num)) return 0;
+        var m = num.toString().match(decimalPlacesRE);
+        return m && m.length || 0;
     }
 
     function getHighestPrecision(nums) {
@@ -27,7 +30,7 @@
     }
 
     function roundToPrecision(num, precision, down) {
-        var c = Math.pow(10, precision);
+        var c = Math.pow(10, Math.min(precision, MAX_PLACES));
         return Math[down ? "floor" : "round"](c * num) / c;
     }
 
@@ -96,7 +99,7 @@
         if (num === '' || isNaN(n)) return '';
         if (placesArg === undefined) places = -1;
         if (isNaN(places)) return num;
-        return floatFormat(n, Math.abs(places), places < 0, roundingBehavior === "down");
+        return floatFormat(n, Math.min(Math.abs(places), MAX_PLACES), places < 0, roundingBehavior === "down");
     });
 
     HyprLive.engine.setFilter('add_url_param', function (url, param, value) {

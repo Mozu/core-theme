@@ -7,7 +7,7 @@
     "bootstrap": "~3.2",
     "jquery.cookie": "~1.4",
     "jquery-colorbox": "~1.5",
-    "typeahead.js": "~0"
+    "typeahead.js": "0.10.5"
   },
   "ignore": [
     "/.*",

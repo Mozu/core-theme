@@ -88,7 +88,7 @@
             var plain = '{{ num|divide(3) }}';
             var operatedOn = '{% if num|divide(4) > 2 %}bigger than 8{% else %}8 or less{% endif %}'
             expect(Hypr.engine.render(plain, { locals: { num: 9 } })).to.equal('3');
-            expect(Hypr.engine.render(plain, { locals: { num: 5 } })).to.equal('1.66666666666667');
+            expect(Hypr.engine.render(plain, { locals: { num: 5 } })).to.equal('1.6666666667');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 12 } })).to.equal('bigger than 8');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 7 } })).to.equal('8 or less');
         });
