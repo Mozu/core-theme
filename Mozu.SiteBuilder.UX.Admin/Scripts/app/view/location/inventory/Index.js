@@ -240,6 +240,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                         }
                         //tfs #54780
                         this.maxWidth = field.column.getWidth();
+                        context.column.resizable = false;
 
                         locationCode = locationFilter.value;
                         context.record.set("locationCode", locationCode);
@@ -353,6 +354,12 @@ Ext.define('Taco.view.location.inventory.Index', {
         if (adjustmentType === 'Delta') {
             Taco.view.location.inventory.InventoryStockColumns.removeDeltaListener(editor);
         }
+        context.column.resizable = true;
+        this.callParent(arguments);
+    },
+
+    onRowEditorCancel: function(editor, context) {
+        context.column.resizable = true;
         this.callParent(arguments);
     }
 });
