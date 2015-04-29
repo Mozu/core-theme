@@ -109,9 +109,7 @@
 
             setPage: function(num) {
                 num = parseInt(num, 10);
-                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiGet($.extend(this.lastRequest, {
-                    startIndex: (num - 1) * parseInt(this.get('pageSize'), 10)
-                }));
+                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiModel.setIndex((num - 1) * parseInt(this.get('pageSize'), 10), this.lastRequest);
             },
 
             changePageSize: function() {
