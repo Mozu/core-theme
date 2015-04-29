@@ -218,34 +218,22 @@ Ext.define('Taco.view.category.Index', {
         }
     },
 
-    deleteParentNode: function(record, grid) {
-        var confirm = Ext.create('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
-            title: 'Delete Category',
-            confirmMessage: 'Are you sure you want to delete this category?',
-            record: record,
-            onDeleteIt: function(modal, cascadeDelete) {
-
-                var store = grid.getStore();
-                grid.setLoading(true);
-                record.set('cascadeDelete', cascadeDelete);
-                record.remove();
-
-                store.sync({
-                    success: function() {
-                        grid.setLoading(false);
-                    },
-                    failure: function(err) {
-                        grid.setLoading(false);
-                        grid.getStore().load();
-                        Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', err);
-                    }
-
-                });
+    deleteParentNode: function (record, grid) {
+        var me = this,
+            confirm = Ext.create('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
+                title: 'Delete Category',
+                confirmMessage: 'Are you sure you want to delete this category?',
+                record: record,
+                onDeleteIt: function(modal, cascadeDelete) {
+                    record.set('cascadeDelete', cascadeDelete);
+                    me.syncRemoveRecordFromStore(grid, record, !cascadeDelete);
+                }
             }
-        });
+        );
     },
 
     deleteLeafNode: function(record, grid) {
+        var me = this;
         Ext.MessageBox.show({
             title: 'Delete Category',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -257,25 +245,30 @@ Ext.define('Taco.view.category.Index', {
             buttons: Ext.Msg.OKCANCEL,
             fn: function (val) {
                 if (val === 'ok') {
-
-                    var store = grid.getStore();
-                    grid.setLoading(true);
-                    //record.set('cascadeDelete', false);
-                    record.remove();
-
-                    store.sync({
-                        success: function (m) {
-                            grid.setLoading(false);
-                        },
-                        failure: function (m) {
-                            grid.setLoading(false);
-                            grid.getStore().load();
-                            Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', m);
-                        }
-
-                    });
+                    me.syncRemoveRecordFromStore(grid, record, false);
                 }
             }
+        });
+    },
+
+    syncRemoveRecordFromStore: function (grid, record, reloadGridToMoveSubcategoryUp) {
+        var store = grid.getStore();
+        grid.setLoading(true);
+        record.remove();
+
+        store.sync({
+            success: function (m) {
+                grid.setLoading(false);
+                if (reloadGridToMoveSubcategoryUp) {
+                    grid.getStore().load(); 
+                }
+            },
+            failure: function (m) {
+                grid.setLoading(false);
+                grid.getStore().load();
+                Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', m);
+            }
+
         });
     },
 
