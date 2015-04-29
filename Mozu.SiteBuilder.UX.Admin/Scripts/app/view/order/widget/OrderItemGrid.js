@@ -252,11 +252,20 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     draggable: false,
                     resizable: true,
                     width: 140,
+                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     hidden:false,
                     align: 'left',                                        
-                    dataIndex: 'productCode'
+                    dataIndex: 'productCode',
+                    tpl: [
+                        '{productCode}',
+                        '<tpl for="bundledProducts">',
+                            '<div>',
+                                '{productCode}',
+                            '</div>',
+                        '</tpl>'
+                    ]
                 },
                 {
                     text: 'Products',
@@ -284,7 +293,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             '</tpl>',
                             '<tpl for="bundledProducts">',
                                 '<div class="bundledProduct">',
-                                    '{productCode} - {name} (Qty. {quantity})',
+                                    '{name}',
                                 '</div>',
                             '</tpl>',
                     
@@ -302,8 +311,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '</div>',
                         {
                             getAttributeName: function (val) {
-                                var rec = me.attributeStore.getById(val.attributeFQN)
-                                return (rec) ? rec.get('name') :  ''
+                                var rec = me.attributeStore.getById(val.attributeFQN);
+                                return (rec) ? rec.get('name') : '';
                             }
                         },
                         {
@@ -328,60 +337,60 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         }
                         */
 
-                        ),
-                        dataIndex: 'productName',
-                        listeners: {
-                            click: {
-                                fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+                    ),
+                    dataIndex: 'productName',
+                    listeners: {
+                        click: {
+                            fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
 
                                 
-                                    var editMode = view.ownerCt.editMode,
-                                        fulfillmentMethod = e.target.getAttribute('fulfillmentMethod'),
-                                        orderRecord = me.record
+                                var editMode = view.ownerCt.editMode,
+                                    fulfillmentMethod = e.target.getAttribute('fulfillmentMethod'),
+                                    orderRecord = me.record
 
                                 
 
-                                    // if user clicks the fulfillment method link. open the fulfillment Method Selector;
-                                    if (editMode && fulfillmentMethod) {
-                                        me.editFulfillmentMethod(record,orderRecord);
-                                    }
+                                // if user clicks the fulfillment method link. open the fulfillment Method Selector;
+                                if (editMode && fulfillmentMethod) {
+                                    me.editFulfillmentMethod(record,orderRecord);
+                                }
 
-                                    if (!editMode || e.target.tagName != 'A') {
-                                        return;
-                                    }
-                                
-                                    //temporarily disabling while we add service support for updating the options and extras.
+                                if (!editMode || e.target.tagName != 'A') {
                                     return;
-
-                                    // prevent the default link behavior
-                                    e.preventDefault();
+                                }
                                 
-                                    var productCode = record.get('productCode'),
-                                    isConfigurable = record.get('isConfigurable');
+                                //temporarily disabling while we add service support for updating the options and extras.
+                                return;
 
-                                    // determine if we need to show the configurator
-                                    //if (isConfigurable) {
+                                // prevent the default link behavior
+                                e.preventDefault();
                                 
-                                        var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
-                                            productCode: productCode,
-                                            configuredProduct: record,
-                                            listeners: {
-                                        'savesuccess': {
-                                                    fn: function (configurationData) {
-                                                        //this.addConfiguredProduct([configurationData]);
+                                var productCode = record.get('productCode'),
+                                isConfigurable = record.get('isConfigurable');
+
+                                // determine if we need to show the configurator
+                                //if (isConfigurable) {
+                                
+                                    var win = Ext.create('Taco.view.order.modal.ProductConfigurator', {
+                                        productCode: productCode,
+                                        configuredProduct: record,
+                                        listeners: {
+                                    'savesuccess': {
+                                                fn: function (configurationData) {
+                                                    //this.addConfiguredProduct([configurationData]);
                                                     
-                                                    },
-                                                    scope: this
-                                                }
+                                                },
+                                                scope: this
                                             }
-                                        });
-                                    //}
+                                        }
+                                    });
+                                //}
                                 
-                                },
-                                scope: this
-                            }
-                        
+                            },
+                            scope: this
                         }
+                        
+                    }
                 },
                 {
                     dataIndex: 'fulfillmentStatus',
@@ -389,10 +398,19 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     draggable: false,
                     resizable: true,
                     width: 120,
+                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     hidden: false,
-                    align: 'left'
+                    align: 'left',
+                    tpl: [
+                        '{fulfillmentStatus}',
+                        '<tpl for="bundledProducts">',
+                            '<div>',
+                                '{fulfillmentStatus}',
+                            '</div>',
+                        '</tpl>'
+                    ]
                 },
                 {
                     text: 'Fulfillment',
@@ -402,16 +420,29 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     draggable: false,
                     resizable: true,
                     //flex:1,
-                    width:180,
+                    width: 180,
                     sortable: false,
                     menuDisabled: true,
                     align: 'left',
                     tpl: [
-                        '{fulfillmentMethod}',
-                        '<tpl if="values.fulfillmentMethod == \'Digital\'">',
-                        ' (Download)',
+                        '<tpl if="bundledProducts.length &gt; 0">',
+                            '<br/>',
+                            '<tpl for="bundledProducts">',
+                                '{parent.fulfillmentMethod}',
+                                '<tpl if="values.fulfillmentMethod == \'Digital\'">',
+                                ' (Download)',
+                                '<tpl else>',
+                                    ' ({parent.fulfillmentLocationCode})',
+                                '</tpl>',
+                                '<br/>',
+                            '</tpl>',
                         '<tpl else>',
+                            '{fulfillmentMethod}',
+                            '<tpl if="values.fulfillmentMethod == \'Digital\'">',
+                            ' (Download)',
+                            '<tpl else>',
                             ' ({fulfillmentLocationCode})',
+                            '</tpl>',
                         '</tpl>'
                     ],
                     editor : (this.getEditMode()) ? me.fulfillmentFieldComboEditor : null
@@ -420,12 +451,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     draggable: false,
                     resizable: false,
                     width: 80,
+                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     align: 'right',
-                    renderer: function (value) {
-                        return me.record.formatCurrency(value);
-                    },
                     editor: (this.getEditMode()) ? {
                         xtype: 'numberfield',
                         showBorder:(this.getEditMode()),
@@ -441,12 +470,26 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         minValue: 0,
                         maxValue: 100000
                     } : null,
-                    dataIndex: 'unitPrice'
+                    dataIndex: 'unitPrice',
+                    tpl: new Ext.XTemplate(
+                        '{[this.formatPrice(values.unitPrice)]}',
+                        '<tpl for="bundledProducts">',
+                            '<div>',
+                                '{price}',// Need to make this formattable, can't atm. First it doesn't come form server, second, I can't get it to call formatPrice properly.
+                            '</div>',
+                        '</tpl>',
+                        {
+                            formatPrice: function(value) {
+                                return me.record.formatCurrency(value);
+                            }
+                        }
+                    )
                 }, {
                     text: 'Quantity',
                     draggable: false,
                     resizable: false,
                     width: 80,
+                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     align: 'right',
@@ -460,7 +503,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         minValue: 1,
                         maxValue: 100000
                     },
-                    dataIndex: 'quantity'
+                    dataIndex: 'quantity',
+                    tpl: [
+                        '{quantity}',
+                        '<tpl for="bundledProducts">',
+                            '<div>',
+                                '{quantity}',
+                            '</div>',
+                        '</tpl>'
+
+                    ]
                 },
                 {
                     text: 'Row Total',
@@ -474,7 +526,20 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     renderer: function (value) {
                         return me.record.formatCurrency(value);
                     },
-                    dataIndex: 'displaySubtotal'
+                    dataIndex: 'displaySubtotal',
+                    tpl: new Ext.XTemplate(
+                        '{[this.formatPrice(values.displaySubtotal)]}',
+                        '<tpl for="bundledProducts">',
+                            '<div>',
+                                //'{price * quantity}',// Need to make this formattable, can't atm. First it doesn't come form server, second, I can't get it to call formatPrice properly.
+                            '</div>',
+                        '</tpl>',
+                        {
+                            formatPrice: function (value) {
+                                return me.record.formatCurrency(value);
+                            }
+                        }
+                    )
                 },
                 {
                     //xtype: 'taco.menucolumn',
