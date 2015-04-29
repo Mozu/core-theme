@@ -53,7 +53,7 @@
             <tr class="mz-ordersummary-tax">
                 <td colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.taxDuty }}:</span>
-                    <span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.dutyTotal|add:model.taxTotal}} {% endfilter %}</span>
+                    <span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.dutyTotal|add(model.taxTotal)}} {% endfilter %}</span>
                 </td>
             </tr>
             {% else %}
