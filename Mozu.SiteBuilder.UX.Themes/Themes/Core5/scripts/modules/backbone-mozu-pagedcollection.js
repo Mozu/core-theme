@@ -1,7 +1,8 @@
 ﻿define([
     "jquery",
+    "underscore",
     "hyprlive",
-    "modules/backbone-mozu-model"], function ($, Hypr, Backbone) {
+    "modules/backbone-mozu-model"], function ($, _, Hypr, Backbone) {
 
         var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
             defaultSort = Hypr.getThemeSetting('defaultSort'),
