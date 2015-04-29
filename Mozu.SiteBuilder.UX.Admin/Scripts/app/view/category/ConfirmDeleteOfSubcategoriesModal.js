@@ -11,8 +11,7 @@ Ext.define('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
     autoShow: true,
     closeAction: 'destroy',
     scale: "",
-    height: 320,
-    width: 400,
+    maxWidth: 800,
     layout: {
         type: 'fit'
     },
@@ -41,7 +40,6 @@ Ext.define('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
                 persistSelectedValueOnly: true,
                 boxLabel: Ext.util.Format.format('Delete {0} ({1}) only.', this.record.get('name'), this.record.get('categoryCode')),
                 inputValue: "single",
-                width: 300,
                 checked: true
             })
         );
@@ -52,7 +50,6 @@ Ext.define('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
             persistSelectedValueOnly: true,
             boxLabel: Ext.util.Format.format('Delete {0} ({1}) and its {2}.', this.record.get('name'), this.record.get('categoryCode'), subcategoryText),
             inputValue: "multiple",
-            width: 300,
             checked: false
         });
 
