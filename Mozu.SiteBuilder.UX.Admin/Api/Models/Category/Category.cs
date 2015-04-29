@@ -31,6 +31,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         public int? ProductCount { get; set; }
 
+        public int? ChildCount { get; set; }
+
         public string Name { get; set; }
 
         //public string InternalName { get; set; }

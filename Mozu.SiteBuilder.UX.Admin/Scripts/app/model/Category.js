@@ -66,14 +66,17 @@ Ext.define('Taco.model.Category', {
             "name": "index",
             "type": "int",
             "useNull": false
-        },
-        {
+        },{
             "name": "productCount",
             "type": "int",
             "useNull": true,
             persist: false
-        },
-         {
+        },{
+            "name": "childCount",
+            "type": "int",
+            "useNull": true,
+            persist: false
+        },{
              "name": "parent",
              "type": "auto",
              "useNull": true,

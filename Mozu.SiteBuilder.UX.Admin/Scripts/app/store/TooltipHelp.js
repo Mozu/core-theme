@@ -9,6 +9,12 @@ Ext.define('Taco.store.TooltipHelp', {
     remoteFilter: false,    
     data: [
         {
+            key: 'category.confirmDelete.deleteCategory',
+            value: 'Subcategory will move one level up in the category tree.'
+        }, {
+            key: 'category.confirmDelete.deleteCategories',
+            value: 'Subcategories will move one level up in the category tree.'
+        }, {
             key: 'discount.general.scope',
             value: '<b>Line item:</b> Applies a discount to individual items.<br/><br/><b>Order:</b> Applies a discount to order subtotals.'
         }, {

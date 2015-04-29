@@ -209,36 +209,74 @@ Ext.define('Taco.view.category.Index', {
     },
 
     destroyMenuColumnHandler: function (item, eventData) {
-        var grid = eventData.grid,
-            record = eventData.record,
-            isLeaf = record.get('leaf'),
+        var isLeaf = eventData.record.get('leaf');
 
-            confirm = Ext.create('Taco.view.category.ConfirmDeleteWithCheckboxModal', {
-                title: 'Delete Category',
-                confirmMessage: 'Are you sure you want to delete this category?',
-                optionCheckboxDefaultValue: false,
-                hideOptionCheckbox: isLeaf,
-                optionCheckboxLabel: 'Delete sub-categories',
-                onDeleteIt: function (modal, cascadeDelete) {
+        if (isLeaf) {
+            this.deleteLeafNode(eventData.record, eventData.grid);
+        } else {
+            this.deleteParentNode(eventData.record, eventData.grid);
+        }
+    },
+
+    deleteParentNode: function(record, grid) {
+        var confirm = Ext.create('Taco.view.category.ConfirmDeleteOfSubcategoriesModal', {
+            title: 'Delete Category',
+            confirmMessage: 'Are you sure you want to delete this category?',
+            record: record,
+            onDeleteIt: function(modal, cascadeDelete) {
+
+                var store = grid.getStore();
+                grid.setLoading(true);
+                record.set('cascadeDelete', cascadeDelete);
+                record.remove();
+
+                store.sync({
+                    success: function() {
+                        grid.setLoading(false);
+                    },
+                    failure: function(err) {
+                        grid.setLoading(false);
+                        grid.getStore().load();
+                        Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', err);
+                    }
+
+                });
+            }
+        });
+    },
+
+    deleteLeafNode: function(record, grid) {
+        Ext.MessageBox.show({
+            title: 'Delete Category',
+            // pushes the buttons to the right to be consistant with our dialog ux.
+            rightJustifyButtons: true,
+            // reverses the order of the buttons
+            reverseOrder: true,
+            msg: "Are you sure you want to delete this category?",
+            closable: false,
+            buttons: Ext.Msg.OKCANCEL,
+            fn: function (val) {
+                if (val === 'ok') {
 
                     var store = grid.getStore();
                     grid.setLoading(true);
-                    record.set('cascadeDelete', cascadeDelete);
+                    //record.set('cascadeDelete', false);
                     record.remove();
 
                     store.sync({
-                        success: function() {
+                        success: function (m) {
                             grid.setLoading(false);
                         },
-                        failure: function(err) {
+                        failure: function (m) {
                             grid.setLoading(false);
                             grid.getStore().load();
-                            Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', err);
+                            Taco.app.fireEvent('setmessage', 'Failed to delete the category', 'error', m);
                         }
 
                     });
                 }
-            });
+            }
+        });
     },
 
     launchEditor: function (record) {
