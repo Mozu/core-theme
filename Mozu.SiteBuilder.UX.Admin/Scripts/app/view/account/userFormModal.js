@@ -120,10 +120,11 @@ Ext.define('Taco.view.account.userFormModal', {
                     value: (this.record) ? this.record.get('email') : '',
                     listeners: {
                         change: function (it, newVal) {
+                            console.log('ere');
                             if (!this.scope.isValid()) {
-                                Ext.ComponentQuery.query('[text="Save"]')[0].disable();
+                                Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].disable();
                             } else {
-                                Ext.ComponentQuery.query('[text="Save"]')[0].enable();
+                                Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].enable();
                             }
                         }
                     },
@@ -310,14 +311,15 @@ Ext.define('Taco.view.account.userFormModal', {
         var radioAdmin = Ext.ComponentQuery.query('[name=role]')[1];*/
         var email = this.form.getValues()['email'];
         var selectionModel = this.selModel.getSelection();
-
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        
         /*if (radioSuperAdmin.value == true && email != '') {
             //super admin
             retval = true;
         } else if (radioAdmin.value == true && email != '') {
             //admin
             retval = true;
-        } else */if (email != '' && selectionModel.length != 0) {
+        } else */if (re.test(email) && selectionModel.length != 0) {
             //other
             retval = true;
         }
