@@ -415,7 +415,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                 {
                     text: 'Fulfillment',
                     editorId: 'fulfillmentColumn',
-                    xtype: 'templatecolumn',
                     dataIndex: 'fulfillmentId',
                     draggable: false,
                     resizable: true,
@@ -425,24 +424,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     menuDisabled: true,
                     align: 'left',
                     tpl: [
-                        '<tpl if="bundledProducts.length &gt; 0">',
-                            '<br/>',
-                            '<tpl for="bundledProducts">',
-                                '{parent.fulfillmentMethod}',
-                                '<tpl if="values.fulfillmentMethod == \'Digital\'">',
-                                ' (Download)',
-                                '<tpl else>',
-                                    ' ({parent.fulfillmentLocationCode})',
-                                '</tpl>',
-                                '<br/>',
-                            '</tpl>',
-                        '<tpl else>',
-                            '{fulfillmentMethod}',
-                            '<tpl if="values.fulfillmentMethod == \'Digital\'">',
+                        '{fulfillmentMethod}',
+                        '<tpl if="values.fulfillmentMethod == \'Digital\'">',
                             ' (Download)',
-                            '<tpl else>',
+                        '<tpl else>',
                             ' ({fulfillmentLocationCode})',
-                            '</tpl>',
                         '</tpl>'
                     ],
                     editor : (this.getEditMode()) ? me.fulfillmentFieldComboEditor : null
@@ -451,45 +437,33 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     draggable: false,
                     resizable: false,
                     width: 80,
-                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     align: 'right',
+                    renderer: function (value) {
+                        return me.record.formatCurrency(value);
+                    },
                     editor: (this.getEditMode()) ? {
                         xtype: 'numberfield',
-                        showBorder:(this.getEditMode()),
+                        showBorder: (this.getEditMode()),
                         forcePrecision: true,
-                        selectOnFocus:true,
+                        selectOnFocus: true,
                         hideTrigger: true,
                         fieldStyle: 'text-align:right;padding-right:4px;',
                         mouseWheelEnabled: false,
-                        
+
                         //unitString: '$',
                         //unitAtEnd: false,
                         allowBlank: true,
                         minValue: 0,
                         maxValue: 100000
                     } : null,
-                    dataIndex: 'unitPrice',
-                    tpl: new Ext.XTemplate(
-                        '{[this.formatPrice(values.unitPrice)]}',
-                        '<tpl for="bundledProducts">',
-                            '<div>',
-                                '{price}',// Need to make this formattable, can't atm. First it doesn't come form server, second, I can't get it to call formatPrice properly.
-                            '</div>',
-                        '</tpl>',
-                        {
-                            formatPrice: function(value) {
-                                return me.record.formatCurrency(value);
-                            }
-                        }
-                    )
+                    dataIndex: 'unitPrice'
                 }, {
                     text: 'Quantity',
                     draggable: false,
                     resizable: false,
                     width: 80,
-                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     align: 'right',
@@ -503,16 +477,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         minValue: 1,
                         maxValue: 100000
                     },
-                    dataIndex: 'quantity',
-                    tpl: [
-                        '{quantity}',
-                        '<tpl for="bundledProducts">',
-                            '<div>',
-                                '{quantity}',
-                            '</div>',
-                        '</tpl>'
-
-                    ]
+                    dataIndex: 'quantity'
                 },
                 {
                     text: 'Row Total',
@@ -526,20 +491,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     renderer: function (value) {
                         return me.record.formatCurrency(value);
                     },
-                    dataIndex: 'displaySubtotal',
-                    tpl: new Ext.XTemplate(
-                        '{[this.formatPrice(values.displaySubtotal)]}',
-                        '<tpl for="bundledProducts">',
-                            '<div>',
-                                //'{price * quantity}',// Need to make this formattable, can't atm. First it doesn't come form server, second, I can't get it to call formatPrice properly.
-                            '</div>',
-                        '</tpl>',
-                        {
-                            formatPrice: function (value) {
-                                return me.record.formatCurrency(value);
-                            }
-                        }
-                    )
+                    dataIndex: 'displaySubtotal'
                 },
                 {
                     //xtype: 'taco.menucolumn',
