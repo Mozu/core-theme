@@ -4,7 +4,7 @@ Ext.define('Taco.model.IpBlocking', {
 
     fields: [
         {
-            name: 'isEnabled',
+            name: 'enabled',
             type: 'boolean',
             usenull: false
         },

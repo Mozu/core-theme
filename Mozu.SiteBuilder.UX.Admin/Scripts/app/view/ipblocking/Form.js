@@ -65,7 +65,7 @@ Ext.define('Taco.view.ipblocking.Form', {
                     boxLabel  : 'Enabling this setting will block all IP addresses from accessing both your Mozu Storefront and administration area. This setting must be enabled for IP security rules to take affect.',
                     fieldLabel: 'Enable IP Address Security Rules',
                     labelAlign: 'top',
-                    name: 'isEnabled'
+                    name: 'enabled'
                 }
             ]
         };

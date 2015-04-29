@@ -26,6 +26,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteBuilder.Mvc.Settings;
 using System.Net.Sockets;
+using Mozu.SiteSettings.General.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -33,32 +34,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class IpBlockingController : BaseController
     {
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
+        private readonly IGeneralSettingsWebApiClient _siteSettingsApiClient;
 
-        public IpBlockingController(Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient)
+        public IpBlockingController(Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient, IGeneralSettingsWebApiClient siteSettingsApiClient)
         {
             _tenantsWebApiClient = tenantsWebApiClient;
+            _siteSettingsApiClient = siteSettingsApiClient;
         }
 
         //
         // GET: /IpBlocking/
 
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<IpBlocking> getIPBlockingData()
+        public async Task<IpBlockingSettings> getIPBlockingData()
         {
-            var model = new IpBlocking();
+            var resp = (await _siteSettingsApiClient.GetIPBlockSettings()).ReadAsSync();
+            var model = resp != null ? Mapper.Map<IpBlockingSettings>(resp) : new IpBlockingSettings();
 
-            model.IsEnabled = true;
             model.IpAddress = GetIPAddress(Request);
-            // need task to retrieve data
+
             return model;
         }
 
         [HttpPostRoute(UriTemplate = "update")]
-        public async Task<List<IpBlocking>> updateIPBlockingData(List<IpBlocking> data)
+        public async Task<List<IpBlockingSettings>> updateIPBlockingData(List<IpBlockingSettings> data)
         {
+            //var resp = (await _siteSettingsApiClient.UpdateIPBlockSettings()).Read;
             var model = data[0];
             // need task to retrieve data  
-            return new List<IpBlocking>();
+            return new List<IpBlockingSettings>();
         }
 
         private static string GetIPAddress(HttpRequestMessage request)

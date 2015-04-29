@@ -10,13 +10,13 @@ using Newtonsoft.Json.Linq;
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
     [DataContract]
-    public class IpBlocking : ModelBase
+    public class IpBlockingSettings : ModelBase
     {
         [DataMember(Name = "DownloadDate")]
-        public string DownloadDate { get; set; }
+        public DateTime? DownloadDate { get; set; }
 
         [DataMember(Name = "IsEnabled")]
-        public bool IsEnabled { get; set; }
+        public bool Enabled { get; set; }
 
         [DataMember(Name = "IPAddress")]
         public string IpAddress { get; set; }

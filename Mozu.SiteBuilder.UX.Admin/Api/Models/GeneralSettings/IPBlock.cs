@@ -13,5 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.GeneralSettings
 
         [JsonProperty(PropertyName = "end")]
         public string RangeEnd { get; set; }
+
+        public int? SiteId { get; set; }
     }
 }
