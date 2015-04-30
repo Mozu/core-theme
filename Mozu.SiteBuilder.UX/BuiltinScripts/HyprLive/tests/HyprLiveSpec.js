@@ -96,6 +96,7 @@
             var plain = '{{ num|add(3) }}';
             var operatedOn = '{% if num|add(3) > 8 %}bigger than 5{% else %}5 or less{% endif %}'
             expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('10');
+            expect(Hypr.engine.render(plain, { locals: { num: 7.7681231 } })).to.equal('10.7681231');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 7 } })).to.equal('bigger than 5');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 3 } })).to.equal('5 or less');
         });
@@ -104,6 +105,8 @@
             var plain = '{{ num|subtract(3) }}';
             var operatedOn = '{% if num|subtract(3) > 5 %}bigger than 5{% else %}5 or less{% endif %}'
             expect(Hypr.engine.render(plain, { locals: { num: 7 } })).to.equal('4');
+            expect(Hypr.engine.render(plain, { locals: { num: 7.7681231 } })).to.equal('4.7681231');
+            expect(Hypr.engine.render('{{ num|subtract(term) }}', { locals: { term: 7.7681231, num: 10 } })).to.equal('2.2318769');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 9 } })).to.equal('bigger than 5');
             expect(Hypr.engine.render(operatedOn, { locals: { num: 3 } })).to.equal('5 or less');
         });
