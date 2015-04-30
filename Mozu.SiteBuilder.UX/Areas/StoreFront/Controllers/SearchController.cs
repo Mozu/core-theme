@@ -14,12 +14,15 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.Core.Actions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class SearchController : BaseApiController
     {
         private readonly IProductCategoryRuntimeWebApiClient _catClient;

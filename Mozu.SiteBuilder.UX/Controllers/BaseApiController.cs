@@ -11,6 +11,13 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UX.Controllers
 {
+    public static class ActionFilterConstants
+    {
+        public const string GlobalPageBeforeAction = "storefront.pages.global.afterRequest";
+        public const string GlobalPageAfterAction = "storefront.pages.global.afterRequest";
+
+    }
+
     [RefreshStoreFrontUserAuthTicketFilter]
     [RequiresSiteContextRedirectFilter]
     public class BaseApiController : ApiControllerBase

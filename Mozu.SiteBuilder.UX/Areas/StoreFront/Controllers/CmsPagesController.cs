@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Actions;
 using Mozu.Core.Api.Client;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -23,6 +24,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class CmsPagesController : BaseApiController
     {
 

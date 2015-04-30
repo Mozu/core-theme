@@ -1,4 +1,5 @@
-﻿using Mozu.SiteBuilder.Mvc.ActionFilters;
+﻿using Mozu.Core.Actions;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
@@ -10,6 +11,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class LocationController : BaseApiController
     {
         //

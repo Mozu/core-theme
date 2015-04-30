@@ -26,12 +26,15 @@ using Mozu.Core.Extensions;
 using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.UX.Filters;
 using Newtonsoft.Json;
+using Mozu.Core.Actions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [ClientCacheHeaders(ForceRevalidate = true)]
     [DataViewModeEnforcementAttribute]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class CartController : BaseApiController
     {
         private readonly ICartWebApiClient _cartClient;

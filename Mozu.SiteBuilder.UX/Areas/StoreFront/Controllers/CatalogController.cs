@@ -37,12 +37,15 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
 using Mozu.SiteBuilder.UX.Filters;
 using DC = Mozu.ProductRuntime.Contracts;
+using Mozu.Core.Actions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcementAttribute]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class CatalogController : BaseApiController
     {
         private readonly ISiteBuilderApiContext _apiCtx;

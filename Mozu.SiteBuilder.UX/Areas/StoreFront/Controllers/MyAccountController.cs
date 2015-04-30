@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.UX.Models.Customers;
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.Core.Actions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -26,6 +27,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [HotOnlyAuthActionFilter]
     [SslOnlyActionFilter]
     [DataViewModeEnforcement]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class MyAccountController : BaseApiController
     {
         private const string DEFAULT_WISHLIST_NAME = "my_wishlist";

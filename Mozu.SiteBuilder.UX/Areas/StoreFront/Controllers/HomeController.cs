@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -16,6 +17,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+    [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
     public class HomeController : BaseApiController
     {
         public HomeController() { }
