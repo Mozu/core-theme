@@ -27,6 +27,11 @@ using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteBuilder.Mvc.Settings;
 using System.Net.Sockets;
 using Mozu.SiteSettings.General.Contracts.Clients;
+using Mozu.SiteSettings.General.Contracts;
+using Mozu.Core;
+using Mozu.Core.Settings;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -35,11 +40,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private readonly IGeneralSettingsWebApiClient _siteSettingsApiClient;
+        private readonly IApiContext _apiContext;
 
-        public IpBlockingController(Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient, IGeneralSettingsWebApiClient siteSettingsApiClient)
+        public IpBlockingController(Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient, IGeneralSettingsWebApiClient siteSettingsApiClient, IApiContext apiContext)
         {
             _tenantsWebApiClient = tenantsWebApiClient;
             _siteSettingsApiClient = siteSettingsApiClient;
+            _apiContext = apiContext;
         }
 
         //
@@ -57,12 +64,48 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "update")]
-        public async Task<List<IpBlockingSettings>> updateIPBlockingData(List<IpBlockingSettings> data)
+        public async Task<IPBlockSettings> updateIPBlockingData(List<IpBlockingSettings> data)
         {
-            //var resp = (await _siteSettingsApiClient.UpdateIPBlockSettings()).Read;
-            var model = data[0];
-            // need task to retrieve data  
-            return new List<IpBlockingSettings>();
+            
+            var model = new IPBlockSettings();
+            model.Enabled = data[0].Enabled;
+
+            var resp = (await _siteSettingsApiClient.UpdateIPBlockSettings(model)).ReadAsSync();
+
+            return resp;
+        }
+
+        [HttpGetRoute(UriTemplate = "export")]
+        public async Task<HttpResponseMessage> exportIpAddresses()
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+ 
+            var file = (await _siteSettingsApiClient.ExportIpBlocks()).ResponseMessage.Content;
+
+            response.Content = file;
+
+            return response;
+        }
+
+        [HttpPostRoute(UriTemplate = "import")]
+        public async Task<HttpResponseMessage> importIpAddresses()
+        {
+            var file = await Request.Content.ReadAsStreamAsync();
+            var serviceResponse = (await _siteSettingsApiClient.ImportIpBlocks(file)).ResponseMessage;
+            var response = new HttpResponseMessage();
+
+            if (serviceResponse.IsSuccessStatusCode)
+            {
+                response.StatusCode = HttpStatusCode.OK;
+            }
+            else
+            {
+                response.StatusCode = HttpStatusCode.Conflict;
+            }
+
+            response.Content = serviceResponse.Content;
+
+            return response;
         }
 
         private static string GetIPAddress(HttpRequestMessage request)

@@ -6,7 +6,6 @@ Ext.define('Taco.view.ipblocking.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: ['Taco.core.ux.form.FileInputButton'],
     ui: 'subform',
-    //store: { type: 'Taco.store.IpBlocking' },
     createTitle: 'IP Blocking',
     layout: {
         type: 'vbox',
@@ -35,12 +34,14 @@ Ext.define('Taco.view.ipblocking.Form', {
     },
 
     downloadFile: function() {
-        window.location.href = '/admin/app/redirects/export?siteid=' + Taco.app.context.getSiteId();
+        this.record.export();
     },
 
     buildFormComponents: function() {
 
-        var header, explanation, formField, uploadGroup, downloadGroup;
+        var header, explanation, formField, uploadGroup, downloadGroup, _this = this;
+
+        var me = this;
 
         header = {
             xtype: 'component',
@@ -83,8 +84,8 @@ Ext.define('Taco.view.ipblocking.Form', {
                     scale: 'medium',
                     text: 'Upload File',
                     listeners: {
-                        change: function (cmp, v) {
-                           //alert('fule uploaded');
+                        filechange: function (fileList, e) {
+                            _this.record.onUploadFile(fileList, e);
                         },
                         boxready: function(cmp) {
                             cmp.fileInputEl.set({ multiple: 'single', accept: '.csv' });
@@ -112,7 +113,7 @@ Ext.define('Taco.view.ipblocking.Form', {
                     scale: 'medium',
                     text: 'Download',
                     width: 117,
-                    handler: this.downloadFile
+                    handler: this.downloadFile.bind(this)
                 }
             ]
         };

@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember(Name = "DownloadDate")]
         public DateTime? DownloadDate { get; set; }
 
-        [DataMember(Name = "IsEnabled")]
+        [DataMember(Name = "Enabled")]
         public bool Enabled { get; set; }
 
         [DataMember(Name = "IPAddress")]
