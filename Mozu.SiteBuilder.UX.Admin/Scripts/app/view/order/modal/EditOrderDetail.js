@@ -216,7 +216,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         } else {
             // field is focused; need to scroll to it if needed;
             var activeFocusEl = Ext.fly(document.activeElement);
-            var isHidden = activeFocusEl.isHiddenByScroll(me.body)            
+            var isHidden = activeFocusEl.isHiddenByScroll(me.body);          
             if (isHidden) {
                 activeFocusEl.scrollIntoView(me.body);
             }
@@ -287,7 +287,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                                     amount: 0
                                 }
                             }
-                        })
+                        });
                     },
                     scope: me
                 },
@@ -313,7 +313,14 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         });
 
 
-        
+        this.record.itemsStore.sort({
+            sorterFn: function (a, b) {
+                if (a.get('lineId') === b.get('lineId')) {
+                    return 0;
+                }
+                return (a.get('lineId') < b.get('lineId') ? -1 : 1);
+            }
+        });
 
         me.detailGrid = Ext.create('Taco.view.order.widget.OrderItemGrid', {
             editMode: true,
@@ -387,13 +394,13 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
         me.mon(gridSelModel, {
             focuschange: function (cellmodel, oldFocused, newFocused) {
                 if (newFocused) {
-                    var row = me.detailGrid.view.getNode(newFocused, true)
+                    var row = me.detailGrid.view.getNode(newFocused, true);
                     // check to see if the row is partially hidden from view within the scroll container;
                     // if item was deleted;
                     if (!row) {
                         return;
                     }
-                    var isHidden = Ext.fly(row).isHiddenByScroll(me.body)
+                    var isHidden = Ext.fly(row).isHiddenByScroll(me.body);
                     if (isHidden) {                        
                         row.scrollIntoView(me.body);
                     }
