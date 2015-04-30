@@ -1,12 +1,12 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-04-28
+ * Mozu Hypr Live - v1.0.0 - 2015-04-30
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
  */
 
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2015-04-28
+ * Mozu Hypr Live - v1.0.0 - 2015-04-30
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -5645,7 +5645,7 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
     function getPrecision(num) {
         if (isNaN(num) || (parseInt(num) === num)) return 0;
         var m = num.toString().match(decimalPlacesRE);
-        return m && m.length || 0;
+        return m && m[0].length || 0;
     }
 
     function getHighestPrecision(nums) {
@@ -5656,7 +5656,7 @@ HyprLive.engine.setTag('dropzone', DropZoneTag.parse, DropZoneTag.compile, false
 
     function roundToPrecision(num, precision, down) {
         var c = Math.pow(10, Math.min(precision, MAX_PLACES));
-        return Math[down ? "floor" : "round"](c * num) / c;
+        return Math[down ? ((num < 0) ? "ceil" : "floor") : "round"](c * num) / c;
     }
 
     function ensureNumeric(fn, forcePrecision) {
