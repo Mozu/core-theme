@@ -62,7 +62,16 @@ Ext.define('Taco.view.order.subform.Detail', {
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
         
         
-    
+        // Sort this store by LineId first!
+        this.record.itemsStore.sort({
+            sorterFn: function(a, b) {
+                if (a.get('lineId') === b.get('lineId')) {
+                    return 0;
+                }
+                return (a.get('lineId') < b.get('lineId') ? -1 : 1);
+            }
+        });
+
         // store that contains the orderItems for this order model
         orderItemStore = this.record.itemsStore;
         
