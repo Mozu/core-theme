@@ -95,17 +95,17 @@ Ext.define('Taco.core.ux.TooltipLabel', {
                         target: btn.getEl(),
                         cls: Taco.baseCSSPrefix + 'tooltip-help-content',
                         html: tooltipStore.findRecord('key', tooltipKey).get('value'),
-                        padding: '0 5 5 5',
+                        padding: '0',
                         focusOnToFront: true,
                         autoHide: false,
                         closable: false,
                         dockedItems: [{
                             xtype: 'toolbar',
-                            dock: 'top',
-                            margin: '5 5 0 0',
-                            minHeight: 10,
+                            dock: 'right',
+                            defaultAlign: 't',
+                            margin: '0 2 0 0',
+                            height: 15,
                             items: [
-                                '->',
                                 {
                                     xtype: 'button',
                                     text: '',
