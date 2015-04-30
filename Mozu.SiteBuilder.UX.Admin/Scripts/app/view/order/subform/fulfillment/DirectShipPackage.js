@@ -47,15 +47,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 padding: '0 10 0 0',
                 tpl: [
                     '<span class="label">Ship To:</span><br>',
-                    '{firstName}<tpl if="middleName"> {middleName}</tpl> {lastName}<br>',
-                    '{address1}<br>',
-                    '<tpl if="address2">{address2}<br></tpl>',
-                    '<tpl if="address3">{address3}<br></tpl>',
-                    '<tpl if="address4">{address4}<br></tpl>',
-                    '{cityOrTown}, {stateOrProvince} {postalOrZipCode} {countryCode}',
-                    '<tpl if="homePhone"><br>{homePhone}</tpl>',
-                    '<tpl if="mobilePhone"><br>{mobilePhone}</tpl>',
-                    '<tpl if="workPhone"><br>{workPhone}</tpl>'
+                    '{firstName:stripTags}<tpl if="middleName"> {middleName:stripTags}</tpl> {lastName:stripTags}<br>',
+                    '{address1:stripTags}<br>',
+                    '<tpl if="address2">{address2:stripTags}<br></tpl>',
+                    '<tpl if="address3">{address3:stripTags}<br></tpl>',
+                    '<tpl if="address4">{address4:stripTags}<br></tpl>',
+                    '{cityOrTown:stripTags}, {stateOrProvince:stripTags} {postalOrZipCode:stripTags} {countryCode:stripTags}',
+                    '<tpl if="homePhone"><br>{homePhone:stripTags}</tpl>',
+                    '<tpl if="mobilePhone"><br>{mobilePhone:stripTags}</tpl>',
+                    '<tpl if="workPhone"><br>{workPhone:stripTags}</tpl>'
                 ],
                 data: this.packageData.contact
             }, {

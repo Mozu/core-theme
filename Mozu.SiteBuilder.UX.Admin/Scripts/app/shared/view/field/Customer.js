@@ -43,7 +43,7 @@ Ext.define('Taco.shared.view.field.Customer', {
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
             '<tpl if="lastName">',
-                '{lastName}, {firstName} - ({id}) - {emailAddress}',
+                '{lastName:stripTags}, {firstName:stripTags} - ({id}) - {emailAddress}',
             '<tpl else>',
                 'Customer {id}',
             '</tpl>',
