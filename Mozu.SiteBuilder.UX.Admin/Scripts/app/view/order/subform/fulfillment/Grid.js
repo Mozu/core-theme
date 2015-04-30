@@ -71,6 +71,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 name: 'fulfillmentStatus',
                 type: 'string',
                 useNull: true
+            }],
+            sorters: [{
+                sorterFn: function (a, b) {
+                    if (a.get('lineId') === b.get('lineId')) {
+                        return 0;
+                    }
+                    return (a.get('lineId') < b.get('lineId') ? -1 : 1);
+                }
             }]
         });
 

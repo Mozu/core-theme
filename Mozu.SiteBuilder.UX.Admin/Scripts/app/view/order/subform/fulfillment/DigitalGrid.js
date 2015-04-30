@@ -35,6 +35,22 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
                 name: 'giftCardCode',
                 type: 'string',
                 useNull: true,
+            }, {
+                name: 'lineId',
+                type: 'int',
+                unseNull: false
+            }, {
+                name: 'fulfillmentStatus',
+                type: 'string',
+                useNull: true
+            }],
+            sorters: [{
+                sorterFn: function(a, b) {
+                    if (a.get('lineId') === b.get('lineId')) {
+                        return 0;
+                    }
+                    return (a.get('lineId') < b.get('lineId') ? -1 : 1);
+                }
             }]
         });
 
@@ -58,6 +74,16 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
             order = this.record;
 
         columns.push({
+            text: 'Line',
+            draggable: false,
+            resizable: true,
+            width: 50,
+            sortable: false,
+            menuDisabled: true,
+            hidden: false,
+            align: 'center',
+            dataIndex: 'lineId'
+        }, {
             text: 'Code',
             draggable: false,
             width: 140,
@@ -104,6 +130,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
                 menuDisabled: true,
                 align: 'left',
                 dataIndex: 'giftCardCode'
+            }, {
+                text: 'Status',
+                draggable: false,
+                width: 100,
+                sortable: false,
+                menuDisabled: true,
+                align: 'left',
+                dataIndex: 'fulfillmentStatus'
             });
         } else {
             columns.push({
