@@ -26,6 +26,24 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
         this.paymentsStore = record.getPayments();
         this.orderItemsStore = order.items();
 
+        // Sort the stores:
+        this.itemsStore.sort({
+            sorterFn: function (a, b) {
+                if (a.get('orderLineId') === b.get('orderLineId')) {
+                    return 0;
+                }
+                return (a.get('orderLineId') < b.get('orderLineId') ? -1 : 1);
+            }
+        });
+
+        this.orderItemsStore.sort({
+            sorterFn: function (a, b) {
+                if (a.get('lineId') === b.get('lineId')) {
+                    return 0;
+                }
+                return (a.get('lineId') < b.get('lineId') ? -1 : 1);
+            }
+        });
 
         // set up major components
         this.itemsGrid = this.initItemsGrid();
