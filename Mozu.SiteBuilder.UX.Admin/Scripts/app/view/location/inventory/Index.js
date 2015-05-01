@@ -70,6 +70,7 @@ Ext.define('Taco.view.location.inventory.Index', {
 
         this.locationPicker = Ext.widget("taco-locationpickerfield", {
             emptyText: "Choose a location",
+            displayField: 'displayName',
             flex: null,
             width: 300,
             forceSelection: true,
