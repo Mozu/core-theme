@@ -20,7 +20,7 @@
     function getPrecision(num) {
         if (isNaN(num) || (parseInt(num) === num)) return 0;
         var m = num.toString().match(decimalPlacesRE);
-        return m && m.length || 0;
+        return m && m[0].length || 0;
     }
 
     function getHighestPrecision(nums) {
@@ -31,7 +31,7 @@
 
     function roundToPrecision(num, precision, down) {
         var c = Math.pow(10, Math.min(precision, MAX_PLACES));
-        return Math[down ? "floor" : "round"](c * num) / c;
+        return Math[down ? ((num < 0) ? "ceil" : "floor") : "round"](c * num) / c;
     }
 
     function ensureNumeric(fn, forcePrecision) {
