@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
 {
     public static class ActionFilterConstants
     {
-        public const string GlobalPageBeforeAction = "storefront.pages.global.afterRequest";
+        public const string GlobalPageBeforeAction = "storefront.pages.global.beforeRequest";
         public const string GlobalPageAfterAction = "storefront.pages.global.afterRequest";
 
     }

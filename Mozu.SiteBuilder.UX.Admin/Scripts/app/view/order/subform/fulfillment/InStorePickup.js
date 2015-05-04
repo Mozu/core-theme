@@ -39,15 +39,15 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePickup', {
                 padding: '0 50 0 0',
                 tpl: [
                     '<span class="label">Customer:</span><br>',
-                    '{billingContact.firstName}<tpl if="billingContact.middleName"> {billingContact.middleName}</tpl> {billingContact.lastName}<br>',
-                    '{billingContact.address1}<br>',
-                    '<tpl if="billingContact.address2">{billingContact.address2}<br></tpl>',
-                    '<tpl if="billingContact.address3">{billingContact.address3}<br></tpl>',
-                    '<tpl if="billingContact.address4">{billingContact.address4}<br></tpl>',
-                    '{billingContact.cityOrTown}, {billingContact.stateOrProvince} {billingContact.postalOrZipCode} {billingContact.countryCode}',
-                    '<tpl if="billingContact.homePhone"><br>{billingContact.homePhone}</tpl>',
-                    '<tpl if="billingContact.mobilePhone"><br>{billingContact.mobilePhone}</tpl>',
-                    '<tpl if="billingContact.workPhone"><br>{billingContact.workPhone}</tpl>'
+                    '{billingContact.firstName:stripTags}<tpl if="billingContact.middleName"> {billingContact.middleName:stripTags}</tpl> {billingContact.lastName:stripTags}<br>',
+                    '{billingContact.address1:stripTags}<br>',
+                    '<tpl if="billingContact.address2">{billingContact.address2:stripTags}<br></tpl>',
+                    '<tpl if="billingContact.address3">{billingContact.address3:stripTags}<br></tpl>',
+                    '<tpl if="billingContact.address4">{billingContact.address4:stripTags}<br></tpl>',
+                    '{billingContact.cityOrTown:stripTags}, {billingContact.stateOrProvince:stripTags} {billingContact.postalOrZipCode:stripTags} {billingContact.countryCode:stripTags}',
+                    '<tpl if="billingContact.homePhone"><br>{billingContact.homePhone:stripTags}</tpl>',
+                    '<tpl if="billingContact.mobilePhone"><br>{billingContact.mobilePhone:stripTags}</tpl>',
+                    '<tpl if="billingContact.workPhone"><br>{billingContact.workPhone:stripTags}</tpl>'
                 ]
             }, {
                 flex: 1,
