@@ -2293,6 +2293,10 @@
       <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.7\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.17.8-dev1504292221-s\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

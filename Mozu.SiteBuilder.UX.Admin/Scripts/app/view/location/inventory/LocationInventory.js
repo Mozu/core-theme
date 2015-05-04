@@ -221,7 +221,7 @@ Ext.define('Taco.view.location.inventory.LocationInventory', {
                         msgTarget: "qtip",                        
                         allowBlank: false,
                         extraFilters: [
-                            { id: "status", property: 'status', value: 'all' },
+                            { id: "status", property: 'status', value: 'active' },
                             { id: "supportsInventory", property: 'supportsInventory', value: 'true' }
                         ],
                         onEditorShow: function (field, editor, context) {

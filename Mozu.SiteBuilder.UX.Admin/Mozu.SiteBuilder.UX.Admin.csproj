@@ -341,9 +341,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.17.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.17.1-dev1503111636-s\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.17.5-dev1505011543-s\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -471,6 +471,7 @@
     <Compile Include="Api\EmailTestController.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyAggregateExceptionResponseBuilder.cs" />
     <Compile Include="Api\ErrorHandlers\FriendlyExceptionResponseBuilderCollection.cs" />
+    <Compile Include="Api\IpBlockingController.cs" />
     <Compile Include="Api\ModelMapping\InvitationMapping.cs" />
     <Compile Include="Api\ModelMapping\InvitationRoleMapping.cs" />
     <Compile Include="Api\ModelMapping\LocalizationMapping.cs" />

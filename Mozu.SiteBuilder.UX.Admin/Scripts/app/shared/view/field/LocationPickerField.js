@@ -30,8 +30,8 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
         cls: "location-picker-menu",
        maxWidth:"400",
         // Custom rendering template for each item
-        getInnerTpl: function () {
-            return "<span class='name'>{name}</span> <span class='code'>{code}</span>"
+       getInnerTpl: function () {
+            return "<span class='name'>{name}</span> <span class='code'>{displayCode}</span>";
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;

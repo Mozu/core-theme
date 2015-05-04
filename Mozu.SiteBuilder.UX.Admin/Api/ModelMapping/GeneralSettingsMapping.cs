@@ -30,12 +30,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
 
             Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.IPBlock, UX.Admin.Api.Models.GeneralSettings.IPBlock>();
-            Mapper.CreateMap<UX.Admin.Api.Models.GeneralSettings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>()
-                //ignores
-                .ForMember(x => x.StoreFrontBlock, op => op.Ignore())
-                .ForMember(x => x.AdminBlock, op => op.Ignore())
-                .ForMember(x => x.AuditInfo, op => op.Ignore())
-                ;
+            Mapper.CreateMap<UX.Admin.Api.Models.GeneralSettings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>();
+
+            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.IPBlockSettings, Mozu.SiteBuilder.UX.Models.Settings.IpBlockingSettings>()
+                .ForMember(x => x.DownloadDate, OP => OP.ResolveUsing((Mozu.SiteSettings.General.Contracts.IPBlockSettings y) => y.AuditInfo != null ? y.AuditInfo.UpdateDate : null))
+                  .ForMember(x => x.IpAddress, OP => OP.Ignore());
+
+
 
             //Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>()
             //    //ignores
