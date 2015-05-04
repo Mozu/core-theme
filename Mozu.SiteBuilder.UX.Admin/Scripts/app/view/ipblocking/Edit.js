@@ -14,8 +14,5 @@ Ext.define('Taco.view.ipblocking.Edit', {
     },
     initComponent: function () {
         this.callParent(arguments);
-    },
-    onSave: function() {
-        this.form.record.save();
     }
 });

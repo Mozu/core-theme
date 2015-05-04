@@ -6,8 +6,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.GeneralSettings
     
     public class IPBlock
     {
-        public int? Id { get; set; }
-
         [JsonProperty(PropertyName = "start")]
         public string RangeStart { get; set; }
 

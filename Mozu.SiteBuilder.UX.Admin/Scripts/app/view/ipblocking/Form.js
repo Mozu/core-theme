@@ -4,7 +4,10 @@
 
 Ext.define('Taco.view.ipblocking.Form', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.core.ux.form.FileInputButton'],
+    requires: [
+        'Taco.core.ux.form.FileInputButton',
+        'Taco.core.ux.window.Modal'
+    ],
     ui: 'subform',
     createTitle: 'IP Blocking',
     layout: {
@@ -25,16 +28,16 @@ Ext.define('Taco.view.ipblocking.Form', {
 
     installRecord: function(records) {
         var ip = records[0].get('ipAddress'),
-            downloadDate = records[0].get('downloadDate') ? records[0].get('downloadDate') : 'You have not uploaded a file yet. You can download a sample file by clicking the download button.';
+            downloadDate = records[0].get('downloadDate') ? Ext.Date.format(records[0].get('downloadDate'), 'M d Y g:ia') : 'You have not uploaded a file yet. You can download a sample file by clicking the download button.';
 
-        this.loadRecord(records[0]);
         this.record = records[0];
+        this.loadRecord(this.record);
         this.down('#ip-address').update('Your IP address is: <strong>' + ip + '</strong>');
         this.down('#download-date').update('<strong>Date uploaded: </strong>' + downloadDate);
     },
 
     downloadFile: function() {
-        this.record.export();
+        this.record.doExport();
     },
 
     buildFormComponents: function() {
@@ -83,9 +86,10 @@ Ext.define('Taco.view.ipblocking.Form', {
                     ui: 'action',
                     scale: 'medium',
                     text: 'Upload File',
+                    id: 'fileUpload',
                     listeners: {
                         filechange: function (fileList, e) {
-                            _this.record.onUploadFile(fileList, e);
+                            _this.record.onUploadFile(fileList, e, _this);
                         },
                         boxready: function(cmp) {
                             cmp.fileInputEl.set({ multiple: 'single', accept: '.csv' });
