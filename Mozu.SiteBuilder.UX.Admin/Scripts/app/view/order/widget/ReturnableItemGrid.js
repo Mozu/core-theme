@@ -49,7 +49,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         menuDisabled: true,
         hidden: false,
         align: 'left',
-        dataIndex: 'orderFulfillmentStatus'
+        dataIndex: 'fulfillmentStatus'
     }, {
         dataIndex: 'returnType',
         text: 'Type',
@@ -249,7 +249,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'string', name: 'orderItemId' },
                 { type: 'string', name: 'parentItemId' },
                 { type: 'int', name: 'orderLineId' },
-                { type: 'string', name: 'orderFulfillmentStatus' }
+                { type: 'string', name: 'fulfillmentStatus' }
             ],
             data: []
         });

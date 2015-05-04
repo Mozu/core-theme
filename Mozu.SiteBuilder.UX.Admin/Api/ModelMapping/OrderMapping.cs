@@ -332,7 +332,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 UnitPrice = item.UnitPrice,
                                 Key = item.Id,
                                 OrderLineId = item.LineId,
-                                OrderFulfillmentStatus = item.FulfillmentStatus
+                                FulfillmentStatus = item.FulfillmentStatus
                             }
                         )
                         .Union
@@ -351,7 +351,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ParentProductName = item.ProductName,
                                 Key = item.Id + "-" + bp.ProductCode,
                                 OrderLineId = item.LineId,
-                                OrderFulfillmentStatus = item.FulfillmentStatus
+                                FulfillmentStatus = bp.FulfillmentStatus
                             }
                         )
                         .ToList();
@@ -362,9 +362,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // one fulfilled in each line item.
                     // Now it is grouped by OrderLineId.
                     // TODO (JK): NEED TO REVIEW! This may be messed up by line id now!
-                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => ri.OrderLineId), group =>
+                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => new { ri.OrderLineId, ri.ProductCode }), group =>
                     {
-                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key);
+                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key.OrderLineId, group.Key.ProductCode);
                         EnumerableExtensions.Each(@group, returnItem =>
                         {
                             int numToMarkFulfilled = Math.Min(returnItem.QuantityOrdered, totalQuantityFulfilled);
