@@ -74,6 +74,20 @@ Ext.define('Taco.model.Location', {
             "type": "string",
             "useNull": true
         }, {
+            name: "displayName",
+            type: "string",
+            convert: function (v, record) {
+                return record.get('name') + (record.get('isDisabled') ? ' (disabled)' : '');
+            },
+            persist: false
+        }, {
+            name: "displayCode",
+            type: "string",
+            convert: function (v, record) {
+                return record.get('code') + (record.get('isDisabled') ? ' (disabled)' : '');
+            },
+            persist: false
+        }, {
             "name": "description",
             "type": "string",
             "useNull": true
