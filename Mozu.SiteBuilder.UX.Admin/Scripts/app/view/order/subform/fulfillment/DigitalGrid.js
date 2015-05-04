@@ -73,17 +73,21 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
         var columns = [],
             order = this.record;
 
+        if (!this.packageData) {
+            columns.push({
+                text: 'Line',
+                draggable: false,
+                resizable: true,
+                width: 50,
+                sortable: false,
+                menuDisabled: true,
+                hidden: false,
+                align: 'center',
+                dataIndex: 'lineId'
+            });
+        }
+
         columns.push({
-            text: 'Line',
-            draggable: false,
-            resizable: true,
-            width: 50,
-            sortable: false,
-            menuDisabled: true,
-            hidden: false,
-            align: 'center',
-            dataIndex: 'lineId'
-        }, {
             text: 'Code',
             draggable: false,
             width: 140,
@@ -107,7 +111,21 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
                 '</span>'
             ],
             dataIndex: 'productName'
-        }, {
+        });
+
+        if (!this.packageData) {
+            columns.push({
+                text: 'Status',
+                draggable: false,
+                width: 100,
+                sortable: false,
+                menuDisabled: true,
+                align: 'left',
+                dataIndex: 'fulfillmentStatus'
+            });
+        }
+
+        columns.push({
             text: 'Amount',
             draggable: false,
             width: 80,
@@ -130,14 +148,6 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
                 menuDisabled: true,
                 align: 'left',
                 dataIndex: 'giftCardCode'
-            }, {
-                text: 'Status',
-                draggable: false,
-                width: 100,
-                sortable: false,
-                menuDisabled: true,
-                align: 'left',
-                dataIndex: 'fulfillmentStatus'
             });
         } else {
             columns.push({
