@@ -90,6 +90,10 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
                 single: true
             });
         }
+
+        //reset params at proxy (e.g. advSearch)
+        me.store.getProxy().extraParams = {};
+        
         
         me.callParent(arguments);
     },
