@@ -285,12 +285,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     foreach (var lineId in itemLineIds)
                     {
                         // This is now an order item, I don't need to call the previous methods!
-                        var orderItem = order.Items.Find(i =>i.LineId == lineId);
-                        if (orderItem.BundledProducts.IsNullOrEmpty())
+                        var orderItem = order.Items.Find(i => i.LineId == lineId);
+
+                        if (orderItem.ProductUsage != "Bundle")
                         {
                             ResolveUnpackagedAmounts(lineId, order, orderItem);
                         }
-                        else
+                        
+                        if (!orderItem.BundledProducts.IsNullOrEmpty())
                         {
                             ResolveUnpackagedAmountsForBundledProduct(lineId, order, orderItem);
                         }
@@ -484,9 +486,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 desiredDigitalQuantity = orderItem.Quantity;
             }
 
-            var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
-            var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
-            var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+            var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
+            var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
+            var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
 
             // if there are more desired products than created packages contain, add this product to unpackagedItems.
             if (desiredPackageQuantity > packagedQuantity)
