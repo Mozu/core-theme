@@ -51,6 +51,7 @@ Mozu.SiteBuilder.UX.Admin/Scripts/bootstrap.js
 Mozu.SiteBuilder.UX.Admin/Scripts/sass/example/
 Mozu.SiteBuilder.UX.Admin/ext-*
 /Mozu.SiteBuilder.UX.Admin/Scripts/.sencha/app
+Mozu.SiteBuilder.UX.Admin/Scripts/.sencha_backup/
 
 # thanks greg
 TestResult.xml
@@ -58,3 +59,9 @@ Mozu.SiteBuilder.UX.Themes/Themes/*/compiled/*
 Mozu.SiteBuilder.UX.Themes/Themes/reptar
 *.log
 Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js
+
+# ignore any of Greg's ideas
+.idea/*
+*/.idea/*
+
+
