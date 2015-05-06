@@ -285,12 +285,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     foreach (var lineId in itemLineIds)
                     {
                         // This is now an order item, I don't need to call the previous methods!
-                        var orderItem = order.Items.Find(i =>i.LineId == lineId);
-                        if (orderItem.BundledProducts.IsNullOrEmpty())
+                        var orderItem = order.Items.Find(i => i.LineId == lineId);
+
+                        if (orderItem.ProductUsage != "Bundle")
                         {
                             ResolveUnpackagedAmounts(lineId, order, orderItem);
                         }
-                        else
+                        
+                        if (!orderItem.BundledProducts.IsNullOrEmpty())
                         {
                             ResolveUnpackagedAmountsForBundledProduct(lineId, order, orderItem);
                         }
@@ -332,7 +334,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 UnitPrice = item.UnitPrice,
                                 Key = item.Id,
                                 OrderLineId = item.LineId,
-                                OrderFulfillmentStatus = item.FulfillmentStatus
+                                FulfillmentStatus = item.FulfillmentStatus
                             }
                         )
                         .Union
@@ -351,7 +353,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 ParentProductName = item.ProductName,
                                 Key = item.Id + "-" + bp.ProductCode,
                                 OrderLineId = item.LineId,
-                                OrderFulfillmentStatus = item.FulfillmentStatus
+                                FulfillmentStatus = bp.FulfillmentStatus
                             }
                         )
                         .ToList();
@@ -362,9 +364,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // one fulfilled in each line item.
                     // Now it is grouped by OrderLineId.
                     // TODO (JK): NEED TO REVIEW! This may be messed up by line id now!
-                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => ri.OrderLineId), group =>
+                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => new { ri.OrderLineId, ri.ProductCode }), group =>
                     {
-                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key);
+                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key.OrderLineId, group.Key.ProductCode);
                         EnumerableExtensions.Each(@group, returnItem =>
                         {
                             int numToMarkFulfilled = Math.Min(returnItem.QuantityOrdered, totalQuantityFulfilled);
@@ -484,9 +486,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 desiredDigitalQuantity = orderItem.Quantity;
             }
 
-            var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
-            var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
-            var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId).Sum(i => i.Quantity);
+            var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
+            var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
+            var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
 
             // if there are more desired products than created packages contain, add this product to unpackagedItems.
             if (desiredPackageQuantity > packagedQuantity)

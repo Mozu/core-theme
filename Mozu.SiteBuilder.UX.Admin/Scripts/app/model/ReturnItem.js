@@ -23,7 +23,7 @@ Ext.define('Taco.model.ReturnItem', {
             "useNull": true
         },
         {
-            "name": "lineId",
+            "name": "orderLineId",
             "type": "int",
             "useNull": false
         },

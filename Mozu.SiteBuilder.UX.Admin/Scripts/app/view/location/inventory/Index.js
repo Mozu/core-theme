@@ -85,7 +85,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                         var record = records[0],
                             itemBrowser = this.up("itembrowser"),
                             gridPanel = itemBrowser.gridPanel,
-                            store = gridPanel.store,
+                            gridStore = gridPanel.store,
                             code = record.get('code');
 
                         if (record.get('isDisabled')) {
@@ -96,8 +96,8 @@ Ext.define('Taco.view.location.inventory.Index', {
 
                         // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
                         // adding a filter with the same id will be treated like an update
-                        store.extraFilters.add({ id: "locationCode", property: 'locationCode', value: code });
-                        store.load();
+                        gridStore.extraFilters.add({ id: "locationCode", property: 'locationCode', value: code });
+                        gridStore.load();
                     }
                 }
             }

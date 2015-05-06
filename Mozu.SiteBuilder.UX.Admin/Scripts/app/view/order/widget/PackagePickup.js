@@ -234,7 +234,7 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
                                         '</tpl>',
 
                                 
-                                    '</div>',                          
+                                    '</div>',
 
                                 '</td>',
 
@@ -244,11 +244,11 @@ Ext.define('Taco.view.order.widget.PackagePickup', {
 
                                     '<div class="shipTo">',
                                         '<div class="header-label">Fulfillment Contact</div>',
-                                        '<div>{firstName} {lastName}</div>',
+                                        '<div>{firstName:stripTags} {lastName:stripTags}</div>',
                                         '<tpl if="values.phoneNumber">',
-                                            '<div>{phoneNumber}</div>',                                    
+                                            '<div>{phoneNumber:stripTags}</div>',
                                         '</tpl>',
-                                        '<tpl if="values.email">',                   
+                                        '<tpl if="values.email">',
                                             '<div>{email}</div>',
                                         '</tpl>',
                                     '</div>',

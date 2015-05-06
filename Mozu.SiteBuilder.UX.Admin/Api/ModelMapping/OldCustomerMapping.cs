@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Magnum.Extensions;
 using MR = Mozu.SiteBuilder.UX.Models.Users;
 using SB = Mozu.SiteBuilder.UX.Models.Customers;
 using AC = Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
@@ -80,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     var data = x.SystemData;
                     if (data != null && data.LastLoginOn.HasValue)
-                        return data.LastLoginOn.Value;
+                        return data.LastLoginOn.Value.ToString() + " UTC";
                     return "";
                 }))
                 .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress));

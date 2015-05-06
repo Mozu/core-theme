@@ -28,6 +28,7 @@
         autoUpdate: [
             'firstName',
             'lastName',
+            'emailAddress',
             'acceptsMarketing'
         ],
         constructor: function () {

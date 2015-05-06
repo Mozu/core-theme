@@ -123,10 +123,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
         }
 
+
+        static readonly FSharpFunc<object, object> cleanFunc = FuncConvert.ToFSharpFunc<object, object>(CleanJson);
+
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
             var result = _actual.ResolveMember(container, memberName);
-            return OptionModule.Map(FuncConvert.ToFSharpFunc<object, object>(o => CleanJson(o)), result);
+            return OptionModule.Map(cleanFunc, result);
         }
     }
 }

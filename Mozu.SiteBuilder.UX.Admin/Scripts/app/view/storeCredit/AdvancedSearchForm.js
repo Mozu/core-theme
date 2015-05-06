@@ -330,7 +330,7 @@ Ext.define('Taco.view.storeCredit.AdvancedSearchForm', {
                 flex: 1,
                 tpl: Ext.create('Ext.XTemplate',
                   '<tpl for=".">',
-                      '<div class="x-boundlist-item">{firstName} {lastName}, {emailAddress}</div>',
+                      '<div class="x-boundlist-item">{firstName:stripTags} {lastName:stripTags}, {emailAddress}</div>',
                   '</tpl>'
                 ),
                 trigger2Cls: 'x-form-clear-trigger',

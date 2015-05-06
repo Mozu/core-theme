@@ -59,6 +59,7 @@ Ext.application({
         'Redirects',
         'SiteRoutes',
         'BusinessIntelligence',
-        'ActionManagement'
+        'ActionManagement',
+        'IpBlocking'
     ],
 });

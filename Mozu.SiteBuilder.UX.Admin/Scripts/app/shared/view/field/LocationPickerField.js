@@ -74,12 +74,21 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
                     property: 'supportsInventory',
                     value: true
                 }],
-                autoLoad: true
+                autoLoad: true,
+                listeners: {
+                    beforeload: function (store, operation) {
+                        var proxy = store.getProxy();
+                        if (proxy.extraParams) {
+                            //reset params at proxy (e.g. advSearch)
+                            proxy.extraParams = {};
+                        }
+                        if (this.extraFilters) {
+                            store.extraFilters.add(this.extraFilters);
+                        }
+                    },
+                    scope: this
+                }
             });
-
-            if (me.extraFilters) {
-                me.store.extraFilters.add(me.extraFilters);
-            }
 
         }
 
@@ -90,7 +99,7 @@ Ext.define('Taco.shared.view.field.LocationPickerField', {
                 single: true
             });
         }
-        
+
         me.callParent(arguments);
     },
 
