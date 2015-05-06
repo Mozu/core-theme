@@ -525,6 +525,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     beforeSave: function () {
         this.record.set('conditionalCategories', this.conditionalCategoryPanel.getValue());
+        this.record.store.needsRefresh = true;
     },
 
     onDestroy: function () {

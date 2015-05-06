@@ -355,7 +355,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         // need to manually mark dirty since the setValue with complex data doesn't trigger the dirty state on the model
         me.record.setDirty();
-
+        me.record.store.needsRefresh = true;
         return true;
     }
 });
