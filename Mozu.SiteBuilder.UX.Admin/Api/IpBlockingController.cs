@@ -115,18 +115,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (request.Properties.ContainsKey("MS_HttpContext"))
             {
                 var ctx = request.Properties["MS_HttpContext"] as HttpContextWrapper;
-                
-                if (ctx != null)
+                bool isReverseProxy = request.Headers.Contains(Mozu.Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY);
+
+                if (!isReverseProxy)
+                {
+                    IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+                    ipstring = host.AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork).ToString();
+                }
+
+                else if (ctx != null)
                 {
                     var ipStr = ctx.Request.Headers["X-Forwarded-For"] ?? ctx.Request.UserHostAddress;
                     IPAddress ipaddress;
-                    if (IPAddress.TryParse(ipStr, out ipaddress) && ipaddress.AddressFamily != AddressFamily.InterNetworkV6)
+                    if (IPAddress.TryParse(ipStr, out ipaddress))
                     {
                         ipstring = ipStr;
                     }
 
                 }
-
             }
 
             return ipstring;

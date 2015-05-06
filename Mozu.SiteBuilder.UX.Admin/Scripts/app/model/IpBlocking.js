@@ -81,6 +81,7 @@ Ext.define('Taco.model.IpBlocking', {
     },
     clearFile: function() {
         this.down('#fileUpload').reset();
+        this.down('#fileUpload').fileInputEl.set({ multiple: 'single', accept: '.csv' });
     },
     getRevertModal: function(fileList, e, el) {
 
