@@ -146,6 +146,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                         dataContainer = this.createPriceChange(metaData);
                     } else if (curRecord.subject.indexOf('Product Quantity') > -1) {
                         dataContainer = this.createQuantityChange(metaData);
+                    } else if (curRecord.subject.indexOf('Item Duty Amount Change') > -1) {
+                        dataContainer = this.createDutyAmountChange(metaData);
                     } else {
                         dataContainer = this.createLineItemInfo(metaData);
                     }
@@ -232,6 +234,48 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     '<br/>',
                     '<div>Old Quantity: {oldValue}</div>',
                     '<div>New Quantity: {newValue}</div>'
+                ]
+            }]
+        });
+    },
+
+    createDutyAmountChange: function(dutyData) {
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: [
+            {
+                flex: 1,
+                padding: '2 2',
+                data: dutyData[0],
+                tpl: [
+                    '<div>Product Code: {productCode}</div>',
+                    '<div>Product Name: {productName}</div>',
+                    '<br/>',
+                    '<div>Old Duty Amount: {[this.getCurrencyFormat(values.oldValue)]}</div>',
+                    '<div>New Duty Amount: {[this.getCurrencyFormat(values.newValue)]}</div>',
+                    {
+                        getCurrencyFormat: function (v) {
+                            var retVal,
+                                isNegative;
+
+                            v = v - 0;
+
+                            if (v < 0) {
+                                isNegative = true;
+                                v = -v;
+                            }
+                            v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                            if (isNegative) {
+                                retVal = '(' + v + ')';
+                            } else {
+                                retVal = v;
+                            }
+
+                            return retVal;
+                        }
+                    }
                 ]
             }]
         });
