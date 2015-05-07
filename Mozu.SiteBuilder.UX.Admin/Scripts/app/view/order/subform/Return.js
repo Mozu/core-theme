@@ -247,6 +247,8 @@ Ext.define('Taco.view.order.subform.Return', {
                 Ext.Array.each(records, this.addProcessReturnPanel, this, true);
                 //after we add the new return we need to reload the returnable items grid data;
                 me.refreshReturnableItemsGrid();
+                // Now we need to refresh the other panels as well.
+                this.record.reload();
             },
             failure: function (batch) {
                 returnsStore.remove(records);
