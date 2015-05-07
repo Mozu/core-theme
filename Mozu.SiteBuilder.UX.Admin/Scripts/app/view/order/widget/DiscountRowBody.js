@@ -85,22 +85,24 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
         var discounts = record.get("discounts"),
             orderItemId = record.get("id"),
             shippingDiscounts = record.get("shippingDiscounts"),
+            bundledProducts = record.get("bundledProducts"),
             rowBodyCls = ( (discounts && discounts.length) || (shippingDiscounts && shippingDiscounts.length)) ? "hasDiscount" : "noDiscount",
             rowBodyData = {
                 orderItemId: orderItemId,
                 handlingAmount: record.get("handlingAmount"),
                 discounts: record.get("discounts"),
-                shippingDiscounts: record.get("shippingDiscounts")
+                shippingDiscounts: record.get("shippingDiscounts"),
+                bundledProducts: bundledProducts
             },
             headerCt = this.view.headerCt,
             colspan = headerCt.getColumnCount();
 
                         
         var rowBodyTemplate = new Ext.XTemplate(this.getRowBody());
-        var rowBoxyTxt = rowBodyTemplate.apply(rowBodyData);
+        var rowBodyTxt = rowBodyTemplate.apply(rowBodyData);
 
         return {
-            rowBody: rowBoxyTxt,
+            rowBody: rowBodyTxt,
             rowTotalColumnWidth: this.grid.rowTotalColumnWidth,
             actionColumnWidth: this.grid.actionColumnWidth,
             rowBodyCls : (discounts.length || shippingDiscounts.length) ? "hasDiscount" : "noDiscount",
@@ -195,8 +197,22 @@ Ext.define('Taco.view.order.widget.DiscountRowBody', {
                 '</td>',
                 '<td role="gridcell"  class="x-action-col-cell taco-menu-col-cell x-action-col-cell' + this.rowBodyTdCls + '"></td>',
                 '</tr>',
+            '</tpl>',
+            '<tpl for="bundledProducts">',
+                '<tr role="row" class="' + this.rowBodyTrCls + ' {rowBodyCls}" tabindex="-1">',
+                    '<td role="gridcell" class="' + this.rowBodyTdCls + '"></td>',
+                    '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
+                        '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">{productCode}</div>',
+                    '</td>',
+                    '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
+                        '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">{name}</div>',
+                    '</td>',
+                    '<td role="gridcell" class="' + this.rowBodyTdCls + '">',
+                        '<div class="' + this.rowBodyDivCls + ' adjustment-cell-inner-wrap">{fulfillmentStatus}</div>',
+                    '</td>',
+                    '<td role="gridcell" class="' + this.rowBodyTdCls + '" colspan="4"></td>',
+                '</tr>',
             '</tpl>'
-
         ].join('');
     }    
 });

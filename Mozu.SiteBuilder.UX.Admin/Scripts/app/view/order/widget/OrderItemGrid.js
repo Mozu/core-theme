@@ -252,20 +252,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     draggable: false,
                     resizable: true,
                     width: 140,
-                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     hidden:false,
                     align: 'left',                                        
-                    dataIndex: 'productCode',
-                    tpl: [
-                        '{productCode}',
-                        '<tpl for="bundledProducts">',
-                            '<div>',
-                                '{productCode}',
-                            '</div>',
-                        '</tpl>'
-                    ]
+                    dataIndex: 'productCode'
                 },
                 {
                     text: 'Products',
@@ -290,11 +281,6 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                 '<span class="option"><tpl if="xindex &gt; 1">, </tpl>{[this.getAttributeName(values)]}',
                                 ': {[this.getAttributeValue(values)]}',
                             '</span>',
-                            '</tpl>',
-                            '<tpl for="bundledProducts">',
-                                '<div class="bundledProduct">',
-                                    '{name}',
-                                '</div>',
                             '</tpl>',
                     
                             /*
@@ -398,19 +384,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     draggable: false,
                     resizable: true,
                     width: 120,
-                    xtype: 'templatecolumn',
                     sortable: false,
                     menuDisabled: true,
                     hidden: false,
-                    align: 'left',
-                    tpl: [
-                        '{fulfillmentStatus}',
-                        '<tpl for="bundledProducts">',
-                            '<div>',
-                                '{fulfillmentStatus}',
-                            '</div>',
-                        '</tpl>'
-                    ]
+                    align: 'left'
                 },
                 {
                     text: 'Fulfillment',
