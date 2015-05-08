@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-04-29
+ * Mozu JavaScript SDK - v0.3.0 - 2015-05-08
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -4583,8 +4583,7 @@ module.exports = (function() {
 
         // only add numberPart if the current card number isn't already masked
         // if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
-        maskedData.cardIssueNumber = cardNumber;
-        delete maskedData.cardNumber;
+        maskedData.cardNumber = cardNumber;
 
         return maskedData;
     }
