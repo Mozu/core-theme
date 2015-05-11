@@ -200,7 +200,11 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             case 'Order':
             case 'StateChange.Order':
                 {
-                    dataContainer = this.createOrderMessage(curRecord);
+                    if (curRecord.subject.toLowerCase().indexOf('package updated')) {
+                        dataContainer = this.createPackageMessage(metaData);
+                    } else {
+                        dataContainer = this.createOrderMessage(curRecord);
+                    }
                     break;
                 }
             case 'Item':
@@ -323,12 +327,31 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         });
     },
 
+    createPackageMessage: function(packageData) {
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: [
+            {
+                flex: 1,
+                padding: '2 2',
+                data: packageData[0],
+                tpl: [
+                    '<div>Product Code: {productCode}</div>',
+                    '<div>Product Name: {productName}</div>',
+                    '<br/>',
+                    '<div>Old Shipping Method: {oldValue}</div>',
+                    '<div>New Shipping Metod: {newValue}</div>'
+                ]
+            }]
+        });
+    },
+
     createOrderMessage: function (orderRecordData) {
         var itemsList = [];
         var orderData = orderRecordData.metadata;
         var statusLabel = 'Order Status';
         if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('fulfillment') > -1) {
-            statusLabel = 'Fulfillment Status';
+            statusLabel = orderRecordData.subject;
         } else if (orderRecordData.subject != null && orderRecordData.subject.toLowerCase().indexOf('payment') > -1) {
             statusLabel = 'Payment Status';
         }
