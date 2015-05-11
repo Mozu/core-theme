@@ -30,7 +30,7 @@
                 {
                     "xtype": "mz-input-textarea",
                     "name": "extendedPropertyParameters",
-                    "fieldLabel": "Query Parameters (comma seperated)"
+                    "fieldLabel": "Query Parameters (comma separated)"
                 }
             ]
         },
