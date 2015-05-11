@@ -173,19 +173,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             string sort = pagingParams.sort.ToSortString();
             int? qLimit = isSearchTypeGlobal ? (int?)3 : (int?)null;
-            // if there is a q AND there is no filter, default qLimit to 50.
-            if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(q) && !qLimit.HasValue)
-                qLimit = pagingParams.pageSize.GetValueOrDefault(50) + 1;
-
-            // qLimit and pageSize do not work together.
-            // if q is specified and we are attempting to page beyond page 1, do not use qLimit.
-            var prodCollection = (!String.IsNullOrWhiteSpace(q) && pagingParams.pageIndex > 1)
-                ? (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q)).ReadAsSync()
-                : (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
+            var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
                         sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit)).ReadAsSync();
-
-
+            
             // need to call the productType service and get the productType name to saturate each product record;
             var productTypes = new List<int?>();
             // gather up all of hte product types
