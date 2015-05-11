@@ -37,6 +37,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
             }, {
                 dataIndex: 'stockOnHand',
                 width: 150,
+                minWidth: 125,
                 itemId: "stockOnHand",
                 stateId: 'stockOnHand',
                 text: 'On Hand',
