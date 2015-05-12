@@ -62,6 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Contacts, op => op.ResolveUsing(x => x.Contacts))
 
                 .ForMember(dc => dc.Contacts, op => op.ResolveUsing(x => x.Contacts))
+                .ForMember(x => x.HasExternalPassword, op => op.Ignore())
                 .ForMember(dc => dc.CompanyOrOrganization, op => op.ResolveUsing(x => x.CompanyOrOrganization))
                 .ForMember(dc => dc.AcceptsMarketing, op => op.ResolveUsing(x => x.AcceptsMarketing))
                 .ForMember(dc => dc.CommerceSummary, op => op.ResolveUsing(x => new DC.CommerceSummary
