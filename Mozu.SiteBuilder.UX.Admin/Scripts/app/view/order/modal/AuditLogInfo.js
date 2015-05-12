@@ -202,6 +202,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 {
                     if (curRecord.subject.toLowerCase().indexOf('package updated') >= 0) {
                         dataContainer = this.createPackageMessage(metaData);
+                    } else if (curRecord.subject.toLowerCase().indexOf('return') >= 0) {
+                        dataContainer = this.createReturnMessage(curRecord);
                     } else {
                         dataContainer = this.createOrderMessage(curRecord);
                     }
@@ -343,6 +345,92 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     '<div>New Shipping Metod: {newValue}</div>'
                 ]
             }]
+        });
+    },
+
+    createReturnMessage: function (retRecord) {
+        var itemsList = [];
+        var retData = retRecord.metadata[0];
+
+        var verbHelper = 'to';
+        if (retRecord.verb.toLowerCase() === 'updated') {
+            verbHelper = 'on';
+        } else if (retRecord.verb.toLowerCase() === 'removed') {
+            verbHelper = 'from';
+        }
+
+        retData.verb = retRecord.verb;
+        retData.verbHelper = verbHelper;
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: retData,
+            tpl: [
+                '<div>Return with Id {returnId} {verb} {verbHelper} order #{orderNumber}</div>'
+            ]
+        });
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: retData,
+            tpl: [
+                '<div>Refund Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+                    {
+                        getCurrencyFormat: function (v) {
+                            var retVal,
+                                isNegative;
+                            v = v - 0;
+
+                            if (v < 0) {
+                                isNegative = true;
+                                v = -v;
+                            }
+                            v = Taco.app.context.getCurrent().formatCurrency(v);
+
+                            if (isNegative) {
+                                retVal = '(' + v + ')';
+                            } else {
+                                retVal = v;
+                            }
+
+                            return retVal;
+                        }
+                    }
+            ]
+        });
+
+        var headerItems = { 'productCode': 'Product Code' };
+        var dataColumns = [];
+        dataColumns.push({
+            text: 'Product Code',
+            dataIndex: 'field1',
+            draggable: false,
+            resizable: true,
+            flex: 1,
+            sortable: false,
+            menuDisabled: true
+        });
+
+        var dataStore = Ext.StoreManager.lookup(retData.productCodes);
+
+        var productGrid = Ext.create('Ext.grid.Panel', {
+            header: false,
+            editMode: false,
+            enableCellEditing: false,
+            padding: '20 0 0',
+            columns: dataColumns,
+            store: dataStore,
+            height: '100%',
+            width: '100%'
+        });
+
+        itemsList.push(productGrid);
+
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: itemsList
         });
     },
 
