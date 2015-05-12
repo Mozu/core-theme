@@ -230,147 +230,148 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.AdminUser.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.AdminUser.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.1-dev1504161434-s\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.AdminUser.Contracts.1.17.2\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.BuildSupport.GetAssemblyFileVersionTask, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.BuildSupport.GetAssemblyFileVersionTask.1.0.0\lib\Mozu.BuildSupport.GetAssemblyFileVersionTask.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.CommerceRuntime.Contracts, Version=1.17.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.6-dev1504241803Sta-s\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.CommerceRuntime.Contracts.1.17.5\lib\net451\Mozu.CommerceRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Content.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Content.Contracts, Version=1.17.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Content.Contracts.1.13.1\lib\Mozu.Content.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Content.Contracts.1.17.3\lib\Mozu.Content.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Actions, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Actions, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.Actions.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.Actions.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Api, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.Api.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Client, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Api.Client, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.Api.Client.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Api.Contracts, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Api.Contracts, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Caching, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Caching, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.Caching.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.ClearScript, Version=1.3.4.38979, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.ClearScript, Version=1.3.4.33991, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.ClearScript.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.ClearScript.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Extensible.Contracts">
-      <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.14.5\lib\net45\Mozu.Core.Extensible.Contracts.dll</HintPath>
-    </Reference>
-    <Reference Include="Mozu.Core.FilterParsing, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Extensible.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.FilterParsing.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Extensible.Contracts.1.17.1\lib\net45\Mozu.Core.Extensible.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.FilterParsing, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.1.14.1\lib\net451\Mozu.Core.Messaging.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.FilterParsing.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.14.12.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Messaging, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Messaging.Contracts.1.14.12\lib\net45\Mozu.Core.Messaging.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Messaging.1.17.1\lib\net451\Mozu.Core.Messaging.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.Mongo, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Messaging.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.Mongo.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Messaging.1.17.1\lib\net451\Mozu.Core.Messaging.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.ThirdParty, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.Mongo, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.Mongo.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.ThirdParty.Contracts, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.ThirdParty, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Core.ThirdParty.Mapping, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.ThirdParty.Contracts, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Core.Prime.1.17.8-dev1505042138-s\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Customer.Contracts, Version=1.15.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Core.ThirdParty.Mapping, Version=1.17.10.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Customer.Contracts.1.15.2\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Core.Prime.1.17.10\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.InstalledApplications.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Customer.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.17.1-dev1503311919-s\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Customer.Contracts.1.17.2\lib\net45\Mozu.Customer.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.InstalledApplications.Contracts, Version=1.17.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.InstalledApps.Contracts.1.17.3\lib\net45\Mozu.InstalledApplications.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Location.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Location.Contracts.1.17.1-dev1503181615-s\lib\net45\Mozu.Location.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Location.Contracts.1.17.1\lib\net45\Mozu.Location.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.MZDB.Contracts">
-      <HintPath>..\packages\Mozu.MZDB.Contracts.1.17.1-dev1501291828-svr\lib\net451\Mozu.MZDB.Contracts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mozu.PaymentService.Contracts, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.MZDB.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.8.0.1\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.MZDB.Contracts.1.17.2\lib\net451\Mozu.MZDB.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.PricingRuntime.Contracts, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.PaymentService.Contracts, Version=1.9.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.13.2\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.PaymentService.Contracts.1.9.8\lib\net451\Mozu.PaymentService.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.17.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.7\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.PricingRuntime.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.17.1-dev1504131316-s\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.PricingRuntime.Contracts.1.17.1\lib\net45\Mozu.PricingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Provisioning.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductAdmin.Contracts, Version=1.17.9.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.13.1\lib\net451\Mozu.Provisioning.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductAdmin.Contracts.1.17.9\lib\net45\Mozu.ProductAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reference.Contracts, Version=1.14.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ProductRuntime.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reference.Contracts.1.14.3\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ProductRuntime.Contracts.1.17.2\lib\net45\Mozu.ProductRuntime.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Provisioning.Contracts, Version=1.17.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Provisioning.Contracts.1.17.5\lib\net451\Mozu.Provisioning.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Mozu.Reference.Contracts, Version=1.17.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mozu.Reference.Contracts.1.17.4\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.Reporting.Contracts">
       <HintPath>..\packages\Mozu.Reporting.Contracts.1.13.1-dev1409220943-svr\lib\net45\Mozu.Reporting.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.14.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.17.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.14.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingAdmin.Contracts.1.17.4\lib\net45\Mozu.ShippingAdmin.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingRuntime.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.17.2\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.ShippingRuntime.Contracts.Constants, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.14.1\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
+      <HintPath>..\packages\Mozu.ShippingRuntime.Contracts.1.17.2\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
     </Reference>
     <Reference Include="Mozu.SiteSettings.General.Contracts, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.17.8-dev1504292221-s\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.General.Contracts.1.17.8\lib\net45\Mozu.SiteSettings.General.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.SiteSettings.Order.Contracts, Version=1.17.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.17.1-dev1502041514-s\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts.1.17.8\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Tenant.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mozu.Tenant.Contracts, Version=1.17.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Tenant.Contracts.1.17.1-dev1501291833-svr\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
+      <HintPath>..\packages\Mozu.Tenant.Contracts.1.17.2\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40">
       <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.17\lib\net45\NDjango.Core40.dll</HintPath>
