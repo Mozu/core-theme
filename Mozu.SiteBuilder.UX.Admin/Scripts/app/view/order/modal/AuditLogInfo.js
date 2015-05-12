@@ -200,7 +200,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             case 'Order':
             case 'StateChange.Order':
                 {
-                    if (curRecord.subject.toLowerCase().indexOf('package updated')) {
+                    if (curRecord.subject.toLowerCase().indexOf('package updated') >= 0) {
                         dataContainer = this.createPackageMessage(metaData);
                     } else {
                         dataContainer = this.createOrderMessage(curRecord);
@@ -583,9 +583,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             tpl: [
                 '<div>Payment Type: {paymentType}</div>'
             ]
-        });
-
-        itemsList.push({
+        }, {
             flex: 1,
             padding: '2 2',
             data: paymentData[0],
@@ -614,11 +612,6 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                                 amt = v.amountRequested;
                                 break;
                             }
-                            default:
-                            {
-                                amt = v.amountCredited;
-                                break;
-                            }
                         }
 
                         amt = amt - 0;
@@ -641,6 +634,46 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 }
             ]
         });
+
+
+
+        if (paymentData[0].amountCredited > 0) {
+            itemsList.push({
+                flex: 1,
+                padding: '2 2',
+                data: paymentData[0],
+                tpl: [
+                    '<div>Amount Credited: {[this.getCurrencyFormat(values)]}</div>',
+                    {
+                        // This needs to take the newValue into effect.
+                        getCurrencyFormat: function (v) {
+                            var retVal,
+                                isNegative,
+                                amt;
+
+                            amt = v.amountCredited;
+
+                            amt = amt - 0;
+
+                            if (amt < 0) {
+                                isNegative = true;
+                                amt = -amt;
+                            }
+                            amt = Taco.app.context.getCurrent().formatCurrency(amt);
+
+
+                            if (isNegative) {
+                                retVal = '(' + amt + ')';
+                            } else {
+                                retVal = amt;
+                            }
+
+                            return retVal;
+                        }
+                    }
+                ]
+            });
+        }
 
         itemsList.push({
             flex: 1,
