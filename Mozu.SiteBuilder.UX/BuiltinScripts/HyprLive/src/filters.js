@@ -43,6 +43,18 @@
         }
     }
 
+
+    function MaybeDate(v) {
+        var d = new Date(v);
+        return (isNaN(+d)) ? null : d;
+    }
+    function ensureDate(fn) {
+        return function() {
+            var args = Array.prototype.map.call(arguments, MaybeDate);
+            return fn.apply(this, args);
+        }
+    }
+
     var currencyInfo,
         RoundingTypeConst = {
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
@@ -67,21 +79,29 @@
         return num && num % divisor === 0;
     });
 
-    HyprLive.engine.setFilter('divide', ensureNumeric(function(num, divisor) {
+    function divide(num, divisor) {
         return num / divisor;
-    }, 14));
+    }
 
-    HyprLive.engine.setFilter('add', ensureNumeric(function(num, addend) {
+    function add(num, addend) {
         return num + addend;
-    }));
+    }
 
-    HyprLive.engine.setFilter('subtract', ensureNumeric(function(num, amt) {
-        return num - amt;
-    }));
+    function subtract(num, amount) {
+        return num - amount;
+    }
 
-    HyprLive.engine.setFilter('multiply', ensureNumeric(function(num, term) {
+    function multiply(num, term) {
         return num * term;
-    }, 14));
+    }
+
+    HyprLive.engine.setFilter('divide', ensureNumeric(divide, 14));
+
+    HyprLive.engine.setFilter('add', ensureNumeric(add));
+
+    HyprLive.engine.setFilter('subtract', ensureNumeric(subtract));
+
+    HyprLive.engine.setFilter('multiply', ensureNumeric(multiply, 14));
 
     HyprLive.engine.setFilter('mod', ensureNumeric(function(num, term) {
         return num % term;
@@ -235,6 +255,120 @@
     HyprLive.engine.setFilter('dictsort', createDictSortFilter(createAscendingComparator));
 
     HyprLive.engine.setFilter('dictsortreversed', createDictSortFilter(createDescendingComparator));
+
+
+    function TimeSpan(date) {
+        if (!(this instanceof TimeSpan)) return new TimeSpan(date);
+        var totalSeconds = date < 0 ? 0 : date / 1000;
+        this.TotalDays = totalSeconds / 86400;
+        this.Days = Math.floor(this.TotalDays);
+        this.TotalHours = totalSeconds / 3600;
+        this.Hours = Math.floor(this.TotalHours) % 24;
+        this.TotalMinutes = totalSeconds / 60;
+        this.Minutes = Math.floor(this.TotalMinutes) % 60;
+    }
+
+    function printDatePart(total, value, denom) {
+        if (total < 1) return "";
+        return value + " " + denom + (value !== 1 ? "s" : "");
+    }
+
+    function getPart(timespan, daysLeft, divider) {
+        return {
+            total: timespan.Days / divider,
+            rounded: Math.floor(daysLeft / divider),
+            remaining: daysLeft % divider
+        };
+    }
+
+    function toHumanDate(memo, datePart) {
+        if (memo.elemsCount == 2) return memo;
+        var strPart = printDatePart(datePart.total, datePart.rounded, datePart.denom);
+        var elemsCount = memo.elemsCount;
+        var space = "";
+        if (strPart) {
+            elemsCount = elemsCount + 1;
+            if (memo.humanized) {
+                space = " ";
+            }
+        }
+        return {
+            humanized: memo.humanized + space + strPart,
+            elemsCount: elemsCount
+        };
+    };
+
+    function timeBetween(date, laterDate) {
+        if (!date || !laterDate) return "0 minutes";
+        var timespan = TimeSpan(laterDate - date);
+
+        var yearPart = getPart(timespan, timespan.Days, 365);
+        yearPart.denom = "year";
+        var monthPart = getPart(timespan, yearPart.remaining, 30);
+        monthPart.denom = "month";
+        var weekPart = getPart(timespan, monthPart.remaining, 7);
+        weekPart.denom = "week";
+
+        var parts = [
+            yearPart,
+            monthPart,
+            weekPart,
+            {
+                total: timespan.TotalDays,
+                rounded: timespan.Days,
+                denom: "day"
+            },
+            {
+                total: timespan.TotalHours,
+                rounded: timespan.Hours,
+                denom: "hour"
+            },
+            {
+                total: timespan.TotalMinutes,
+                rounded: timespan.Minutes,
+                denom: "minute"
+            }
+        ];
+
+        var resultDate = parts.reduce(toHumanDate, {
+            humanized: "",
+            elemsCount: 0
+        });
+        if (resultDate.elemsCount === 0) return "0 minutes";
+        return resultDate.humanized;
+    }
+
+    HyprLive.engine.setFilter('timeuntil', ensureDate(function(value, laterDate) {
+        return timeBetween(value, laterDate);
+    }));
+
+    HyprLive.engine.setFilter('timesince', ensureDate(function(value, laterDate) {
+        return timeBetween(laterDate, value);
+    }));
+
+    HyprLive.engine.setFilter('is_after', ensureDate(function(value, date) {
+        return value > date;
+    }));
+
+    HyprLive.engine.setFilter('is_before', ensureDate(function(value, date) {
+        return date > value;
+    }));
+
+    HyprLive.engine.setFilter('parse_date', function(value) {
+        if (typeof value === "string" || typeof value === "number") {
+            var n = Number(value);
+            if (!isNaN(n)) return n;
+        }
+        return (new Date(value))/1000;
+    });
+
+    HyprLive.engine.setFilter('add_time', function(value, moreTime) {
+        value = MaybeDate(value);
+        moreTime = parseInt(moreTime);
+        if (!value) return "";
+        if (!moreTime || isNaN(moreTime)) return value;
+        return ((+value) + (moreTime*1000))/1000;
+    });
 
 
 }());

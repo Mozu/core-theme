@@ -44,6 +44,8 @@ for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
     //if (!locals[volatilelocalNames[lni]]) throw new ReferenceError('This page template fails to preload the ' + volatilelocalNames[lni] + ' global using {% preload_json ' + volatilelocalNames[lni] + ' "' + volatilelocalNames[lni].toLowerCase() + '" %}');
 }
 
+locals.now = require.mozuData('now') || (new Date()).toISOString();
+
 var HyprLive = {
     engine: new amds[0].Swig({
         cache: false,

@@ -158,6 +158,98 @@
 
         });
 
+        var dateScenarios = [
+            ['2001-12-12', '2001-12-12', "0 minutes"],
+            ['2002-12-12', '2001-12-12', "0 minutes"],
+            ['2001-12-12', '2002-12-13', "1 year 0 months"],
+            ['2002-12-12', '2002-12-13', "1 day 0 hours"],
+            ['2002-12-12', '2003-01-20', "1 month 1 week"],
+            ['2002-12-12', new Date(2002, 11, 12, 4, 30, 0), "10 hours 30 minutes"] // timezone offset
+        ];
+
+        describe("has date filters including", function() {
+            describe("timeuntil, which prints a humanized date interval", function() {
+
+                function testTimeUntil(n, fstr, output) {
+                    it("works with value|timeuntil(" + fstr + ") on " + n + " to produce " + output, function() {
+                        expect(Hypr.engine.render('{{ value|timeuntil("' + (new Date(fstr)).toISOString() + '") }}', { locals: { value: (new Date(n)).toISOString() } })).to.equal(output);
+                    });
+                }
+
+                dateScenarios.forEach(function(scenario) {
+                    testTimeUntil.apply(this, scenario);
+                });
+
+
+            })
+
+            describe("is_after, which returns boolean whether a date is after another date", function() {
+
+                function testIsAfter(n, fstr, output) {
+                    n = new Date(n);
+                    fstr = new Date(fstr);
+                    it("works with value|is_after(" + fstr.toISOString() + ") on " + n.toISOString() + " to return " + (n > fstr), function() {
+                        expect(Hypr.engine.render('{{ value|is_after("' + fstr.toISOString() + '") }}', { locals: { value: n.toISOString() } })).to.equal((n > fstr).toString());
+                    });
+                }
+
+                dateScenarios.forEach(function(scenario) {
+                    testIsAfter.apply(this, scenario);
+                })
+
+            });
+
+            describe("is_before, which returns boolean whether a date is before another date", function() {
+
+                function testIsBefore(n, fstr, output) {
+                    n = new Date(n);
+                    fstr = new Date(fstr);
+                    it("works with value|is_before(" + fstr.toISOString() + ") on " + n.toISOString() + " to return " + (n < fstr), function() {
+                        expect(Hypr.engine.render('{{ value|is_before("' + fstr.toISOString() + '") }}', { locals: { value: n.toISOString() } })).to.equal((n < fstr).toString());
+                    });
+                }
+
+                dateScenarios.forEach(function(scenario) {
+                    testIsBefore.apply(this, scenario);
+                });
+
+            });
+
+            describe('parse_date, which turns a string, number or date into a date value', function() {
+                function testParseDate(scenario) {
+                    var n = scenario[0],
+                        output = scenario[1];
+                    it("parses " + n + " into " + output, function() {
+                        expect(Hypr.engine.render('{{ value|parse_date }}', { locals: { value: n } })).to.equal(output);
+                    });
+                }
+
+                [
+                    ['2015-05-12', ((+(new Date('2015-05-12'))) / 1000).toString()],
+                    [1879263, ((+new Date(1879263 * 1000)) / 1000).toString()],
+                    [new Date(2002, 10, 14, 9, 2, 9, 23), ((+(new Date(2002, 10, 14, 9, 2, 9, 23))) / 1000).toString()],
+                    ['1', ((+new Date(1000)) / 1000).toString()]
+                ].forEach(testParseDate);
+            });
+
+
+            describe('add_time, which takes an internal time value represented in seconds and adds time to it', function() {
+                function testAddTime(scenario) {
+                    var n = scenario[0];
+                    var toAdd = scenario[1];
+                    var output = scenario[2];
+                    it("adds " + scenario[1] + ' to ' + scenario[0] + ' to produce ' + output + ', which is the internal representation of date ' + new Date(Number(output) * 1000), function() {
+                        expect(Hypr.engine.render('{{ value|add_time(t) }}', { locals: { value: n, t: scenario[1] } })).to.equal(output.toString());
+                    });
+                }
+
+                [
+                    ['2015-01-01', 86400, (new Date(+(new Date('2015-01-01')) + 86400000)).getTime() / 1000]
+                ].forEach(testAddTime);
+
+            })
+        });
+
         it('has an add_url_param filter that adds a parameter intelligently to a url', function() {
             var url = 'http://example.com/',
                 urlWithQuery = url + '?one=two',
