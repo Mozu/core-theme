@@ -60,8 +60,7 @@
   "ccVisa"         : "Visa",
   "ccMastercard"     : "MasterCard",
   "ccAmericanExpress"    : "American Express",
-  "ccDiscover"       : "Discover", 
-  "ccJcb"       : "JCB",
+  "ccDiscover"       : "Discover",
 
   "payPal"               : "Paypal Express",
   "password"             : "Password",
