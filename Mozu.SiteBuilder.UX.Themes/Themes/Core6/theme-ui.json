@@ -19,29 +19,28 @@
         },
         {
             "xtype": "panel",
-            "title": "Extended Properties",
-            "collapsed":false,
+<<<<<<< HEAD
+            "title": "Product Lists",            "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
                     "name": "extendedPropertiesEnabled",
-                    "fieldLabel": "Enable Extended Properties (Tracking Strings)"
+                    "fieldLabel": "Enable Expanded Properties (Tracking Strings)"
                 },
                 {
                     "xtype": "mz-input-textarea",
                     "name": "extendedPropertyParameters",
-                    "fieldLabel": "Query Parameters (comma separated)"
+                    "fieldLabel": "Query Parameters (comma seperated)"
                 }
             ]
         },
-        {
-            "xtype": "panel",
-            "title": "Product Lists",
+        {            "title": "Product Lists",
             "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
                     "name": "listProductCode",
+>>>>>>> parent of a79d76e... WIP tracking string in SDK
                     "fieldLabel": "Show product code in product lists"
                 },
                 {

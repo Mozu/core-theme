@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22512.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.Mvc", "Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj", "{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}"
 EndProject
@@ -25,9 +25,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{01AADA78-DDBB-44EE-96B0-3E0790123F38}"
 	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mozu.SiteBuilder.UnitTests", "Mozu.SiteBuilder.UnitTests\Mozu.SiteBuilder.UnitTests.csproj", "{8C45AD1D-F429-4C8A-8280-BAD6FBC8DF4C}"

@@ -4,16 +4,10 @@
  * (tenant, catalog and store IDs, and authorization tickets).
  */
 
-define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
+define(['sdk-affiliatetracking', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
     var apiConfig = require.mozuData('apicontext');
     Mozu.setServiceUrls(apiConfig.urls);
     var api = Mozu.Store(apiConfig.headers).api();
-
-    var expandedPropertyParameters = Hypr.getThemeSetting('expandedPropertyParameters');
-    if (expandedPropertyParameters && Hypr.getThemeSetting('extendedPropertiesEnabled')) {
-        api.setAffiliateTrackingParameters(expandedPropertyParameters.split(','));
-    }
-
     if (Hypr.getThemeSetting('useDebugScripts') || require.mozuData('pagecontext').isDebugMode) {
         api.on('error', function (badPromise, xhr, requestConf) {
             var e = "Error communicating with Mozu web services";
