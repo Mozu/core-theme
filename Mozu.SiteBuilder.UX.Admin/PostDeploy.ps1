@@ -14,12 +14,36 @@ function Update-ScaleUnit-In-AppSettings ([string]$ConfigFilePath, [String] $sca
 
 function install-counters($application, $dllPath)
 {
-	$dotNetVer = "v4.0.30319"
-    $dotNetRoot = (Get-ItemProperty HKLM:\software\Microsoft\.NETFramework).InstallRoot
-    pushd
-    cd "$dotNetRoot\$dotnetver"
-    $output = Invoke-Expression -command ".\InstallUtil.exe /ApplicationName=$application $dllPath 2>&1"
-    popd
+	write-Host ("func install-counters: application = $application, dllPath = $dllPath")
+	$dllPathNoQuotes = $dllPath.trim("`"")
+	if (Test-Path -LiteralPath $dllPathNoQuotes -PathType Leaf) {
+		$dotNetVer = "v4.0.30319"
+		$dotNetRoot = (Get-ItemProperty HKLM:\software\Microsoft\.NETFramework).InstallRoot
+		pushd
+		cd "$dotNetRoot\$dotnetver"
+		$installUtilExe = ".\InstallUtil.exe"
+		$applicationName = "/ApplicationName=$application"
+		write-Host ("func install-counters: iex -Command $installUtilExe $applicationName $dllPath")
+		#& $installUtilExe $applicationName $dllPath #using try catch below instead to trap non-terminal errors
+		Try	{
+            $er = (Invoke-Expression -Command ("$installUtilExe $applicationName $dllPath")) 2>&1
+	        if ($lastexitcode) {
+				write-Host ("ERROR - func install-counters: Invoke-Expression of InstallUtil failed with non-terminal error lastexitcode = $lastexitcode")
+                $er
+                write-Error "ABORT SCRIPT"
+			}
+			write-Host ("func install-counters: InstallUtil successfully installed counters for: $dllPath")
+        } Catch {
+			$exName = $_.Exception.GetType().FullName
+			write-Host ("ERROR - func install-counters: Invoke-Expression of InstallUtil exception $exName")
+            $_
+            throw "EXCEPTION"
+        }
+		popd
+	} else {
+		write-Host ("func install-counters: Warning - counter assmebly does not exist at: $dllPath")
+		write-Host ("func install-counters: Warning - counter assembly cannot be installed")
+	}
 }
 
 function get-web-application-poolName($octoProjName)
@@ -43,18 +67,30 @@ function get-mozu-AppPoolPath($octoProjName)
     Try
 	{
 		$applicationPaths = Get-WebApplication  | select -ExpandProperty PhysicalPath
-		if (!$applicationPaths) { throw "Error - function get-mozu-AppPoolPath: no application pools with a physical path found on the server." }
+		if (!$applicationPaths) { throw "Error - func get-mozu-AppPoolPath: no application pools with a physical path found on the server." }
+
+		foreach($applicationPath in $applicationPaths)
+		{
+			write-Host ("func get-mozu-AppPoolPath: applicationPath = $applicationPath")
+		}
 
 		$poolLocation = $applicationPaths | where{$_ -like "*$octoProjName*" }
-		if (!$poolLocation) { throw "Error - function get-mozu-AppPoolPath: no application path found that contains the Octopus Project Name: $octoProjName" } 
+		if (!$poolLocation) { throw "Error - func get-mozu-AppPoolPath: no application path found that contains the Octopus Project Name: $octoProjName" } 
     
+		foreach($poolLoc in $poolLocation)
+		{
+			write-Host ("func get-mozu-AppPoolPath: poolLocation = $poolLoc")
+		}
+
+		if ($poolLocation.count -gt 1) { throw "Error - func get-mozu-AppPoolPath: multiple pool locations for $octoProjName" }
+
 		if (test-path $poolLocation)
 		{
 			return $poolLocation
 		}
 		else
 		{ 
-			Throw "Error - function get-mozu-AppPoolPath: can't find path of the application per physical path of the application pool "
+			Throw "Error - func get-mozu-AppPoolPath: can't find path of the application per physical path of the application pool "
 		}
 	}    
 	Catch
@@ -97,12 +133,12 @@ function GetFumblerPage ([string] $fumblerUri)
 {
 	Try
 	{
-		write-Host ("function - GetFumblerPage: Invoke-WebRequest Uri = '$fumblerUri'")
+		write-Host ("func GetFumblerPage: Invoke-WebRequest Uri = '$fumblerUri'")
 		$webapiStatus = (Invoke-WebRequest -Uri ("$fumblerUri") -UseBasicParsing -ErrorAction 'SilentlyContinue').StatusCode 
 
 		if ($webapiStatus -ne "200")
 		{
-			write-Warning ("function - GetFumblerPage: Invoke-WebRequest Uri = $fumblerUri webapiStatus ne 200")
+			write-Warning ("func GetFumblerPage: Invoke-WebRequest Uri = $fumblerUri webapiStatus ne 200")
 			write-Host ("WebapiStatus = $webapiStatus")
 			return $webapiStatus
 		}
@@ -115,11 +151,11 @@ function GetFumblerPage ([string] $fumblerUri)
 	Catch 
 	{
 		$webapiStatus = "-1"
-		write-Warning ("function - GetFumblerPage: Invoke-WebRequest EXCEPTION") 
+		write-Warning ("func GetFumblerPage: Invoke-WebRequest EXCEPTION") 
 		$ErrorMessage = $_.Exception.Message
 		write-Host ("ErrorMessage = $ErrorMessage")
-		write-Host ("function - GetFumblerPage: webapiStatus = $webapiStatus")
-		write-Host ("function - GetFumblerPage: return and try alternate Uri")
+		write-Host ("func GetFumblerPage: webapiStatus = $webapiStatus")
+		write-Host ("func GetFumblerPage: return and try alternate Uri")
 		return $webapiStatus
 	}
 }
@@ -128,13 +164,13 @@ function GetAppSite ([string] $webUri)
 {
 	Try
 	{
-		write-Host ("function - GetAppSite: Invoke-WebRequest Uri = $webUri")
+		write-Host ("func GetAppSite: Invoke-WebRequest Uri = $webUri")
 
 		$webapiStatus = (Invoke-WebRequest -Uri ($webUri) -UseBasicParsing -ErrorAction 'SilentlyContinue').StatusCode 
 
 		if($webapiStatus -ne "200") 
 		{
-			write-error ("function - GetAppSite: ERROR Uri $webUri not = 200")
+			write-error ("func GetAppSite: ERROR Uri $webUri not = 200")
 			return $webapiStatus
 		}
 		else
@@ -145,34 +181,34 @@ function GetAppSite ([string] $webUri)
 	Catch 
 	{
 		$webapiStatus = "-1"
-		write-Warning ("function - GetAppSite: Invoke-WebRequest EXCEPTION") 
+		write-Warning ("func GetAppSite: Invoke-WebRequest EXCEPTION") 
 		$ErrorMessage = $_.Exception.Message
 		write-Host ("ErrorMessage = $ErrorMessage")
-		write-Host ("function - GetAppSite: webapiStatus = $webapiStatus")
-		write-Host ("function - GetAppSite: return and ie automation to get redirected Uri")
+		write-Host ("func GetAppSite: webapiStatus = $webapiStatus")
+		write-Host ("func GetAppSite: return and ie automation to get redirected Uri")
 		return $webapiStatus
 	}
 }
 
 function GetPortFromPoolName ([string]$poolName)
 {
-	write-Host ("function - GetPortFromPoolName: poolName = $poolName")
+	write-Host ("func GetPortFromPoolName: poolName = $poolName")
 	$xPath = (Get-WebApplication | ? { $_.ItemXPath  -like "*$poolName*" }).ItemXPath 
-	write-Host ("function - GetPortFromPoolName: xPath = $xPath")
+	write-Host ("func GetPortFromPoolName: xPath = $xPath")
 	$site = $xPath.Substring($xPath.IndexOf("site[@name='") + 12, ($xPath.IndexOf("' and @id=") - ($xPath.IndexOf("site[@name='") + 12)))
-	write-Host ("function - GetPortFromPoolName: site = $site")
+	write-Host ("func GetPortFromPoolName: site = $site")
 	[string] $bi = (Get-WebBinding -Name $site).bindingInformation
 	$bindings = $bi.Split(" ")
 	if (!($bindings)) { Throw "Error - function GetPortFromPoolName: no bindings found."  }
     foreach ($binding in $bindings)
     {
-		write-Host ("function - GetPortFromPoolName: binding = $binding. Looking for *80*")
+		write-Host ("func GetPortFromPoolName: binding = $binding. Looking for *80*")
         if ($binding -like "*80*")
         {
-            write-Host ("function - GetPortFromPoolName: found target binding = $binding")
+            write-Host ("func GetPortFromPoolName: found target binding = $binding")
 			$port = $binding.TrimStart('*')
 			$port = $port.Trim(':')
-			write-Host ("function - GetPortFromPoolName: port = $port")
+			write-Host ("func GetPortFromPoolName: port = $port")
 			return $port
         }
     }
@@ -181,24 +217,24 @@ function GetPortFromPoolName ([string]$poolName)
 
 function GetHostHeaderFromPoolName ([string]$poolName)
 {
-	write-Host ("function - GetHostHeaderFromPoolName: poolName = $poolName")
+	write-Host ("func GetHostHeaderFromPoolName: poolName = $poolName")
 	$xPath = (Get-WebApplication | ? { $_.ItemXPath  -like "*$poolName*" }).ItemXPath 
-	write-Host ("function - GetHostHeaderFromPoolName: xPath = $xPath")
+	write-Host ("func GetHostHeaderFromPoolName: xPath = $xPath")
 	$site = $xPath.Substring($xPath.IndexOf("site[@name='") + 12, ($xPath.IndexOf("' and @id=") - ($xPath.IndexOf("site[@name='") + 12)))
-	write-Host ("function - GetHostHeaderFromPoolName: site = $site")
+	write-Host ("func GetHostHeaderFromPoolName: site = $site")
 	[string] $bi = (Get-WebBinding -Name $site).bindingInformation
 	$bindings = $bi.Split(" ")
 	if (!($bindings)) { Throw "Error - function GetHostHeaderFromPoolName: no bindings found."  }
     foreach ($binding in $bindings)
     {
-		write-Host ("function - GetHostHeaderFromPoolName: binding = $binding. Looking for *80*")
+		write-Host ("func GetHostHeaderFromPoolName: binding = $binding. Looking for *80*")
         if ($binding -like "*80*")
         {
-			write-Host ("function - GetHostHeaderFromPoolName: found target binding = $binding")
+			write-Host ("func GetHostHeaderFromPoolName: found target binding = $binding")
 			[int]$i = $binding.LastIndexOf(":")
 			$hostHeader= $binding.Substring($i)
 			$hostHeader = $hostHeader.TrimStart(':')
-			write-Host ("function - GetHostHeaderFromPoolName: hostHeader = $hostHeader")
+			write-Host ("func GetHostHeaderFromPoolName: hostHeader = $hostHeader")
 			return $hostHeader
         }
     }
@@ -207,32 +243,32 @@ function GetHostHeaderFromPoolName ([string]$poolName)
 
 function CheckForHostHeader ([string]$poolName)
 {
-	write-Host ("function - CheckForHostHeader: poolName = $poolName")
+	write-Host ("func CheckForHostHeader: poolName = $poolName")
 	$xPath = (Get-WebApplication | ? { $_.ItemXPath  -like "*$poolName*" }).ItemXPath 
-	write-Host ("function - CheckForHostHeader: xPath = $xPath")
+	write-Host ("func CheckForHostHeader: xPath = $xPath")
 	$site = $xPath.Substring($xPath.IndexOf("site[@name='") + 12, ($xPath.IndexOf("' and @id=") - ($xPath.IndexOf("site[@name='") + 12)))
-	write-Host ("function - CheckForHostHeader: site = $site")
+	write-Host ("func CheckForHostHeader: site = $site")
 	[string] $bi = (Get-WebBinding -Name $site).bindingInformation
 	$bindings = $bi.Split(" ")
 	if (!($bindings)) { Throw "Error - function CheckForHostHeader: no bindings found."  }
     foreach ($binding in $bindings)
     {
-		write-Host ("function - CheckForHostHeader: binding = $binding. Looking for *80*")
+		write-Host ("func CheckForHostHeader: binding = $binding. Looking for *80*")
         if ($binding -like "*80*")
         {
-            write-Host ("function - CheckForHostHeader: found target binding = $binding")
+            write-Host ("func CheckForHostHeader: found target binding = $binding")
 			[int]$i = $binding.LastIndexOf(":") + 1 #will be equal to length if last character is a colon
 			[int]$l = $binding.Length
 			if ($l -gt $i)
 			{
 				$hasHeader = "true"
-				write-Host ("function - CheckForHostHeader: hasHeader = $hasHeader")
+				write-Host ("func CheckForHostHeader: hasHeader = $hasHeader")
 				return $hasHeader
 			}
 			else
 			{
 				$hasHeader = "false"
-				write-Host ("function - CheckForHostHeader: hasHeader = $hasHeader")
+				write-Host ("func CheckForHostHeader: hasHeader = $hasHeader")
 				return $hasHeader
 			}
         }
@@ -246,30 +282,14 @@ function get-mozu-appName($filename)
     if($xml)
     {
         $applicationName = $xml.configuration.appSettings.add | ?{$_.key -like "ApplicationName"} |select -ExpandProperty value
-		# the convention .Mozu application name is by design and used to that the list of mozu counters sorts to the top in the perf counter UI
-        $appName =  "`".Mozu $applicationName`""
+        $appName =  "`"$applicationName`""
         return $appname
     }
-    else{ throw "can't find installutil"}
+    else{ throw "can't find $filename"}
     popd
 }
 
 write-Host("START - Post-Deploy Script")
-$TeamFoundationBuildService = Get-Service -DisplayName ("*Team Foundation Build Service*")
-if ($TeamFoundationBuildService)
-{
-	write-Host("TeamFoundationBuildService found on $env:COMPUTERNAME")
-	write-Host("Assumed to be a build machine. Exit post-deploy script")
-	write-Host("END - Post Deploy Script")
-	Exit
-}
-else 
-{
-	write-Host("TeamFoundationBuildService not found on $env:COMPUTERNAME")
-	write-Host("$env:COMPUTERNAME not a TFS build machine")
-	write-Host("Continue with post-deploy script execution")
-	write-Host(" ")
-}
 write-Host("START - Set Scale Units")
 if($ScaleUnitId)
 {
@@ -305,19 +325,13 @@ write-Host("START - Install counters")
 $octoProjName = $OctopusParameters["Octopus.Project.Name"]
 $poolLocation = get-mozu-AppPoolPath($octoProjName)
 write-Host("Install counters - poolLocation: $poolLocation")
-$countersInstallLoc = "$poolLocation\bin\Mozu.Core.Api.dll"
-write-Host("Install counters - counters install loc: $countersInstallLoc")
 $appName = get-mozu-appName "$poolLocation\web.config"
 write-Host("Install counters - appName: $appName")
-$verDeployed = get-version $countersInstallLoc
-write-Host("Install counters - verDeployed: $verDeployed")
-[version]$currVersion = $verDeployed.FileVersion
-write-Host("Install counters - currVersion: $currVersion")
-[version]$minVersion =  "1.7.0.1"
-write-Host("Install counters - minVersion: $minVersion")
-if($currVersion -gt $minVersion)
+$countersAssemblyFiles = "$poolLocation\bin\Mozu.Core.Api.dll", "$poolLocation\bin\mozu.core.actions.dll"
+foreach ($countersAssemblyFilePath in $countersAssemblyFiles)
 {
-	install-counters $appName `"$countersInstallLoc`"
+	write-Host("Install counters - counters install loc: $countersAssemblyFilePath")
+	install-counters $appName `"$countersAssemblyFilePath`"
 }
 write-Host("END - Install counters")
 write-Host(" ")
@@ -330,7 +344,7 @@ write-Host("Restart application pool - previousStart: $previousStart")
 Restart-WebAppPool -name $poolName
 $currentStart = get-webAppPool-status $poolName
 write-Host("Restart application pool - currentStart: $currentStart")
-write-host   ("$poolName previous start $previousStart restarted on $currentStart")
+write-Host   ("$poolName previous start $previousStart restarted on $currentStart")
 write-Host("END - Restart application pool")
 write-Host(" ")
 
@@ -360,7 +374,7 @@ if($checkHost -eq "true")
 
 	if ($webapiStatus -eq "200")
 	{
-		Write-host ("$fumblerUri is operational")
+		write-Host ("$fumblerUri is operational")
 	}
 	else
 	{
@@ -380,7 +394,7 @@ if($checkHost -eq "true")
 		write-Host ("WebapiStatus = $webapiStatus")
 		if ($webapiStatus -eq "200")
 		{
-			Write-host ("$webUri is operational")
+			write-Host ("$webUri is operational")
 		}
 		else
 		{
