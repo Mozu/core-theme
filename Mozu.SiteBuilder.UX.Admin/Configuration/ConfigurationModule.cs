@@ -62,7 +62,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             builder.RegisterClassesMatchingInterfaceName(typeof(IApplicationsWebApiClient).Assembly);
             //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Clients.ShippingRateWebApiClient).Assembly);
-            builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Reporting.Contracts.Clients.ReportWebApiClient).Assembly);
           //  builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Shipping.Contracts.Clients.ShippingSettingsWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingRuntime.Contracts.Clients.ShippingWebApiClient).Assembly);
             //builder.RegisterClassesMatchingInterfaceName(typeof(PlatformService.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
