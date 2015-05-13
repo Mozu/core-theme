@@ -337,9 +337,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Mozu.Reference.Contracts.1.17.4\lib\net451\Mozu.Reference.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Mozu.Reporting.Contracts, Version=1.13.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Mozu.Reporting.Contracts.1.13.1-dev1409220943-svr\lib\net45\Mozu.Reporting.Contracts.dll</HintPath>
+    <Reference Include="Mozu.Reporting.Contracts, Version=1.17.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mozu.Reporting.Contracts.1.17.1\lib\net45\Mozu.Reporting.Contracts.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mozu.ShippingAdmin.Contracts, Version=1.17.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
