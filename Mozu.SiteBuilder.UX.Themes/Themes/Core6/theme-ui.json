@@ -19,8 +19,8 @@
         },
         {
             "xtype": "panel",
-<<<<<<< HEAD
-            "title": "Product Lists",            "collapsed": false,
+            "title": "Product Lists",            
+            "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-checkbox",
@@ -40,7 +40,6 @@
                 {
                     "xtype": "mz-input-checkbox",
                     "name": "listProductCode",
->>>>>>> parent of a79d76e... WIP tracking string in SDK
                     "fieldLabel": "Show product code in product lists"
                 },
                 {
