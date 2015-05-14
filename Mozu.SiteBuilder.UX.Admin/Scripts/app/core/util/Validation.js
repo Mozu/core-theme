@@ -44,7 +44,7 @@ Ext.define('Taco.core.util.Validation', {
         //                           string
 
 
-        replaceInvalidSeoRegex: new RegExp(/[^@%a-zA-Z\d\.]+|[\.]+$/g)
+        replaceInvalidSeoRegex: new RegExp(/[^%a-zA-Z_-\d\.]+/g)
         //  NODE                     EXPLANATION
         //--------------------------------------------------------------------------------
         //  [^@%a-zA-Z\d\.]+         any character except: '@', '%', 'a' to 'z', 'A'
