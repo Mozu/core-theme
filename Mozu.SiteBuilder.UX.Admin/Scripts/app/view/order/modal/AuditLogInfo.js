@@ -342,7 +342,7 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     '<div>Product Name: {productName}</div>',
                     '<br/>',
                     '<div>Old Shipping Method: {oldValue}</div>',
-                    '<div>New Shipping Metod: {newValue}</div>'
+                    '<div>New Shipping Method: {newValue}</div>'
                 ]
             }]
         });
