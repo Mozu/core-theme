@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-05-08
+ * Mozu JavaScript SDK - v0.3.0 - 2015-05-13
  *
  * Copyright (c) 2015 Volusion, Inc.
  *

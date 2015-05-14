@@ -140,8 +140,32 @@
         additionalEvents: {
             "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
             "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
-            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer"
+            "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
+            "change [data-mz-value=\"card.paymentOrCardType\"]": "foobar",
+            "change [data-mz-value=\"card.cardNumberPartOrMask\"]": "foobar",
+            "change [data-mz-value=\"card.nameOnCard\"]": "foobar",
+            "change [data-mz-value=\"card.expireMonth\"]": "foobar",
+            "change [data-mz-value=\"card.expireYear\"]": "foobar"
         },
+        foobar: function (e) {
+            var card = this.model.get('card');
+            var field = $('#mz-payment-credit-card-number');
+
+            // If payment service already assigned a cardId to the card info,
+            // then we need to unset the cardId when that info changes.
+            // This way payment service will handle it as a new payment.
+            if (card && card.get('paymentServiceCardId')) {
+                card.unset('paymentServiceCardId');
+
+                // Counterintuitively, a masked card is not backed by a full card. It's only a visual aid.
+                // Once the cardId is unset, the shopper must understand that she needs to re-enter a
+                // valid full card. Pending better UX, we enforce this by clearing the field.
+                if (field && field.val().indexOf('*') !== -1) {
+                    field.val('');
+                }
+            }
+        },
+
         initialize: function () {
             this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
             this.listenTo(this.model, 'orderPayment', function (order, scope) {
