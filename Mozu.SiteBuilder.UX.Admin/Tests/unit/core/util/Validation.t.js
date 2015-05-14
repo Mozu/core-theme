@@ -37,9 +37,9 @@
                             input: 'gx200*((',
                             expected: 'gx200-'
                         }, {
-                            scenario: 'should replace "%" with a hyphen',
+                            scenario: 'should allow "%"',
                             input: 'gx200%fx',
-                            expected: 'gx200-fx'
+                            expected: 'gx200%fx'
                         }
                     ];
                     next();
