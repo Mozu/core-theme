@@ -17,7 +17,26 @@
                 }
             ]
         },
-        {            "title": "Product Lists",
+        {
+            "xtype": "panel",
+            "title": "Extended Properties",
+            "collapsed":false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "extendedPropertiesEnabled",
+                    "fieldLabel": "Enable Extended Properties (Tracking Strings)"
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                    "name": "extendedPropertyParameters",
+                    "fieldLabel": "Query Parameters (comma seperated)"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Product Lists",
             "collapsed": false,
             "items": [
                 {

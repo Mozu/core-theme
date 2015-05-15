@@ -353,6 +353,8 @@
         }
     ],
     "settings": {
+        "extendedPropertiesEnabled": false,
+        "extendedPropertyParameters": "",
         "bannerImage": "/resources/images/banner.jpg",
         "bannerImageEnabled": false,
         "bannerImageRepeat": "repeat-x",
