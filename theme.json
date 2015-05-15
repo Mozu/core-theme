@@ -372,7 +372,7 @@
         },
         "template": "email/order-refund-issued",
         "title": "Refund Issued"
-     },
+	  },
       {
         "id": "return.created",
         "title": "Return Created",
@@ -768,7 +768,7 @@
         ],
         "defaultConfig": {
             "template": "modules/product/product-list-carousel",
-            "attributeId": "Tenant~product-related",
+            "attributeId": "tenant~product-related",
             "title": "Other Items",
             "count": "4"
         },
@@ -825,8 +825,8 @@
             "hrBorderWidth": "1px",
             "hrBorderColor": "#000",
             "hrBorderStyle": "solid",
-            "hrMarginTop": "None",
-            "hrMarginBottom": "None"
+            "hrMarginTop": "0px",
+            "hrMarginBottom": "0px"
         },
         "validPageTypes":["*"]
     }, {

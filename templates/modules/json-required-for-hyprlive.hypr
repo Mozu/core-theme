@@ -1,3 +1,7 @@
-﻿{% preload_json apiContext "apicontext" %}
+﻿{#  the intent of thise template is to prepopulate the hypr-live context with the same information as server-side hypr.  #}
+{#  this should be roughly in line with the contents of HyprView.cs::CreateRequestContext. #}
+{#  EXCEPTIONS: navigation is not loaded here because it can be HUGE. themesettings and labels are provided as part of the static hyprlivecontext that is cached. #}
+{% preload_json apiContext "apicontext" %}
 {% preload_json pageContext "pagecontext" %}
 {% preload_json user "user" %}
+{% preload_json now "now" %}
