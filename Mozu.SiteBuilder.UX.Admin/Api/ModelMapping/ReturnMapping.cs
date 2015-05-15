@@ -57,7 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
             .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
             .ForMember(x => x.OrderItemId, op => op.ResolveUsing(dc => dc.OrderItemId))
-            .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.Product == null ? null : dc.Product.ProductCode))
+            .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.Product == null ? null : (!string.IsNullOrWhiteSpace(dc.Product.VariationProductCode) ? dc.Product.VariationProductCode : dc.Product.ProductCode)))
             .ForMember(x => x.OrderItemId, op => op.ResolveUsing(dc => dc.OrderItemId))
             .ForMember(x => x.ReturnReason, op => op.ResolveUsing(dc => dc.Reasons != null && dc.Reasons.Any() ? dc.Reasons.First().Reason : null))
             .ForMember(x => x.RmaNote, op => op.ResolveUsing(dc => (dc.Notes != null && dc.Notes.Any()) ? dc.Notes.First().Text : String.Empty))
