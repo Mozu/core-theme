@@ -22,7 +22,7 @@
         {% if payment.billingInfo.paymentType == "CreditCard" %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ payment.billingInfo.paymentType }}</h4>
-            <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ model.card.cardNumberPartOrMask }}</span>
+            <span><strong>{{ payment.amountRequested|currency }}</strong> &mdash; {{ payment.billingInfo.card.cardNumberPartOrMask }}</span>
             <dl class="mz-propertylist">
                 <dt>{{ labels.billingAddress }}</dt>
                 <dd>

@@ -1,5 +1,8 @@
 Core4 Changelog
 ===============
+v4.4.0
+------
+* Brought over multiple changes from Mozu release 1.16.25
 
 v4.3.0
 ------

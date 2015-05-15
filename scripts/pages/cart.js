@@ -2,6 +2,21 @@
 
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
+        initialize: function () {
+            var me = this;
+
+            //setup coupon code text box enter.
+            this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
+            this.codeEntered = !!this.model.get('couponCode');
+            this.$el.on('keypress', 'input', function (e) {
+                if (e.which === 13) {
+                    if (me.codeEntered) {
+                        me.handleEnterKey();
+                    }
+                    return false;
+                }
+            });
+        },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
                 newQuantity = parseInt($qField.val()),
@@ -25,6 +40,29 @@
             // return false;
             this.model.isLoading(true);
             // the rest is done through a regular HTTP POST
+        },
+        addCoupon: function () {
+            var self = this;
+            this.model.addCoupon().ensure(function () {
+                self.model.unset('couponCode');
+                self.render();
+            });
+        },
+        onEnterCouponCode: function (model, code) {
+            if (code && !this.codeEntered) {
+                this.codeEntered = true;
+                this.$el.find('#cart-coupon-code').prop('disabled', false);
+            }
+            if (!code && this.codeEntered) {
+                this.codeEntered = false;
+                this.$el.find('#cart-coupon-code').prop('disabled', true);
+            }
+        },
+        autoUpdate: [
+            'couponCode'
+        ],
+        handleEnterKey: function () {
+            this.addCoupon();
         }
     });
 

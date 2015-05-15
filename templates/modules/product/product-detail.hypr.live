@@ -42,7 +42,7 @@
   </button>
 
   {% if not user.isAnonymous and themeSettings.allowWishlist %}
-  <button id="add-to-wishlist" {% if model.notDoneConfiguring %} disabled="disabled" {% endif %} class="mz-productdetail-addtowishlist mz-button" data-mz-action="addToWishlist">
+  <button id="add-to-wishlist" {% if model.notDoneConfiguring %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button" data-mz-action="addToWishlist">
       {{ labels.addToWishlist }}
   </button>
   {% endif %}
