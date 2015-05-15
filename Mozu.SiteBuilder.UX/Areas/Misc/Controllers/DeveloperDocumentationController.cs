@@ -5,35 +5,29 @@ using System.Linq;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Xsl;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Tags;
 using System.Text;
-using System.Web.Routing;
-
-using Mozu.SiteBuilder.UX.Controllers;
-using Mozu.SiteBuilder.UX.Areas.Misc.Models;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using NDjango;
 using NDjango.Interfaces;
+using Mozu.SiteBuilder.Mvc.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
 
-    public class DeveloperDocumentationController : BaseApiController
+    public class DeveloperDocumentationController : ApiControllerBase
     {
-    
+
         private readonly ITemplateManagerProvider _templateManagerProvider;
 
         public DeveloperDocumentationController(ITemplateManagerProvider templateManagerProvider)
         {
-           _templateManagerProvider = templateManagerProvider;
+            _templateManagerProvider = templateManagerProvider;
         }
 
         //
         // GET: /Misc/DeveloperDocumentation/
-           [System.Web.Http.HttpGet]
+        [System.Web.Http.HttpGet]
         public ActionResult Tags()
         {
             List<DjangoItemInfo> itemInfos = BuildTagInfos();
@@ -49,34 +43,38 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             };
 
 
-         
+
         }
-           public class DjangoItemInfo
-           {
-               public string TagName
-               {
-                   get;
-                   set;
-               }
-               public String DocUrl { get; set; }
-               public List<string> Examples
-               {
-                   get;
-                   set;
-               }
+        public class DjangoItemInfo
+        {
+            public string TagName
+            {
+                get;
+                set;
+            }
+            public String DocUrl { get; set; }
+            public List<string> Examples
+            {
+                get;
+                set;
+            }
 
 
-               public string Description { get; set; }
+            public string Description { get; set; }
 
-               public string Summary { get; set; }
-           }
+            public string Summary { get; set; }
+            public override string ToString()
+            {
+                return TagName;
+            }
+        }
 
-/// <summary>
-/// 
-/// </summary>
-/// <
-/// <returns></returns>
-           [System.Web.Http.HttpGet]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <
+        /// <returns></returns>
+        [System.Web.Http.HttpGet]
         public ActionResult Filters()
         {
 
@@ -93,30 +91,30 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var descriptionAttribute = (NDjango.ParserNodes.DescriptionAttribute)tt.GetCustomAttributes(descAttType, false).FirstOrDefault();
                 var typeLookup = tt.FullName.Replace("+", ".");
                 itemInfos.Add(new DjangoItemInfo()
-                                 {
-                                     TagName = installedFilter.Key ,
-                                     Description = descriptionAttribute == null ? null : descriptionAttribute.Description ,
+                {
+                    TagName = installedFilter.Key,
+                    Description = descriptionAttribute == null ? null : descriptionAttribute.Description,
 
-                                     Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
-                                     DocUrl = tt.FullName.IndexOf("Mozu") == -1 ? "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedFilter.Key : null
-                                     
-                                 });
+                    Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
+                    DocUrl = tt.FullName.IndexOf("Mozu") == -1 ? "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedFilter.Key : null
+
+                });
 
 
             }
-               ViewData.Model = itemInfos;
-               ViewData["itemtype"] = "Filters";
+            ViewData.Model = itemInfos;
+            ViewData["itemtype"] = "Filters";
             return new Mozu.SiteBuilder.Mvc.ActionResults.RazorViewResult()
-                      {
-                          Model = itemInfos,
-                          ViewData = ViewData,
+            {
+                Model = itemInfos,
+                ViewData = ViewData,
 
-                          ViewName = "list"
-                      };
-                //("documentation/tags", tagInfos);
+                ViewName = "list"
+            };
+            //("documentation/tags", tagInfos);
         }
 
-           private static Dictionary<string, string> _assumblyTypeSummeries = null;
+        private static Dictionary<string, string> _assumblyTypeSummeries = null;
         /// <summary>
         /// 
         /// </summary>
@@ -124,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// <code>i like fudge</code>
         /// <param name="context"></param>
         /// <returns></returns>
-        static Dictionary<string, string> GetSummeries(System.Web.HttpContextBase  context)
+        static Dictionary<string, string> GetSummeries(System.Web.HttpContextBase context)
         {
             if (_assumblyTypeSummeries != null)
             {
@@ -140,8 +138,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     throw new FileNotFoundException("documentation file missing " + xmlFile, xmlFile);
                 }
                 XDocument xdoc = XDocument.Load(fullPath);
-               
-                var kvps=xdoc.Root.Element("members").Elements("member").Where(mem => ((string) mem.Attribute("name")).StartsWith("T:")).Select(
+
+                var kvps = xdoc.Root.Element("members").Elements("member").Where(mem => ((string)mem.Attribute("name")).StartsWith("T:")).Select(
                     mem => new KeyValuePair<string, string>(
                         mem.Attribute("name").Value.Substring(2),
                         ToHtmlString(mem.Element("summary")
@@ -156,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             }
             return _assumblyTypeSummeries = dic;
-            
+
 
         }
 
@@ -172,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 if (node.NodeType == XmlNodeType.Element)
                 {
-                    var subEl = (XElement) node;
+                    var subEl = (XElement)node;
                     if (subEl.Name == "code")
                     {
                         sb.Append("<div class=\"code\">");
@@ -187,10 +185,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 if (node.NodeType == XmlNodeType.Text)
                 {
 
-                    sb.Append(((XText) node).Value);
+                    sb.Append(((XText)node).Value);
                 }
 
-                
+
             }
             return sb.ToString();
 
@@ -204,7 +202,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var tagInfos = new List<DjangoItemInfo>();
             var baseDynamicTagType = typeof(DynamicTagBase);
             var nameAttType = typeof(NDjango.Interfaces.NameAttribute);
-            var descAttType=typeof (NDjango.ParserNodes.DescriptionAttribute);
+            var descAttType = typeof(NDjango.ParserNodes.DescriptionAttribute);
             var dtags = baseDynamicTagType.Assembly.GetTypes().Where(x => !x.IsAbstract && baseDynamicTagType.IsAssignableFrom(x)).ToList();
 
 
@@ -213,7 +211,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             foreach (var installedTag in _templateManagerProvider.Tags)
             {
                 var tt = installedTag.Value.GetType();
-                if (tt.GetCustomAttributes(typeof (ObsoleteAttribute), true).FirstOrDefault() != null)
+                if (tt.GetCustomAttributes(typeof(ObsoleteAttribute), true).FirstOrDefault() != null)
                 {
                     continue;
                 }
@@ -224,12 +222,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var typeLookup = tt.FullName.Replace("+", ".");
 
                 var item = new DjangoItemInfo()
-                           {
-                               Description = descriptionAttribute != null ? descriptionAttribute.Description : null,
-                               TagName = installedTag.Key,
-                               Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
-                               DocUrl = "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedTag.Key
-                           };
+                {
+                    Description = descriptionAttribute != null ? descriptionAttribute.Description : null,
+                    TagName = installedTag.Key,
+                    Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
+                    DocUrl = "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedTag.Key
+                };
 
 
 
@@ -238,8 +236,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return tagInfos.OrderBy(x => x.TagName).ToList();
         }
 
-        
+
 
     }
-
 }
