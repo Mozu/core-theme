@@ -212,11 +212,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     },
                     password: this.$parent.find('[data-mz-signup-password]').val()
                 };
-            if (this.validate(payload)) {
+            if (this.validate(payload)) {   
                 //var user = api.createSync('user', payload);
                 this.setLoading(true);
                 return api.action('customer', 'createStorefront', payload).then(function () {
-                    window.location.reload();
+                    if (self.redirectTemplate) {
+                        window.location.pathname = self.redirectTemplate;
+                    }
+                    else {
+                        window.location.reload();
+                    }
                 }, self.displayApiMessage);
             }
         }
@@ -243,6 +248,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var signupPage = new SignupPopover();
             signupPage.formSelector = 'form[name="mz-signupform"]';
             signupPage.pageType = 'signup';
+            signupPage.redirectTemplate = 'myaccount';
             signupPage.init(this);
         });
         $('[data-mz-action="loginpage-submit"]').each(function(){

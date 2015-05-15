@@ -222,7 +222,7 @@
   "shippedTo"            : "Shipped to",
   "giftMessage"          : "Gift Message",
   "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
-  "noPaymentRequired": "Your total is {0}, so no payment method is required.",
+  "noPaymentRequired"    : "Your total is {0}, so no payment method is required.",
   "noPaymentWasRequired"    : "Your total was {0}, so no payment method was required.",
 
   "giftCardEmailBanner"       : "<!--<a href=\"{0}\"><img src=\"//:0\"/></a>-->",

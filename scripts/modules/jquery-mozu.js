@@ -33,7 +33,7 @@ define(["jquery", "vendor/jquery-scrollto", "vendor/jquery.cookie/jquery.cookie"
         // march and parse
         for (i = querystring.length; i > 0;) {
             pair = querystring[--i].split('=');
-            params[d(pair[0])] = d(pair[1]);
+            if (pair && pair.length > 1) params[d(pair[0])] = d(pair[1].replace(/\+/g, '%20'));
         }
 
         return params;

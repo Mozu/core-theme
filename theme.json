@@ -6,7 +6,8 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core6"
+        "name": "Core6",
+        "allowProduction": false
     },
     "editors": [
         {
@@ -15,14 +16,6 @@
             ],
             "id": "web_page@mozu",
             "path": "web_page.js",
-            "priority": 0.2
-        },
-        {
-            "documentTypes": [
-                "post@mozu"
-            ],
-            "id": "post@mozu",
-            "path": "post.js",
             "priority": 0.2
         },
         {
@@ -877,7 +870,7 @@
         },
         {
             "defaultConfig": {
-                "attributeId": "Tenant~product-related",
+                "attributeId": "tenant~product-related",
                 "count": "4",
                 "template": "modules/product/product-list-carousel",
                 "title": "Other Items"

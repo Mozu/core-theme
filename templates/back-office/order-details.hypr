@@ -76,8 +76,7 @@
                         <td>({{ model.storeCredit|currency }})</td>
                     </tr>
                 {% endif %}
-                <tr>
-                    <td colspan="5">Tax</td>
+                <tr>                    <td colspan="5">Tax</td>
                     <td>{{ model.taxTotal|currency }}</td>
                 </tr><tr>
                     <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>

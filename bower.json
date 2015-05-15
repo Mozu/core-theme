@@ -1,13 +1,14 @@
 {
   "name": "mozu-core-theme",
-  "version": "6.3.0",
+  "version": "6",
   "dependencies": {
     "backbone": "~1.1",
     "underscore": "~1.6",
     "bootstrap": "~3.2",
+    "jquery": "~1.11",
     "jquery.cookie": "~1.4",
     "jquery-colorbox": "~1.5",
-    "typeahead.js": "~0"
+    "typeahead.js": "0.10.5"
   },
   "ignore": [
     "/.*",

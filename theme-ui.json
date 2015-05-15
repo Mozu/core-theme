@@ -17,9 +17,7 @@
                 }
             ]
         },
-        {
-            "xtype": "panel",
-            "title": "Product Lists",
+        {            "title": "Product Lists",
             "collapsed": false,
             "items": [
                 {

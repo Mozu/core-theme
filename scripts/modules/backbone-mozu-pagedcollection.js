@@ -1,7 +1,8 @@
 ﻿define([
     "jquery",
+    "underscore",
     "hyprlive",
-    "modules/backbone-mozu-model"], function ($, Hypr, Backbone) {
+    "modules/backbone-mozu-model"], function ($, _, Hypr, Backbone) {
 
         var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
             defaultSort = Hypr.getThemeSetting('defaultSort'),
@@ -69,7 +70,8 @@
             getQueryString: function() {
                 var params = this.getQueryParams();
                 if (!params || _.isEmpty(params)) return "";
-                return "?" + $.param(params);
+                return "?" + $.param(params)
+                              .replace(/\+/g, ' ');
             },
 
             buildRequest: function() {
@@ -107,9 +109,7 @@
 
             setPage: function(num) {
                 num = parseInt(num, 10);
-                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiGet($.extend(this.lastRequest, {
-                    startIndex: (num - 1) * parseInt(this.get('pageSize'), 10)
-                }));
+                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiModel.setIndex((num - 1) * parseInt(this.get('pageSize'), 10), this.lastRequest);
             },
 
             changePageSize: function() {

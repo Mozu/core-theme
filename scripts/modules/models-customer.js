@@ -400,7 +400,7 @@
         beginEditContact: function (id) {
             var toEdit = this.get('contacts').get(id);
             if (toEdit)
-                this.get('editingContact').set(toEdit.toJSON({ helpers: true, ensureCopy: true }));
+                this.get('editingContact').set(toEdit.toJSON({ helpers: true, ensureCopy: true }), { silent: true });
         },
         endEditContact: function() {
             var editingContact = this.get('editingContact');

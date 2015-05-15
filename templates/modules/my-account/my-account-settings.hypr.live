@@ -19,16 +19,6 @@
   <div class="mz-accountsettings-displayemail">{{ model.emailAddress|default(model.userName) }}</div>
   {% endif %}
 </div>
-<div class="mz-accountsettings-section mz-accountsettings-phone">
-  <span class="mz-accountsettings-label mz-account-settings-label-phone">{{ labels.phone }}</span>
-  {% if editing %}
-  <input id="account-phone" class="mz-accountsettings-phone" value="{{ model.primaryBillingContact.phoneNumbers.home }}" type="tel" placeholder="555-555-5555" data-mz-value="primaryBillingContact.phoneNumbers.home" />
-  <span class="mz-validationmessage" data-mz-validationmessage-for="phone"></span>
-  {% else %}
-  <div class="mz-accountsettings-displayphone">{{ model.primaryBillingContact.phoneNumbers.home|default(labels.noPhoneNumber) }}</div>
-  {% endif %}
-</div>
-
 <div class="mz-accountsettings-section mz-accountsettings-acceptsmarketing">
   <input type="checkbox" id="account-acceptsmarketing" data-mz-value="acceptsMarketing" {% if model.acceptsMarketing %}checked="checked"{% endif %} {% if not editing %}disabled="disabled"{% endif %} />
   <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
