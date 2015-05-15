@@ -48,7 +48,7 @@
 		</tbody>
     </table>
 
-	{{ labels.returnReceivedBlob2|safe }}
+	<!--{{ labels.returnReceivedBlob2|safe }} removed per bug #51526 -->
 
 	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
 

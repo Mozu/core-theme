@@ -1,13 +1,12 @@
 ﻿<div class="mz-cms-image" style="height: 100%; width: 100%;" data-mz-cms-image="{% json_attribute Model.config|default:'{}' %}">
-
 {% if not Model.config  %}
 
-    <img class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
+    <img class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></div>
 
 {% endif %}
 
 {% if Model.config.imageSize == 'maintain' %}
-    <img class="mz-cms-image-maintain" src="{{Model.config.imageExternalUrl}}">
+    <img class="mz-cms-image-maintain" src="{{Model.config.imageExternalUrl}} border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};">
 
 {% else %}
 
@@ -17,12 +16,12 @@
 
             {% if Model.config.imageSource == "externalUrl" %}
             
-                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkExternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
+                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkExternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></a>
             
             {% endif %}
             {% if Model.config.imageSource == "file" %}
             
-                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkExternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
+                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkExternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></a>
             
             {% endif %}
 
@@ -31,12 +30,12 @@
 
             {% if Model.config.imageSource == "externalUrl" %}
             
-                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkInternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
+                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkInternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></a>
             
             {% endif %}
             {% if Model.config.imageSource == "file" %}
             
-                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkInternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
+                <a class="mz-cms-image-cover" target="_blank" href="{{Model.config.linkInternalUrl}}" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></a>
             
             {% endif %}
 
@@ -45,12 +44,12 @@
 
             {% if Model.config.imageSource == "externalUrl" %}
             
-                <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></a>
+                <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></a>
             
             {% endif %}
             {% if Model.config.imageSource == "file" %}
             
-                <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></a>
+                <a class="mz-cms-image-cover" target="_blank" data-thom="thom" {% if Model.config.linkFileId %}href="{{ siteContext.cdnPrefix }}/cms/files/{{Model.config.linkFileId}}"{% endif %} title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></a>
             
             {% endif %}
 
@@ -60,12 +59,12 @@
 
         {% if Model.config.imageSource == "externalUrl" %}
         
-            <div class="mz-cms-image-cover" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');"></div>
+            <div class="mz-cms-image-cover" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{Model.config.imageExternalUrl}}');border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></div>
         
         {% endif %}
         {% if Model.config.imageSource == "file" %}
         
-            <div class="mz-cms-image-cover" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}');"></div>
+            <div class="mz-cms-image-cover" title="{{Model.config.imageAltText}}" alt="{{Model.config.imageAltText}}" style="background-image: url('{{siteContext.cdnPrefix}}/cms/files/{{Model.config.imageFileId}}'); border-width: {{Model.config.borderWidth}}; border-style: {{Model.config.borderStyle}}; border-color: {{Model.config.borderColor}};"></div>
         
         {% endif %}
 
