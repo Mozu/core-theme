@@ -690,6 +690,10 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                                 amt = v.amountCollected;
                                 break;
                             }
+                            case 'credited': {
+                                amt = v.amountCredited;
+                                break;
+                            }
                             case 'new':
                             // FALL THROUGH ALL OF THESE
                             case 'pending':
