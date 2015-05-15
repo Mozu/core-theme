@@ -11,7 +11,7 @@ Ext.define('Taco.core.util.Validation', {
     config: {
 
         //not il18n friendly
-        seoFriendlyRegex: new RegExp(/^[a-z0-9-_\.()]*[a-z0-9-_()]$/i), 
+        seoFriendlyRegex: new RegExp(/^[a-z0-9-_\.()]*[a-z0-9-_()]$/i),
         //RegEx documentation below is taken from http://rick.measham.id.au/paste/explain.pl
         //  NODE                     EXPLANATION
         //--------------------------------------------------------------------------------
@@ -44,10 +44,10 @@ Ext.define('Taco.core.util.Validation', {
         //                           string
 
 
-        replaceInvalidSeoRegex: new RegExp(/[^%a-zA-Z_-\d\.]+/g)
+        replaceInvalidSeoRegex: new RegExp(/[^a-zA-Z\d\.]+|[\.]+$/g)
         //  NODE                     EXPLANATION
         //--------------------------------------------------------------------------------
-        //  [^@%a-zA-Z\d\.]+         any character except: '@', '%', 'a' to 'z', 'A'
+        //  [^a-zA-Z\d\.]+         any character except: 'a' to 'z', 'A'
         //                           to 'Z', digits (0-9), '\.' (1 or more
         //                           times (matching the most amount possible))
         //--------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ Ext.define('Taco.core.util.Validation', {
         }
         return true;
     },
-    
+
     /**
      * Validates queryString text is URL friendly.  Allows empty.
      * @param value text value

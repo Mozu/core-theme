@@ -25,9 +25,9 @@
                             input: 'product.standard',
                             expected: 'product.standard'
                         }, {
-                            scenario: 'should allow "." at end',
-                            input: 'g@f.x.',
-                            expected: 'g-f.x.'
+                            scenario: 'should replace ending period with a hyphen',
+                            input: 'product standard.',
+                            expected: 'product-standard-'
                         }, {
                             scenario: 'should replace special characters with hyphens',
                             input: 'gx$200*g4&',
@@ -37,13 +37,9 @@
                             input: 'gx200*((',
                             expected: 'gx200-'
                         }, {
-                            scenario: 'should allow "%"',
+                            scenario: 'should replace "%" with a hyphen',
                             input: 'gx200%fx',
-                            expected: 'gx200%fx'
-                        },{
-                            scenario: 'should replace space and multiple invalid characters.',
-                            input: 'my-3823----- $$%#####3.-',
-                            expected: 'my-3823------%-3.-'
+                            expected: 'gx200-fx'
                         }
                     ];
                     next();
