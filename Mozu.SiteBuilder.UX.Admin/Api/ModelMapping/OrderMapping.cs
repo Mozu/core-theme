@@ -168,26 +168,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .AfterMap(InterpolateRefundsIntoPaymentInteractions)
                 .AfterMap((dc, order) =>
                 {
-                    if (order.Packages.IsNullOrEmpty())
-                        return;
+                    if (!order.Packages.IsNullOrEmpty())
+                    {
 
-                    // sort order packages by create date (for consistent ordering in UI)
-                    order.Packages = order.Packages.OrderBy(p => p.CreateDate).ToList();
+                        // sort order packages by create date (for consistent ordering in UI)
+                        order.Packages = order.Packages.OrderBy(p => p.CreateDate).ToList();
 
-                    // add orderId to packages
-                    EnumerableExtensions.Each(order.Packages, p => p.OrderId = order.Id);
+                        // add orderId to packages
+                        EnumerableExtensions.Each(order.Packages, p => p.OrderId = order.Id);
 
-                    // add item name, etc to packageItems
-                    EnumerableExtensions.Each(order.Packages.SelectMany(p => p.Items), packageItem => FillPackageItemDetails(packageItem, order));
+                        // add item name, etc to packageItems
+                        EnumerableExtensions.Each(order.Packages.SelectMany(p => p.Items), packageItem => FillPackageItemDetails(packageItem, order));
 
-                    // add item name to pickup item
-                    EnumerableExtensions.Each(order.Pickups.SelectMany(p => p.Items), pickupItem => FillPickupItemDetails(pickupItem, order));
+                        // ensure weight on all packages
+                        EnumerableExtensions.Each(order.Packages, p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
+                    }
 
-                    // add item name to digital items
-                    EnumerableExtensions.Each(order.DigitalPackages.SelectMany(p => p.Items), digitalItem => FillPackageItemDetails(digitalItem, order));
+                    if (!order.Pickups.IsNullOrEmpty())
+                    {
+                        // add item name to pickup item
+                        EnumerableExtensions.Each(order.Pickups.SelectMany(p => p.Items), pickupItem => FillPickupItemDetails(pickupItem, order));
+                    }
 
-                    // ensure weight on all packages
-                    EnumerableExtensions.Each(order.Packages, p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
+                    if (!order.DigitalPackages.IsNullOrEmpty())
+                    {
+                        // add item name to digital items
+                        EnumerableExtensions.Each(order.DigitalPackages.SelectMany(p => p.Items), digitalItem => FillPackageItemDetails(digitalItem, order));
+                    }
+
                 })
                 .AfterMap((dc, order) =>
                 {
