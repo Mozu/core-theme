@@ -371,14 +371,26 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             ]
         });
 
-        itemsList.push({
-            flex: 1,
-            padding: '2 2',
-            data: retData,
-            tpl: [
-                '<div>Refund Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
+        if (retData.transactionId != null && retData.transactionId.length > 0) {
+            itemsList.push({
+                flex: 1,
+                padding: '2 2',
+                data: retData,
+                tpl: [
+                    '<div>TransactionId: {transactionId}</div>'
+                ]
+            });
+        }
+
+        if (retRecord.verb.toLowerCase() !== 'added') {
+            itemsList.push({
+                flex: 1,
+                padding: '2 2',
+                data: retData,
+                tpl: [
+                    '<div>Refund Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
                     {
-                        getCurrencyFormat: function (v) {
+                        getCurrencyFormat: function(v) {
                             var retVal,
                                 isNegative;
                             v = v - 0;
@@ -398,10 +410,10 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                             return retVal;
                         }
                     }
-            ]
-        });
+                ]
+            });
+        }
 
-        var headerItems = { 'productCode': 'Product Code' };
         var dataColumns = [];
         dataColumns.push({
             text: 'Product Code',
