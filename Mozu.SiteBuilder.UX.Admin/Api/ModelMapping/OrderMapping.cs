@@ -1305,10 +1305,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             if (itemInOrder == null)
                 return;
 
-            pickupItem.ProductCode = itemInOrder.ProductCode;
-            pickupItem.ProductName = itemInOrder.ProductName;
-            pickupItem.LineId = itemInOrder.LineId;
-            pickupItem.FulfillmentStatus = itemInOrder.FulfillmentStatus;
+            if (itemInOrder.BundledProducts.IsNullOrEmpty())
+            {
+                pickupItem.ProductCode = itemInOrder.ProductCode;
+                pickupItem.ProductName = itemInOrder.ProductName;
+                pickupItem.LineId = itemInOrder.LineId;
+                pickupItem.FulfillmentStatus = itemInOrder.FulfillmentStatus;
+            }
+            else
+            {
+                var foundProduct = itemInOrder.BundledProducts.FirstOrDefault(i => i.ProductCode == pickupItem.ProductCode);
+                if (foundProduct == null)
+                    return;
+                pickupItem.ProductCode = foundProduct.ProductCode;
+                pickupItem.ProductName = foundProduct.Name;
+                pickupItem.LineId = pickupItem.LineId;
+                pickupItem.FulfillmentStatus = foundProduct.FulfillmentStatus;
+            }
         }
     }
 }
