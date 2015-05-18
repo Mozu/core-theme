@@ -186,7 +186,12 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
             success: function () {
                 // if the user rejects or cancels the return we need to update the returnable items grid since the qty returned will change;
                 if (buttonId === 'Cancel' || buttonId === 'Reject') {
-                    me.fireEvent("refresh-returnable-items");
+                    me.getOrder().reload({
+                        success: function () {
+                            me.fireEvent("refresh-returnable-items");
+                        },
+                        scope: me
+                    });
                 }
             },
             callback: function () {
