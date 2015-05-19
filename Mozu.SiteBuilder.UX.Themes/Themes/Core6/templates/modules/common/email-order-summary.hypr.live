@@ -44,8 +44,9 @@
                 <span class="mz-ordersummary-totalname">{{ labels.subtotal }}:</span>
                 <span class="mz-ordersummary-totalvalue">{{ model.discountedSubTotal|currency }}</span>
               </td>
-            </tr>
-            {% else %}            <tr class="mz-ordersummary-tax">
+            </tr>         
+            {% if model.taxTotal %}
+             <tr class="mz-ordersummary-tax">
                 <td align="right" colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.tax }}:</span>
                     <span class="mz-ordersummary-totalvalue">{{ model.taxTotal|currency }}</span>
