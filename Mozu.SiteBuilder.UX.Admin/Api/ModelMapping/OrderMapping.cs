@@ -410,9 +410,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     desiredDigitalQuantity = bundledProduct.Quantity * orderItem.Quantity;
                 }
 
-                var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
-                var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
-                var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
+                var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
+                var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
+                var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == bundledProduct.ProductCode).Sum(i => i.Quantity);
                 // add new unpackaged item with remaining quantity to the order.UnpackagedItems
                 // make sure new entry contains, fulfillment status, line id, and other goodness
                 // if there are more desired products than created packages contain, add this product to unpackagedItems.
@@ -494,9 +494,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 desiredDigitalQuantity = orderItem.Quantity;
             }
 
-            var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
-            var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
-            var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
+            var packagedQuantity = order.Packages.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
+            var pickedQuantity = order.Pickups.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
+            var digitallyFulfilled = order.DigitalPackages.SelectMany(p => p.Items).Where(i => i.LineId.HasValue && i.LineId == lineId && i.ProductCode == orderItem.ProductCode).Sum(i => i.Quantity);
 
             // if there are more desired products than created packages contain, add this product to unpackagedItems.
             if (desiredPackageQuantity > packagedQuantity)
@@ -1265,7 +1265,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             
             // use the packageItem's LineId here!
             // Find the orderItem within the order:
-            var orderItem = order.Items.FirstOrDefault(i => i.LineId == packageItem.LineId);
+            var orderItem = order.Items.FirstOrDefault(i => packageItem.LineId.HasValue && i.LineId == packageItem.LineId);
 
             if (orderItem == null)
                 return;
