@@ -107,13 +107,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "billingcontactlastname":
                     return string.Format("({1} sw {0})", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME);
                 case "billingcontactaddress":
-                    return string.Format("( {1} cont \"{0}\" )", filter.value, BILLINGCONTACTADDRESS);
+                    return string.Format("( {1} sw \"{0}\" )", filter.value, BILLINGCONTACTADDRESS);
                 case "firstname":
-                    return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, BILLINGCONTACTFIRSTNAME, BILLINGCONTACTFIRSTNAME);
+                    return string.Format("(({1} sw {0}) or ({2} sw {0}))", filter.value, BILLINGCONTACTFIRSTNAME, FULFILLMENTCONTACTFIRSTNAME);
                 case "lastname":
-                    return string.Format("(({1} cont {0}) or ({2} cont {0}))", filter.value, FULFILLMENTCONTACTLASTNAMEORSURNAME, FULFILLMENTCONTACTLASTNAMEORSURNAME);
+                    return string.Format("(({1} sw {0}) or ({2} sw {0}))", filter.value, BILLINGCONTACTLASTNAMEORSURNAME, FULFILLMENTCONTACTLASTNAMEORSURNAME);
                 case "emailaddress":
-                    return string.Format("(({1} cont {0}) or ({2} cont {0}) or ({3} cont {0}))", filter.value, EMAIL, FULFILLMENTCONTACTEMAIL, BILLINGCONTACTEMAIL);
+                    return string.Format("(({1} sw {0}) or ({2} sw {0}) or ({3} sw {0}))", filter.value, EMAIL, FULFILLMENTCONTACTEMAIL, BILLINGCONTACTEMAIL);
                 case "customerid":
                     return string.Format("( CustomerAccountId  eq {0} )", filter.value);
                 case "ordertype":
