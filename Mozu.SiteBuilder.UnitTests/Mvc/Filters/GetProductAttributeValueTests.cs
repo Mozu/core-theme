@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                 {
                     Name = "takes stringvalue first",
                     Template = getavailability,
-                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="he"}}}}}} },
+                    Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="eh"}}}}}} },
                     ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
                 new TestDescriptor
