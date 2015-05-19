@@ -16,7 +16,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// The line id associated with the fulfillment.
         /// </summary>
-        public int LineId { get; set; }
+        public int? LineId { get; set; }
 
         public string FulfillmentStatus { get; set; }
         
