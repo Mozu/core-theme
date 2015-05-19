@@ -1,0 +1,17 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+
+	{% if user and user.firstName %}
+		{{ labels.emailOpening|string_format(user.firstName)|safe }}
+	{% else %}
+		{{ labels.emailOpeningAlternative|safe }}
+	{% endif %}
+
+  <h1>{{ labels.newUserEmailSalutation|string_format(siteContext.generalSettings.websiteName) }}</h1>
+
+  <p>{{ labels.newUserEmailNotification|string_format(domainName, model.UserEmailAddress)|safe }}</p>
+
+  {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}

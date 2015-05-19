@@ -1,0 +1,10 @@
+﻿<div class="mz-ordersummary-checkout">
+    <h3 class="mz-formstep-header">
+        {{ labels.orderSummary }}
+        <button class="mz-button mz-button-small" data-mz-action="editCart">{{ labels.edit }}</button>
+    </h3>
+
+    <div class="mz-formstep-body">
+        {% include "modules/common/order-summary" %}
+    </div><!-- #order-summary -->
+</div>

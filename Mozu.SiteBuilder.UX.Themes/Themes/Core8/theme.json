@@ -6,8 +6,7 @@
         "isDesktop": true,
         "isMobile": false,
         "isTablet": false,
-        "name": "Core7",
-        "allowProduction": false
+        "name": "Core8"
     },
     "editors": [
         {
@@ -344,7 +343,7 @@
             "title": "Sign Up",
             "userCreatable": false
         },
-        {
+         {
             "entityType": "forgotpassword",
             "id": "forgotpassword",
             "template": "forgot-password",
@@ -353,7 +352,6 @@
         }
     ],
     "settings": {
-        "backofficeDateTimeFormat" :  "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
         "bannerImage": "/resources/images/banner.jpg",
