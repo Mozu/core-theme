@@ -434,12 +434,11 @@ Ext.define('Taco.store.Navigation', {
                                 "label": "Action Management",
                                 "address": "actionmanagement"
                             },
-                            // turning off in prod brah 
-                            // {
-                            //     "id": "ipblocking",
-                            //     "label": "IP Blocking",
-                            //     "address": "ipblocking"
-                            // }
+                            {
+                                "id": "ipblocking",
+                                "label": "IP Blocking",
+                                "address": "ipblocking"
+                            }
                         ]
                     }
                 ]
