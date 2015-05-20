@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             public string Name { get; set; }
             public string Template { get; set; }
             public Dictionary<string, object> Context { get; set; }
-            public object Expected { get; set; }
+            public Func<string, Tuple<bool, string>> ExpectedFunc { get; set; }
             public override string ToString()
             {
                 return Name;
@@ -54,6 +54,21 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             public TestDescriptor()
             {
                 Context = new Dictionary<string, object>();
+            }
+
+            public static Func<string, Tuple<bool, string>> CompareLiteral(string expected)
+            {
+                return actual =>
+                {
+                    if (actual.Equals(expected, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return new Tuple<bool, string>(true, string.Empty);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string>(false, string.Format("expected was different that actual. expected: {0}. Actual: {1}", expected, actual));
+                    }
+                };
             }
         }
 
@@ -65,7 +80,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var template = manager.GetTemplate(desc.Template);
             var renderer = new TemplateRenderer(manager, template, context);
             var rendered = RenderTemplate(renderer);
-            Assert.AreEqual(desc.Expected, rendered, string.Format("expected was different that actual. expected: {0}. Actual: {1}", desc.Expected, rendered));
+            var expected = desc.ExpectedFunc(rendered);
+            Assert.IsTrue(expected.Item1, expected.Item2);
         }
 
         protected void RunTemplate(TestDescriptor desc)

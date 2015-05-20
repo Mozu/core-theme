@@ -26,42 +26,42 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Filters
                     Name = "base case",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { {"product", new {Properties = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="eh"}}}}}} },
-                    Expected = "eh"
+                    ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
                 new TestDescriptor
                 {
                     Name = "no product",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { {"product", null} },
-                    Expected = String.Empty
+                    ExpectedFunc = TestDescriptor.CompareLiteral(string.Empty)
                 },
                 new TestDescriptor
                 {
                     Name = "no matching property",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { { "product", new{Properties = new object[]{}}} },
-                    Expected = String.Empty
+                    ExpectedFunc = TestDescriptor.CompareLiteral(string.Empty)
                 },
                 new TestDescriptor
                 {
                     Name = "will match options as well",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="eh"}}}}}} },
-                    Expected = "eh"
+                    ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
                 new TestDescriptor
                 {
                     Name = "takes stringvalue first",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh", stringValue="he"}}}}}} },
-                    Expected = "he"
+                    ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
                 new TestDescriptor
                 {
                     Name = "takes value if no stringvalue",
                     Template = getavailability,
                     Context = new Dictionary<string, object> { {"product", new {Options = new[] {new {attributeFQN = "availability", values = new[]{new{value="eh"}}}}}} },
-                    Expected = "eh"
+                    ExpectedFunc = TestDescriptor.CompareLiteral("eh")
                 },
             };
         }

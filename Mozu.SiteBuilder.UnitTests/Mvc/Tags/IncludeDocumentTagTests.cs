@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 Name = "can parse all params",
                 Template = @"{% include_documents ""test"" with viewName=""blah"" pageWithUrl=true sortWithUrl=true startIndex=1 pageSize=20 query=""I am a query"" sortBy=""I am a sort by"" list=""default"" view=""testview"" ids=""1,2,3,4,5"" id=""10"" effectivityDated=true %}",
                 Context = new Dictionary<string, object>(),
-                Expected = ""
+                ExpectedFunc = TestDescriptor.CompareLiteral(string.Empty) // empty string because a fetched script gets added to the render context
             };
         }
     }
