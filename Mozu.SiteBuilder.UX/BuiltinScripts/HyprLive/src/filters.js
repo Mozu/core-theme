@@ -45,7 +45,18 @@
 
 
     function MaybeDate(v) {
-        var d = new Date(v);
+        // interpret a number or a number string as a seconds value
+        var nv = Number(v);
+        var d;
+        if (isNaN(nv)) {
+            d = new Date(v);
+        } else {
+            if (v instanceof Date) {
+                d = v;
+            } else {
+                d = new Date(v * 1000);
+            }
+        }
         return (isNaN(+d)) ? null : d;
     }
     function ensureDate(fn) {
@@ -315,7 +326,7 @@
             weekPart,
             {
                 total: timespan.TotalDays,
-                rounded: timespan.Days,
+                rounded: timespan.Days % 7,
                 denom: "day"
             },
             {
