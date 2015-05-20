@@ -8,24 +8,24 @@
             </tr>
         </thead>
         {% for item in model.items %}
-            <tbody class="mz-ordersummary-lineitems">
-              <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
-                    <td class="mz-ordersummary-item-product">
-                      {{ item.product.name }}
-                      {% if item.product.productUsage == 'Bundle' %}
-                      <dl class="mz-propertylist">
-                        {% for bundledProduct in item.product.bundledProducts %}
-                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                        {% endfor %}
-                      </dl>
-                      {% endif %}
-                    </td>
-                    <td>{{ item.quantity }}</td>
-                    <td align="right"> {% include "modules/common/email-item-price" %}</td>
-                    <td align="right"> {% include "modules/common/email-item-total" %}</td>
-                </tr>
-            </tbody>
+        <tbody class="mz-ordersummary-lineitems">
+          <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
+                <td class="mz-ordersummary-item-product">
+                  {{ item.product.name }}
+                  {% if item.product.productUsage == 'Bundle' %}
+                  <dl class="mz-propertylist">
+                    {% for bundledProduct in item.product.bundledProducts %}
+                    <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                    <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                    {% endfor %}
+                  </dl>
+                  {% endif %}
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td align="right"> {% include "modules/common/email-item-price" %}</td>
+                <td align="right"> {% include "modules/common/email-item-total" %}</td>
+            </tr>
+        </tbody>
         {% endfor %}
       
         <tbody>
@@ -44,13 +44,23 @@
                 <span class="mz-ordersummary-totalname">{{ labels.subtotal }}:</span>
                 <span class="mz-ordersummary-totalvalue">{{ model.discountedSubTotal|currency }}</span>
               </td>
+            </tr>        
+            {% if model.dutyTotal %}
+            <tr class="mz-ordersummary-tax">
+                <td align="right" colspan="4">
+                    <span class="mz-ordersummary-totalname">{{ labels.taxDuty }}:</span>
+                    <span class="mz-ordersummary-totalvalue">{{ model.dutyTotal|add(model.taxTotal)|currency }}</span>
+                </td>
             </tr>
-            {% else %}            <tr class="mz-ordersummary-tax">
+            {% else %}
+            {% if model.taxTotal %}
+            <tr class="mz-ordersummary-tax">
                 <td align="right" colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.tax }}:</span>
                     <span class="mz-ordersummary-totalvalue">{{ model.taxTotal|currency }}</span>
                 </td>
             </tr>
+            {% endif %}
             {% endif %}
             <tr class="mz-ordersummary-shippingtotal">
               <td align="right" colspan="4">
