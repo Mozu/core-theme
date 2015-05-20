@@ -76,6 +76,17 @@
                         <td>({{ model.storeCredit|currency }})</td>
                     </tr>
                 {% endif %}
+                {% if model.dutyTotal %}
+                <tr>
+                    <td colspan="5">Duties and Taxes</td>
+                    <td>{{ model.dutyTotal|add(model.taxTotal)|currency }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">Tax</td>
+                    <td>{{ model.taxTotal|currency }}</td>
+                </tr>
+                {% endif %}
                 <tr>                    <td colspan="5">Tax</td>
                     <td>{{ model.taxTotal|currency }}</td>
                 </tr><tr>

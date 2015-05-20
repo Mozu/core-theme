@@ -24,6 +24,7 @@
     "total"   : "Gesamt",
     "subtotal"   : "Zwischensumme",
     "tax"   : "Steuer",
+    "taxDuty": "Zölle und Steuern",
     "shippingHandling"   : "Versandkosten",
     "additionalHandling"   : "Zusätzliche Handhabung",
     "digitalCreditTotal"   : "Weniger   : Geschenkkarten",

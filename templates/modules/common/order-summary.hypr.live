@@ -48,6 +48,14 @@
           </tr>
           {% endif %}
           {% endfor %}
+          {% if model.dutyTotal %}
+          <tr class="mz-ordersummary-tax">
+              <td colspan="4">
+                  <span class="mz-ordersummary-totalname">{{ labels.taxDuty }}:</span>
+                  <span class="mz-ordersummary-totalvalue">{{ model.dutyTotal|add(model.taxTotal)|currency }}</span>
+              </td>
+          </tr>
+          {% else %}
           {% if model.taxTotal %}
           <tr class="mz-ordersummary-tax">
                 <td colspan="4">
@@ -55,6 +63,7 @@
                     <span class="mz-ordersummary-totalvalue">{{ model.taxTotal|currency }}</span>
                 </td>
             </tr>
+            {% endif %}
             {% endif %}
             <tr class="mz-ordersummary-shippingtotal">
               <td colspan="4">
