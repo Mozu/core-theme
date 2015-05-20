@@ -12,6 +12,9 @@ Ext.define('Taco.model.AccountUserTree', {
         { name: 'items', type: 'auto'},
         {
             name: 'activity', type: 'string', convert: function (value, record) {
+                if (value != '' && value.indexOf('UTC') == -1) {
+                    value += ' UTC';
+                }
                 var date = new Date(value);
                 if (date instanceof Date && !isNaN(date.valueOf())) {
                     return ((record.data.type == 'user') ? 'Last Login ' : 'Invite Sent ') + date.toLocaleString();
