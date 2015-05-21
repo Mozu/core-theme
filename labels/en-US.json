@@ -61,6 +61,7 @@
   "ccMastercard"     : "MasterCard",
   "ccAmericanExpress"    : "American Express",
   "ccDiscover"       : "Discover",
+  "ccJcb"       : "JCB",
 
   "payPal"               : "Paypal Express",
   "password"             : "Password",
