@@ -206,6 +206,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                         dataContainer = this.createPackageMessage(metaData);
                     } else if (curRecord.subject.toLowerCase().indexOf('return') >= 0) {
                         dataContainer = this.createReturnMessage(curRecord);
+                    } else if (curRecord.subject.toLowerCase().indexOf('refund') >=0) {
+                        dataContainer = this.createRefundMessage(metaData);
                     } else {
                         dataContainer = this.createOrderMessage(curRecord);
                     }
@@ -347,6 +349,72 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     '<div>New Shipping Method: {newValue}</div>'
                 ]
             }]
+        });
+    },
+
+    createRefundMessage: function(refundData) {
+        var itemsList = [];
+        var refundMetaData = refundData[0];
+
+
+        if (refundMetaData.transactionId != null && refundMetaData.transactionId.length > 0) {
+            itemsList.push({
+                flex: 1,
+                padding: '2 2',
+                data: refundMetaData,
+                tpl: [
+                    '<div>Transaction Id: {refundTransactionId}</div>'
+                ]
+            });
+        }
+
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: refundMetaData,
+            tpl: [
+                '<div>Refund Type: {refundType}</div>'
+            ]
+        });
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: refundMetaData,
+            tpl: [
+                '<div>Refund Amount: {[this.getCurrencyFormat(values.refundAmount)]}</div>',
+                {
+                    getCurrencyFormat: function (v) {
+                        var retVal,
+                            isNegative;
+
+                        v = v - 0;
+
+                        if (v < 0) {
+                            isNegative = true;
+                            v = -v;
+                        }
+                        v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                        if (isNegative) {
+                            retVal = '(' + v + ')';
+                        } else {
+                            retVal = v;
+                        }
+
+                        return retVal;
+                    }
+                }
+            ]
+        });
+
+
+
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: itemsList
         });
     },
 
