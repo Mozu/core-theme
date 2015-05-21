@@ -187,6 +187,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                         dataContainer = this.createNestedGrid(metaData);
                     } else if (curRecord.verb.toLowerCase() === 'refunded') {
                         dataContainer = this.createRMARefundInfo(metaData);
+                    } else if (curRecord.verb.toLowerCase() === 'applied') {
+                        dataContainer = this.createReturnStateChange(curRecord);
                     }
                     break;
                 }
@@ -702,10 +704,6 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                                 amt = v.amountCollected;
                                 break;
                             }
-                            case 'credited': {
-                                amt = v.amountCredited;
-                                break;
-                            }
                             case 'new':
                             // FALL THROUGH ALL OF THESE
                             case 'pending':
@@ -936,6 +934,55 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                     }
                 ]
             }
+        });
+
+        return retVal;
+    },
+
+    createReturnStateChange: function (retRecord) {
+        var stateData = retRecord.metadata[0];
+        var itemsList = [];
+
+        itemsList.push({
+            flex: 1,
+            padding: '2 2',
+            data: stateData,
+            tpl: [
+                '<div>{newValue} return with Id {returnNumber}</div>'
+            ]
+        });
+
+
+        var dataColumns = [];
+        dataColumns.push({
+            text: 'Product Code',
+            dataIndex: 'field1',
+            draggable: false,
+            resizable: true,
+            flex: 1,
+            sortable: false,
+            menuDisabled: true
+        });
+
+        var dataStore = Ext.StoreManager.lookup(stateData.productCodes);
+
+        var productGrid = Ext.create('Ext.grid.Panel', {
+            header: false,
+            editMode: false,
+            enableCellEditing: false,
+            padding: '20 0 0',
+            columns: dataColumns,
+            store: dataStore,
+            height: '100%',
+            width: '100%'
+        });
+
+        itemsList.push(productGrid);
+
+
+        retVal = Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: itemsList
         });
 
         return retVal;
