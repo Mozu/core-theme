@@ -171,9 +171,6 @@ Ext.define('Taco.view.fileManager.Index', {
 
         this.mon(this.store, 'beforesync', this.onBeforeSyncStore, this);
 
-        this.mon(this.store, 'load', function() {
-            console.log(arguments)
-        }, this)
         this.on({
             boxready: {
                 scope: this,
