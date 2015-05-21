@@ -8,7 +8,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
     {
     }
 
-    public class ViewResultBase : ActionResult 
+    public class ViewResultBase : ActionResult , Mozu.Core.Actions.Contracts.Http.IViewResult
     {
         private ViewDataDictionary _viewDataDictionary;
 
@@ -43,5 +43,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             }
             set { this.ViewData.Model = value; }
         }
+
+        System.Collections.Generic.Dictionary<string, object> Core.Actions.Contracts.Http.IViewResult.ViewData
+        {
+            get { return this.ViewData; }
+        }
+
+      
     }
 }
