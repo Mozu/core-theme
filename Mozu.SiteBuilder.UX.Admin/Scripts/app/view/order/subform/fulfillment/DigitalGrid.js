@@ -72,22 +72,18 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalGrid', {
     getColumnConfig: function () {
         var columns = [],
             order = this.record;
-
-        if (!this.packageData) {
-            columns.push({
-                text: 'Line',
-                draggable: false,
-                resizable: true,
-                width: 50,
-                sortable: false,
-                menuDisabled: true,
-                hidden: false,
-                align: 'center',
-                dataIndex: 'lineId'
-            });
-        }
-
+        
         columns.push({
+            text: 'Line',
+            draggable: false,
+            resizable: true,
+            width: 50,
+            sortable: false,
+            menuDisabled: true,
+            hidden: false,
+            align: 'center',
+            dataIndex: 'lineId'
+        }, {
             text: 'Code',
             draggable: false,
             width: 140,
