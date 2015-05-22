@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         private static readonly string[] SpecialCharacters = { "^", "'", "\"", "{", "}", "(", ")", "[", "]" };
         public static string ToFilterSafeString(this string inputString)
         {
-            return SpecialCharacters.Aggregate(inputString, (s, spec) => s.Replace(spec, "^" + spec));
+            return !string.IsNullOrEmpty(inputString) ? SpecialCharacters.Aggregate(inputString, (s, spec) => s.Replace(spec, "^" + spec)) : string.Empty;
         }
 
         // ReSharper disable once InconsistentNaming

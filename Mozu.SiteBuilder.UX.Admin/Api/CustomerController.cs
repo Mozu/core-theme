@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                 sortBy: sort,
                                 qLimit: qLimit,
                                 q: q,
-                                filter: filter,
+                                filter: filter.ToFilterSafeString(),
                                 isAnonymous: isAnonymous == true ? (bool?)null : false
                             )).ReadAsSync();
 
