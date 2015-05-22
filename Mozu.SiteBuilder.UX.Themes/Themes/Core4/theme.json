@@ -108,7 +108,7 @@
 
         "showCheckoutCommentsField": true,
         "requireCheckoutAgreeToTerms": true,
-
+        "backofficeDateTimeFormat" :  "m/d/Y H:i:s O",
         
      "usStates": [
         {

@@ -13,9 +13,7 @@
         <style type="text/css">{% inline_style "back-office.less" %}</style>
     </head>
     <body>
-        {% with "m/d/Y H:i:s O" as backoffice_time_format %}
-            {% block body-content %}
-            {% endblock body-content %}
-        {% endwith %}
+        {% block body-content %}
+        {% endblock body-content %}        
     </body>
 </html>
