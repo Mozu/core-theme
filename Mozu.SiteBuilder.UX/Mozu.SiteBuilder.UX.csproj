@@ -359,11 +359,11 @@
       <HintPath>..\packages\Mozu.Tenant.Contracts.1.17.2\lib\net45\Mozu.Tenant.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.30-local\lib\net45\NDjango.Core40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.30\lib\net45\NDjango.Core40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.30-local\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+      <HintPath>..\packages\Mozu.Hypr.NDjango.1.17.30\lib\net45\NDjangoFilters.NDjangoExtension40.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
