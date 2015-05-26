@@ -419,6 +419,39 @@ Ext.define('Taco.Application', {
             }
         });
 
+        // fix hide submenu (in chrome 43) 
+        // bug fix from https://www.sencha.com/forum/showthread.php?301116
+        // subnav menus were disappearing in newest version of chrome, this fixes it
+        // this override can be removed once we update to v5 of EXT
+
+        Ext.override(Ext.menu.Menu, {
+            onMouseLeave: function(e) {
+            var me = this;
+
+            // BEGIN FIX
+            var visibleSubmenu = false;
+            me.items.each(function(item) { 
+                if(item.menu && item.menu.isVisible()) { 
+                    visibleSubmenu = true;
+                }
+            });
+            if(visibleSubmenu) {
+                //console.log('apply fix hide submenu');
+                return;
+            }
+            // END FIX
+
+            me.deactivateActiveItem();
+
+            if (me.disabled) {
+                return;
+            }
+
+
+            me.fireEvent('mouseleave', me, e);
+            }
+        });
+
 
         Ext.util.Observable.prototype.removeOwnedListener =
             function (owner) {
