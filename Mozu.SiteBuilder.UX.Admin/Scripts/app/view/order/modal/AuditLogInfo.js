@@ -768,6 +768,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                             
                         switch(v.newValue.toLowerCase()) {
                             case 'collected':
+                            // FALL THROUGH: If we credit a payment, then we previously collected something against that payment.
+                            case 'credited':
                             {
                                 amt = v.amountCollected;
                                 break;
@@ -780,6 +782,13 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                             case 'authorized':
                             {
                                 amt = v.amountRequested;
+                                break;
+                            }
+                            case 'default':
+                            {
+                                // Serious data issue! Should not get here.
+                                //  This handles display problems so NaN isn't displayed.
+                                amt = 0;
                                 break;
                             }
                         }
