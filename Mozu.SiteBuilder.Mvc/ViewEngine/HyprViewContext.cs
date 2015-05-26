@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
@@ -8,9 +9,10 @@ using Autofac;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
-    public class ViewDataDictionary : Dictionary<string, object>
+    public class ViewDataDictionary : IDictionary<string, object> , Microsoft.ClearScript.IPropertyBag
     {
-        public ViewDataDictionary() : base(StringComparer.OrdinalIgnoreCase)
+        IDictionary<string, object> _inner = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        public ViewDataDictionary() 
         {
             
         }
@@ -23,6 +25,102 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 return model;
             }
             set { this["Model"] = value; }
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return _inner.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable) _inner).GetEnumerator();
+        }
+
+        public void Add(KeyValuePair<string, object> item)
+        {
+            _inner[item.Key] = item.Value;
+        }
+
+        public void Clear()
+        {
+            _inner.Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, object> item)
+        {
+            return _inner.Contains(item);
+        }
+
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
+        {
+            _inner.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(KeyValuePair<string, object> item)
+        {
+            return _inner.Remove(item);
+        }
+
+        public int Count
+        {
+            get { return _inner.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return _inner.IsReadOnly; }
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _inner.ContainsKey(key);
+        }
+
+        public void Add(string key, object value)
+        {
+            _inner[key] = value;
+        }
+
+        public bool Remove(string key)
+        {
+            return _inner.Remove(key);
+        }
+
+        public bool TryGetValue(string key, out object value)
+        {
+            return _inner.TryGetValue(key, out value);
+        }
+
+        public object this[string key]
+        {
+            get {
+                object obj;
+                if (_inner.TryGetValue(key, out obj))
+                {
+                    return obj;
+                }
+                return null;
+            }
+            set 
+            {
+                if (value is Microsoft.ClearScript.V8.IV8ScriptItem)
+                {
+                    value = Newtonsoft.Json.Linq.JToken.FromObject(value);
+                }
+                _inner[key] = value;
+            
+            }
+        }
+
+        public ICollection<string> Keys
+        {
+            get { return _inner.Keys; }
+        }
+
+        public ICollection<object> Values
+        {
+            get { return _inner.Values; }
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Dynamic;
 using Microsoft.FSharp.Core;
 using NDjango.Interfaces;
 using NDjango.FiltersCS;
@@ -14,7 +15,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             _actual = new CaseInsensitiveMemberResolver();
         }
 
-        public static  object CleanJson(object val)
+        public static object CleanJson(object val)
         {
             var jVal = val as Newtonsoft.Json.Linq.JValue;
             if (jVal != null)
@@ -28,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
             return val;
         }
-        class  JarrayWrapper :IEnumerable, IList
+        class JarrayWrapper : IEnumerable, IList
         {
             public JarrayWrapper(Newtonsoft.Json.Linq.JArray innerArray)
             {
@@ -37,12 +38,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             Newtonsoft.Json.Linq.JArray InnerArray;
             public IEnumerator GetEnumerator()
             {
-                for ( int i = 0; i < InnerArray.Count;i++)
+                for (int i = 0; i < InnerArray.Count; i++)
                 {
                     yield return this[i];
                 }
-                
-                
+
+
             }
 
             public int Add(object value)
@@ -109,7 +110,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
             public int Count
             {
-                get { return InnerArray.Count ; }
+                get { return InnerArray.Count; }
             }
 
             public bool IsSynchronized
@@ -125,11 +126,41 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
 
         static readonly FSharpFunc<object, object> cleanFunc = FuncConvert.ToFSharpFunc<object, object>(CleanJson);
-
+        static System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder> _binders = new System.Collections.Concurrent.ConcurrentDictionary<string, MemberResolverGetMemberBinder>();
         public FSharpOption<object> ResolveMember(object container, string memberName)
         {
-            var result = _actual.ResolveMember(container, memberName);
+            FSharpOption<object> result;
+            if (container is Microsoft.ClearScript.V8.IV8ScriptItem)
+            {
+                var binder = _binders.GetOrAdd(memberName, s => new MemberResolverGetMemberBinder(memberName, false));
+                object res;
+                if (!((DynamicObject)container).TryGetMember(binder, out res))
+                {
+                    res = null;
+                }
+                res = res is Microsoft.ClearScript.Undefined ? null : res;
+                result = new FSharpOption<object>(res);
+            }
+            else
+            {
+                result = _actual.ResolveMember(container, memberName);
+            }
             return OptionModule.Map(cleanFunc, result);
         }
+
+        class MemberResolverGetMemberBinder : GetMemberBinder
+        {
+            public MemberResolverGetMemberBinder(string name, bool ignoreCase)
+                : base(name, ignoreCase)
+            {
+            }
+
+            public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
+            {
+                return null;
+            }
+        }
+
     }
+
 }
