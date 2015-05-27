@@ -29,6 +29,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public SortingCollection sort { get; set; }
 
         public string productCode { get; set; }
+
+        public int SkipAmount
+        {
+            get
+            {
+                if (pageIndex.HasValue && pageSize.HasValue) return (pageIndex.Value - 1) * pageSize.Value;
+                return 0;
+            }
+        }
     }
 
     public class FilterCollection : List<FilterCollectionItem>

@@ -418,37 +418,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     {
         private const string FileName = "redirects.1.1";
         private readonly MemoryCache _cache;
-        private readonly IDocumentListWebApiClient _documentListWebApiClient;
+        private readonly IDocumentListWebApiClient _systemDocumentClient;
         private readonly ILogger _logger;
         private readonly ISiteBuilderApiContext _siteBuilderApiContext;
         private Task<Dictionary<string, RedirectEntry>> _redirectEntryListTask;
+        private readonly IDocumentListWebApiClient _userDocumentClient;
 
         public RedirectRepository(IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger)
         {
             _siteBuilderApiContext = siteBuilderApiContext;
-            _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
+            _systemDocumentClient = documentListWebApiClient.CloneWithoutUserClaims();
+            _userDocumentClient = documentListWebApiClient;
             _cache = MemoryCache.Default;
             _logger = logger;
-        }
-
-        IDocumentListWebApiClient CloneWithSite(IDocumentListWebApiClient client , int? siteId)
-        {
-            return client.CloneWithApiContext(x =>
-            {
-                if (!x.MasterCatalogId.HasValue)
-                {
-                    x.MasterCatalogId = _siteBuilderApiContext.MasterCatalogId;
-                }
-                if (!x.CatalogId.HasValue)
-                {
-                    x.CatalogId = _siteBuilderApiContext.CatalogId;
-                }
-                if (string.IsNullOrWhiteSpace(x.LocaleCode))
-                {
-                    x.LocaleCode = _siteBuilderApiContext.LocaleCode;
-                }
-                x.SiteId = siteId;
-            });
         }
 
         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.FetchRedirectEntries(int? siteId)
@@ -456,9 +438,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             if (_redirectEntryListTask == null)
             {
 
-                IDocumentListWebApiClient client = siteId == null ? _documentListWebApiClient : CloneWithSite(_documentListWebApiClient, siteId);
-
-
+                var client = siteId == null ? _systemDocumentClient : _systemDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId);
+                
                 return _redirectEntryListTask = client.CloneWithConfigOptions(x => x.TimeoutMilliseconds = 5000).GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
                 {
                    
@@ -543,11 +524,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                                     {
                                         _cache.Set(key, ret, new CacheItemPolicy() { AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(30) });
                                     }
-                                    
-                                    
-
-                                    
-                                    
                                 }
                             }
                         }
@@ -561,7 +537,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         Task<Dictionary<string, RedirectEntry>> IRedirectRepository.UpdateRedirectEntries(Dictionary<string, RedirectEntry> redirects, int? siteId)
         {
-            IDocumentListWebApiClient client = siteId.HasValue ? CloneWithSite(_documentListWebApiClient, siteId) : _documentListWebApiClient;
+            var client = siteId.HasValue ? _userDocumentClient.CloneWithSbContext(_siteBuilderApiContext).CloneWithSiteId(siteId) : _userDocumentClient;
             return client.GetTreeDocument("siteSettings@mozu", FileName).ContinueWith(gdt =>
             {
                 bool exists = false;
@@ -602,5 +578,36 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return key;
         }
        
+    }
+
+    public static class ClientExt
+    {
+        public static T CloneWithSbContext<T>(this T client, ISiteBuilderApiContext sbContext) where T : IServiceClientBase<T>
+        {
+            return client.CloneWithApiContext(x =>
+            {
+                if (!x.MasterCatalogId.HasValue)
+                {
+                    x.MasterCatalogId = sbContext.MasterCatalogId;
+                }
+                if (!x.CatalogId.HasValue)
+                {
+                    x.CatalogId = sbContext.CatalogId;
+                }
+                if (string.IsNullOrWhiteSpace(x.LocaleCode))
+                {
+                    x.LocaleCode = sbContext.LocaleCode;
+                }
+                if (!x.SiteId.HasValue)
+                {
+                    x.SiteId = sbContext.SiteId;
+                }
+            });
+        }
+
+        public static T CloneWithSiteId<T>(this T client, int? siteid) where T : IServiceClientBase<T>
+        {
+            return client.CloneWithApiContext(ctx => ctx.SiteId = siteid);
+        }
     }
 }

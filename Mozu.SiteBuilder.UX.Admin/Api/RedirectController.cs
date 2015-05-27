@@ -47,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          {
              var dic = await _redirectRepository.FetchRedirectEntries();
              var tot = dic.Count;
-             var list = dic.Values.OrderBy(x=> x.Source ).Skip((pagingParams.pageIndex.Value - 1) * pagingParams.pageSize.Value).Take(pagingParams.pageSize.Value).ToList();
+             var list = dic.Values.OrderBy(x=> x.Source).Skip(pagingParams.SkipAmount).Take(pagingParams.pageSize.Value).ToList();
              return List2(list, tot);
          }
 
