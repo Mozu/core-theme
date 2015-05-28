@@ -213,7 +213,7 @@ Ext.define('Taco.view.location.subform.Location', {
 
         this.allowNoStockFulfillment = Ext.widget("checkbox", {
             name: "allowFulfillmentWithNoStock",
-            boxLabel: 'Validate inventory level on fulfillment',
+            boxLabel: 'Allow fulfillment without stock on hand',
             width: 300,
             margin: "0 0 0 25",
             disabled: !this.record.get('supportsInventory')
