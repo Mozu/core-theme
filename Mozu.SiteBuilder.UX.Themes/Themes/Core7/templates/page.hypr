@@ -3,10 +3,6 @@
 <!doctype html>
 {% endblock doctype %}
 
-<!-- now: {{ now }}  -->
-<!-- today: {{ now|date:"c" }}  -->
-<!-- today: {{ now|parse_date|date"c" }}  -->
-
 {% comment %}
     The comment tag lets you write comments that will be visible when editing the template file, but don't appear in the rendered HTML. It's essentially just an "ignore this" tag.
 {% endcomment %}
