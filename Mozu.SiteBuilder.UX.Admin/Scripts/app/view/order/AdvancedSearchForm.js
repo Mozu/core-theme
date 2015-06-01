@@ -42,11 +42,23 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             },
             {
                 name: 'firstName',
-                fieldLabel: 'Customer First Name'
+                fieldLabel: 'Customer First Name',
+                listeners: {
+                    blur: {
+                        scope: this,
+                        fn: 'escapeSpecialChars'
+                    }
+                }
             },
             {
                 name: 'lastName',
-                fieldLabel: 'Customer Last Name'
+                fieldLabel: 'Customer Last Name',
+                listeners: {
+                    blur: {
+                        scope: this,
+                        fn: 'escapeSpecialChars'
+                    }
+                }
             },
             {
                 name: 'emailAddress',
@@ -258,5 +270,20 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                     }]
             }];
         this.callParent(arguments);
+    },
+
+    /**
+     * Helper for escaping special characters from certain textfields, intended to be used on blur.
+     * @param {Ext.Component} field The field.
+     * @param {Ext.EventObject} e The event object.
+     */
+    escapeSpecialChars: function (field, e) {
+        var specialChars = /[\'\"\{\}\[\]]/g; // ' " { } [ ]
+        var value = field.getValue();
+
+        if (!Ext.isEmpty(value)) {
+            // ^ is the escape character; $& is the matched token
+            field.setValue(value.replace(specialChars, '^$&'));
+        }
     }
 });
