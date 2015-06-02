@@ -47,6 +47,7 @@ Ext.define('Taco.view.website.Tree', {
         });
     
         this.mon(this.store, 'load', this.showNavState, this, {single: true});
+        this.mon(this.store, 'load', this.onTreeNodesLoad, this, {single: true});
 
         this.plugins = this.plugins || [];
         this.plugins.push(this.cellEditor);
@@ -70,24 +71,6 @@ Ext.define('Taco.view.website.Tree', {
                 allowBlank: false
             }
         }];
-
-        this.store.load({
-            callback:function (records, operation) {
-                if (operation && operation.response && operation.response.getResponseHeader('needsFixup')==='true') {
-                    Ext.Ajax.request(
-                        {
-                            url: '/admin/app/navigation/fixup',
-                            method: 'POST',
-                            success: function (response) {
-                                if (response.responseText === 'true') {
-                                    me.store.load();
-                                }
-                            }
-                        }
-                    );
-                }
-            }
-        });
 
         this.mon(this.store, {
             write: function (store) {
@@ -243,6 +226,23 @@ Ext.define('Taco.view.website.Tree', {
                 }
             }
         });
+    },
+
+    onTreeNodesLoad: function (store, records, successfull, eOpts) {
+
+        if (store && store.lastOperation && store.lastOperation.response.getResponseHeader('needsFixup') === 'true') {
+            Ext.Ajax.request(
+                {
+                    url: '/admin/app/navigation/fixup',
+                    method: 'POST',
+                    success: function (response) {
+                        if (response.responseText === 'true') {
+                            me.store.load();
+                        }
+                    }
+                }
+            );
+        }
     },
 
     getMenuItems: function (record, scope) {
