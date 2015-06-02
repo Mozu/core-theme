@@ -237,7 +237,7 @@ Ext.define('Taco.view.website.Tree', {
                     method: 'POST',
                     success: function (response) {
                         if (response.responseText === 'true') {
-                            me.store.load();
+                            store.load();
                         }
                     }
                 }
