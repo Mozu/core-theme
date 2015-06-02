@@ -232,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             foreach (var widget in widgets)
             {
-                await WriteWidget(sb, widget, getWidgetDefFunc, isEditmode, context);
+                await WriteWidget(sb, widget, getWidgetDefFunc, isEditmode, context).ConfigureAwait(false);
             }
 
             sb.Append("</div>");

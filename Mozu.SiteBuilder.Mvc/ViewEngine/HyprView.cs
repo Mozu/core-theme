@@ -127,7 +127,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 throw MakeRenderingException(_virtualPath, ex);
             }
-            await writer.FlushAsync();
+            await writer.FlushAsync().ConfigureAwait(false);
             return true;
         }
 
