@@ -520,12 +520,7 @@ Ext.define('Taco.view.website.Index', {
         this.tree.on('urlclick', this.onTreeUrlClick, this);
         this.tree.on('contentlistclick', this.onContentListClick, this);
         this.tree.on('navigationchange', this.onNavigationChange, this);
-
-        this.tree.store.load({
-            scope: this,
-            callback: this.createEntityTables
-        });
-
+        this.tree.on('load', this.createEntityTables, this);
 
         this.on('render', function () {
             var header = me.getHeader();
@@ -559,13 +554,14 @@ Ext.define('Taco.view.website.Index', {
         });
     },
 
-    createEntityTables: function(records) {
-        if (this.entityList) {
-            var me = this,
-                list = records.filter(function(n) {return n.internalId === '_cmsContentTypes'; })[0].childNodes.filter(function(y){return y.get('url') === me.url;})[0];
+    createEntityTables: function(store) {
+       
+        if (this.entityList && store.tree.nodeHash._cmsContentTypes) {
 
-            me.navigate({url: this.url, metaData: list.raw.metaData});
-            me.onNavigateComplete();
+            var list = store.tree.nodeHash._cmsContentTypes.childNodes[0];
+
+            this.navigate({url: this.url, metaData: list.raw.metaData});
+            this.onNavigateComplete();
         }
     },
 

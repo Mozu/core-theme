@@ -28,7 +28,15 @@ Ext.define('Taco.model.NavigationTreeNode', {
     {
         name: 'loaded',
         convert: function (v, record) {
-            return record.get('loaded') || record.data.id != "root";
+            // this condition was added to limit the number of network requests for the tree
+            // this will always return true we think? -- for questions talk to thom or ben
+            // bug number #60167
+
+            if (record.raw)
+            {
+                return true;
+            }
+            return record.get('loaded') || record.data.id != 'root';
         },
         persist: false
     },

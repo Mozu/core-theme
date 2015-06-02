@@ -15,6 +15,7 @@ Ext.define('Taco.store.shared.TreeStore', {
 
     },
     constructor: function () {
+
         var root,
             me = this,
             statics = this.statics(),
