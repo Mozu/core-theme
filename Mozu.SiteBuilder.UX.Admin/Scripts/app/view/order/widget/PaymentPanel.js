@@ -55,10 +55,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     },
 
     getAvailableActions: function() {
-
         var me = this,
-
-            availableActions = me.record.data.availableActions;
+            data = me.record.data,
+            isDeclined = data && data.status === 'Declined',
+            availableActions = data && data.availableActions;
 
         me.paymentActions = {};
 
@@ -84,11 +84,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             },
             {
                 text: 'Authorize Payment',
-                itemId: 'AuthorizePayment'
+                itemId: 'AuthorizePayment',
+                disabled: isDeclined
             },
             {
                 text: 'Auth and Capture',
-                itemId: 'AuthAndCapture'
+                itemId: 'AuthAndCapture',
+                disabled: isDeclined
             },
             {
                 text: 'Rollback',
