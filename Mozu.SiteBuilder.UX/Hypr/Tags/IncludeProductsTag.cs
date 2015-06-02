@@ -138,9 +138,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     pageSize = productCodesFilters.Length;
                 }
-                
+
             }
-            
+
             if (includeFacets && categoryId.HasValue)
             {
                 facetHierDepth = "categoryId:2";
@@ -163,17 +163,28 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (pc == null)
             {
                 var res = await searchWebApiClient.Search(query: defaultQuery, filter: filter, facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
-                using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync())
+                if (res.HasException && context.SiteBuilderApiContext().IsDebugMode)
                 {
-                    using (var rdr = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, Encoding.UTF8))
+                    throw res.ReadException();
+                }
+                if (res.HasException)
+                {
+                    pc = new ProductSearchResult();
+                }
+                else
+                {
+                    using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false))
                     {
-                        var ser = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
-                        pc = ser.Deserialize<ProductSearchResult>(rdr);
-                        
-                        if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null )
+                        using (var rdr = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, Encoding.UTF8))
                         {
-                            pc.Items = productCodes.Cast<string>().Select(x => pc.Items.FirstOrDefault(y => y.ProductCode.Equals(x, StringComparison.OrdinalIgnoreCase)))
-                                .Where(x => x != null).ToList();
+                            var ser = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
+                            pc = ser.Deserialize<ProductSearchResult>(rdr);
+
+                            if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null)
+                            {
+                                pc.Items = productCodes.Cast<string>().Select(x => pc.Items.FirstOrDefault(y => y.ProductCode.Equals(x, StringComparison.OrdinalIgnoreCase)))
+                                    .Where(x => x != null).ToList();
+                            }
                         }
                     }
                 }

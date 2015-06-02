@@ -110,22 +110,17 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             dynamic res;
             if (ids != null && ids.Count == 0)
             {
-                res = await service.GetEntity(entityListFullName: list, id: ids[0]);
+                res = await service.GetEntity(entityListFullName: list, id: ids[0]).ConfigureAwait(false);
             }
             else
             {
-                res = await service.GetEntities(entityListFullName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex);
+                res = await service.GetEntities(entityListFullName: list, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex).ConfigureAwait(false);
             }
 
             object model = null;
-            if (res.HasException)
+            if (res.HasException && sbContext.IsDebugMode)
             {
-                if (sbContext.IsEditMode)
-                {
-                    //todo add in after demo
-                   // throw (Exception)res.ReadException();
-                }
-
+                throw (Exception)res.ReadException();
             }
             else if (res.ResponseMessage.IsSuccessStatusCode)
             {
