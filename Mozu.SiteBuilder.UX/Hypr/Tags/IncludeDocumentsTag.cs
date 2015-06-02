@@ -117,7 +117,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
             //and properties.endDate gt {1} and properties.beginDate lt {1} 
 
-            var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex);
+            var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex).ConfigureAwait(false);
        
             object model = null;
             if (res.HasException && sbContext.IsEditMode)

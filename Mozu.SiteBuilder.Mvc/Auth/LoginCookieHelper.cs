@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.Auth
     {
         public static async Task<HttpResponseMessage> SetAdminUserCookie(HttpRequestMessage request, ICookieProvider cookieProvider, ISiteBuilderApiContext context, IAuthenticationHelper authHelper, string defaultRedirectUrl, bool isForStoreFrontAccess)
         {
-            var form = await request.Content.ReadAsFormDataAsync();
+            var form = await request.Content.ReadAsFormDataAsync().ConfigureAwait(false);
             string formAccessToken = form["accessToken"];
             string formRedirectUrl = form["redirectUrl"];
 

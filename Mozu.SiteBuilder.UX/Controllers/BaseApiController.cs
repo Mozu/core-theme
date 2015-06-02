@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
         {
             var shippingWebApiClient = this.Request.Resolve<IShippingWebApiClient>();
 
-            var result = (await shippingWebApiClient.GetShippableStates()).ReadAsSync();
+            var result = (await shippingWebApiClient.GetShippableStates().ConfigureAwait(false)).ReadAsSync();
             var states = result.Where(c => c.Code.EqualsIgnoreCase("US"))
                 .SelectMany(c => c.States)
                 .OrderBy(s => s.Name)

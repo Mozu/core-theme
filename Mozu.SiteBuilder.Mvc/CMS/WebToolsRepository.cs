@@ -131,7 +131,7 @@ Disallow: /admin/";
 
         private async Task<string> GetOrCreateDocumentId(string name, string mimeType)
         {
-            var task = await _cmsServiceWrapper.GetByPath2(ContentCollection, name);
+            var task = await _cmsServiceWrapper.GetByPath2(ContentCollection, name).ConfigureAwait(false);
 
             if (task.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {

@@ -175,11 +175,51 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return File.ReadAllText(info.FullPath);
         }
 
+
+        static System.Collections.Concurrent.ConcurrentBag<byte[]> _bytePool = new System.Collections.Concurrent.ConcurrentBag<byte[]>();
+        static System.Collections.Concurrent.ConcurrentBag<char[]> _charPool = new System.Collections.Concurrent.ConcurrentBag<char[]>();
+
         public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
         {
+            //needs testing..
+            //using (System.Threading.CancellationTokenSource source = new System.Threading.CancellationTokenSource(5000))
+            //{
+
+
+            //    using (var stream = GetStream(info))
+            //    {
+            //        var sb = new StringBuilder();
+            //        byte[] buff = null;
+            //        char[] charbuff = null;
+            //        if ( !_bytePool.TryTake(out buff))
+            //        {
+            //            buff= new byte[4096];
+            //        }
+            //        if ( !_charPool.TryTake( out charbuff))
+            //        {
+            //            charbuff = new char[ System.Text.Encoding.UTF8.GetMaxCharCount(buff.Length)];
+            //        }
+                    
+                   
+            //        while (true)
+            //        {
+            //            var len = await stream.ReadAsync(buff, 0, buff.Length, source.Token).ConfigureAwait(false);
+            //            if (len == 0)
+            //            {
+            //                break;
+            //            }
+            //            var clen = System.Text.Encoding.UTF8.GetChars(buff, 0, len, charbuff,0);
+            //            sb.Append(charbuff, 0, clen);
+
+            //        }
+            //        return sb.ToString();
+
+            //    }
+            //}
+
             using (var r = new StreamReader(GetStream(info)))
             {
-                return await r.ReadToEndAsync();
+                return await r.ReadToEndAsync().ConfigureAwait(false);
             }
         }
 

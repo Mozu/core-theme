@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (view != null)
             {
                 var viewContext = new HyprViewContext(Request, new ViewDataDictionary { Model = wpd });
-                await view.AsyncRender(viewContext, tw);
+                await view.AsyncRender(viewContext, tw).ConfigureAwait(false);
                 RenderScriptsTag.RenderRequiresForWidgetPreview(tw, HttpContext);
             }
             else

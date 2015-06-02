@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
                 var buffer = new byte[0x1000];
                 while (true)
                 {
-                    int count = await FileStream.ReadAsync( buffer, 0, 0x1000);
+                    int count = await FileStream.ReadAsync( buffer, 0, 0x1000).ConfigureAwait(false);
                     if (count == 0)
                     {
                         return;

@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public async Task<StreamContent> Delete(CustomerGroup customerGroup)
         {
-            var result = await _customerSegmentWebApiClient.DeleteSegment(customerGroup.Id);
+            var result = await _customerSegmentWebApiClient.DeleteSegment(customerGroup.Id).ConfigureAwait(false);
             return result.ReadAsAsync().Result;
         }
 

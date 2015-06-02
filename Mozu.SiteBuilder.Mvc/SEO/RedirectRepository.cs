@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public async Task<bool> RouteIncomingRequest()
         {
-            HttpRouteCollection routeCollection = await GetRouteCollectionTask();
+            HttpRouteCollection routeCollection = await GetRouteCollectionTask().ConfigureAwait(false);
             if (routeCollection == null)
             {
                 return false;
@@ -279,7 +279,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         async Task<List<SiteRouteEntry>> ISiteRouteRepository.FetchSiteRouteEntries()
         {
-            ServiceClientResponse<Document> documentResopnse = await GetDocumentResponse();
+            ServiceClientResponse<Document> documentResopnse = await GetDocumentResponse().ConfigureAwait(false);
             if (documentResopnse.HasException || !documentResopnse.ResponseMessage.IsSuccessStatusCode)
             {
                 return new List<SiteRouteEntry>();
@@ -315,7 +315,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         async Task<HttpRouteCollection> ISiteRouteRepository.GetHttpRouteCollection()
         {
-            ServiceClientResponse<Document> docResponse = await GetDocumentResponse();
+            ServiceClientResponse<Document> docResponse = await GetDocumentResponse().ConfigureAwait(false);
 
             if (docResponse.HasException || !docResponse.ResponseMessage.IsSuccessStatusCode)
             {
