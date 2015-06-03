@@ -70,7 +70,8 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
            text: 'Help',
            hidden: Taco.siteBuilderHelperToggle !== 'on',
            handler: function () { 
-                window.open(Taco.drupalLink);
+               //window.open(Taco.drupalLink);
+               window.open(Taco.adminHelpLink);
            }
         },
 
