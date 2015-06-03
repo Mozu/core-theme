@@ -119,7 +119,17 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             xtype: 'numberfield',
             showBorder:true,
             hideTrigger: true,
-            minValue: 0
+            minValue: 0,
+            msgTarget: 'qtip',
+            validator: function (value) {
+                var record = this.ownerCt.editingPlugin.activeRecord;
+                var qf = record.get('quantityFulfilled');
+                var qr = record.get('quantityReturned');
+
+                if (value === "0") return true; // zero is always valid
+
+                return (value <= (qf - qr)) || 'Quantity to return may not exceed quantity fulfilled less quantity returned.';
+            }
         },
         renderer: function (value) {
             return value || 0;
@@ -264,6 +274,10 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     },
 
     handleSelect: function (selModel, record, index) {
-        if (!record.get('quantity')) record.set('quantity', 1);
+        var unreturned = record.get('quantityFulfilled') - record.get('quantityReturned');
+        
+        if (!record.get('quantity') && unreturned > 0) {
+            record.set('quantity', 1);
+        }
     }
 });
