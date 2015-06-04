@@ -244,100 +244,45 @@ Ext.define('Taco.view.website.Tree', {
             );
         }
     },
-
     getMenuItems: function (record, scope) {
-        var items = [],
-            addLink = {
-                text: 'Add Link',
-                scope: scope,
-                handler: function () {
-                    this.showLinkEditor(null, record);
-                }
-            },
-            editLink = {
-                text: 'Edit Link',
-                scope: scope,
-                handler: function () {
-                    this.showLinkEditor(record, record.parentNode);
-                }
-            },
-            addPage = {
-                text: 'Add Page',
-                scope: scope,
-                handler: function () {
-                    this.showPageCreator(record);
-                }
-            },
-            deleteLink = {
-                text: 'Delete',
-                scope: scope,
-                handler: function () {
-                    this.deleteLink(record);
-                }
-            },
-            deletePage = {
-                text: 'Delete',
-                scope: scope,
-                handler: function () {
-                    this.deletePage(record);
-                }
-            },
-            showProducts = {
-                text: 'Show Products',
-                scope: scope,
-                handler: function () {
-                    this.fireEvent('showproducts', record);
-                }
-            }, rename = {
-                text: 'Rename',
-                scope: scope,
-                handler: function () {
-                    this.onRename(record);
-                }
-            },
-            emailtest = {
-                text: 'Send Test Email',
-                scope: scope,
-                handler: function () {
-
-                    this.onTestEmail(record);
-                }
+        var menuItem = function(text, scope, handler) {
+                return {
+                    text: text,
+                    scope: scope,
+                    handler: handler
+                };
             };
-        
 
+        var addLink = menuItem('Add Link', scope, this.showLinkEditor.bind(scope, null, record)),
+            editLink = menuItem('Edit Link', scope, this.showLinkEditor.bind(scope, record, record.parentNode)),
+            addPage = menuItem('Add Page', scope, this.showPageCreator.bind(scope, record)),
+            deleteLink = menuItem('Delete', scope, this.deleteLink.bind(scope, record)),
+            deletePage = menuItem('Delete', scope, this.deletePage.bind(scope, record)),
+            showProducts = menuItem('Show Products', scope, this.fireEvent.bind(scope, 'showProducts', record)),
+            rename = menuItem('Rename', scope, this.onRename.bind(scope, record)),
+            emailtest = menuItem('Send Test Email', scope, this.onTestEmail.bind(scope, record));
 
-        if (record.getId() === '_navigation') {
-            items.push(addLink);
-            items.push(addPage);
-        } else if (record.getId() === '_unlinked') {
-            items.push(addLink);
-            items.push(addPage);
-        } else if (record.data.nodeType === 'category') {
-            items.push(showProducts);
-            items.push(addLink);
-            items.push(addPage);
-        } else if (record.data.nodeType === 'link') {
-            items.push(editLink);
-            items.push(rename);
-            items.push(deleteLink);
-            items.push(addLink);
-            items.push(addPage);
+        var itemsDict = {
+                _navigation: [addLink, addPage],
+                _unlinked: [addLink, addPage],
+                category: [showProducts, addLink, addPage],
+                link: [editLink, rename, deleteLink, addLink, addPage],
+                page: [rename, addLink, addPage, deletePage],
+                _emailTemplates: [emailtest]
+            };
+            
+        var key = record.getId() === '_navigation' || record.getId() === '_unlinked' ? record.getId() : undefined;
 
-        } else if (record.data.nodeType === 'page') {
-            items.push(rename);
-            items.push(addLink);
-            items.push(addPage);
-            items.push(deletePage);
-
-        } else if (record.data.parentId === '_emailTemplates') {
-            items.push(emailtest);
-           
-
+        if (!key && record.data.parentId === '_emailTemplates') {
+            key = '_emailTemplates';
         }
 
-        //contentlist
+        else if (!key) {
+            key = record.data.nodeType;
+        }
 
-        return items;
+        return itemsDict[key];
+
     },
 
     getIconClass: function(record) {
