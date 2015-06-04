@@ -46,8 +46,7 @@ Ext.define('Taco.view.website.Tree', {
             }
         });
     
-        this.mon(this.store, 'load', this.showNavState, this, {single: true});
-        this.mon(this.store, 'load', this.onTreeNodesLoad, this, {single: true});
+        this.mon(this.store, 'load', Ext.Function.createSequence(this.showNavState, this.onTreeNodesLoad), this, {single: true});
 
         this.plugins = this.plugins || [];
         this.plugins.push(this.cellEditor);
@@ -178,7 +177,7 @@ Ext.define('Taco.view.website.Tree', {
                         overIndex = overModel.parentNode.indexOf(overModel);
                     if (dropPosition === 'append') {
                         node = overModel.appendChild(nodeData);
-                    }else if (dropPosition === 'before') {
+                    } else if (dropPosition === 'before') {
                         node = overModel.parentNode.insertChild(overIndex, nodeData);
                     } else {
                         node = overModel.parentNode.insertChild(overIndex, nodeData);
@@ -186,10 +185,7 @@ Ext.define('Taco.view.website.Tree', {
                     node.phantom = true;
 
                     node.save();
-                }
-             
-
-             
+                }             
             },
             drop: function(node, data, overModel, dropPosition, eOpts) {
                 var selModel = this.getSelectionModel(),
@@ -270,7 +266,7 @@ Ext.define('Taco.view.website.Tree', {
                 page: [rename, addLink, addPage, deletePage],
                 _emailTemplates: [emailtest]
             };
-            
+
         var key = record.getId() === '_navigation' || record.getId() === '_unlinked' ? record.getId() : undefined;
 
         if (!key && record.data.parentId === '_emailTemplates') {
@@ -343,16 +339,15 @@ Ext.define('Taco.view.website.Tree', {
 
     showLinkEditor: function (record, parentRecord) {
         var me = this;
-             Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
-                record: record,
-                parentRecord: parentRecord,
-                listeners: {
-                    savesuccess: function () {
-                        me.fireEvent('navigationchange', me);
-                    }
+        Ext.create('Taco.view.website.misc.ExternalLinkEditor', {
+            record: record,
+            parentRecord: parentRecord,
+            listeners: {
+                savesuccess: function () {
+                    me.fireEvent('navigationchange', me);
                 }
-            });
-        //modal.on('close', )
+            }
+        });
     },
     deleteLink: function (record) {
         var me = this;
