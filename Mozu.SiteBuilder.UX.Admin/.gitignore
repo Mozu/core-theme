@@ -37,3 +37,6 @@ Scripts/sass/example/
 
 # UNIT TESTS
 Tests/AllUnitTests.js
+
+# ignore any of Chet's ideas
+.paket/
