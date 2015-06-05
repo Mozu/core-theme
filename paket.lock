@@ -24,7 +24,7 @@ NUGET
     Burrows.Log4Net (0.3.3.0) - framework: >= net451
       Burrows (>= 0.3.3.0)
       log4net (>= 2.0.3)
-    ClearScript.Installer (5.4.5620.22155) - framework: >= net451
+    ClearScript.Installer (5.4.5634.17927)
     dotless (1.4.0.0) - framework: >= net45
     FluentAssertions (3.2.2) - framework: >= net451
     FluentValidation (5.5.0.0) - framework: >= net451
