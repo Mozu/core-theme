@@ -1,5 +1,5 @@
 NUGET
-  remote: https://www.nuget.org/api/v2
+  remote: http://nuget-external.corp.volusion.com:8201/api/odata
   specs:
     51Degrees.mobi (2.1.15.1) - framework: >= net45
       Microsoft.Web.Infrastructure (>= 1.0.0.0)
@@ -11,6 +11,20 @@ NUGET
       Autofac (>= 3.3.0)
       NSubstitute (>= 1.7.0.0)
     AutoMapper (3.3.0) - framework: >= net451
+    Burrows (0.3.3.0) - framework: >= net451
+      Magnum (>= 2.1.2)
+      Newtonsoft.Json (>= 5.0.8)
+      RabbitMQ.Client (>= 3.2.1)
+      Stact (>= 1.1.2)
+    Burrows.Autofac (0.3.3.0) - framework: >= net451
+      Autofac (>= 3.3.0)
+      Burrows (>= 0.3.3.0)
+      Magnum (>= 2.1.2)
+      Newtonsoft.Json (>= 5.0.8)
+    Burrows.Log4Net (0.3.3.0) - framework: >= net451
+      Burrows (>= 0.3.3.0)
+      log4net (>= 2.0.3)
+    ClearScript.Installer (5.4.5620.22155) - framework: >= net451
     dotless (1.4.0.0) - framework: >= net45
     FluentAssertions (3.2.2) - framework: >= net451
     FluentValidation (5.5.0.0) - framework: >= net451
@@ -66,22 +80,6 @@ NUGET
     Sprache (2.0.0.45) - framework: >= net451
     Stact (1.1.2) - framework: >= net45
       Magnum (>= 2.1.2)
-  remote: http://nuget-external.corp.volusion.com:8201/api/odata
-  specs:
-    Burrows (0.3.3.0) - framework: >= net451
-      Magnum (>= 2.1.2)
-      Newtonsoft.Json (>= 5.0.8)
-      RabbitMQ.Client (>= 3.2.1)
-      Stact (>= 1.1.2)
-    Burrows.Autofac (0.3.3.0) - framework: >= net451
-      Autofac (>= 3.3.0)
-      Burrows (>= 0.3.3.0)
-      Magnum (>= 2.1.2)
-      Newtonsoft.Json (>= 5.0.8)
-    Burrows.Log4Net (0.3.3.0) - framework: >= net451
-      Burrows (>= 0.3.3.0)
-      log4net (>= 2.0.3)
-    ClearScript.Installer (5.4.5620.22155) - framework: >= net451
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
   specs:
     Jolt (1.0.0) - framework: >= net451
