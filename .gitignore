@@ -20,6 +20,7 @@ user.app.config
 *.ide
 .vs
 TestResults/
+.paket
 
 Mozu.SiteBuilder.UX.Admin/Scripts/ext/
 Mozu.SiteBuilder.UX.Admin/Scripts/docs/
