@@ -189,12 +189,12 @@ Ext.define('Taco.view.order.subform.Return', {
             returnType: type,
             items: Ext.Array.map(items, function (item) {
                 return {
-                    orderItemId: item.data.orderItemId,
-                    orderLineId: item.data.orderLineId,
-                    productCode: item.data.orderItemId ? null : item.data.productCode, // only provide product code when there is no orderItemId
-                    returnReason: item.data.reason,
-                    quantity: item.data.quantity,
-                    rmaNote: item.data.returnReason === 'Other' ? 'Other' : null
+                    orderItemId: item.get('orderItemId'),
+                    orderLineId: item.get('orderLineId'),
+                    productCode: item.get('orderItemId') ? null : item.get('productCode'), // only provide product code when there is no orderItemId
+                    quantity: item.get('quantity'),
+                    returnReason: item.get('reason'),
+                    rmaNote: item.get('reason') === 'Other' ? 'Other' : null
                 };
             })
         })[0];
