@@ -136,7 +136,7 @@
   "cartEmpty"            : "You have no items in your cart.", 
   "taxAtCheckout"        : "Tax & Shipping Calculated at Checkout", 
   "orderTotal"           : "Order Total", 
-  "proceedToCheckout"    : "Proceed to Checkout",
+  "proceedToCheckout"    : "Proceed To Checkout",
   "storePickupAt"        : "In-Store Pickup at <strong>{0}</strong>",
   
   "checkout"             : "Checkout",
