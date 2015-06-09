@@ -233,16 +233,20 @@ namespace Mozu.SiteBuilder.Mvc
 
         public void Load()
         {
+            // in here, if we're not behind a reverse proxy then we have to reach out to the tenant service to get some necessary context.
+            // we want to skip this when we're not local, so hide these branches behind the config setting check.
+
             IEnumerable<string> values;
             if (_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.TENANT, out values))
             {
                 this.InitFromHeaders(_httpRequestMessage.Headers);
             }
-            else if (!_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values))
+            else if (!_httpRequestMessage.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.ORIGINAL_URL, out values) && !_settings.AppSettingsAsBool("ReverseProxy"))
             {
 
                 //todo:hyper check rp flag.
                 //testing without proxy...
+                //todo: make this configurable by flag
                 string host = _httpRequestMessage.RequestUri.Host;
                 Site site = g_domainSiteLookup.GetOrAdd(host, LookupSiteByDomain);
 
@@ -261,7 +265,7 @@ namespace Mozu.SiteBuilder.Mvc
                 LoadFromCookie(_cookieProvider);
             }
 
-            if (string.IsNullOrEmpty(this.LocaleCode) && this.SiteId.HasValue)
+            if (string.IsNullOrEmpty(this.LocaleCode) && this.SiteId.HasValue && _settings.AppSettingsAsBool("ReverseProxy"))
             {
                 Site site = g_SiteIdSiteLookup.GetOrAdd(this.SiteId.Value, LookupSiteById );
                 if (site != null)

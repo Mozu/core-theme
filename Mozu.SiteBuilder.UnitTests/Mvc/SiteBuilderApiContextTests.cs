@@ -24,6 +24,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             ICookieProvider cookieProvider = Substitute.For<ICookieProvider>();
 
             ISettings settings = Substitute.For<ISettings>();
+            settings.AppSettings(Arg.Is<string>("ReverseProxy")).Returns("true");
             IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
             var dvm = Substitute.For<IDataViewModeFinderOuter>();
             dvm.GetDataViewMode(Arg.Any<Mozu.Core.LightweightUserClaims>()).Returns(Core.DataViewModeType.Pending);
@@ -46,6 +47,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             ICookieProvider cookieProvider = Substitute.For<ICookieProvider>();
 
             ISettings settings = Substitute.For<ISettings>();
+            settings.AppSettings(Arg.Is<string>("ReverseProxy")).Returns("true");
             IAuthenticationHelper auth = Substitute.For<IAuthenticationHelper>();
             HttpRequestMessage request = Substitute.For<HttpRequestMessage>();
             var dvm = Substitute.For<IDataViewModeFinderOuter>();
