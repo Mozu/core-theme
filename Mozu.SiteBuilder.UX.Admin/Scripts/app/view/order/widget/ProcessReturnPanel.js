@@ -308,7 +308,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     minValue: 0
                 }
             }, {
-                dataIndex: 'reason',
+                dataIndex: 'returnReason',
                 text: 'Reason',
                 draggable: false,
                 sortable: false,
@@ -585,7 +585,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                         '<td><span class="label">Status:</span>{status}</td>',
                         '<td><span class="label">Returning:</span>{[Ext.Array.sum(Ext.Array.pluck(values.items, "quantity"))]} item(s)</td>',
                     '</tr><tr>',
-                        '<td><span class="label">Type:</span>{type}</td>',
+                        '<td><span class="label">Type:</span>{returnType}</td>',
                         '<td><span class="label">Price:</span>{[this.getUnitPriceTotal(values.items)]}</td>',
                     '</tr><tr>',
                         '<td><span class="label">Created:</span>{createDate:date("m/d/Y g:ia")}</td>',
@@ -620,7 +620,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 '{createDate:date("m/d/Y g:ia")}',
                 '<span class="label">Return ID:</span>{returnNumber}',
                 '<span class="label">Status:</span>{status}',
-                '<span class="label">Type:</span>{type}',
+                '<span class="label">Type:</span>{returnType}',
                 '<span class="label">Amount:</span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}',
                 '<span class="label">Items:</span>{[values.items.length]}'
             ]
