@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var logger = Substitute.For<ILogger>();
             var ApiContext = Substitute.For<IApiContext>();
 
-            var resourceController = new ResourceController(vpp, nav, contentRetriever, logger, settings, ApiContext);
+            var resourceController = new ResourceController(new Lazy<IMozuVirtualPathProvider> ( ()=>vpp), new Lazy<INavigationGandalf> (()=>nav), new Lazy<IThemeContentRetriever>(()=>contentRetriever), logger, settings, ApiContext);
             var results = await resourceController.LiveTemplates();
             results.Count.ShouldEqual(5);
             

@@ -225,26 +225,32 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                                                                           {"zip", "application/zip"}
                                                                                       };
 
-        private readonly IMozuVirtualPathProvider _pathProvider;
-        private readonly INavigationGandalf _navGandalf;
-        private readonly IThemeContentRetriever _contentRetriever;
+        private readonly Lazy<IMozuVirtualPathProvider> _pathProvider;
+        private readonly Lazy<INavigationGandalf> _navGandalf;
+        private readonly Lazy<IThemeContentRetriever> _contentRetriever;
         private readonly Core.Logging.ILogger _logger;
-        private readonly AMDModuleProvider _moduleProvider;
+        private readonly Lazy<AMDModuleProvider> _moduleProvider;
         private readonly ISettings _settings;
         private readonly IApiContext _apiContext;
 
-        public ResourceController(IMozuVirtualPathProvider pathProvider, INavigationGandalf gandalf, IThemeContentRetriever contentRetriever, Core.Logging.ILogger logger, ISettings settings, IApiContext ApiContext)
+        public ResourceController(Lazy<IMozuVirtualPathProvider> pathProvider, 
+            Lazy<INavigationGandalf> gandalf, 
+            Lazy<IThemeContentRetriever> contentRetriever, 
+            Core.Logging.ILogger logger, 
+            ISettings settings, 
+            IApiContext apiContext)
         {
             _navGandalf = gandalf;
             _contentRetriever = contentRetriever;
             _logger = logger;
             _pathProvider = pathProvider;
-            _apiContext = ApiContext;
-            _moduleProvider = new AMDModuleProvider
-            {
-                PathProvider = pathProvider
-            };
+            _apiContext = apiContext;
             _settings = settings;
+            _moduleProvider = new Lazy<AMDModuleProvider>(() => new AMDModuleProvider
+            {
+                PathProvider = _pathProvider.Value
+            });
+            
         }
 
         DataViewModeType Convert(string dataViewModeString)
@@ -285,7 +291,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (oc != null)
             {
 
-                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _pathProvider, _contentRetriever).Transform;
+                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug, emitDebugStylesheet, this, _pathProvider.Value, _contentRetriever.Value).Transform;
             }
 
             return res;
@@ -309,10 +315,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public async Task<JObject> LiveTemplates(bool? debug = false)
         {
             var templateContentsTasks =
-                    _pathProvider.GetLiveTemplates().Select(async x => new TemplateInfo
+                    _pathProvider.Value.GetLiveTemplates().Select(async x => new TemplateInfo
                     {
                         key = ScrubVirtualPath(x.VirtualPathNoExt),
-                        content = await _contentRetriever.GetContentAsync(x),
+                        content = await _contentRetriever.Value.GetContentAsync(x),
                         themeId = x.ThemeId
                     });
 
@@ -322,7 +328,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 if (!GetExtendsRegex.IsMatch(x.content)) return new List<TemplateInfo> { x }; // base case
 
-                var allTemplateInfos = new List<TemplateInfo> { x }.Concat(await GetParentInfos(_pathProvider, x.key, _contentRetriever));
+                var allTemplateInfos = new List<TemplateInfo> { x }.Concat(await GetParentInfos(_pathProvider.Value, x.key, _contentRetriever.Value));
                 _logger.Info(string.Format("inheritance chain for {0}: {1}", x.ToString(), string.Join(", ", allTemplateInfos.Select(y => y.ToString()))));
 
                 return TransformAndMapTemplates(allTemplateInfos); // else have to fetch and merge in all the parents
@@ -506,7 +512,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public async Task<JArray> AjaxNavigation()
         {
-            var nav = await _navGandalf.GetTreeNavigation();
+            var nav = await _navGandalf.Value.GetTreeNavigation();
             return JArray.FromObject(nav);
         }
 
@@ -680,7 +686,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 return Content("scripts/" + pathinfo, "text/javascript");
             }
-            return _moduleProvider.CreateModule(Request, pathinfo, shimRequire, shimExport, debug);
+            return _moduleProvider.Value.CreateModule(Request, pathinfo, shimRequire, shimExport, debug);
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
@@ -756,9 +762,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         private HttpResponseMessage GetFileResult(string pathinfo, string contentType)
         {
-            var file = _pathProvider.GetThemeFileInfo(pathinfo);
+            var file = _pathProvider.Value.GetThemeFileInfo(pathinfo);
             return file != null ?
-                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever)) :
+                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever.Value)) :
                 Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
         }
 
