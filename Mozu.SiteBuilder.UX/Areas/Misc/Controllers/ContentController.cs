@@ -307,7 +307,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 _docRepo.Options.AdditionalHeaders = _docRepo.Options.AdditionalHeaders ?? new NameValueCollection();
 
-
+                if (tpl != null)
+                {
+                    _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
+                }
                 ServiceClientResponse<StreamContent> docContextRes = null;
                 Guid guidId;
 
