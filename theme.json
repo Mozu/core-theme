@@ -344,7 +344,7 @@
             "title": "Sign Up",
             "userCreatable": false
         },
-         {
+        {
             "entityType": "forgotpassword",
             "id": "forgotpassword",
             "template": "forgot-password",
@@ -353,6 +353,7 @@
         }
     ],
     "settings": {
+        "backofficeDateTimeFormat" :  "m/d/Y H:i:s O",
         "bannerImage": "/resources/images/banner.jpg",
         "bannerImageEnabled": false,
         "bannerImageRepeat": "repeat-x",

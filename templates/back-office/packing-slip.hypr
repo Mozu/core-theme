@@ -9,7 +9,7 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date("m/d/Y H:i:s K") }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
