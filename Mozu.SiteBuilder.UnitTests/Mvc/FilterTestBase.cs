@@ -16,9 +16,21 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
     public class TemplateTestBase
     {
         private class TestTemplateLoader : ITemplateLoader{
+            private readonly Dictionary<string, string> _templates;
+
+            public TestTemplateLoader ( Dictionary<string,string> templates)
+            {
+                _templates = templates;
+            }
+
             public Tuple<TextReader, DateTime> GetTemplate(string path)
             {
-                return new Tuple<TextReader, DateTime>(new StringReader(path), DateTime.UtcNow);
+                string templateString;
+                if (!_templates.TryGetValue( path, out templateString))
+                {
+                    templateString = path;
+                }
+                return new Tuple<TextReader, DateTime>(new StringReader(templateString), DateTime.UtcNow);
             }
 
             public bool IsUpdated(string path, DateTime timestamp)
@@ -26,6 +38,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 return false;
             }
         }
+
+        public Dictionary<string, string> Templates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         
         private ITemplateManager _manager;
         private ITemplateManager Manager
@@ -36,7 +50,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                     .WithLibrary(typeof (AddFilter).Assembly)
                     .WithLibrary(typeof (HyprViewEngine).Assembly)
                     .WithLibrary(typeof (DropZoneTag).Assembly)
-                    .WithLoader(new TestTemplateLoader())
+                    .WithLoader(new TestTemplateLoader(Templates))
                     .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager()));
             }
         }
