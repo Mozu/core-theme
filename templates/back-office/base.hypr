@@ -14,6 +14,6 @@
     </head>
     <body>
         {% block body-content %}
-        {% endblock body-content %}
+        {% endblock body-content %}        
     </body>
 </html>
