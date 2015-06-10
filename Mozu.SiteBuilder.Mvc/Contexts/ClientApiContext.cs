@@ -115,6 +115,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             });
         }
 
+        string GetUserClaims ( IApiContext apiContext){
+            if ( apiContext.SiteId.HasValue)
+            {
+                return (apiContext.UserClaims ?? LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId.Value)).ToAccessToken();
+            }
+            return "";
+                
+        }
+
         private Dictionary<string, string> BuildHeaders(IApiContext apiContext)
         {
             var header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -125,7 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             header[APIConstants.Headers.MASTER_CATALOG] = apiContext.MasterCatalogId.HasValue ? apiContext.MasterCatalogId.Value.ToString() : "";
             header[APIConstants.Headers.CATALOG] = apiContext.CatalogId.HasValue ? apiContext.CatalogId.Value.ToString() : "";
             header[APIConstants.Headers.TENANT] = apiContext.TenantId.ToString();
-            header[APIConstants.Headers.USER_CLAIMS] = apiContext.UserClaims.ToAccessToken();
+            header[APIConstants.Headers.USER_CLAIMS] = GetUserClaims(apiContext);
 
          //   header[APIConstants.Headers.BYPASS_CACHE] = apiContext.ShouldBypassCache.ToString();
             if (apiContext.DataViewMode == DataViewModeType.Pending)
