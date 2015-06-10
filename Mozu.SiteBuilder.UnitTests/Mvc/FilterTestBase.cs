@@ -41,19 +41,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
         public Dictionary<string, string> Templates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         
-        private ITemplateManager _manager;
+      
         private ITemplateManager Manager
         {
-            get
-            {
-                return (_manager ?? (_manager = new TemplateManagerProvider()
+            get;set;
+        }
+        void InitManager(){
+            Manager = new TemplateManagerProvider()
                     .WithLibrary(typeof (AddFilter).Assembly)
                     .WithLibrary(typeof (HyprViewEngine).Assembly)
                     .WithLibrary(typeof (DropZoneTag).Assembly)
                     .WithLoader(new TestTemplateLoader(Templates))
-                    .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager()));
-            }
+                    .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager();
         }
+           
 
         public class TestDescriptor
         {
@@ -69,13 +70,16 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             {
                 Context = new Dictionary<string, object>();
             }
+
+            public Dictionary<string, string> Templates { get; set; }
         }
 
-        public static void RunTemplate(TestDescriptor desc, ITemplateManager manager)
+        public   void RunTemplate(TestDescriptor desc, ITemplateManager manager)
         {
             NDjango.Utilities.UtilConfig.Comparer = new NDjango.FiltersCS.DjangoComparer();
             
             var context = SetupContext(desc);
+            InitTempaltes(desc);
             var template = manager.GetTemplate(desc.Template);
             var renderer = new TemplateRenderer(manager, template, context);
             var rendered = RenderTemplate(renderer);
@@ -84,9 +88,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
         protected void RunTemplate(TestDescriptor desc)
         {
+            InitManager();
             RunTemplate(desc, Manager);
         }
-
+        private void InitTempaltes ( TestDescriptor desc)
+        {
+            Templates.Clear();
+            if (desc.Templates != null)
+            {
+                foreach ( var kvp in desc.Templates)
+                {
+                    Templates[kvp.Key] = kvp.Value;
+                }
+            }
+        }
         private static string RenderTemplate(TemplateRenderer renderer)
         {
             var writer = new StringWriter();
