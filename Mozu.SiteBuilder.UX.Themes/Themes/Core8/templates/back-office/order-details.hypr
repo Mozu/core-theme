@@ -93,9 +93,15 @@
                     <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
                     <td>{{ model.shippingTotal|currency }}</td>
                 </tr>
+                {% if model.handlingTotal > 0 %}
+                    <tr>
+                        <td colspan="5">Handling</td>
+                        <td>{{ model.handlingTotal|currency }}</td>
+                    </tr>
+                {% endif %}
                 {% if model.feeTotal > 0 %}
                     <tr>
-                        <td colspan="5">Handling Fees</td>
+                        <td colspan="5">Fees</td>
                         <td>{{ model.feeTotal|currency }}</td>
                     </tr>
                 {% endif %}
