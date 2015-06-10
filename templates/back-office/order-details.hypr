@@ -9,7 +9,7 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date("m/d/Y H:i:s K") }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
@@ -145,7 +145,7 @@
                 {% for payment in model.payments %}
                     {% if payment.status != "Voided" %}
                     <tr>
-                        <td>{{ payment.auditInfo.createDate|date("m/d/Y H:i:s K") }}</td>
+                        <td>{{ payment.auditInfo.createDate|date(themeSettings.backofficeDateTimeFormat) }}</td>
                         <td>{{ payment.status }}</td>
                         {% if payment.paymentType == "CreditCard" %}
                             <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
@@ -192,7 +192,7 @@
                 <tbody>
                     {% if model.shopperNotes.comments %}
                         <tr>
-                            <td>{{ model.submittedDate | date("m/d/Y H:i:s K") }}</td>
+                            <td>{{ model.submittedDate | date(themeSettings.backofficeDateTimeFormat) }}</td>
                             <td>Customer</td>
                             <td>Shopper Notes</td>
                             <td>{{ model.shopperNotes.comments }}</td>
@@ -200,7 +200,7 @@
                     {% endif %}
                     {% if model.shopperNotes.giftMessage %}
                         <tr>
-                            <td>{{ model.submittedDate | date("m/d/Y H:i:s K") }}</td>
+                            <td>{{ model.submittedDate | date(themeSettings.backofficeDateTimeFormat) }}</td>
                             <td>Customer</td>
                             <td>Gift Message</td>
                             <td>{{ model.shopperNotes.giftMessage }}</td>

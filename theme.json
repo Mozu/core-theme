@@ -284,6 +284,7 @@
     "settings": {
         "allowWishlist": false,
         "autocompleteProducts": true,
+        "backofficeDateTimeFormat" :  "m/d/Y H:i:s O",
         "bannerImage": "/resources/images/banner.jpg",
         "bannerImageEnabled": false,
         "bannerImageRepeat": "repeat-x",
