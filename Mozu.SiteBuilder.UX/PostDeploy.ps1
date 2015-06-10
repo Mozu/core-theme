@@ -46,13 +46,17 @@ function install-counters($application, $dllPath)
 	}
 }
 
-function get-web-application-poolName($octoProjName)
+function get-web-application-poolName($octoStepName)
 {
 	try
 	{
-		$poolLocation = get-mozu-AppPoolPath($octoProjName)
-		$poolName = (Get-WebApplication | ?{$_.PhysicalPath -eq $poolLocation }).ApplicationPool 
-		if (!$poolName) { throw "Error - function get-web-application-poolName: no application pool value found" }
+		$poolPath = get-mozu-AppPoolPath($octoStepName)
+		$poolName = ( Get-WebApplication | ?{$_.PhysicalPath -eq $poolPath }).ApplicationPool 
+		if (!$poolName) 
+			{ 
+				$poolName = ( Get-WebSite | ?{$_.PhysicalPath -eq $poolPath }).ApplicationPool 
+				if (!$poolName)  { throw "Error - function get-web-application-poolName: no application pool for path: $poolPath found" }
+			}
 		return $poolName
 	}    
 	Catch
@@ -62,31 +66,45 @@ function get-web-application-poolName($octoProjName)
 	}
 }
 
-function get-mozu-AppPoolPath($octoProjName)
+function get-mozu-AppPoolPath($octoStepName)
 {
     Try
 	{
 		$applicationPaths = Get-WebApplication  | select -ExpandProperty PhysicalPath
-		if (!$applicationPaths) { throw "Error - func get-mozu-AppPoolPath: no application pools with a physical path found on the server." }
+		if (!$applicationPaths) { throw "Error - func get-mozu-AppPoolPath: no web applications with a physical path found on the server." }
 
 		foreach($applicationPath in $applicationPaths)
 		{
 			write-Host ("func get-mozu-AppPoolPath: applicationPath = $applicationPath")
 		}
 
-		$poolLocation = $applicationPaths | where{$_ -like "*$octoProjName*" }
-		if (!$poolLocation) { throw "Error - func get-mozu-AppPoolPath: no application path found that contains the Octopus Project Name: $octoProjName" } 
+		$poolPaths = $applicationPaths | where{$_ -like "*\$octoStepName\*" }
+		if (!$poolPaths) 
+		{ 
+			$sitePaths = Get-WebSite  | select -ExpandProperty PhysicalPath
+			if (!$sitePaths) { throw "Error - func get-mozu-AppPoolPath: no sites with a physical path found on the server." }
+
+			foreach($sitePath in $sitePaths)
+			{
+				write-Host ("func get-mozu-AppPoolPath: sitePath = $sitePath")
+			}
+
+			$poolPaths = $sitePaths | where{$_ -like "*\$octoStepName\*" }
+			if (!$poolPaths) { throw "Error - func get-mozu-AppPoolPath: no web application or site path found on the server that contain the Octopus Project Step Name: $octoStepName"  }
+		} 
     
-		foreach($poolLoc in $poolLocation)
+		foreach($poolPath in $poolPaths)
 		{
-			write-Host ("func get-mozu-AppPoolPath: poolLocation = $poolLoc")
+			write-Host ("func get-mozu-AppPoolPath: poolPath = $poolPath")
 		}
 
-		if ($poolLocation.count -gt 1) { throw "Error - func get-mozu-AppPoolPath: multiple pool locations for $octoProjName" }
+		if ($poolPaths.count -gt 1) { throw "Error - func get-mozu-AppPoolPath: multiple pool locations for $octoStepName" }
+		$poolPath = $poolPaths #there is only one
 
-		if (test-path $poolLocation)
+
+		if (test-path $poolPath)
 		{
-			return $poolLocation
+			return $poolPath
 		}
 		else
 		{ 
@@ -322,12 +340,12 @@ write-Host("END - Set Scale Units")
 write-Host(" ")
 
 write-Host("START - Install counters")
-$octoProjName = $OctopusParameters["Octopus.Project.Name"]
-$poolLocation = get-mozu-AppPoolPath($octoProjName)
-write-Host("Install counters - poolLocation: $poolLocation")
-$appName = get-mozu-appName "$poolLocation\web.config"
+$octoStepName = $OctopusParameters["Octopus.Step.Name"]
+$poolPath = get-mozu-AppPoolPath($octoStepName)
+write-Host("Install counters - poolPath: $poolPath")
+$appName = get-mozu-appName "$poolPath\web.config"
 write-Host("Install counters - appName: $appName")
-$countersAssemblyFiles = "$poolLocation\bin\Mozu.Core.Api.dll", "$poolLocation\bin\mozu.core.actions.dll"
+$countersAssemblyFiles = "$poolPath\bin\Mozu.Core.Api.dll", "$poolPath\bin\mozu.core.actions.dll"
 foreach ($countersAssemblyFilePath in $countersAssemblyFiles)
 {
 	write-Host("Install counters - counters install loc: $countersAssemblyFilePath")
@@ -337,7 +355,7 @@ write-Host("END - Install counters")
 write-Host(" ")
 
 write-Host("START - Restart application pool")
-$poolName = get-web-application-poolName($octoProjName)
+$poolName = get-web-application-poolName($octoStepName)
 write-Host("Restart application pool - poolName: $poolName")
 $previousStart = get-webAppPool-status $poolName
 write-Host("Restart application pool - previousStart: $previousStart")
