@@ -2,7 +2,7 @@
   "name": "mozu-core4",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu.",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "devDependencies": {
     "grunt": "~0.4",
     "grunt-contrib-jshint": "~0.8",
