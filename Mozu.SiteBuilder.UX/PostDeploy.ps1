@@ -308,6 +308,19 @@ function get-mozu-appName($filename)
 }
 
 write-Host("START - Post-Deploy Script")
+#region Get Variables
+write-Host("START - Get Variables")
+$octoPackageId = $OctopusParameters["Octopus.Action.Package.NuGetPackageId"]
+write-Host("Octopus System Variable octoPackageId = $octoPackageId")
+write-Host("Get Variables - deployment will abort if any required variable values are missing")
+if (!(
+	 $octoPackageId
+	 )) { throw ("Error: abort deployment: missing one or more web pre deploy variable values.") }
+write-Host("END - Get Variables")
+write-Host(" ")
+#endregion
+
+#region Set Scale Units
 write-Host("START - Set Scale Units")
 if($ScaleUnitId)
 {
@@ -338,26 +351,10 @@ if($ScaleUnitId)
 }
 write-Host("END - Set Scale Units")
 write-Host(" ")
+#endregion
 
+#region Install counters
 write-Host("START - Install counters")
-$octoStepName = $OctopusParameters["Octopus.Step.Name"]
-
-
-$octoPackageId = $OctopusParameters["Octopus.Action.Package.NuGetPackageId"]
-write-Host("octoPackageId = $octoPackageId")
-
-
-write-Host("Get Variables - deployment will abort if any required variable values are missing")
-if (!(
-	 $octoStepName -and 
-	 $octoPackageId
-	 )) { throw ("Error: abort deployment: missing one or more web pre deploy variable values.") }
-
-
-
-
-
-
 $poolPath = get-mozu-AppPoolPath($octoPackageId)
 write-Host("Install counters - poolPath: $poolPath")
 $appName = get-mozu-appName "$poolPath\web.config"
@@ -370,8 +367,10 @@ foreach ($countersAssemblyFilePath in $countersAssemblyFiles)
 }
 write-Host("END - Install counters")
 write-Host(" ")
+#endregion
 
-write-Host("START - Restart application pool")
+#region 
+write-Host("START - Restart Application Pool")
 $poolName = get-web-application-poolName($octoPackageId)
 write-Host("Restart application pool - poolName: $poolName")
 $previousStart = get-webAppPool-status $poolName
@@ -380,11 +379,13 @@ Restart-WebAppPool -name $poolName
 $currentStart = get-webAppPool-status $poolName
 write-Host("Restart application pool - currentStart: $currentStart")
 write-Host   ("$poolName previous start $previousStart restarted on $currentStart")
-write-Host("END - Restart application pool")
+write-Host("END - Restart Application Pool")
 write-Host(" ")
+#endregion
 
-write-Host("START - Check if operational")
-write-Host("Check if operational - checkHost: $checkHost")
+#region Check Operation
+write-Host("START - Check Operation")
+write-Host("Check Operation - checkHost: $checkHost")
 if (!$checkHost) 
 { 
 	Write-Warning("checkHost variable in Octopus project is null: add variable to project and set value to true. Script will default to true when variable is missing.") 
@@ -441,5 +442,7 @@ else
 {
 	write-Host("Operational check not performed.")
 }
-write-Host("END - Check if operational")
+write-Host("END - Check Operation")
+#endregion
+
 write-Host("END - Post Deploy Script")
