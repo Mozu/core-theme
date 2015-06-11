@@ -344,10 +344,11 @@ $octoStepName = $OctopusParameters["Octopus.Step.Name"]
 
 
 $octoPackageId = $OctopusParameters["Octopus.Action.Package.NuGetPackageId"]
+write-Host("octoPackageId = $octoPackageId")
+
 
 write-Host("Get Variables - deployment will abort if any required variable values are missing")
 if (!(
-	 $octoProjName -and 
 	 $octoStepName -and 
 	 $octoPackageId
 	 )) { throw ("Error: abort deployment: missing one or more web pre deploy variable values.") }
