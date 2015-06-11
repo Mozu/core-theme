@@ -79,6 +79,11 @@ Ext.define('Taco.model.Discount', {
           defaultValue:null
         },
         {
+            name: 'paymentMethods',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
             name: 'shippingMethods',
             type: 'auto',
             defaultValue: []

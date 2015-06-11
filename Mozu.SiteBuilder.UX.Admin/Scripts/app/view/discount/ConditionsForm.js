@@ -12,7 +12,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         'Taco.view.customers.segments.Modal',
         'Taco.core.ux.form.CurrencyField',
         'Taco.view.discount.widget.CategoryPicker',
-        'Taco.core.ux.TooltipLabel'
+        'Taco.core.ux.TooltipLabel',
+        'Taco.model.GatewayDefinitions'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
@@ -22,7 +23,46 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     title: 'Discount Conditions',
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            paymentMethodsStore = Ext.create('Ext.data.Store', {
+                fields: [
+                    { name: "name", type: "string" },
+                    { name: "id", type: "string" }
+                ],
+                pageSize: 800,
+                remoteSort: false,
+                remoteFilter: false,
+                sorters: ['name'],
+                data: [
+                    { name: "Visa", id: "visa" },
+                    { name: "Master Card", id: "MasterCard" },
+                    { name: "American Express", id: "AmericanExpress" },
+                    { name: "Discover", id: "Discover" },
+                    { name: "Paypall Express", id: "PaypalExpress" },
+                    { name: "Visa Checkout", id: "VisaCheckout" }
+                ]
+            });
+
+
+
+        this.paymentMethodsField = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'paymentMethods',
+            margin: 0,
+            store: paymentMethodsStore,
+            queryMode: 'local',
+            width: 600,
+            triggerOnClick: true,
+            forceSelection: true,
+            disableKeyFilter: true,
+            typeAhead: true,
+            value: this.record.get('paymentMethods'),
+            displayField: 'name',
+            fieldLabel: 'Select Payment Methods',
+            valueField: 'id'
+        });
+
+
+
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField',
             Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minOrderAmount', me, {
                 name: 'minimumOrderAmount',
@@ -165,7 +205,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 margin: '0 0 0 0'
             }),
             this.categoriesBox,
-            this.minimumCategorySubtotalBeforeDiscounts
+            this.minimumCategorySubtotalBeforeDiscounts,
+            this.paymentMethodsField
         ];
 
         this.callParent(arguments);
