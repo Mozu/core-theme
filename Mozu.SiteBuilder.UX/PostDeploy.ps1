@@ -46,11 +46,11 @@ function install-counters($application, $dllPath)
 	}
 }
 
-function get-web-application-poolName($octoStepName)
+function get-web-application-poolName($octoPackageId)
 {
 	try
 	{
-		$poolPath = get-mozu-AppPoolPath($octoStepName)
+		$poolPath = get-mozu-AppPoolPath($octoPackageId)
 		$poolName = ( Get-WebApplication | ?{$_.PhysicalPath -eq $poolPath }).ApplicationPool 
 		if (!$poolName) 
 			{ 
@@ -66,7 +66,7 @@ function get-web-application-poolName($octoStepName)
 	}
 }
 
-function get-mozu-AppPoolPath($octoStepName)
+function get-mozu-AppPoolPath($octoPackageId)
 {
     Try
 	{
@@ -78,7 +78,7 @@ function get-mozu-AppPoolPath($octoStepName)
 			write-Host ("func get-mozu-AppPoolPath: applicationPath = $applicationPath")
 		}
 
-		$poolPaths = $applicationPaths | where{$_ -like "*\$octoStepName\*" }
+		$poolPaths = $applicationPaths | where{$_ -like "*\$octoPackageId\*" }
 		if (!$poolPaths) 
 		{ 
 			$sitePaths = Get-WebSite  | select -ExpandProperty PhysicalPath
@@ -89,8 +89,8 @@ function get-mozu-AppPoolPath($octoStepName)
 				write-Host ("func get-mozu-AppPoolPath: sitePath = $sitePath")
 			}
 
-			$poolPaths = $sitePaths | where{$_ -like "*\$octoStepName\*" }
-			if (!$poolPaths) { throw "Error - func get-mozu-AppPoolPath: no web application or site path found on the server that contain the Octopus Project Step Name: $octoStepName"  }
+			$poolPaths = $sitePaths | where{$_ -like "*\$octoPackageId\*" }
+			if (!$poolPaths) { throw "Error - func get-mozu-AppPoolPath: no web application or site path found on the server that contain the Octopus Project Step Package ID: $octoPackageId"  }
 		} 
     
 		foreach($poolPath in $poolPaths)
@@ -98,7 +98,7 @@ function get-mozu-AppPoolPath($octoStepName)
 			write-Host ("func get-mozu-AppPoolPath: poolPath = $poolPath")
 		}
 
-		if ($poolPaths.count -gt 1) { throw "Error - func get-mozu-AppPoolPath: multiple pool locations for $octoStepName" }
+		if ($poolPaths.count -gt 1) { throw "Error - func get-mozu-AppPoolPath: multiple pool locations for Octopus Project Package ID $octoPackageId" }
 		$poolPath = $poolPaths #there is only one
 
 
@@ -341,7 +341,23 @@ write-Host(" ")
 
 write-Host("START - Install counters")
 $octoStepName = $OctopusParameters["Octopus.Step.Name"]
-$poolPath = get-mozu-AppPoolPath($octoStepName)
+
+
+$octoPackageId = $OctopusParameters["Octopus.Action.Package.NuGetPackageId"]
+
+write-Host("Get Variables - deployment will abort if any required variable values are missing")
+if (!(
+	 $octoProjName -and 
+	 $octoStepName -and 
+	 $octoPackageId
+	 )) { throw ("Error: abort deployment: missing one or more web pre deploy variable values.") }
+
+
+
+
+
+
+$poolPath = get-mozu-AppPoolPath($octoPackageId)
 write-Host("Install counters - poolPath: $poolPath")
 $appName = get-mozu-appName "$poolPath\web.config"
 write-Host("Install counters - appName: $appName")
@@ -355,7 +371,7 @@ write-Host("END - Install counters")
 write-Host(" ")
 
 write-Host("START - Restart application pool")
-$poolName = get-web-application-poolName($octoStepName)
+$poolName = get-web-application-poolName($octoPackageId)
 write-Host("Restart application pool - poolName: $poolName")
 $previousStart = get-webAppPool-status $poolName
 write-Host("Restart application pool - previousStart: $previousStart")
