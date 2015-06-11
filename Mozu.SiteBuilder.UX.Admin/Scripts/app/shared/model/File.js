@@ -84,7 +84,7 @@ Ext.define('Taco.shared.model.File', {
             persist: false,
             convert: function fullName(v, record) {
                 var raw = record.raw || {};
-                return v || (raw.localthumbnail || raw.imageUrl || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
+                return v || (raw.localthumbnail || raw.imageUrl || record.getCndPrefix() + '/cms/files/' + (raw.cmsId || raw.id));
             }
         },{
             name: 'url',
@@ -93,10 +93,16 @@ Ext.define('Taco.shared.model.File', {
             persist: false,
             convert: function fullName(v, record) {
                 var raw = record.raw || {};
-                return v || (raw.url || raw.imageUrl || '/cms/' + record.getCurrentSiteId() + '/files/' + (raw.cmsId || raw.id));
+                return v || (raw.url || raw.imageUrl || record.getCndPrefix() + '/cms/files/' + (raw.cmsId || raw.id));
             }
         }
     ],
+    getCndPrefix: function () {
+        if (Taco.cdnPrefix) {
+            return '//' + Taco.cdnPrefix + '/' + Taco.app.context.getTenantId() + '-m' + Taco.app.context.getMasterCatalogId() || '1';
+        }
+        return '';
+    },
     getCurrentSiteId: function () {
         
         var siteId = Taco.app.context.getSiteId();
