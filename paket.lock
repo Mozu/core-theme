@@ -172,4 +172,5 @@ NUGET
       Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.Tenant.Contracts (1.17.2)
       Mozu.Core.Prime (>= 1.17)
+    Mozu.VS.PowerShell (1.17.1)
     OctoPack (2.1.3)
