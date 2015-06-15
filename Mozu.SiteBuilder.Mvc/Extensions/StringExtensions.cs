@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
@@ -24,6 +20,11 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 return null;
             }
             return val;
+        }
+
+        public static bool IsNullOrEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s);
         }
 
         private static readonly string[] SpecialCharacters = { "^", "'", "\"", "{", "}", "(", ")", "[", "]" };

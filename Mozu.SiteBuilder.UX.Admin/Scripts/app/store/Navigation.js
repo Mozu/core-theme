@@ -44,9 +44,9 @@ Ext.define('Taco.store.Navigation', {
                     if (item.locAtts) {
                         if (item.locAtts.length === 2 && !(isMultiLang || isMultiCurrency)) {
                             return false;
-                        } else if (  Ext.Array.indexOf( item.locAtts,"multiLang") > -1 && !isMultiLang) {
+                        } else if (  Ext.Array.indexOf( item.locAtts,'multiLang') > -1 && !isMultiLang) {
                             return false;
-                        } else if (Ext.Array.indexOf( item.locAtts,"multCurrency") > -1 && !isMultiCurrency) {
+                        } else if (Ext.Array.indexOf( item.locAtts,'multCurrency') > -1 && !isMultiCurrency) {
                             return false;
                         }
                     }
@@ -76,7 +76,7 @@ Ext.define('Taco.store.Navigation', {
 
              
 
-         
+            console.log(Taco.tenantSettings)
 
 
             Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
@@ -145,367 +145,373 @@ Ext.define('Taco.store.Navigation', {
         type: 'memory',
         data: [
 /*{
-            "id": "dashboard",
-            "label": "Dashboard",
-            "address": "dashboard",
-            "icon": "nav-dashboard",
-            "items": [
+            'id': 'dashboard',
+            'label': 'Dashboard',
+            'address': 'dashboard',
+            'icon': 'nav-dashboard',
+            'items': [
                 {
-                    "id": "channels",
-                    "label": "Channels",
-                    "address": "channels"
+                    'id': 'channels',
+                    'label': 'Channels',
+                    'address': 'channels'
                 }, {
-                    "id": "reports",
-                    "label": "Reports",
-                    "address": "reports"
+                    'id': 'reports',
+                    'label': 'Reports',
+                    'address': 'reports'
                 }
             ]
         },*/ {
-                "id": "customers",
-                "label": "Customers",
-                "address": "customers",
-                "icon": "nav-customers",
-                "behaviorIds": [41],
-                "items": [
+                'id': 'customers',
+                'label': 'Customers',
+                'address': 'customers',
+                'icon': 'nav-customers',
+                'behaviorIds': [41],
+                'items': [
 /*{
-                "id": "accounts",
-                "label": "Accounts",
-                "address": "customers"
+                'id': 'accounts',
+                'label': 'Accounts',
+                'address': 'customers'
             }, */{
-                        "id": "customerAttributes",
-                        "label": "Attributes",
-                        "address": "CustomerAttributes"
+                        'id': 'customerAttributes',
+                        'label': 'Attributes',
+                        'address': 'CustomerAttributes'
                     }, {
-                        "id": "customerSegments",
-                        "label": "Segments",
-                        "address": "customer/segments"
+                        'id': 'customerSegments',
+                        'label': 'Segments',
+                        'address': 'customer/segments'
                     } /*, {
-                "id": "contacts",
-                "label": "Contacts",
-                "address": "tbd/contacts"
+                'id': 'contacts',
+                'label': 'Contacts',
+                'address': 'tbd/contacts'
             }*/
                 ]
             }, {
-                "id": "catalog",
-                "label": "Catalog",
-                "address": "products",
-                "behaviorIds": [4],
-                "icon": "nav-catalog",
-                "items": [
+                'id': 'catalog',
+                'label': 'Catalog',
+                'address': 'products',
+                'behaviorIds': [4],
+                'icon': 'nav-catalog',
+                'items': [
 /*{
-                "id": "products",
-                "label": "Products",
-                "address": "products",
-                "behaviorIds": [4]
+                'id': 'products',
+                'label': 'Products',
+                'address': 'products',
+                'behaviorIds': [4]
             }, */{
-                        "id": "inventory",
-                        "label": "Inventory",
-                        "address": "inventory",
-                        "behaviorIds": [4]
+                        'id': 'inventory',
+                        'label': 'Inventory',
+                        'address': 'inventory',
+                        'behaviorIds': [4]
                     }, {
-                        "id": "categories",
-                        "label": "Categories",
-                        "address": "categories",
-                        "behaviorIds": [16]
+                        'id': 'categories',
+                        'label': 'Categories',
+                        'address': 'categories',
+                        'behaviorIds': [16]
                     }, {
-                        "id": "productTypes",
-                        "label": "Product Types",
-                        "address": "producttypes"
+                        'id': 'productTypes',
+                        'label': 'Product Types',
+                        'address': 'producttypes'
                     }, {
-                        "id": "attributes",
-                        "label": "Attributes",
-                        "address": "attributes"
+                        'id': 'attributes',
+                        'label': 'Attributes',
+                        'address': 'attributes'
                     }
                 ]
             }, {
-                "id": "orders",
-                "label": "Orders",
-                "address": "orders",
-                "behaviorIds": [73],
-                "icon": "nav-orders",
-                "items": [
+                'id': 'orders',
+                'label': 'Orders',
+                'address': 'orders',
+                'behaviorIds': [73],
+                'icon': 'nav-orders',
+                'items': [
 /*{
-                "id": "orders",
-                "behaviorIds": [16],
-                "label": "Orders",
-                "address": "orders"
+                'id': 'orders',
+                'behaviorIds': [16],
+                'label': 'Orders',
+                'address': 'orders'
             }, */{
-                        "id": "orderAttributes",
-                        "label": "Attributes",
-                        "address": "orderattributes"
+                        'id': 'orderAttributes',
+                        'label': 'Attributes',
+                        'address': 'orderattributes'
                     }, {
-                        "id": "storecredit",
-                        "label": "Store Credit",
-                        "address": "StoreCredits"
+                        'id': 'storecredit',
+                        'label': 'Store Credit',
+                        'address': 'StoreCredits'
                     }
                 ]
             }, {
-                "id": "marketing",
-                "label": "Marketing",
-                "address": "discounts",
-                "behaviorIds": [24],
-                "icon": "nav-marketing",
-                "items": [
+                'id': 'marketing',
+                'label': 'Marketing',
+                'address': 'discounts',
+                'behaviorIds': [24],
+                'icon': 'nav-marketing',
+                'items': [
                     {
-                        "id": "discounts",
-                        "behaviorIds": [24],
+                        'id': 'discounts',
+                        'behaviorIds': [24],
 
-                        "label": "Discounts",
-                        "address": "discounts"
+                        'label': 'Discounts',
+                        'address': 'discounts'
                     } /*, {
-                "id": "promotions",
-                "label": "Promotions",
-                "address": "tbd/promotions"
+                'id': 'promotions',
+                'label': 'Promotions',
+                'address': 'tbd/promotions'
             }, {
-                "id": "targeting",
-                "label": "Targeting",
-                "address": "tbd/targeting"
+                'id': 'targeting',
+                'label': 'Targeting',
+                'address': 'tbd/targeting'
             }*/
                 ]
             }, {
-                "id": "sitebuilder",
-                "label": "Site Builder",
-                "address": "siteSelection",
-                "showBreadCrumbs": true,
-                //"address": "sites/pages",
-                "icon": "nav-sites",
-                "items": [
+                'id': 'sitebuilder',
+                'label': 'Site Builder',
+                'address': 'siteSelection',
+                'showBreadCrumbs': true,
+                //'address': 'sites/pages',
+                'icon': 'nav-sites',
+                'items': [
                     {
-                        "id": "webedit",
-                        "visible": false,
-                        "label": "Edit",
-                        "address": "website"
+                        'id': 'webedit',
+                        'visible': false,
+                        'label': 'Edit',
+                        'address': 'website'
                     }, {
-                        "id": "themes",
-                        "label": "Themes",
-                        "visible": false,
-                        "address": "themes"
+                        'id': 'themes',
+                        'label': 'Themes',
+                        'visible': false,
+                        'address': 'themes'
                     },
                     {
-                        "id": "redirects",
-                        "label": "Redirects",
-                        "visible": false,
-                        "address": "redirects"
+                        'id': 'redirects',
+                        'label': 'Redirects',
+                        'visible': false,
+                        'address': 'redirects'
                     },
                     {
-                        "id": "generalsettings",
-                        "label": "Site Settings",
-                        "visible": false,
-                        "address": "generalsettings/site"
+                        'id': 'generalsettings',
+                        'label': 'Site Settings',
+                        'visible': false,
+                        'address': 'generalsettings/site'
                     } 
                     /*, {
-                "id": "fileManager",
-                "label": "File Manager",
-                "address": "fileManager"
+                'id': 'fileManager',
+                'label': 'File Manager',
+                'address': 'fileManager'
             }*/
                 ]
             }, {
-                "id": "settings",
-                "label": "Settings",
-                "icon": "nav-settings",
-                "visible": false,
-                "items": [
+                'id': 'settings',
+                'label': 'Settings',
+                'icon': 'nav-settings',
+                'visible': false,
+                'items': [
                     {
-                        "id": "generalsettings",
-                        "label": "General Settings",
-                        "address": "generalsettings"
+                        'id': 'generalsettings',
+                        'label': 'General Settings',
+                        'address': 'generalsettings'
 
                     },
                     {
-                        "id": "paymentcheckout",
-                        "label": "Payment & Checkout",
-                        "address": "settings/paymentAndCheckout"
+                        'id': 'paymentcheckout',
+                        'label': 'Payment & Checkout',
+                        'address': 'settings/paymentAndCheckout'
                     }, {
-                        "id": "tax",
-                        "label": "Tax",
-                        "address": "settings/tax"
+                        'id': 'tax',
+                        'label': 'Tax',
+                        'address': 'settings/tax'
                     },
                     {
-                        "id": "shipping",
-                        "label": "Shipping",
-                        "address": "shipping",
-                        "items": [
+                        'id': 'shipping',
+                        'label': 'Shipping',
+                        'address': 'shipping',
+                        'items': [
                             {
-                                "id": "shipping4",
-                                "label": "Methods and Fees",
-                                "address": "shipping"
+                                'id': 'shipping4',
+                                'label': 'Methods and Fees',
+                                'address': 'shipping'
                             },
                             {
-                                "id": "shipping1",
-                                "label": "Carriers and Settings",
-                                "address": "shipping/carriers"
+                                'id': 'shipping1',
+                                'label': 'Carriers and Settings',
+                                'address': 'shipping/carriers'
                             },
                             {
-                                "id": "shipping2",
-                                "label": "Zones",
-                                "address": "shipping/zones"
+                                'id': 'shipping2',
+                                'label': 'Zones',
+                                'address': 'shipping/zones'
                             },
                             {
-                                "id": "shipping3",
-                                "label": "Product Rules",
-                                "address": "shipping/productRules"
+                                'id': 'shipping3',
+                                'label': 'Product Rules',
+                                'address': 'shipping/productRules'
                             }
                         ]
 
                     }, {
-                        "id": "localization",
-                        "locAtts": ["multiLang", "multCurrency"],
-                        "label": "Localization",
-                        "address": "Localization",
-                        "items": [
+                        'id': 'localization',
+                        'locAtts': ['multiLang', 'multCurrency'],
+                        'label': 'Localization',
+                        'address': 'Localization',
+                        'items': [
                             {
-                                "id": "localizationAttr",
-                                "label": "Attributes",
-                                "address": "Localization",
-                                "locAtts": ["multiLang"]
+                                'id': 'localizationAttr',
+                                'label': 'Attributes',
+                                'address': 'Localization',
+                                'locAtts': ['multiLang']
                             },
                             {
-                                "id": "localizationAttrVal",
-                                "label": "Attribute Values",
-                                "address": "Localization/attributeValues",
-                                "locAtts": ["multiLang"]
+                                'id': 'localizationAttrVal',
+                                'label': 'Attribute Values',
+                                'address': 'Localization/attributeValues',
+                                'locAtts': ['multiLang']
                             },
                             {
-                                "id": "localizationProp",
-                                "label": "Product Properties",
-                                "address": "Localization/productProperties",
-                                "locAtts": ["multiLang"]
+                                'id': 'localizationProp',
+                                'label': 'Product Properties',
+                                'address': 'Localization/productProperties',
+                                'locAtts': ['multiLang']
                             },
                             {
-                                "id": "localizationExtra",
-                                "label": "Product Extras",
-                                "address": "Localization/productExtras",
-                                "locAtts": ["multCurrency"]
+                                'id': 'localizationExtra',
+                                'label': 'Product Extras',
+                                'address': 'Localization/productExtras',
+                                'locAtts': ['multCurrency']
                             },
                             {
-                                "id": "localizationVar",
-                                "label": "Product Variants",
-                                "address": "Localization/productVariants",
-                                "locAtts": ["multCurrency"]
+                                'id': 'localizationVar',
+                                'label': 'Product Variants',
+                                'address': 'Localization/productVariants',
+                                'locAtts': ['multCurrency']
                             }
                         ]
                     },
                     {
-                        "id": "usersRoles",
-                        "label": "Users &amp; Roles",
-                        "items": [
+                        'id': 'usersRoles',
+                        'label': 'Users &amp; Roles',
+                        'items': [
                             {
-                                "id": "users",
-                                "label": "Users",
-                                "address": "account/users"
+                                'id': 'users',
+                                'label': 'Users',
+                                'address': 'account/users'
                             }, {
-                                "id": "roles",
-                                "label": "Roles",
-                                "address": "roles"
+                                'id': 'roles',
+                                'label': 'Roles',
+                                'address': 'roles'
                             }
                         ]
 
                     }, {
-                        "id": "publishing",
-                        "label": "Publishing",
-                        "address": "settings/publishing"
+                        'id': 'publishing',
+                        'label': 'Publishing',
+                        'address': 'settings/publishing'
                     }, {
-                        "id": "applications-manage",
-                        "label": "Applications",
-                        "address": "capability"
+                        'id': 'applications-manage',
+                        'label': 'Applications',
+                        'address': 'capability'
                     }, {
-                        "id": "channels",
-                        "label": "Channels",
-                        "address": "channels"
+                        'id': 'channels',
+                        'label': 'Channels',
+                        'address': 'channels'
                     }, {
-                        "id": "fileManager",
-                        "label": "File Manager",
-                        "address": "fileManager"
+                        'id': 'fileManager',
+                        'label': 'File Manager',
+                        'address': 'fileManager'
                     }, {
-                        "id": "entities",
-                        "label": "Content/Entity",
-                        "address": "entities",
-                        "visible": !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
+                        'id': 'entities',
+                        'label': 'Content/Entity',
+                        'address': 'entities',
+                        'visible': !!(Taco.tenantSettings && Taco.tenantSettings.entityManagerVisible)
                     }, {
-                        "id": "sysAdmin",
-                        "label": "System Administration",
-                        "items": [
+                        'id': 'sysAdmin',
+                        'label': 'System Administration',
+                        'items': [
                             {
-                                "id": "provisioning",
-                                "label": "Catalog And Site Structure",
-                                "address": "provisioning"
-                            }, {
-                                "id": "actionmanagement",
-                                "label": "Action Management",
-                                "address": "actionmanagement"
+                                'id': 'provisioning',
+                                'label': 'Catalog And Site Structure',
+                                'address': 'provisioning'
+                            }, 
+                            {
+                                'id': 'actionmanagement',
+                                'label': 'Action Management',
+                                'address': 'actionmanagement'
                             },
+                            {
+                                'id': 'customroutes',
+                                'label': 'Custom Routes',
+                                'address': 'customroutes'
+                            }
                             // turning off in prod brah 
                             // {
-                            //     "id": "ipblocking",
-                            //     "label": "IP Blocking",
-                            //     "address": "ipblocking"
+                            //     'id': 'ipblocking',
+                            //     'label': 'IP Blocking',
+                            //     'address': 'ipblocking'
                             // }
                         ]
                     }
                 ]
             }, {
-                "id": "publishing",
-                "label": "Publish",
-                "address": "pendingchanges",
-                "icon": "nav-publishing",
-                "behaviorIds": [8],
-                "items": [
+                'id': 'publishing',
+                'label': 'Publish',
+                'address': 'pendingchanges',
+                'icon': 'nav-publishing',
+                'behaviorIds': [8],
+                'items': [
                     {
-                        "id": "cmspublishing",
-                        "label": "Content",
-                        "address": "/pendingChanges/cms"
+                        'id': 'cmspublishing',
+                        'label': 'Content',
+                        'address': '/pendingChanges/cms'
                     }, {
-                        "id": "catlogpublishing",
-                        "label": "Product",
-                        "address": "/pendingChanges/product"
+                        'id': 'catlogpublishing',
+                        'label': 'Product',
+                        'address': '/pendingChanges/product'
                     }
                 ]
             }, {
-                "id": "locations",
-                "label": "Locations",
-                "address": "locations",
-                "icon": "nav-locations",
-                "behaviorIds": [186],
-                "items": [
+                'id': 'locations',
+                'label': 'Locations',
+                'address': 'locations',
+                'icon': 'nav-locations',
+                'behaviorIds': [186],
+                'items': [
 /*{
-                "id": "locations-manage",
-                "label": "Locations",
-                "address": "locations"
+                'id': 'locations-manage',
+                'label': 'Locations',
+                'address': 'locations'
             },*/ {
-                        "id": "locationTypes",
-                        "label": "Location Types",
-                        "address": "locationTypes"
+                        'id': 'locationTypes',
+                        'label': 'Location Types',
+                        'address': 'locationTypes'
                     }, /* {
-                "id": "locations-orders",
-                "label": "Orders",
-                "address": "tbd/orders"
+                'id': 'locations-orders',
+                'label': 'Orders',
+                'address': 'tbd/orders'
             },*/ {
-                        "id": "locations-inventory",
-                        "label": "Inventory",
-                        "address": "locationInventory"
+                        'id': 'locations-inventory',
+                        'label': 'Inventory',
+                        'address': 'locationInventory'
                     }
                 ]
             }, {
-                "id": "reports",
-                "label": "Reporting",
-                "address": "reports",
-                "icon": "nav-dashboard",
-                "behaviorIds": [188],
-                "items": [{
-                    "id": "report-sales",
-                    "label": "Sales",
-                    "address": "/reports/index"
+                'id': 'reports',
+                'label': 'Reporting',
+                'address': 'reports',
+                'icon': 'nav-dashboard',
+                'behaviorIds': [188],
+                'items': [{
+                    'id': 'report-sales',
+                    'label': 'Sales',
+                    'address': '/reports/index'
                 }]
                 //    {
-                //        "id": "reports",
-                //        "label": "Reports",
-                //        "address": "reports"
+                //        'id': 'reports',
+                //        'label': 'Reports',
+                //        'address': 'reports'
                 //    }
                 //,
                 //{
-                //    "id": "bizIntel",
-                //    "label": "Dashboard",
-                //    "address": "businessIntelligence"
+                //    'id': 'bizIntel',
+                //    'label': 'Dashboard',
+                //    'address': 'businessIntelligence'
                 //}
                 //]
 

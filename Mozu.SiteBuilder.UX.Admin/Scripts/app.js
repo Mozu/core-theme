@@ -23,6 +23,7 @@ Ext.application({
         'Reports',
         'Navigation',
         'Customers',
+        'CustomRoutes',
         'StoreCredits',
         'CustomerAttributes',
         'Categories',

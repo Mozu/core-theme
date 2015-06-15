@@ -259,7 +259,7 @@
     <Compile Include="Api\ProductAvailableInventoryHelper.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
     <Compile Include="Api\SiteRoutesController.cs" />
-    <Compile Include="Api\RedirectController.cs" />
+    <Compile Include="Api\CustomRoutesController.cs" />
     <Compile Include="Api\ProvisioningController.cs" />
     <Compile Include="Api\ReportController.cs" />
     <Compile Include="Api\ReturnController.cs" />
@@ -429,6 +429,7 @@
     <Compile Include="MockServices\TestResponse.cs" />
     <Compile Include="Modules\VersionValidationCacheHeaderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RedirectController.cs" />
     <Content Include="PostDeploy.ps1">
       <Paket>True</Paket>
     </Content>

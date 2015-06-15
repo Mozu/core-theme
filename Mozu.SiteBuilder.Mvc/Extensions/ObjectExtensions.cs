@@ -4,20 +4,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Magnum.Binding.TypeBinders;
 using Magnum.Extensions;
-using Microsoft.FSharp.Core;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.IO;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
     using System.Runtime.Serialization.Json;
     using Newtonsoft.Json;
 

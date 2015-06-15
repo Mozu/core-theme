@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 
         private Task _contextInitTasks;
 
-        public Task ContextInitilaztionTasks
+        public Task ContextInitializationTasks
         {
             get
             {

@@ -35,7 +35,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Debug\Mozu.SiteBuilder.Mvc.XML</DocumentationFile>
-    <NoWarn>1591,1572,1571,1573,1587,1570, 612</NoWarn>
+    <NoWarn>1591,1572,1571,1573,1587,1570, 612, 0001</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -209,7 +209,10 @@
     <Compile Include="Catalog\AdminCategoryTreeProvider.cs" />
     <Compile Include="Catalog\ICategoryTreeProvider.cs" />
     <Compile Include="Catalog\RuntimeCategoryTreeProvider.cs" />
+    <Compile Include="Extensions\CacheExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtension.cs" />
+    <Compile Include="Extensions\HttpRouteValueDictionaryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UserClaimsExtensions.cs" />
     <Compile Include="RequestUrlFinderOuter.cs" />
@@ -261,6 +264,10 @@
     <Compile Include="ObjectPools\StringBuilderPool.cs" />
     <Compile Include="ObjectPools\CharBufferPool.cs" />
     <Compile Include="ObjectPools\ObjectPool.cs" />
+    <Compile Include="SEO\Constraints.cs" />
+    <Compile Include="SEO\CustomRoute.cs" />
+    <Compile Include="SEO\CustomRouteValidator.cs" />
+    <Compile Include="SEO\Mappings.cs" />
     <Compile Include="SEO\RedirectRepository.cs" />
     <Compile Include="SEO\SlugNormalizer.cs" />
     <Compile Include="SiteBuilderApiContextBuilder.cs" />
@@ -377,6 +384,7 @@
     <EmbeddedResource Include="TestData\backoffice\Package1.json" />
     <EmbeddedResource Include="TestData\refund.created\Refund2.json" />
     <EmbeddedResource Include="TestData\refund.created\Refund3.json" />
+    <None Include="SEO\proto_routeTable" />
     <None Include="TestData\refund.created\Refund1.json" />
   </ItemGroup>
   <ItemGroup>

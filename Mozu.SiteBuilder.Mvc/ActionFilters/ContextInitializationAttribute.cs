@@ -16,12 +16,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         public Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
             var controller = (ApiControllerBase)actionContext.ControllerContext.Controller;
-            if (controller != null || !controller.ContextInitilaztionTasks.IsCompleted)
+            if (controller != null || !controller.ContextInitializationTasks.IsCompleted)
             {
                 return continuation().ContinueWith(x => 
                     
                     {
-                        if (controller.ContextInitilaztionTasks.IsCompleted &&
+                        if (controller.ContextInitializationTasks.IsCompleted &&
                             controller.PageContext != null &&
                             controller.PageContext.CmsContext != null &&
                             !controller.PageContext.CmsContext.Initialized)
@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                         }
                         else
                         {
-                            return controller.ContextInitilaztionTasks.ContinueWith(y => x.Result);    
+                            return controller.ContextInitializationTasks.ContinueWith(y => x.Result);    
                         }
                         
                     }).Unwrap();

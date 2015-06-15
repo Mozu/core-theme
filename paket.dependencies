@@ -37,7 +37,7 @@ nuget Mozu.ProductRuntime.Contracts 1.17.2 framework: >= net451
 nuget Mozu.Provisioning.Contracts 1.17.5 framework: >= net451
 nuget Mozu.Reference.Contracts 1.17.4 framework: >= net451
 nuget Mozu.ShippingAdmin.Contracts 1.17.4 framework: >= net451
-nuget Mozu.SiteSettings.General.Contracts 1.17.8 framework: >= net451
-nuget Mozu.SiteSettings.Order.Contracts 1.17.8 framework: >= net451
+nuget Mozu.SiteSettings.General.Contracts < 1.19 prerelease framework: >= net451 
+nuget Mozu.SiteSettings.Order.Contracts < 1.19 framework: >= net451 
 nuget protobuf-net 2.0.0.668 framework: >= net45
 

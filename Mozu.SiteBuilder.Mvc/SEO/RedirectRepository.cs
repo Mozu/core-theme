@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Hosting;
-using System.Web.Http.Routing;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
@@ -21,14 +20,14 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
     public interface ISiteRouteRepository
     {
         Task<List<SiteRouteEntry>> FetchSiteRouteEntries();
-
-
         Task<HttpRouteCollection> GetHttpRouteCollection();
         Task<List<SiteRouteEntry>> UpdateRedirectEntries(List<SiteRouteEntry> routes);
     }
@@ -36,9 +35,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     public interface ISiteRouteHandler
     {
         Task<bool> RouteIncomingRequest();
-        HttpResponseMessage ProcessSeoRedirect();
 
-        string GetCanonicalUrl(Document d);
+        /// <summary>
+        /// if a canonical url exists for the internalroute that is specified, this method creates a redirect to that url, with potentially new viewdata that can be injected.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="internalRoute"></param>
+        /// <param name="viewDataAdditionFunc"></param>
+        /// <returns></returns>
+        Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
     }
 
     public class SiteRouteHandler : ISiteRouteHandler
@@ -68,122 +73,31 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
         }
 
-
-        public string GetCanonicalUrl(Document d)
-        {
-            HttpRouteCollection rrCol = RouteCollection;
-            if (rrCol != null)
-            {
-                HttpRouteValueDictionary vals = null;
-                IHttpVirtualPathData vpathData = null;
-                foreach (IHttpRoute route in rrCol)
-                {
-                    var entry = ((SiteRouteEntry) route.Defaults[ContextKey]);
-                    if (entry.IsCanonical.GetValueOrDefault(false) && entry.PageType == PageTypes.document &&
-                        (string.IsNullOrEmpty(entry.ListName) || string.Equals(entry.ListName, d.ListFQN, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        if (vals == null)
-                        {
-                            vals = new HttpRouteValueDictionary();
-                            vals[HttpRoute.HttpRouteKey] = true;
-                            vals["name"] = d.Name;
-                            vals["id"] = d.Id;
-                            vals["list"] = d.ListFQN;
-                        }
-                        vpathData = route.GetVirtualPath(_requestMessage, vals);
-                        if (vpathData != null)
-                        {
-                            string url = vpathData.VirtualPath;
-                            if (url.Length > 0 && url[0] != '/')
-                            {
-                                url = "/" + url;
-                            }
-
-                            url = url.Split('?')[0];
-                            return url;
-                        }
-                    }
-                }
-            }
-            return "cms/" + d.ListFQN + "/" + d.Name;
-        }
-
         public async Task<bool> RouteIncomingRequest()
         {
-            HttpRouteCollection routeCollection = await GetRouteCollectionTask().ConfigureAwait(false);
+            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             if (routeCollection == null)
             {
                 return false;
             }
 
-            IHttpRouteData reRouteData = routeCollection.GetRouteData(_requestMessage);
-            SiteRouteEntry siteRouteEntry = null;
-            if (reRouteData != null)
+            var rerouteData = routeCollection.GetRouteData(_requestMessage);
+            if (rerouteData == null) return false;
+
+            if (rerouteData.Route is CustomRoute)
             {
-                siteRouteEntry = (SiteRouteEntry) reRouteData.Values[ContextKey];
-
-                _requestMessage.Properties[HttpPropertyKeys.HttpRouteDataKey] = reRouteData;
-
-                _requestMessage.Properties[ContextKey] = siteRouteEntry;
-                HttpRequestContext rctx = _requestMessage.GetRequestContext();
-                rctx.RouteData = reRouteData;
-                return true;
+                var cr = rerouteData.Route as CustomRoute;
+                cr.RewriteRouteData(rerouteData.Values);
+                // do thing to the _request
             }
-            return false;
+
+            _requestMessage.Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
+            HttpRequestContext rctx = _requestMessage.GetRequestContext();
+            rctx.RouteData = rerouteData;
+            return true;
         }
 
-
-        public HttpResponseMessage ProcessSeoRedirect()
-        {
-            string key = ContextKey;
-            object tmp;
-            SiteRouteEntry siteRouteEntry = null;
-
-            if (_siteBuilderApiContext.IsEditMode)
-            {
-                return null;
-            }
-
-            if (_requestMessage.Properties.TryGetValue(key, out tmp))
-            {
-                siteRouteEntry = (SiteRouteEntry) tmp;
-                if (siteRouteEntry.IsCanonical.GetValueOrDefault(false))
-                {
-                    return null;
-                }
-            }
-            var vals = new HttpRouteValueDictionary(_requestMessage.GetRouteData().Values);
-            vals[HttpRoute.HttpRouteKey] = true;
-            string controller = ((string) vals["controller"] ?? "").ToLowerInvariant();
-            string action = ((string) vals["action"] ?? "").ToLowerInvariant();
-
-
-            switch (controller)
-            {
-                case "cmspages":
-                {
-                    switch (action)
-                    {
-                        case "page":
-                        {
-                            return ProcessCmsPageRedirect(_requestMessage, vals);
-                        }
-                        case "contentindex":
-                        {
-                            return ProcessCmsIndexRedirect(_requestMessage, vals);
-                        }
-                    }
-                    break;
-                }
-                default:
-                {
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        private async Task<HttpRouteCollection> GetRouteCollectionTask()
+        async Task<HttpRouteCollection> GetRouteCollectionAsync()
         {
             if (_httpRouteCollection == null)
             {
@@ -192,223 +106,37 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return _httpRouteCollection as HttpRouteCollection;
         }
 
-        private HttpResponseMessage ProcessCmsIndexRedirect(HttpRequestMessage request, HttpRouteValueDictionary vals)
+
+        public async Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
         {
-            HttpRouteCollection rrCol = RouteCollection;
-            if (rrCol == null)
+            if (_siteBuilderApiContext.IsEditMode)
             {
                 return null;
             }
 
+            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+            var canonicalRouteAndData = 
+                routeCollection
+                .Where(route => route is CustomRoute).Cast<CustomRoute>()
+                .Where(route => route.IsCanonicalFor(internalRoute) && route != request.GetRouteData()) // don't want to redirect if the canonical route is the current route
+                .Select(route => new { route, routeData = route.GetRouteData("/", request) }) // uhhh, what is the virtualPathRoot?
+                .FirstOrDefault(x => x.routeData != null);
 
-            var list = (string) vals["list"];
-            IHttpVirtualPathData vpathData = null;
-            foreach (IHttpRoute route in rrCol)
-            {
-                var entry = ((SiteRouteEntry) route.Defaults[ContextKey]);
-                if (entry.IsCanonical.GetValueOrDefault(false) && entry.PageType == PageTypes.documentList &&
-                    (string.IsNullOrEmpty(entry.ListName) || string.Equals(entry.ListName, list, StringComparison.OrdinalIgnoreCase)))
-                {
-                    vpathData = route.GetVirtualPath(request, vals);
-                    if (vpathData != null)
-                    {
-                        string url = vpathData.VirtualPath;
-                        if (url.Length > 0 && url[0] != '/')
-                        {
-                            url = "/" + url;
-                        }
+            if (canonicalRouteAndData == null) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
-                        url = url.Split('?')[0];
-                        return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(url, true));
-                    }
-                }
-            }
-            return null;
-        }
+            // else redirect
+            var incomingRouteValues = _requestMessage.GetRouteData().Values;
+            var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
+            var finalRouteValues = 
+                incomingRouteValues
+                .ChainAdd(additionalValues)
+                .ChainAdd(canonicalRouteAndData.routeData.Values);
 
-        private HttpResponseMessage ProcessCmsPageRedirect(HttpRequestMessage request, HttpRouteValueDictionary vals)
-        {
-            HttpRouteCollection rrCol = RouteCollection;
-            if (rrCol == null)
-            {
-                return null;
-            }
-
-
-            var list = (string) vals["list"];
-            IHttpVirtualPathData vpathData = null;
-            foreach (IHttpRoute route in rrCol)
-            {
-                var entry = ((SiteRouteEntry) route.Defaults[ContextKey]);
-                if (entry.IsCanonical.GetValueOrDefault(false) && entry.PageType == PageTypes.document &&
-                    (string.IsNullOrEmpty(entry.ListName) || string.Equals(entry.ListName, list, StringComparison.OrdinalIgnoreCase)))
-                {
-                    vpathData = route.GetVirtualPath(request, vals);
-                    if (vpathData != null)
-                    {
-                        string url = vpathData.VirtualPath;
-                        if (url.Length > 0 && url[0] != '/')
-                        {
-                            url = "/" + url;
-                        }
-
-                        url = url.Split('?')[0];
-                        return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(url, true));
-                    }
-                }
-            }
-
-            return null;
+            var finalRoute = canonicalRouteAndData.route.GetVirtualPath(request, finalRouteValues).VirtualPath;
+            return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(finalRoute, true));
         }
     }
-
-
-    public class SiteRouteRepository : ISiteRouteRepository
-    {
-        private readonly ObjectCache _cache;
-        private readonly IDocumentListWebApiClient _documentListWebApiClient;
-        private readonly ILogger _logger;
-        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-
-        public SiteRouteRepository(IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger, ObjectCache cache)
-        {
-            _siteBuilderApiContext = siteBuilderApiContext;
-            _logger = logger;
-            _cache = cache;
-            _documentListWebApiClient = (documentListWebApiClient == null) ? null : documentListWebApiClient.CloneWithoutUserClaims();
-        }
-
-        async Task<List<SiteRouteEntry>> ISiteRouteRepository.FetchSiteRouteEntries()
-        {
-            ServiceClientResponse<Document> documentResopnse = await GetDocumentResponse().ConfigureAwait(false);
-            if (documentResopnse.HasException || !documentResopnse.ResponseMessage.IsSuccessStatusCode)
-            {
-                return new List<SiteRouteEntry>();
-            }
-            return FetchSiteRouteEntries(documentResopnse.ReadAsSync());
-        }
-
-
-        async Task<List<SiteRouteEntry>> ISiteRouteRepository.UpdateRedirectEntries(List<SiteRouteEntry> routes)
-        {
-            ServiceClientResponse<Document> res = await _documentListWebApiClient.GetTreeDocument("siteSettings@mozu", "siteRoutes").ConfigureAwait(false);
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                Document doc = res.ReadAsSync();
-                doc.Set("data", JArray.FromObject(routes));
-                res = await _documentListWebApiClient.UpdateDocument(doc.ListFQN, doc.Id, doc);
-                return routes;
-            }
-            else
-            {
-                var doc = new Document
-                          {
-                              Name = "siteRoutes",
-                              DocumentTypeFQN = "document@mozu",
-                              ListFQN = "siteSettings@mozu",
-                          };
-                doc.Set("data", JArray.FromObject(routes));
-                res = await _documentListWebApiClient.CreateDocument(doc.ListFQN, doc);
-                return res.ReadAsSync().Get<JArray>("data").ToObject<List<SiteRouteEntry>>();
-            }
-        }
-
-
-        async Task<HttpRouteCollection> ISiteRouteRepository.GetHttpRouteCollection()
-        {
-            ServiceClientResponse<Document> docResponse = await GetDocumentResponse().ConfigureAwait(false);
-
-            if (docResponse.HasException || !docResponse.ResponseMessage.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            var doc = docResponse.ReadAsSync();
-
-            string key = GetType().FullName +
-                         ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
-                         _siteBuilderApiContext.SiteId +
-                         doc.UpdateDate.GetValueOrDefault(DateTime.MinValue).ToString("s");
-
-            var res = _cache[key] as HttpRouteCollection;
-            if (res != null)
-            {
-                return res;
-            }
-
-
-            List<SiteRouteEntry> list = FetchSiteRouteEntries(doc);
-
-
-            // pants..
-            var col = new HttpRouteCollection();
-            foreach (SiteRouteEntry item in list)
-            {
-                var dic = new HttpRouteValueDictionary();
-                switch (item.PageType)
-                {
-                    case PageTypes.document:
-                    {
-                        dic.Add("controller", "cmspages");
-                        dic.Add("action", "Page");
-                        break;
-                    }
-                    case PageTypes.documentListView:
-                    case PageTypes.documentList:
-                    {
-                        dic.Add("controller", "cmspages");
-                        dic.Add("action", "contentIndex");
-                        break;
-                    }
-                }
-                if (!string.IsNullOrEmpty(item.ListName))
-                {
-                    dic.Add("list", item.ListName);
-                }
-                if (!string.IsNullOrEmpty(item.ListViewName))
-                {
-                    dic.Add("listView", item.ListViewName);
-                }
-                dic.Add("SiteRouteEntry", item);
-                //col.MapRoute(item.Name, item.Template, dic);
-                col.Add(item.Name, new HttpRoute(item.Template, dic));
-            }
-            _cache[key] = col;
-            return col;
-        }
-
-        private Task<ServiceClientResponse<Document>> GetDocumentResponse()
-        {
-            Task<ServiceClientResponse<Document>> task = _documentListWebApiClient.GetTreeDocument("siteSettings@mozu", "siteRoutes");
-            task.ConfigureAwait(false);
-            return task;
-        }
-
-        private List<SiteRouteEntry> FetchSiteRouteEntries(Document doc)
-        {
-            
-            
-            if (doc == null)
-            {
-                return new List<SiteRouteEntry>();
-            }
-            var jobj = doc.Get<JArray>("data");
-            if (jobj == null)
-            {
-                return new List<SiteRouteEntry>();
-            }
-            try
-            {
-                return jobj.ToObject<List<SiteRouteEntry>>();
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn("unexpected deserializing errror in siteroute hadnler", ex);
-                return new List<SiteRouteEntry>();
-            }
-        }
-    }
-
+   
     public interface IRedirectRepository
     {
         Task<Dictionary<string, RedirectEntry>> FetchRedirectEntries(int? siteId = null);
@@ -417,13 +145,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class RedirectRepository : IRedirectRepository
     {
-        private const string FileName = "redirects.1.1";
-        private readonly MemoryCache _cache;
-        private readonly IDocumentListWebApiClient _systemDocumentClient;
-        private readonly ILogger _logger;
-        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        private Task<Dictionary<string, RedirectEntry>> _redirectEntryListTask;
-        private readonly IDocumentListWebApiClient _userDocumentClient;
+        const string FileName = "redirects.1.1";
+        MemoryCache _cache;
+        readonly IDocumentListWebApiClient _systemDocumentClient;
+        readonly ILogger _logger;
+        readonly ISiteBuilderApiContext _siteBuilderApiContext;
+        Task<Dictionary<string, RedirectEntry>> _redirectEntryListTask;
+        readonly IDocumentListWebApiClient _userDocumentClient;
 
         public RedirectRepository(IDocumentListWebApiClient documentListWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ILogger logger)
         {
@@ -442,7 +170,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             public AsyncSemaphore(int initialCount)
             {
-                if (initialCount < 0) throw new ArgumentOutOfRangeException("initialCount");
+                if (initialCount < 0) throw new ArgumentOutOfRangeException("count");
                 m_currentCount = initialCount;
             }
 

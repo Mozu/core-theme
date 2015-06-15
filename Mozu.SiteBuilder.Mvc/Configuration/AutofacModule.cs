@@ -65,7 +65,9 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<ExceptionContextLogWrapper>();
             builder.RegisterType<LiveModeOnlyCacheInternal>().As<ILiveModeOnlyCache>().InstancePerRequest();
             builder.RegisterType<DataViewModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();
-            builder.RegisterType<EditModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();         
+            builder.RegisterType<EditModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();
+            builder.RegisterTypes(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
+            builder.RegisterType<SEO.CustomRouteValidator>().AsImplementedInterfaces().AsSelf();
         }
 
       
