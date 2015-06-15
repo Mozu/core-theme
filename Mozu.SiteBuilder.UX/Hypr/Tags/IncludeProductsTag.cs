@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetHierDepth = null;
             var categoryId = pageContext.CategoryId;
             var defaultQuery = "*:*";
-            string[] productCodesFilters = null;
+            string[] productCodesFilters = new string[0];
 
             if (query != null)
             {
