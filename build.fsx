@@ -48,38 +48,37 @@ let testDlls =
     !! (sprintf "**/bin/%s/*UnitTest*.dll" config)
     ++ (sprintf "**/bin/%s/*IntegrationTest*.dll" config)
 
-Target "test" (fun _ ->
+let test() =
+  let nunitParams p =
+      {NUnitDefaults with
+          Framework = "net-4.5"
+          IncludeCategory = match hasBuildParam "siesta" with true -> "Siesta" | false -> "" }
+  testDlls
+  |> NUnit nunitParams
 
-    let nunitParams p =
-        {NUnitDefaults with
-            Framework = "net-4.5"
-            IncludeCategory = match hasBuildParam "siesta" with true -> "Siesta" | false -> "" }
-    testDlls
-    |> NUnit nunitParams
+Target "test" (fun _ ->
+  test()
 )
 
 let createDefaultconfig filePath =
-  File.WriteAllText(filePath, """<?xml version="1.0" encoding="utf-8"?>
-  <configuration>
-  <appSettings>
+  File.WriteAllText(filePath,
+    """<appSettings>
   <add key="Environment" value=""/>
   <add key="ScaleUnit" value=""/>
-  </appSettings>
-  </configuration>
-""")
+  </appSettings>""")
 
 let xname s = XName.op_Implicit s
 let attr name (xElem:XElement) = xElem.Attribute(xname name)
 
 let updateAppSetting (key:string) (value:string) (doc : XDocument) =
-  let config = doc.Descendants(xname "configuration")  |> Seq.head
-  let appSettings  = config.Descendants(xname "appSettings") |> Seq.head
+  let appSettings  = doc.Descendants(xname "appSettings") |> Seq.head
   let add = appSettings.Descendants() |> Seq.find (fun add -> (add |> attr "key").Value = key)
   let atr = add |> attr "value"
   atr.Value <- value
 
 let updateUserConfig env su =
-  let filePath = Path.Combine("C:/code/sitebuilder", "user.app.config")
+  let filePath = Path.Combine(__SOURCE_DIRECTORY__, "user.app.config")
+  Console.WriteLine(filePath)
   if not <| File.Exists(filePath)
   then
     createDefaultconfig filePath
@@ -94,6 +93,14 @@ Target "set-env" (fun _ ->
     let scaleUnit = getBuildParamOrDefault "su" "SB"
     updateUserConfig env scaleUnit
 )
+
+//Target "watch" (fun _ ->
+//  use watcher = testDlls |> WatchChanges (fun changes ->
+//      runTests()
+//  )
+//  System.Console.ReadLine() |> ignore
+//  watcher.Dispose()
+//)
 
 Target "help" (fun _ ->
     printfn "Targets"
