@@ -1,7 +1,8 @@
 source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
-nuget 51Degrees.mobi 2.1.15.1  content: none 
+
+nuget 51Degrees.mobi 3.1.12.6  content: none 
 nuget Microsoft.AspNet.WebPages 3.2.2 content:none
 nuget Microsoft.AspNet.Mvc 5.2.2 content:none
 nuget ClearScript.Installer >= 5.4 content:none
