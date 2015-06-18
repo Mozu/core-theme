@@ -12,7 +12,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using AutoMapper;
-using FiftyOne.Foundation.Mobile.Detection.Matchers;
+
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Extensions;
 using Mozu.ProductAdmin.Contracts;
