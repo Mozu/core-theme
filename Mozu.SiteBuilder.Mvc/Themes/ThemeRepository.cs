@@ -173,7 +173,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             _themes = new ConcurrentDictionary<string, Theme>();
             _themeSlims = new ConcurrentDictionary<string, Theme>();
 
-            _addons = new ConcurrentDictionary<string, Theme>();
+            
         }
 
         private FileSystemWatcher CreateWatcher(string path)
