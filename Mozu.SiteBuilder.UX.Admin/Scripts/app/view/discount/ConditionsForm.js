@@ -24,7 +24,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     initComponent: function () {
         var me = this,
-            paymentMethodsStore = Ext.create('Ext.data.Store', {
+            includedPaymentMethodsStore = Ext.create('Ext.data.Store', {
                 fields: [
                     { name: "name", type: "string" },
                     { name: "id", type: "string" }
@@ -45,17 +45,17 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
 
 
-        this.paymentMethodsField = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'paymentMethods',
+        this.includedPaymentMethodsField = Ext.create('Ext.ux.form.field.BoxSelect', {
+            name: 'includedPaymentMethods',
             margin: 0,
-            store: paymentMethodsStore,
+            store: includedPaymentMethodsStore,
             queryMode: 'local',
             width: 600,
             triggerOnClick: true,
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
-            value: this.record.get('paymentMethods'),
+            value: this.record.get('includedPaymentMethods'),
             displayField: 'name',
             fieldLabel: 'Select Payment Methods',
             valueField: 'id'
@@ -206,7 +206,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             }),
             this.categoriesBox,
             this.minimumCategorySubtotalBeforeDiscounts,
-            this.paymentMethodsField
+            this.includedPaymentMethodsField
         ];
 
         this.callParent(arguments);

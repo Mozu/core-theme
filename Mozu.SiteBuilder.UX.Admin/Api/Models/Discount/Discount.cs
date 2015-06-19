@@ -119,9 +119,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> Products { get; set; }
 
         /// <summary>
+        /// List of payment types that are a condition of this discount.
+        /// </summary>
+        public List<string> IncludedPaymentTypes { get; set; } 
+
+        /// <summary>
         /// List of shipping methods this discount applies to.
         /// </summary>
-      
+
         public List<string> ShippingMethods { get; set; }
 
 

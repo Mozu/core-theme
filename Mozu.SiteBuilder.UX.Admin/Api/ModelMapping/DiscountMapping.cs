@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -63,6 +64,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? x.Target.IncludeAllProducts
                     : null))
 
+                .ForMember(x => x.IncludedPaymentTypes, opt => opt.ResolveUsing(x => (x.Conditions != null)
+                    ? x.Conditions.IncludedPaymentTypes
+                    : null))
+
                 .ForMember(x => x.ExcludeItemsWithExistingProductDiscounts, opt => opt.ResolveUsing(x => (x.Target != null)
                     ? x.Target.ExcludeItemsWithExistingProductDiscounts
                     : null))
@@ -92,6 +97,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ExcludedProducts != null)
                         ? (x.Target.ExcludedProducts).Select(_ => _.ProductCode).ToList()
                         : (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
+
+                        
 
                 .ForMember(x => x.ShippingMethods,
                     opt => opt.ResolveUsing(x => (x.Target != null && x.Target.ShippingMethods != null)
@@ -177,6 +184,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToProductsWithSalePrice))
+                
+
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => (x.AmountType == null || x.AmountType.EqualsIgnoreCase(DC.Discount.AmountTypes.FREE))
                     ? null
                     : x.Amount))
@@ -187,6 +196,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                ExcludedCategories = (x.DiscountConditionExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.CategoryDiscountCondition {CategoryId = _}).ToList(),
                                                                                IncludedProducts = (x.DiscountConditionProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
                                                                                ExcludedProducts = (x.DiscountConditionExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
+                                                                               IncludedPaymentTypes = x.IncludedPaymentTypes,
                                                                                CustomerSegments = (x.CustomerSegments ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerSegment {Id = _}).ToList(),
                                                                                MinimumQuantityProductsRequiredInCategories = (x.DiscountConditionCategories.IsNullOrEmpty() || ! x.MinimumQuantityProductsRequiredInCategories.HasValue) 
                                                                                 ? (int?)null 
