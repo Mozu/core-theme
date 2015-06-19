@@ -347,6 +347,7 @@
     <Content Include=".jshintignore" />
     <Content Include=".jshintrc" />
     <Content Include="BuiltinScripts\SDK\src\methods.json" />
+    <Content Include="App_Data\51Degrees-PremiumV3_1.dat" />
     <None Include="Properties\PublishProfiles\demo.pubxml" />
     <Content Include="Views\DeveloperDocumentation\list.cshtml" />
   </ItemGroup>

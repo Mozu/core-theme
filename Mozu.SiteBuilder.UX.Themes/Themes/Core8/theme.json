@@ -352,6 +352,7 @@
         }
     ],
     "settings": {
+        "backofficeDateTimeFormat" :  "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
         "bannerImage": "/resources/images/banner.jpg",

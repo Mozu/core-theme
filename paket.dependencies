@@ -1,12 +1,14 @@
 source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
-nuget 51Degrees.mobi 2.1.15.1  content: none 
+
+nuget 51Degrees.mobi 3.1.12.6  content: none 
 nuget Microsoft.AspNet.WebPages 3.2.2 content:none
 nuget Microsoft.AspNet.Mvc 5.2.2 content:none
 nuget ClearScript.Installer >= 5.4 content:none
 
 nuget Mozu.Core.Prime >= 1.17
+nuget Mozu.VS.PowerShell
 nuget RabbitMQ.Client 3.3.5
 nuget Burrows.Autofac 0.3.3.0 framework: >= net451
 nuget Burrows.Log4Net 0.3.3.0 framework: >= net451
@@ -39,5 +41,4 @@ nuget Mozu.ShippingAdmin.Contracts 1.17.4 framework: >= net451
 nuget Mozu.SiteSettings.General.Contracts 1.17.8 framework: >= net451
 nuget Mozu.SiteSettings.Order.Contracts 1.17.8 framework: >= net451
 nuget protobuf-net 2.0.0.668 framework: >= net45
-
 
