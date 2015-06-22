@@ -141,11 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             Sorting = SortingParameters.Create(Search);
             Pagination = PagingParameters.Create(Search);
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
-
-            //object tmpObj;
-       
-
-            
+            DataViewMode = apiContext.DataViewMode;
         }
 
         private static string CreateDefaultUrl(string url)
@@ -398,7 +394,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string Url { get; set; }
 
-       
+        public DataViewModeType DataViewMode { get; set; }
+
+        //public string IpAddress
+        //{
+        //    get
+        //    {
+        //        var req = System.Web.HttpContext.Current.Request;
+        //        return req.Headers["x-forwarded-for"] ?? req.ServerVariables["REMOTE_ADDR"];;
+        //    }
+        //}
 
 
         public string SecureHost { get; set; }
