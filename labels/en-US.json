@@ -154,6 +154,7 @@
   "useShippingAddress"   : "Use my shipping address",
   "optIn"                : "Yes! I want to receive news and special offers from {0}!",
   "promoCodeError"     : "Sorry, '{0}' does not appear to be a valid coupon code.",
+  "promoCodeAlreadyUsed" : "The promo code '{0}' has already been applied.",
   "reviewOrder"          : "Review & Place Order",
   "reviewOrderText": "Please review all of the information on this page and, if necessary, make changes before placing your order.",
   "recalculatePayments": "Your order total has changed. Please re-enter your payment information to recalculate payment.",
