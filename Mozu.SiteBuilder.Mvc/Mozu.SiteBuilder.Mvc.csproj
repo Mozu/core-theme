@@ -359,9 +359,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="paket.references">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="paket.references" />
     <EmbeddedResource Include="TestData\order.shipped\Order1.json" />
     <EmbeddedResource Include="TestData\order.changed\Order1.json" />
     <EmbeddedResource Include="TestData\return.closed\Return1.json" />

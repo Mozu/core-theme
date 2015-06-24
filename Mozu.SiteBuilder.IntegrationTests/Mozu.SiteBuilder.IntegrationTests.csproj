@@ -223,9 +223,7 @@
     <None Include="Diagrams\ProductRuntime\cdProductRuntime.cd" />
     <None Include="Diagrams\StoreFront\Checkout\cdDigitalCredit.cd" />
     <None Include="Diagrams\StoreFront\Customer\cdCustomer.cd" />
-    <None Include="paket.references">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">

@@ -314,10 +314,7 @@
     <Folder Include="MessageHandlers\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="paket.references">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

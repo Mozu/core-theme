@@ -2246,9 +2246,7 @@
     <Folder Include="Views\AccountUserTreeNode\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="paket.references">
-      <SubType>Designer</SubType>
-    </Content>
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Index.cshtml" />

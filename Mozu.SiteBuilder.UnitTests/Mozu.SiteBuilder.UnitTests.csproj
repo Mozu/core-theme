@@ -205,9 +205,7 @@
     <None Include="Diagrams\Admin\Scripts\app\view\product\cdProductSearchJs.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\Product.cd" />
     <None Include="Diagrams\UX.Models\StoreFront\Catalog\ProductSearchResults.cd" />
-    <None Include="paket.references">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">
