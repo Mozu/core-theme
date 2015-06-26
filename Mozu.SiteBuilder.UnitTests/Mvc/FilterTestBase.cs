@@ -9,7 +9,7 @@ using NDjango.FiltersCS;
 using NDjango.Interfaces;
 using NDjango.Misc;
 using NUnit.Framework;
-
+using System.Net.Http;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
@@ -72,6 +72,23 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             }
 
             public Dictionary<string, string> Templates { get; set; }
+            public IEnumerable<object> ServiceRegistrations { get; set; }
+
+
+            public static Func<string, Tuple<bool, string>> CompareLiteral(string expected)
+            {
+                return actual =>
+                {
+                    if (actual.Equals(expected, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return new Tuple<bool, string>(true, string.Empty);
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string>(false, string.Format("expected was different that actual. expected: {0}. Actual: {1}", expected, actual));
+                    }
+                };
+            }
         }
 
         public   void RunTemplate(TestDescriptor desc, ITemplateManager manager)
@@ -113,7 +130,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         private static Dictionary<string, object> SetupContext(TestDescriptor desc)
         {
             var dict = desc.Context == null ? new Dictionary<string, object>() : desc.Context;
-            
+
+            dict["true"] = true;
+            dict["false"] = false;
+            dict["now"] = DateTime.UtcNow;
             //add viewContextNode
             var hyprviewcontext = new HyprViewContext(null, null, null);
             dict.Add("_vc", hyprviewcontext);
