@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                 {
                     Name = "base case",
                     Template = @"{% require_script ""http://test.script.com/{0}""|string_format(siteId) %}",
-                    ExpectedFunc = TestDescriptor.CompareLiteral(string.Empty) // empty string because a fetched script gets added to the render context.
+                    ExpectedFunc = TestDescriptor.CompareLiteral(string.Empty), // empty string because a fetched script gets added to the render context.
                     Context = new Dictionary<string, object> {{"siteId", 10}},
                 },
                 new TestDescriptor
@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     Template = @"{% extends ""middle"" %}
                                 {%block title-tag-content %}a{% parent %}{% endblock title-tag-content %}",
                     Context = new Dictionary<string, object>(),
-                    ExpectedFunc = TestDescriptor.ComapreLiteral("12abc34"),
+                    ExpectedFunc = TestDescriptor.CompareLiteral("12abc34"),
                     Templates = new Dictionary<string, string>
                     {
                         {
@@ -52,7 +52,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     Template = @"{% extends ""middle"" %}
                                 {%block a %}bottom a{% endblock a %}",
                     Context = new Dictionary<string, object>(),
-                    Expected = "bottom amiddle btop c",
+                    ExpectedFunc = TestDescriptor.CompareLiteral("bottom amiddle btop c"),
                     Templates = new Dictionary<string, string>
                     {
                         {

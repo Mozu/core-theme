@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Hosting;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Logging;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Threading;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
-using System.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -44,99 +38,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="viewDataAdditionFunc"></param>
         /// <returns></returns>
         Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
-    }
-
-    public class SiteRouteHandler : ISiteRouteHandler
-    {
-        public static string ContextKey = "SiteRouteEntry";
-        private readonly HttpRequestMessage _requestMessage;
-        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        private readonly ISiteRouteRepository _siteRouteRepository;
-        private object _httpRouteCollection;
-
-        public SiteRouteHandler(ISiteRouteRepository siteRouteRepository, HttpRequestMessage requestMessage, ISiteBuilderApiContext siteBuilderApiContext)
-        {
-            _siteRouteRepository = siteRouteRepository;
-            _requestMessage = requestMessage;
-            _siteBuilderApiContext = siteBuilderApiContext;
-        }
-
-        private HttpRouteCollection RouteCollection
-        {
-            get
-            {
-                if (_httpRouteCollection == null)
-                {
-                    _httpRouteCollection = _siteRouteRepository.GetHttpRouteCollection().ConfigureAwait(false).GetAwaiter().GetResult() ?? new object();
-                }
-                return _httpRouteCollection as HttpRouteCollection;
-            }
-        }
-
-        public async Task<bool> RouteIncomingRequest()
-        {
-            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
-            if (routeCollection == null)
-            {
-                return false;
-            }
-
-            var rerouteData = routeCollection.GetRouteData(_requestMessage);
-            if (rerouteData == null) return false;
-
-            if (rerouteData.Route is CustomRoute)
-            {
-                var cr = rerouteData.Route as CustomRoute;
-                cr.RewriteRouteData(rerouteData.Values);
-                // do thing to the _request
-            }
-
-            _requestMessage.Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
-            HttpRequestContext rctx = _requestMessage.GetRequestContext();
-            rctx.RouteData = rerouteData;
-            return true;
-        }
-
-        async Task<HttpRouteCollection> GetRouteCollectionAsync()
-        {
-            if (_httpRouteCollection == null)
-            {
-                _httpRouteCollection = (await _siteRouteRepository.GetHttpRouteCollection().ConfigureAwait(false)) ?? new object();
-            }
-            return _httpRouteCollection as HttpRouteCollection;
-        }
-
-
-        public async Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
-        {
-            if (_siteBuilderApiContext.IsEditMode)
-            {
-                return null;
-            }
-
-            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
-            if (routeCollection == null) return null;
-
-            var canonicalRouteAndData = 
-                routeCollection
-                .Where(route => route is CustomRoute).Cast<CustomRoute>()
-                .Where(route => route.IsCanonicalFor(internalRoute) && route != request.GetRouteData()) // don't want to redirect if the canonical route is the current route
-                .Select(route => new { route, routeData = route.GetRouteData("/", request) }) // uhhh, what is the virtualPathRoot?
-                .FirstOrDefault(x => x.routeData != null);
-
-            if (canonicalRouteAndData == null) return null; // no canonical route that matches, or current route is canonical? then no redirect!
-
-            // else redirect
-            var incomingRouteValues = _requestMessage.GetRouteData().Values;
-            var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
-            var finalRouteValues = 
-                incomingRouteValues
-                .ChainAdd(additionalValues)
-                .ChainAdd(canonicalRouteAndData.routeData.Values);
-
-            var finalRoute = canonicalRouteAndData.route.GetVirtualPath(request, finalRouteValues).VirtualPath;
-            return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(finalRoute, true));
-        }
     }
    
     public interface IRedirectRepository
@@ -162,87 +63,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _userDocumentClient = documentListWebApiClient;
             _cache = MemoryCache.Default;
             _logger = logger;
-        }
-
-        public class AsyncSemaphore
-        {
-            private readonly static Task s_completed = Task.FromResult(true);
-            private readonly Queue<TaskCompletionSource<bool>> m_waiters = new Queue<TaskCompletionSource<bool>>();
-            private int m_currentCount;
-
-            public AsyncSemaphore(int initialCount)
-            {
-                if (initialCount < 0) throw new ArgumentOutOfRangeException("count");
-                m_currentCount = initialCount;
-            }
-
-            public Task WaitAsync()
-            {
-                lock (m_waiters)
-                {
-                    if (m_currentCount > 0)
-                    {
-                        --m_currentCount;
-                        return s_completed;
-                    }
-                    else
-                    {
-                        var waiter = new TaskCompletionSource<bool>();
-                        m_waiters.Enqueue(waiter);
-                        return waiter.Task;
-                    }
-                }
-            }
-
-            public void Release()
-            {
-                TaskCompletionSource<bool> toRelease = null;
-                lock (m_waiters)
-                {
-                    if (m_waiters.Count > 0)
-                        toRelease = m_waiters.Dequeue();
-                    else
-                        ++m_currentCount;
-                }
-                if (toRelease != null)
-                    toRelease.SetResult(true);
-            }
-        }
-
-        // http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10266988.aspx
-        public class AsyncLock
-        {
-            private readonly AsyncSemaphore m_semaphore;
-            private readonly Task<Releaser> m_releaser;
-
-            public AsyncLock()
-            {
-                m_semaphore = new AsyncSemaphore(1);
-                m_releaser = Task.FromResult(new Releaser(this));
-            }
-
-            public Task<Releaser> LockAsync()
-            {
-                var wait = m_semaphore.WaitAsync();
-                return wait.IsCompleted ?
-                    m_releaser :
-                    wait.ContinueWith((_, state) => new Releaser((AsyncLock)state),
-                        this, CancellationToken.None,
-                        TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
-            }
-
-            public struct Releaser : IDisposable
-            {
-                private readonly AsyncLock m_toRelease;
-
-                internal Releaser(AsyncLock toRelease) { m_toRelease = toRelease; }
-
-                public void Dispose()
-                {
-                    if (m_toRelease != null)
-                        m_toRelease.m_semaphore.Release();
-                }
-            }
         }
 
         static System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock> _redirectLookupLock = new System.Collections.Concurrent.ConcurrentDictionary<string, AsyncLock>();

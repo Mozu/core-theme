@@ -288,9 +288,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             (siteSettingsClient as ICloneable).Clone().Returns(siteSettingsClient);
             siteSettingsClient.GetGeneralSettings().Returns(ctx => Task.FromResult(Response(gensettings)));
 
+            var docListClient = Substitute.For<IDocumentListWebApiClient, ICloneable>();
+            (docListClient as ICloneable).Clone().Returns(docListClient);
+
             var constraintFactory = new ConstraintFactory(entityListClient, attrClient, sbapiContext);
             var mappingFactory = new RouteMappingFactory(entityListClient);
-            var repo = new SiteRouteRepository(sbapiContext, logger, cache, constraintFactory, mappingFactory, siteSettingsClient);
+            var repo = new SiteRouteRepository(sbapiContext, logger, cache, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
 
             var collection = await (repo as ISiteRouteRepository).GetHttpRouteCollection();
             collection.Count.ShouldEqual(numRoutes);
