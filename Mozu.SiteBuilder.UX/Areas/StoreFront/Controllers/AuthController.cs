@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Filters;
+using Mozu.CommerceRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -31,16 +32,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISiteBuilderApiContext _apiContext;
         private IAuthenticationHelper _authenticationHelper;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IAuthTicketWebApiClient _authTicketWebApiClient;
         private PageContext _pageContext;
         private VisitEventPublisher _visitPublisher;
 
-        public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, PageContext pageContext, VisitEventPublisher visitPublisher)
+        public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, PageContext pageContext, VisitEventPublisher visitPublisher)
         {
             if (customerAccountWebApiClient == null) throw new ArgumentNullException("customerAccountWebApiClient");
             if (authTicketWebApiClient == null) throw new ArgumentNullException("authTicketWebApiClient");
             _authenticationHelper = authenticationHelper;
             _customerAccountWebApiClient = customerAccountWebApiClient;
+            _orderWebApiClient = orderWebApiClient;
             _authTicketWebApiClient = authTicketWebApiClient;
          
             _cookieProvider = cookieProvider;
@@ -305,8 +308,115 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
         }
-            
         
+        public class OrderDetails
+        {
+            public string orderNumber { get; set; }
+            public string email { get; set; }
+            public string billingZipCode { get; set; }
+            public string billingPhoneNumber { get; set; }
+        }
+
+        [System.Web.Http.HttpPost]
+        [SslOnlyActionFilter]
+        public async Task<HttpResponseMessage> AnonymousOrderLogin(OrderDetails details)
+        {
+            var orderNumber = details.orderNumber;
+            var email = details.email;
+            var billingZipCode = details.billingZipCode;
+            var billingPhoneNumber = details.billingPhoneNumber;
+
+            if (string.IsNullOrEmpty(orderNumber))
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new
+                {
+                    Message = "orderId is required"
+                });
+            }
+
+            // make sure one of the three challenges are provided
+            if (string.IsNullOrEmpty(email) && string.IsNullOrEmpty(billingZipCode) && string.IsNullOrEmpty(billingPhoneNumber))
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, new
+                {
+                    Message = "One of the following must be provided: email, billingZipCode, or billingPhoneNumber"
+                });
+            }
+
+            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrder(orderNumber);
+            if (res.HasException)
+            {
+                if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, new
+                    {
+                        Message = "The order number you provided was not found. Please validate the order number and try again or contact customer service."
+                    });
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError, new
+                    {
+                        Message = "An unknown error occured, please try again."
+                    });
+                }
+            }
+
+            var order = res.ReadAsSync();
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                if (!order.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
+                {
+                    return GenerateInvalidChallengeResponse();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(billingPhoneNumber))
+            {
+                if (order.BillingInfo == null || order.BillingInfo.BillingContact == null || order.BillingInfo.BillingContact.PhoneNumbers == null)
+                {
+                    return GenerateInvalidChallengeResponse();
+                }
+
+                // see if any of the phone numbers under the billing contact match the provided billingphonenumber
+                if (!order.BillingInfo.BillingContact.PhoneNumbers.Home.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase)
+                    && !order.BillingInfo.BillingContact.PhoneNumbers.Work.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase)
+                    && !order.BillingInfo.BillingContact.PhoneNumbers.Mobile.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase))
+                {
+                    return GenerateInvalidChallengeResponse();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(billingZipCode))
+            {
+                if (order.BillingInfo == null || order.BillingInfo.BillingContact == null || order.BillingInfo.BillingContact.Address == null)
+                {
+                    return GenerateInvalidChallengeResponse();
+                }
+
+                if (!order.BillingInfo.BillingContact.Address.PostalOrZipCode.Equals(billingZipCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    return GenerateInvalidChallengeResponse();
+                }
+            }
+            var userClaims = _apiContext.UserClaims;
+            userClaims.Bag["orderId"] = order.Id;
+            var profileToken = _authenticationHelper.GetProfileToken();
+            _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken);
+
+            var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
+            redir.Headers.Location = MakeRedirectUri("/myanonymousaccount");
+            return redir;
+        }
+
+        private HttpResponseMessage GenerateInvalidChallengeResponse()
+        {
+            return Request.CreateResponse(HttpStatusCode.BadRequest, new
+            {
+                Message = "Sorry, the information you provided did not match our records. Please check the information that you provided and try again or contact the customer service department"
+            });
+        }
 
         [HttpPost, HttpOptions]
         [SslOnlyActionFilter]
