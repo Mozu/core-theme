@@ -115,6 +115,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
 
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+            if (routeCollection == null) return null;
+
             var canonicalRouteAndData = 
                 routeCollection
                 .Where(route => route is CustomRoute).Cast<CustomRoute>()
