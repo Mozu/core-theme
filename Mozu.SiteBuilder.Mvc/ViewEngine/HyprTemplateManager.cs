@@ -3,6 +3,7 @@ using System.IO;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using NDjango;
 using NDjango.Interfaces;
+using Microsoft.FSharp.Collections;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return _innerTemplateManager.GetTemplate(absolutePath);
         }
 
-        ITemplate ITemplateManager.GetTemplate(string template, TypeResolver.ITypeResolver resolver, TypeResolver.ModelDescriptor model)
+        ITemplate ITemplateManager.GetTemplate(string template, TypeResolver.ITypeResolver resolver, TypeResolver.ModelDescriptor model, FSharpList<string> extends)
         {
             //var path = template.Split('|')[0];
             var path = template;
@@ -78,7 +79,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 path = vFile.FullPath;
             }
           
-            return _innerTemplateManager.GetTemplate(path, resolver, model);
+            return _innerTemplateManager.GetTemplate(path, resolver, model, extends);
         }
 
         TextReader ITemplateManager.RenderTemplate(string path, System.Collections.Generic.IDictionary<string, object> context)

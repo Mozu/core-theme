@@ -23,7 +23,16 @@ Ext.define('Taco.model.NavigationTreeNode', {
     {
         name: 'expandable',
         defaultValue: true,
-        persist: false
+        persist: false,
+        convert: function(v, record) {
+            if (record.get('nodeType') === 'category' || record.get('nodeType') === 'link') {
+                return true;
+            }
+            if (record.get('expandable')) {
+                return !(record.isLeaf() || (record.isLoaded() && !record.hasChildNodes()));
+            }
+            return false;
+        }
     },
     {
         name: 'loaded',
@@ -36,62 +45,49 @@ Ext.define('Taco.model.NavigationTreeNode', {
         name: 'parentId',
         type: 'string',
         useNull: true
-    }, {
+    }, 
+    {
         name: 'index',
         type: 'int',
         useNull: true
-    }, {
+    }, 
+    {
         name: 'name',
         type: 'string'
-    }, {
+    }, 
+    {
         name: 'nodeType',
         type: 'string'
-    }, {
+    }, 
+    {
         name: 'allowDrag',
         convert: function (v, record) {
             var nt = (record.data ? record.data.nodeType : (record.raw ? record.raw.nodeType : undefined));
             return nt === 'page' || nt === 'link';
         }
-    },{
+    },
+    {
         name: 'cls',
         convert: function (v, record) {
-            return "taco-website-tree-node-" + (record.data ? record.data.nodeType : (record.raw ? record.raw.nodeType : undefined));
-        },//iconCls
-    },{
-            name: 'url',
-            type: 'string'
-        }, {
-            name: 'isHidden',
-            type: 'boolean'
-        }, {
-            name: 'name',
-            type: 'string'
-        }, {
-            name: 'editAction',
-            type: 'string'
-        }],
-    initExpandable: function(model) {
-        Ext.data.NodeInterface.decorate(model);
-        if (this.isExpandable != this.isExpandableOverride) {
-
-            model.override({
-                isExpandable: this.isExpandableOverride
-            });
-        }
-
-    },
-    isExpandableOverride:
-        function() {
-            var me = this;
-            if (me.get('nodeType') == 'category') {
-                return true;
-            }
-            if (me.get('expandable')) {
-                return !(me.isLeaf() ||
-                    (me.isLoaded() && !me.hasChildNodes()));
-            }
-            return false;
+            return 'taco-website-tree-node-' + (record.data ? record.data.nodeType : (record.raw ? record.raw.nodeType : undefined));
         },
+    },
+    {
+        name: 'url',
+        type: 'string'
+    }, 
+    {
+        name: 'isHidden',
+        type: 'boolean'
+    }, 
+    {
+        name: 'name',
+        type: 'string'
+    }, 
+    {
+        name: 'editAction',
+        type: 'string'
+    }],
     proxy: {
         type: 'ajaxproxy',
         extraParams: {

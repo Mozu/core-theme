@@ -51,9 +51,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     {
         protected override async Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, NDjango.Interfaces.IContext context, Func<string, ITemplate> getTemplateFunction)
         {
-            var result = new ProcessTagResult(context);
-            var cache = context.Resolve<ILiveModeOnlyCache>();
-
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault("includeFacets", false);
             var pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
@@ -77,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetHierDepth = null;
             var categoryId = pageContext.CategoryId;
             var defaultQuery = "*:*";
-            string[] productCodesFilters = null;
+            string[] productCodesFilters = new string[0];
 
             if (query != null)
             {
@@ -94,7 +91,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
                 if (productCodesFilters.Length == 0)
                 {
-                    result.Template = null;
                     return Enumerable.Empty<WalkResult>();
                 }
                 else
@@ -158,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             var filter = searchQuery.ToString();
             var cacheKey = new StringBuilder().Append(defaultQuery).Append(filter).Append(facetHierValue).Append(facetTemplate).Append(facetHierDepth).Append(facetValueFilter).Append(startIndex).Append(sortBy).Append(pageSize).ToString();
-
+            var cache = context.Resolve<ILiveModeOnlyCache>();
             var pc = cache.Get<ProductSearchResult>(cacheKey);
             if (pc == null)
             {

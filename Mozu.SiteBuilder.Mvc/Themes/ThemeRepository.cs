@@ -25,10 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         Theme GetThemeSlim(ThemeSelection name);
 
 
-        /// <summary>
-        /// Finds an addon by name.
-        /// </summary>
-        Theme GetAddon(string id );
+    
 
         /// <summary>
         /// Finds a theme by name.
@@ -43,9 +40,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         string GetLocalThemePath();
 
-        string GetLocalAddonPath();
+       
 
-        Theme ApplyAddons(Theme Theme, string[] addonsIds);
+ 
     }
     
     /// <summary>
@@ -63,8 +60,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private static ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
         private static ConcurrentDictionary<string, Theme> _themeSlims = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
 
-        private static ConcurrentDictionary<string, Theme> _addons = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-        private static List<FileSystemWatcher> _watchers;
+       
+        private static ConcurrentDictionary<string, FileSystemWatcher> _watchers = new ConcurrentDictionary<string, FileSystemWatcher>(StringComparer.OrdinalIgnoreCase);
         
         public static readonly  ThemeSelection DefaultThemeSelection = new ThemeSelection()
                                                              {
@@ -108,30 +105,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
             // food//GetThemeSlim
         }
-        public Theme GetAddon(string name)
-        {
-            return _addons.GetOrAdd(name ?? Mozu.SiteBuilder.Mvc.Constants.DefaultTheme, ThemeFactory.Build(_themeMetaDataProvider.GetAddon(name), null));
-           
-        }
-
-
-
-        public Theme ApplyAddons(Theme theme, string[] addonsIds)
-        {
-            Theme outTheme = theme;
-            for (int i = addonsIds.Length - 1; i > 0; i--)
-            {
-                var addon = GetAddon(addonsIds[i]);
-                if (addon != null)
-                {
-                    outTheme = ThemeFactory.Build(addon.Source , outTheme);
-                }
-                 
-                
-            }
-            return outTheme;
-           
-        }
+       
 
 
 
@@ -147,8 +121,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (t == null)
                 throw new ThemeNotFoundException("Requested theme was not found: " + name);
 
+            _watchers.GetOrAdd(t.ThemePath, CreateWatcher);
             return t;
         }
+
+
+
 
         /// <summary>
         /// Loads theme metadata from the filesystem and uses ThemeFactory to build it.
@@ -156,8 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         private Theme CreateTheme(string name, Stack<string> inheritChain)
         {
-            if (_watchers == null)
-                InitializeFilesystemWatcher();
+           
             
             // make sure that a theme isn't somehow trying to inherit from itself.
             if (inheritChain.Contains(name, StringComparer.OrdinalIgnoreCase))
@@ -166,7 +143,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var tmd = _themeMetaDataProvider.GetTheme(name);
             if (tmd == null)
                 return null;
+            
+            _watchers.GetOrAdd( tmd.ThemePath , CreateWatcher);
 
+          
             string parentName = tmd.Configuration.About.Extends;
             Theme parent = null;
             if (!String.IsNullOrEmpty(parentName))
@@ -179,43 +159,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return ThemeFactory.Build(tmd, parent);
         }
 
+
+      
+
         /// <summary>
         /// Watch the filesystem for changes to themes.
         /// </summary>
-        private void InitializeFilesystemWatcher()
-        {
-            if (_watchers == null)
-            {
-                lock (_themes)
-                {
-                    if (_watchers == null)
-                    {
-                        var watchers = new List<FileSystemWatcher>();
-                        foreach (string dir in _themeMetaDataProvider.ThemePaths)
-                        {
-                            if (Directory.Exists(dir))
-                            {
-                                watchers.Add(CreateWatcher(dir));
-                            }
-                            else
-                            {
-                                throw new FileNotFoundException(String.Format("Cannot create watcher for theme path: \"{0}\" make sure it exists and the web process has access to it", dir));
-                            }
-                        }
-                        System.Threading.Thread.MemoryBarrier();
-                        _watchers = watchers;
-                        //foreach (var dir in _themeMetaDataProvider.AddonPaths)
-                        //{
-                        //    if (Directory.Exists(dir))
-                        //    {
-                        //        _watchers.Add(CreateWatcher(dir));          
-                        //    }
-
-                        //}
-                    }
-                }
-            }
-        }
+        
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
@@ -223,7 +173,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             _themes = new ConcurrentDictionary<string, Theme>();
             _themeSlims = new ConcurrentDictionary<string, Theme>();
 
-            _addons = new ConcurrentDictionary<string, Theme>();
+            
         }
 
         private FileSystemWatcher CreateWatcher(string path)
@@ -237,8 +187,20 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             watcher.Changed += watcher_Changed;
             watcher.Created += watcher_Changed;
             watcher.Deleted += watcher_Changed;
-
+            watcher.Renamed += watcher_Changed;
+            watcher.Error += watcher_Error;
             return watcher;
+        }
+
+        void watcher_Error(object sender, ErrorEventArgs e)
+        {
+            FileSystemWatcher errordWatcher = sender as FileSystemWatcher;
+            var key = _watchers.Where(x => x.Value == errordWatcher).Select(x=>x.Key).FirstOrDefault();
+            Mozu.Core.Logging.LoggingService.LoggerFor<ThemeRepository>().Warn(string.Format("error in fileSystemWatcher [{0}]", key), e);
+            if ( key != null)
+            {
+                _watchers.TryRemove( key, out errordWatcher);
+            }
         }
 
         /// <summary>

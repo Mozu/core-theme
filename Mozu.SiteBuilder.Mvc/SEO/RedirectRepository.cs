@@ -269,10 +269,18 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             Document doc = null;
             Dictionary<string, RedirectEntry> ret = null;
 
-            if (gdt.Result.HasException)
+            
+            if (!gdt.IsCompleted || gdt.Result.HasException || !gdt.Result.ResponseMessage.IsSuccessStatusCode)
             {
-                _logger.Error("error looking up redirects metadoc", gdt.Exception);
-                ret = _cache[fallbackKey] as Dictionary<string, RedirectEntry> ?? new Dictionary<string, RedirectEntry>();
+                if (gdt.IsFaulted)
+                {
+                    _logger.Error("error looking up redirects", gdt.Exception);
+                }
+                ret = _cache[fallbackKey] as Dictionary<string, RedirectEntry> ;
+                if (ret == null)
+                {
+                    _cache[fallbackKey] = ret = new Dictionary<string, RedirectEntry>();
+                }
                 return ret;
             }
 

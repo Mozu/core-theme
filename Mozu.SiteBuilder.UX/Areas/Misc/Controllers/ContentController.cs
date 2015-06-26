@@ -252,6 +252,34 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return siteRes.ReadAsSync();
         }
 
+         Task<ServiceClientResponse<System.Net.Http.StreamContent>>  GetDocumentContent ( string list,string idOrName, bool headOnly)
+        {
+            Guid guidId;
+             if ( headOnly)
+             {
+                 if (Guid.TryParse(idOrName, out guidId))
+                 {
+                     return _docRepo.GetDocumentContentHead(list, idOrName);
+                 }
+                 else
+                 {
+                     return _docRepo.GetTreeDocumentContentHead(list, idOrName);
+                 }
+             }
+             else
+             {
+                 _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
+                 if (Guid.TryParse(idOrName, out guidId))
+                 {
+                     return _docRepo.GetDocumentContent(list, idOrName);
+                 }
+                 else
+                 {
+                     return _docRepo.GetTreeDocumentContent(list, idOrName);
+                 }
+             }
+            
+        }
 
         [ClientCacheHeaders(ConfigKey = "images")]
         [HttpGet]
@@ -259,35 +287,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             //todo send out appoligy letter
 
-            ApiContext context = null;
-
-            _docRepo = _docRepo.CloneWithApiContext(x =>
-            {
-                context = x;
-                if (site.HasValue)
-                {
-                    Site siteLookup = _siteLookup.GetOrAdd(site.Value, LookupSite);
-                    if (siteLookup == null)
-                    {
-                        throw new FileNotFoundException("cant find site:" + site);
-                    }
-                    context.TenantId = siteLookup.TenantId;
-                    context.MasterCatalogId = siteLookup.MasterCatalogId;
-                    context.CatalogId = siteLookup.CatalogId;
-                    context.SiteId = siteLookup.Id;
-                    context.LocaleCode = siteLookup.DefaultLocaleCode;
-                    //   context.SiteId = tmp;
-                }
-                if (mastercat.HasValue)
-                {
-                    context.MasterCatalogId = mastercat.Value;
-                }
-                if (tenant.HasValue)
-                {
-                    context.TenantId = tenant.Value;
-                }
-                context.UserClaims = null;
-            });
+            ApiContext context;
+            InitCmsClient(tenant, mastercat, site, out context);
             Semaphore mutex = null;
             FileSystemResult tpl = null;
             try
@@ -304,79 +305,60 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 tpl = await GetFromFSCache(context, list, documentId);
 
-
-                _docRepo.Options.AdditionalHeaders = _docRepo.Options.AdditionalHeaders ?? new NameValueCollection();
-
-                if (tpl != null)
-                {
-                    _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
-                }
-                ServiceClientResponse<StreamContent> docContextRes = null;
+                
                 Guid guidId;
 
-                if (tpl != null)
+                if (tpl != null&& tpl.Header.LastModified.HasValue)
                 {
+
+                    //future support for not modifye
                     _docRepo.Options.AdditionalHeaders.Add("If-Modified-Since", tpl.Header.LastModified.Value.ToString("r"));
                     if (!string.IsNullOrEmpty(tpl.Header.Etag))
                     {
                         _docRepo.Options.AdditionalHeaders.Add("If-None-Match", tpl.Header.Etag);
                     }
-                }
 
-                if (Guid.TryParse(documentId, out guidId))
-                {
-                    docContextRes = await _docRepo.GetDocumentContent(list, documentId);
-                }
-                else
-                {
-                    docContextRes = await _docRepo.GetTreeDocumentContent(list, documentId);
-                }
 
-                if (docContextRes.ResponseMessage.IsSuccessStatusCode)
-                {
+                    var docContextHeadRes = await GetDocumentContent(list, documentId, true);
                     
-                    if (docContextRes.ResponseMessage.StatusCode != HttpStatusCode.NotModified 
-                        &&
-                            (
-                        tpl == null || 
-                        docContextRes.ResponseMessage.Content == null ||
-                        docContextRes.ResponseMessage.Content.Headers.LastModified == null ||
-                        docContextRes.ResponseMessage.Content.Headers.LastModified != tpl.Header.LastModified
-                            )
+                    //not found or errored in some way return not found
+                    if (((int)docContextHeadRes.ResponseMessage.StatusCode) >= 400)  //<change to <= 400
+                    {
+                        return new NotFoundResult();
+                    }
+
+                    //if  last modified is less then get the content and kill the image
+                    if (
+                        docContextHeadRes.ResponseMessage.StatusCode != HttpStatusCode.NotModified
+                    &&
+                        (
+                            docContextHeadRes.ResponseMessage.Content == null ||
+                            !docContextHeadRes.ResponseMessage.Content.Headers.LastModified.HasValue||
+                            docContextHeadRes.ResponseMessage.Content.Headers.LastModified > tpl.Header.LastModified
                         )
-                    {
-                        if (tpl != null)
-                        {
-                            tpl.Stream.Dispose();
-                        }
-                        tpl = await AddToFSCache(context, list, documentId, docContextRes.ResponseMessage);
-                    }
-                   
-                }
-                else
-                {
-                    if (tpl != null)
-                    {
-                        tpl.Stream.Dispose();
-                    }
-                    //return Redirect(NotFoundImage);
-                    return new NotFoundResult();
-                }
-
-
-                if ((Request.Headers.IfModifiedSince.HasValue &&
-                     tpl.Header.LastModified.HasValue &&
-                     Request.Headers.IfModifiedSince.Value >= tpl.Header.LastModified.Value) ||
-                    (!string.IsNullOrEmpty(tpl.Header.Etag) &&
-                     Request.Headers.IfNoneMatch != null &&
-                     Request.Headers.IfNoneMatch.Count == 1 &&
-                     Request.Headers.IfNoneMatch.First().Tag == tpl.Header.Etag)
                     )
-                {
-                    if (tpl != null)
                     {
                         tpl.Stream.Dispose();
+                        tpl = null;
                     }
+                }
+                //cache wasnt found or was invalidated above
+                if (tpl == null)
+                {
+                    var docContextRes = await GetDocumentContent(list, documentId, false);
+                    if (!docContextRes.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        docContextRes.ResponseMessage.Dispose();
+                        return new NotFoundResult();
+                    }
+
+                    tpl = await AddToFSCache(context, list, documentId, docContextRes.ResponseMessage);
+                }
+
+
+                if  ( Request.Headers.IfModifiedSince.HasValue && tpl.Header.LastModified.HasValue &&
+                    Request.Headers.IfModifiedSince.Value >= tpl.Header.LastModified.Value )
+                {
                     return new NotModifiedResult();
                 }
 
@@ -408,15 +390,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     tpl.Stream.Dispose();
                 }
-
-
-                Debug.WriteLine(ex);
-
-                return new NotFoundResult();
-               // return new MyFileStreamResult(new MemoryStream(OnePixelGif), "image/gif");
-
-
-                //return Redirect("/admin/scripts/resources/images/noimage.png");
+               return new NotFoundResult();
+               
             }
             finally
 
@@ -429,17 +404,41 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
 
-        //[System.Web.Http.HttpGet]
-        //public ActionResult Download(string list, string documentId)
-        //{
-        //    var doc = _docRepo.GetDocument(documentListName: list, documentId: documentId).Result.ReadAsSync();
-        //    var content = _docRepo.GetDocumentContent(list, documentId).Result.ResponseMessage.Content;
-        //    var stream = content.ReadAsStreamAsync().Result;
+        private void InitCmsClient(int? tenant, int? mastercat, int? site, out ApiContext context)
+        {
+            ApiContext  ctx= null;
+            _docRepo = _docRepo.CloneWithApiContext(x =>
+            {
+                ctx = x;
+                if (site.HasValue)
+                {
+                    Site siteLookup = _siteLookup.GetOrAdd(site.Value, LookupSite);
+                    if (siteLookup == null)
+                    {
+                        throw new FileNotFoundException("cant find site:" + site);
+                    }
+                    ctx.TenantId = siteLookup.TenantId;
+                    ctx.MasterCatalogId = siteLookup.MasterCatalogId;
+                    ctx.CatalogId = siteLookup.CatalogId;
+                    ctx.SiteId = siteLookup.Id;
+                    ctx.LocaleCode = siteLookup.DefaultLocaleCode;
+                    //   context.SiteId = tmp;
+                }
+                if (mastercat.HasValue)
+                {
+                    ctx.MasterCatalogId = mastercat.Value;
+                }
+                if (tenant.HasValue)
+                {
+                    ctx.TenantId = tenant.Value;
+                }
+                ctx.UserClaims = null;
+            });
+            _docRepo.Options.AdditionalHeaders = _docRepo.Options.AdditionalHeaders ?? new NameValueCollection();
+            context = ctx;
+           
+        }
 
-        //    return new MyFileStreamResult(stream, GetContentType(doc.Name), doc.Name);
-        //    //var stream = content.ReadAsStreamAsync().Result;
-
-        //}
         private string GetContentType(string fileName)
         {
             string fileExtension = Path.GetExtension(fileName);

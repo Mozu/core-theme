@@ -439,13 +439,12 @@ Ext.define('Taco.store.Navigation', {
                                 'id': 'customroutes',
                                 'label': 'Custom Routes',
                                 'address': 'customroutes'
+                            },
+                            {
+                                 'id': 'ipblocking',
+                                 'label': 'IP Blocking',
+                                 'address': 'ipblocking'
                             }
-                            // turning off in prod brah 
-                            // {
-                            //     'id': 'ipblocking',
-                            //     'label': 'IP Blocking',
-                            //     'address': 'ipblocking'
-                            // }
                         ]
                     }
                 ]
