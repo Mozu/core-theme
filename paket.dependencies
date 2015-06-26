@@ -27,7 +27,7 @@ nuget Mozu.Core.Api.Contracts 1.17.1 framework: >= net451
 nuget Mozu.Core.Messaging 1.17.1 framework: >= net451
 nuget Mozu.Core.Test 1.17.1 framework: >= net451
 nuget Mozu.Customer.Contracts 1.17.2 framework: >= net451
-nuget Mozu.DeployWeb 1.0.30 framework: >= net451
+nuget mozu.deployweb 2.0.3 framework: >= net451
 nuget Mozu.Hypr.NDjango >= 1.17 framework: >= net451
 nuget Mozu.InstalledApps.Contracts 1.17.3 framework: >= net451
 nuget Mozu.Location.Contracts 1.17.1 framework: >= net451
@@ -40,4 +40,3 @@ nuget Mozu.ShippingAdmin.Contracts 1.17.4 framework: >= net451
 nuget Mozu.SiteSettings.General.Contracts < 1.19 prerelease framework: >= net451 
 nuget Mozu.SiteSettings.Order.Contracts < 1.19 framework: >= net451 
 nuget protobuf-net 2.0.0.668 framework: >= net45
-
