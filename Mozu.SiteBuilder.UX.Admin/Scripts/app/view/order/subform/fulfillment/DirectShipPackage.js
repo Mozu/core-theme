@@ -77,15 +77,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     hidden: !!this.packageData.shipmentId,
                     listeners: {
                         menushow: function (button, menu) {
-                            if (this.shippingMethodsStore.count() === 0 && !this.shippingMethodsStore.isLoading()) {
-                                this.shippingMethodsStore.load({
-                                    scope: this,
-                                    callback: function () {
-                                        menu.removeAll();
-                                        menu.add(this.buildShippingMethods());
-                                    }
-                                })
-                            }
+                            // Removed if check, this should always fire!
+                            this.shippingMethodsStore.load({
+                                scope: this,
+                                callback: function() {
+                                    menu.removeAll();
+                                    menu.add(this.buildShippingMethods());
+                                }
+                            });
                         },
                         scope: this
                     },

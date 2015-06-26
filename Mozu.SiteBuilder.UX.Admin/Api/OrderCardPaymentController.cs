@@ -29,7 +29,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "CapturePayment",
-//                CurrencyCode = "USD",  if not provided, commerceruntime defers to what's provisioned for the tenant
+//              if not provided, commerceruntime defers to what's provisioned for the tenant
+                CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = args.Amount,
                 ReferenceSourcePaymentId = null
             };
@@ -51,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "AuthAndCapture",
-                CurrencyCode = "USD",
+                CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = args.Amount,
                 ReferenceSourcePaymentId = null
             };
@@ -73,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "AuthorizePayment",
-                CurrencyCode = "USD",
+                CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = args.Amount,
                 ReferenceSourcePaymentId = null
             };
@@ -101,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "CreditPayment",
-                CurrencyCode = "USD",
+                CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = args.Amount
             };
 
@@ -127,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var action = new DCp.PaymentAction
             {
                 ActionName = "VoidPayment",
-                CurrencyCode = "USD",
+                CurrencyCode = SbApiContext.CurrencyCode,
                 Amount = null,
                 ReferenceSourcePaymentId = null
             };
@@ -154,7 +155,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 // TODO: should determine ActionName from store preferences
                 ActionName = /*"AuthAndCapture"*/ "AuthorizePayment",
-                CurrencyCode = "USD",
+                CurrencyCode = SbApiContext.CurrencyCode,
                 NewBillingInfo = new DCp.BillingInfo
                 {
                     Card = new DCp.PaymentCard
