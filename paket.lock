@@ -104,7 +104,7 @@ NUGET
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
       Newtonsoft.Json
-    Mozu.Content.Contracts (1.17.3) - framework: >= net451
+    Mozu.Content.Contracts (1.18.1-dev1506272108ci-s) - framework: >= net451
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Api.Contracts (1.17.1) - framework: >= net451
       Mozu.Core.Prime (>= 1.17.0)
