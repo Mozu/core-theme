@@ -15,7 +15,7 @@
     <AssemblyName>Mozu.SiteBuilder.UX.Themes</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
@@ -2212,6 +2212,7 @@
     <Content Include="Themes\Core7\theme-ui.json" />
     <Content Include="Themes\Core7\theme.json" />
     <Content Include="paket.references" />
+    <Content Include="Mozu.SiteBuilder.UX.Themes.nuspec" />
     <None Include="Themes\Core7\templates\modules\pinky-bumpus.hypr.live" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
