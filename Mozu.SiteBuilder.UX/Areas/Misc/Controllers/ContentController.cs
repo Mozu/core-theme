@@ -30,8 +30,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     public class ContentController : ApiControllerBase
     {
-
-
         //private static string NotFoundImage = "/admin/scripts/resources/images/noimage.png";
 
         private static readonly ConcurrentDictionary<int, Site> _siteLookup = new ConcurrentDictionary<int, Site>();
@@ -52,17 +50,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         // GET:/Img/
 
 
-
-
-
-
         private static ImageCodecInfo GetEncoderInfo(String mimeType)
         {
             return ImageCodecInfo.GetImageEncoders().FirstOrDefault(t => t.MimeType == mimeType);
         }
-
-
-                 
 
 
         private Site LookupSite(int siteid)
@@ -78,15 +69,20 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
 
         [ClientCacheHeaders(ConfigKey = "images")]
-        [HttpGet]
+        [HttpGet()]
         public async Task<ActionResult> Index(
-            int? tenant = null, 
-            int? mastercat = null, 
-            int? site = null, 
-            string list = "files@mozu.com", 
-            string documentId = null, 
-            int? size = null, 
-            int? max = null)
+            int? tenant = null,
+            int? mastercat = null,
+            int? site = null,
+            string list = "files@mozu.com",
+            string documentId = null,
+            int? size = null,
+            int? max = null,
+            int? maxWidth= null,
+            int? maxHeight= null,
+            int? width = null,
+            int? height  = null,
+            string crop = null)
         {
             //todo send out appoligy letter
 
@@ -121,9 +117,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             });
             Guid guid;
             ServiceClientResponse<StreamContent> result = null;
-            if ( Request.Headers.IfModifiedSince.HasValue){
-                     if (Guid.TryParse(documentId, out guid))
+            if (Request.Headers.IfModifiedSince.HasValue)
             {
+                if (Guid.TryParse(documentId, out guid))
+                {
                     result = await _docRepo.GetDocumentContentHead(list, documentId).ConfigureAwait(false);
                 }
                 else
@@ -132,58 +129,63 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
                 if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                   return new NotFoundResult();
+                    return new NotFoundResult();
                 }
-                if ( result.HasException)
-                    {
+                if (result.HasException)
+                {
                     throw result.ReadException();
                 }
 
-                if ( Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.Value)
+                if (Request.Headers.IfModifiedSince.Value >= result.ResponseMessage.Content.Headers.LastModified.Value)
                 {
                     return new NotModifiedResult();
                 }
-
             }
+            
             _docRepo.Options.CompletionOption = System.Net.Http.HttpCompletionOption.ResponseHeadersRead;
             if (Guid.TryParse(documentId, out guid))
             {
-
                 result = await _docRepo.TransformDocumentContent(
-                    list, 
+                    list,
                     documentId,
-                    width:size , 
-                    max:max 
+                    width: width.HasValue ? width : size,
+                    height:height,
+                    maxWidth: maxWidth.HasValue? maxWidth : max,
+                    maxHeight: maxHeight,
+                    crop: crop
                     ).ConfigureAwait(false);
-                }
-                //cache wasnt found or was invalidated above
-                if (tpl == null)
-                {
+            }
+            else
+            {
                 result = await _docRepo.TransformTreeDocumentContent(
-                    list, 
+                    list,
                     documentId,
-                    width: size,
-                    max: max).ConfigureAwait(false);
-                    }
-             if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-             {
-                 result.ResponseMessage.Dispose();
-                 return new NotFoundResult();
-                }
-             if (result.HasException)
-                    {
-                 result.ResponseMessage.Dispose();
-                 throw result.ReadException();
-                }
-             string ct = result.ResponseMessage.Content.Headers.ContentType != null ? result.ResponseMessage.Content.Headers.ContentType.MediaType : null;
-                if (ct == "text/json" || string.IsNullOrEmpty(ct))
-                {
-                    ct = "image/jpeg";
-                }
-             return new MyFileStreamResult(result.ResponseMessage.Content.ReadAsStreamAsync().Result, ct,null,result.ResponseMessage.Content.Headers.LastModified );
-            
-
-
+                    width: width.HasValue ? width : size,
+                    height: height,
+                    maxWidth: maxWidth.HasValue ? maxWidth : max,
+                    maxHeight: maxHeight,
+                    crop: crop
+                    ).ConfigureAwait(false);
+            }
+            if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                result.ResponseMessage.Dispose();
+                return new NotFoundResult();
+            }
+            if (result.HasException)
+            {
+                result.ResponseMessage.Dispose();
+                throw result.ReadException();
+            }
+            string ct = result.ResponseMessage.Content.Headers.ContentType != null
+                ? result.ResponseMessage.Content.Headers.ContentType.MediaType
+                : null;
+            if (ct == "text/json" || string.IsNullOrEmpty(ct))
+            {
+                ct = "image/jpeg";
+            }
+            return new MyFileStreamResult(result.ResponseMessage.Content.ReadAsStreamAsync().Result, ct, null,
+                result.ResponseMessage.Content.Headers.LastModified);
         }
 
 
@@ -214,8 +216,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 default:
                     return "application/octet-stream";
             }
-            }
-
+        }
 
 
         private class MyFileStreamResult : FileStreamResult
@@ -227,7 +228,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             private Stream stream;
 
 
-            public MyFileStreamResult(Stream stream, string contentType, string etag, DateTimeOffset? LastModifiedDate, string fileName = null)
+            public MyFileStreamResult(Stream stream, string contentType, string etag, DateTimeOffset? LastModifiedDate,
+                string fileName = null)
                 : base(stream, contentType)
             {
                 _fileName = fileName;
@@ -250,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     response.AddHeader("Content-Disposition", "attachment; filename=" + _fileName);
                 }
             }
-            }
+        }
 
 
         private class NotModifiedResult : ActionResult
