@@ -3,13 +3,15 @@
     background-color: white;
     border: 1px solid #bfbfbf;
     font-family: SourceSansProRegular, MyriadWebProRegular, helvetica, arial, verdana, sans-serif;
-    height: 380px;
+    height: 390px;
     left: 50%;
     margin-left: -190px;
     margin-top: -190px;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: fixed;
     top: 50%;
-    width: 380px;
+    width: 390px;
     z-index: 100003;
 
     @include border-radius(2px);
@@ -25,7 +27,6 @@
     .mz-cms-body {
         padding: 9px 10px 0;
         height:385px;
-        overflow-y:auto;
     }
 
     .mz-cms-widget {
@@ -67,14 +68,14 @@
 .mz-cms-shadow {
     background-color: rgb(51, 51, 51);
     // display: none;
-    height: 460px;
+    height: 470px;
     left: 50%;
     margin-left: -230px;
     margin-top: -230px;
     opacity: 0.9;
     position: fixed;
     top: 50%;
-    width: 460px;
+    width: 470px;
     z-index: 100002;
     @include border-radius(2px);
 }
