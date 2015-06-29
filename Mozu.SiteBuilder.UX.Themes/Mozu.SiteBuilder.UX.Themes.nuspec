@@ -14,8 +14,9 @@
     <version>0.0.0.0</version>
   </metadata>
   <files>
-      <file src="Themes/**/*" exclude="Themes\**\node_modules\**" target ="" />
-      <file src="web.*.config" target="" />
-      <file src="web.config" target="" />
+    <file src="Themes/**/*" exclude="Themes\**\node_modules\**" />
+    <file src="web.*.config" />
+    <file src="web.config" />
+    <file src="*.ps1" />
   </files>
 </package>
