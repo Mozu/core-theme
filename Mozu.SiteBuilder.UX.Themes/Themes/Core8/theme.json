@@ -336,6 +336,13 @@
             "title": "Login",
             "userCreatable": false
         },
+        { 
+            "entityType": "order_status",
+            "id": "order_status",
+            "template": "order-status",
+            "title": "Order Status",
+            "userCreatable": false
+        },
         {
             "entityType": "signup",
             "id": "signup",
