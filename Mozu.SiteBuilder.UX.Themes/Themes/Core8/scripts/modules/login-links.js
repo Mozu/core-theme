@@ -157,6 +157,54 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 password: this.$parent.find('[data-mz-login-password]').val()
             }).then(this.handleLoginComplete, this.displayApiMessage);
         },
+        anonymousorder: function() {
+            var me = this;
+
+            var email = "";
+            var billingZipCode = "";
+            var billingPhoneNumber = "";
+
+            switch (this.$parent.find('[data-mz-verify-with]').val()) {
+                case "Zip Code":
+                    {
+                        billingZipCode = this.$parent.find('[data-mz-verification]').val();
+                        email = null;
+                        billingPhoneNumber = null;
+                        break;
+                    }
+                case "Phone Number":
+                    {
+                        billingZipCode = null;
+                        email = null;
+                        billingPhoneNumber = this.$parent.find('[data-mz-verification]').val();
+                        break;
+                    }
+                case "Email Address":
+                    {
+                        billingZipCode = null;
+                        email = this.$parent.find('[data-mz-verification]').val();
+                        billingPhoneNumber = null;
+                        break;
+                    }
+                default:
+                    {
+                        billingZipCode = null;
+                        email = null;
+                        billingPhoneNumber = null;
+                        break;
+                    }
+
+            }
+
+            this.setLoading(true);
+            // the new handle message needs to take the redirect.
+            api.action('customer', 'orderStatusLogin', {
+                ordernumber: this.$parent.find('[data-mz-order-number]').val(),
+                email: me.email,
+                billingZipCode: me.billingZipCode,
+                billingPhoneNumber: me.billingPhoneNumber
+            }).then(this.handleLoginComplete, this.displayApiMessage);
+        },
         retrievePassword: function () {
             this.setLoading(true);
             api.action('customer', 'resetPasswordStorefront', {
@@ -255,6 +303,12 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             var loginPage = new SignupPopover();
             loginPage.formSelector = 'form[name="mz-loginform"]';
             loginPage.pageType = 'login';
+            loginPage.init(this);
+        });
+        $('[data-mz-action="anonymousorder-submit"]').each(function () {
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-anonymousorder"]';
+            loginPage.pageType = 'anonymousorder';
             loginPage.init(this);
         });
         $('[data-mz-action="forgotpasswordpage-submit"]').each(function(){

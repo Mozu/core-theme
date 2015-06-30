@@ -164,6 +164,7 @@
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\OrderStatus.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\JObjectMapping.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPackageItem.cs" />

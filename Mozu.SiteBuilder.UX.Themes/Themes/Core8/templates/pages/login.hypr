@@ -35,9 +35,6 @@
                             <div class="mz-l-formfieldgroup-cell"></div>
                             <div class="mz-l-formfieldgroup-cell">
                                 <a href="/user/forgotpassword" class="mz-forgot" data-mz-action="launchforgotpassword">{{ labels.forgotPassword }}</a>
-                                <div class="mz-l-formfieldgroup-cell">
-                                    <section data-mz-role="popover-message" class="mz-popover-message"></section>
-                                </div>
                             </div>
                         </div>
                         <div class="mz-l-formfieldgroup-row">
@@ -50,6 +47,9 @@
                             <div class="mz-l-formfieldgroup-cell"></div>
                             <div class="mz-l-formfieldgroup-cell">
                                 <button class="mz-button mz-button-large mz-login-button" data-mz-action="loginpage-submit">{{ labels.logIn }}</button>
+                                <div class="mz-l-formfieldgroup-cell">
+                                    <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
             <div class="mz-l-column">
 	            <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
                 <p>Orders placed as a guest or single order lookup</p>
-                <form method="post" class="mz-loginform mz-loginform-page" name="mz-orderstatus">
+                <form method="post" class="mz-loginform mz-loginform-page" name="mz-anonymousorder">
                     {% include "modules/common/message-bar" with model=model.messages %}
                     <input type="hidden" name="order-returnUrl" value="{{ model.returnUrl }}"/>
                     <div class="mz-l-formfieldgroup">
@@ -75,7 +75,7 @@
                                 <label for="verifywith">{{ labels.verifyWith }}</label>
                             </div>
                             <div class="mz-l-formfieldgroup-cell">
-                                <select data-mz-verifyWith>
+                                <select data-mz-verify-with>
                                     <option>Zip Code</option>
                                     <option>Phone Number</option>
                                     <option>Email Address</option>
@@ -94,6 +94,9 @@
                             <div class="mz-l-formfieldgroup-cell"></div>
                             <div class="mz-l-formfieldgroup-cell">
                                 <button class="mz-button mz-button-large mz-login-button" data-mz-action="anonymousorder-submit">{{ labels.submit }}</button>
+                                <div class="mz-l-formfieldgroup-cell">
+                                    <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                                </div>
                             </div>
                         </div>
                     </div>

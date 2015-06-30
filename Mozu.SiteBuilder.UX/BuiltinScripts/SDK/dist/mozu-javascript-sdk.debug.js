@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2015-05-13
+ * Mozu JavaScript SDK - v0.3.0 - 2015-06-30
  *
  * Copyright (c) 2015 Volusion, Inc.
  *
@@ -3764,6 +3764,10 @@ module.exports=
             "verb": "POST",
             "template": "{+storefrontUserService}login",
             "returnType": "login"
+        },
+        "order-status-login": {
+            "verb": "POST",
+            "template": "{+storefrontUserService}anonymous-login"
         },
         "update": {
             "verb": "PUT",
