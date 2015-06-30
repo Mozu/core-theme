@@ -158,8 +158,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }).then(this.handleLoginComplete, this.displayApiMessage);
         },
         anonymousorder: function() {
-            var me = this;
-
             var email = "";
             var billingZipCode = "";
             var billingPhoneNumber = "";
@@ -200,9 +198,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             // the new handle message needs to take the redirect.
             api.action('customer', 'orderStatusLogin', {
                 ordernumber: this.$parent.find('[data-mz-order-number]').val(),
-                email: me.email,
-                billingZipCode: me.billingZipCode,
-                billingPhoneNumber: me.billingPhoneNumber
+                email: email,
+                billingZipCode: billingZipCode,
+                billingPhoneNumber: billingPhoneNumber
             }).then(this.handleLoginComplete, this.displayApiMessage);
         },
         retrievePassword: function () {
