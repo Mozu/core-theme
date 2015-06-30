@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<ExceptionContextLogWrapper>();
             builder.RegisterType<LiveModeOnlyCacheInternal>().As<ILiveModeOnlyCache>().InstancePerRequest();
             builder.RegisterType<DataViewModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();
-            builder.RegisterType<EditModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();
+            builder.RegisterType<EditModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();         
             builder.RegisterTypes(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
             builder.RegisterType<SEO.CustomRouteValidator>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<SEO.CustomRouteRepository>().AsImplementedInterfaces().AsSelf();
@@ -83,11 +83,15 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance();
             builder.RegisterType<HyprViewEngine>().InstancePerRequest();
 
+         
+
+            builder.Register(c =>
+            {
             var tmp = new TemplateManagerProvider()
-                .WithLibrary(typeof (AddFilter).Assembly)
-                .WithLibrary(typeof (HyprViewEngine).Assembly)
-                .WithLibrary(typeof (AutofacModule).Assembly)
-                .WithLoader(new TemplateLoader())
+                    .WithLibrary(typeof(AddFilter).Assembly)
+                    .WithLibrary(typeof(HyprViewEngine).Assembly)
+                    .WithLibrary(typeof(AutofacModule).Assembly)
+                    .WithLoader(new TemplateLoader(c.Resolve<Lazy<IThemeRepository>>()))
                 .WithSetting("settings.DEFAULT_AUTOESCAPE", true);
 
             var ass = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => new AssemblyName(x.FullName).Name == "Mozu.SiteBuilder.UX");
@@ -96,7 +100,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                 tmp = tmp.WithLibrary(ass);
             }
             
-            builder.Register(c => tmp)
+                return tmp;
+            })
                 .As<TemplateManagerProvider>()
                 .As<ITemplateManagerProvider>()
                 .SingleInstance();
@@ -106,9 +111,12 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             Utilities.UtilConfig.Comparer = new DjangoComparer();
             Utilities.UtilConfig.VirtualPathFunc = new DjangoUtilHelper();
 
-            var tm = tmp.GetNewManager();
+           // var tm = tmp.GetNewManager();
             
-            builder.Register(c => new HyprTemplateManager(tm, c.Resolve<IMozuVirtualPathProvider>()))
+            builder.Register(c => {
+                var tm = c.Resolve<TemplateManagerProvider>().GetNewManager();
+                return new HyprTemplateManager(tm, c.Resolve<IMozuVirtualPathProvider>());
+            })
                 .As<ITemplateManager>()
                 .InstancePerLifetimeScope();
         }

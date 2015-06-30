@@ -5,13 +5,20 @@ using System.Net.Http;
 using Autofac;
 
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Themes;
 using NDjango.Interfaces;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     internal class TemplateLoader : ITemplateLoader
     {
-   
+        private readonly Lazy<IThemeRepository> _themeRepo;
+
+
+        public TemplateLoader(Lazy<IThemeRepository> themeRepo)
+        {
+            _themeRepo = themeRepo;
+        }
 
         //public TextReader GetTemplate(string path)
         //{
@@ -20,8 +27,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
          
         public bool IsUpdated(string path, DateTime timestamp)
         {
-            
-            return File.GetLastWriteTime(path) != timestamp;
+            bool isUpdated= _themeRepo.Value.GetLastWriteTime(path).ToUniversalTime() != timestamp.ToUniversalTime();
+            return isUpdated;
+
         }
 
         Tuple<TextReader, DateTime> ITemplateLoader.GetTemplate(string path)

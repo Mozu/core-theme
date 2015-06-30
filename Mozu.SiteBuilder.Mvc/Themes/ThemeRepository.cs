@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         Theme GetThemeSlim(ThemeSelection name);
 
 
-    
+        DateTime GetLastWriteTime(string fileName);
 
         /// <summary>
         /// Finds a theme by name.
@@ -77,7 +77,20 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             _themeMetaDataProvider = themeMetaDataProvider;
         }
 
-
+        public DateTime GetLastWriteTime(string fileName)
+        {
+            var theme = _themes.Where(x => x.Value.ThemePath != null && fileName.StartsWith(x.Value.ThemePath, StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            if (theme != null)
+            {
+                var vpath = fileName.Substring(theme.ThemePath.Length).TrimStart(new char[] { '\\' });
+                var info = theme.FileListing.GetFileInfo(vpath, true);
+                if (info != null)
+                {
+                    return info.TimsStamp;
+                }
+            }
+            return File.GetLastWriteTime(fileName);
+        }
         /// <summary>
         /// Finds a theme by name.
         /// </summary>
