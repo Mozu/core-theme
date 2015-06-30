@@ -6,7 +6,7 @@ nuget Microsoft.AspNet.WebPages 3.2.2 content:none
 nuget Microsoft.AspNet.Mvc 5.2.2 content:none
 nuget ClearScript.Installer >= 5.4 content:none
 
-nuget Mozu.Core.Prime >= 1.17
+nuget Mozu.Core.Prime < 1.18
 nuget Mozu.VS.PowerShell
 nuget RabbitMQ.Client 3.3.5
 nuget Burrows.Autofac 0.3.3.0 framework: >= net451
@@ -22,13 +22,13 @@ nuget Mozu.AppDev.Contracts 1.17.2 framework: >= net451
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 framework: >= net45
 nuget Mozu.BuildSupport.WebApi 1.0.0.6 framework: >= net45
 nuget Mozu.CommerceRuntime.Contracts 1.17.6 framework: >= net451
-nuget Mozu.Content.Contracts 1.17.3 framework: >= net451
+nuget Mozu.Content.Contracts < 1.19 prerelease framework: >= net451
 nuget Mozu.Core.Api.Contracts 1.17.1 framework: >= net451
 nuget Mozu.Core.Messaging 1.17.1 framework: >= net451
 nuget Mozu.Core.Test 1.17.1 framework: >= net451
 nuget Mozu.Customer.Contracts 1.17.2 framework: >= net451
 nuget mozu.deployweb 2.0.3 framework: >= net451
-nuget Mozu.Hypr.NDjango >= 1.17 framework: >= net451
+nuget Mozu.Hypr.NDjango < 1.18 framework: >= net451
 nuget Mozu.InstalledApps.Contracts 1.17.3 framework: >= net451
 nuget Mozu.Location.Contracts 1.17.1 framework: >= net451
 nuget Mozu.MZDB.Contracts 1.17.2 framework: >= net451

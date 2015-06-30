@@ -82,6 +82,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (!Directory.Exists(tmd.ThemePath))
                 return null;
 
+
+
+
             tmd.Configuration = LoadThemeDescriptor(tmd.ThemePath, METADATA_THEME_FILE_NAME);
             tmd.FileListing = LoadThemeFileListing(tmd.ThemePath, tmd.Id );
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);

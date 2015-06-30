@@ -199,6 +199,7 @@
     <Compile Include="ActionResults\IgnoreRoute.cs" />
     <Compile Include="ActionResults\RedirectResult.cs" />
     <Compile Include="ActionResults\ViewResultBase.cs" />
+    <Compile Include="AsyncSemaphore.cs" />
     <Compile Include="Auth\LoginCookieHelper.cs" />
     <Compile Include="Caching\CacheScope.cs" />
     <Compile Include="Caching\LiveModeOnlyCache.cs" />
@@ -269,6 +270,8 @@
     <Compile Include="SEO\CustomRouteValidator.cs" />
     <Compile Include="SEO\Mappings.cs" />
     <Compile Include="SEO\RedirectRepository.cs" />
+    <Compile Include="SEO\SiteRouteHandler.cs" />
+    <Compile Include="SEO\SiteRouteRepository.cs" />
     <Compile Include="SEO\SlugNormalizer.cs" />
     <Compile Include="SiteBuilderApiContextBuilder.cs" />
     <Compile Include="Tags\PreloadJsonTag.cs" />

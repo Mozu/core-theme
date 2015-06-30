@@ -9,16 +9,28 @@ using NDjango.FiltersCS;
 using NDjango.Interfaces;
 using NDjango.Misc;
 using NUnit.Framework;
-
+using System.Net.Http;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
     public class TemplateTestBase
     {
         private class TestTemplateLoader : ITemplateLoader{
+            private readonly Dictionary<string, string> _templates;
+
+            public TestTemplateLoader ( Dictionary<string,string> templates)
+            {
+                _templates = templates;
+            }
+
             public Tuple<TextReader, DateTime> GetTemplate(string path)
             {
-                return new Tuple<TextReader, DateTime>(new StringReader(path), DateTime.UtcNow);
+                string templateString;
+                if (!_templates.TryGetValue( path, out templateString))
+                {
+                    templateString = path;
+                }
+                return new Tuple<TextReader, DateTime>(new StringReader(templateString), DateTime.UtcNow);
             }
 
             public bool IsUpdated(string path, DateTime timestamp)
@@ -26,20 +38,23 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
                 return false;
             }
         }
+
+        public Dictionary<string, string> Templates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         
-        private ITemplateManager _manager;
+      
         private ITemplateManager Manager
         {
-            get
-            {
-                return (_manager ?? (_manager = new TemplateManagerProvider()
+            get;set;
+        }
+        void InitManager(){
+            Manager = new TemplateManagerProvider()
                     .WithLibrary(typeof (AddFilter).Assembly)
                     .WithLibrary(typeof (HyprViewEngine).Assembly)
                     .WithLibrary(typeof (DropZoneTag).Assembly)
-                    .WithLoader(new TestTemplateLoader())
-                    .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager()));
-            }
+                    .WithLoader(new TestTemplateLoader(Templates))
+                    .WithSetting("settings.DEFAULT_AUTOESCAPE", true).GetNewManager();
         }
+           
 
         public class TestDescriptor
         {
@@ -55,6 +70,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             {
                 Context = new Dictionary<string, object>();
             }
+
+            public Dictionary<string, string> Templates { get; set; }
+            public IEnumerable<object> ServiceRegistrations { get; set; }
+
 
             public static Func<string, Tuple<bool, string>> CompareLiteral(string expected)
             {
@@ -72,11 +91,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             }
         }
 
-        public static void RunTemplate(TestDescriptor desc, ITemplateManager manager)
+        public   void RunTemplate(TestDescriptor desc, ITemplateManager manager)
         {
             NDjango.Utilities.UtilConfig.Comparer = new NDjango.FiltersCS.DjangoComparer();
             
             var context = SetupContext(desc);
+            InitTempaltes(desc);
             var template = manager.GetTemplate(desc.Template);
             var renderer = new TemplateRenderer(manager, template, context);
             var rendered = RenderTemplate(renderer);
@@ -86,9 +106,20 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
         protected void RunTemplate(TestDescriptor desc)
         {
+            InitManager();
             RunTemplate(desc, Manager);
         }
-
+        private void InitTempaltes ( TestDescriptor desc)
+        {
+            Templates.Clear();
+            if (desc.Templates != null)
+            {
+                foreach ( var kvp in desc.Templates)
+                {
+                    Templates[kvp.Key] = kvp.Value;
+                }
+            }
+        }
         private static string RenderTemplate(TemplateRenderer renderer)
         {
             var writer = new StringWriter();
@@ -100,7 +131,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         private static Dictionary<string, object> SetupContext(TestDescriptor desc)
         {
             var dict = desc.Context == null ? new Dictionary<string, object>() : desc.Context;
-            
+
+            dict["true"] = true;
+            dict["false"] = false;
+            dict["now"] = DateTime.UtcNow;
             //add viewContextNode
             var hyprviewcontext = new HyprViewContext(null, null, null);
             dict.Add("_vc", hyprviewcontext);

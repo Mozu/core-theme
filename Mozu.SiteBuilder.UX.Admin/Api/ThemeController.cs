@@ -227,54 +227,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        [HttpGetRoute(UriTemplate = "addons/list/{themeId}")]
-        public async Task<Response<List<ThemeDTO>>> GetAddons(string themeId)
-        {
-            var localAddonDir = _themeRepository.GetLocalAddonPath();
-
-            var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = themeId });
-
-            var themeSettings = (await _themeSettingsRepository.GetInstanceValues(themeId)) ?? new JObject();
-
-
-            var selectedAddonsProperty = (JProperty)themeSettings[ThemeSettingsRepository.ADDONKEY];
-            var selectedAddons = selectedAddonsProperty != null ? selectedAddonsProperty.Value.ToObject<string[]>() : new string[0];
-
-            var entitlements = (await _tenantClient.GetSiteEntitlements(this.SbApiContext.TenantId, this.SbApiContext.SiteId)).ReadAsSync();
-
-            var addonLocations = entitlements.Items.Where(x => x.ApplicationType == "Widget")
-                .Select(x => x.ApplicationVersionId.ToString())
-                .Union(Directory.GetDirectories(localAddonDir)
-                .Select(x => Path.GetFileName(x)));
-
-
-            var addons = addonLocations
-                .Select(x =>
-                {
-                    try
-                    {
-                        return _themeRepository.GetAddon(x);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Warn("addon error", ex);
-                        System.Diagnostics.Debug.Write(ex);
-                        return null;
-                    }
-
-                })
-                    .Where(x => x != null)
-                .Select<Theme, ThemeDTO>(t => new ThemeDTO(null , t)).ToList();
-            
-            
-                addons.ForEach(x =>
-                    {
-                        x.IsSelectedDesktop = selectedAddons.Contains( x.Id);
-                    });
-            
-
-            return List2(addons);
-        }
+        
 
         [HttpPostRoute (UriTemplate = "addons/update/{themeId}")]
         public async Task<Response<List<ThemeDTO>>> UpdateAddons(string themeId, string[] addons )

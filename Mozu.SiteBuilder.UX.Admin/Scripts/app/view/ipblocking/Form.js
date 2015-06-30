@@ -33,7 +33,7 @@ Ext.define('Taco.view.ipblocking.Form', {
         this.record = records[0];
         this.loadRecord(this.record);
         this.down('#ip-address').update('Your IP address is: <strong>' + ip + '</strong>');
-        this.down('#download-date').update('<strong>Date uploaded: </strong>' + downloadDate);
+        // this.down('#download-date').update('<strong>Date uploaded: </strong>' + downloadDate);
     },
 
     downloadFile: function() {

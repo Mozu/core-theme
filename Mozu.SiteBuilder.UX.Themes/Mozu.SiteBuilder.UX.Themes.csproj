@@ -2322,6 +2322,7 @@
     <Content Include="Themes\Core7\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core7\theme-ui.json" />
     <Content Include="Themes\Core7\theme.json" />
+    <Content Include="Mozu.SiteBuilder.UX.Themes.nuspec" />
     <None Include="paket.references" />
     <None Include="Themes\Core7\templates\modules\pinky-bumpus.hypr.live" />
     <Content Include="Themes\Core8\bower.json" />

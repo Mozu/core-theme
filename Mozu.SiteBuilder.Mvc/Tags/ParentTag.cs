@@ -46,14 +46,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 var ctx = walker.context;
                 var block = walker.context.tryfind("block");
-                
-                if (Microsoft.FSharp.Core.OptionModule.IsNone(block))
+
+                if (block == null || block.Value == null || Microsoft.FSharp.Core.OptionModule.IsNone(block))
                 {
                     return base.walk(manager, walker);
                 }
-
-                var nodesToRender = (_superProperty.GetValue(block.Value) as ParserNodes.TagNode).nodelist;
-                return new List<WalkResult> { WalkResultHelpers.ContextDeletions(new[] { "block" }), WalkResultHelpers.Nodes(nodesToRender) }.AsEnumerable().ToFSharpList();
+                var super = _superProperty.GetValue(block.Value) as ParserNodes.TagNode;
+                return super.walk(manager, walker);
+                //var nodesToRender = (_superProperty.GetValue(block.Value) as ParserNodes.TagNode).nodelist;
+                //var additions = Microsoft.FSharp.Core.OptionModule.IsNone(walker.parent) ? new Dictionary<string, object>() : new Dictionary<string, object> { { "block", walker.parent.Value.context.tryfind("block") } };
+                //var result = WalkResultHelpers.RenderNodesWithContextMods(nodesToRender, additions, Enumerable.Empty<string>());
+                //return result.ToFSharpList();
             }
         }
     }

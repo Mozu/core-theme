@@ -165,6 +165,7 @@
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
     <Compile Include="Mvc\SEO\CustomRouteTests.cs" />
+    <Compile Include="Mvc\Tags\ArgumentCollectionTests.cs" />
     <Compile Include="Mvc\Tags\DumpTagTests.cs" />
     <Compile Include="StoreFront\Controllers\StaticContentTest.cs" />
     <Compile Include="StoreFront\Security\DataViewModeEnforcementFilterTests.cs" />
