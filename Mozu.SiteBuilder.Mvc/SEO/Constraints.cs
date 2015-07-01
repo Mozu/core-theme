@@ -14,6 +14,9 @@ using Mozu.Core.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.MZDB.Contracts;
+using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
@@ -37,6 +40,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 case Validator.TypeConst.attribute:
                     return AttributeConstraint(_attributeClient, _context, validator);
+                case Validator.TypeConst.categoryCode:
+                    return CategoryCodeContraint(validator);
                 case Validator.TypeConst.list:
                     return ListMapping(validator);
                 case Validator.TypeConst.mzdb:
@@ -48,6 +53,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         static ICustomRouteConstraint AttributeConstraint(IAttributeWebApiClient client, IApiContext context, Validator validator)
         {
             return new ProductAttributeRouteConstraint(client, context, validator.attributeCode);
+        }
+
+        static ICustomRouteConstraint CategoryCodeContraint(Validator validator)
+        {
+           return new CategoryCodeContraint(validator);
         }
 
         static ICustomRouteConstraint ListMapping(Validator validator)
@@ -64,11 +74,48 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
     public abstract class ConstraintBase : ICustomRouteConstraint
     {
         public abstract Task<bool> Initialize();
-        public abstract bool Match(string parameterName, IDictionary<string, object> routeData);
+        public abstract bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection);
 
         public bool Match(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
-            return Match(parameterName, values);
+            return DoMatch(request, route, parameterName, values, routeDirection);
+        }
+    }
+
+    public class CategoryCodeContraint : ConstraintBase
+    {
+        private Validator validator;
+       
+        public CategoryCodeContraint(Validator validator)
+        {
+            // TODO: Complete member initialization
+            this.validator = validator;
+        }
+
+        public override Task<bool> Initialize()
+        {
+            return Task.FromResult(true); 
+        }
+
+        
+
+        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+            object tmp;
+            string code = null;
+            if ( !values.TryGetValue(parameterName,out tmp) )
+            {
+                return false;
+            }
+            code = Convert.ToString(tmp);
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return false;
+            }
+            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
+            var catTree = catTreeProvider.GetAllCategories().Result;
+
+            return  catTree.Items.Any(x => string.Equals(code, x.CategoryCode, StringComparison.OrdinalIgnoreCase));
         }
     }
 
@@ -105,7 +152,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return true;
         }
 
-        public override bool Match(string parameterName, IDictionary<string, object> values)
+        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
             AttributeVocabularyValue attr;
             object routeValue;
@@ -132,9 +179,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         /// <returns></returns>
         private string GetAttributeValue(AttributeVocabularyValue attr, string localeCode)
         {
-            var content = attr.LocalizedContent.FirstOrDefault(lc => lc.LocaleCode.EqualsIgnoreCase(localeCode)) ?? attr.Content;
+            var content = attr.LocalizedContent == null ? attr.Content : attr.LocalizedContent.FirstOrDefault(lc => lc.LocaleCode.EqualsIgnoreCase(localeCode)) ?? attr.Content;
             return content.StringValue;
         }
+
+        
     }
 
     public class MzdbRouteConstraint : ConstraintBase
@@ -171,7 +220,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return results.SelectMany(x => x.Items);
         }
 
-        public override bool Match(string parameterName, IDictionary<string, object> values)
+        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
             object temp;
             if (!values.TryGetValue(parameterName, out temp))
@@ -200,7 +249,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return Task.FromResult(true);
         }
 
-        public override bool Match(string parameterName, IDictionary<string, object> values)
+        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
             object temp;
             if (!values.TryGetValue(parameterName, out temp))

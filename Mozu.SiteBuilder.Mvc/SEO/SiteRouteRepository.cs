@@ -178,8 +178,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             var defaults =
                 routeDef.Defaults
-                .ChainAdd("controller", GetControllerName(routeDef.InternalRoute.ToEnum<FancyRoute>()))
-                .ChainAdd("action", GetControllerAction(routeDef.InternalRoute.ToEnum<FancyRoute>()));
+                .ChainSet("controller", GetControllerName(routeDef.InternalRoute.ToEnum<FancyRoute>()))
+                .ChainSet("action", GetControllerAction(routeDef.InternalRoute.ToEnum<FancyRoute>()));
 
             return new CustomRoute(routeDef.Template, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
         }

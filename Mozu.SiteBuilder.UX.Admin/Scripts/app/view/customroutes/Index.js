@@ -90,6 +90,9 @@ Ext.define('Taco.view.customroutes.Index', {
             failure: function (response) {
                 var msg = 'An error occured while saving your configuration. Please ensure that it is formatted correctly.';
                 var oRes = Ext.JSON.decode(response.responseText);
+                if (oRes.message) {
+                    msg = oRes.message;
+                }
                 if (oRes.items && oRes.items.length) {
                     msg = oRes.items[0].message;
                 }

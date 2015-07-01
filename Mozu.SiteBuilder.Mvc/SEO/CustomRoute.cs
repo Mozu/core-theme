@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using Autofac;
@@ -81,8 +82,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         IDictionary<string, object> Map(IDictionary<string, object> values);
     }
 
-    public interface ICustomRouteConstraint : ICanInit {
-        bool Match(string parameterName, IDictionary<string, object> routeData);
+    public interface ICustomRouteConstraint : ICanInit, IHttpRouteConstraint
+    {
+        bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection);
     }
     #endregion
 

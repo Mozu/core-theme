@@ -28,6 +28,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
                     return FacetMapping(mapping);
                 case Mapping.TypeConst.mzdb:
                     return MZDBMapping(_entityListClient, mapping);
+                case Mapping.TypeConst.categorySlug:
+                    return new CategorySlugMapping(mapping);
             }
             throw new ArgumentException(string.Format("mapping type {0} not known", mapping.type));
         }
@@ -82,7 +84,26 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             return string.Format("{0}_{1}", _facetId, v);
         }
     }
+    public class CategorySlugMapping : IRouteDataMapping
+    {
+        private Mapping mapping;
 
+        public CategorySlugMapping(Mapping mapping)
+        {
+            // TODO: Complete member initialization
+            this.mapping = mapping;
+        }
+
+        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        {
+            return values;
+        }
+
+        public Task<bool> Initialize()
+        {
+            return Task.FromResult(true); 
+        }
+    }
     public class DirectMapping : IRouteDataMapping
     {
         readonly IDictionary<string, string> _maps;

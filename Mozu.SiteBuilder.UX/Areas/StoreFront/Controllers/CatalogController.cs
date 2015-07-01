@@ -193,20 +193,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
+      
+
         [HttpGet]
-        public async Task<HttpResponseMessage> Category(int? categoryId = null, string sortBy = null, int? page = null, int? itemsPerPage = null)
+        public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null , string sortBy = null, int? page = null, int? itemsPerPage = null)
         {
             PageContext.PageType = "category";
             PageContext.CategoryId = categoryId;
             PageContext.FeedUrl = "/feeds/category/" + categoryId;
 
-            var cat = (await _categoryTreeProvider.GetAllCategories()).Items.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
+            var cat = (await _categoryTreeProvider.GetAllCategories()).Items.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1) ||string.Equals (categoryCode, x.CategoryCode , StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (cat == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
 
-            var redirect = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.Category, () => Request.GetRouteData().Values).ConfigureAwait(false);
+            var redirect = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.Category, () => Mapper.Map<IDictionary<string,object>>(cat)).ConfigureAwait(false);
             if (redirect != null)
             {
                 return redirect;

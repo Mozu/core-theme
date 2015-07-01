@@ -9,22 +9,89 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Hosting;
+using System.Web.Http.Routing;
+using System.Web.Routing;
+using Autofac;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
+
+    public interface IRouteConfig
+    {
+        HttpRouteCollection DefaultRoutes { get; }
+
+        void RouteIncomingRequest(HttpRequestMessage message);
+        
+
+    }
+    public class NonSystemRoute : IHttpRoute
+    {
+        public IDictionary<string, object> Constraints
+        {
+            get; set;
+        }
+
+        public IDictionary<string, object> DataTokens
+        {
+            get; set;
+        }
+
+        public IDictionary<string, object> Defaults
+        {
+            get; set;
+        }
+
+        public HttpMessageHandler Handler
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public string RouteTemplate
+        {
+            get
+            {
+                return "{*url}";
+            }
+        }
+
+        public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)
+        {
+            return new HttpRouteData(this);
+
+        }
+
+        public IHttpVirtualPathData GetVirtualPath(HttpRequestMessage request, IDictionary<string, object> values)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
     public class SiteRouteHandler : ISiteRouteHandler
     {
         public static string ContextKey = "SiteRouteEntry";
-        private readonly HttpRequestMessage _requestMessage;
-        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        private readonly ISiteRouteRepository _siteRouteRepository;
+        private readonly Lazy<HttpRequestMessage> _requestMessage;
+        private readonly Lazy<ISiteBuilderApiContext> _siteBuilderApiContext;
+        private readonly Lazy<ISiteRouteRepository> _siteRouteRepository;
         private object _httpRouteCollection;
 
-        public SiteRouteHandler(ISiteRouteRepository siteRouteRepository, HttpRequestMessage requestMessage, ISiteBuilderApiContext siteBuilderApiContext)
+        //public SiteRouteHandler(Lazy<ISiteRouteRepository> siteRouteRepository, Lazy<HttpRequestMessage> requestMessage, Lazy<ISiteBuilderApiContext> siteBuilderApiContext)
+        //{
+        //    _siteRouteRepository = siteRouteRepository;
+        //    _requestMessage = requestMessage;
+        //    _siteBuilderApiContext = siteBuilderApiContext;
+        //}
+
+        public SiteRouteHandler(HttpRequestMessage request, Lazy<ISiteRouteRepository> siteRouteRepository, Lazy<ISiteBuilderApiContext> siteBuilderApiContext)
         {
+            _requestMessage = new Lazy<HttpRequestMessage>(() => request);
             _siteRouteRepository = siteRouteRepository;
-            _requestMessage = requestMessage;
             _siteBuilderApiContext = siteBuilderApiContext;
+
         }
 
         private HttpRouteCollection RouteCollection
@@ -33,10 +100,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 if (_httpRouteCollection == null)
                 {
-                    _httpRouteCollection = _siteRouteRepository.GetHttpRouteCollection().ConfigureAwait(false).GetAwaiter().GetResult() ?? new object();
+                    _httpRouteCollection = _siteRouteRepository.Value.GetHttpRouteCollection().ConfigureAwait(false).GetAwaiter().GetResult() ?? new object();
                 }
                 return _httpRouteCollection as HttpRouteCollection;
             }
+        }
+
+        public async Task<bool> Init()
+        {
+            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+            
+            return routeCollection == null;
         }
 
         public async Task<bool> RouteIncomingRequest()
@@ -47,7 +121,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 return false;
             }
 
-            var rerouteData = routeCollection.GetRouteData(_requestMessage);
+            var rerouteData = routeCollection.GetRouteData(_requestMessage.Value);
             if (rerouteData == null) return false;
 
             if (rerouteData.Route is CustomRoute)
@@ -56,17 +130,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 cr.RewriteRouteData(rerouteData.Values);
             }
 
-            _requestMessage.Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
-            var rctx = _requestMessage.GetRequestContext();
+            _requestMessage.Value .Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
+            var rctx = _requestMessage.Value.GetRequestContext();
             rctx.RouteData = rerouteData;
             return true;
         }
+
+
 
         async Task<HttpRouteCollection> GetRouteCollectionAsync()
         {
             if (_httpRouteCollection == null)
             {
-                _httpRouteCollection = (await _siteRouteRepository.GetHttpRouteCollection().ConfigureAwait(false)) ?? new object();
+                _httpRouteCollection = (await _siteRouteRepository.Value.GetHttpRouteCollection().ConfigureAwait(false)) ?? new object();
             }
             return _httpRouteCollection as HttpRouteCollection;
         }
@@ -74,7 +150,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public async Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
         {
-            if (_siteBuilderApiContext.IsEditMode)
+            if (_siteBuilderApiContext.Value.IsEditMode)
             {
                 return null;
             }
@@ -82,25 +158,67 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             if (routeCollection == null) return null;
 
-            var canonicalRouteAndData =
+            var routes = 
                 routeCollection
                 .Where(route => route is CustomRoute).Cast<CustomRoute>()
-                .Where(route => route.IsCanonicalFor(internalRoute) && route != request.GetRouteData()) // don't want to redirect if the canonical route is the current route
-                .Select(route => new { route, routeData = route.GetRouteData("/", request) }) // uhhh, what is the virtualPathRoot?
-                .FirstOrDefault(x => x.routeData != null);
+                .Where(route => route.IsCanonicalFor(internalRoute))
+               // .TakeWhile(route => route != request.GetRouteData().Route ) // don't want to redirect if the canonical route is the current route
+                .ToList();
 
-            if (canonicalRouteAndData == null) return null; // no canonical route that matches, or current route is canonical? then no redirect!
+            if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
             // else redirect
-            var incomingRouteValues = _requestMessage.GetRouteData().Values;
+            var incomingRouteValues = _requestMessage.Value.GetRouteData().Values;
             var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
             var finalRouteValues =
                 incomingRouteValues
-                .ChainAdd(additionalValues)
-                .ChainAdd(canonicalRouteAndData.routeData.Values);
+                .ChainSet(additionalValues);
+            finalRouteValues["httproute"] = true;
+            var newReq = new HttpRequestMessage();
+            foreach ( var rp in _requestMessage.Value.Properties)
+            {
+                newReq.Properties[rp.Key]= rp.Value;
+            }
+            //Pr{ Properties = _requestMessage.Value.Properties };
+            //finalRouteValues = new RouteValueDictionary(finalRouteValues);
+            foreach (var route in routes)
+            {
+                var vpath = route.GetVirtualPath(newReq, finalRouteValues);
+                //todo check if is the same url.
+                if ( vpath != null)
+                { 
+                    var uri = new Uri("http://localhost/" + vpath.VirtualPath);
+                    uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
+                    if (!string.Equals(uri.PathAndQuery, _requestMessage.Value.RequestUri.PathAndQuery, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(uri.PathAndQuery, true));
+                    }
+                    return null;
+                    
+                }
+                
+            }
+                //.ChainSet(canonicalRouteAndData.routeData.Values);
 
-            var finalRoute = canonicalRouteAndData.route.GetVirtualPath(request, finalRouteValues).VirtualPath;
-            return request.CreateResponse(HttpStatusCode.MovedPermanently, new RedirectResult(finalRoute, true));
+            
+            return null;
+           
         }
+
+        public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)
+        {
+            var routeCollection = GetRouteCollectionAsync().Result;
+            if (routeCollection == null)
+            {
+                return null;
+            }
+
+            return  routeCollection.GetRouteData(_requestMessage.Value);
+            
+        }
+
+     
+
+
     }
 }

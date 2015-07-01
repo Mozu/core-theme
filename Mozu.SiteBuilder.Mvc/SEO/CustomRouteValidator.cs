@@ -49,10 +49,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private bool HaveFacetMapFields(Mapping arg)
         {
-            return !arg.facetId.IsNullOrEmpty() && !arg.mapFrom.IsNullOrEmpty() && arg.mapTo.IsNullOrEmpty();
+            return !arg.facetId.IsNullOrEmpty() && !arg.mapFrom.IsNullOrEmpty() && !arg.mapTo.IsNullOrEmpty();
         }
 
-        static string[] types = typeof(Mapping.TypeConst).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => fi.FieldType == typeof(string)).Select(fi => (string)fi.GetValue(null)).ToArray();
+        static string[] types = typeof(Mapping.TypeConst)
+            .GetFields(BindingFlags.Static | BindingFlags.Public)
+            .Where(fi => fi.FieldType == typeof(string))
+            .Select(fi => (string)fi.GetValue(null))
+            .ToArray();
         private bool BeInTypeConst(string arg)
         {
             return types.Contains(arg, StringComparer.OrdinalIgnoreCase);
@@ -110,7 +114,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return !arg.attributeCode.IsNullOrEmpty();
         }
 
-        static string[] types = typeof(Validator.TypeConst).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => fi.FieldType == typeof(string)).Select(fi => (string)fi.GetValue(null)).ToArray();
+        static string[] types = typeof(Validator.TypeConst)
+            .GetFields(BindingFlags.Static | BindingFlags.Public)
+            .Where(fi => fi.FieldType == typeof(string))
+            .Select(fi => (string)fi.GetValue(null))
+            
+            .ToArray();
         private bool BeInTypeConst(string arg)
         {
             return types.Contains(arg, StringComparer.OrdinalIgnoreCase);

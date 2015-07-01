@@ -140,7 +140,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             var httpRoute = Substitute.For<IHttpRoute>();
             await constraint.Initialize();
-            constraint.Match(parameterName, inputs).ShouldEqual(routeShouldMatch);
+            constraint.DoMatch(null,null,parameterName, inputs,HttpRouteDirection.UriResolution).ShouldEqual(routeShouldMatch);
         }
 
         static IEnumerable<object[]> ConstraintTests()

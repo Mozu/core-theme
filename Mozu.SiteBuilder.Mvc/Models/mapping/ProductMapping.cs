@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Collections.Generic;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
@@ -20,6 +21,34 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
         protected override void Configure()
         {
+
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
+                .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category cat) =>
+                {
+                    var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                    dic["code"] = cat.CategoryCode;
+                    dic["categoryCode"] = cat.CategoryCode;
+                    dic["id"] = cat.Id;
+                    dic["slug"] = cat.Content == null ? null : cat.Content.Slug;
+                    if (cat.ParentCategory != null)
+                    {
+                        dic["parent-CategoryCode"] = cat.ParentCategory.CategoryCode;
+                        dic["parent-Code"] = cat.ParentCategory.CategoryCode;
+                        dic["parent-CategorySlug"] = cat.ParentCategory.Content == null ? null :cat.ParentCategory.Content.Slug;
+
+                        if (cat.ParentCategory.ParentCategory != null)
+                        {
+                            dic["grandParent-CategoryCode"] = cat.ParentCategory.ParentCategory.CategoryCode;
+                            dic["grandParent-Code"] = cat.ParentCategory.ParentCategory.CategoryCode;
+                            dic["grandParent-CategorySlug"] = cat.ParentCategory.ParentCategory.Content == null ? null : cat.ParentCategory.ParentCategory.Content.Slug;
+                        }
+                    }
+                    
+
+                    return dic;
+                });
+
+
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();
