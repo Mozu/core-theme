@@ -7,5 +7,11 @@
 {% block body-content %}
     <div class="mz-l-container">
         <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
+
+        <div class="mz-l-sidebar mz-myaccount-nav">
+            {% include "modules/my-account/my-account-nav" with navtarget="body" %}
+        </div>
+
+        {% include "modules/my-account/order-history-item-listing" with model=item order=model %}
     </div>
 {% endblock body-content %}
