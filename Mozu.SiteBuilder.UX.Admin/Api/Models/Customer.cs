@@ -127,5 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         public bool IsLocked { get; set; }
         public bool IsDisabled { get; set; }
+
+        public DateTime CustomerSinceDate { get; set; }
     }
 }
