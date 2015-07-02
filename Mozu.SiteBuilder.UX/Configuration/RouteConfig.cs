@@ -386,9 +386,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { acceptConstraint = new AcceptConstraint("application/json", true) });
 
             routes.MapHttpRoute(
-                "Order Status Page",
-                "user/order-status",
-                new {controller = "OrderStatus", action = "Index"});
+                "Anonymous Order Status",
+                "user/my-anonymous-order",
+                new {controller = "MyAnonymousAccount", action = "Index"});
 
             routes.MapHttpRoute(
                 "refresh tokens",

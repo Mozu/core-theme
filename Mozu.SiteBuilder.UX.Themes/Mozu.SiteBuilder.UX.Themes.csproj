@@ -2580,7 +2580,7 @@
     <Content Include="Themes\Core8\theme-ui.json" />
     <Content Include="Themes\Core8\theme.json" />
     <Content Include="Themes\Core8\stylesheets\pages\login.less" />
-    <Content Include="Themes\Core8\templates\pages\order-status.hypr" />
+    <Content Include="Themes\Core8\templates\pages\my-anonymous-account.hypr" />
     <None Include="Web.CI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

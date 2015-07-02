@@ -343,26 +343,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
 
-            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrder(orderNumber);
+            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter:String.Format("orderNumber eq {0}", orderNumber));
             if (res.HasException)
             {
-                if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, new
-                    {
-                        Message = "The order number you provided was not found. Please validate the order number and try again or contact customer service."
-                    });
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.InternalServerError, new
-                    {
-                        Message = "An unknown error occured, please try again."
-                    });
-                }
+                    Message = "An unknown error occured, please try again."
+                });
             }
 
-            var order = res.ReadAsSync();
+            var order = res.ReadAsSync().Items.FirstOrDefault();
+            if (order == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, new
+                {
+                    Message = "The order number you provided was not found. Please validate the order number and try again or contact customer service."
+                });
+            }
 
             if (!string.IsNullOrEmpty(email))
             {
@@ -406,7 +403,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken);
 
             var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
-            redir.Headers.Location = MakeRedirectUri("/myanonymousaccount");
+            redir.Headers.Location = MakeRedirectUri("/user/my-anonymous-order");
             return redir;
         }
 

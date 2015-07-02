@@ -31,14 +31,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [DataViewModeEnforcement]
     [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
     [ActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-    public class OrderStatus : BaseApiController
+    public class MyAnonymousAccountController : BaseApiController
     {
 
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ISiteBuilderApiContext _apiContext;
         private readonly IReturnWebApiClient _returnApiClient;
 
-        public OrderStatus(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnApiClient, ISiteBuilderApiContext apiContext)
+        public MyAnonymousAccountController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnApiClient, ISiteBuilderApiContext apiContext)
         {
             _orderWebApiClient = orderWebApiClient;
             _returnApiClient = returnApiClient;
@@ -76,7 +76,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var jsOrder = order.ToJObject();
 
-            return Request.CreateResponse(HttpStatusCode.OK, View("order-status", jsOrder));
+
+            return Request.CreateResponse(HttpStatusCode.OK, View("my-anonymous-account", jsOrder));
         }
     }
 }

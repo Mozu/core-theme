@@ -20,8 +20,13 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
             var sbContext = actionContext.Request.Resolve<ISiteBuilderApiContext>();
-            if (sbContext.UserClaims.IsAnonymous || !sbContext.UserClaims.IsAuthenticationHot)
+            var userClaims = sbContext.UserClaims;
+            if(userClaims.IsAnonymous || !userClaims.IsAuthenticationHot)
             {
+                // check for case when we are order auth'd
+                if(userClaims.Bag.ContainsKey("orderId"))
+                    return;
+
                 var authHelper = actionContext.Request.Resolve<IAuthenticationHelper>();
                 var rToken = authHelper.GetStoreFrontRefreshToken();
                 if (rToken != null)
