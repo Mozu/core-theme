@@ -41,9 +41,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public IDictionary<string, object> RewriteRouteData(IDictionary<string, object> values)
+        public IDictionary<string, object> RewriteRouteData(HttpRequestMessage requestMessage, IDictionary<string, object> values)
         {
-            values = Mappings.Aggregate(values, (dict, m) => m.Map(dict));
+            values = Mappings.Aggregate(values, (dict, m) => m.Map(requestMessage, dict));
             return values;
         }
 
@@ -51,6 +51,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             return IsCanonical && InternalRoute == route;
         }
+
+       
     }
 
     #region Interfaces
@@ -79,7 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     /// </summary>
     public interface IRouteDataMapping : ICanInit
     {
-        IDictionary<string, object> Map(IDictionary<string, object> values);
+        IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values);
     }
 
     public interface ICustomRouteConstraint : ICanInit, IHttpRouteConstraint

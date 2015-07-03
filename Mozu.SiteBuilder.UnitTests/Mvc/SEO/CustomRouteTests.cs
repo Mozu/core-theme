@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         public async Task MappersWork(IRouteDataMapping mapping, Dictionary<string, object> inputs, Dictionary<string, object> expectedOutput)
         {
             await mapping.Initialize();
-            var outputs = mapping.Map(inputs);
+            var outputs = mapping.Map(null,inputs);
             outputs.SequenceEqual(expectedOutput);
         }
 

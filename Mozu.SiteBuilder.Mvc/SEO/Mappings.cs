@@ -5,7 +5,13 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
@@ -69,20 +75,27 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 
         public Task<bool> Initialize() { return Task.FromResult(true); }
 
-        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage,   IDictionary<string, object> values)
         {
-            if (values.ContainsKey(_mapFrom))
+            object tmp;
+            if (!values.TryGetValue(_mapFrom, out tmp))
             {
-                values[_mapTo] = UnFacetify(values[_mapFrom].ToString());
+                return values;
             }
+            var value = Convert.ToString(tmp);
+            
+            if (!values.TryGetValue(FacetValueFilterCollection.RouteDataKey , out tmp))
+            {
+                //todo: throw error?
+                return values;
+            }
+            var col = (FacetValueFilterCollection)tmp;
+
+            col.Add(_facetId, value);
+
             return values;
         }
-
-        //TODO check with Britt/Kevin that this is correct.
-        private string UnFacetify(string v)
-        {
-            return string.Format("{0}_{1}", _facetId, v);
-        }
+        
     }
     public class CategorySlugMapping : IRouteDataMapping
     {
@@ -94,8 +107,26 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             this.mapping = mapping;
         }
 
-        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values)
         {
+            object tmp;
+            string slug = null;
+            if (!values.TryGetValue(mapping.mapFrom, out tmp))
+            {
+                return values;
+            }
+            slug = Convert.ToString(tmp);
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                return values;
+            }
+            var catTreeProvider = requestMessage.Resolve<ICategoryTreeProvider>();
+            var catTree = catTreeProvider.GetAllCategories().Result;
+            var cat = catTree.Items.FirstOrDefault(x => x.Content != null && string.Equals(slug, x.Content.Slug, StringComparison.OrdinalIgnoreCase));
+            if (cat != null)
+            {
+                values[mapping.mapTo] = cat.CategoryCode;
+            }
             return values;
         }
 
@@ -116,7 +147,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         }
         public Task<bool> Initialize() { return Task.FromResult(true); }
 
-        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values)
         {
             return _maps.ApplyMapping(values);
         }
@@ -154,7 +185,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             return true;
         }
 
-        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values)
         {
             return _docValues.ApplyMapping(values);
         }

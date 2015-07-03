@@ -30,13 +30,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                     dic["categoryCode"] = cat.CategoryCode;
                     dic["id"] = cat.Id;
                     dic["slug"] = cat.Content == null ? null : cat.Content.Slug;
-                    if (cat.ParentCategory != null)
+                    if (cat.ParentCategory != null  && cat.ParentCategory.IsDisplayed )
                     {
                         dic["parent-CategoryCode"] = cat.ParentCategory.CategoryCode;
                         dic["parent-Code"] = cat.ParentCategory.CategoryCode;
                         dic["parent-CategorySlug"] = cat.ParentCategory.Content == null ? null :cat.ParentCategory.Content.Slug;
 
-                        if (cat.ParentCategory.ParentCategory != null)
+                        if (cat.ParentCategory.ParentCategory != null && cat.ParentCategory.IsDisplayed)
                         {
                             dic["grandParent-CategoryCode"] = cat.ParentCategory.ParentCategory.CategoryCode;
                             dic["grandParent-Code"] = cat.ParentCategory.ParentCategory.CategoryCode;

@@ -198,9 +198,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null , string sortBy = null, int? page = null, int? itemsPerPage = null)
         {
-            PageContext.PageType = "category";
-            PageContext.CategoryId = categoryId;
-            PageContext.FeedUrl = "/feeds/category/" + categoryId;
+           
 
             var cat = (await _categoryTreeProvider.GetAllCategories()).Items.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1) ||string.Equals (categoryCode, x.CategoryCode , StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (cat == null)
@@ -213,6 +211,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return redirect;
             }
+
+            PageContext.PageType = "category";
+            PageContext.CategoryId = cat.CategoryId;
+            PageContext.CategoryCode = cat.CategoryCode;
+            PageContext.FeedUrl = "/feeds/category/" + cat.CategoryId;
 
             PageContext.MetaDescription = cat.Content.MetaTagDescription;
             PageContext.MetaTitle = cat.Content.MetaTagTitle;

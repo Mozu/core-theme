@@ -6,6 +6,7 @@ using Mozu.Core.Api;
 using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
@@ -25,11 +26,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
         {
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
+            httpConfiguration.MessageHandlers.Insert(1, new SiteBuilderRouteDataInitilizer());
             httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
             httpConfiguration.MessageHandlers.Add(new FourHundredMessageHandler());
             
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
 
+           
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {

@@ -373,5 +373,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public List<KeyValuePair<string, string>> BillingStates { get; set; }
         public List<KeyValuePair<string, string>> ShippingStates { get; set; }
         public DateTime Now { get; set; }
+
+        public static string CategoryCode { get; set; }
     }
 }

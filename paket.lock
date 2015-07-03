@@ -24,7 +24,7 @@ NUGET
     Burrows.Log4Net (0.3.3.0) - framework: >= net451
       Burrows (>= 0.3.3.0)
       log4net (>= 2.0.3)
-    ClearScript.Installer (5.4.5635.11700)
+    ClearScript.Installer (5.4.5634.17927) - content: none
     dotless (1.4.0.0) - framework: >= net45
     FluentAssertions (3.2.2)
     FluentValidation (5.5.0.0)
@@ -51,7 +51,7 @@ NUGET
     Microsoft.Bcl (1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Bcl.Build (1.0.14)
-    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+Unsupported
+    Microsoft.Net.Http (2.2.28) - framework: portable-wp80+win+net45+wp81+unsupported
       Microsoft.Bcl (>= 1.1.9)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Owin (3.0.0)

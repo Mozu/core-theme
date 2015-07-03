@@ -8,6 +8,8 @@ using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Collections.Generic;
+using System.Net.Http;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
 
@@ -61,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var sort = arguments.GetValueOrDefault<string>("sort");
             var productCodes = arguments.GetValueOrDefault<IEnumerable>("productCodes");
 
-
+            var requestMessage = context.Resolve<HttpRequestMessage>();
             var pageContext = context.PageContext();
             var siteContext = context.SiteContext();
             var searchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
@@ -142,7 +144,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 facetHierDepth = "categoryId:2";
                 facetTemplate = "categoryId:" + categoryId;
                 facetHierValue = "categoryId:" + categoryId;
-                facetValueFilter = request.QueryString["facetValueFilter"];
+                facetValueFilter = FacetValueFilterCollection.GetStringFromRequest(requestMessage);
             }
 
             var sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();

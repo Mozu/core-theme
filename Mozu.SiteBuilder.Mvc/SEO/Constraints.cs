@@ -42,6 +42,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                     return AttributeConstraint(_attributeClient, _context, validator);
                 case Validator.TypeConst.categoryCode:
                     return CategoryCodeContraint(validator);
+                case Validator.TypeConst.categorySlug:
+                    return CategorySlugContraint(validator);
+                case Validator.TypeConst.categoryId:
+                    return CategorySlugContraint(validator);
                 case Validator.TypeConst.list:
                     return ListMapping(validator);
                 case Validator.TypeConst.mzdb:
@@ -58,6 +62,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         static ICustomRouteConstraint CategoryCodeContraint(Validator validator)
         {
            return new CategoryCodeContraint(validator);
+        }
+        static ICustomRouteConstraint CategorySlugContraint(Validator validator)
+        {
+            return new CategorySlugContraint(validator);
+        }
+        static ICustomRouteConstraint CategoryIdContraint(Validator validator)
+        {
+            return new CategoryIdContraint(validator);
         }
 
         static ICustomRouteConstraint ListMapping(Validator validator)
@@ -81,7 +93,79 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return DoMatch(request, route, parameterName, values, routeDirection);
         }
     }
+    public class CategorySlugContraint : ConstraintBase
+    {
+        private Validator validator;
 
+        public CategorySlugContraint(Validator validator)
+        {
+            // TODO: Complete member initialization
+            this.validator = validator;
+        }
+
+        public override Task<bool> Initialize()
+        {
+            return Task.FromResult(true);
+        }
+
+
+
+        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+            object tmp;
+            string slug = null;
+            if (!values.TryGetValue(parameterName, out tmp))
+            {
+                return false;
+            }
+            slug = Convert.ToString(tmp);
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                return false;
+            }
+            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
+            var catTree = catTreeProvider.GetAllCategories().Result;
+
+            return catTree.Items.Any (x=>x.Content != null &&  string.Equals(slug, x.Content.Slug , StringComparison.OrdinalIgnoreCase));
+        }
+    }
+    public class CategoryIdContraint : ConstraintBase
+    {
+        private Validator validator;
+
+        public CategoryIdContraint(Validator validator)
+        {
+            // TODO: Complete member initialization
+            this.validator = validator;
+        }
+
+        public override Task<bool> Initialize()
+        {
+            return Task.FromResult(true);
+        }
+
+
+
+        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+            object tmp;
+            int id;
+            if (!values.TryGetValue(parameterName, out tmp))
+            {
+                return false;
+            }
+            tmp = Convert.ToString(tmp);
+            if ( !int.TryParse((string)tmp, out id))
+            {
+                return false;
+            }
+           
+            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
+            var catTree = catTreeProvider.GetAllCategories().Result;
+
+            return catTree.Items.Any(x => x.Id == id);
+        }
+    }
     public class CategoryCodeContraint : ConstraintBase
     {
         private Validator validator;

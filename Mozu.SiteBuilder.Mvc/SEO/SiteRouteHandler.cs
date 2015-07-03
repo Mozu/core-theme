@@ -124,15 +124,25 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var rerouteData = routeCollection.GetRouteData(_requestMessage.Value);
             if (rerouteData == null) return false;
 
+            foreach( var key in _requestMessage.Value.GetRouteData().Values.Keys)
+            {
+                if ( !rerouteData.Values.ContainsKey(key))
+                {
+                    rerouteData.Values[key] = _requestMessage.Value.GetRouteData().Values[key];
+                }
+            }
+
             if (rerouteData.Route is CustomRoute)
             {
                 var cr = rerouteData.Route as CustomRoute;
-                cr.RewriteRouteData(rerouteData.Values);
+                cr.RewriteRouteData(_requestMessage.Value, rerouteData.Values);
             }
 
-            _requestMessage.Value .Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
-            var rctx = _requestMessage.Value.GetRequestContext();
-            rctx.RouteData = rerouteData;
+            //_requestMessage.Value .Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
+            //var rctx = _requestMessage.Value.GetRequestContext();
+            //rctx.RouteData = rerouteData;
+
+            _requestMessage.Value.SetRouteData(rerouteData);
             return true;
         }
 
