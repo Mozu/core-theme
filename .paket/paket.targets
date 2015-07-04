@@ -33,6 +33,7 @@
     <Exec Command="$(DownloadPaketCommand)" Condition=" '$(DownloadPaket)' == 'true' AND !Exists('$(PaketExePath)')" />
   </Target>
   <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
+    <Exec Command="del /f %LOCALAPPDATA%\nuget\cache\mozu.*" IgnoreExitCode="true"/>
     <Exec Command="$(RestoreCommand)" WorkingDirectory="$(PaketRootPath)" Condition="Exists('$(PaketReferences)')" />
   </Target>
 </Project>
