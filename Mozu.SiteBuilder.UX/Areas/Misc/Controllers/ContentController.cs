@@ -82,7 +82,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             int? maxHeight= null,
             int? width = null,
             int? height  = null,
-            string crop = null)
+            string crop = null,
+            int? quality = null)
         {
             //todo send out appoligy letter
 
@@ -152,7 +153,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     height:height,
                     maxWidth: maxWidth.HasValue? maxWidth : max,
                     maxHeight: maxHeight,
-                    crop: crop
+                    crop: crop,
+                    quality: quality
                     ).ConfigureAwait(false);
             }
             else
@@ -164,7 +166,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     height: height,
                     maxWidth: maxWidth.HasValue ? maxWidth : max,
                     maxHeight: maxHeight,
-                    crop: crop
+                    crop: crop,
+                    quality: quality
                     ).ConfigureAwait(false);
             }
             if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
