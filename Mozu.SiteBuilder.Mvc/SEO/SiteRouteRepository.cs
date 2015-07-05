@@ -15,6 +15,7 @@ using Mozu.Core.Extensions;
 using Mozu.Content.Contracts.Clients;
 using Newtonsoft.Json.Linq;
 using Mozu.Content.Contracts;
+using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -93,7 +94,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                               ListFQN = "siteSettings@mozu",
                           };
                 doc.Set("data", JArray.FromObject(routes));
-                res = await _documentListWebApiClient.CreateDocument(doc.ListFQN, doc);
+                res = await _documentListWebApiClient.CreateDocument(doc.ListFQN, doc).ConfigureAwait(false);
                 return FetchSiteRouteEntries(res.ReadAsSync());
             }
         }
@@ -108,7 +109,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                          _siteBuilderApiContext.SiteId +
                          (routes.Mappings.Count + routes.Validators.Count + routes.Routes.Count);
 
-            return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes), DateTimeOffset.UtcNow.AddMinutes(5));
+            return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false), DateTimeOffset.UtcNow.AddMinutes(5));
         }
 
         List<SiteRouteEntry> FetchSiteRouteEntries(Document doc)
@@ -147,16 +148,21 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 constraints.Values.Cast<ICanInit>()
                 .Concat(mappings.Values.Cast<ICanInit>())
                 .Where(x => x != null)
-                .Select(async x => await x.Initialize());
+                .Select(async x => await x.Initialize().ConfigureAwait(false));
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
 
             var routes = customSettings.Routes.Select(x => CreateCustomRoute(x, constraints, mappings));
 
             var routeCollection = new HttpRouteCollection();
             foreach (var route in routes)
             {
-                routeCollection.Add(route.RouteTemplate, route);
+                if ( routeCollection.ContainsKey( route.RouteTemplate))
+                {
+                    throw new ArgumentException("duplicate route [" + route.RouteTemplate + "]");
+                }
+               routeCollection.Add(route.RouteTemplate, route);
+               
             }
 
             return routeCollection;
@@ -166,20 +172,27 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             var knownValidators =
                 routeDef.Validators
-                .Partition(validators.ContainsKey)
-                .GetOrError(unknowns => new ArgumentException(string.Format("Some validators are not known: {0}", string.Join(",", unknowns))))
-                .ToDictionary(x => x, x => validators[x], StringComparer.OrdinalIgnoreCase);
+                .Partition(kvp => validators.ContainsKey(kvp.Key ))
+                .GetOrError(unknowns => new ArgumentException(string.Format("Some validators are not known: {0}", string.Join(",", unknowns.Select(x => x.Key)))))
+                .ToDictionary( x => validators[x.Key],  x => x.Value);
+
+               // .ToDictionary<ICustomRouteConstraint, string[]>((KeyValuePair<string, string[]> x) => validators[x.Key], (KeyValuePair<string, string[]> x) => x.Value, StringComparer.OrdinalIgnoreCase);
 
             var knownMappings =
                 routeDef.Mappings
-                .Partition(mappings.ContainsKey)
+                .Partition(kvp => mappings.ContainsKey(kvp.Key))
                 .GetOrError(unknowns => new ArgumentException(string.Format("Some validators are not known: {0}", string.Join(",", unknowns))))
-                .Select(x => mappings[x]);
+                .ToDictionary(x => mappings[x.Key ], x => x.Value);
+
+            knownMappings[QueryStringFixup.DefaultMapping] = new string[0];
 
             var defaults =
                 routeDef.Defaults
                 .ChainSet("controller", GetControllerName(routeDef.InternalRoute.ToEnum<FancyRoute>()))
                 .ChainSet("action", GetControllerAction(routeDef.InternalRoute.ToEnum<FancyRoute>()));
+               
+
+                
 
             return new CustomRoute(routeDef.Template, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
         }

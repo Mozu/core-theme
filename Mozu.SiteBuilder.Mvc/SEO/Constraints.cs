@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using Mozu.Core.Api.Client;
@@ -18,6 +19,7 @@ using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
+using Category = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
 
 namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 {
@@ -39,48 +41,22 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             switch (validator.type)
             {
                 case Validator.TypeConst.attribute:
-                    return AttributeConstraint(_attributeClient, _context, validator);
+                    return new ProductAttributeRouteConstraint(_attributeClient, _context, validator.attributeCode);
                 case Validator.TypeConst.categoryCode:
-                    return CategoryCodeContraint(validator);
                 case Validator.TypeConst.categorySlug:
-                    return CategorySlugContraint(validator);
+                case Validator.TypeConst.categorySlugPath:
                 case Validator.TypeConst.categoryId:
-                    return CategorySlugContraint(validator);
+                case Validator.TypeConst.categoryCodePath:
+                    return new CategoryContraint(validator);
                 case Validator.TypeConst.list:
-                    return ListMapping(validator);
+                    return new StringListRouteConstraint(validator.values);
                 case Validator.TypeConst.mzdb:
-                    return MZDBMapping(_entityListClient, validator);
+                    return new MzdbRouteConstraint(_entityListClient, validator.listId, validator.fieldId);
             }
             throw new ArgumentException(string.Format("mapping type {0} not known", validator.type));
         }
 
-        static ICustomRouteConstraint AttributeConstraint(IAttributeWebApiClient client, IApiContext context, Validator validator)
-        {
-            return new ProductAttributeRouteConstraint(client, context, validator.attributeCode);
-        }
-
-        static ICustomRouteConstraint CategoryCodeContraint(Validator validator)
-        {
-           return new CategoryCodeContraint(validator);
-        }
-        static ICustomRouteConstraint CategorySlugContraint(Validator validator)
-        {
-            return new CategorySlugContraint(validator);
-        }
-        static ICustomRouteConstraint CategoryIdContraint(Validator validator)
-        {
-            return new CategoryIdContraint(validator);
-        }
-
-        static ICustomRouteConstraint ListMapping(Validator validator)
-        {
-            return new StringListRouteConstraint(validator.values);
-        }
-
-        static ICustomRouteConstraint MZDBMapping(IEntityListsWebApiClient client, Validator validator)
-        {
-            return new MzdbRouteConstraint(client, validator.listId, validator.fieldId);
-        }
+      
     }
 
     public abstract class ConstraintBase : ICustomRouteConstraint
@@ -90,14 +66,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public bool Match(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
+            if ( routeDirection == HttpRouteDirection.UriGeneration)
+            {
+                return true;
+            }
             return DoMatch(request, route, parameterName, values, routeDirection);
         }
     }
-    public class CategorySlugContraint : ConstraintBase
+    
+   
+    public class CategoryContraint : ConstraintBase
     {
         private Validator validator;
 
-        public CategorySlugContraint(Validator validator)
+        public CategoryContraint(Validator validator)
         {
             // TODO: Complete member initialization
             this.validator = validator;
@@ -108,98 +90,245 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return Task.FromResult(true);
         }
 
-
-
-        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
-        {
-            object tmp;
-            string slug = null;
-            if (!values.TryGetValue(parameterName, out tmp))
-            {
-                return false;
-            }
-            slug = Convert.ToString(tmp);
-            if (string.IsNullOrWhiteSpace(slug))
-            {
-                return false;
-            }
-            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
-            var catTree = catTreeProvider.GetAllCategories().Result;
-
-            return catTree.Items.Any (x=>x.Content != null &&  string.Equals(slug, x.Content.Slug , StringComparison.OrdinalIgnoreCase));
-        }
-    }
-    public class CategoryIdContraint : ConstraintBase
-    {
-        private Validator validator;
-
-        public CategoryIdContraint(Validator validator)
-        {
-            // TODO: Complete member initialization
-            this.validator = validator;
-        }
-
-        public override Task<bool> Initialize()
-        {
-            return Task.FromResult(true);
-        }
-
-
+        static List<string> SlugAncestoryNames = new List<string>{
+                        "categorySlug",
+                        "parent-categorySlug",
+                        "grandParent-categorySlug",
+                        "great-grandParent-categorySlug",
+                        "great-great-grandParent-categorySlug",
+                        "great-great-great-grandParent-categorySlug",
+                        "great-great-great-great-grandParent-categorySlug",
+                    };
+        static List<string> CodeAncestoryNames = new List<string>{
+                        "categoryCode",
+                        "parent-categoryCode",
+                        "grandParent-categoryCode",
+                        "great-grandParent-categoryCode",
+                        "great-great-grandParent-categoryCode",
+                        "great-great-great-grandParent-categoryCode",
+                        "great-great-great-great-grandParent-categoryCode",
+                    };
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
+            if (routeDirection == HttpRouteDirection.UriGeneration)
+            {
+                return true;
+            }
+            Category cat = null;
+            switch (validator.type)
+            {
+                case Validator.TypeConst.categoryId:
+                    {
+                        cat = MatchId(request, route, parameterName, values, routeDirection);
+                        break;
+                    }
+                case Validator.TypeConst.categoryCode:
+                    {
+                        cat = MatchCode(request, route, parameterName, values, routeDirection);
+                        break;
+                    }
+                case Validator.TypeConst.categorySlug:
+                    {
+                        cat = MatchSlug(request, route, parameterName, values, routeDirection);
+                        break;
+                    }
+                case Validator.TypeConst.categorySlugPath:
+                    {
+                        cat = MatchSlugPath(request, route, parameterName, values, routeDirection);
+                        break;
+                    }
+                case Validator.TypeConst.categoryCodePath:
+                    {
+                        cat = MatchCategoryCodePath(request, route, parameterName, values, routeDirection);
+                        break;
+                    }
+            }
+            if (cat == null)
+            {
+                return false;
+            }
+
+            values[parameterName + "-object"] = cat;
+
+            return true;
+
+        }
+        Category MatchId(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+         
             object tmp;
             int id;
             if (!values.TryGetValue(parameterName, out tmp))
             {
-                return false;
+                return null;
             }
             tmp = Convert.ToString(tmp);
-            if ( !int.TryParse((string)tmp, out id))
+            if (!int.TryParse((string)tmp, out id))
             {
-                return false;
+                return null;
             }
-           
+
             var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
             var catTree = catTreeProvider.GetAllCategories().Result;
 
-            return catTree.Items.Any(x => x.Id == id);
-        }
-    }
-    public class CategoryCodeContraint : ConstraintBase
-    {
-        private Validator validator;
-       
-        public CategoryCodeContraint(Validator validator)
-        {
-            // TODO: Complete member initialization
-            this.validator = validator;
-        }
-
-        public override Task<bool> Initialize()
-        {
-            return Task.FromResult(true); 
-        }
-
+            return catTree.FindById(id);
         
-
-        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        }
+        Category MatchCode(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
+
             object tmp;
-            string code = null;
-            if ( !values.TryGetValue(parameterName,out tmp) )
+           
+            if (!values.TryGetValue(parameterName, out tmp)|| tmp == null)
             {
-                return false;
+                return null;
             }
-            code = Convert.ToString(tmp);
-            if (string.IsNullOrWhiteSpace(code))
-            {
-                return false;
-            }
+            var code = Convert.ToString(tmp);
+            
+
             var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
             var catTree = catTreeProvider.GetAllCategories().Result;
 
-            return  catTree.Items.Any(x => string.Equals(code, x.CategoryCode, StringComparison.OrdinalIgnoreCase));
+            return catTree.FindByCode(code);
+
+        }
+        Category MatchSlug(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+
+            object tmp;
+            
+            if (!values.TryGetValue(parameterName, out tmp) || tmp == null)
+            {
+                return null;
+            }
+            var code = Convert.ToString(tmp);
+
+
+            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
+            var catTree = catTreeProvider.GetAllCategories().Result;
+
+            return catTree.FindBySlug(code).FirstOrDefault();
+
+        }
+        Category MatchSlugPath(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+
+            object tmp;
+
+            if (!values.TryGetValue(parameterName, out tmp) || tmp == null)
+            {
+                return null;
+            }
+            var slug = Convert.ToString(tmp);
+
+
+            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
+            var catTree = catTreeProvider.GetAllCategories().Result;
+            var cats = catTree.FindBySlug(slug).ToList();
+            if (!cats.Any())
+            {
+                return null ;
+            }
+            if (cats.Count() == 1)
+            {
+               // return cats[0];
+            }
+
+
+
+            var index = SlugAncestoryNames.FindIndex(x => string.Equals(parameterName, x, StringComparison.OrdinalIgnoreCase));
+            if (index < 0 || index >= SlugAncestoryNames.Count - 1)
+            {
+                return null;
+            }
+            Category matchedCat = null;
+            foreach (var cat in cats)
+            {
+                matchedCat = cat;
+                var parent = cat.ParentCategory;
+                for (var i = index + 1; parent != null && parent.IsDisplayed && parent.Content != null && i < SlugAncestoryNames.Count; i++)
+                {
+                    object obj;
+                    parameterName = SlugAncestoryNames[i];
+                    if (values.TryGetValue(parameterName, out obj))
+                    {
+                        slug = obj as string;
+                        if (!string.Equals(slug, parent.Content.Slug, StringComparison.OrdinalIgnoreCase))
+                        {
+                            matchedCat = null;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    parent = cat.ParentCategory;
+                }
+                if (matchedCat != null)
+                {
+                    break;
+                }
+            }
+            return matchedCat;
+            
+
+        }
+        Category MatchCategoryCodePath(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        {
+
+            object tmp;
+
+            if (!values.TryGetValue(parameterName, out tmp) || tmp == null)
+            {
+                return null;
+            }
+            var code = Convert.ToString(tmp);
+
+
+            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
+            var catTree = catTreeProvider.GetAllCategories().Result;
+            var cat = catTree.FindByCode(code);
+            if (cat == null)
+            {
+                return null;
+            }
+
+
+
+
+            var index = CodeAncestoryNames.FindIndex(x => string.Equals(parameterName, x, StringComparison.OrdinalIgnoreCase));
+            if (index < 0 || index >= CodeAncestoryNames.Count - 1)
+            {
+                return null;
+            }
+
+
+            var parent = cat.ParentCategory;
+            for (var i = index + 1; parent != null && parent.IsDisplayed && parent.Content != null && i < CodeAncestoryNames.Count; i++)
+            {
+                object obj;
+                parameterName = CodeAncestoryNames[i];
+                if (values.TryGetValue(parameterName, out obj))
+                {
+                    code = obj as string;
+                    if (!string.Equals(code, parent.CategoryCode, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return null;
+
+                    }
+                }
+                else
+                {
+                    break;
+                }
+                parent = cat.ParentCategory;
+            }
+
+            return cat;
+
+
         }
     }
 
@@ -250,7 +379,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return false;
             }
-            
+
             //TODO: put the right locale in here?
             values[parameterName] = GetAttributeValue(attr, "en-US");
             return true;
@@ -267,7 +396,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return content.StringValue;
         }
 
-        
+
     }
 
     public class MzdbRouteConstraint : ConstraintBase
@@ -281,7 +410,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             if (listId.IsNullOrEmpty()) throw new ArgumentException("listId");
             if (fieldId.IsNullOrEmpty()) throw new ArgumentException("fieldId");
 
-            _getDocsFunc = async (start, size) => await mzdbClient.CloneWithoutUserClaims().GetEntities(listId, startIndex: start, pageSize: size);
+            _getDocsFunc = async (start, size) => await mzdbClient.CloneWithoutUserClaims().GetEntities(listId, startIndex: start, pageSize: size).ConfigureAwait(false);
             _fieldGetter = o => o.Value<string>(fieldId);
         }
 
@@ -291,7 +420,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             if (mzdbDocResponse.HasException) throw mzdbDocResponse.ReadException();
 
             var mzdbDocs = mzdbDocResponse.ReadAsSync();
-            var otherItems = await Unroll<JObject>(async (start, size) => (await _getDocsFunc(start, size)).ReadAsSync(), mzdbDocs.TotalCount, 50);
+            var otherItems = await Unroll<JObject>(async (start, size) => (await _getDocsFunc(start, size).ConfigureAwait(false)).ReadAsSync(), mzdbDocs.TotalCount, 50);
 
             _values = mzdbDocs.Items.Concat(otherItems).Select(_fieldGetter).ToList();
             return true;
@@ -299,7 +428,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         private static async Task<IEnumerable<T>> Unroll<T>(Func<int, int, Task<PagedCollectionBase<T>>> getter, int totalCount, int pageSize)
         {
-            var tasks = Enumerable.Range(0, totalCount / pageSize).Select(async i => await getter(i * pageSize, pageSize));
+            var tasks = Enumerable.Range(0, totalCount / pageSize).Select(async i => await getter(i * pageSize, pageSize).ConfigureAwait(false));
             var results = await Task.WhenAll(tasks);
             return results.SelectMany(x => x.Items);
         }

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using Mozu.Core;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Models;
@@ -21,26 +22,43 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 {
     public class PagingParameters
     {
-        public string FacetValueFilter { get; set; }
-        public int? PageSize { get; set; }
-        public int? StartIndex { get; set; }
-        public override string ToString()
-        {
-            return new Dictionary<string, string> {
-                {"facetValueFilter", FacetValueFilter},
-                {"pageSize", PageSize.ToString() },
-                {"startIndex", StartIndex.ToString() }
-            }.ToQueryString();
-        }
+        private SearchContext search;
 
-        public static PagingParameters Create(HttpRequestMessage request)
+        public PagingParameters(SearchContext search)
         {
-            PagingParameters sp;
-            if (!request.RequestUri.TryReadQueryAs(out sp))
+            // TODO: Complete member initialization
+            this.search = search;
+        }
+        public string FacetValueFilter
+        {
+            get
             {
-                sp = new PagingParameters();
+                return search.ToFacetValueFilter();
             }
-            return sp;
+            set { throw new NotSupportedException(); }
+        }
+        public int? PageSize
+        {
+            get
+            {
+                return search.PageSize;
+            }
+            set { throw new NotSupportedException(); }
+        }
+        public int? StartIndex
+        {
+            get
+            {
+                return search.StartIndex;
+            }
+            set { throw new NotSupportedException(); }
+        }
+      
+
+        public static PagingParameters Create(SearchContext  search)
+        {
+            return new PagingParameters(search);
+            
         }
     }
 
@@ -69,24 +87,31 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
     public class SortingParameters
     {
-        public string Sort { get; set; }
-        public static SortingParameters Create(HttpRequestMessage request)
+        private SearchContext search;
+
+        public SortingParameters(SearchContext search)
         {
-            SortingParameters sp;
-            if (!request.RequestUri.TryReadQueryAs(out sp))
+           
+            this.search = search;
+        }
+        public string Sort
+        {
+            get
             {
-                sp = new SortingParameters();
+                return this.search.SortBy;
             }
-            return sp;
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+        public static SortingParameters Create(SearchContext search)
+        {
+
+            return new SortingParameters(search);
         }
 
-        public override string ToString()
-        {
-            return new Dictionary<string, string>
-            {
-                {"sort", Sort}
-            }.ToQueryString();
-        }
+        
     }
    
     public class PageContext : IEditableContext
@@ -98,7 +123,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
 
-        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter)
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
@@ -112,9 +137,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             IsSecure = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
             Now = apiContext.Now.Value;
             Url = requestURLGetter.GetRequestUrl();
-            Sorting = SortingParameters.Create(requestMessage);
-            Pagination = PagingParameters.Create(requestMessage);
+           
+            Sorting = SortingParameters.Create(Search);
+            Pagination = PagingParameters.Create(Search);
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
+
+            //object tmpObj;
+       
+
+            
         }
 
         private static string CreateDefaultUrl(string url)
@@ -240,7 +271,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public CmsPageContext CmsContext {get;set;}
 
         public SearchContext  Search
-        { get; set; }
+        {
+            get
+            {
+                return SearchContext.Get(_requestMessage);
+            }
+            set
+            {
+                ;
+            }
+        }
 
 
        
@@ -344,7 +384,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string ProductCode { get; set; }
 
-        public int? CategoryId { get; set; }
+      
 
         public string FeedUrl { get; set; }
 
@@ -358,14 +398,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string Url { get; set; }
 
-        //public string IpAddress
-        //{
-        //    get
-        //    {
-        //        var req = System.Web.HttpContext.Current.Request;
-        //        return req.Headers["x-forwarded-for"] ?? req.ServerVariables["REMOTE_ADDR"];;
-        //    }
-        //}
+       
 
 
         public string SecureHost { get; set; }
@@ -374,6 +407,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public List<KeyValuePair<string, string>> ShippingStates { get; set; }
         public DateTime Now { get; set; }
 
-        public static string CategoryCode { get; set; }
+        public  string CategoryCode { get; set; }
+        public int? CategoryId { get { return Search.CategoryId; } set { Search.CategoryId = value; } }
     }
 }

@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             if (apiContext.SiteId.HasValue == false)
             {
-                return (await base.SendAsync(request, cancellationToken));
+                return (await base.SendAsync(request, cancellationToken).ConfigureAwait(false));
             }
 
 
@@ -108,9 +108,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 }
             }
 
-            
 
-            var response=  await base.SendAsync(request, cancellationToken);
+
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             
             return response;

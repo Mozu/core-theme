@@ -1,75 +1,152 @@
 {
-  "mappings": {
-    "facetValue-tenant~color": {
-      "type": "facetValueFilter",
-      "mapFrom": "facetValue-tenant~color",
-      "mapTo": "facetValueFilter",
-      "facetId": "tenant~color"
-    },
-    "categorySlug": {
-      "type": "categorySlug"
-    }
-  },
-  "validators": {
-    "facetValue-tenant~color": {
-      "type": "productAttribute",
-      "attributeCode": "tenant~color"
-    },
-    "categoryCode": {
-      "type": "categoryCode"
-    },
-    "parent-categoryCode": {
-      "type": "categoryCode"
-    }
-  },
-  "routes": [
-    {
-      "template": "{parent-categoryCode}/{categoryCode}/{facetValue-tenant~color}",
-      "defaults": {},
-      "internalRoute": "Category",
-      "mappings": [
-        "facetValue-tenant~color"
-      ],
-      "canonical": true,
-      "validators": [
-        "facetValue-tenant~color",
-        "categoryCode",
-        "parent-categoryCode"
-      ]
-    },
-    {
-      "template": "{categoryCode}/{facetValue-tenant~color}",
-      "defaults": {},
-      "internalRoute": "Category",
-      "mappings": [
-        "facetValue-tenant~color"
-      ],
-      "canonical": true,
-      "validators": [
-        "categoryCode",
-        "facetValue-tenant~color"
-      ]
-    },
-    {
-      "template": "{parent-categoryCode}/{categoryCode}",
-      "defaults": {},
-      "internalRoute": "Category",
-      "mappings": [],
-      "canonical": true,
-      "validators": [
-        "categoryCode",
-        "parent-categoryCode"
-      ]
-    },
-    {
-      "template": "{categoryCode}",
-      "defaults": {},
-      "internalRoute": "Category",
-      "mappings": [],
-      "canonical": true,
-      "validators": [
-        "categoryCode"
-      ]
-    }
-  ]
+	"mappings": {
+		"facetValue-tenant~color": {
+			"type": "facetValueFilter",
+			"mapTo": "facetValueFilter",
+			"facetId": "tenant~color"
+		},
+		"category": {
+			"type": "category"
+		}
+	},
+	"validators": {
+		"color": {
+			"type": "productAttribute",
+			"attributeCode": "tenant~color"
+		},
+		"categoryCode": {
+			"type": "categoryCode"
+		},
+		"categorySlugPath": {
+			"type": "categorySlugPath"
+		},
+		"assortmentName": {
+			"type": "stringlist",
+			"values": [
+				"blue-assortment",
+				"red-assortment"
+			]
+		}
+	},
+	"routes": [
+		{
+			"template": "assortment/{name}",
+			"defaults": {
+				"list": "pages@mozu",
+				"code": "shop"
+			},
+			"internalRoute": "CmsPage",
+			"mappings": {},
+			"canonical": true,
+			"validators": {
+				"assortmentName": [
+					"name"
+				]
+			}
+		},
+		{
+			"template": "assortment/{name}/{code}",
+			"defaults": {
+				"list": "pages@mozu"
+			},
+			"internalRoute": "CmsPage",
+			"mappings": {},
+			"canonical": true,
+			"validators": {
+				"categoryCode": [
+					"code"
+				],
+				"assortmentName": [
+					"name"
+				]
+			}
+		},
+		{
+			"template": "{parent-categorySlug}/{categorySlug}/{facetValue-tenant~color}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"facetValue-tenant~color": [
+					"facetValue-tenant~color",
+					"categorySlug"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"color": [
+					"facetValue-tenant~color"
+				],
+				"categorySlugPath": [
+					"categorySlug"
+				]
+			}
+		},
+		{
+			"template": "{categorySlug}/{facetValue-tenant~color}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"category": [
+					"categorySlug"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
+					"categorySlug"
+				],
+				"color": [
+					"facetValue-tenant~color"
+				]
+			}
+		},
+		{
+			"template": "{grandParent-categorySlug}/{parent-categorySlug}/{categorySlug}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"category": [
+					"categorySlug"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
+					"categorySlug"
+				]
+			}
+		},
+		{
+			"template": "{parent-categorySlug}/{categorySlug}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"category": [
+					"categorySlug"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"categorySlugPath": [
+					"categorySlug"
+				]
+			}
+		},
+		{
+			"template": "{categoryCode}",
+			"defaults": {},
+			"internalRoute": "Category",
+			"mappings": {
+				"category": [
+					"categoryCode"
+				]
+			},
+			"canonical": true,
+			"validators": {
+				"categoryCode": [
+					"categoryCode"
+				]
+			}
+		}
+	]
 }

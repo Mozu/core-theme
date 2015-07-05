@@ -152,7 +152,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     width: width.HasValue ? width : size,
                     height:height,
                     maxWidth: maxWidth.HasValue? maxWidth : max,
-                    maxHeight: maxHeight,
+                    maxHeight: maxHeight.HasValue ? maxHeight : max,
                     crop: crop,
                     quality: quality
                     ).ConfigureAwait(false);
@@ -165,7 +165,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     width: width.HasValue ? width : size,
                     height: height,
                     maxWidth: maxWidth.HasValue ? maxWidth : max,
-                    maxHeight: maxHeight,
+                    maxHeight: maxHeight.HasValue ? maxHeight : max,
                     crop: crop,
                     quality: quality
                     ).ConfigureAwait(false);

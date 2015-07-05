@@ -165,7 +165,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.17.2)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.General.Contracts (1.18.1-dev1507021329) - framework: >= net451
+    Mozu.SiteSettings.General.Contracts (1.18.1-dev1507071212) - framework: >= net451
       Mozu.Core.Prime (>= 1.17)
     Mozu.SiteSettings.Order.Contracts (1.17.8) - framework: >= net451
       Mozu.Core.Prime (>= 1.17)

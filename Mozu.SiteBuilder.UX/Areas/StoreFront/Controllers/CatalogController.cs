@@ -198,9 +198,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null , string sortBy = null, int? page = null, int? itemsPerPage = null)
         {
-           
 
-            var cat = (await _categoryTreeProvider.GetAllCategories()).Items.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1) ||string.Equals (categoryCode, x.CategoryCode , StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            var catTree = (await _categoryTreeProvider.GetAllCategories().ConfigureAwait(false));
+            var cat = catTree.FindById(categoryId) ?? catTree.FindByCode(categoryCode);
             if (cat == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");

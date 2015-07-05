@@ -22,9 +22,14 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             return string.Join(string.Empty, strings);
         }
 
-        public static IDictionary<TKey,TValue> ChainSet<TKey,TValue>(this IDictionary<TKey,TValue> dict, TKey key, TValue value)
+        public static IDictionary<TKey,TValue> ChainSet<TKey,TValue>(this IDictionary<TKey,TValue> dict, TKey key, TValue value, bool overWrite=true)
         {
+            if (!overWrite && dict.ContainsKey(key))
+            {
+                return dict;
+            } 
             dict[key] = value;
+            
             return dict;
         }
 

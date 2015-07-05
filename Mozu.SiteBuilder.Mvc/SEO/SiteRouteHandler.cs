@@ -136,6 +136,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 var cr = rerouteData.Route as CustomRoute;
                 cr.RewriteRouteData(_requestMessage.Value, rerouteData.Values);
+
             }
 
             //_requestMessage.Value .Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
@@ -172,12 +173,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 routeCollection
                 .Where(route => route is CustomRoute).Cast<CustomRoute>()
                 .Where(route => route.IsCanonicalFor(internalRoute))
-               // .TakeWhile(route => route != request.GetRouteData().Route ) // don't want to redirect if the canonical route is the current route
                 .ToList();
 
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
-            // else redirect
+     
             var incomingRouteValues = _requestMessage.Value.GetRouteData().Values;
             var additionalValues = viewDataAdditionFunc == null ? new Dictionary<string, object>() : viewDataAdditionFunc();
             var finalRouteValues =
@@ -189,12 +189,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 newReq.Properties[rp.Key]= rp.Value;
             }
-            //Pr{ Properties = _requestMessage.Value.Properties };
-            //finalRouteValues = new RouteValueDictionary(finalRouteValues);
+          
             foreach (var route in routes)
             {
                 var vpath = route.GetVirtualPath(newReq, finalRouteValues);
-                //todo check if is the same url.
+              
                 if ( vpath != null)
                 { 
                     var uri = new Uri("http://localhost/" + vpath.VirtualPath);
@@ -208,7 +207,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 }
                 
             }
-                //.ChainSet(canonicalRouteAndData.routeData.Values);
+               
 
             
             return null;

@@ -18,32 +18,33 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 return this.GetType().FullName;
             }
         }
-
+        static string[] AncestoryPrefixes = new string[]{
+                        "",
+                        "parent-",
+                        "grandParent-",
+                        "great-grandParent-",
+                        "great-great-grandParent-",
+                        "great-great-great-grandParent-",
+                        "great-great-great-great-grandParent-",
+                    };
         protected override void Configure()
         {
 
             Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
-                .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category cat) =>
+                .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category parent) =>
                 {
-                    var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-                    dic["code"] = cat.CategoryCode;
-                    dic["categoryCode"] = cat.CategoryCode;
-                    dic["id"] = cat.Id;
-                    dic["slug"] = cat.Content == null ? null : cat.Content.Slug;
-                    if (cat.ParentCategory != null  && cat.ParentCategory.IsDisplayed )
-                    {
-                        dic["parent-CategoryCode"] = cat.ParentCategory.CategoryCode;
-                        dic["parent-Code"] = cat.ParentCategory.CategoryCode;
-                        dic["parent-CategorySlug"] = cat.ParentCategory.Content == null ? null :cat.ParentCategory.Content.Slug;
-
-                        if (cat.ParentCategory.ParentCategory != null && cat.ParentCategory.IsDisplayed)
-                        {
-                            dic["grandParent-CategoryCode"] = cat.ParentCategory.ParentCategory.CategoryCode;
-                            dic["grandParent-Code"] = cat.ParentCategory.ParentCategory.CategoryCode;
-                            dic["grandParent-CategorySlug"] = cat.ParentCategory.ParentCategory.Content == null ? null : cat.ParentCategory.ParentCategory.Content.Slug;
-                        }
-                    }
                     
+                    var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                    for (var i = 0; parent != null && parent.IsDisplayed && i < AncestoryPrefixes.Length; i++)
+                    {
+                        var prefix = AncestoryPrefixes[i];
+                        dic[prefix + "categoryCode"] = parent.CategoryCode;
+                        dic[prefix + "categoryId"] = parent.Id;
+                        dic[prefix + "categorySlug"] = parent.Content == null ? null : parent.Content.Slug;
+                        parent = parent.ParentCategory;
+
+                    }
 
                     return dic;
                 });

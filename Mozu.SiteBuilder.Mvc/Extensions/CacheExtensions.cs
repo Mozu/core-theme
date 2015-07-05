@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         {
             var got = getter();
             if (got != null) return (T)got;
-            var v = await valueMaker();
+            var v = await valueMaker().ConfigureAwait(false);
             var exp = expirationGenner(v);
             var addResult = addOrGetter(v, exp);
             if (addResult == null) return v;
@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 () => cache.Get(key, regionName),
                 value,
                 v => v == null ? DateTimeOffset.UtcNow.AddMinutes(2) : expiration,
-                (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName));
+                (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                             () => cache.Get(key, regionName),
                             value,
                             v => v == null ? new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(2) } : policy,
-                            (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName));
+                            (v, exp) => cache.AddOrGetExisting(key, v, exp, regionName)).ConfigureAwait(false);
         }
     }
 }
