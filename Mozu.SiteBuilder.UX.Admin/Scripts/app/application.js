@@ -35,6 +35,7 @@
  * @requires Taco.controller.Testing
  * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
+ * @requires Taco.controller.PaymentWorkflows
  * @requires Taco.controller.Settings
  
  * @requires Taco.controller.Themes
