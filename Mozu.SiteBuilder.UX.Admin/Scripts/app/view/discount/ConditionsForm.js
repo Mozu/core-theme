@@ -24,31 +24,12 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     initComponent: function () {
         var me = this,
-            includedPaymentMethodsStore = Ext.create('Ext.data.Store', {
-                fields: [
-                    { name: "name", type: "string" },
-                    { name: "id", type: "string" }
-                ],
-                pageSize: 800,
-                remoteSort: false,
-                remoteFilter: false,
-                sorters: ['name'],
-                data: [
-                    { name: "Visa", id: "visa" },
-                    { name: "Master Card", id: "MasterCard" },
-                    { name: "American Express", id: "AmericanExpress" },
-                    { name: "Discover", id: "Discover" },
-                    { name: "Paypall Express", id: "PaypalExpress" },
-                    { name: "Visa Checkout", id: "VisaCheckout" }
-                ]
-            });
-
-
-
+            paymentWorkflowsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PaymentWorkflows');
+            
         this.includedPaymentMethodsField = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'includedPaymentMethods',
             margin: 0,
-            store: includedPaymentMethodsStore,
+            store: paymentWorkflowsStore,
             queryMode: 'local',
             width: 600,
             triggerOnClick: true,
@@ -56,9 +37,9 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             disableKeyFilter: true,
             typeAhead: true,
             value: this.record.get('includedPaymentMethods'),
-            displayField: 'name',
-            fieldLabel: 'Select Payment Methods',
-            valueField: 'id'
+            displayField: 'value',
+            fieldLabel: 'Payment Workflow',
+            valueField: 'key'
         });
 
 

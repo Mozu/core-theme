@@ -614,6 +614,7 @@
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
     <Content Include="Scripts\app\store\DiscountGrid.js" />
     <Content Include="Scripts\app\store\Discounts.js" />
+    <Content Include="Scripts\app\store\PaymentWorkflows.js" />
     <Content Include="Scripts\app\store\ProductTypesPicker.js" />
     <Content Include="Scripts\app\store\ProductTypesGrid.js" />
     <Content Include="Scripts\app\store\States2.js" />

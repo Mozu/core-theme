@@ -121,6 +121,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// <summary>
         /// List of payment types that are a condition of this discount.
         /// </summary>
+        [JsonProperty(PropertyName = "includedPaymentMethods")]
         public List<string> IncludedPaymentTypes { get; set; } 
 
         /// <summary>
