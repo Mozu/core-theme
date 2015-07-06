@@ -2577,31 +2577,7 @@
     <Content Include="Themes\Core8\templates\Widgets\social\addthis.hypr" />
     <Content Include="Themes\Core8\theme-ui.json" />
     <Content Include="Themes\Core8\theme.json" />
-    <None Include="Web.CI.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Demo.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Dev.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.perf.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Prod.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.QA.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
     <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.SI.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
