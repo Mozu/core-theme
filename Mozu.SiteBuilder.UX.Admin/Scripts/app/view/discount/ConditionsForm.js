@@ -13,7 +13,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         'Taco.core.ux.form.CurrencyField',
         'Taco.view.discount.widget.CategoryPicker',
         'Taco.core.ux.TooltipLabel',
-        'Taco.model.GatewayDefinitions'
+        'Taco.model.GatewayDefinitions',
+        'Taco.store.PaymentWorkflows'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
