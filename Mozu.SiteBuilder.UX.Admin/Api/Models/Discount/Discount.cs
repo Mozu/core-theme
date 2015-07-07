@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         
         public int? MaximumRedemptionsPerOrder { get; set; }
         
-             /// <summary>
+        /// <summary>
         /// List of categories this discount applies to.
         /// </summary>
         [JsonProperty(PropertyName = "conditionalCategories")]
@@ -90,6 +90,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// </summary>
         [JsonProperty(PropertyName = "conditionalProducts")]
         public List<string> DiscountConditionProducts { get; set; }
+
+        /// <summary>
+        /// Categories operator, All or Any.  Defaults to Any
+        /// </summary>
+        public bool IsIncludedCategoriesAllOperator { get; set; }
 
         /// <summary>
         /// List of categories this order cant have .

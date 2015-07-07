@@ -19,7 +19,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             productStore,
             zoneStore,
             shippingStore,
-            me = this
+            me = this;
 
         // need to listen for changes to the buy product or category items field changes in the conditions subform to alter the maximumQuantityPerRedemptionTB filed;
         me.mon(me.record, "buyitemconditionchange", function (hasBuyConditions) {
@@ -164,6 +164,15 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 verticalAlign: 'bottom'
             }
         });
+
+        this.includedCategoriesOperatorCheckbox = Ext.widget(
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.criteria.includedCategoriesOperatorCheckbox', me, {
+                xtype: 'checkbox',
+                name: 'isIncludedCategoriesAllOperator',
+                boxLabel: 'Include only common products',
+                width: 300
+            })
+        );
 
         this.categoryMaxQuantityField = Ext.widget({
             xtype: 'numberfield',
@@ -423,6 +432,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 this.excludeLineItemDiscounts,
                 this.productsBox,
                 this.categoriesBox,
+                this.includedCategoriesOperatorCheckbox,
                 this.maximumQuantityPerRedemptionTB,
                 {
                     xtype: 'component',
@@ -648,6 +658,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             me.productList.setDisabled(!targetSpecifcProducts);
 
             me.categoriesBox.setVisible(this.includeSpecificCatagoriesInput.checked);
+            me.includedCategoriesOperatorCheckbox.setVisible(this.includeSpecificCatagoriesInput.checked);
             me.categoryList.setDisabled(!this.includeSpecificCatagoriesInput.checked);
             
         } else {
@@ -655,6 +666,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.productList.setDisabled(true);
             
             this.categoriesBox.setVisible(false);
+            this.includedCategoriesOperatorCheckbox.setVisible(false);
+            this.includedCategoriesOperatorCheckbox.setValue(false);
             this.categoryList.setDisabled(true);
         }
         

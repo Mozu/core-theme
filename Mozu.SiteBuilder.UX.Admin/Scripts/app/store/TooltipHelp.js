@@ -51,6 +51,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.criteria.scope',
             value: 'Choose what will be discounted.'
         }, {
+            key: 'discount.criteria.includedCategoriesOperatorCheckbox',
+            value: 'TBP by Misha'
+        }, {
             key: 'discount.criteria.excludeLineItemDiscounts',
             value: 'You can also use the "Restrict discounts on this product" setting on individual products to exclude them from discounts. '
         }, {
