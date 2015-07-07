@@ -67,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 Template = new DocumentRequest()
                 {
-                    Path = "order-status",
+                    Path = "my-anonymous-account",
                     DocumentTypeFQN = "pageTemplateContent@mozu"
                 }
 

@@ -387,7 +387,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                 "Anonymous Order Status",
-                "user/my-anonymous-order",
+                "my-anonymous-account",
                 new {controller = "MyAnonymousAccount", action = "Index"});
 
             routes.MapHttpRoute(

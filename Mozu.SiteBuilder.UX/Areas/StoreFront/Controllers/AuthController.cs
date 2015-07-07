@@ -403,7 +403,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken);
 
             var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
-            redir.Headers.Location = MakeRedirectUri("/user/my-anonymous-order");
+            redir.Headers.Location = MakeRedirectUri("/my-anonymous-account");
             return redir;
         }
 
