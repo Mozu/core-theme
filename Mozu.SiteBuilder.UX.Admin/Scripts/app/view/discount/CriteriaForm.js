@@ -162,6 +162,18 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'
+            },
+            listeners: {
+                change: function (field, newValue, prevValue) {
+                    var prevCount = (Array.isArray(prevValue)) ? prevValue.length : prevValue.split(',').length;
+                    
+                    if (newValue.split(',').length >= 2 && prevCount < 2) {
+                        this.includedCategoriesOperatorCheckbox.show();
+                    } else if (prevCount >= 2 && newValue.split(',').length < 2) {
+                        this.hideAndResetField(this.includedCategoriesOperatorCheckbox);
+                    }
+                },
+                scope: this
             }
         });
 
@@ -170,7 +182,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 xtype: 'checkbox',
                 name: 'isIncludedCategoriesAllOperator',
                 boxLabel: 'Include only common products',
-                width: 300
+                width: 300,
+                hidden: me.record.get('categories').length < 2
             })
         );
 
@@ -658,7 +671,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             me.productList.setDisabled(!targetSpecifcProducts);
 
             me.categoriesBox.setVisible(this.includeSpecificCatagoriesInput.checked);
-            me.includedCategoriesOperatorCheckbox.setVisible(this.includeSpecificCatagoriesInput.checked);
+            if (this.includeSpecificCatagoriesInput.checked && this.categoryList.getValue().length >= 2) {
+                me.includedCategoriesOperatorCheckbox.setVisible(true);
+            } else {
+                me.hideAndResetField(me.includedCategoriesOperatorCheckbox, false);
+            }
             me.categoryList.setDisabled(!this.includeSpecificCatagoriesInput.checked);
             
         } else {
@@ -666,8 +683,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             this.productList.setDisabled(true);
             
             this.categoriesBox.setVisible(false);
-            this.includedCategoriesOperatorCheckbox.setVisible(false);
-            this.includedCategoriesOperatorCheckbox.setValue(false);
+            me.hideAndResetField(me.includedCategoriesOperatorCheckbox, false);
+            
             this.categoryList.setDisabled(true);
         }
         
@@ -718,6 +735,11 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.setProductCategoryContainerVisibility();
         this.updateMaximumQuantityPerRedemptionField();
         this.setShippingListVisibility();
+    },
+
+    hideAndResetField: function (targetField, defaultVal) {
+        targetField.hide();
+        targetField.setValue(defaultVal);
     },
     
     /**
