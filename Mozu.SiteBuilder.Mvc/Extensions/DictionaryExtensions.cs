@@ -60,6 +60,13 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             return dict;
         }
 
+        public static IDictionary<TKey, TValue> ChainSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
+        {
+            dict[key] = value;
+            return dict;
+        }
+
+
         /// <summary>
         /// given a map from key1=>key2 and a base dictionary, this adds an entry of (key2, source[key1]) for all key1 that exist in source
         /// </summary>
