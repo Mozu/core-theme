@@ -336,11 +336,11 @@
             "title": "Login",
             "userCreatable": false
         },
-        { 
-            "entityType": "anonymous-account",
-            "id": "anonymous_account",
+        {
+            "entityType":  "anonymous_account",
+            "id": "my_anonymous_account",
             "template": "my-anonymous-account",
-            "title": "Anonymous Account",
+            "title": "Anonymous Order Status",
             "userCreatable": false
         },
         {

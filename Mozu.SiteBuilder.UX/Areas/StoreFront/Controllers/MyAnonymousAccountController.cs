@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using MongoDB.Bson;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Returns;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
@@ -17,7 +18,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.Customers;
-
+using Newtonsoft.Json.Linq;
 using PasswordInfo = Mozu.SiteBuilder.UX.Models.Customers.PasswordInfo;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
@@ -54,13 +55,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var orderId = userClaims.Bag["orderId"];
 
             // If there isn't an orderId, cancel!
-            if (orderId == null || orderId.Length > 0)
+            if (orderId == null || !(orderId.Length > 0))
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             }
 
             var order = (await _orderWebApiClient.GetOrder(orderId));
-            var returns = (await _returnApiClient.GetReturns(filter: String.Format("orderId eq {0}", orderId)));
+            var returns = (await _returnApiClient.GetReturns(filter: String.Format("originalorderid eq {0}", orderId)));
 
             var pc = PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -72,9 +73,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             };
-            pc.PageType = "order_status";
+            pc.PageType = "my_anonymous_account";
 
-            var jsOrder = order.ToJObject();
+            var orderResult = order.ReadAsAsync();
+            var returnResult = returns.ReadAsAsync();
+            var jsOrder = new JObject
+            {
+                {"order", orderResult.Result.ToJObject()},
+                {"returns", returnResult.Result.ToJObject()}
+            };
 
 
             return Request.CreateResponse(HttpStatusCode.OK, View("my-anonymous-account", jsOrder));

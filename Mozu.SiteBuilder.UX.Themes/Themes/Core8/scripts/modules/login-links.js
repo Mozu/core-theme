@@ -201,7 +201,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 email: email,
                 billingZipCode: billingZipCode,
                 billingPhoneNumber: billingPhoneNumber
-            }).then(this.handleLoginComplete, this.displayApiMessage);
+            }).then(function() { window.location.href = "/my-anonymous-account"; }, this.displayApiMessage);
         },
         retrievePassword: function () {
             this.setLoading(true);

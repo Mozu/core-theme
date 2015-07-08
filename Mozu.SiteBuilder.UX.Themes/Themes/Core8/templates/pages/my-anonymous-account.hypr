@@ -8,10 +8,12 @@
     <div class="mz-l-container">
         <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
 
-        <div class="mz-l-sidebar mz-myaccount-nav">
-            {% include "modules/my-account/my-account-nav" with navtarget="body" %}
+        <div class="mz-l-stack-section mz-accountorderhistory" id="anonymous-account-order">
+            {% include "modules/my-account/order-history-order-listing" with model=model.order %}
         </div>
 
-        {% include "modules/my-account/order-history-item-listing" with model=item order=model %}
+        <div class="mz-l-stack-section mz-accountreturnhistory" id="anonymous-account-return">
+            {% include "modules/my-account/my-account-returnhistory" with model=model.returns %}
+        </div>
     </div>
 {% endblock body-content %}

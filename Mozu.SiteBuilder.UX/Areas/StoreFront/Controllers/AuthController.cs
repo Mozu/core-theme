@@ -402,9 +402,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var profileToken = _authenticationHelper.GetProfileToken();
             _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken);
 
-            var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
-            redir.Headers.Location = MakeRedirectUri("/my-anonymous-account");
-            return redir;
+
+            return Request.CreateResponse(statusCode: HttpStatusCode.OK);
+            
         }
 
         private HttpResponseMessage GenerateInvalidChallengeResponse()
