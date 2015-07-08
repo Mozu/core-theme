@@ -34,7 +34,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 queryMode: 'local',
                 margin: 0,
                 width: 600,
-                fieldLabel: 'Payment Method',
+                fieldLabel: 'Required Payment Method',
                 labelAlign: 'top',
                 editable: false,
                 allowBlank: true,
