@@ -668,6 +668,30 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     {
         public string ETag { get; set; }
         public List<Category> Items { get; set; }
+        public Category FindById( int? categoryId)
+        {
+            if (!categoryId.HasValue)
+            {
+                return null;
+            }
+            return Items.FirstOrDefault(x => x.CategoryId == categoryId);
+        }
+        public Category FindByCode(string categoryCode)
+        {
+            if( categoryCode == null)
+            {
+                return null;
+            }
+            return Items.FirstOrDefault(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase));
+        }
+        public IEnumerable<Category> FindBySlug ( string categorySlug)
+        {
+            if (categorySlug == null)
+            {
+                return null;
+            }
+            return Items.Where(x => x.Content != null && string.Equals(categorySlug, x.Content.Slug , StringComparison.OrdinalIgnoreCase));
+        }
     }
 
     [DataContract]

@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             _entityListClient = client;
             RuleFor(x => x.Value.type).Must(BeInTypeConst).WithName("mapping type").WithMessage(string.Format("mapping type must be one of {0}", string.Join(",", types)));
-            RuleFor(x => x.Value).Must(HaveFacetMapFields).When(x => x.Value.type == Mapping.TypeConst.facet).WithName("facet mapping").WithMessage("facet mapping must provide mapFrom, mapTo, and facetId");
+            RuleFor(x => x.Value).Must(HaveFacetMapFields).When(x => x.Value.type == Mapping.TypeConst.facet).WithName("facet mapping").WithMessage("facet mapping must provide  mapTo, and facetId");
             RuleFor(x => x.Value).Must(HaveMZDBMapFields).When(x => x.Value.type == Mapping.TypeConst.mzdb).WithName("mzdb mapping").WithMessage("mzdb mapping must provide listName and docId");
             RuleFor(x => x.Value).Must(HaveDirectMapFields).When(x => x.Value.type == Mapping.TypeConst.direct).WithName("direct mapping").WithMessage("direct mapping must provide mappings");
         }
@@ -49,10 +49,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         private bool HaveFacetMapFields(Mapping arg)
         {
-            return !arg.facetId.IsNullOrEmpty() && !arg.mapFrom.IsNullOrEmpty() && arg.mapTo.IsNullOrEmpty();
+            return !arg.facetId.IsNullOrEmpty()  && !arg.mapTo.IsNullOrEmpty();
         }
 
-        static string[] types = typeof(Mapping.TypeConst).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => fi.FieldType == typeof(string)).Select(fi => (string)fi.GetValue(null)).ToArray();
+        static string[] types = typeof(Mapping.TypeConst)
+            .GetFields(BindingFlags.Static | BindingFlags.Public)
+            .Where(fi => fi.FieldType == typeof(string))
+            .Select(fi => (string)fi.GetValue(null))
+            .ToArray();
         private bool BeInTypeConst(string arg)
         {
             return types.Contains(arg, StringComparer.OrdinalIgnoreCase);
@@ -66,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 validDoc = await IsValidMZDBDoc(_entityListClient, instance.listName, instance.docId).ConfigureAwait(false);
             }
-            var result = await base.ValidateAsync(context);
+            var result = await base.ValidateAsync(context).ConfigureAwait(false);
             return result.Concat(validDoc);
         }
 
@@ -110,7 +114,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return !arg.attributeCode.IsNullOrEmpty();
         }
 
-        static string[] types = typeof(Validator.TypeConst).GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => fi.FieldType == typeof(string)).Select(fi => (string)fi.GetValue(null)).ToArray();
+        static string[] types = typeof(Validator.TypeConst)
+            .GetFields(BindingFlags.Static | BindingFlags.Public)
+            .Where(fi => fi.FieldType == typeof(string))
+            .Select(fi => (string)fi.GetValue(null))
+            
+            .ToArray();
         private bool BeInTypeConst(string arg)
         {
             return types.Contains(arg, StringComparer.OrdinalIgnoreCase);
@@ -142,16 +151,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class RouteValidator : AbstractValidator<Route>
     {
-        readonly IEnumerable<string> _mappingNames;
-        readonly IEnumerable<string> _validatorKeys;
+       // readonly IEnumerable<string> _mappingNames;
+    //    readonly IEnumerable<string> _validatorKeys;
 
         public RouteValidator(IEnumerable<string> mappingNames, IEnumerable<string> validatorKeys)
         {
-            _mappingNames = mappingNames;
-            _validatorKeys = validatorKeys;
+         //   _mappingNames = mappingNames;
+          //  _validatorKeys = validatorKeys;
             RuleFor(x => x.InternalRoute).Must(ParseAsFancyRoute).WithName("internal route").WithMessage(string.Format("the internal route must be one of {0}", string.Join(",", Enum.GetNames(typeof(FancyRoute)))));
-            RuleFor(x => x.Mappings).Must(x => x.All(map => mappingNames.Contains(map, StringComparer.OrdinalIgnoreCase))).WithName("mapping name").WithMessage("all mappings must be declared in the mapping section of the custom routes");
-            RuleFor(x => x.Validators).Must(x => x.All(constraint => validatorKeys.Contains(constraint, StringComparer.OrdinalIgnoreCase))).WithName("validator name").WithMessage("all validators must be declared in the validators section of the custom routes");
+            RuleFor(x => x.Mappings.Keys ).Must( x => x.All(map => mappingNames.Contains(map, StringComparer.OrdinalIgnoreCase))).WithName("mapping name").WithMessage("all mappings must be declared in the mapping section of the custom routes");
+            RuleFor(x => x.Validators.Keys).Must(x => x.All(constraint => validatorKeys.Contains(constraint, StringComparer.OrdinalIgnoreCase))).WithName("validator name").WithMessage("all validators must be declared in the validators section of the custom routes.  Error with validators:({0}) in routeTempate:{1}", x =>  String.Join(",", x.Validators.Keys), x=> x.Template );
         }
 
         private bool ParseAsFancyRoute(string arg)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Mozu.Core.Api.Contracts.Client;
+
 using Newtonsoft.Json;
 using DC = Mozu.Customer.Contracts;
 
@@ -127,5 +128,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         public bool IsLocked { get; set; }
         public bool IsDisabled { get; set; }
+
+        public DateTime CustomerSinceDate { get; set; }
+
+        public DC.CurrencyAmount LifetimeValue { get; set; }
+
+     
+        public DateTime? LifeTimeValueSetDate { get; set; }
     }
 }

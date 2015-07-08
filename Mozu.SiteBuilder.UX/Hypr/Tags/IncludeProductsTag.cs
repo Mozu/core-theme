@@ -8,8 +8,12 @@ using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Web.Http;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
+using Mozu.SiteBuilder.Mvc.Catalog;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -51,34 +55,158 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
     {
         protected override async Task<IEnumerable<WalkResult>> ProcessTagAsync(ArgumentCollection arguments, NDjango.Interfaces.IContext context, Func<string, ITemplate> getTemplateFunction)
         {
+            var pageContext = context.PageContext();
+            var siteContext = context.SiteContext();
+            var searchContext = pageContext.Search;
+
+
             var template = arguments.GetValueOrDefault<string>("viewName") ?? (string)arguments[0].Value;
             var includeFacets = arguments.GetValueOrDefault("includeFacets", false);
             var pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
             var sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
             var startIndex = arguments.GetValueOrDefault("startIndex", 0);
             var pageSize = arguments.GetValueOrDefault("pageSize", 15);
-            var query = arguments.GetValueOrDefault<string>("query");
+            var filter = arguments.GetValueOrDefault<string>("query" , arguments.GetValueOrDefault<string>("filter"));
+            var searchQueryString = arguments.GetValueOrDefault<string>("searchQuery", "*:*");
             var sort = arguments.GetValueOrDefault<string>("sort");
+            
             var productCodes = arguments.GetValueOrDefault<IEnumerable>("productCodes");
+            var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true);
+            var facetHierDepthInt = arguments.GetValueOrDefault<int>("facetHierDepth", 2);
+
+            int? facetCategoryId;
+            int? categoryId;
+            GetCategoryCodes(arguments, context, pageContext, out facetCategoryId, out categoryId);
 
 
-            var pageContext = context.PageContext();
-            var siteContext = context.SiteContext();
-            var searchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
-            var request = context.HttpContext().Request;
-            var searchQuery = new StringBuilder();
+
+            var productSearchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
+          
+            
             string facetTemplate = null;
 
             string facetValueFilter = null;
             string facetHierValue = null;
             string facetHierDepth = null;
-            var categoryId = pageContext.CategoryId;
-            var defaultQuery = "*:*";
-            string[] productCodesFilters = new string[0];
+           
+            
 
-            if (query != null)
+            string[] productCodesFilters = new string[0];
+        
+
+            if (!ProcessFilter( ref productCodes, categoryId, ref filter, ref productCodesFilters))
             {
-                searchQuery.Append(query);
+                return Enumerable.Empty<WalkResult>();
+            }
+
+            ProcessPaging(siteContext, searchContext, pageWithUrl, ref startIndex, ref pageSize, productCodesFilters);
+
+            ProcessFacets(searchContext, includeFacets, ref cacheResults, facetHierDepthInt, facetCategoryId, categoryId, ref facetTemplate, ref facetValueFilter, ref facetHierValue, ref facetHierDepth);
+
+            string sortBy = ProcessSortBy(siteContext, searchContext, sortWithUrl, sort);
+
+            
+            var cache = context.Resolve<ILiveModeOnlyCache>();
+            ProductSearchResult pc = await DoSearch(cache, startIndex, pageSize, cacheResults, facetTemplate, facetValueFilter, facetHierValue, facetHierDepth, searchQueryString, sortBy, filter, productSearchWebApiClient, pageContext, productCodesFilters, productCodes).ConfigureAwait(false);
+
+            var dict = new Dictionary<string, object> { { "model", pc } };
+            var nodes = getTemplateFunction(template).Nodes;
+            
+            return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, Enumerable.Empty<string>()) };
+        }
+
+        private async Task<ProductSearchResult> DoSearch(ILiveModeOnlyCache cache, int startIndex, int pageSize, bool cacheResults, string facetTemplate, string facetValueFilter, string facetHierValue, string facetHierDepth, string searchQueryString, string sortBy, string filter, IProductSearchWebApiClient productSearchWebApiClient, Mozu.SiteBuilder.Mvc.Contexts.PageContext pageContext, string[] productCodesFilters, IEnumerable productCodes)
+        {
+            string cacheKey = null;
+           
+            ProductSearchResult pc = null;
+            if (cacheResults)
+            {
+                cacheKey = new StringBuilder()
+                    .Append(searchQueryString)
+                    .Append(filter)
+                    .Append(facetHierValue)
+                    .Append(facetTemplate)
+                    .Append(facetHierDepth)
+                    .Append(facetValueFilter)
+                    .Append(startIndex)
+                    .Append(sortBy)
+                    .Append(pageSize)
+                    .ToString();
+
+                pc = cache.Get<ProductSearchResult>(cacheKey);
+            }
+            if (pc == null)
+            {
+                var res = await productSearchWebApiClient.Search(
+                    query: searchQueryString,
+                    filter: filter,
+                    facetHierValue: facetHierValue,
+                    facetTemplate: facetTemplate,
+                    facetHierDepth: facetHierDepth,
+                    facetValueFilter: facetValueFilter,
+                    startIndex: startIndex,
+                    sortBy: sortBy,
+                    pageSize: pageSize).ConfigureAwait(false);
+
+                if (res.HasException)
+                {
+                    if (pageContext.IsDebugMode)
+                    {
+                        throw res.ReadException();
+                    }
+                    pc = new ProductSearchResult();
+                }
+                else
+                {
+                    using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                    {
+                        using (var rdr = GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, Encoding.UTF8))
+                        {
+                            var ser = GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
+                            pc = ser.Deserialize<ProductSearchResult>(rdr);
+
+                            if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null)
+                            {
+                                pc.Items = productCodes
+                                    .Cast<string>()
+                                    .Select(x => pc.Items.FirstOrDefault(y => y.ProductCode.Equals(x, StringComparison.OrdinalIgnoreCase)))
+                                    .Where(x => x != null).ToList();
+                            }
+                        }
+                    }
+                }
+                if (cacheResults)
+                {
+                    cache.Set(cacheKey, pc);
+                }
+            }
+
+            return pc;
+        }
+
+        private static string ProcessSortBy(Mvc.Contexts.SiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool sortWithUrl, string sort)
+        {
+            string sortBy = sort;
+            if (string.IsNullOrEmpty(sortBy))
+            {
+                sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
+            }
+
+            if (sortWithUrl && !string.IsNullOrEmpty(searchContext.SortBy))
+            {
+                sortBy = searchContext.SortBy;
+            }
+            return sortBy;
+        }
+
+        private static bool ProcessFilter( ref IEnumerable productCodes, int? categoryId, ref string filter, ref string[] productCodesFilters)
+        {
+            StringBuilder filterStringBuilder = new StringBuilder();
+        
+            if (filter != null)
+            {
+                filterStringBuilder.Append(filter);
             }
             else if (productCodes != null)
             {
@@ -86,33 +214,55 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     productCodes = ((string)productCodes).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 }
-
-
                 productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
                 if (productCodesFilters.Length == 0)
                 {
-                    return Enumerable.Empty<WalkResult>();
+                    return false; 
                 }
                 else
                 {
-                    searchQuery.Append(string.Join(" or ", productCodesFilters));
+                    filterStringBuilder.Append(string.Join(" or ", productCodesFilters));
                 }
             }
             else
             {
                 if (categoryId.HasValue)
                 {
-                    searchQuery.Append("categoryId req ");
-                    searchQuery.Append(categoryId.Value);
+                    filterStringBuilder.Append("categoryId req ");
+                    filterStringBuilder.Append(categoryId.Value);
                 }
             }
+            filter = filterStringBuilder.ToString();
+            return true;
+        }
 
+        private static void ProcessFacets(Mvc.Contexts.SearchContext searchContext, bool includeFacets, ref bool cacheResults, int facetHierDepthInt, int? facetCategoryId, int? categoryId, ref string facetTemplate, ref string facetValueFilter, ref string facetHierValue, ref string facetHierDepth)
+        {
+            if (includeFacets && (categoryId.HasValue || facetCategoryId.HasValue))
+            {
+                facetHierDepth = "categoryId:" + facetHierDepthInt;
+                facetTemplate = "categoryId:" + (facetCategoryId.HasValue ? facetCategoryId : categoryId);
+                facetHierValue = "categoryId:" + (facetCategoryId.HasValue ? facetCategoryId : categoryId);
+
+                //dont cache results if faceting... too much mem consumed caching... eg more money==more problems
+                if (searchContext.Facets.Count > 0)
+                {
+                    cacheResults = false;
+                }
+
+                facetValueFilter = searchContext.ToFacetValueFilter();
+
+            }
+        }
+
+        private static void ProcessPaging(Mvc.Contexts.SiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool pageWithUrl, ref int startIndex, ref int pageSize, string[] productCodesFilters)
+        {
             if (pageWithUrl)
             {
                 int tmp;
-                if (int.TryParse(request["pageSize"], out tmp))
+                if (searchContext.PageSize.HasValue)
                 {
-                    pageSize = tmp;
+                    pageSize = searchContext.PageSize.Value;
                 }
                 else if (int.TryParse((siteContext.ThemeSettings["defaultPageSize"] ?? new object()).ToString(), out tmp))
                 {
@@ -123,9 +273,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     pageSize = 15;
                 }
 
-                if (int.TryParse(request["startIndex"], out tmp))
+                if (searchContext.StartIndex.HasValue)
                 {
-                    startIndex = tmp;
+                    startIndex = searchContext.StartIndex.Value;
                 }
             }
             else
@@ -136,61 +286,39 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
 
             }
+        }
 
-            if (includeFacets && categoryId.HasValue)
+        private static void GetCategoryCodes(ArgumentCollection arguments, NDjango.Interfaces.IContext context, Mvc.Contexts.PageContext pageContext, out int? facetCategoryId, out int? categoryId)
+        {
+            facetCategoryId = arguments.GetValueOrDefault<int?>("facetCategoryId");
+            categoryId = arguments.GetValueOrDefault<int?>("categoryId", pageContext.CategoryId);
+
+            var faceCategoryCode = arguments.GetValueOrDefault<string>("facetCategoryCode");
+            var categoryCode = arguments.GetValueOrDefault<string>("categoryCode");
+
+            if (!string.IsNullOrWhiteSpace(faceCategoryCode) || !string.IsNullOrWhiteSpace(categoryCode))
             {
-                facetHierDepth = "categoryId:2";
-                facetTemplate = "categoryId:" + categoryId;
-                facetHierValue = "categoryId:" + categoryId;
-                facetValueFilter = request.QueryString["facetValueFilter"];
-            }
-
-            var sortBy = (siteContext.ThemeSettings["defaultSort"] ?? "").ToString();
-
-            if (sortWithUrl && !string.IsNullOrEmpty(request["sortBy"]))
-            {
-                sortBy = request["sortBy"];
-            }
-
-            var filter = searchQuery.ToString();
-            var cacheKey = new StringBuilder().Append(defaultQuery).Append(filter).Append(facetHierValue).Append(facetTemplate).Append(facetHierDepth).Append(facetValueFilter).Append(startIndex).Append(sortBy).Append(pageSize).ToString();
-            var cache = context.Resolve<ILiveModeOnlyCache>();
-            var pc = cache.Get<ProductSearchResult>(cacheKey);
-            if (pc == null)
-            {
-                var res = await searchWebApiClient.Search(query: defaultQuery, filter: filter, facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize).ConfigureAwait(false);
-                if (res.HasException && context.SiteBuilderApiContext().IsDebugMode)
+                var catTree = context.Resolve<ICategoryTreeProvider>().GetAllCategories().Result;
+                if (!string.IsNullOrWhiteSpace(faceCategoryCode))
                 {
-                    throw res.ReadException();
-                }
-                if (res.HasException)
-                {
-                    pc = new ProductSearchResult();
-                }
-                else
-                {
-                    using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                    var tempCat = catTree.Items.Where(x => string.Equals(faceCategoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    if (tempCat != null)
                     {
-                        using (var rdr = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, Encoding.UTF8))
-                        {
-                            var ser = System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
-                            pc = ser.Deserialize<ProductSearchResult>(rdr);
-
-                            if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null)
-                            {
-                                pc.Items = productCodes.Cast<string>().Select(x => pc.Items.FirstOrDefault(y => y.ProductCode.Equals(x, StringComparison.OrdinalIgnoreCase)))
-                                    .Where(x => x != null).ToList();
-                            }
-                        }
+                        facetCategoryId = tempCat.Id;
                     }
                 }
-                cache.Set(cacheKey, pc);
+                if (!string.IsNullOrWhiteSpace(categoryCode))
+                {
+                    var tempCat = catTree.Items.Where(x => string.Equals(categoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    if (tempCat != null)
+                    {
+                        categoryId = tempCat.Id;
+                    }
+                }
             }
-
-            var dict = new Dictionary<string, object> { { "model", pc } };
-            var nodes = getTemplateFunction(template).Nodes;
-
-            return new[] { WalkResultHelpers.RenderNodesWithContextMods(nodes, dict, Enumerable.Empty<string>()) };
         }
     }
+
+
+   
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.FSharp.Core;
@@ -97,7 +98,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 requestContext["pageModel"] = viewContext.ParentActionViewContext.ViewData.Model;
             }
 
-            requestContext["ViewData"] = viewContext.ViewData;
+            requestContext["viewData"] = viewContext.ViewData;
+            requestContext["routeData"] = viewContext.RequestMessage.GetRouteData().Values;
         }
 
         public async Task<bool> AsyncRender(HyprViewContext viewContext, TextWriter writer)

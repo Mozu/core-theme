@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Collections.Generic;
 using Mozu.Core.Api.Contracts;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
@@ -17,9 +18,38 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 return this.GetType().FullName;
             }
         }
-
+        static string[] AncestoryPrefixes = new string[]{
+                        "",
+                        "parent-",
+                        "grandParent-",
+                        "great-grandParent-",
+                        "great-great-grandParent-",
+                        "great-great-great-grandParent-",
+                        "great-great-great-great-grandParent-",
+                    };
         protected override void Configure()
         {
+
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
+                .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category parent) =>
+                {
+                    
+                    var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                    for (var i = 0; parent != null && parent.IsDisplayed && i < AncestoryPrefixes.Length; i++)
+                    {
+                        var prefix = AncestoryPrefixes[i];
+                        dic[prefix + "categoryCode"] = parent.CategoryCode;
+                        dic[prefix + "categoryId"] = parent.Id;
+                        dic[prefix + "categorySlug"] = parent.Content == null ? null : parent.Content.Slug;
+                        parent = parent.ParentCategory;
+
+                    }
+
+                    return dic;
+                });
+
+
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();

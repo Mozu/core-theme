@@ -39,6 +39,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'discount.conditions.minimumLifetimeValueAmount',
             value: 'If specified, only customers whose lifetime value meets or exceeds this amount are eligible for the discount. '
         }, {
+            key: 'discount.conditions.includedPaymentMethodField',
+            value: 'TBP by Misha. '
+        }, {
             key: 'discount.criteria.maximumQuantityPerRedemption',
             value: 'Choose the maximum quantity of products the customer will receive the discount on, per redemption. In a "Buy (n) of X, Get (m) of Y at discounted rate" scenario, this field specifies the quantity (m). Control other restrictions in "Discount Limitations" section.'
         }, {
@@ -50,6 +53,9 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'discount.criteria.scope',
             value: 'Choose what will be discounted.'
+        }, {
+            key: 'discount.criteria.includedCategoriesOperatorCheckbox',
+            value: 'TBP by Misha'
         }, {
             key: 'discount.criteria.excludeLineItemDiscounts',
             value: 'You can also use the "Restrict discounts on this product" setting on individual products to exclude them from discounts. '

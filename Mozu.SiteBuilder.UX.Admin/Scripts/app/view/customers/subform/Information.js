@@ -230,7 +230,7 @@ Ext.define('Taco.view.customers.subform.Information', {
                     '<h2 data-handle="customer-visit-count"><tpl if="typeof visitCount === \'number\'">{visitCount}<tplelse>N/A</tpl></h2>',
                     '</td>',
                     '</table>',
-                    '<div>Customer Since: <span data-handle="customer-since">{createDate:date("m/d/Y")}</span></div>'
+                    '<div>Customer Since: <span data-handle="customer-since">{customerSinceDate:date("m/d/Y")}</span></div>'
                 ]
             }, {
                 xtype: 'container',

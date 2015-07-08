@@ -22,28 +22,40 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             return string.Join(string.Empty, strings);
         }
 
-        public static IDictionary<TKey,TValue> ChainAdd<TKey,TValue>(this IDictionary<TKey,TValue> dict, TKey key, TValue value)
+        public static IDictionary<TKey,TValue> ChainSet<TKey,TValue>(this IDictionary<TKey,TValue> dict, TKey key, TValue value, bool overWrite=true)
         {
-            dict.Add(key, value);
+            if (!overWrite && dict.ContainsKey(key))
+            {
+                return dict;
+            } 
+            dict[key] = value;
+            
             return dict;
         }
 
-        public static IDictionary<TKey, TValue> ChainAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, KeyValuePair<TKey,TValue> pair)
+        public static IDictionary<TKey, TValue> ChainSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, KeyValuePair<TKey,TValue> pair)
         {
-            dict.Add(pair);
+            dict[pair.Key ] = pair.Value;
+            
             return dict;
         }
-        public static IDictionary<TKey, TValue> ChainAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, Tuple<TKey, TValue> pair)
+        public static IDictionary<TKey, TValue> ChainSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, Tuple<TKey, TValue> pair)
         {
-            dict.Add(pair.Item1, pair.Item2);
+            dict[pair.Item1] = pair.Item2;
             return dict;
         }
 
-        public static IDictionary<TKey, TValue> ChainAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, IDictionary<TKey, TValue> pairs)
+        public static IDictionary<TKey, TValue> ChainSet<TKey, TValue>(this IDictionary<TKey, TValue> dict, IDictionary<TKey, TValue> pairs)
         {
+            if (Object.ReferenceEquals(dict , pairs))
+            {
+                //wtf chet?
+                return dict;
+            }
+
             foreach (var pair in pairs)
             {
-                dict.Add(pair.Key, pair.Value);
+                dict[pair.Key] = pair.Value;
             }
             return dict;
         }

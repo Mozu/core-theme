@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
             get{ return string.IsNullOrEmpty ( _catCode )?  System.Guid.NewGuid ().ToString () : _catCode ;}
             set{ _catCode = value ;}
         }
-
+        public string CategoryType { get; set; }
         public string Slug { get; set; }
 
         public int? CatalogId { get; set; }

@@ -85,7 +85,7 @@ let updateUserConfig env su =
 
   let doc = XDocument.Load(filePath)
   updateAppSetting "Environment" env doc
-  updateAppSetting "ScaleUnit" su doc
+  updateAppSetting "ScaleUnitId" su doc
   doc.Save(filePath)
 
 Target "set-env" (fun _ ->

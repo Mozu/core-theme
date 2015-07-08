@@ -18,6 +18,7 @@ using System.Net.Http;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Tenant.Contracts.Clients;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -31,16 +32,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IDiscountSortFormatter _discountSortFormatter;
         private IApiContext _ctx;
         private readonly ITenantsWebApiClient _tenantClient;
+        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public DiscountController(IDiscountWebApiClient discountWebClient, IDiscountSortFormatter discountSortFormatter, IApiContext ctx, ITenantsWebApiClient tenantClient)
+        public DiscountController(IDiscountWebApiClient discountWebClient, IDiscountSortFormatter discountSortFormatter, IApiContext ctx, ITenantsWebApiClient tenantClient, ICheckoutSettingsWebApiClient checkoutSettingsClient)
         {
             _discountWebClient = discountWebClient;
             _discountSortFormatter = discountSortFormatter;
             _ctx = ctx;
             _tenantClient = tenantClient;
+            _checkoutSettingsClient = checkoutSettingsClient;
 
         }
 
@@ -150,6 +153,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             tasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
 
             return SuccessWithTotal2<Discount>(discounts.Count);
+        }
+
+        [HttpGetRoute(UriTemplate = "paymentworkflow/list")]
+        public async Task<Response<List<KeyValuePair<string, string>>>> GetPaymentWorkflows(PagingParamaters pagingParams, FilterCollection extFilter)
+        {
+            var paymentSettings = (await _checkoutSettingsClient.GetPaymentSettings()).ReadAsSync();
+            var enabledPaymentWorkflows = paymentSettings.ExternalPaymentWorkflowDefinitions
+                                            .Where(x => x.IsEnabled)
+                                            .Select(x => new KeyValuePair<string, string>(x.Name, x.Name)).ToList();
+            enabledPaymentWorkflows.Insert(0, new KeyValuePair<string, string>("None", "None"));
+            return List2(enabledPaymentWorkflows);
         }
     }
 }

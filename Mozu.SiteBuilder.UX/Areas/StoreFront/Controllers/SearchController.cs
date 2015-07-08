@@ -63,10 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             
-            PageContext.Search  = new SearchContext
-            {
-                Query = query
-            };
+            
             
             PageContext.PageType = "search";
             PageContext.CategoryId = categoryId;

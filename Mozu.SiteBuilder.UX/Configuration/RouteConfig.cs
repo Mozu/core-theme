@@ -4,27 +4,183 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
-    public class RouteConfig
+
+   
+
+    public class RouteConfig : IRouteConfig
     {
+
+        static HttpRouteCollection _systemRoutes;
+        static HttpRouteCollection _standarRoutes;
+        public  HttpRouteCollection SystemRoutes
+        {
+            get
+            {
+                if (_systemRoutes == null)
+                {
+                    _systemRoutes = GetSystemRoutes();
+                }
+                return _systemRoutes;
+            }
+        }
+
+        public  HttpRouteCollection DefaultRoutes
+        {
+            get
+            {
+                if (_standarRoutes == null)
+                {
+                    _standarRoutes = GetStandardRoutes();
+                }
+                return _standarRoutes;
+            }
+        }
+
         public void Register(HttpRouteCollection routes)
         {
-
-
-
+            GetSystemRoutes(routes);
+        }
+        public static HttpRouteCollection GetSystemRoutes(HttpRouteCollection routes = null)
+        {
+            routes = routes??new HttpRouteCollection();
             routes.MapHttpRoute(
-              "favicon",
-              "favicon.ico",
-                     new {controller = "Resource", action = "misc" , pathinfo="images/favicon.ico" });
-                         
+             "favicon",
+             "favicon.ico",
+                    new { controller = "Resource", action = "misc", pathinfo = "images/favicon.ico" });
+
             routes.MapHttpRoute(
                 "search",
                 "search",
                 new { controller = "Search", action = "index" });
 
+
+
+
+            routes.MapHttpRoute(
+                "hyprlivecontext",
+                "hyprlivecontext",
+                new { controller = "Resource", action = "hyprcontextaction" });
+
+            routes.MapHttpRoute(
+                "storefront_navigation",
+                "nav",
+                new { controller = "Resource", action = "AjaxNavigation" });
+
+            routes.MapHttpRoute(
+                "Visit_Tracking_Pixel",
+                "_mzblank.gif",
+                new { controller = "Visit", action = "TrackingPixel" });
+
+            routes.MapHttpRoute(
+                "scripts",
+                "scripts/{*pathInfo}",
+                new { controller = "Resource", action = "Scripts" });
+
+
+            routes.MapHttpRoute(
+                "compiledscripts",
+                "compiled/scripts/{*pathInfo}",
+                new { controller = "Resource", action = "CompiledScripts" });
+
+            routes.MapHttpRoute(
+                "stylesheets",
+                "stylesheets/{*pathInfo}",
+                new { controller = "Resource", action = "Stylesheets" });
+
+            routes.MapHttpRoute(
+                "livetemplates",
+                "livetemplates",
+                new { controller = "Resource", action = "LiveTemplates" });
+
+            routes.MapHttpRoute("builtinscripts",
+                "js/{action}-{mode}.js",
+                new { controller = "BuiltinScripts", mode = "min" });
+
+
+            routes.MapHttpRoute(
+                "mozu_receiver",
+                "receiver",
+                new { controller = "Resource", action = "MozuReceiver" });
+
+
+            routes.MapHttpRoute(
+              "Widgets",
+              "widgets/{action}",
+              new { controller = "Widgets", action = "Index" });
+
+            routes.MapHttpRoute(
+                "templates",
+                "templates/{templateId}",
+                new { controller = "Templates", action = "Index" });
+
+            routes.MapHttpRoute(
+                "resources",
+                "resources/{*pathinfo}",
+                new { controller = "Resource", action = "Misc" });
+            routes.MapHttpRoute(
+                "resources-Site-Thumbnail",
+                "SiteThumbnail",
+                new { controller = "Resource", action = "SiteThumbnail" });
+
+            routes.MapHttpRoute(
+                "auth/pants",
+                "auth/pants",
+                new { controller = "Pants", action = "pants" });
+
+            routes.MapHttpRoute(
+                "Set Site Context",
+                "_gosite/{siteId}",
+                new { action = "GoSite", controller = "Testing" }
+                );
+
+            routes.MapHttpRoute(
+                "Set Theme Override",
+                "setTheme/{themeType}",
+                new { action = "ForceTheme", controller = "Testing" }
+                );
+
+            routes.MapHttpRoute(
+              "Static_Content",
+              "staticContent/{*relativePath}",
+              new { controller = "Resource", action = "StaticContentShare" });
+
+
+            routes.MapHttpRoute(
+               "gaverify",
+               "google{hash}.html",
+               new { controller = "Home", action = "GoogleSiteVerification" });
+
+
+            routes.MapHttpRoute(
+                "order details (back office)",
+                "back-office/orders/{orderId}",
+                new { controller = "BackOffice", action = "OrderSummary" });
+
+            routes.MapHttpRoute(
+                "packing slip (back office)",
+                "back-office/orders/{orderId}/packages/{packageId}",
+                new { controller = "BackOffice", action = "PackingSlip" });
+
+            routes.MapHttpRoute(
+                "back office (admin view) - PREVIEW",
+                "back-office-preview/{templateid}",
+                new { controller = "BackOffice", action = "Preview" });
+
+            routes.Add("SiteRoutes", new NonSystemRoute());
+
+            return routes;
+        }
+      
+        public static HttpRouteCollection GetStandardRoutes()
+        {
+            HttpRouteCollection routes = new HttpRouteCollection();
             routes.MapHttpRoute(
                 "StoreFront_productDetails_SEO",
                 "{slug}/p/{productCode}",
@@ -46,16 +202,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { controller = "cmspages", action = "Page", list = "pages@mozu" });
 
 
-            routes.MapHttpRoute(
-               "Misc_content_3",
-               "cms/files/{documentId}",
-               new { action = "index", controller = "content", list = "files@mozu" }
-               );
+          
 
-            routes.MapHttpRoute(
-              "Static_Content",
-              "staticContent/{*relativePath}",
-              new { controller = "Resource", action = "StaticContentShare" });
+            
 
             routes.MapHttpRoute(
                "cms_page",
@@ -115,51 +264,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "404",
                 new {controller = "Home", action = "NotFound",});
 
-            routes.MapHttpRoute(
-                "hyprlivecontext",
-                "hyprlivecontext",
-                new {controller = "Resource", action = "hyprcontextaction"});
-
-            routes.MapHttpRoute(
-                "storefront_navigation",
-                "nav",
-                new {controller = "Resource", action = "AjaxNavigation"});
-
-            routes.MapHttpRoute(
-                "Visit_Tracking_Pixel",
-                "_mzblank.gif",
-                new {controller = "Visit", action = "TrackingPixel"});
-
-            routes.MapHttpRoute(
-                "scripts",
-                "scripts/{*pathInfo}",
-                new {controller = "Resource", action = "Scripts"});
 
 
-            routes.MapHttpRoute(
-                "compiledscripts",
-                "compiled/scripts/{*pathInfo}",
-                new { controller = "Resource", action = "CompiledScripts" });
 
-            routes.MapHttpRoute(
-                "stylesheets",
-                "stylesheets/{*pathInfo}",
-                new {controller = "Resource", action = "Stylesheets"});
-
-            routes.MapHttpRoute(
-                "livetemplates",
-                "livetemplates",
-                new {controller = "Resource", action = "LiveTemplates"});
-
-            routes.MapHttpRoute("builtinscripts",
-                "js/{action}-{mode}.js",
-                new {controller = "BuiltinScripts", mode = "min"});
-
-
-            routes.MapHttpRoute(
-                "mozu_receiver",
-                "receiver",
-                new { controller = "Resource", action = "MozuReceiver" });
+            
             
             routes.MapHttpRoute(
                 "StoreFront_feeds_categories",
@@ -222,15 +330,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "sitemap.xml/{action}/{page}",
                 new { controller = "Sitemap", action = "Index", page = RouteParameter.Optional });
 
-            routes.MapHttpRoute(
-                "Widgets",
-                "widgets/{action}",
-                new {controller = "Widgets", action = "Index"});
-
-            routes.MapHttpRoute(
-                "templates",
-                "templates/{templateId}",
-                new {controller = "Templates", action = "Index"});
+            
 
             routes.MapHttpRoute(
                 "vlegacy_product",
@@ -248,25 +348,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "{slug}-s/{categoryId}.htm",
                  new { controller = "Catalog", action = "Category" });
 
-  //          Premium-18-Powered-Subwoofer-Cabinets-Pair-p/magma-118s-pw-pair.htm
+            //          Premium-18-Powered-Subwoofer-Cabinets-Pair-p/magma-118s-pw-pair.htm
 
 
 
-
-
-            routes.MapHttpRoute(
-                "resources",
-                "resources/{*pathinfo}",
-                new {controller = "Resource", action = "Misc"});
-            routes.MapHttpRoute(
-                "resources-Site-Thumbnail",
-                "SiteThumbnail",
-                new {controller = "Resource", action = "SiteThumbnail"});
-
-            routes.MapHttpRoute(
-                "auth/pants",
-                "auth/pants",
-                new {controller = "Pants", action = "pants"});
+           
             
 
             routes.MapHttpRoute(
@@ -322,20 +408,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             //http://txwks3164.corp.volusion.com/2083-2116/cms/7332/files/b1bf3cab-1d7c-42f8-901a-bff60b56d778?size=60
 
+
            
-
-
-            routes.MapHttpRoute(
-                "Set Site Context",
-                "_gosite/{siteId}",
-                new {action = "GoSite", controller = "Testing"}
-                );
-
-            routes.MapHttpRoute(
-                "Set Theme Override",
-                "setTheme/{themeType}",
-                new {action = "ForceTheme", controller = "Testing"}
-                );
 
 
             //todo remove before launch
@@ -438,26 +512,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { controller = "Home", action = "RobotsTxt" });
 
 
-            routes.MapHttpRoute(
-               "gaverify",
-               "google{hash}.html",
-               new { controller = "Home", action = "GoogleSiteVerification" });
-
-
-            routes.MapHttpRoute(
-                "order details (back office)",
-                "back-office/orders/{orderId}",
-                new { controller = "BackOffice", action = "OrderSummary" });
-
-            routes.MapHttpRoute(
-                "packing slip (back office)",
-                "back-office/orders/{orderId}/packages/{packageId}",
-                new { controller = "BackOffice", action = "PackingSlip" });
-
-            routes.MapHttpRoute(
-                "back office (admin view) - PREVIEW",
-                "back-office-preview/{templateid}",
-                new { controller = "BackOffice", action = "Preview" });
+            
 
 
             /*********************************************************************
@@ -495,6 +550,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "{*url}",
                 new {controller = "Home", action = "NotFound"}
                 );
+            return routes;
         }
 
         private class AcceptConstraint : IHttpRouteConstraint
@@ -546,6 +602,19 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
                 return true;
             }
+        }
+
+
+        public void RouteIncomingRequest(HttpRequestMessage request)
+        {
+            var rerouteData = DefaultRoutes.GetRouteData(request);
+            if ( rerouteData != null)
+            {
+                request.Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
+                var rctx = request.GetRequestContext();
+                rctx.RouteData = rerouteData;
+            }
+            
         }
     }
 }

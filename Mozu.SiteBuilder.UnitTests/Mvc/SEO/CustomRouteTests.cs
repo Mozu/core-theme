@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         }
         static IEnumerable<object[]> GoodCases()
         {
-            var mapping1 = new Mapping { type = Mapping.TypeConst.facet, mapFrom = "foo", mapTo = "bar", facetId = "facet@mozu" };
+            var mapping1 = new Mapping { type = Mapping.TypeConst.facet, mapTo = "bar", facetId = "facet@mozu" };
             yield return new object[] { mapping1, typeof(FacetValueFilterMapping) };
 
             var mapping2 = new Mapping { type = Mapping.TypeConst.direct, mappings = new Dictionary<string, string> { { "butts", "lol"} } };
@@ -77,7 +77,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         public async Task MappersWork(IRouteDataMapping mapping, Dictionary<string, object> inputs, Dictionary<string, object> expectedOutput)
         {
             await mapping.Initialize();
-            var outputs = mapping.Map(inputs);
+            HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/foo"); ;
+            reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
+            var outputs = mapping.Map(reqMessage, inputs, "foo");
             outputs.SequenceEqual(expectedOutput);
         }
 
@@ -89,7 +91,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 new Dictionary<string, object> { { "foo", 1234 }, { "butts", "lol" }, { "bar", 1234 } }};
 
             yield return new object[] {
-                new FacetValueFilterMapping("color", "facetValueFilter", "facet@mozu"),
+                new FacetValueFilterMapping("color", "facet@mozu"),
                 new Dictionary<string, object> { { "color", "mauve"}, { "foo", 1234 } },
                 new Dictionary<string, object> { { "color", "mauve" }, { "foo", 1234 }, { "facetValueFilter", "mauve" } }};
 
@@ -116,7 +118,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             };
 
             yield return new object[] {
-                new FacetValueFilterMapping("color", "facetValueFilter", "facet@mozu"),
+                new FacetValueFilterMapping("color",  "facet@mozu"),
                 new Dictionary<string, object> { { "foo", 1234 } },
                 new Dictionary<string, object> { { "foo", 1234 } }
             };
@@ -140,7 +142,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             var httpRoute = Substitute.For<IHttpRoute>();
             await constraint.Initialize();
-            constraint.Match(parameterName, inputs).ShouldEqual(routeShouldMatch);
+            constraint.DoMatch(null,null,parameterName, inputs,HttpRouteDirection.UriResolution).ShouldEqual(routeShouldMatch);
         }
 
         static IEnumerable<object[]> ConstraintTests()

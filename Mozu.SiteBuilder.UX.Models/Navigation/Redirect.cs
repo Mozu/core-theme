@@ -27,26 +27,26 @@ namespace Mozu.SiteBuilder.UX.Models.Navigation
 
     }
 
-    public class SiteRouteHandler : IRouteHandler
-    {
-        private SiteRouteEntry _entry;
+    //public class SiteRouteHandler : IRouteHandler
+    //{
+    //    private SiteRouteEntry _entry;
 
-        public SiteRouteEntry Entry
-        {
-            get
-            {
-                return _entry; 
+    //    public SiteRouteEntry Entry
+    //    {
+    //        get
+    //        {
+    //            return _entry; 
                 
-            }
-            set { _entry = value; }
-        }
+    //        }
+    //        set { _entry = value; }
+    //    }
 
 
-        System.Web.IHttpHandler IRouteHandler.GetHttpHandler(RequestContext requestContext)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+    //    System.Web.IHttpHandler IRouteHandler.GetHttpHandler(RequestContext requestContext)
+    //    {
+    //        throw new System.NotImplementedException();
+    //    }
+    //}
 
 
     public enum PageTypes

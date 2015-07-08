@@ -4,9 +4,18 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 
 namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 {
@@ -28,6 +37,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
                     return FacetMapping(mapping);
                 case Mapping.TypeConst.mzdb:
                     return MZDBMapping(_entityListClient, mapping);
+                case Mapping.TypeConst.category:
+                    return new CategoryMapping(mapping);
             }
             throw new ArgumentException(string.Format("mapping type {0} not known", mapping.type));
         }
@@ -39,7 +50,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 
         private IRouteDataMapping FacetMapping(Mapping mapping)
         {
-            return new FacetValueFilterMapping(mapping.mapFrom, mapping.mapTo, mapping.facetId);
+            return new FacetValueFilterMapping( mapping.mapTo, mapping.facetId);
         }
 
         private static IRouteDataMapping DirectMapping(Mapping mapping)
@@ -51,35 +62,176 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
     public class FacetValueFilterMapping : IRouteDataMapping
     {
         readonly string _facetId;
-        readonly string _mapFrom;
+  
         readonly string _mapTo;
 
-        public FacetValueFilterMapping(string mapFrom, string mapTo, string facetId)
+        public FacetValueFilterMapping(string mapTo, string facetId)
         {
-            if (mapFrom.IsNullOrEmpty()) throw new ArgumentException("mapFrom");
+          
             if (mapTo.IsNullOrEmpty()) throw new ArgumentException("mapTo");
             if (facetId.IsNullOrEmpty()) throw new ArgumentException("facetId");
 
-            _mapFrom = mapFrom;
+       
             _mapTo = mapTo;
             _facetId = facetId;
         }
 
         public Task<bool> Initialize() { return Task.FromResult(true); }
 
-        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
         {
-            if (values.ContainsKey(_mapFrom))
+            object tmp;
+            if (!values.TryGetValue(parameterName, out tmp))
             {
-                values[_mapTo] = UnFacetify(values[_mapFrom].ToString());
+                return values;
             }
+            var value = Convert.ToString(tmp);
+            
+            
+            var col = SearchContext.Get(requestMessage);
+
+            col.Facets.Add(_facetId, value);
+
+            return values;
+        }
+        
+    }
+    public class CategoryMapping : IRouteDataMapping
+    {
+        private Mapping mapping;
+
+        public CategoryMapping(Mapping mapping)
+        {
+            // TODO: Complete member initialization
+            this.mapping = mapping;
+        }
+
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
+        {
+            object tmp;
+            //string slug = null;
+            
+           
+            if (values.TryGetValue(parameterName+"-object", out tmp))
+            {
+                var cat = (Category)tmp;
+                values["categoryCode"] = cat.CategoryCode;
+                values["categoryId"] = cat.CategoryId;
+                values["categorySlug"] = cat.Content!= null? cat.Content.Slug: null;
+                return values;
+            }
+
+            //if (!values.TryGetValue(parameterName, out tmp))
+            //{
+            //    return values;
+            //}
+            //slug = Convert.ToString(tmp);
+            //if (string.IsNullOrWhiteSpace(slug))
+            //{
+            //    return values;
+            //}
+
+
+            //var catTreeProvider = requestMessage.Resolve<ICategoryTreeProvider>();
+            //var catTree = catTreeProvider.GetAllCategories().Result;
+            //var cats = catTree.FindBySlug(slug).ToList();
+            
+            //if (cats.Count > 0 )
+            //{
+            //    values["categoryCode"] = cats[0].CategoryCode;
+            //    values[ "categoryId"] = cats[0].CategoryId;
+            //}
             return values;
         }
 
-        //TODO check with Britt/Kevin that this is correct.
-        private string UnFacetify(string v)
+        public Task<bool> Initialize()
         {
-            return string.Format("{0}_{1}", _facetId, v);
+            return Task.FromResult(true); 
+        }
+    }
+
+    public class QueryStringFixup : IRouteDataMapping
+    {
+
+
+        public readonly static QueryStringFixup DefaultMapping = new QueryStringFixup();
+
+
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
+        {
+            object tmp;
+            int id;
+
+            var qs = requestMessage.RequestUri.ParseQueryString();
+            
+            SetValue(values, qs,"pageSize", true);
+            SetValue(values, qs, "startIndex", true);
+            SetValue(values, qs, "categoryId", true);
+            SetValue(values, qs, "sortBy", false);
+            SetValue(values, qs, "query", false);
+            SetValue(values, qs, "categoryCode", false);
+            SetValue(values, qs, "facetValueFilter", false);
+
+
+            bool catFound = false; 
+
+            if (values.TryGetValue("categoryId", out tmp) && tmp != null && (tmp is int || tmp is string))
+            {
+                if (int.TryParse(tmp.ToString(), out id))
+                {
+                    var catTreeProvider = requestMessage.Resolve<ICategoryTreeProvider>();
+                    var cat = catTreeProvider.GetAllCategories().Result.FindById(id);
+                    if (cat != null)
+                    {
+                        values["categoryCode"] = cat.CategoryCode;
+                        catFound = true;
+                    }
+                }
+
+            }
+
+            if (!catFound && values.TryGetValue("categoryCode", out tmp) && !string.IsNullOrWhiteSpace(tmp as string))
+            {
+                var catTreeProvider = requestMessage.Resolve<ICategoryTreeProvider>();
+                var cat = catTreeProvider.GetAllCategories().Result.FindByCode((string)tmp);
+                if (cat != null)
+                {
+                    values["categoryId"] = cat.Id;
+                    //catFound = true;
+                }
+            }
+            SearchContext.Get(requestMessage).InitRouteData(values);
+            return values;
+        }
+
+        private static void SetValue(IDictionary<string, object> values, NameValueCollection qs, string key, bool asInt)
+        {
+            object obj;
+            if (values.TryGetValue(key, out obj) && obj != null && !(obj is string && string.IsNullOrWhiteSpace(obj as string)))
+            {
+                return;
+            }
+
+            var temp = qs[key];
+            if (asInt)
+            {
+                int tempInt;
+
+                if (int.TryParse(temp, out tempInt))
+                {
+                    values[key] = tempInt;
+                }
+            }
+            else
+            {
+                values[key] = temp;
+            }
+
+        }
+
+        public Task<bool> Initialize()
+        {
+            return Task.FromResult(true);
         }
     }
 
@@ -95,7 +247,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         }
         public Task<bool> Initialize() { return Task.FromResult(true); }
 
-        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
         {
             return _maps.ApplyMapping(values);
         }
@@ -133,7 +285,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             return true;
         }
 
-        public IDictionary<string, object> Map(IDictionary<string, object> values)
+        public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
         {
             return _docValues.ApplyMapping(values);
         }

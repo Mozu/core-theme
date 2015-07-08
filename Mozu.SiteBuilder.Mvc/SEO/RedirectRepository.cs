@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Routing;
 using Mozu.Content.Contracts;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
@@ -29,6 +30,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     public interface ISiteRouteHandler
     {
         Task<bool> RouteIncomingRequest();
+
+        Task<bool> Init();
+
+        IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request);
+
 
         /// <summary>
         /// if a canonical url exists for the internalroute that is specified, this method creates a redirect to that url, with potentially new viewdata that can be injected.

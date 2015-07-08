@@ -19,11 +19,11 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var response = await base.SendAsync(request, cancellationToken);
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && request.Headers.Accept.Any(x => string.Equals(x.MediaType, "text/html", StringComparison.OrdinalIgnoreCase)))
             {
-                return await Process400(request, response);
+                return await Process400(request, response).ConfigureAwait(false);
             }
             return response;
         }

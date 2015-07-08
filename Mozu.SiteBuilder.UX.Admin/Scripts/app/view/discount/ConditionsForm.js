@@ -13,7 +13,8 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         'Taco.core.ux.form.CurrencyField',
         'Taco.view.discount.widget.CategoryPicker',
         'Taco.core.ux.TooltipLabel',
-        'Taco.model.GatewayDefinitions'
+        'Taco.model.GatewayDefinitions',
+        'Taco.store.PaymentWorkflows'
     ],
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco-discount-conditions',
@@ -24,44 +25,32 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     initComponent: function () {
         var me = this,
-            includedPaymentMethodsStore = Ext.create('Ext.data.Store', {
-                fields: [
-                    { name: "name", type: "string" },
-                    { name: "id", type: "string" }
-                ],
-                pageSize: 800,
-                remoteSort: false,
-                remoteFilter: false,
-                sorters: ['name'],
-                data: [
-                    { name: "Visa", id: "visa" },
-                    { name: "Master Card", id: "MasterCard" },
-                    { name: "American Express", id: "AmericanExpress" },
-                    { name: "Discover", id: "Discover" },
-                    { name: "Paypall Express", id: "PaypalExpress" },
-                    { name: "Visa Checkout", id: "VisaCheckout" }
-                ]
+            paymentWorkflowsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PaymentWorkflows');
+            
+        this.includedPaymentMethodField = Ext.create('Ext.form.field.ComboBox',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.includedPaymentMethodField', me, {
+                name: 'includedPaymentMethod',
+                store: paymentWorkflowsStore,
+                queryMode: 'local',
+                margin: 0,
+                width: 600,
+                fieldLabel: 'Required Payment Method',
+                labelAlign: 'top',
+                editable: false,
+                allowBlank: true,
+                forceSelection: true,
+                autoSelect: true,
+                displayField: 'value',
+                valueField: 'key'
+            })
+        );
+        if (this.record.get('includedPaymentMethod') === "") {
+            paymentWorkflowsStore.addListener("load", function(scope, records, successful) {
+                if (successful) {
+                    me.includedPaymentMethodField.select(records[0]);
+                }
             });
-
-
-
-        this.includedPaymentMethodsField = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'includedPaymentMethods',
-            margin: 0,
-            store: includedPaymentMethodsStore,
-            queryMode: 'local',
-            width: 600,
-            triggerOnClick: true,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            value: this.record.get('includedPaymentMethods'),
-            displayField: 'name',
-            fieldLabel: 'Select Payment Methods',
-            valueField: 'id'
-        });
-
-
+        }
 
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField',
             Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minOrderAmount', me, {
@@ -206,7 +195,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             }),
             this.categoriesBox,
             this.minimumCategorySubtotalBeforeDiscounts,
-            this.includedPaymentMethodsField
+            this.includedPaymentMethodField
         ];
 
         this.callParent(arguments);

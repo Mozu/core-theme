@@ -144,6 +144,10 @@ Ext.define('Taco.model.CustomerAccount', {
                     return 'Active';
                 }
             }
+        }, {
+            name: 'customerSinceDate',
+            type: 'date',
+            dateFormat: 'c'
         }
 
     ],

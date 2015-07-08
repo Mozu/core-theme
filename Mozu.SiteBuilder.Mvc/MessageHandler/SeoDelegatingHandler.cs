@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
+using Autofac;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -38,7 +39,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             if (apiContext.SiteId.HasValue == false)
             {
-                return (await base.SendAsync(request, cancellationToken));
+                return (await base.SendAsync(request, cancellationToken).ConfigureAwait(false));
             }
 
 
@@ -97,14 +98,19 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 }
             }
 
-            var routeHandler = request.Resolve<ISiteRouteHandler>();
+            if (  request.GetRouteData().Route is Mozu.SiteBuilder.Mvc.SEO.NonSystemRoute)
+            {
+                var routeHandler = request.Resolve<ISiteRouteHandler>();
+                var found = await routeHandler.RouteIncomingRequest().ConfigureAwait(false);
+                if ( !found)
+                {
+                    request.Resolve<IRouteConfig>().RouteIncomingRequest(request);
+                }
+            }
 
-            await routeHandler.RouteIncomingRequest();
-            
 
 
-
-            var response=  await base.SendAsync(request, cancellationToken);
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             
             return response;

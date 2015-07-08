@@ -79,9 +79,9 @@ Ext.define('Taco.model.Discount', {
           defaultValue:null
         },
         {
-            name: 'includedPaymentMethods',
-            type: 'auto',
-            defaultValue: []
+            name: 'includedPaymentMethod',
+            type: 'string',
+            defaultValue: null
         },
         {
             name: 'shippingMethods',
@@ -200,6 +200,10 @@ Ext.define('Taco.model.Discount', {
             name: 'minimumCategorySubtotalBeforeDiscounts',
             type:'int',
             useNull: true
+        },{
+            name: 'isIncludedCategoriesAllOperator',
+            type: 'boolean',
+            defaultValue: false
         }
 
     ],

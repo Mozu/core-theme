@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
         {
             var categories = new List<Category>();
 
-
+            var dic = new Dictionary<int, Category>();
             
             var etag = res.ETag();
             var srvTree = res.ReadAsSync();
@@ -93,6 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                 var cat = Mapper.Map<Category>(catPair.Item1);
 
                 categories.Add(cat);
+                dic [cat.Id.Value] = cat;
                 cat.ReadOnly = true;
 
                 if (catPair.Item1.ChildrenCategories != null)
@@ -105,7 +106,14 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
                 }
             }
 
-
+           foreach( var cat in categories)
+            {
+                Category parent;
+                if (cat.ParentCategoryId.HasValue && dic.TryGetValue(cat.ParentCategoryId.Value, out parent))
+                {
+                    cat.ParentCategory = parent;
+                }
+            }
             return new CategoryTree {Items = categories, ETag = etag};
         }
     }

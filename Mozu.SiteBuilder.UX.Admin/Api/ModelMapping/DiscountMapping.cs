@@ -64,8 +64,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? x.Target.IncludeAllProducts
                     : null))
 
-                .ForMember(x => x.IncludedPaymentTypes, opt => opt.ResolveUsing(x => (x.Conditions != null)
-                    ? x.Conditions.IncludedPaymentTypes
+                .ForMember(x => x.IncludedPaymentType, opt => opt.ResolveUsing(x => (x.Conditions != null && !x.Conditions.IncludedPaymentWorkflows.IsNullOrEmpty())
+                    ? x.Conditions.IncludedPaymentWorkflows.First()
                     : null))
 
                 .ForMember(x => x.ExcludeItemsWithExistingProductDiscounts, opt => opt.ResolveUsing(x => (x.Target != null)
@@ -86,6 +86,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     opt => opt.ResolveUsing(x => (x.Target != null && x.Target.Categories != null)
                         ? (x.Target.Categories).Select(_ => _.Id).ToList()
                         : (Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id).ToList()))
+                
+                .ForMember(x => x.IsIncludedCategoriesAllOperator, op => op.ResolveUsing(dc => (dc.Target != null 
+                                && dc.Target.IncludedCategoriesOperator == DC.DiscountTarget.TargetedCategoriesOperators.ALL)))
+            
                 .ForMember(x => x.Products, opt => opt.ResolveUsing(x => (x.Target != null && x.Target.Products != null)
                     ? (x.Target.Products).Select(_ => _.ProductCode).ToList()
                     : (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
@@ -196,8 +200,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                ExcludedCategories = (x.DiscountConditionExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.CategoryDiscountCondition {CategoryId = _}).ToList(),
                                                                                IncludedProducts = (x.DiscountConditionProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
                                                                                ExcludedProducts = (x.DiscountConditionExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
-                                                                               IncludedPaymentTypes = x.IncludedPaymentTypes,
-                                                                               CustomerSegments = (x.CustomerSegments ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerSegment {Id = _}).ToList(),
+                                                                               IncludedPaymentWorkflows = (string.IsNullOrEmpty(x.IncludedPaymentType) || x.IncludedPaymentType.Equals("None")) ? null : new List<string> {x.IncludedPaymentType},
+                    CustomerSegments = (x.CustomerSegments ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerSegment {Id = _}).ToList(),
                                                                                MinimumQuantityProductsRequiredInCategories = (x.DiscountConditionCategories.IsNullOrEmpty() || ! x.MinimumQuantityProductsRequiredInCategories.HasValue) 
                                                                                 ? (int?)null 
                                                                                 : Math.Max(x.MinimumQuantityProductsRequiredInCategories.Value, 1),
@@ -222,11 +226,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                             ? (int?)null 
                                                                             : Math.Max(x.MaximumQuantityPerRedemption.Value, 1),
                                                                            Categories = (x.Categories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
+                                                                           IncludedCategoriesOperator = x.IsIncludedCategoriesAllOperator 
+                                                                                ? DC.DiscountTarget.TargetedCategoriesOperators.ALL
+                                                                                : DC.DiscountTarget.TargetedCategoriesOperators.ANY,
                                                                            ExcludedCategories = (x.ExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.TargetedCategory {Id = _}).ToList(),
                                                                            ExcludedProducts = (x.ExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
                                                                            Products = (x.Products ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedProduct {ProductCode = _}).ToList(),
                                                                            ShippingMethods = (x.ShippingMethods ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingMethod { Code = _ }).ToList(),
-                                                                          ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),                                                                          
+                                                                           ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),                                                                          
                                                                            IncludeAllProducts = x.IncludeAllProducts,
                                                                        }))
                 .AfterMap((s, d) =>

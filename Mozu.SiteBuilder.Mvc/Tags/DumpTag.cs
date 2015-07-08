@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             model = model ?? "null";
 
-            var ss = new CaseInsensitiveJsonSerializerSettings { StringEscapeHandling = StringEscapeHandling.EscapeHtml, NullValueHandling = NullValueHandling.Include };
+            var ss = new CaseInsensitiveJsonSerializerSettings { StringEscapeHandling = StringEscapeHandling.EscapeHtml, NullValueHandling = NullValueHandling.Include, Converters = new List<JsonConverter> { new Newtonsoft.Json.Converters.StringEnumConverter() } };
             var json = JsonConvert.SerializeObject(model, Formatting.None, ss);
             return string.Format("<pre>{0}\r\n{1}</pre>", model.GetType().FullName, json);
         }
