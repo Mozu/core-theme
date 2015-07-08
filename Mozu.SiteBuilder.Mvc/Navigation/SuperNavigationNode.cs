@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public bool Expanded { get { return _expanded.HasValue ? _expanded.Value : (Expandable && IsSystemNode); } set { _expanded = value; } }
 
         private bool? _expandable;
-        public bool Expandable { get { return _expandable.HasValue ? _expandable.Value : (NodeType.IsCategory || NodeType.IsGroup || NodeType.IsPage); } set { _expandable = value; } }
+        public bool Expandable { get { return _expandable.HasValue ? _expandable.Value : (NodeType.IsCategory || NodeType.IsGroup || NodeType.IsPage || NodeType.IsLink); } set { _expandable = value; } }
 
         private bool? _isLeaf;
         /// <summary>

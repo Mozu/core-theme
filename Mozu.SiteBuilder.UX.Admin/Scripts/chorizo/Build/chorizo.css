@@ -105,19 +105,21 @@
   background-color: white;
   border: 1px solid #bfbfbf;
   font-family: SourceSansProRegular, MyriadWebProRegular, helvetica, arial, verdana, sans-serif;
-  height: 380px;
+  height: 390px;
   left: 50%;
   margin-left: -190px;
   margin-top: -190px;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: fixed;
   top: 50%;
-  width: 380px;
+  width: 390px;
   z-index: 100003;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
 }
-/* line 17, ../../sass/etc/chorizo/_widgets.scss */
+/* line 19, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-header {
   font-size: 24px;
   font-weight: normal;
@@ -125,11 +127,9 @@
   line-height: 24px;
   padding: 19px 19px 10px;
 }
-/* line 25, ../../sass/etc/chorizo/_widgets.scss */
+/* line 27, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-body {
   padding: 9px 10px 0;
-  height: 385px;
-  overflow-y: auto;
 }
 /* line 31, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-widget-modal .mz-cms-widget {
@@ -169,14 +169,14 @@
 /* line 67, ../../sass/etc/chorizo/_widgets.scss */
 .mz-cms-shadow {
   background-color: #333333;
-  height: 460px;
+  height: 470px;
   left: 50%;
   margin-left: -230px;
   margin-top: -230px;
   opacity: 0.9;
   position: fixed;
   top: 50%;
-  width: 460px;
+  width: 470px;
   z-index: 100002;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -282,7 +282,7 @@
   width: 13px;
   cursor: pointer;
 }
-/* line 88, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 90, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-tools .chorizo-icon.pencil::after {
   color: white;
   content: "\E025";
@@ -303,7 +303,7 @@
   position: relative;
   width: 14px;
 }
-/* line 88, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 90, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-tools .chorizo-icon.drag-handle::after {
   color: white;
   content: "\E609";
@@ -325,7 +325,7 @@
   width: 13px;
   cursor: pointer;
 }
-/* line 88, ../../sass/etc/taco/mixins/_fonts.scss */
+/* line 90, ../../sass/etc/taco/mixins/_fonts.scss */
 .mz-cms-editing .mz-cms-tools .chorizo-icon.trash::after {
   color: white;
   content: "\E02A";
