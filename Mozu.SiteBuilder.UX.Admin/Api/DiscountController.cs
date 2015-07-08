@@ -162,6 +162,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var enabledPaymentWorkflows = paymentSettings.ExternalPaymentWorkflowDefinitions
                                             .Where(x => x.IsEnabled)
                                             .Select(x => new KeyValuePair<string, string>(x.Name, x.Name)).ToList();
+            enabledPaymentWorkflows.Insert(0, new KeyValuePair<string, string>("None", "None"));
             return List2(enabledPaymentWorkflows);
         }
     }

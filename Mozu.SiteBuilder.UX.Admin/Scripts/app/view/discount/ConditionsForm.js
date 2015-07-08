@@ -27,23 +27,30 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         var me = this,
             paymentWorkflowsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.PaymentWorkflows');
             
-        this.includedPaymentMethodsField = Ext.create('Ext.ux.form.field.BoxSelect', {
-            name: 'includedPaymentMethods',
-            margin: 0,
-            store: paymentWorkflowsStore,
-            queryMode: 'local',
-            width: 600,
-            triggerOnClick: true,
-            forceSelection: true,
-            disableKeyFilter: true,
-            typeAhead: true,
-            value: this.record.get('includedPaymentMethods'),
-            displayField: 'value',
-            fieldLabel: 'Payment Workflow',
-            valueField: 'key'
-        });
-
-
+        this.includedPaymentMethodField = Ext.create('Ext.form.field.ComboBox',
+            Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.includedPaymentMethodField', me, {
+                name: 'includedPaymentMethod',
+                store: paymentWorkflowsStore,
+                queryMode: 'local',
+                margin: 0,
+                width: 600,
+                fieldLabel: 'Payment Method',
+                labelAlign: 'top',
+                editable: false,
+                allowBlank: true,
+                forceSelection: true,
+                autoSelect: true,
+                displayField: 'value',
+                valueField: 'key'
+            })
+        );
+        if (this.record.get('includedPaymentMethod') === "") {
+            paymentWorkflowsStore.addListener("load", function(scope, records, successful) {
+                if (successful) {
+                    me.includedPaymentMethodField.select(records[0]);
+                }
+            });
+        }
 
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField',
             Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minOrderAmount', me, {
@@ -188,7 +195,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             }),
             this.categoriesBox,
             this.minimumCategorySubtotalBeforeDiscounts,
-            this.includedPaymentMethodsField
+            this.includedPaymentMethodField
         ];
 
         this.callParent(arguments);
