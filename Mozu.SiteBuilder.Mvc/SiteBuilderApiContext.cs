@@ -47,7 +47,6 @@ namespace Mozu.SiteBuilder.Mvc
 
             DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             this.Now = new Lazy<DateTime>(GetNowValue);
-            
         }
 
         private void SetDebugMode()
@@ -117,6 +116,8 @@ namespace Mozu.SiteBuilder.Mvc
             }
             return now;
         }
+
+        
 
         private static DateTime RoundMinueteToLowest10(DateTime now)
         {
@@ -361,6 +362,8 @@ namespace Mozu.SiteBuilder.Mvc
         {
             this.DataViewMode = dataViewMode;
         }
+
+        public new DateTime? PreviewDate { get { return Now.Value; } }
     }
 
     public static class Constants
