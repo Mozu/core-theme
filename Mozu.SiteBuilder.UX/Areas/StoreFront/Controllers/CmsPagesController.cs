@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -52,8 +53,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _hyprViewEngine = hyprViewEngine;
             _siteRouteHandler = siteRouteHandler;
         }
-
-        [System.Web.Http.HttpGet]
+         [HttpHead]
+        [HttpGet]
         public async Task<HttpResponseMessage> ContentIndex(string list,string listView= null)
         {
             var resp = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", list }, {"listView", listView } });
@@ -128,8 +129,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-
-        [System.Web.Http.HttpGet]
+        [HttpHead]
+        [HttpGet]
         public async Task<HttpResponseMessage> Page(string list, string name)
         {
             //todo move to actoin

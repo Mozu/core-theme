@@ -20,8 +20,15 @@ using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-    public class HttpRouteCollection2:System.Web.Http.HttpRouteCollection{
-       public System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, System.Collections.Generic.List<CustomRoute>> CannonicleRouteCache {get;set;}
+
+    public class HttpRouteCollection2 : System.Web.Http.HttpRouteCollection
+    {
+        
+
+    }
+
+    public class HttpRouteCollectionWithMappings:System.Web.Http.HttpRouteCollection{
+        public List<IRouteDataMapping> PreRouteMappings { get; set; }
 
     }
     public class SiteRouteRepository : ISiteRouteRepository

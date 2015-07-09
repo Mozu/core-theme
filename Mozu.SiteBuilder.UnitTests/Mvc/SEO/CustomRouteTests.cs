@@ -86,12 +86,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         static IEnumerable<object[]> HappyPathMappings()
         {
             yield return new object[] {
-                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Dictionary<string, string> { { "foo", "bar" } }),
+                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, string> { { "foo", "bar" } }}),
                 new Dictionary<string, object> { { "foo", 1234 }, { "butts", "lol" } },
                 new Dictionary<string, object> { { "foo", 1234 }, { "butts", "lol" }, { "bar", 1234 } }};
 
             yield return new object[] {
-                new FacetValueFilterMapping("color", "facet@mozu"),
+                new FacetValueFilterMapping(new Mapping(){ facetId="color"} ),
                 new Dictionary<string, object> { { "color", "mauve"}, { "foo", 1234 } },
                 new Dictionary<string, object> { { "color", "mauve" }, { "foo", 1234 }, { "facetValueFilter", "mauve" } }};
 
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(new ServiceClientResponse<JObject>() { ReadAsSync = () => JObject.Parse("{\"blah\":\"foo\"}") }));
             yield return new object[] {
-                new MZDBMap(entityClientMock, "list", "doc"),
+                new MZDBMap( entityClientMock , new Mapping (){ listName = "list", docId ="doc"}),
                 new Dictionary<string, object> { { "blah", 1234 }, { "butts", "lol" } },
                 new Dictionary<string, object> { { "blah", 1234 }, { "butts", "lol" }, { "foo", 1234 } }};
         }
@@ -112,13 +112,13 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         static IEnumerable<object[]> NoOpPathMappings()
         {
             yield return new object[] {
-                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Dictionary<string, string> { { "foo", "bar" } }),
+                new SiteBuilder.Mvc.SEO.Mappings.DirectMapping(new Mapping(){ mappings =new Dictionary<string, string> { { "foo", "bar" } }}),
                 new Dictionary<string, object> { { "bar", 1234 } },
                 new Dictionary<string, object> { { "bar", 1234 } }
             };
 
             yield return new object[] {
-                new FacetValueFilterMapping("color",  "facet@mozu"),
+                new FacetValueFilterMapping(new Mapping(){ facetId ="color"}),
                 new Dictionary<string, object> { { "foo", 1234 } },
                 new Dictionary<string, object> { { "foo", 1234 } }
             };
@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(Response(obj)));
             yield return new object[] {
-                new MZDBMap(entityClientMock, "list", "doc"),
+                new MZDBMap(entityClientMock, new Mapping(){ listName = "list", docId ="doc"}),
                 new Dictionary<string, object> { { "butts", "lol" } },
                 new Dictionary<string, object> { { "butts", "lol" } }
             };

@@ -27,7 +27,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         string Template { get; set; }
         FancyRoute InternalRoute { get; set; }
         bool IsCanonical { get; set; }
-        IDictionary<IRouteDataMapping, string[]> Mappings { get; set; }
+        IDictionary<IRouteDataMapping, string[]> PreMappings { get; set; }
+        IDictionary<IRouteDataMapping, string[]> PostMappings { get; set; }
 
         public CustomRoute(string template, FancyRoute internalRoute, bool isCanonical, IDictionary<string, object> defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings) :
             base(template, defaults.ToRouteDictionary())
@@ -37,7 +38,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             InternalRoute = internalRoute;
             IsCanonical = isCanonical;
 
-            Mappings = mappings;
+            PreMappings = mappings.Where(x => x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x=>x.Key, y=> y.Value );
+            PostMappings = mappings.Where(x => !x.Key.Settings.beforeRouting.GetValueOrDefault(false)).ToDictionary(x => x.Key, y => y.Value);
 
 
             object temp;
@@ -68,19 +70,41 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public IDictionary<string, object> RewriteRouteData(HttpRequestMessage requestMessage, IDictionary<string, object> values)
+        public IDictionary<string, object> RewriteRouteData(HttpRequestMessage requestMessage, IDictionary<string, object> values )
         {
-            values = Mappings.Aggregate(values, (dict, mapEntry) => {
-               var paramNames = mapEntry.Value == null || mapEntry.Value.Length ==0 ? new string[]{"*"}: mapEntry.Value;
-               foreach (var parameterName in paramNames)
+            return DoRewriteRouteData(requestMessage, values, PostMappings);
+           
+        }
+
+
+        static IDictionary<string, object> DoRewriteRouteData(HttpRequestMessage requestMessage, IDictionary<string, object> values, IDictionary<IRouteDataMapping, string[]> mappings)
+        {
+            values = mappings.Aggregate(values, (dict, mapEntry) =>
+            {
+                var paramNames = mapEntry.Value == null || mapEntry.Value.Length == 0 ? new string[] { "*" } : mapEntry.Value;
+                foreach (var parameterName in paramNames)
                 {
                     mapEntry.Key.Map(requestMessage, dict, parameterName);
                 }
                 return values;
             });
-            //todo removeHack.
-           
+
+
             return values;
+        }
+
+        protected override bool ProcessConstraint(HttpRequestMessage request, object constraint, string parameterName, HttpRouteValueDictionary values, HttpRouteDirection routeDirection)
+        {
+            var origional = values;
+            if( this.PreMappings.Count > 0 )
+            {
+                values= new HttpRouteValueDictionary( values);
+                DoRewriteRouteData(request, values, PreMappings);
+            }
+            var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
+            //todo: should pre mappings persist?
+            return ret;
+            
         }
 
         public bool IsCanonicalFor(FancyRoute route)
@@ -117,6 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     /// </summary>
     public interface IRouteDataMapping : ICanInit
     {
+        Mapping Settings { get; set; }
         IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName);
     }
 

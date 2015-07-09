@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _siteRouteHandler = siteRoutehandler;
         }
 
-        // [CodeBlockViewActionFilter(AfterSlotId = "storefront.filters.product.after")]
+        [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode)
         {
@@ -196,7 +196,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
       
-
+        [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null , string sortBy = null, int? page = null, int? itemsPerPage = null)
         {

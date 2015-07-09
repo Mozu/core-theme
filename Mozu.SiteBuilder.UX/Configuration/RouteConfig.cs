@@ -212,7 +212,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapCustomHttpRoute(
                 "StoreFront_productDetails_SEO",
-                "{slug}/p/{productCode}",
+                "{productSlug}/p/{productCode}",
                  null,
               null,
               null,
