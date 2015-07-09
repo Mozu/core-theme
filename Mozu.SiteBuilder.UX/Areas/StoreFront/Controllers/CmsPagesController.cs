@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -103,15 +104,36 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return this.Request.CreateResponse(HttpStatusCode.OK, view);
         }
 
+
+
+
+        Dictionary<string, object> ToRouteDictionary(Mozu.Content.Contracts.Document doc)
+        {
+            var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { 
+            { "documentName", doc.Name }, 
+            { "documentListName", doc.ListFQN  } ,
+            { "documentListFQN", doc.ListFQN  } ,
+            { "documentType", doc.DocumentTypeFQN   } ,
+            { "documentTypeFQN", doc.DocumentTypeFQN   } ,
+            { "documentdocumentTypeFQN", doc.DocumentTypeFQN   } 
+            };
+            if ( doc.Properties!= null)
+            {
+                foreach( var prop in doc.Properties.Properties().Cast<JProperty>().Where(x=> x.Value  is JValue))
+                {
+                    dic["documentProperty-" + prop.Name] = ((JValue)prop.Value).Value;
+                }
+            }
+            return dic;
+        }
+
+
+
         [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Page(string list, string name)
         {
             //todo move to actoin
-            var resp = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => new Dictionary<string, object> { {"list", list }, { "name", name } });
-            if (resp != null)
-            {
-                return resp;
-            }
+           
 
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
@@ -129,6 +151,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (pc.CmsContext.Page.Document  == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
+            }
+
+            var resp = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
+            if (resp != null)
+            {
+                return resp;
             }
 
             var vm = pc.CmsContext.Page.Document;

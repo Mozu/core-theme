@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using Mozu.Core.Api.Client;
@@ -74,6 +75,109 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         }
     }
     
+    public class CategoryToken
+    {
+        public enum CategoryIdentifierType
+        {
+            Id,
+            Code,
+            Slug
+        };
+
+        public CategoryToken (CategoryIdentifierType type, int depth, string subCode)
+        {
+            this.Depth = depth;
+            this.SubCode = subCode;
+            this.IdType = type;
+            
+        }
+        public  CategoryToken(string token)
+        {
+           
+            var m = pattern.Match(token);
+            IsMatch = m.Success;
+            if ( !IsMatch )
+            {
+                return;
+            }
+            CategoryIdentifierType type;
+            if ( Enum.TryParse<CategoryIdentifierType>(m.Groups["t"].Value,true,out type))
+            {
+                IdType = type;
+            }
+            else
+            {
+                IsMatch = false;
+                return;
+            }
+            SubCode = m.Groups["s"].Value;
+
+            var p   = m.Groups["p"].Captures.Count;
+            var gp  = 2*m.Groups["gp"].Captures.Count;
+               
+            var grtCount = m.Groups["g"].Captures.Count;
+            Depth  = p+gp+grtCount;
+
+
+        }
+
+        public  string GetRawValue()
+        {
+
+            StringBuilder sb = new StringBuilder();
+            int d = Depth;
+            while (d > 2)
+            {
+                d = d - 1;
+                sb.Append("great-");
+            }
+            if (d == 2)
+            {
+                sb.Append("grandParent-");
+
+            }
+            else if (d == 1)
+            {
+                sb.Append("parent-");
+            }
+            if (!string.IsNullOrEmpty(SubCode))
+            {
+                sb.Append(SubCode).Append("-");
+            }
+            sb.Append("category");
+            sb.Append(IdType);
+            return sb.ToString();
+        }
+        public CategoryToken GetParent()
+        {
+            return new CategoryToken(IdType, Depth + 1, SubCode);
+        }
+        public CategoryToken GetChild()
+        {
+            if ( Depth == 0)
+            {
+                return null;
+            }
+            return new CategoryToken(IdType, Depth - 1, SubCode);
+        }
+        //"g-g-gp-sdf"
+        //"parent"
+        //"grandP"
+
+
+        public string Raw { get { return GetRawValue(); } }
+        public bool IsMatch { get; set; }
+        public int Depth { get; set; }
+        public string SubCode { get; set; }
+
+        public CategoryIdentifierType IdType { get; set; }
+
+
+        static Regex pattern = new Regex(@"^((?<g>great)\-){0,7}((?<gp>grandParent)\-){0,1}((?<p>parent)\-){0,1}((?<s>[a-z0-9]+)\-){0,1}category(?<t>(Code|Id|Slug))$",
+                RegexOptions.IgnoreCase |
+                RegexOptions.ExplicitCapture |
+                RegexOptions.IgnorePatternWhitespace);
+    }
    
     public class CategoryContraint : ConstraintBase
     {
@@ -90,24 +194,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return Task.FromResult(true);
         }
 
-        static List<string> SlugAncestoryNames = new List<string>{
-                        "categorySlug",
-                        "parent-categorySlug",
-                        "grandParent-categorySlug",
-                        "great-grandParent-categorySlug",
-                        "great-great-grandParent-categorySlug",
-                        "great-great-great-grandParent-categorySlug",
-                        "great-great-great-great-grandParent-categorySlug",
-                    };
-        static List<string> CodeAncestoryNames = new List<string>{
-                        "categoryCode",
-                        "parent-categoryCode",
-                        "grandParent-categoryCode",
-                        "great-grandParent-categoryCode",
-                        "great-great-grandParent-categoryCode",
-                        "great-great-great-grandParent-categoryCode",
-                        "great-great-great-great-grandParent-categoryCode",
-                    };
+        
+
+
+        
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
@@ -115,32 +205,45 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 return true;
             }
+            object tmp;
+            if ( !values.TryGetValue(parameterName,out tmp) || tmp == null)
+            {
+                return false;
+            }
+        
+            var tree = new Lazy<CategoryTree>(()=>request.Resolve<ICategoryTreeProvider>().GetAllCategories().Result);
             Category cat = null;
+
+            var token = new CategoryToken(parameterName);
+            if ( !token.IsMatch)
+            {
+                return false;
+            }
             switch (validator.type)
             {
                 case Validator.TypeConst.categoryId:
                     {
-                        cat = MatchId(request, route, parameterName, values, routeDirection);
+                        cat = MatchId( tree, token, values);
                         break;
                     }
                 case Validator.TypeConst.categoryCode:
                     {
-                        cat = MatchCode(request, route, parameterName, values, routeDirection);
+                        cat = MatchCode(tree, token, values);
                         break;
                     }
                 case Validator.TypeConst.categorySlug:
                     {
-                        cat = MatchSlug(request, route, parameterName, values, routeDirection);
+                        cat = MatchSlug(tree, token, values);
                         break;
                     }
                 case Validator.TypeConst.categorySlugPath:
                     {
-                        cat = MatchSlugPath(request, route, parameterName, values, routeDirection);
+                        cat = MatchSlugPath(tree, token, values);
                         break;
                     }
                 case Validator.TypeConst.categoryCodePath:
                     {
-                        cat = MatchCategoryCodePath(request, route, parameterName, values, routeDirection);
+                        cat = MatchCategoryCodePath(tree,token, values);
                         break;
                     }
             }
@@ -149,17 +252,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return false;
             }
 
-            values[parameterName + "-object"] = cat;
+            values[token.SubCode + "-categoryObject"] = cat;
 
             return true;
 
         }
-        Category MatchId(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        Category MatchId(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
          
             object tmp;
             int id;
-            if (!values.TryGetValue(parameterName, out tmp))
+            if (!values.TryGetValue(token.Raw , out tmp))
             {
                 return null;
             }
@@ -169,165 +272,163 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return null;
             }
 
-            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
-            var catTree = catTreeProvider.GetAllCategories().Result;
-
-            return catTree.FindById(id);
+           
+            return catTree.Value.FindById(id);
         
         }
-        Category MatchCode(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        Category MatchCode(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
 
             object tmp;
-           
-            if (!values.TryGetValue(parameterName, out tmp)|| tmp == null)
+
+            if (!values.TryGetValue(token.Raw , out tmp) || string.IsNullOrEmpty(tmp as string))
             {
                 return null;
             }
             var code = Convert.ToString(tmp);
             
 
-            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
-            var catTree = catTreeProvider.GetAllCategories().Result;
-
-            return catTree.FindByCode(code);
+            
+            return catTree.Value.FindByCode(code);
 
         }
-        Category MatchSlug(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        Category MatchSlug(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
 
             object tmp;
-            
-            if (!values.TryGetValue(parameterName, out tmp) || tmp == null)
+
+            if (!values.TryGetValue(token.Raw, out tmp) || string.IsNullOrEmpty(tmp as string))
             {
                 return null;
             }
             var code = Convert.ToString(tmp);
 
 
-            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
-            var catTree = catTreeProvider.GetAllCategories().Result;
-
-            return catTree.FindBySlug(code).FirstOrDefault();
+         
+            return catTree.Value.FindBySlug(code).FirstOrDefault();
 
         }
-        Category MatchSlugPath(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        Category MatchSlugPath(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
 
             object tmp;
 
-            if (!values.TryGetValue(parameterName, out tmp) || tmp == null)
+            if (!values.TryGetValue(token.Raw, out tmp) || tmp == null)
             {
                 return null;
             }
             var slug = Convert.ToString(tmp);
-
-
-            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
-            var catTree = catTreeProvider.GetAllCategories().Result;
-            var cats = catTree.FindBySlug(slug).ToList();
+           
+            var cats = catTree.Value.FindBySlug(slug).ToList();
             if (!cats.Any())
             {
                 return null ;
             }
-            if (cats.Count() == 1)
-            {
-               // return cats[0];
-            }
 
+           
 
-
-            var index = SlugAncestoryNames.FindIndex(x => string.Equals(parameterName, x, StringComparison.OrdinalIgnoreCase));
-            if (index < 0 || index >= SlugAncestoryNames.Count - 1)
-            {
-                return null;
-            }
             Category matchedCat = null;
             foreach (var cat in cats)
             {
                 matchedCat = cat;
-                var parent = cat.ParentCategory;
-                for (var i = index + 1; parent != null && parent.IsDisplayed && parent.Content != null && i < SlugAncestoryNames.Count; i++)
+                var parentCat = cat.ParentCategory;
+                var parentToken = token.GetParent();
+                while(true)
                 {
-                    object obj;
-                    parameterName = SlugAncestoryNames[i];
-                    if (values.TryGetValue(parameterName, out obj))
+                    
+                    if (!values.TryGetValue( parentToken.Raw , out tmp) || string.IsNullOrEmpty(tmp as string))
                     {
-                        slug = obj as string;
-                        if (!string.Equals(slug, parent.Content.Slug, StringComparison.OrdinalIgnoreCase))
-                        {
-                            matchedCat = null;
-                            break;
-                        }
-                    }
-                    else
-                    {
+                        //parent not in route no need to look up. winner...
                         break;
                     }
-                    parent = cat.ParentCategory;
+                    
+                    if ( parentCat == null || parentCat.Content == null)
+                    {
+                        //current ancenstor doesnt have a parent :(  loozer
+                        matchedCat = null;
+                        break;
+                    }
+                    slug = Convert.ToString(tmp);
+
+
+                    if (! string.Equals(slug, parentCat.Content.Slug , StringComparison.OrdinalIgnoreCase))
+                    {
+                        //current ancenstor doesnt match ancesotor route. loozer
+                        matchedCat = null;
+                        break;
+                    }
+
+                    parentCat = parentCat.ParentCategory;
+                    parentToken = parentToken.GetParent();
                 }
-                if (matchedCat != null)
+                if ( matchedCat != null)
                 {
                     break;
                 }
             }
+
             return matchedCat;
             
 
         }
-        Category MatchCategoryCodePath(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
+        Category MatchCategoryCodePath(Lazy<CategoryTree> catTree, CategoryToken token, IDictionary<string, object> values)
         {
 
             object tmp;
 
-            if (!values.TryGetValue(parameterName, out tmp) || tmp == null)
+            if (!values.TryGetValue(token.Raw, out tmp) || string.IsNullOrEmpty(tmp as string))
             {
                 return null;
             }
             var code = Convert.ToString(tmp);
 
 
-            var catTreeProvider = request.Resolve<ICategoryTreeProvider>();
-            var catTree = catTreeProvider.GetAllCategories().Result;
-            var cat = catTree.FindByCode(code);
+           
+            var cat = catTree.Value.FindByCode(code);
             if (cat == null)
             {
                 return null;
             }
 
 
+            
 
+            Category matchedCat = null;
 
-            var index = CodeAncestoryNames.FindIndex(x => string.Equals(parameterName, x, StringComparison.OrdinalIgnoreCase));
-            if (index < 0 || index >= CodeAncestoryNames.Count - 1)
+            matchedCat = cat;
+            var parentCat = cat.ParentCategory;
+            var parentToken = token.GetParent();
+            while (true)
             {
-                return null;
-            }
 
-
-            var parent = cat.ParentCategory;
-            for (var i = index + 1; parent != null && parent.IsDisplayed && parent.Content != null && i < CodeAncestoryNames.Count; i++)
-            {
-                object obj;
-                parameterName = CodeAncestoryNames[i];
-                if (values.TryGetValue(parameterName, out obj))
+                if (!values.TryGetValue(parentToken.Raw, out tmp) || string.IsNullOrEmpty(tmp as string))
                 {
-                    code = obj as string;
-                    if (!string.Equals(code, parent.CategoryCode, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return null;
-
-                    }
-                }
-                else
-                {
+                    //parent not in route no need to look up. winner...
                     break;
                 }
-                parent = cat.ParentCategory;
+
+                if (parentCat == null)
+                {
+                    //current ancenstor doesnt have a parent :(  loozer
+                    matchedCat = null;
+                    break;
+                }
+                code = Convert.ToString(tmp);
+
+
+                if (!string.Equals(code, parentCat.CategoryCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    //current ancenstor doesnt match ancesotor route. loozer
+                    matchedCat = null;
+                    break;
+                }
+
+                parentCat = parentCat.ParentCategory;
+                parentToken = parentToken.GetParent();
             }
 
-            return cat;
 
+            return matchedCat;
 
         }
     }
@@ -367,6 +468,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
+            
             AttributeVocabularyValue attr;
             object routeValue;
             if (!values.TryGetValue(parameterName, out routeValue))
@@ -374,11 +476,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return false;
             }
 
+            if (routeDirection == HttpRouteDirection.UriGeneration)
+            {
+                return true;
+            }
+
             var curRouteValue = routeValue.ToString();
             if (!_values.TryGetValue(curRouteValue, out attr))
             {
                 return false;
             }
+           
 
             //TODO: put the right locale in here?
             values[parameterName] = GetAttributeValue(attr, "en-US");
@@ -435,6 +543,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
+            //todo:validate this.
+            if (routeDirection == HttpRouteDirection.UriGeneration)
+            {
+                return true;
+            }
             object temp;
             if (!values.TryGetValue(parameterName, out temp))
             {

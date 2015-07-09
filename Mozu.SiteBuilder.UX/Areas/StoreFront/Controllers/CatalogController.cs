@@ -83,9 +83,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             ProductRuntime.Contracts.Product prod = await productResponse.ReadAsAsync();
-            
 
-            var redirect = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails, () => Request.GetRouteData().Values);
+
+            var product = Mapper.Map<Product>(prod);
+            //todo... ugh.. too many maps.
+            var redirect = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
             if (redirect != null)
             {
                 return redirect;
@@ -114,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             string template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
 
-            var product = Mapper.Map<Product>(prod);
+            
             SetCatalogContext(product);
             var dynamicProd = JObject.FromObject(product, _productSerializer).ToObject<ExpandoObject>(_productSerializer);
             var result = View(template, dynamicProd);

@@ -96,6 +96,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         }
         
     }
+
+    //todo:depricate
     public class CategoryMapping : IRouteDataMapping
     {
         private Mapping mapping;
@@ -108,40 +110,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 
         public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
         {
-            object tmp;
-            //string slug = null;
             
-           
-            if (values.TryGetValue(parameterName+"-object", out tmp))
-            {
-                var cat = (Category)tmp;
-                values["categoryCode"] = cat.CategoryCode;
-                values["categoryId"] = cat.CategoryId;
-                values["categorySlug"] = cat.Content!= null? cat.Content.Slug: null;
-                return values;
-            }
-
-            //if (!values.TryGetValue(parameterName, out tmp))
-            //{
-            //    return values;
-            //}
-            //slug = Convert.ToString(tmp);
-            //if (string.IsNullOrWhiteSpace(slug))
-            //{
-            //    return values;
-            //}
-
-
-            //var catTreeProvider = requestMessage.Resolve<ICategoryTreeProvider>();
-            //var catTree = catTreeProvider.GetAllCategories().Result;
-            //var cats = catTree.FindBySlug(slug).ToList();
-            
-            //if (cats.Count > 0 )
-            //{
-            //    values["categoryCode"] = cats[0].CategoryCode;
-            //    values[ "categoryId"] = cats[0].CategoryId;
-            //}
-            return values;
+           return values;
         }
 
         public Task<bool> Initialize()
@@ -150,11 +120,11 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         }
     }
 
-    public class QueryStringFixup : IRouteDataMapping
+    public class RouteDataFixup : IRouteDataMapping
     {
 
 
-        public readonly static QueryStringFixup DefaultMapping = new QueryStringFixup();
+        public readonly static RouteDataFixup DefaultMapping = new RouteDataFixup();
 
 
         public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
@@ -172,6 +142,19 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             SetValue(values, qs, "categoryCode", false);
             SetValue(values, qs, "facetValueFilter", false);
 
+
+            foreach ( var val in values.Where(x=> x.Value is Category  && x.Key.EndsWith("-categoryObject")).ToList())
+            {
+                var cat = (Category)val.Value;
+
+                var subCode = val.Key == "-categoryObject" ? "" : val.Key.Replace("-categoryObject", "")+"-";
+               
+                values[subCode+"categoryCode"] = cat.CategoryCode;
+                values[subCode+"categoryId"] = cat.CategoryId;
+                values[subCode+"categorySlug"] = cat.Content!= null? cat.Content.Slug: null;
+                
+            }
+            
 
             bool catFound = false; 
 
@@ -197,9 +180,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
                 if (cat != null)
                 {
                     values["categoryId"] = cat.Id;
-                    //catFound = true;
+                  
                 }
             }
+
             SearchContext.Get(requestMessage).InitRouteData(values);
             return values;
         }

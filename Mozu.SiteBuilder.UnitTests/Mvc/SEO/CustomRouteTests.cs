@@ -274,6 +274,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                             InternalRoute = FancyRoute.CmsPage.ToStringQuickly()
                         }
                     }
+                },
+                AuditInfo = new Core.Api.Contracts.AuditInfo()
+                {
+                    UpdateDate= DateTime.MinValue
                 }
             };
 

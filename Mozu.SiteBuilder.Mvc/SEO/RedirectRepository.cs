@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     public interface ISiteRouteRepository
     {
         Task<List<SiteRouteEntry>> FetchSiteRouteEntries();
-        Task<HttpRouteCollection> GetHttpRouteCollection();
+        Task<HttpRouteCollection2> GetHttpRouteCollection();
         Task<List<SiteRouteEntry>> UpdateRedirectEntries(List<SiteRouteEntry> routes);
     }
 

@@ -6,14 +6,39 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
 
-   
+    public static class RouteExtensions
+    {
+        public static IHttpRoute MapCustomHttpRoute(this HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical)
+        {
+            if (mappings == null)
+            {
+                mappings = new Dictionary<IRouteDataMapping, string[]>();
+            }
 
+            mappings.Add( new RouteDataFixup(), new string[0]);
+
+            HttpRouteValueDictionary defaultsDictionary = new HttpRouteValueDictionary(defaults);
+            defaultsDictionary
+               .ChainSet("controller", SiteRouteRepository.GetControllerName(fancyRoute))
+               .ChainSet("action", SiteRouteRepository.GetControllerAction(fancyRoute));
+               
+
+
+          
+            CustomRoute route = new CustomRoute(routeTemplate, fancyRoute, isCanonical, defaultsDictionary, constraints, mappings);
+            routes.Add(name, route);
+            return route;
+        }
+    }
     public class RouteConfig : IRouteConfig
     {
 
@@ -181,10 +206,18 @@ namespace Mozu.SiteBuilder.UX.Configuration
         public static HttpRouteCollection GetStandardRoutes()
         {
             HttpRouteCollection routes = new HttpRouteCollection();
-            routes.MapHttpRoute(
+
+
+            
+
+            routes.MapCustomHttpRoute(
                 "StoreFront_productDetails_SEO",
                 "{slug}/p/{productCode}",
-                new {controller = "Catalog", action = "ProductDetail"});
+                 null,
+              null,
+              null,
+              FancyRoute.ProductDetails,
+              true);
 
             routes.MapHttpRoute(
                "StoreFront_productDetails",
@@ -198,8 +231,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                "StoreFront_pages",
-               "pages/{name}",
-               new { controller = "cmspages", action = "Page", list = "pages@mozu" });
+               "pages/{documentName}",
+               new { controller = "cmspages", action = "Page", documentListName = "pages@mozu" });
 
 
           
@@ -208,30 +241,34 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                "cms_page",
-               "cms/{list}/{name}",
+               "cms/{documentListName}/{documentName}",
                new { controller = "cmspages", action = "Page" });
 
             routes.MapHttpRoute(
                "StoreFront_pages_list",
-               "cms/{list}",
+               "cms/{documentListName}",
                new { controller = "cmspages", action = "contentIndex" });
 
-            routes.MapHttpRoute(
+            routes.MapCustomHttpRoute(
                 "StoreFront_categories_SEO",
-                "{slug}/c/{categoryId}",
-                new { controller = "Catalog", action = "Category" }
-                );
+                "{categorySlug}/c/{categoryId}",
+                null,
+                null,
+                null,
+                FancyRoute.Category,
+                true);
 
 
-            routes.MapHttpRoute(
-                "StoreFront_categories",
-                "category/{categoryId}",
-                new { controller = "Catalog", action = "Category" });
 
-            routes.MapHttpRoute(
+
+            routes.MapCustomHttpRoute(
                 "StoreFront_categories_short",
                 "c/{categoryId}",
-                new { controller = "Catalog", action = "Category" });
+                 null,
+                null,
+                null,
+                FancyRoute.Category,
+                false);
 
 
 
@@ -517,8 +554,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                "StoreFront_pages_seo",
-               "{name}",
-               new { controller = "cmspages", action = "Page", list = "pages@mozu" });
+               "{documentName}",
+               new { controller = "cmspages", action = "Page", documentListName = "pages@mozu" });
 
 
 
@@ -600,6 +637,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
             if ( rerouteData != null)
             {
                 request.Properties[HttpPropertyKeys.HttpRouteDataKey] = rerouteData;
+
+                if (rerouteData.Route is CustomRoute)
+                {
+                    var cr = rerouteData.Route as CustomRoute;
+
+                    cr.RewriteRouteData(request, rerouteData.Values);
+                }
+
                 var rctx = request.GetRequestContext();
                 rctx.RouteData = rerouteData;
             }

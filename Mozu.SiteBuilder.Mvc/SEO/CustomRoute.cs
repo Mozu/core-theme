@@ -41,6 +41,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
 
             object temp;
+            if (constraints == null)
+            {
+                return;
+            }
             foreach ( var kvp in constraints)
             {
                 var paramNames = kvp.Value == null || kvp.Value.Length ==0 ? new string[]{"*"}: kvp.Value;
