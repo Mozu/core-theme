@@ -158,10 +158,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "paymentworkflow/list")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetPaymentWorkflows(PagingParamaters pagingParams, FilterCollection extFilter)
         {
+            var displayNames = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("PAYPALEXPRESS", "PayPal Express"),
+                new KeyValuePair<string, string>("VISAPAY", "Visa Pay"),
+                new KeyValuePair<string, string>("AMAZONPAY", "Amazon Pay"),
+
+            };
             var paymentSettings = (await _checkoutSettingsClient.GetPaymentSettings()).ReadAsSync();
-            var enabledPaymentWorkflows = paymentSettings.ExternalPaymentWorkflowDefinitions
-                                            .Where(x => x.IsEnabled)
-                                            .Select(x => new KeyValuePair<string, string>(x.Name, x.Name)).ToList();
+
+            var enabledPaymentWorkflows = ( from wk in paymentSettings.ExternalPaymentWorkflowDefinitions
+                                            join dis in displayNames on wk.Name equals dis.Key
+                                            where wk.IsEnabled
+                                            select new KeyValuePair<string, string>(wk.Name, dis.Value)
+                                           ).ToList();
+            //move to front end.
             enabledPaymentWorkflows.Insert(0, new KeyValuePair<string, string>("None", "None"));
             return List2(enabledPaymentWorkflows);
         }
