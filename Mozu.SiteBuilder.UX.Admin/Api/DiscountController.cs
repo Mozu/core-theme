@@ -167,14 +167,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
             var paymentSettings = (await _checkoutSettingsClient.GetPaymentSettings()).ReadAsSync();
 
-            var enabledPaymentWorkflows = ( from wk in paymentSettings.ExternalPaymentWorkflowDefinitions
-                                            join dis in displayNames on wk.Name equals dis.Key
-                                            where wk.IsEnabled
-                                            select new KeyValuePair<string, string>(wk.Name, dis.Value)
-                                           ).ToList();
-            //move to front end.
-            enabledPaymentWorkflows.Insert(0, new KeyValuePair<string, string>("None", "None"));
-            return List2(enabledPaymentWorkflows);
+            var enabledPaymentWorkflows = 
+                from wk in paymentSettings.ExternalPaymentWorkflowDefinitions
+                join dis in displayNames on wk.Name equals dis.Key
+                where wk.IsEnabled
+                select new KeyValuePair<string, string>(wk.Name, dis.Value);
+
+            return List2(enabledPaymentWorkflows.ToList());
         }
     }
 }
