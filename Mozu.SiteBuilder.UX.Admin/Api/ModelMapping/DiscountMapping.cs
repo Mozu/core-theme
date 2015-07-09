@@ -200,7 +200,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                ExcludedCategories = (x.DiscountConditionExcludedCategories ?? Enumerable.Empty<int>()).Select(_ => new DC.CategoryDiscountCondition {CategoryId = _}).ToList(),
                                                                                IncludedProducts = (x.DiscountConditionProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
                                                                                ExcludedProducts = (x.DiscountConditionExcludedProducts ?? Enumerable.Empty<string>()).Select(_ => new DC.ProductDiscountCondition {ProductCode = _}).ToList(),
-                                                                               IncludedPaymentWorkflows = (string.IsNullOrEmpty(x.IncludedPaymentType) || x.IncludedPaymentType.Equals("None")) ? null : new List<string> {x.IncludedPaymentType},
+                                                                               IncludedPaymentWorkflows = (string.IsNullOrEmpty(x.IncludedPaymentType)) ? null : new List<string> {x.IncludedPaymentType},
                     CustomerSegments = (x.CustomerSegments ?? Enumerable.Empty<int>()).Select(_ => new DC.CustomerSegment {Id = _}).ToList(),
                                                                                MinimumQuantityProductsRequiredInCategories = (x.DiscountConditionCategories.IsNullOrEmpty() || ! x.MinimumQuantityProductsRequiredInCategories.HasValue) 
                                                                                 ? (int?)null 

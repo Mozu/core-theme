@@ -81,6 +81,7 @@ Ext.define('Taco.model.Discount', {
         {
             name: 'includedPaymentMethod',
             type: 'string',
+            useNull: true,
             defaultValue: null
         },
         {

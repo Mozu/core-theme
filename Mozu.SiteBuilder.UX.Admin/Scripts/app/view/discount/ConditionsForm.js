@@ -48,10 +48,10 @@ Ext.define('Taco.view.discount.ConditionsForm', {
         paymentWorkflowsStore.addListener("load", function(scope, records, successful) {
             if (!successful) return;
 
-            var noneOption = Ext.create('Taco.model.KeyValuePair', { key: "None", value: "None" });
+            var noneOption = Ext.create('Taco.model.KeyValuePair', { key: null, value: "None" });
             paymentWorkflowsStore.insert(0, noneOption);
 
-            if (me.record.get('includedPaymentMethod') === "") {
+            if (!me.record.get('includedPaymentMethod')) {
                 me.includedPaymentMethodField.select(noneOption);
             }
         });
