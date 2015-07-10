@@ -232,6 +232,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return Single2(Mapper.Map<Category>(newCategory));
         }
+        
+        [HttpPostRoute(UriTemplate = "validateexpression")]
+        public async Task<Response<DynamicExpression>> ValidateDynamicExpression(DynamicExpression expression)
+        {
+            var validatedExpresssion = _categoriesClient.ValidateDynamicExpression(expression).Result.ReadAsAsync().Result;
+            return Single2(validatedExpresssion);
+        }
 
     }
 }

@@ -16,9 +16,15 @@
     
     showIndexOnCancel: true,
 
+    showIndexOnDestroy :true,
+
     autoScroll: true,
         
     enableNextPrevious: false,
+
+    // This is long standing behavior for this class, but is undesireable when your editing unpersisted data. 
+    // use case. edit record and save dialog (not persisted yet) edit again and cancel. When this is true, the first edit is canceled as well. 
+    rejectRecordOnCancel : true,
 
     initComponent: function () {
         var me = this
@@ -52,8 +58,6 @@
         this.mixins.editorwrapper.constructor.call(this, {});
 
         
-
-
         var model = this.record ? Ext.ModelManager.getModel(this.record.modelName) : null;
         this.initWrapper();
         
@@ -86,19 +90,20 @@
         this.on('idchange', function(editor, record) {
             // Don't navigate if the record has yet to be persisted
             if (record.phantom) return;
+
+            me.onCreateSuccess(editor, record);
+
+            //Taco.app.contentView.remove(editor);
             
-            Taco.app.contentView.remove(editor);
-            
-            // save after a create. navigate to the edit view;
-            Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + record.getId(), { record: record });
+            //// save after a create. navigate to the edit view;
+            //Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + record.getId(), { record: record });
             
 
             
         }, this, { delay: 10, single: true, scope: this });
         
-       
-        this.on('cancel', function(editor) {
-            if (editor.record) {
+        this.on('cancel', function (editor) {
+            if (editor.rejectRecordOnCancel && editor.record) {
                 editor.record.reject();
             }
             if (this.showIndexOnCancel) {
@@ -109,9 +114,22 @@
 
         }, this, { single: true, scope: this });
         
-        this.on('destroyrecord', function(editor, records, operation) {
-            Taco.core.StateManager.attemptNavigate(me.getIndexViewName());
+        this.on('destroyrecord', function (editor, records, operation) {
+            if (this.showIndexOnDestroy)
+            {
+                Taco.core.StateManager.attemptNavigate(me.getIndexViewName());
+            }
+            
         }, this, { delay: 10, single: true, scope: this });
+    },
+
+    onCreateSuccess: function (editor, record) {
+        var me = this;
+        
+        Taco.app.contentView.remove(editor);
+
+        // save after a create. navigate to the edit view;
+        Taco.core.StateManager.attemptNavigate(me.getEditRoute() + '/' + record.getId(), { record: record });
     },
 
 

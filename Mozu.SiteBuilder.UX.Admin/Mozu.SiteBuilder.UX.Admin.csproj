@@ -483,6 +483,7 @@
     <Content Include="Scripts\app\core\ux\browser\SearchList.js" />
     <Content Include="Scripts\app\core\ux\content\SplitContainer.js" />
     <Content Include="Scripts\app\core\ux\content\ContextMenu.js" />
+    <Content Include="Scripts\app\core\ux\editor\ModalEditor.js" />
     <Content Include="Scripts\app\core\ux\form\DateRange.js" />
     <Content Include="Scripts\app\core\ux\form\entities\CategoryEditorForm.js" />
     <Content Include="Scripts\app\core\ux\form\entities\TemplateEditorForm.js" />
@@ -528,6 +529,7 @@
     <Content Include="Scripts\app\model\AccountUserTree.js" />
     <Content Include="Scripts\app\model\AuditLog.js" />
     <Content Include="Scripts\app\model\IpBlocking.js" />
+    <Content Include="Scripts\app\model\ExpressionTree.js" />
     <Content Include="Scripts\app\model\OrderRefund.js" />
     <Content Include="Scripts\app\model\PublishSet.js" />
     <Content Include="Scripts\app\model\PublishSetItem.js" />
@@ -611,6 +613,7 @@
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />
     <Content Include="Scripts\app\shared\view\modal\Wishlist.js" />
     <Content Include="Scripts\app\store\AccountUsersTree.js" />
+    <Content Include="Scripts\app\store\AttributesGrid.js" />
     <Content Include="Scripts\app\store\AuditLog.js" />
     <Content Include="Scripts\app\store\BehaviorNodes.js" />
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
@@ -675,6 +678,8 @@
     <Content Include="Scripts\app\view\account\userFormModal.js" />
     <Content Include="Scripts\app\view\account\Users.js" />
     <Content Include="Scripts\app\view\actionmanagement\Index.js" />
+    <Content Include="Scripts\app\view\attribute\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\attribute\Grid.js" />
     <Content Include="Scripts\app\view\businessIntelligence\Index.js" />
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
@@ -695,6 +700,12 @@
     <Content Include="Scripts\app\view\discount\GeneralForm.js" />
     <Content Include="Scripts\app\view\discount\Grid.js" />
     <Content Include="Scripts\app\view\discount\LimitationsForm.js" />
+    <Content Include="Scripts\app\view\filter\Edit.js" />
+    <Content Include="Scripts\app\view\filter\EditCodeModal.js" />
+    <Content Include="Scripts\app\view\filter\EditFilterModal.js" />
+    <Content Include="Scripts\app\view\filter\ExpressionTreePanel.js" />
+    <Content Include="Scripts\app\view\filter\Form.js" />
+    <Content Include="Scripts\app\view\filter\schema.js" />
     <Content Include="Scripts\app\view\generalSettings\subform\Features.js" />
     <Content Include="Scripts\app\view\ipblocking\Edit.js" />
     <Content Include="Scripts\app\view\ipblocking\Form.js" />
@@ -2252,6 +2263,7 @@
   <ItemGroup>
     <Folder Include="Api\Models\Cms\" />
     <Folder Include="Models\" />
+    <Folder Include="Scripts\app\core\ux\selector\" />
     <Folder Include="Scripts\app\exported\" />
     <Folder Include="Scripts\app\model\Context\" />
     <Folder Include="Scripts\app\platter\containers\" />

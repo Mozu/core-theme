@@ -78,6 +78,8 @@ Ext.define('Taco.core.ux.window.Modal', {
         form: undefined
     },
 
+    showActionsBar: true,
+
     constructor: function (config) {
         var actions,
             actionBar;
@@ -88,7 +90,10 @@ Ext.define('Taco.core.ux.window.Modal', {
         actions = this.configureActions(config);
         actionBar = this.initActionBar(actions, config.actionBar || this.actionBar);
 
-        config.dockedItems = Ext.Array.merge([actionBar], config.dockedItems);
+        if (this.showActionsBar) {
+            config.dockedItems = Ext.Array.merge([actionBar], config.dockedItems);
+        }
+        
 
         this.callParent([config]);
     },
@@ -166,7 +171,7 @@ Ext.define('Taco.core.ux.window.Modal', {
 
         me.callParent(arguments);
 
-        if (me.scopeActionsToWindow) {
+        if (me.scopeActionsToWindow && this.showActionsBar) {
             me.scopeActions(me.down('#actionBar').items);
         }
         

@@ -7,6 +7,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
     extend: 'Ext.form.field.Base',
     alias: ['widget.taco-codefield', 'widget.taco-code'],
     requires: [
+        'Ext.util.KeyNav'
     ],
     componentLayout: 'taco-codefieldlayout',
     theme: "ace/theme/textmate",
@@ -16,6 +17,11 @@ Ext.define('Taco.core.ux.form.field.Code', {
     inputType: 'hidden',
     mode: 'mozufilter',
     showGutter: true,
+    useWrapMode: true,
+    showPrintMargin: true,
+    fontSize: '16px',
+    selectOnRender: true,
+    
     setReadOnly: function (value) {
         this.readOnly = value;
         if (this.editor) {
@@ -29,6 +35,8 @@ Ext.define('Taco.core.ux.form.field.Code', {
                 me.editor.resize();
             }
         });
+
+        
 
         me.on('render', function (cmp) {
             //if (!me.width) {
@@ -57,7 +65,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
 
             me.editor.setHighlightActiveLine(false);
 
-            me.editor.getSession().setUseWrapMode(true);
+            me.editor.getSession().setUseWrapMode(me.useWrapMode);
 
             //me.editor.getSession().setWrapLimitRange(85, 85);
             //  me.editor.setPrintMarginColumn(85);
@@ -65,7 +73,9 @@ Ext.define('Taco.core.ux.form.field.Code', {
             me.editor.renderer.setShowGutter(me.showGutter);
             //  
 
-            me.editor.setFontSize('16px');
+            me.editor.renderer.setShowPrintMargin(me.showPrintMargin);
+
+            me.editor.setFontSize(me.fontSize);
 
             me.editor.setOptions({
                 enableBasicAutocompletion: true, 
@@ -73,13 +83,29 @@ Ext.define('Taco.core.ux.form.field.Code', {
                 enableLiveAutocompletion: false, 
             });
 
-            //    
+            if (!me.selectOnRender) {
+                me.editor.clearSelection();
+            }
+            
+            //listen for the esc key to set focus on the components el;
+            this.keyNav = Ext.create('Ext.util.KeyNav', this.el, {
+                // target: this.getEl(),
+                scope: this,
+                esc: function (e) {
+                    this.fireEvent('escKey');
+                    return false;
+                }
+            });
+
+
+            me.fireEvent('editorready',this,this.editor);
 
             me.editor.on('change', function (e) {
                 var actualValue = me.editor.getValue();
                 me.setValueInternal(actualValue);
             });
 
+            
         });
         this.callParent(arguments);
     },
