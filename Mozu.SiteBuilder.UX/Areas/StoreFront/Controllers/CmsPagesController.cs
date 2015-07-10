@@ -53,11 +53,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _hyprViewEngine = hyprViewEngine;
             _customRouteHandler = customRouteHandler;
         }
-         [HttpHead]
+
+        [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
         {
-            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", list }, {"listView", listView } });
+            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", documentListName }, {"listView", listView } });
             if (resp != null)
             {
                 return resp;

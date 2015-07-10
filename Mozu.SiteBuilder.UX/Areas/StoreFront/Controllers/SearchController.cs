@@ -37,10 +37,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _searchClient = searchClient;
         }
 
-        private readonly Regex categoryIdRE = new Regex("categoryId:(?<categoryId>\\w+)");
-
         [HttpGet]
-        public async Task<ActionResult> Index(string query= null, int? categoryId = null, string sortBy = null, int? startIndex = null, int? page = null, int? pageSize = null, string facetValueFilter = null, 
+        public async Task<ActionResult> Index(string query= null, int? categoryId = null, string sortBy = null, int? startIndex = null, int? page = null, int? pageSize = null, 
             //adding w as an extra param for jelly belly.  Plan to remove in r6.1
             string w=null)
         {
@@ -48,12 +46,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             int filterCatId = 0;
             bool isCatFiltered = false;
             query = query ?? w;
-            Match m;
-            if (facetValueFilter != null)
+
+            var categoryIdFacet = PageContext.Search.Facets["categoryId"];
+            if (!categoryIdFacet.IsNullOrEmpty())
             {
-                m = categoryIdRE.Match(facetValueFilter);
-                if (m.Success) {
-                    isCatFiltered = int.TryParse(m.Groups["categoryId"].Value, out filterCatId);
+                int facetCategoryId;
+                if(int.TryParse(categoryIdFacet, out facetCategoryId))
+                {
+                    filterCatId = facetCategoryId;
                 }
             }
 
@@ -62,8 +62,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 categoryId = filterCatId;
             }
 
-            
-            
             
             PageContext.PageType = "search";
             PageContext.CategoryId = categoryId;
@@ -122,13 +120,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
 
 
-            ProductRuntime.Contracts.ProductSearchResult res = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: facetValueFilter, startIndex: startIndex, sortBy: sortBy, pageSize: pageSize, facet: facets)).ReadAsSync();
+            var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: startIndex, sortBy: sortBy, pageSize: pageSize, facet: facets)).ReadAsSync();
 
 
             //end paste
 
             // var ret = _searchClient.Search(query, null, categoryId, categoryId == null ? false : true, sortBy, itemsPerPage, startIdx, true, true, null).Result.ReadAsAsync().Result;
-            var pc = Mapper.Map<ProductSearchResult>(res);
+            var pc = Mapper.Map<ProductSearchResult>(searchResponse);
 
             pc.Query = query;
 
