@@ -77,14 +77,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var orderResult = order.ReadAsAsync();
             var returnResult = returns.ReadAsAsync();
-            var jsOrder = new JObject
-            {
-                {"order", orderResult.Result.ToJObject()},
-                {"returns", returnResult.Result.ToJObject()}
-            };
+
+            var orderJArray = new JArray();
+            orderJArray.Add(orderResult.Result.ToJObject());
+
+            var orderJSON = new JObject();
+            orderJSON.Add("startIndex", 0);
+            orderJSON.Add("pageSize", 5);
+            orderJSON.Add("pageCount", 1);
+            orderJSON.Add("totalCount", 1);
+            orderJSON.Add("items", orderJArray);
+
+            var retObject = (new Customer.Contracts.CustomerAccount()).ToJObject();
+            retObject.Add("orderHistory", orderJSON);
+            retObject.Add("returnHistory", returnResult.Result.ToJObject());
 
 
-            return Request.CreateResponse(HttpStatusCode.OK, View("my-anonymous-account", jsOrder));
+            return Request.CreateResponse(HttpStatusCode.OK, View("my-anonymous-account", retObject));
         }
     }
 }

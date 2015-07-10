@@ -5,15 +5,19 @@
 {% block body-tag-classes %} mz-loginpage {% endblock body-tag-classes %}
 
 {% block body-content %}
+
+{% require_script "pages/myaccount" %}
+
+{% preload_json model "customer" %}
     <div class="mz-l-container">
         <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
-
-        <div class="mz-l-stack-section mz-accountorderhistory" id="anonymous-account-order">
-            {% include "modules/my-account/order-history-order-listing" with model=model.order %}
+        
+        <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
+            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory %}
         </div>
-
-        <div class="mz-l-stack-section mz-accountreturnhistory" id="anonymous-account-return">
-            {% include "modules/my-account/my-account-returnhistory" with model=model.returns %}
+        
+        <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
+            {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
         </div>
     </div>
 {% endblock body-content %}
