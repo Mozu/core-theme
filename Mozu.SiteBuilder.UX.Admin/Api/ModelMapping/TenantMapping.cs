@@ -23,6 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       .ForMember(x => x.MasterCatalogs, op => op.ResolveUsing(x => x.MasterCatalogs))
                       .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
                       .ForMember(x => x.Currencies, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
+                      .ForMember(x => x.LogzuUrl, op => op.Ignore())
                       .AfterMap((tenant, context) =>
                           {
                               foreach (var site in tenant.Sites)
