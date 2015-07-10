@@ -6,6 +6,7 @@ using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Linq;
+using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {
@@ -18,15 +19,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 return this.GetType().FullName;
             }
         }
-        static string[] AncestoryPrefixes = new string[]{
-                        "",
-                        "parent-",
-                        "grandParent-",
-                        "great-grandParent-",
-                        "great-great-grandParent-",
-                        "great-great-great-grandParent-",
-                        "great-great-great-great-grandParent-",
-                    };
+        
         protected override void Configure()
         {
 
@@ -36,119 +29,71 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                     
                     var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-                    for (var i = 0; parent != null && parent.IsDisplayed && i < AncestoryPrefixes.Length; i++)
+                    var token = new CategoryToken(CategoryToken.CategoryIdentifierType.Id, 0, null);
+                   
+                    for (var i = 0; parent != null && parent.IsDisplayed && i < 10; i++)
                     {
-                        var prefix = AncestoryPrefixes[i];
-                        dic[prefix + "categoryCode"] = parent.CategoryCode;
-                        dic[prefix + "categoryId"] = parent.Id;
-                        dic[prefix + "categorySlug"] = parent.Content == null ? null : parent.Content.Slug;
-                        parent = parent.ParentCategory;
+                        token.IdType = CategoryToken.CategoryIdentifierType.Id;
+                        dic[token.Raw] = parent.CategoryId;
+                        token.IdType = CategoryToken.CategoryIdentifierType.Code;
+                        dic[token.Raw] = parent.CategoryCode;
+                        token.IdType = CategoryToken.CategoryIdentifierType.Slug;
+                        dic[token.Raw] = parent.Content == null ? null : parent.Content.Slug;
 
+                        parent = parent.ParentCategory;
+                        token = token.GetParent();
+                      
                     }
 
                     return dic;
                 });
+
+            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, IDictionary<string, object>>()
+               .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product  product) =>
+               {
+
+                   var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                   dic["productCode"] = product.ProductCode;
+                   dic["productName"] = product.ProductName;
+                   dic["productSlug"] = product.Content == null ? null : product.Content.SEOFriendlyUrl;
+                   if ( product.Categories != null && product.Categories.Count>0)
+                   {
+                       var cat = product.Categories.First();
+                       var token = new CategoryToken(CategoryToken.CategoryIdentifierType.Id, 0, null);
+                       token.IdType = CategoryToken.CategoryIdentifierType.Id;
+                       dic[token.Raw] = cat.CategoryId;
+                       token.IdType = CategoryToken.CategoryIdentifierType.Code;
+                       dic[token.Raw] = cat.CategoryCode;
+                       token.IdType = CategoryToken.CategoryIdentifierType.Slug;
+                       dic[token.Raw] = cat.Content == null ? null : cat.Content.Slug;
+
+                   }
+                   return dic;
+               });
 
 
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();
           
-          //  Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacet, CategoryFacet>();
-          //  Mapper.CreateMap<Mozu.ProductRuntime.Contracts.CategoryFacetItem, CategoryFacetItem>();
-           // Mapper.CreateMap<ProductRuntime.Contracts.CategoryFacet, CategoryFacet>();
-
-
-         
-            //Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductAttribute, ProductAttribute>();
-
+     
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductOption, ProductOption>();
                 //ForMember(x => x.StandardInputTypeIntention, op => op.MapFrom(x => (x.StandardInputTypeIntention == "Undefined" || x.OptionType == "Configurable")  ? "Dropdown" : x.StandardInputTypeIntention));
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductImage, ProductImage>();
 
-          //  Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>();
-
-          //  Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductOptionValue, ProductOptionValue>();
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Category, Category>();
-                //.ForMember( x=> x.ParentCategory , op=> op.Ignore ())
-                //.ForMember(x => x.Name, op => op.MapFrom(x => x.Content.Name))
-                //.ForMember(x => x.MetaTagDescription, op => op.MapFrom(x => x.Content.MetaTagDescription))
-                //.ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => x.Content.MetaTagKeywords))
-                //.ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => x.Content.MetaTagTitle))
-                //.ForMember(x => x.PageTitle, op => op.MapFrom(x => x.Content.PageTitle))
-                //.ForMember(x => x.ParentCategoryId, op => op.MapFrom(x => x.ParentCategory != null ? (int?)x.ParentCategory.CategoryId : (int?)null))
-                //.ForMember(x => x.Slug, op => op.MapFrom(x => x.Content.Slug));
-
-            //Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPurchasableState, ProductPurchasableState>();
-            //Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ValidationMessage, ValidationMessage>();
-
-
-
-            //Mapper.CreateMap<ProductConfigurationRequest, Mozu.ProductRuntime.Contracts.ProductSelections>();
-            //Mapper.CreateMap<ProductOptionSelection, Mozu.ProductRuntime.Contracts.ProductOptionSelection>();
-
-
-
-                
-            //Mapper.CreateMap<ProductRuntime.Contracts.CategoryNode, Category>()
-            //    .ForMember(x => x.Name, op => op.MapFrom(x => x.Content.Name))
-            //    .ForMember(x => x.CategoryId, op => op.MapFrom(x => x.CategoryId))
-            //    .ForMember(x => x.ParentCategoryId, op => op.MapFrom(x => x.ParentCategoryId))
-            //    .ForMember(x => x.Description, op => op.MapFrom(x => x.Content.Description));
+              
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ConfiguredProduct, ConfiguredProduct>();
                 
 
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPrice, ProductPrice>();
-                //.ForMember(x => x.SalePrice, op => op.MapFrom(x => x.SalePrice))
-                //.ForMember(x => x.Price, op => op.MapFrom(x => x.Price));
-
-
-
-            //Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPrice>();
-                //.ForMember(x => x.LowerBoundPrice, op => op.MapFrom(x => x.Lower.Price))
-                //.ForMember(x => x.LowerBoundSalePrice, op => op.MapFrom(x => x.Lower.SalePrice))
-                //.ForMember(x => x.UpperBoundPrice, op => op.MapFrom(x => x.Upper.Price))
-                //.ForAllMembers(x => x.Ignore());
-
-                //.ForMember(x => x.DiscountEndDate, op => op.MapFrom(x => x.Price.Discount == null ? (DateTime?)null : x.Price.Discount.Discount.EndDate))
-                //.ForMember(x => x.DiscountId, op => op.MapFrom(x => x.Price.Discount == null ? (int?)null : x.Price.Discount.Discount.DiscountId))
-               // .ForMember(x => x.DiscountName, op => op.MapFrom(x => x.Price.Discount == null ? null : x.Price.Discount.Discount.Name))
-                //.ForMember(x => x.LowerBoundPrice, op => op.MapFrom(x => x. == null ? 0 : x.PriceRange.Lower.Price))
-                //.ForMember(x => x.LowerBoundSalePrice, op => op.MapFrom(x => x.PriceRange == null ? 0 : x.PriceRange.Lower.SalePrice))
-                //.ForMember(x => x.UpperBoundPrice, op => op.MapFrom(x => x.PriceRange == null ? 0 : x.PriceRange.Upper.Price));
-
+          
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPriceRange>();
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>();
-                //.ForMember(x => x.ProductName, op => op.MapFrom(x => x.Content.ProductName))
-                //.ForMember(x => x.ProductFullDescription, op => op.MapFrom(x => x.Content.ProductFullDescription))
-                //.ForMember(x => x.ProductShortDescription, op => op.MapFrom(x => x.Content.ProductShortDescription))
-                //.ForMember(x => x.MetaTagTitle, op => op.MapFrom(x => x.Content.MetaTagTitle))
-                //.ForMember(x => x.MetaTagDescription, op => op.MapFrom(x => x.Content.MetaTagDescription))
-                //.ForMember(x => x.MetaTagKeywords, op => op.MapFrom(x => x.Content.MetaTagKeywords))
-                //.ForMember(x => x.SEOFriendlyUrl, op => op.MapFrom(x => x.Content.SEOFriendlyUrl))
-                //.ForMember(x => x.ProductImages, op => op.MapFrom(x => x.Content.ProductImages))
-                //.ForMember(x => x.IsPurchasable, op => op.MapFrom(x => x.PurchasableState.IsPurchasable))
-                //.ForMember(x => x.PurchasableMessage, op => op.MapFrom(x => x.PurchasableState.Messages))
-                 //.ForMember(x => x.Price, op => op.MapFrom(_ =>
-                 //                                           new ProductPrice()
-                 //                                               {
-                 //                                                   Price = _.Price != null ? _.Price.Price : null,
-                 //                                                   SalePrice = _.Price != null ? _.Price.SalePrice : null,
-                 //                                                   DiscountId = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.DiscountId : (int?) null,
-                 //                                                   DiscountName = _.Price != null && _.Price.Discount != null && _.Price.Discount.Discount != null ? _.Price.Discount.Discount.Name : null,
-                 //                                                   LowerBoundPrice = _.PriceRange != null ? _.PriceRange.Lower.Price : (decimal?) null,
-                 //                                                   UpperBoundPrice = _.PriceRange != null ? _.PriceRange.Upper.Price : (decimal?) null,
-                 //                                                   LowerBoundSalePrice = _.PriceRange != null && _.PriceRange != null ? _.PriceRange.Lower.SalePrice : null
-
-                 //                                               }));
-                //)).AfterMap((dc, vm) =>
-                //{
-                //    vm.ProductImages.Product = vm;
-                //    vm.ProductImages.ForEach(x => x.Collection = vm.ProductImages);
-                //});
+              
             Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductContent, ProductContent>()
                   .ForMember(x => x.ProductImages, op => op.ResolveUsing(x =>
                       {

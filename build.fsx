@@ -64,7 +64,7 @@ let createDefaultconfig filePath =
   File.WriteAllText(filePath,
     """<appSettings>
   <add key="Environment" value=""/>
-  <add key="ScaleUnit" value=""/>
+  <add key="ScaleUnitId" value=""/>
   </appSettings>""")
 
 let xname s = XName.op_Implicit s

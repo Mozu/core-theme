@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Runtime.Caching;
+
 using Mozu.Core.Logging;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -19,6 +20,17 @@ using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
+
+    public class HttpRouteCollection2 : System.Web.Http.HttpRouteCollection
+    {
+        
+
+    }
+
+    public class HttpRouteCollectionWithMappings:System.Web.Http.HttpRouteCollection{
+        public List<IRouteDataMapping> PreRouteMappings { get; set; }
+
+    }
     public class SiteRouteRepository : ISiteRouteRepository
     {
         readonly ObjectCache _cache;
@@ -99,17 +111,18 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
         }
 
-        async Task<HttpRouteCollection> ISiteRouteRepository.GetHttpRouteCollection()
+        async Task<HttpRouteCollection2> ISiteRouteRepository.GetHttpRouteCollection()
         {
-            var routes = await GetRouteSettings(_genSettingsClient).ConfigureAwait(false);
+            var settings = await GetRouteSettings(_genSettingsClient).ConfigureAwait(false);
+            var routes = settings.CustomRoutes;
             if (routes == null) return null;
 
             var key = GetType().FullName +
                          ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
                          _siteBuilderApiContext.SiteId +
-                         (routes.Mappings.Count + routes.Validators.Count + routes.Routes.Count);
+                         settings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
 
-            return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false), DateTimeOffset.UtcNow.AddMinutes(5));
+            return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false), DateTimeOffset.UtcNow.AddMinutes(5)).ConfigureAwait(false);
         }
 
         List<SiteRouteEntry> FetchSiteRouteEntries(Document doc)
@@ -128,7 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
         }
 
-        async Task<HttpRouteCollection> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
+        async Task<HttpRouteCollection2> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
         {
             if (customSettings == null) return null;
 
@@ -154,7 +167,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             var routes = customSettings.Routes.Select(x => CreateCustomRoute(x, constraints, mappings));
 
-            var routeCollection = new HttpRouteCollection();
+            var routeCollection = new HttpRouteCollection2();
             foreach (var route in routes)
             {
                 if ( routeCollection.ContainsKey( route.RouteTemplate))
@@ -184,7 +197,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .GetOrError(unknowns => new ArgumentException(string.Format("Some validators are not known: {0}", string.Join(",", unknowns))))
                 .ToDictionary(x => mappings[x.Key ], x => x.Value);
 
-            knownMappings[QueryStringFixup.DefaultMapping] = new string[0];
+            knownMappings[RouteDataFixup.DefaultMapping] = new string[0];
 
             var defaults =
                 routeDef.Defaults
@@ -197,7 +210,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return new CustomRoute(routeDef.Template, routeDef.InternalRoute.ToEnum<FancyRoute>(), routeDef.Canonical.GetValueOrDefault(false), defaults, knownValidators, knownMappings);
         }
 
-        string GetControllerAction(FancyRoute internalRoute)
+        public static string GetControllerAction(FancyRoute internalRoute)
         {
             string s;
             if (ActionNames.TryGetValue(internalRoute, out s)) return s;
@@ -205,7 +218,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             throw new ArgumentException(string.Format("don't know the route specified, {0}. Try one of {1} instead.", internalRoute, string.Join(";", Enum.GetValues(typeof(FancyRoute)).Cast<FancyRoute>().Select(x => x.ToString()))));
         }
 
-        string GetControllerName(FancyRoute internalRoute)
+        public static string GetControllerName(FancyRoute internalRoute)
         {
             string s;
             if (ControllerRoutes.TryGetValue(internalRoute, out s)) return s;
@@ -213,10 +226,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             throw new ArgumentException(string.Format("don't know the route specified, {0}. Try one of {1} instead.", internalRoute, string.Join(";", Enum.GetValues(typeof(FancyRoute)).Cast<FancyRoute>().Select(x => x.ToString()))));
         }
 
-        static async Task<CustomRouteSettings> GetRouteSettings(IGeneralSettingsWebApiClient genSettingsClient)
+        static async Task<Mozu.SiteSettings.General.Contracts.GeneralSettings> GetRouteSettings(IGeneralSettingsWebApiClient genSettingsClient)
         {
             var settings = (await genSettingsClient.CloneWithoutUserClaims().GetGeneralSettings().ConfigureAwait(false)).ReadAsSync();
-            return settings.CustomRoutes;
+            return settings;
         }
     }
 }

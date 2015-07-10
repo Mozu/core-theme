@@ -44,13 +44,17 @@ Ext.define('Taco.view.discount.ConditionsForm', {
                 valueField: 'key'
             })
         );
-        if (this.record.get('includedPaymentMethod') === "") {
-            paymentWorkflowsStore.addListener("load", function(scope, records, successful) {
-                if (successful) {
-                    me.includedPaymentMethodField.select(records[0]);
-                }
-            });
-        }
+
+        paymentWorkflowsStore.addListener("load", function(scope, records, successful) {
+            if (!successful) return;
+
+            var noneOption = Ext.create('Taco.model.KeyValuePair', { key: null, value: "None" });
+            paymentWorkflowsStore.insert(0, noneOption);
+
+            if (!me.record.get('includedPaymentMethod')) {
+                me.includedPaymentMethodField.select(noneOption);
+            }
+        });
 
         this.minimumOrderAmountInput = Ext.create('Taco.core.ux.form.CurrencyField',
             Taco.core.ux.TooltipLabel.wrapConfig('discount.conditions.minOrderAmount', me, {
