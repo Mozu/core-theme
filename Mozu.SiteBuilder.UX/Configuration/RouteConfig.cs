@@ -198,6 +198,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "back-office-preview/{templateid}",
                 new { controller = "BackOffice", action = "Preview" });
 
+
+            routes.Add("SiteRoutes", new NonSystemRoute());
+
             return routes;
         }
       
