@@ -28,7 +28,7 @@ Ext.application({
         'CustomerAttributes',
         'Categories',
         'Products',
-        'PendingChanges',
+        'Publishing',
         'Inventory',
         'Message',
         'Catalog',

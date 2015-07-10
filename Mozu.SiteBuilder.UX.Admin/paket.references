@@ -26,3 +26,4 @@ Mozu.ShippingAdmin.Contracts
 Mozu.SiteSettings.General.Contracts
 Mozu.SiteSettings.Order.Contracts
 protobuf-net
+Mozu.ScheduledEvent.Contracts

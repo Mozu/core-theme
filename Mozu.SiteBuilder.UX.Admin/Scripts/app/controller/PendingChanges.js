@@ -9,7 +9,8 @@ Ext.define('Taco.controller.PendingChanges', {
     alias:['Taco.controller.Pendingchanges'],
     requires: [
         'Taco.view.pendingChange.Cms',
-        'Taco.view.pendingChange.Product'
+        'Taco.view.pendingChange.Product',
+        'Taco.view.pendingChange.Split'
    ],
     editorView: 'Taco.view.category.SimpleEditor',
     listView: null,
@@ -34,5 +35,9 @@ Ext.define('Taco.controller.PendingChanges', {
             this.createContentView('Taco.view.pendingChange.Product');
         }, this);
 
+    },
+
+    split: function(cfg) {
+        this.createContentView('Taco.view.pendingChange.Split');
     }
 });
