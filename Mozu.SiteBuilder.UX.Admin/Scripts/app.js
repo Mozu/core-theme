@@ -58,7 +58,6 @@ Ext.application({
         'LocationInventory',
         'SiteSelection',
         'Redirects',
-        'SiteRoutes',
         'BusinessIntelligence',
         'ActionManagement',
         'IpBlocking'

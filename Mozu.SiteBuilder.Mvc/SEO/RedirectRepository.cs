@@ -20,14 +20,12 @@ using Mozu.SiteSettings.General.Contracts.General.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-    public interface ISiteRouteRepository
+    public interface ICustomRouteCollectionRepository
     {
-        Task<List<SiteRouteEntry>> FetchSiteRouteEntries();
-        Task<HttpRouteCollection2> GetHttpRouteCollection();
-        Task<List<SiteRouteEntry>> UpdateRedirectEntries(List<SiteRouteEntry> routes);
+        Task<HttpRouteCollection> GetHttpRouteCollection();
     }
 
-    public interface ISiteRouteHandler
+    public interface ICustomRouteHandler
     {
         Task<bool> RouteIncomingRequest();
 

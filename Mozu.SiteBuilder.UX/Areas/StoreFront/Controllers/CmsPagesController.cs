@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected IDocumentTypeWebApiClient _docTypeRepo;
         protected ICmsServiceWrapper _cmsService;
         readonly HyprViewEngine _hyprViewEngine;
-        readonly ISiteRouteHandler _siteRouteHandler;
+        readonly ICustomRouteHandler _customRouteHandler;
 
 
         public CmsPagesController(
@@ -45,19 +45,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
             HyprViewEngine hyprViewEngine,
-            ISiteRouteHandler siteRouteHandler)
+            ICustomRouteHandler customRouteHandler)
         {
             _docRepo = docRepo.CloneWithoutUserClaims();
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
             _hyprViewEngine = hyprViewEngine;
-            _siteRouteHandler = siteRouteHandler;
+            _customRouteHandler = customRouteHandler;
         }
          [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
         {
-            var resp = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", list }, {"listView", listView } });
+            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", list }, {"listView", listView } });
             if (resp != null)
             {
                 return resp;
@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
             }
 
-            var resp = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
+            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
             if (resp != null)
             {
                 return resp;
