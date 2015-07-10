@@ -40,10 +40,9 @@ Ext.define('Taco.core.context.TaContext', {
             }
             corId = resp.getResponseHeader('x-vol-correlation');
             // TODO pull in this environment's logzu url...
-            logzuUrl = 'http://zukeeper.mozu-qa.com/mozu.logzu/';
 
             if (corId != undefined) {
-                url = logzuUrl + '#trace/' + corId;
+                url = config.logzuUrl + '#trace/' + corId;
             }
             console.error('AJAX Exception', 'View in Logzu', url);
 

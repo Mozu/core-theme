@@ -25,6 +25,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "contentPublishingEnabled")]
         public bool? ContentPublishingEnabled { get; set; }
+
+        [DataMember(Name = "logzuUrl")]
+        public string LogzuUrl { get; set; }
     }
 
     [DataContract]
