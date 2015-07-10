@@ -1,0 +1,14 @@
+{
+    "about": {
+        "author": "Volusion",
+        "defaultLanguage": "en-US",
+        "extends": "Core8",
+        "isDesktop": true,
+        "isMobile": true,
+        "isTablet": true,
+       
+        "name": "Demo 2"
+    },
+    
+    
+}
