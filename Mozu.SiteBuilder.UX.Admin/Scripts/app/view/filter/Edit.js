@@ -13,11 +13,10 @@ Ext.define('Taco.view.filter.Edit', {
 
     rejectRecordOnCancel: false,
 
-    title:"Edit Filter",
+    title: 'Edit Filter',
 
     initComponent: function () {
         var me = this;
-        debugger;
         this.callParent(arguments);
     },
 

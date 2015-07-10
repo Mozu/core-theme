@@ -448,21 +448,20 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         console.log("edit filter");
         alert("coming soon.");
 
-        return;
-        var win = Ext.create('Taco.view.filter.EditFilterModal', {
-            record: Ext.clone(record),
-            listeners: {
-                scope:me,
-                'aftersaveclose' : function() {
+        // var win = Ext.create('Taco.view.filter.EditFilterModal', {
+        //     record: Ext.clone(record),
+        //     listeners: {
+        //         scope:me,
+        //         'aftersaveclose' : function() {
                     
-                    me.refreshFocus();
-                },
-                'aftercancelclose': function () {
+        //             me.refreshFocus();
+        //         },
+        //         'aftercancelclose': function () {
                     
-                    me.refreshFocus();
-                }
-            }
-        });
+        //             me.refreshFocus();
+        //         }
+        //     }
+        // });
 
     },
     createFilter: function() {

@@ -119,7 +119,7 @@ Ext.define('Taco.view.attribute.Grid', {
                     width: 200,
                     sortable: false,
                     renderer: function(value, metaData, record) {
-                        ret = [];
+                        var ret = [];
                         if (record.get('isOption')) {
                             ret.push('Option')
                         }

@@ -17,8 +17,8 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
         //*****  make sure the subclass includes a requires item for the model ******;
     ],
     
-    width: "95%",
-    height:"95%",
+    width: '95%',
+    height:'95%',
 
     closeAction: 'destroy',
 
@@ -58,8 +58,8 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
     initComponent: function (eOpts) {
         var me = this;
 
-        this.cls = this.cls || "";
-        this.cls += " taco-modaleditor ";
+        this.cls = this.cls || '';
+        this.cls += ' taco-modaleditor ';
 
         // todo: bring in the mixins from the FullEditor class to enable "next/previous" "duplicate" "permissions" "navheader (will need to modify)"
 
@@ -99,12 +99,11 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
             model = Ext.ModelManager.getModel(me.modelName);
         
         if (!model) {
-            throw ("this.modelName is either invalid or not added to the requires of the calling class");
-            return;
+            throw ('this.modelName is either invalid or not added to the requires of the calling class');
         }
 
         var mask = me.setLoading({
-            msg: "Loading"
+            msg: 'Loading'
         }, me.body);
         
         if (!entityId) {
@@ -118,7 +117,7 @@ Ext.define('Taco.core.ux.editor.ModalEditor', {
             //Edit entity
             model.load(entityId, {
                 failure: function (record, operation) {
-                    Taco.app.fireEvent('setmessage', "Error loading", 'error');
+                    Taco.app.fireEvent('setmessage', 'Error loading', 'error');
                     me.setLoading(false, this.body);
                 },
                 success: function (record, operation) {
