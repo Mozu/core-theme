@@ -343,7 +343,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
 
-            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter:String.Format("orderNumber eq {0}", orderNumber));
+            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter:String.Format("orderNumber eq {0} || externalId eq {1}", orderNumber, orderNumber));
             if (res.HasException)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new

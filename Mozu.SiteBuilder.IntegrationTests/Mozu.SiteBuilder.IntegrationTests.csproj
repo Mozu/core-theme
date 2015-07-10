@@ -194,7 +194,6 @@
     <Compile Include="Ux\Controllers\CheckoutControllerTests.cs" />
     <Compile Include="Ux\Controllers\SearchControllerTests.cs" />
     <Compile Include="Ux\Models\CaseInsensitiveNamingContainerExtensionTests.cs" />
-    <Compile Include="Ux\Routing\SiteRouteTests.cs" />
     <Compile Include="WebApiClientTestExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

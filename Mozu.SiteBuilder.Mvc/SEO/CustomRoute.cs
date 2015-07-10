@@ -102,6 +102,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 DoRewriteRouteData(request, values, PreMappings);
             }
             var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
+            if (ret)
+            {
+                origional.Clear();
+                origional.AddRange(values);
+            }
+            
             //todo: should pre mappings persist?
             return ret;
             

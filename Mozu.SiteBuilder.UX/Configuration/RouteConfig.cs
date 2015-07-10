@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
     public static class RouteExtensions
     {
-        public static IHttpRoute MapCustomHttpRoute(this HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical)
+        public static IHttpRoute MapCustomHttpRoute(this System.Web.Http.HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical)
         {
             if (mappings == null)
             {
@@ -28,8 +28,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             HttpRouteValueDictionary defaultsDictionary = new HttpRouteValueDictionary(defaults);
             defaultsDictionary
-               .ChainSet("controller", SiteRouteRepository.GetControllerName(fancyRoute))
-               .ChainSet("action", SiteRouteRepository.GetControllerAction(fancyRoute));
+               .ChainSet("controller", CustomRouteRepository.GetControllerName(fancyRoute))
+               .ChainSet("action", CustomRouteRepository.GetControllerAction(fancyRoute));
                
 
 
@@ -42,8 +42,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
     public class RouteConfig : IRouteConfig
     {
 
-        static HttpRouteCollection _systemRoutes;
-        static HttpRouteCollection _standarRoutes;
+        static System.Web.Http.HttpRouteCollection _systemRoutes;
+        static System.Web.Http.HttpRouteCollection _standarRoutes;
         public  HttpRouteCollection SystemRoutes
         {
             get
@@ -68,13 +68,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
             }
         }
 
-        public void Register(HttpRouteCollection routes)
+        public void Register(System.Web.Http.HttpRouteCollection routes)
         {
             GetSystemRoutes(routes);
         }
-        public static HttpRouteCollection GetSystemRoutes(HttpRouteCollection routes = null)
+        public static HttpRouteCollection GetSystemRoutes(System.Web.Http.HttpRouteCollection routes = null)
         {
-            routes = routes??new HttpRouteCollection();
+            routes = routes??new System.Web.Http.HttpRouteCollection();
             routes.MapHttpRoute(
              "favicon",
              "favicon.ico",
@@ -198,17 +198,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "back-office-preview/{templateid}",
                 new { controller = "BackOffice", action = "Preview" });
 
-            routes.Add("SiteRoutes", new NonSystemRoute());
-
             return routes;
         }
       
         public static HttpRouteCollection GetStandardRoutes()
         {
-            HttpRouteCollection routes = new HttpRouteCollection();
-
-
-            
+            System.Web.Http.HttpRouteCollection routes = new System.Web.Http.HttpRouteCollection();
 
             routes.MapCustomHttpRoute(
                 "StoreFront_productDetails_SEO",

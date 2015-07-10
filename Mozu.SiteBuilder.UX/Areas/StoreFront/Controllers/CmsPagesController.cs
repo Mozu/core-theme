@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         protected IDocumentTypeWebApiClient _docTypeRepo;
         protected ICmsServiceWrapper _cmsService;
         readonly HyprViewEngine _hyprViewEngine;
-        readonly ISiteRouteHandler _siteRouteHandler;
+        readonly ICustomRouteHandler _customRouteHandler;
 
 
         public CmsPagesController(
@@ -45,25 +45,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICmsServiceWrapper cmsService,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
             HyprViewEngine hyprViewEngine,
-            ISiteRouteHandler siteRouteHandler)
+            ICustomRouteHandler customRouteHandler)
         {
             _docRepo = docRepo.CloneWithoutUserClaims();
             _docTypeRepo = docTypeRepo;
             _cmsService = cmsService;
             _hyprViewEngine = hyprViewEngine;
-            _siteRouteHandler = siteRouteHandler;
+            _customRouteHandler = customRouteHandler;
         }
          [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> ContentIndex(string list,string listView= null)
+        public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
         {
-            var resp = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", list }, {"listView", listView } });
+            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { {"listName", list }, {"listView", listView } });
             if (resp != null)
             {
                 return resp;
             }
 
-            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.ListFQN == list && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
+            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.ListFQN == documentListName && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
             var template = pageType != null ? pageType.Template : "document-list";
 
 
@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                           {
                                               Page = new DocumentRequest()
                                                      {
-                                                         Path = list + (!string.IsNullOrEmpty(listView) ? "-" + listView : "") + ".index",
+                                                         Path = documentListName + (!string.IsNullOrEmpty(listView) ? "-" + listView : "") + ".index",
                                                          ListFQN = "pages@mozu"
                                                      },
                                               Template = new DocumentRequest
@@ -97,11 +97,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             this.PageContext.PageType = "documentList";
-            this.PageContext.ListName = list;
+            this.PageContext.ListName = documentListName;
             this.PageContext.ListViewName = listView;
 
             await Task.WhenAll(this.ContextInitializationTasks);
-            var view = View(template, new {listFQN=list});
+            var view = View(template, new { listFQN = documentListName });
             return this.Request.CreateResponse(HttpStatusCode.OK, view);
         }
 
@@ -131,9 +131,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> Page(string list, string name)
+        public async Task<HttpResponseMessage> Page(string documentListName, string documentName)
         {
-            //todo move to actoin
+            
            
 
             var pc = this.PageContext;
@@ -141,8 +141,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 Page = new DocumentRequest()
                 {
-                    Path = name,
-                    ListFQN = list
+                    Path = documentName,
+                    ListFQN = documentListName
                 }
             };
 
@@ -154,7 +154,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
             }
 
-            var resp = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
+            var resp = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
             if (resp != null)
             {
                 return resp;
@@ -164,7 +164,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             NavigationContext.SetContext(vm);
 
-            pc.ListName = list;
+            pc.ListName = documentListName;
             pc.DocumentId = pc.CmsContext.Page.Document.Id;
             pc.Title = vm.Get<string>("title") as string;
             pc.MetaDescription = vm.Get<string>("meta_description") as string;

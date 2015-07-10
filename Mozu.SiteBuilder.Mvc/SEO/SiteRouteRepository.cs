@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Mozu.SiteBuilder.UX.Models.Navigation;
 using System.Runtime.Caching;
 
 using Mozu.Core.Logging;
@@ -14,24 +13,15 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.Content.Contracts.Clients;
-using Newtonsoft.Json.Linq;
-using Mozu.Content.Contracts;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-
-    public class HttpRouteCollection2 : System.Web.Http.HttpRouteCollection
-    {
-        
-
-    }
-
-    public class HttpRouteCollectionWithMappings:System.Web.Http.HttpRouteCollection{
+    public class HttpRouteCollectionWithMappings: HttpRouteCollection {
         public List<IRouteDataMapping> PreRouteMappings { get; set; }
-
     }
-    public class SiteRouteRepository : ISiteRouteRepository
+
+    public class CustomRouteRepository : ICustomRouteCollectionRepository
     {
         readonly ObjectCache _cache;
         readonly ILogger _logger;
@@ -59,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         };
         
 
-        public SiteRouteRepository(
+        public CustomRouteRepository(
             ISiteBuilderApiContext siteBuilderApiContext,
             ILogger logger,
             ObjectCache cache,
@@ -77,41 +67,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
         }
 
-        async Task<List<SiteRouteEntry>> ISiteRouteRepository.FetchSiteRouteEntries()
-        {
-            var docResponse = await _documentListWebApiClient.GetTreeDocument("siteSettings@mozu", "siteRoutes").ConfigureAwait(false);
-            if (docResponse.HasException || !docResponse.ResponseMessage.IsSuccessStatusCode)
-            {
-                return new List<SiteRouteEntry>();
-            }
-            return FetchSiteRouteEntries(docResponse.ReadAsSync());
-        }
 
-        async Task<List<SiteRouteEntry>> ISiteRouteRepository.UpdateRedirectEntries(List<SiteRouteEntry> routes)
-        {
-            var res = await _documentListWebApiClient.GetTreeDocument("siteSettings@mozu", "siteRoutes").ConfigureAwait(false);
-            if (res.ResponseMessage.IsSuccessStatusCode)
-            {
-                var doc = res.ReadAsSync();
-                doc.Set("data", JArray.FromObject(routes));
-                res = await _documentListWebApiClient.UpdateDocument(doc.ListFQN, doc.Id, doc);
-                return routes;
-            }
-            else
-            {
-                var doc = new Document
-                          {
-                              Name = "siteRoutes",
-                              DocumentTypeFQN = "document@mozu",
-                              ListFQN = "siteSettings@mozu",
-                          };
-                doc.Set("data", JArray.FromObject(routes));
-                res = await _documentListWebApiClient.CreateDocument(doc.ListFQN, doc).ConfigureAwait(false);
-                return FetchSiteRouteEntries(res.ReadAsSync());
-            }
-        }
-
-        async Task<HttpRouteCollection2> ISiteRouteRepository.GetHttpRouteCollection()
+        async Task<HttpRouteCollection> ICustomRouteCollectionRepository.GetHttpRouteCollection()
         {
             var settings = await GetRouteSettings(_genSettingsClient).ConfigureAwait(false);
             var routes = settings.CustomRoutes;
@@ -125,23 +82,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return await _cache.AddOrGetExisting(key, async () => await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false), DateTimeOffset.UtcNow.AddMinutes(5)).ConfigureAwait(false);
         }
 
-        List<SiteRouteEntry> FetchSiteRouteEntries(Document doc)
-        {
-            if (doc == null) return new List<SiteRouteEntry>(); 
-            var jobj = doc.Get<JArray>("data");
-            if (jobj == null) return new List<SiteRouteEntry>();
-            try
-            {
-                return jobj.ToObject<List<SiteRouteEntry>>();
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn("unexpected error deserializing errror in siteroute repo", ex);
-                return new List<SiteRouteEntry>();
-            }
-        }
-
-        async Task<HttpRouteCollection2> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
+        async Task<HttpRouteCollection> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
         {
             if (customSettings == null) return null;
 
@@ -167,7 +108,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             var routes = customSettings.Routes.Select(x => CreateCustomRoute(x, constraints, mappings));
 
-            var routeCollection = new HttpRouteCollection2();
+            var routeCollection = new HttpRouteCollection();
             foreach (var route in routes)
             {
                 if ( routeCollection.ContainsKey( route.RouteTemplate))

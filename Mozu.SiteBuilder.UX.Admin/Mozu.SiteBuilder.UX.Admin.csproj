@@ -258,7 +258,6 @@
     <Compile Include="Api\OrderRefundController.cs" />
     <Compile Include="Api\ProductAvailableInventoryHelper.cs" />
     <Compile Include="Api\PublishingSettingsController.cs" />
-    <Compile Include="Api\SiteRoutesController.cs" />
     <Compile Include="Api\CustomRoutesController.cs" />
     <Compile Include="Api\ProvisioningController.cs" />
     <Compile Include="Api\ReportController.cs" />
@@ -455,7 +454,6 @@
     <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
     <Content Include="Scripts\app\controller\BusinessIntelligence.js" />
-    <Content Include="Scripts\app\controller\SiteRoutes.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
     <Content Include="Scripts\app\controller\Tests.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
@@ -546,7 +544,6 @@
     <Content Include="Scripts\app\model\LocationPickup.js" />
     <Content Include="Scripts\app\model\NavigationItem2.js" />
     <Content Include="Scripts\app\model\HandlingFeeRule.js" />
-    <Content Include="Scripts\app\model\SiteRouteEntry.js" />
     <Content Include="Scripts\app\model\ShippingInclusionRule.js" />
     <Content Include="Scripts\app\model\TargetRule.js" />
     <Content Include="Scripts\app\model\ProductExtraValue.js" />
@@ -746,7 +743,6 @@
     <Content Include="Scripts\app\view\provisioning\Index.js" />
     <Content Include="Scripts\app\view\provisioning\CatalogProvisionerModal.js" />
     <Content Include="Scripts\app\view\provisioning\SiteProvisionerModal.js" />
-    <Content Include="Scripts\app\view\siteRoutes\Index.js" />
     <Content Include="Scripts\app\view\redirects\Index.js" />
     <Content Include="Scripts\app\view\customerAttribute\Edit.js" />
     <Content Include="Scripts\app\view\customerAttribute\Form.js" />
