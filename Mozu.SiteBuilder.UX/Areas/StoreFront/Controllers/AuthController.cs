@@ -400,7 +400,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var userClaims = _apiContext.UserClaims;
             userClaims.Bag["orderId"] = order.Id;
             var profileToken = _authenticationHelper.GetProfileToken();
-            _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken);
+            _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken, DateTime.Now.AddMinutes(20));
 
 
             return Request.CreateResponse(statusCode: HttpStatusCode.OK);

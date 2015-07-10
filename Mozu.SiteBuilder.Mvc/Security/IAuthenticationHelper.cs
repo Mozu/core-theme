@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Security
 
         string GetStoreFrontAccessToken();
 
-        void SaveStoreFrontAccessToken(string token, string profile);
+        void SaveStoreFrontAccessToken(string token, string profile, DateTime? expiry = null);
 
 
         // void SaveAuthTicket(UserAuthTicket ticket);
