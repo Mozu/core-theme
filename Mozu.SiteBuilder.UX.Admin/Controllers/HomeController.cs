@@ -294,6 +294,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
 
             var taContext = Mapper.Map<TaContext>(tenant);
+            taContext.LogzuUrl = _settings.ZuKeeperPath + "mozu.logzu/";
             Mapper.Map(masterCatalogs, taContext);
 
             var emtpy = new Currency();
