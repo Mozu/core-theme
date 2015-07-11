@@ -222,10 +222,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PostDeploy.ps1">
-      <Paket>True</Paket>
     </Content>
     <Content Include="PreDeploy.ps1">
-      <Paket>True</Paket>
     </Content>
     <Content Include="Areas\Misc\Views\Testing\SiteList.aspx" />
     <Content Include="Assets\mozu_receiver_v2.html" />
@@ -1383,14 +1381,7 @@
       </ItemGroup>
     </When>
   </Choose>
-  <Choose>
-    <When Condition="($(TargetFrameworkIdentifier) == 'WindowsPhone') Or ($(TargetFrameworkIdentifier) == 'WindowsPhoneApp') Or ($(TargetFrameworkIdentifier) == 'Silverlight') Or ($(TargetFrameworkIdentifier) == '.NETCore') Or ($(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')) Or ($(TargetFrameworkIdentifier) == 'MonoAndroid') Or ($(TargetFrameworkIdentifier) == 'MonoTouch')">
-      <PropertyGroup>
-        <__paket__OctoPack_targets>OctoPack</__paket__OctoPack_targets>
-      </PropertyGroup>
-    </When>
-  </Choose>
-  <Import Project="..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets" Condition="Exists('..\packages\OctoPack\build\$(__paket__OctoPack_targets).targets')" Label="Paket" />
+  <Import Project="..\packages\OctoPack\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack\build\OctoPack.targets')" Label="Paket" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCore'">
       <ItemGroup>
