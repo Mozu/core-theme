@@ -299,9 +299,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var constraintFactory = new ConstraintFactory(entityListClient, attrClient, sbapiContext);
             var mappingFactory = new RouteMappingFactory(entityListClient);
-            var repo = new SiteRouteRepository(sbapiContext, logger, cache, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
+            var repo = new CustomRouteRepository(sbapiContext, logger, cache, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
 
-            var collection = await (repo as ISiteRouteRepository).GetHttpRouteCollection();
+            var collection = await (repo as ICustomRouteCollectionRepository).GetHttpRouteCollection();
             collection.Count.ShouldEqual(numRoutes);
         }
 

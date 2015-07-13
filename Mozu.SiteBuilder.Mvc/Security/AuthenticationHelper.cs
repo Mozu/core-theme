@@ -125,12 +125,12 @@ namespace Mozu.SiteBuilder.Mvc.Security
             return null;
         }
 
-        void IAuthenticationHelper.SaveStoreFrontAccessToken(string accessToken, string profile)
+        void IAuthenticationHelper.SaveStoreFrontAccessToken(string accessToken, string profile, DateTime? expiry)
         {
             var cookie = new HttpCookie(StoreFrontAccessTokenCookieName);
             cookie[ProfileToken ] = profile;
             cookie[AccessToken] = accessToken;
-            cookie.Expires = DateTime.Now.AddYears(20);
+            cookie.Expires = expiry ?? DateTime.Now.AddYears(20);
 
 
             CookieProvider.SaveResponseCookie(StoreFrontAccessTokenCookieName, cookie);

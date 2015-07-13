@@ -134,6 +134,30 @@ Ext.define('Taco.model.Category', {
             type: 'int'
         },
         {
+            name: 'categoryType',
+            type: 'string',
+            defaultValue:"Static"
+        },
+        {
+            name: 'dynamicExpression',
+            type: 'object',
+            serialize : function (v, r) {
+                if (r.get("categoryType")=="Static") {
+                    return null;
+                }
+                return v;
+            },
+            defaultValue: {
+                "text": "",
+                "type":"DynamicPreComputed",
+                "tree": {
+                    "type": "container",
+                    "logicalOperator": "or",
+                    "nodes": []
+                }
+            }
+        },
+        {
             "name": "categoryImages",
             "type": "array",
             "defaultValue":[],

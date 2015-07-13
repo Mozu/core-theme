@@ -54,7 +54,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         
         menuColumnHandler = function (item) {
             item.menuColumnHandler(item, item.eventData);
-            me.menu.hide();
+            me.menu.destroy();
         };
 
         recurseItemFn = function(item) {
@@ -75,16 +75,20 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
             }
         };
         
-
-        if (!this.menu) {
-
-            this.menu = new Ext.menu.Menu({
-                plain: true,
-                shadow: false,
-                cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                items: this.getMenuItems(Ext.Array.clone(this.menuItems))
-            });
+        //clear out old version of menu; need to recreate it each time to allow it to change its content based on instance specific logic.
+        if (this.menu) {
+            this.menu.destroy();
+            this.menu = null;
         }
+
+        var items = this.preProcessMenuItems(Ext.Array.clone(this.menuItems), me, eventData);
+
+        this.menu = new Ext.menu.Menu({
+            plain: true,
+            shadow: false,
+            cls: Taco.baseCSSPrefix + 'grid-row-menu',
+            items: this.getMenuItems(items)
+        });
 
         this.onMenuShow(this.menu, eventData);
         
@@ -95,6 +99,16 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         return this.menu;
     },
     
+
+    /**
+     * Template method that allows the items to be pre processed by the instance to alter its contents prior to generating the menu
+     * @param  {Array} The array of menu items
+     * @return {Array} The array of menu items
+     * @private
+     */
+    preProcessMenuItems : function(items, menuColumn, eventData) {
+        return items;
+    },
 
     /**
      * Template method that allows the view to adjust the menu based on the data selected. Typically to disable or hide menu options selectively based on the data record

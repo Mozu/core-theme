@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             }
 
-            var order = (await _orderWebApiClient.GetOrder(orderId));
+            var order = (await _orderWebApiClient.GetOrders(filter: String.Format("id eq {0}", orderId)));
             var returns = (await _returnApiClient.GetReturns(filter: String.Format("originalorderid eq {0}", orderId)));
 
             var pc = PageContext;
@@ -78,18 +78,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var orderResult = order.ReadAsAsync();
             var returnResult = returns.ReadAsAsync();
 
-            var orderJArray = new JArray();
-            orderJArray.Add(orderResult.Result.ToJObject());
-
-            var orderJSON = new JObject();
-            orderJSON.Add("startIndex", 0);
-            orderJSON.Add("pageSize", 5);
-            orderJSON.Add("pageCount", 1);
-            orderJSON.Add("totalCount", 1);
-            orderJSON.Add("items", orderJArray);
-
             var retObject = (new Customer.Contracts.CustomerAccount()).ToJObject();
-            retObject.Add("orderHistory", orderJSON);
+            retObject.Add("orderHistory", orderResult.Result.ToJObject());
             retObject.Add("returnHistory", returnResult.Result.ToJObject());
 
 

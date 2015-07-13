@@ -28,7 +28,7 @@ Ext.application({
         'CustomerAttributes',
         'Categories',
         'Products',
-        'PendingChanges',
+        'Publishing',
         'Inventory',
         'Message',
         'Catalog',
@@ -58,7 +58,6 @@ Ext.application({
         'LocationInventory',
         'SiteSelection',
         'Redirects',
-        'SiteRoutes',
         'BusinessIntelligence',
         'ActionManagement',
         'IpBlocking'

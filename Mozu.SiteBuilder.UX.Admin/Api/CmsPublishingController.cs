@@ -296,6 +296,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(returnedIds);
         }
 
+        [HttpPostRoute(UriTemplate = "pubsetpublish")]
+        public async Task<Response<List<string>>> PubSetPublish(List<string> docIds)
+        {
+         
+            var result = await _documentPublishingWebApiClient.PublishDocuments(documentIds: docIds);
+
+            if (result.HasException)
+            {
+                throw result.ReadException();
+            }
+
+            return List2(docIds);
+        }
+
+        [HttpPostRoute(UriTemplate = "pubsetdiscard")]
+        public async Task<Response<List<string>>> PubSetDiscard(List<string> docIds)
+        {
+
+            var result = await _documentPublishingWebApiClient.DeleteDocumentDrafts(documentIds: docIds);
+
+            if (result.HasException)
+            {
+                throw result.ReadException();
+            }
+
+            return List2(docIds);
+        }
+
         /// <summary>
         /// Discard pending changes to a set of documents.
         /// </summary>

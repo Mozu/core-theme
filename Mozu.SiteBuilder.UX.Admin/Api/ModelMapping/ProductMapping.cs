@@ -414,6 +414,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MAPStartDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPStartDate))
                 .ForMember(x => x.MAPEndDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPEndDate))
 
+
+                .ForMember(x => x.DateFirstAvailableInCatalog, op => op.ResolveUsing(dc => (dc.DateFirstAvailableInCatalog ?? null)))
+
                 //ignores
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 .ForMember(x => x.ListPrice, op => op.Ignore())
@@ -421,6 +424,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<ProductInCatalogInfo, DC.ProductInCatalogInfo>()
                 .ForMember(dc => dc.CatalogId, op => op.ResolveUsing(pisi => pisi.CatalogId))
+
+
+                .ForMember(dc => dc.DateFirstAvailableInCatalog, op => op.ResolveUsing(pisi => pisi.DateFirstAvailableInCatalog))
+                
+
                 .ForMember(x => x.ProductCategories, op => op.ResolveUsing(pisi => pisi.ProductCategories != null
                     ? pisi.ProductCategories.Select(catid => new DC.ProductCategory() { CategoryId = catid }).ToArray()
                     : null))

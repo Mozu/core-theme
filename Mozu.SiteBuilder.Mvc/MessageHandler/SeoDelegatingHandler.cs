@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
             if (  request.GetRouteData().Route is Mozu.SiteBuilder.Mvc.SEO.NonSystemRoute)
             {
-                var routeHandler = request.Resolve<ISiteRouteHandler>();
+                var routeHandler = request.Resolve<ICustomRouteHandler>();
                 var found = await routeHandler.RouteIncomingRequest().ConfigureAwait(false);
                 if ( !found)
                 {

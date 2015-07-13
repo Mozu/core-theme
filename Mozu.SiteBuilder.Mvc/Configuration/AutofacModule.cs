@@ -68,6 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<EditModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();
             builder.RegisterTypes(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
             builder.RegisterType<SEO.CustomRouteValidator>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<SEO.CustomRouteRepository>().AsImplementedInterfaces().AsSelf();
         }
 
       

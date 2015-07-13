@@ -46,17 +46,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         readonly IProductWebApiClient _productClient;
         readonly IProductSearchWebApiClient _searchClient;
         readonly ISlugNormalizer _slugNormalizer;
-        readonly ISiteRouteHandler _siteRouteHandler;
+        readonly ICustomRouteHandler _customRouteHandler;
         static readonly JsonSerializer _productSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
 
-        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, ILifetimeScope lifetimeScope, ISlugNormalizer slugNormalizer, ISiteRouteHandler siteRoutehandler)
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, ISiteBuilderApiContext apiCtx, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient, ILifetimeScope lifetimeScope, ISlugNormalizer slugNormalizer, ICustomRouteHandler customRouteHandler)
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
             _slugNormalizer = slugNormalizer;
             _productClient = productClient;
             _apiCtx = apiCtx;
-            _siteRouteHandler = siteRoutehandler;
+            _customRouteHandler = customRouteHandler;
         }
 
         [HttpHead]
@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var product = Mapper.Map<Product>(prod);
             //todo... ugh.. too many maps.
-            var redirect = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
+            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
             if (redirect != null)
             {
                 return redirect;
@@ -208,7 +208,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
 
-            var redirect = await _siteRouteHandler.RedirectWithContext(Request, FancyRoute.Category, () => Mapper.Map<IDictionary<string,object>>(cat)).ConfigureAwait(false);
+            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.Category, () => Mapper.Map<IDictionary<string,object>>(cat)).ConfigureAwait(false);
             if (redirect != null)
             {
                 return redirect;

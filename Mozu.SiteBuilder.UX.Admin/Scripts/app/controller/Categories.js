@@ -13,7 +13,23 @@ Ext.define('Taco.controller.Categories', {
     stores: ['Categories'],
     modelName: 'Category',
 
+    doCreateInternal: function (id, additionalParams, appState, viewName, model) {
+        var record = appState ? appState.record : Ext.create(model);
+        
+        // had to dup this method from the base controller class so I can modify the record; not ideal but the way category gets data is very atypical.
+        if (additionalParams.isDynamic) {
+            record.set("categoryType", "DynamicPreComputed");
+        }
+
+        this.ensureRequiredStores(function () {
+            this.createContentView(viewName, Ext.apply({
+                record: record
+            }, additionalParams || {}));
+        });
+    },
+
     edit: function (id, additionalParams, appState) {
+        
         var record = appState ? appState.record : null, 
             options= appState ? appState.options : null,
             store,

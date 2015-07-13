@@ -35,6 +35,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
         public bool IsActive { get; set; }
 
 
+        public string DateFirstAvailableInCatalog { get; set; }
+
+
         #region Content
         /// <summary>
         /// Represents whether the content information is overridden from the global data.

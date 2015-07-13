@@ -106,6 +106,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
          */
         additionalActions: null,
         
+        // set to true if this editor is going to be in a modal (save and cancel buttons go to the bottom instead of the top header;
+        isModalWrapper :false,
+
         //temporary data member that is set when user chooses to save and create new;
         createOnSaveSuccess : false,
         
@@ -228,13 +231,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             }
         }
 
+        
+
         if (!me.actions) {
             me.actions = [];
-
+            me.footerActions = [];
 
             // todo: finalize button visibility pattern and do search and replace
             if (me.cancelButtonEnabled) {
-                me.actions.push(Ext.apply({}, me.cancelButtonCfg, {
+                me.cancelActionButton = Ext.widget(Ext.apply({}, me.cancelButtonCfg, {
                     xtype: 'button',
                     text: me.cancelText,
                     margin: "0 0 0 10",
@@ -245,6 +250,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     handler: me.cancelActionHandler,
                     scope: me
                 }));
+                
+                // if not in the modal wrapper then put in the header.
+                if (!me.isModalWrapper) {
+                    me.actions.push(me.cancelActionButton);
+                } else {
+                    me.footerActions.push(me.cancelActionButton);
+                }
             }
             
             if (me.saveButtonEnabled) {
@@ -277,7 +289,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 // need to cache a reference to the button since the button is moved outside of the class by the splitEditor
                 me.saveActionButton = Ext.widget(saveButtonCfg);
 
-                me.actions.push(me.saveActionButton);
+                // if not in the modal wrapper then put in the header.
+                if (!me.isModalWrapper) {
+                    me.actions.push(me.saveActionButton);
+                } else {
+                    me.footerActions.push(me.saveActionButton);
+                }
+                
             }
 
             if (me.createButtonEnabled) {
@@ -294,6 +312,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 }));
             }
         }
+
 
         
         // Allows class with mixin to insert additional actions. Code copied from EditorWrapper;
@@ -333,9 +352,34 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         Ext.Array.push(conf.items, me.actionToolbar);
 
+        // this adds a close X to the header so that a form can be embedded in a dialog and maintain the native X for closing windows.
+        if (me.enableWindowCloseButton) {
+            this.windowCloseButton = Ext.apply({}, me.closeButtonCfg, {
+                xtype: 'tool',
+                type: 'close',
+                itemId: 'windowCloseButton',
+                handler: function () {
+                    //find the window and call the close method;
+                    var win = this.up('component[closable = true]');
+                    if (win) {
+                        win.close();
+                    }
+                },
+                scope: me
+            });
+
+            Ext.Array.push(conf.items, this.windowCloseButton);
+        }
+
         me.navHeader = Ext.widget(conf);
 
         me.header.items.unshift(me.navHeader);
+
+        if (me.isModalWrapper) {
+            me.footerActions.unshift({ xtype: 'tbfill' });
+            me.bbar = me.footerActions;
+        }
+
     },
 
     resetSaveButton: function () {
@@ -427,7 +471,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     },
 
     /**
-    * Callback method that announces when a bound form has saved successfuly    
+    * Callback method that announces when a bound form has saved successfuly    s
     * When no bound form exists, this method is called immediately when the save button is clicked;
     * Pass in data argument if you want to override the default arguments for the savesuccess event
     * @param  {mixed} data the data that was saved. Could be record, string, object, array. Optional, but strongly recommended; If data not passed the method will attempt to pull the data from a child form;

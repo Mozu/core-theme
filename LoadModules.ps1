@@ -1,1 +1,1 @@
-﻿gci -Path .\packages\Mozu.VS.PowerShell.1.17.1\tools\*.psm1 | import-module
+﻿gci -Path .\packages\Mozu.VS.PowerShell\tools\*.psm1 | import-module

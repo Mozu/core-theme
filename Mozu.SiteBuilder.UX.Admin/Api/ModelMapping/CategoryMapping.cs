@@ -21,6 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Id, opt => opt.ResolveUsing(c => c.Id))
                 .ForMember(dest => dest.IsHidden, opt => opt.ResolveUsing(c => !c.IsDisplayed))
                 .ForMember(dest => dest.CatalogId, opt => opt.ResolveUsing(c => c.CatalogId))
+
+                .ForMember(dest => dest.DynamicExpression, opt => opt.ResolveUsing(c => c.DynamicExpression))
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
                 
                 .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1 ))
@@ -58,12 +60,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Mapper.CreateMap<Category, DC.Category>()
                 .ForMember(dest => dest.Id, opt => opt.ResolveUsing(c => c.Id))
                 .ForMember(dest => dest.CatalogId, opt => opt.ResolveUsing(c => c.CatalogId))
+                .ForMember(dest => dest.DynamicExpression, opt => opt.ResolveUsing(c => c.DynamicExpression))
+                .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
                 .ForMember(dest => dest.ParentCategoryId, opt => opt.ResolveUsing(c => c.ParentId.GetValueOrDefault(-1) == -1 ? null : c.ParentId))
                 .ForMember(dest => dest.Sequence, opt => opt.ResolveUsing(c => c.Sequence))
                 .ForMember(dest => dest.Content, opt => opt.ResolveUsing((Category c) => c))
                 .ForMember(dest => dest.IsDisplayed, opt => opt.ResolveUsing(c => !c.IsHidden))
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
-                .ForMember(dest => dest.DynamicExpression, opt => opt.Ignore())
 
                 //ignores
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())

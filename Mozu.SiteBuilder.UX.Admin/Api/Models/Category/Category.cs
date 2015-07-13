@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Mozu.ProductAdmin.Contracts;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
@@ -15,6 +16,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
             set{ _catCode = value ;}
         }
         public string CategoryType { get; set; }
+        public DynamicExpression DynamicExpression { get; set; }
+
         public string Slug { get; set; }
 
         public int? CatalogId { get; set; }
@@ -67,5 +70,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public string Url { get; set; }
 
         public string Alt { get; set; }
+    }
+
+
+    public class DynamicExpression
+    {
+
+        public string Type { get; set; }
+
+        public string Text { get; set; }
+
+        public Expression Tree { get; set; }
+
     }
 }

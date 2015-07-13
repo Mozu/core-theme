@@ -1,23 +1,47 @@
 ﻿{% extends "page" %}
 
-{% block title-tag-content %}{% firstof pageContext.metaTitle labels.logIn %} - {% parent %}{% endblock title-tag-content %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.orderStatus %} - {% parent %}{% endblock title-tag-content %}
 
-{% block body-tag-classes %} mz-loginpage {% endblock body-tag-classes %}
+{% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
 
 {% block body-content %}
 
 {% require_script "pages/myaccount" %}
 
 {% preload_json model "customer" %}
-    <div class="mz-l-container">
-        <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
         
+    <div class="mz-l-sidebar mz-myaccount-nav">
+        <nav class="mz-scrollnav" id="account-nav" data-mz-scrollnav="body">
+            <ul class="mz-scrollnav-list nav">
+                <li class="mz-scrollnav-item">
+                    <a class="mz-scrollnav-link" href="#orderhistory">
+                        {{ labels.orderHistory }}
+                    </a>
+                </li>
+                <li class="mz-scrollnav-item">
+                    <a class="mz-scrollnav-link" href="#returnhistory">
+                        {{ labels.returns }}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
+
+        {% dropzone "my-account-top" scope="template" %}
+
+        <a id="orderhistory"></a>
         <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
             {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory %}
         </div>
         
+        <a id="returnhistory"></a>
         <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
             {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
         </div>
     </div>
+</div>
 {% endblock body-content %}

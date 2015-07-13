@@ -175,7 +175,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("{1} eq {0}", filter.value, PRICE_MSRP_PROPERTY);
                 case "map":
                     return string.Format("{1} eq {0}", filter.value, PRICE_MAP_PROPERTY);
-                
+                case "publishsetcode":
+                    return string.Format("{1} eq {0}", filter.value, "publishsetcode");
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

@@ -1,0 +1,37 @@
+﻿{
+    "items": [
+        {
+            "name": "PublishSet1",
+            "id": "104",
+            "type": "content",
+            "documetTypeFQN": "123456",
+            "listTypeFQN": "123456",
+            "activeUpdateDate": "11/12'13",
+            "draftUpdateDate": "11/12'13",
+            "updatedBy": "Ben",
+            "publishType": "someType",
+            "publishSetCode": "1234",
+            "masterCatalogId": 4,
+            "catalogId": 4,
+            "siteId": "1234"
+        },
+        {
+            "name": "PublishSet1",
+            "id": "104",
+            "type": "content",
+            "documetTypeFQN": "123456",
+            "listTypeFQN": "123456",
+            "activeUpdateDate": "11/12'13",
+            "draftUpdateDate": "11/12'13",
+            "updatedBy": "Ben",
+            "publishType": "someType",
+            "publishSetCode": "1234",
+            "masterCatalogId": 4,
+            "catalogId": 4,
+            "siteId": "1234"
+        }
+    ],
+    "message": "Some message",
+    "success": true,
+    "total": 2
+}

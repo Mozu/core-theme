@@ -184,6 +184,16 @@ Ext.define('Taco.model.Entity', {
             name: 'properties',
             type: 'auto',
             useNull: true
+        },
+        {
+            name: 'startDate',
+            type: 'date',
+            defaultValue: null
+        },
+        {
+            name: 'endDate',
+            type: 'date',
+            defaultValue: null
         }
     ],
     publish:function () {

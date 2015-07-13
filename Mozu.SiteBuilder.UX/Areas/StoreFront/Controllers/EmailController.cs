@@ -136,11 +136,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             IServiceClientBase<ISitesWebApiClient> sitesWebApiClient,
             ILogger logger,
             IServiceClientBase<ILocationRuntimeWebApiClient> locationRuntimeWebApiClient,
-            ISiteRouteHandler siteRouteHandler,
+            ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient
             )
             : base(docRepo, docTypeRepo, cmsService,
-                customerAccountWebApiClient, hyprViewEngine, siteRouteHandler)
+                customerAccountWebApiClient, hyprViewEngine, customRouteHandler)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
