@@ -5,12 +5,10 @@ dotless
 JsonValue
 Microsoft.AspNet.Mvc
 Mozu.AdminUser.Contracts
-Mozu.BuildSupport.WebApi
 Mozu.CommerceRuntime.Contracts
 Mozu.Content.Contracts
 Mozu.Core.Messaging
 Mozu.Customer.Contracts
-Mozu.DeployWeb
 Mozu.Hypr.NDjango
 Mozu.InstalledApps.Contracts
 Mozu.Location.Contracts
@@ -23,3 +21,4 @@ Mozu.ShippingAdmin.Contracts
 Mozu.SiteSettings.General.Contracts
 Mozu.SiteSettings.Order.Contracts
 protobuf-net
+OctoPack

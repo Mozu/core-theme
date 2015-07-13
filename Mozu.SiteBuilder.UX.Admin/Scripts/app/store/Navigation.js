@@ -450,21 +450,11 @@ Ext.define('Taco.store.Navigation', {
                 ]
             }, {
                 'id': 'publishing',
-                'label': 'Publish',
-                'address': 'pendingchanges',
+                'label': 'Publishing ',
+                'address': 'publishing',
                 'icon': 'nav-publishing',
                 'behaviorIds': [8],
-                'items': [
-                    {
-                        'id': 'cmspublishing',
-                        'label': 'Content',
-                        'address': '/pendingChanges/cms'
-                    }, {
-                        'id': 'catlogpublishing',
-                        'label': 'Product',
-                        'address': '/pendingChanges/product'
-                    }
-                ]
+                'items': []
             }, {
                 'id': 'locations',
                 'label': 'Locations',

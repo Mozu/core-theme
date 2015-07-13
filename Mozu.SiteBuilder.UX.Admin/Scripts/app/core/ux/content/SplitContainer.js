@@ -74,13 +74,15 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
     },
 
     initComponent: function () {
-        Ext.apply(this, {
-            items: [
-                this.getWest(),
-                this.getSplitter(),
-                this.getEast()
-            ]
-        });
+
+
+        if (!Array.isArray(this.items)) {
+            this.items = [];
+        }
+
+        this.items.unshift(this.getEast());
+        this.items.unshift(this.getSplitter());
+        this.items.unshift(this.getWest());
 
         this.callParent(arguments);
 
@@ -196,6 +198,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             lbar: {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
+                itemId: 'east-left',
                 width: 13,
                 listeners: {
                     click: {
@@ -228,6 +231,7 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
             rbar: {
                 xtype: 'component',
                 cls: 'taco-splitcontainer-collapsetool',
+                itemId: 'west-right',
                 width: 13,
                 listeners: {
                     click: {
@@ -241,7 +245,10 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
     },
 
     getState: function () {
-        var state = this.callParent();
+        return this.initializeState(this.callParent());
+    },
+
+    initializeState: function(state) {
         var nextSplit = this.getSplit();
         
         (state || (state = {})).split = nextSplit;
@@ -259,11 +266,11 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
      * By default, this function updates the collapsed state.
      * 
      * @param {Ext.EventObject} e The {@link Ext.EventObject} encapsulating the DOM event.
-     * @param {HTMLElement} t The target of the event.
+     * @param {HTMLElement} targetEl The target of the event.
      */
-    handleCollapseToolClick: function (e, t) {
-        var direction = (Ext.getCmp(t.id).ownerCt.getItemId() === 'east' ? 'getEast' : 'getWest');
-        var opposite = (direction === 'getEast' ? 'getWest' : 'getEast');
+    handleCollapseToolClick: function (e, targetEl) {
+        var direction = Ext.getCmp(targetEl.id).getItemId() === 'east-left' ? 'getEast' : 'getWest';
+        var opposite = direction === 'getEast' ? 'getWest' : 'getEast';
 
         if (this[opposite]().getCollapsed()) {
             this[opposite]().expand();
@@ -276,10 +283,16 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
      * Include CSS classes.
      */
     onBoxReady: function () {
-        var state = this.getState();
-        var panel;
-
         this.callParent(arguments);
+
+        this.initializePanels();
+
+        this.addCls('taco-splitcontainer');
+    },
+
+    initializePanels: function() {
+        var state = this.getState(),
+            panel;
 
         if (state) {
             if (state.split) {
@@ -291,7 +304,5 @@ Ext.define('Taco.core.ux.content.SplitContainer', {
                 panel.collapse();
             }
         }
-
-        this.addCls('taco-splitcontainer');
     }
 });

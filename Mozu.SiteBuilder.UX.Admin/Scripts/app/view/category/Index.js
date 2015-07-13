@@ -9,6 +9,9 @@ Ext.define('Taco.view.category.Index', {
         'Taco.store.CategoriesTree'
     ],
 
+    createButtonText: "Create New Category",
+    createButtonVisible:true,
+
     contextConfig: {
         supportedLevels: ['c'],
         requiresContextOfType: [ 'c', 's']
@@ -17,6 +20,60 @@ Ext.define('Taco.view.category.Index', {
     initComponent: function () {
         var me = this;
 
+        var createButtonConfig = {
+            xtype: 'button',
+            text: me.createButtonText,
+            margin: "0 0 0 10",
+            ui: 'action-primary',
+            scale: 'medium',
+            hidden: !me.createButtonVisible,
+            itemId: 'createActionButton',
+            scope: me
+        }
+
+        
+        
+            Ext.apply(createButtonConfig, {
+                handler: Ext.emptyFn,
+                menu: {
+                    plain: true,
+                    showSeparator: false,
+                    listeners: {
+                        click: {
+                            fn: function (menu, menuItem, e) {
+                                if (!menuItem) {
+                                    return
+                                }
+
+                                Taco.core.StateManager.attemptNavigate('categories/create', {
+                                    isDynamic: (menuItem.getItemId() == "Dynamic")
+                                });
+
+                            },
+                            scope: me,
+                            delegate: "x-menu-item-link"
+                        }
+                    },
+                    items: [
+                        {
+                            text: "Static Category",
+                            itemId:"Static"
+                        }, {
+                            text: "Dynamic Category",
+                            itemId: "Dynamic"
+                        }
+                    ]
+                }
+            });
+
+        me.header = {
+            title: "Categories",
+            actions: [
+                createButtonConfig
+            ]
+        };
+
+        /*
         me.header = {
             title: 'Categories',
             actions: [{
@@ -32,6 +89,10 @@ Ext.define('Taco.view.category.Index', {
                 }
             }]
         };
+        */
+
+        
+
 
         me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
 

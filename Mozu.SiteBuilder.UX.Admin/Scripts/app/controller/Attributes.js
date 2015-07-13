@@ -6,9 +6,9 @@
 
 Ext.define('Taco.controller.Attributes', {
     extend: 'Taco.core.Controller',
-    listView: null,
+    //listView: null,
     models: ['Taco.model.Attribute'],
-    stores: ['Taco.store.Attributes'],
-    views: ['attribute.Index'],
+    stores: ['Taco.store.Attributes', 'Taco.store.AttributesGrid'],
+    views: ['attribute.Index', 'attribute.Edit'],
     modelName: 'Attribute'
 });

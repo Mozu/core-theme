@@ -3,6 +3,11 @@
  */
 
 Ext.define('Taco.view.attribute.Index', {
+    extend: 'Taco.view.attribute.Grid',
+    alias: "widget.taco-attribute-index"
+});
+
+/*Ext.define('Taco.view.attribute.Index', {
     extend: 'Taco.core.ux.browser.BrowserPage',
     alias: "widget.taco-attribute-index",
     requires: ['Taco.model.Attribute', 'Taco.store.Attributes', 'Taco.view.attribute.Edit'],
@@ -100,4 +105,4 @@ Ext.define('Taco.view.attribute.Index', {
         }, 1, this);
         return;
     }
-})
+})*/

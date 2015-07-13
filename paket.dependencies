@@ -1,15 +1,19 @@
+#adding content none to top to stop pre deploy edits from being overwritten by paket install.
+content:none
 source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
 
-nuget 51Degrees.mobi 2.1.15.1  content: none
-nuget ClearScript.Installer 5.4.5634.17927 content:none
+nuget 51Degrees.mobi 2.1.15.1  
+nuget ClearScript.Installer 5.4.5634.17927 
 nuget Microsoft.AspNet.WebApi.Core 5.2.3
-nuget Microsoft.AspNet.WebPages 3.2.2 content:none
-nuget Microsoft.AspNet.Mvc 5.2.2 content:none
+nuget Microsoft.AspNet.WebPages 3.2.2 
+nuget Microsoft.AspNet.Mvc 5.2.2 
 
 
-nuget Mozu.Core.Prime < 1.19 prerelease content:none
+nuget Mozu.Core.Prime < 1.19 prerelease
+nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
+nuget OctoPack 2.1.3
 nuget RabbitMQ.Client 3.3.5
 nuget Burrows.Autofac 0.3.3.0 framework: >= net451
 nuget Burrows.Log4Net 0.3.3.0 framework: >= net451
@@ -22,14 +26,12 @@ nuget morelinq 1.0.16006 framework: >= net451
 nuget Mozu.AdminUser.Contracts 1.17.2 framework: >= net451
 nuget Mozu.AppDev.Contracts 1.17.2 framework: >= net451
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 framework: >= net45
-nuget Mozu.BuildSupport.WebApi 1.0.0.6 framework: >= net45
 nuget Mozu.CommerceRuntime.Contracts 1.17.6 framework: >= net451
 nuget mozu.content.contracts < 1.19 prerelease ,  framework: >= net451
 nuget Mozu.Core.Api.Contracts 1.17.1 framework: >= net451
 nuget Mozu.Core.Messaging 1.17.1 framework: >= net451
 nuget Mozu.Core.Test 1.17.1 framework: >= net451
 nuget Mozu.Customer.Contracts < 1.19 prerelease framework: >= net451
-nuget mozu.deployweb 2.0.3 framework: >= net451
 nuget Mozu.Hypr.NDjango < 1.18 framework: >= net451
 nuget Mozu.InstalledApps.Contracts 1.17.3 framework: >= net451
 nuget Mozu.Location.Contracts 1.17.1 framework: >= net451
@@ -39,6 +41,7 @@ nuget Mozu.ProductRuntime.Contracts 1.17.2 framework: >= net451
 nuget Mozu.Provisioning.Contracts 1.17.5 framework: >= net451
 nuget Mozu.Reference.Contracts 1.17.4 framework: >= net451
 nuget Mozu.ShippingAdmin.Contracts 1.17.4 framework: >= net451
-nuget Mozu.SiteSettings.General.Contracts < 1.19 prerelease framework: >= net451 
+nuget Mozu.SiteSettings.General.Contracts prerelease 
 nuget Mozu.SiteSettings.Order.Contracts < 1.19 prerelease framework: >= net451 
+
 nuget protobuf-net 2.0.0.668 framework: >= net45
