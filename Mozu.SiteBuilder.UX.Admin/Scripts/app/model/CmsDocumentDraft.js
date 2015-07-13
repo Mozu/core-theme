@@ -63,6 +63,16 @@ Ext.define('Taco.model.CmsDocumentDraft', {
             "name": "lastPublished",
             "type": "date",
             "useNull": true
+        },
+        {
+            name: 'beginDate',
+            type: 'date',
+            defaultValue: null
+        },
+        {
+            name: 'endDate',
+            type: 'date',
+            defaultValue: null
         }
 
     ],

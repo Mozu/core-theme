@@ -343,7 +343,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
 
-            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter:String.Format("orderNumber eq {0} || externalId eq {1}", orderNumber, orderNumber));
+            var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter:String.Format("orderNumber eq {0} or externalId eq {1}", orderNumber, orderNumber));
             if (res.HasException)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new
@@ -400,7 +400,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var userClaims = _apiContext.UserClaims;
             userClaims.Bag["orderId"] = order.Id;
             var profileToken = _authenticationHelper.GetProfileToken();
-            _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken);
+            _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken, DateTime.Now.AddMinutes(20));
 
 
             return Request.CreateResponse(statusCode: HttpStatusCode.OK);

@@ -1,29 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http.Routing;
-using Autofac;
-using Mozu.Core;
-using Mozu.Core.Api.Client;
-using System.Runtime.Caching;
-using Mozu.Core.Logging;
-using Mozu.SiteBuilder.UX.Models.Navigation;
-using System.Web.Http;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.Core.Extensions;
-using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
-
-
     public class CustomRoute : HttpRoute
     {
-        
         string Template { get; set; }
         FancyRoute InternalRoute { get; set; }
         bool IsCanonical { get; set; }
@@ -102,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 DoRewriteRouteData(request, values, PreMappings);
             }
             var ret=  base.ProcessConstraint(request, constraint, parameterName, values, routeDirection);
-            if (ret)
+            if (ret && !object.Equals( origional,values ))
             {
                 origional.Clear();
                 origional.AddRange(values);
@@ -117,8 +104,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         {
             return IsCanonical && InternalRoute == route;
         }
-
-       
     }
 
     #region Interfaces

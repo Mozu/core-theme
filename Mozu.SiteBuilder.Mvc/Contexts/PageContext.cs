@@ -135,7 +135,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             IsEditMode = _apiContext.IsEditMode;
             HandledByProxy = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
             IsSecure = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
-            Now = apiContext.Now.Value;
+            Now = apiContext.PreviewDate.GetValueOrDefault(DateTime.UtcNow);
             Url = requestURLGetter.GetRequestUrl();
            
             Sorting = SortingParameters.Create(Search);

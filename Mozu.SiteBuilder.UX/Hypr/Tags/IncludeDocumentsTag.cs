@@ -8,6 +8,7 @@ using Mozu.SiteBuilder.Mvc.Tags;
 using NDjango;
 using NDjango.Interfaces;
 using NDjango.FiltersCS.Compatibility;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -115,7 +116,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
                 query += string.Format("properties.beginDate le {0} and properties.endDate ge {0}", now.ToUniversalTime().ToString("o"));
             }
-            //and properties.endDate gt {1} and properties.beginDate lt {1} 
+
+            // staying in line with the admin-side doc client
+            if(sbContext.DataViewMode == Core.DataViewModeType.Pending)
+            {
+                service = service.CloneWithConfigOptions(opts => opts.DisableCache = true);
+            }
 
             var res = await service.GetViewDocuments(documentListName: list, viewName: view, filter: query, sortBy: sortBy, pageSize: pageSize, startIndex: startIndex).ConfigureAwait(false);
        
