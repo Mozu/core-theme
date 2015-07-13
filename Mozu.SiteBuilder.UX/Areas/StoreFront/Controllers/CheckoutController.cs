@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             this.PageContext.BillingStates = billStateTask.Result;
             this.PageContext.ShippingStates = shipStateTask.Result;
-
+            this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
 
             if (!this.PageContext.User.IsAnonymous)
             {

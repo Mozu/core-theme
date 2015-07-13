@@ -91,6 +91,18 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool IsPayPalEnabled { get; set; }
 
         public Dictionary<string, string> SupportedCards { get; set; }
+
+        public VisaCheckoutSettings VisaCheckout { get; set; }
+    }
+
+    /// <summary>
+    /// Holds Visa Checkout specific settings
+    /// </summary>
+    public class VisaCheckoutSettings
+    {
+        public bool IsEnabled { get; set; }
+        public string ClientId { get; set; }
+        public string ApiKey { get; set; }
     }
    
     public class EmailTransactionSettings
