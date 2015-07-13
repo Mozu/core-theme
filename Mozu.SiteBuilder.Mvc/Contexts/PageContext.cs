@@ -410,6 +410,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public List<KeyValuePair<string, string>> BillingStates { get; set; }
         public List<KeyValuePair<string, string>> ShippingStates { get; set; }
+        public string VisaCheckoutButtonUrl { get; set; }
         public DateTime Now { get; set; }
 
         public  string CategoryCode { get; set; }
