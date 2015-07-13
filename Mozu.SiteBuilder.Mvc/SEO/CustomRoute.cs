@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
