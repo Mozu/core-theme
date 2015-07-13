@@ -173,6 +173,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\ModelMapping\DynamicExpressionMapping.cs" />
     <Compile Include="Api\ModelMapping\PublishingSetMapping.cs" />
     <Compile Include="Api\Models\PublishSets\PublishSets.cs" />
     <Compile Include="Api\PublishSetController.cs" />

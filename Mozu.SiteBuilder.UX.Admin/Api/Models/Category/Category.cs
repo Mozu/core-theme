@@ -71,4 +71,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         public string Alt { get; set; }
     }
+
+
+    public class DynamicExpression
+    {
+
+        public string Type { get; set; }
+
+        public string Text { get; set; }
+
+        public Expression Tree { get; set; }
+
+    }
 }

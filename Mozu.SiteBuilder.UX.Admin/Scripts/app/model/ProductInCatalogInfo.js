@@ -17,6 +17,10 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "name": "productShortDescription",
             "type": "string",
             "useNull": true
+        }, {
+            "name": "dateFirstAvailableInCatalog",
+            "type": "date",
+            "useNull": true
         },
         {
             "name": "isActive",

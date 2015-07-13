@@ -42,6 +42,7 @@ Ext.define('Taco.view.category.Form', {
 
             this.expressionTreePanel = Ext.create('Taco.view.filter.ExpressionTreePanel', {
                 name: "dynamicExpression",
+                type:expressionData.type,
                 data: expressionData,
                 editable: true,
                 showEditButton: false,
@@ -113,7 +114,6 @@ Ext.define('Taco.view.category.Form', {
             }
         );
 
-
         this.items.push(
         {
             xtype: 'textarea',
@@ -150,14 +150,25 @@ Ext.define('Taco.view.category.Form', {
             editable: false,
             forceSelection: true,
             initialValue: "Active",
-            disabled: !this.record.phantom,
+            //disabled: !this.record.phantom,
+            // temporarily disabling the ability to create real time dynamic expressions. service isn't ready yet.
+            disabled: true,
             value:(this.record.get("categoryType")=="DynamicPreComputed") ? "yes" : "no",
             listeners: {
                 scope: me,
-                'change': function () {
-                    // need to toggle the type between precomputed and real time
+                'change': function(field, newValue, oldValue, e) {
+                    var type = "DynamicPreComputed";
+                    if (newValue == "no") {
+                        type = "DynamicRealTime";
+                    }
 
+                    this.record.set("categoryType", type);
+                    this.expressionTreePanel.setType(type);
                 }
+                // need to validate any expressions we have currently since the rules change for each type.
+
+
+
             },
             store: Ext.create('Ext.data.Store', {
                 fields: ['id', "name"],

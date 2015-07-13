@@ -9,6 +9,10 @@ Ext.define('Taco.view.filter.EditCodeModal', {
         'Taco.core.ux.form.field.Code'
     ],
 
+    config: {
+        type:null
+    },
+
     entityId: null,
 
     record: null,
@@ -220,8 +224,10 @@ Ext.define('Taco.view.filter.EditCodeModal', {
         var codeField = tab.down('.taco-codefield');
         var codeTxt = codeField.getValue();
 
+        
+        
         var jsonData = {
-            type: "dynamicExpression" // realTimeDynamicExpressionval
+            type:this.getType()
         }
         
         if (tab.getItemId() == "treeCode") {

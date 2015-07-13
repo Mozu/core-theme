@@ -519,15 +519,36 @@ Ext.define('Taco.view.product.subform.General', {
                                 allowBlank: false,
                                 editable: false,
                                 forceSelection: true,
-                                listConfig: { shadow: false },                                
+                                listConfig: { shadow: false },
                                 width: twoColumnFieldWidth,
                                 store: [[false, 'Disable'], [true, 'Active']],
                                 value: this.productInCatalogInfo ? this.productInCatalogInfo.get('isActive') : false
                             }
                         ]
+                    } 
+                ]
+            },
+
+            {
+                xtype: 'formform',
+                persistChangesToModel: true,
+                record: this.productInCatalogInfo,
+                hidden: this.isGlobal,
+                width: twoColumnFieldWidth,
+                header: false,
+                items: [
+                    {
+                        xtype: 'datetime',
+                        fieldLabel: 'Date First Available',
+                        name: 'DateFirstAvailableInCatalog',
+                        labelAlign: 'top',
+                        hidden: this.isGlobal,
+                        width: twoColumnFieldWidth,
+                        value: this.productInCatalogInfo ? this.productInCatalogInfo.get('dateFirstAvailableInCatalog') : ""
                     }
                 ]
-            }, {
+            },
+            {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
                 width: '600',                

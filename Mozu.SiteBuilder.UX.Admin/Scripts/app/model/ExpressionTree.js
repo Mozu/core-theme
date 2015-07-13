@@ -47,7 +47,7 @@ Ext.define('Taco.model.ExpressionTree', {
         }, {
             name: "right",
             persistType: "predicate",
-            type: "string"
+            type: "auto"
         }, {
             name: "operator",
             persistType: "predicate",

@@ -152,7 +152,7 @@ NUGET
     Mozu.PaymentService.Contracts (1.9.9)
     Mozu.PricingRuntime.Contracts (1.17.1)
       Mozu.Core.Prime (>= 1.17.6)
-    Mozu.ProductAdmin.Contracts (1.18.1-dev1507091445) - framework: >= net451
+    Mozu.ProductAdmin.Contracts (1.18.1-dev1507132015) - framework: >= net451
     Mozu.ProductRuntime.Contracts (1.17.2) - framework: >= net451
       Mozu.Core.Prime (>= 1.17.0)
     Mozu.Provisioning.Contracts (1.17.5) - framework: >= net451

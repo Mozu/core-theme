@@ -67,7 +67,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Content, opt => opt.ResolveUsing((Category c) => c))
                 .ForMember(dest => dest.IsDisplayed, opt => opt.ResolveUsing(c => !c.IsHidden))
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
-                .ForMember(dest => dest.DynamicExpression, opt => opt.Ignore())
 
                 //ignores
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())

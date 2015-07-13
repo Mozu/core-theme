@@ -46,13 +46,20 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     // puts the tools into a header toolbar with overflow management and default button configuration; 
     headerToolbar: true,
 
-    showTypeColumn :false,
+    showTypeColumn: false,
+
+    config: {
+        type: null
+    },
 
     initComponent: function() {
         var me = this;
         me.title = "Expression";
         me.tools = me.tools || [];
         
+
+        this.mon(me, "needsvalidation", this.validateExpression, me);
+
         // set tabIndex on the grid so that it can be tabbed too;
         this.columns = [
             {
@@ -612,14 +619,29 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
     },
 
+    validateExpression : function(categoryType) {
+      
+
+    },
+
+    
+
+    applyType: function(value) {
+        this.fireEvent("needsvalidation",value);
+        return value;
+
+    },
+
     openCodeEditor: function (focusCmp) {
         var me = this;
+
         
         Ext.create('Taco.view.filter.EditCodeModal', {
+            type:this.getType(),
             data: {
                 tree: this.getValue(),
                 text: "need to load this",
-                type:"dynamicExpression"
+                type:this.getType()
             },
             listeners: {
                 scope: me,
