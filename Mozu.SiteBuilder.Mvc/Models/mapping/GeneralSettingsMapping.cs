@@ -28,7 +28,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             Mapper.CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
                   .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
                   .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
-                  .ForMember(x => x.VisaCheckout, opt => opt.ResolveUsing(GetVisaCheckoutSettings))
                   .ForMember(x => x.PayByMail, opt => opt.ResolveUsing(x => x.PaymentSettings.PayByMail))
                   .ForMember(x => x.PaymentProcessingFlowType, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.PaymentProcessingFlowType))
                   // .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing(x => (x.PaymentSettings.Gateways ?? Enumerable.Empty<DC.Gateway>()).Where(g => g.GatewayAccount != null && g.GatewayAccount.IsActive).Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>()))
@@ -155,36 +154,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
 
         }
-
-        private VisaCheckoutSettings GetVisaCheckoutSettings(DC.CheckoutSettings checkoutSettings)
-        {
-            VisaCheckoutSettings settings = new VisaCheckoutSettings();
-            if (checkoutSettings.PaymentSettings.ExternalPaymentWorkflowDefinitions != null)
-            {
-                DC.ExternalPaymentWorkflowDefinition externalPayment = checkoutSettings.PaymentSettings
-                    .ExternalPaymentWorkflowDefinitions.Find(
-                        expwd =>
-                            String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.VISA_CHECKOUT,
-                                System.StringComparison.OrdinalIgnoreCase));
-                if (externalPayment != null)
-                {
-                    settings.IsEnabled = true;
-                    if (externalPayment.Credentials != null)
-                    {
-                        settings.ClientId = externalPayment.Credentials.Any(data => data.APIName == "CLIENTID")
-                            ? externalPayment.Credentials.Find(data => data.APIName == "CLIENTID").Value
-                            : String.Empty;
-
-                        settings.ApiKey = externalPayment.Credentials.Any(data => data.APIName == "APIKEY")
-                            ? externalPayment.Credentials.Find(data => data.APIName == "APIKEY").Value
-                            : String.Empty;
-
-                    }
-                }
-            }
-            return settings;
-        }
-        
 
 
         /// <summary>

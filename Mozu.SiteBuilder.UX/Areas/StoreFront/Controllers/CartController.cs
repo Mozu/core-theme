@@ -81,7 +81,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             PageContext.PageType = "cart";
 
-            this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
 
             return (await RenderCartViewWithMessage(null));
         }
